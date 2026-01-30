@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="de"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Outbreak Tunes - Crafting Sonic Worlds</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#800df2",
+            "background-light": "#f7f5f8",
+            "background-dark": "#141118",
+          },
+          fontFamily: {
+            "display": ["Space Grotesk", "sans-serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.5rem",
+            "lg": "0.75rem",
+            "xl": "1rem",
+            "full": "9999px"
+          },
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24
+    }
+  </style>
+</head>
+<body class="bg-background-dark font-display">
+<div class="relative flex min-h-screen w-full flex-col text-white">
+<!-- Top Nav Bar -->
+<header class="sticky top-0 z-50 flex w-full items-center justify-between whitespace-nowrap border-b border-solid border-white/10 bg-background-dark/80 px-4 py-3 backdrop-blur-md sm:px-6 lg:px-10">
+<div class="flex items-center gap-4">
+<div class="size-6 text-primary">
+<svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M44 4H30.6666V17.3334H17.3334V30.6666H4V44H44V4Z" fill="currentColor"></path>
+</svg>
+</div>
+<h1 class="text-white text-xl font-bold leading-tight tracking-[-0.015em]">Outbreak Tunes</h1>
+</div>
+<nav class="hidden items-center gap-8 md:flex">
+<a class="text-white/80 hover:text-white transition-colors text-sm font-medium leading-normal" href="#services">Services</a>
+<a class="text-white/80 hover:text-white transition-colors text-sm font-medium leading-normal" href="#portfolio">Portfolio</a>
+<a class="text-white/80 hover:text-white transition-colors text-sm font-medium leading-normal" href="#team">Team</a>
+<a class="text-white/80 hover:text-white transition-colors text-sm font-medium leading-normal" href="#contact">Kontakt</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/90 transition-colors">
+<span class="truncate">Get a Quote</span>
+</button>
+<button class="md:hidden p-2 rounded-md hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</header>
+<main class="flex h-full grow flex-col">
+<div class="mx-auto flex w-full max-w-5xl flex-1 flex-col px-4 py-10 sm:px-6 lg:px-8">
+<!-- Hero Section -->
+<section class="w-full">
+<div class="@container">
+<div class="p-0 @[480px]:p-4">
+<div class="flex min-h-[60vh] flex-col gap-6 bg-cover bg-center bg-no-repeat @[480px]:gap-8 @[480px]:rounded-xl items-center justify-center p-4" data-alt="Abstract background with purple and cyan waveform visualizations." style='background-image: linear-gradient(rgba(20, 17, 24, 0.6) 0%, rgba(20, 17, 24, 0.9) 100%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuDwSo0OSUWqySWR5IWbFvGP1M9GKUQmz8skGUVhtkct_S_r3EtMVpC1ARzmBWJnwiYpl83fp-ZstKXzYD4-y3lHARy4lTdcv61cewYe4QdeSGd58MSKYGLWrQy0n5DijmeZoN7zqWZMhuNd1WFN39zMUqbWn5cBkXExUezmC9PjZxpDkNNwPyRl30Is7qCCqP-TRjl9dRElafDzwH3mLwbIlTa6M-Y-fjtz8zOxMcldTwz2etxPpEPe2Xq2zG5WYK_IYnsfppXHjyY");'>
+<div class="flex flex-col gap-4 text-center">
+<h2 class="text-white text-4xl font-black leading-tight tracking-[-0.033em] @[480px]:text-6xl @[480px]:font-black @[480px]:leading-tight @[480px]:tracking-[-0.033em]">
+                    The Alchemy of Sound
+                  </h2>
+<p class="text-white/80 text-base font-normal leading-normal @[480px]:text-lg @[480px]:font-normal @[480px]:leading-normal max-w-2xl">Wir verwandeln Ideen in unvergessliche Klangwelten. Von epischen Soundtracks bis hin zu immersivem Sounddesign – hier beginnt Ihre auditive Reise.</p>
+</div>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-[#ffd700] text-black text-base font-bold leading-normal tracking-[0.015em] hover:bg-opacity-90 transition-colors">
+<span class="truncate">Let's Create Sound</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Sound Scrolls / Portfolio Carousel Section -->
+<section class="w-full pt-16" id="portfolio">
+<h3 class="text-white text-3xl font-bold leading-tight tracking-[-0.015em] px-4 pb-4">Sound Scrolls</h3>
+<div class="flex overflow-x-auto [-ms-scrollbar-style:none] [scrollbar-width:none] [&amp;::-webkit-scrollbar]:hidden py-4">
+<div class="flex items-stretch p-4 gap-6">
+<div class="flex h-full w-64 flex-shrink-0 flex-col gap-4 rounded-lg bg-[#211b27] shadow-[0_0_15px_rgba(0,0,0,0.2)]">
+<div class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-lg flex flex-col" data-alt="Abstract album art with cyberpunk aesthetics" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAmcD__LgeAUUJW6NZyCkzHA8raFD9iRFJ6hCfnFBwvWuZ0YUMArC9_XHTuu-z1cTp4qYAy955C54SQlfMgN_QCBCrLmHHMxyznWCOJypbbi3O6zW9aMsruBGQKYPWseQhnp3xtKRJbDnNmK7CpEqxnGnI8VyBZ3AD6XzeW74ULF0eNKZSkcD_62IQiFLrxwHojyhRYhO_VX7vS1uxkPSjknSwePkJu0fSCTHPPFbOClFrZ5mZsP5k92HoNQdvoId4eHaFp4YXzT7s");'></div>
+<div class="flex flex-col flex-1 justify-between p-4 pt-0 gap-4">
+<div>
+<p class="text-white text-base font-medium leading-normal">Cybernetic Dawn</p>
+<p class="text-[#ab9cba] text-sm font-normal leading-normal">Synthwave</p>
+</div>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-md h-10 px-4 bg-[#302839] text-white text-sm font-bold leading-normal tracking-[0.015em] gap-2 hover:bg-[#41364d] transition-colors">
+<span class="material-symbols-outlined text-base">play_arrow</span>
+<span class="truncate">Play</span>
+</button>
+</div>
+</div>
+<div class="flex h-full w-64 flex-shrink-0 flex-col gap-4 rounded-lg bg-[#211b27] shadow-[0_0_15px_rgba(0,0,0,0.2)]">
+<div class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-lg flex flex-col" data-alt="Mystical forest album art" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCJ_M6bMsSaVTWJdDqPSIZW5K5y4Ou5swO8ntQ10BC-0HgZ0OTkQWdpsDaAaaW5gkzytOYJCA0bS_gORyNOi-Eot3NxiHg-3GwvnOwPplZM1N0p9iV689G4JDpZHtvnQeYtjbv0S-6dbf0wncVOB7J65WP7vU6t71sGTVtCnZURS9-7TjE1y8y-YvawYolPfrdefW6IBoXXB3Vemznpk_Vluq3hkPLawPVCQwEvx6HUOmKNMQGv8Zf9CqKtsCUa87XfklBo1Xsedfc");'></div>
+<div class="flex flex-col flex-1 justify-between p-4 pt-0 gap-4">
+<div>
+<p class="text-white text-base font-medium leading-normal">Mystic Echoes</p>
+<p class="text-[#ab9cba] text-sm font-normal leading-normal">Ambient</p>
+</div>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-md h-10 px-4 bg-[#302839] text-white text-sm font-bold leading-normal tracking-[0.015em] gap-2 hover:bg-[#41364d] transition-colors">
+<span class="material-symbols-outlined text-base">play_arrow</span>
+<span class="truncate">Play</span>
+</button>
+</div>
+</div>
+<div class="flex h-full w-64 flex-shrink-0 flex-col gap-4 rounded-lg bg-[#211b27] shadow-[0_0_15px_rgba(0,0,0,0.2)]">
+<div class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-lg flex flex-col" data-alt="Neon city street at night album art" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAy4dN8D7AUigLl2w3YIt8p8WOn38i7zMXm-QD0Nw8rqM_ZMEAGixr_L0STNp__gN5V_neDm3CH1YxQ2gKJKOLdNlZ3KcXGBWJmhPbG80vt3RAAjO201zb-S22hurh53AxhxLoUKS9HY2AvVJ6USDiA8vRfU9epMw7-gISLjLsqQX4p5ESkd5os5Ofj3M0oyE4LuU6RKI7ohjt_rhHPhclAPdW8KNu4MkBHYT9TS3O60zhGqYy3IV2kqIjkRZOXf93GR8cLEGP7C-U");'></div>
+<div class="flex flex-col flex-1 justify-between p-4 pt-0 gap-4">
+<div>
+<p class="text-white text-base font-medium leading-normal">Neon Velocity</p>
+<p class="text-[#ab9cba] text-sm font-normal leading-normal">Drum &amp; Bass</p>
+</div>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-md h-10 px-4 bg-[#302839] text-white text-sm font-bold leading-normal tracking-[0.015em] gap-2 hover:bg-[#41364d] transition-colors">
+<span class="material-symbols-outlined text-base">play_arrow</span>
+<span class="truncate">Play</span>
+</button>
+</div>
+</div>
+<div class="flex h-full w-64 flex-shrink-0 flex-col gap-4 rounded-lg bg-[#211b27] shadow-[0_0_15px_rgba(0,0,0,0.2)]">
+<div class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-lg flex flex-col" data-alt="Cosmic nebula album art" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBHrc6tFlumj8A8V-YvNytztV1QquPddLYietpc_swh23UDAqmP_6srgOHvjEMvAyq1TEJO7GGpMtUmFkmYg6672GbXqS-WdFCO3pItJi963VjCKK83XEd5MDV1EyXNez-uIoSYocpxh3-I4cz2cy3-duYwSjHWdYRZpvIW59wWsPC-9pZsQKuxs3c3L3xqIS5Ohnxg_gYDfc6Ku9jh1QPid2h0JwZZU93R6yzxCdR0UNWRqvRsgUE34qBxzpLcT9W4vSyf-Vyu11I");'></div>
+<div class="flex flex-col flex-1 justify-between p-4 pt-0 gap-4">
+<div>
+<p class="text-white text-base font-medium leading-normal">Galactic Drift</p>
+<p class="text-[#ab9cba] text-sm font-normal leading-normal">Chillstep</p>
+</div>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-md h-10 px-4 bg-[#302839] text-white text-sm font-bold leading-normal tracking-[0.015em] gap-2 hover:bg-[#41364d] transition-colors">
+<span class="material-symbols-outlined text-base">play_arrow</span>
+<span class="truncate">Play</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Services Section -->
+<section class="w-full pt-16" id="services">
+<h3 class="text-white text-3xl font-bold leading-tight tracking-[-0.015em] px-4 pb-4">Our Services</h3>
+<div class="grid grid-cols-1 gap-6 p-4 sm:grid-cols-2 lg:grid-cols-3">
+<div class="group flex flex-col gap-4 rounded-lg bg-[#211b27] p-6 shadow-[0_0_15px_rgba(0,0,0,0.2)] border border-transparent hover:border-primary transition-all duration-300">
+<div class="text-primary">
+<span class="material-symbols-outlined !text-4xl">music_note</span>
+</div>
+<h4 class="text-white text-xl font-bold">Custom Composition</h4>
+<p class="text-[#ab9cba] text-sm font-normal leading-normal">Einzigartige Soundtracks und Kompositionen, die perfekt auf Ihr Projekt zugeschnitten sind – für Film, Spiele und mehr.</p>
+</div>
+<div class="group flex flex-col gap-4 rounded-lg bg-[#211b27] p-6 shadow-[0_0_15px_rgba(0,0,0,0.2)] border border-transparent hover:border-primary transition-all duration-300">
+<div class="text-primary">
+<span class="material-symbols-outlined !text-4xl">equalizer</span>
+</div>
+<h4 class="text-white text-xl font-bold">Mixing &amp; Mastering</h4>
+<p class="text-[#ab9cba] text-sm font-normal leading-normal">Professionelle Abmischung und Veredelung Ihrer Tracks für einen klaren, druckvollen und industriestandardkonformen Klang.</p>
+</div>
+<div class="group flex flex-col gap-4 rounded-lg bg-[#211b27] p-6 shadow-[0_0_15px_rgba(0,0,0,0.2)] border border-transparent hover:border-primary transition-all duration-300">
+<div class="text-primary">
+<span class="material-symbols-outlined !text-4xl">gamepad</span>
+</div>
+<h4 class="text-white text-xl font-bold">Sound Design for Games</h4>
+<p class="text-[#ab9cba] text-sm font-normal leading-normal">Immersive Soundeffekte und Atmosphären, die Ihre Spielwelt zum Leben erwecken und das Spielerlebnis vertiefen.</p>
+</div>
+</div>
+</section>
+<!-- Team Section -->
+<section class="w-full pt-16" id="team">
+<h3 class="text-white text-3xl font-bold leading-tight tracking-[-0.015em] px-4 pb-4">The Alchemists</h3>
+<div class="grid grid-cols-1 gap-8 p-4 sm:grid-cols-2 md:grid-cols-3">
+<div class="flex flex-col items-center gap-4 text-center">
+<div class="relative h-32 w-32">
+<img class="h-full w-full rounded-full object-cover" data-alt="Portrait of a female sound engineer with dark hair." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZGib4wgAjGcm0aXk7TyqLkMtOL5WBJCOt7iwSDSagdVx5hqsyTLnnNF-qR8xUQlCn4wAS3euE0KTfNOcwkp9A2bYsJeNnbW77u4luE_id9wccfA6mfINf0SrPgdwV6ElXvoByO820ayJT7vmlI5Dv9VXAkF3JmRzY4Zb4PxyycvUBSRdWfPVyHask2zKDzvbNx3FQF5SqXKOr3NPnIa7d3TrggT2cWGGu6jqzLEGIR--bmGrPUFwK_2JsaYcAL86fQt7sWJdTGNU"/>
+<div class="absolute inset-0 rounded-full border-2 border-primary"></div>
+</div>
+<div>
+<h4 class="text-white text-lg font-bold">Aria Vance</h4>
+<p class="text-primary text-sm font-medium">Lead Composer</p>
+</div>
+</div>
+<div class="flex flex-col items-center gap-4 text-center">
+<div class="relative h-32 w-32">
+<img class="h-full w-full rounded-full object-cover" data-alt="Portrait of a male mixing engineer with a beard." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAC2P-_2BAh2Q5BXWm9hquQR8vLz1PT2E01492Wo-_4OfWYUtda3ElGciX6TNRGW5paHROtzNiASYMh7eol2TTVsHChfczle_kZzlbwtR_1jgs_3UrvR-Hcz7RgPrm6l9CWjuIJIZ_GfuWHQd2Jd4ot8fgqFI-G2tYqjDGM-ibDISOP3ktfEz9PpAy_oFjEYiY9io7m2Ka9kJM0goq9C6XPmdyi5xi_zoNCH4AMh7y4HHDbYsE07FPQ2OBdcpPFbn0ipxDhnmovT68"/>
+<div class="absolute inset-0 rounded-full border-2 border-primary"></div>
+</div>
+<div>
+<h4 class="text-white text-lg font-bold">Jaxon Reid</h4>
+<p class="text-primary text-sm font-medium">Mixing &amp; Mastering Engineer</p>
+</div>
+</div>
+<div class="flex flex-col items-center gap-4 text-center">
+<div class="relative h-32 w-32">
+<img class="h-full w-full rounded-full object-cover" data-alt="Portrait of a sound designer with colorful hair." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBTuZ91ncS5x1sbhRS98zFjp1YYytYYCWcxIL30KyU9kuqixveGmYr-HfFEMdXcbOoPwyuWCmQPjUCRlVzZV9p45xzruRFSNEDigyqIduVEb1vyK2hjgSSfzPOMwXjbGFRv1o_vhhczOwn42eQzb_JIWcNC9tIY9uuT4W9bYRhtq5SO99kCWDBjEwp-CD0lbTZk8Dw2Nsw8zzcLPTXOR2gTEJnKrL3NIvFGdTF1Ituju1kJpCPvhifYegDRSan0TPoDv8xw-HsSnaw"/>
+<div class="absolute inset-0 rounded-full border-2 border-primary"></div>
+</div>
+<div>
+<h4 class="text-white text-lg font-bold">Kai Lyra</h4>
+<p class="text-primary text-sm font-medium">Sound Designer</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Contact CTA Section -->
+<section class="w-full py-16" id="contact">
+<div class="flex flex-col items-center justify-center gap-6 rounded-xl bg-gradient-to-r from-primary/80 to-[#ff00ff]/60 p-10 text-center">
+<h3 class="text-white text-3xl font-bold">Ready to Start Your Sonic Journey?</h3>
+<p class="text-white/90 max-w-lg">Lassen Sie uns zusammenarbeiten und außergewöhnliche Klangerlebnisse schaffen. Kontaktieren Sie uns für ein unverbindliches Angebot.</p>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-[#ffd700] text-black text-base font-bold leading-normal tracking-[0.015em] hover:bg-opacity-90 transition-colors">
+<span class="truncate">Request a Quote</span>
+</button>
+</div>
+</section>
+</div>
+</main>
+</div>
+</body></html>

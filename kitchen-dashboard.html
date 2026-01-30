@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kitchen Dashboard | African Queen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        rel="stylesheet" />
+
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "amber": "#FFBF00",
+                        "background-dark": "#191022",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-background-dark text-white font-display min-h-screen">
+
+    <!-- Top Bar -->
+    <header
+        class="bg-black/50 border-b border-white/10 p-4 flex justify-between items-center sticky top-0 z-50 backdrop-blur-md">
+        <div class="flex items-center gap-4">
+            <a href="dashboard.html" class="p-2 hover:bg-white/10 rounded-full transition-colors">
+                <span class="material-symbols-outlined">arrow_back</span>
+            </a>
+            <h1 class="text-xl font-bold flex items-center gap-2">
+                <span class="material-symbols-outlined text-amber">skillet</span>
+                Kitchen Dashboard
+            </h1>
+        </div>
+        <div class="flex items-center gap-4">
+            <div
+                class="px-3 py-1 bg-green-500/20 text-green-500 border border-green-500/50 rounded-full text-xs font-bold uppercase animate-pulse">
+                Live Service
+            </div>
+            <span class="text-xs text-white/50" id="clock">12:00</span>
+        </div>
+    </header>
+
+    <div class="flex flex-col md:flex-row h-[calc(100vh-73px)]">
+
+        <!-- Order Queue (Left) -->
+        <div class="w-full md:w-1/3 border-r border-white/10 p-4 overflow-y-auto bg-[#141118]">
+            <h2
+                class="text-sm font-bold uppercase tracking-widest text-white/50 mb-4 sticky top-0 bg-[#141118] py-2 z-10">
+                Incoming Orders</h2>
+
+            <div id="order-list" class="space-y-4">
+                <!-- Sim Order 1 -->
+                <div class="bg-white/5 border-l-4 border-amber p-4 rounded-r-lg shadow-lg">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="font-bold text-lg">#1024</span>
+                        <span class="text-xs text-white/50">2 min ago</span>
+                    </div>
+                    <ul class="space-y-1 mb-4 text-sm">
+                        <li class="flex justify-between"><span>1x Jollof Rice</span> <span class="font-bold">12€</span>
+                        </li>
+                        <li class="flex justify-between"><span>2x Fried Plantain</span> <span
+                                class="font-bold">8€</span></li>
+                    </ul>
+                    <div class="flex gap-2">
+                        <button onclick="this.closest('.bg-white\\/5').remove()"
+                            class="flex-1 py-2 bg-green-600 hover:bg-green-500 rounded font-bold text-sm transition-colors">Complete</button>
+                        <button
+                            class="px-3 py-2 bg-red-600/20 text-red-500 hover:bg-red-600/30 rounded font-bold text-sm">Cancel</button>
+                    </div>
+                </div>
+
+                <!-- Sim Order 2 -->
+                <div class="bg-white/5 border-l-4 border-blue-500 p-4 rounded-r-lg shadow-lg opacity-80">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="font-bold text-lg">#1023</span>
+                        <span class="text-xs text-white/50">15 min ago</span>
+                    </div>
+                    <ul class="space-y-1 mb-4 text-sm">
+                        <li class="flex justify-between"><span>1x Vegan Platter</span> <span
+                                class="font-bold">15€</span></li>
+                    </ul>
+                    <button
+                        class="w-full py-2 bg-white/10 text-white/50 rounded font-bold text-sm cursor-not-allowed">Completed</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menu Management (Right) -->
+        <div class="flex-1 p-6 overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold">Menu Management</h2>
+                <div class="relative">
+                    <span
+                        class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-white/30">search</span>
+                    <input type="text" id="menu-search" placeholder="Search item..."
+                        class="bg-white/5 border border-white/10 rounded-full pl-10 pr-4 py-2 text-sm focus:border-amber outline-none w-64 transition-all focus:w-80">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="menu-grid">
+                <!-- Menu Item -->
+                <div
+                    class="menu-item bg-white/5 border border-white/10 p-4 rounded-xl flex items-center justify-between group hover:border-white/30 transition-all">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-lg bg-gray-800 overflow-hidden">
+                            <img src="https://placehold.co/100x100/333/white?text=Rice"
+                                class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <h3 class="font-bold">Jollof Rice</h3>
+                            <p class="text-xs text-white/50">Main Dish</p>
+                        </div>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" checked class="sr-only peer">
+                        <div
+                            class="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500">
+                        </div>
+                        <span class="ml-2 text-xs font-bold text-white/50 peer-checked:text-green-400">In Stock</span>
+                    </label>
+                </div>
+
+                <!-- Menu Item -->
+                <div
+                    class="menu-item bg-white/5 border border-white/10 p-4 rounded-xl flex items-center justify-between group hover:border-white/30 transition-all">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-lg bg-gray-800 overflow-hidden">
+                            <img src="https://placehold.co/100x100/333/white?text=Fish"
+                                class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <h3 class="font-bold">Grilled Tilapia</h3>
+                            <p class="text-xs text-white/50">Main Dish</p>
+                        </div>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" checked class="sr-only peer">
+                        <div
+                            class="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500">
+                        </div>
+                        <span class="ml-2 text-xs font-bold text-white/50 peer-checked:text-green-400">In Stock</span>
+                    </label>
+                </div>
+
+                <!-- Menu Item -->
+                <div
+                    class="menu-item bg-white/5 border border-white/10 p-4 rounded-xl flex items-center justify-between group hover:border-white/30 transition-all">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-lg bg-gray-800 overflow-hidden">
+                            <img src="https://placehold.co/100x100/333/white?text=Plantain"
+                                class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <h3 class="font-bold">Fried Plantain</h3>
+                            <p class="text-xs text-white/50">Side</p>
+                        </div>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" checked class="sr-only peer">
+                        <div
+                            class="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500">
+                        </div>
+                        <span class="ml-2 text-xs font-bold text-white/50 peer-checked:text-green-400">In Stock</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="mt-8 p-4 bg-amber/10 border border-amber/30 rounded-lg">
+                <h3 class="text-amber font-bold mb-2 flex items-center gap-2"><span
+                        class="material-symbols-outlined">warning</span> Kitchen Note</h3>
+                <p class="text-sm text-amber/80">Remember to mark items as "Out of Stock" immediately when inventory is
+                    low to prevent bad user experience.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Clock Script & Search -->
+    <script>
+        // Clock
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById('clock').textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }, 1000);
+
+        // Search
+        document.getElementById('menu-search').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            document.querySelectorAll('.menu-item').forEach(item => {
+                const name = item.querySelector('h3').textContent.toLowerCase();
+                item.style.display = name.includes(term) ? 'flex' : 'none';
+            });
+        });
+
+        // RBAC Check
+        const role = localStorage.getItem('userRole') || 'guest';
+        // In real app, redirect if not kitchen/admin
+        // if(role !== 'kitchen' && role !== 'admin') window.location.href = 'index.html';
+    </script>
+</body>
+
+</html>

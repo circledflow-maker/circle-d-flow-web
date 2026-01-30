@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Circle the Flow: Mobile Home</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#7f0df2",
+              "background-light": "#f7f5f8",
+              "background-dark": "#191022",
+            },
+            fontFamily: {
+              "display": ["Space Grotesk", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<div class="flex flex-1 justify-center py-5">
+<div class="layout-content-container flex flex-col w-full max-w-[960px] flex-1">
+<!-- TopNavBar -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-white/10 px-4 py-3 md:px-10">
+<div class="flex items-center gap-3 text-white">
+<div class="size-6 text-primary">
+<svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 4H17.3334V17.3334H30.6666V30.6666H44V44H4V4Z" fill="currentColor"></path>
+</svg>
+</div>
+<h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">Circle the Flow</h2>
+</div>
+<div class="flex gap-2">
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">Login</span>
+</button>
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 bg-white/10 text-white gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5">
+<span class="material-symbols-outlined text-white text-[20px]">menu</span>
+</button>
+</div>
+</header>
+<main>
+<!-- HeroSection -->
+<div class="p-4">
+<div class="flex min-h-[60vh] flex-col gap-6 bg-cover bg-center bg-no-repeat rounded-xl items-center justify-center p-4" data-alt="Abstract mystical purple and gold flowing energy pattern" style='background-image: linear-gradient(rgba(25, 16, 34, 0.6) 0%, rgba(25, 16, 34, 0.8) 100%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuDqPBqu0WAXu48UBiXbGeaiN71sUFAgGWmYaIxsDaSG8qbSDzvnMdnto_mPx1FmUhVEgSJRzCYdWJ0ivggeixr5lmQ8J1QPepWUjEKh2D5f3nStdBz-BUIZy4Slr_YLVarknMDdCkVS-dUvOlYIB9KVi4hIH6x_3gEnbVGvkIoqHciqwocb7L8ucZ8GEeq26LpCBdkv8V9IDrrcxXZYQ7mjs6rg59Cp327g6b3oQa47E7pWke3uMf63sisMRDEy8UH2yaWShl0_6jc");'>
+<div class="flex flex-col gap-2 text-center">
+<h1 class="text-white text-5xl font-black leading-tight tracking-[-0.033em] md:text-6xl">
+                                        Feel your flow
+                                    </h1>
+<h2 class="text-white/80 text-base font-normal leading-normal md:text-lg">
+                                        An artistic and scientific community hub in Lisbon, connecting various functions and sub-brands.
+                                    </h2>
+</div>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 px-5 bg-primary text-white text-base font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">Explore</span>
+</button>
+</div>
+</div>
+<!-- SectionHeader -->
+<h2 class="text-white text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">Our Philosophy</h2>
+<!-- BodyText -->
+<p class="text-white/80 text-base font-normal leading-normal pb-3 pt-1 px-4">
+                            Discover the core beliefs and the unique blend of artistic, scientific, and spiritual themes that guide our community.
+                        </p>
+<!-- ImageGrid / Feature Highlights -->
+<div class="grid grid-cols-2 gap-3 p-4">
+<div class="bg-cover bg-center flex flex-col gap-3 rounded-xl justify-end p-4 aspect-[3/4]" data-alt="Stylized illustration of cosmic energies in a manga panel style." style='background-image: linear-gradient(0deg, rgba(25, 16, 34, 0.8) 0%, rgba(0, 0, 0, 0) 100%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuAGBE--awJdIado8nU7M7JQhspra_P4Tg4dy3KyjZyddFcssKhPaOlcp1Sl_2E7WsaLbJUekpeoCpcmf8bbOKCNPCwDLcG59bUSIHIIfMq8LyrFh3sUkt39souMoa7ej2nWsHWW3PW72nRlQX86WmD93nWgSPBOcA2jnbryQ1FtADwgEcFqBKnu6ZF9g_pIabrqcXiPKCLGoTSg19UgiGGpId_QtP0FN_DR9Ic8LhWoBDjrdTQnrvNY8pRYC5g1aa17ufShISY-auM");'>
+<p class="text-white text-base font-bold leading-tight line-clamp-3">Upcoming Events</p>
+</div>
+<div class="bg-cover bg-center flex flex-col gap-3 rounded-xl justify-end p-4 aspect-[3/4]" data-alt="Illustration of diverse people connecting in a futuristic hub." style='background-image: linear-gradient(0deg, rgba(25, 16, 34, 0.8) 0%, rgba(0, 0, 0, 0) 100%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuAvKSywQQtJn-iQO7pZoUfPEJhlnXEL6RZIdqNV7zqi3t4CQdqFbZVnFCSgwfu0i8Z4Crf2no38JXoBETAYsrJQEtKX00LUA_soCE1Zy2Bqs70JyxnKd7CqcDdz-7hDnbMoae9A3mejMbxuI_HDEj5Tn3UDYuQ6A92wD19lCDjxQzqbcL6tE4Txnnq89Fln9CmtPabYlvrJ_lbN5lLW0EpC0ja6H0j0_qn-gWtpMq06yHz_XSI0G0ucepjTd3WXdyC3TQtDC4f0hYY");'>
+<p class="text-white text-base font-bold leading-tight line-clamp-3">Community Hub</p>
+</div>
+<div class="col-span-2 bg-cover bg-center flex flex-col gap-3 rounded-xl justify-end p-4 aspect-[2/1]" data-alt="Abstract art representing creative and scientific services." style='background-image: linear-gradient(0deg, rgba(25, 16, 34, 0.8) 0%, rgba(0, 0, 0, 0) 100%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuAolIFXEQsJuK9Sd62SBGLnUQH8Ft3GLl7WqOiDK9G_QcDMr4SorpoDLD8caQnl_3bjyEUpRiKUJXMlFW2G4Sy6LAzGOSrU_n3--TXMtq3oUMAcet8OWBFhQytCGJ2nXoFHxBnr4EI1YN3L8hOj6GPde33Sf529G_VfqPvBrxAGIJHtIZ9_haz6o1C0AGyrcgRa5gnK6D1Y58sExz1hUqjLf6q8Y2blqa25Wo5fBpCw9pOfXfF6Vn1DkvZnDX3y3OYylPg7Q0aPkqA");'>
+<p class="text-white text-base font-bold leading-tight line-clamp-3">Our Services</p>
+</div>
+</div>
+<!-- Sub-brand Gateways -->
+<div class="p-4 flex flex-col gap-4">
+<!-- Kiss Your Heart Card -->
+<div class="flex flex-col gap-4 rounded-xl p-6 bg-white/5 border border-white/10">
+<h3 class="text-xl font-bold text-primary">Kiss Your Heart</h3>
+<p class="text-white/80 text-sm">Explore our sub-brand dedicated to spiritual and emotional well-being through workshops and art.</p>
+<button class="mt-2 flex w-fit items-center justify-center rounded-lg h-10 px-4 bg-primary/20 text-primary text-sm font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">Discover More</span>
+</button>
+</div>
+<!-- Outbreak Tunes Card -->
+<div class="flex flex-col gap-4 rounded-xl p-6 bg-white/5 border border-white/10">
+<h3 class="text-xl font-bold text-primary">Outbreak Tunes</h3>
+<p class="text-white/80 text-sm">Dive into our world of sound and music production, where science meets sonic artistry.</p>
+<button class="mt-2 flex w-fit items-center justify-center rounded-lg h-10 px-4 bg-primary/20 text-primary text-sm font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">Listen Now</span>
+</button>
+</div>
+</div>
+<!-- Footer -->
+<footer class="mt-8 border-t border-solid border-white/10 px-4 py-8">
+<div class="flex flex-col items-center gap-6 text-center">
+<div class="flex items-center gap-3 text-white">
+<div class="size-5 text-primary">
+<svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 4H17.3334V17.3334H30.6666V30.6666H44V44H4V4Z" fill="currentColor"></path>
+</svg>
+</div>
+<h2 class="text-white text-md font-bold leading-tight">Circle the Flow</h2>
+</div>
+<div class="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-white/70">
+<a class="hover:text-primary" href="#">Home</a>
+<a class="hover:text-primary" href="#">Events</a>
+<a class="hover:text-primary" href="#">Community</a>
+<a class="hover:text-primary" href="#">Contact</a>
+</div>
+<p class="text-xs text-white/50">© 2024 Circle the Flow. All rights reserved.</p>
+</div>
+</footer>
+</main>
+</div>
+</div>
+</div>
+</div>
+</body></html>

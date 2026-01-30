@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to the Circle | Success</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+
+<body class="bg-[#0F0A13] text-white min-h-screen flex items-center justify-center p-4 overflow-hidden">
+
+    <div class="text-center relative z-10 max-w-lg">
+        <!-- Animated Checkmark -->
+        <div class="mb-8 relative inline-block">
+            <div class="absolute inset-0 bg-green-500 blur-2xl opacity-20 animate-pulse"></div>
+            <div
+                class="w-24 h-24 bg-[#1a1625] border-2 border-green-500 rounded-full flex items-center justify-center relative z-10 mx-auto shadow-[0_0_30px_rgba(34,197,94,0.3)]">
+                <svg class="w-12 h-12 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+        </div>
+
+        <h1 class="text-4xl md:text-5xl font-bold font-sans mb-4 tracking-tight">You're In.</h1>
+        <p class="text-xl text-white/60 mb-8">Welcome to the <span class="text-[#FFD700] font-bold">Circle D Flow</span>
+            family.</p>
+
+        <div class="bg-[#1a1625] p-6 rounded-xl border border-white/5 mb-8 text-left">
+            <h3 class="text-xs font-bold uppercase tracking-widest text-[#9A4DFF] mb-2">Next Steps</h3>
+            <ul class="space-y-3 text-sm text-gray-300">
+                <li class="flex items-center gap-3">
+                    <span
+                        class="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center text-xs font-bold">1</span>
+                    Access your Dashboard
+                </li>
+                <li class="flex items-center gap-3">
+                    <span
+                        class="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center text-xs font-bold">2</span>
+                    Set up your Creator Profile
+                </li>
+                <li class="flex items-center gap-3">
+                    <span
+                        class="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center text-xs font-bold">3</span>
+                    Start Listing Items or Events
+                </li>
+            </ul>
+        </div>
+
+        <a href="dashboard.html"
+            class="inline-block px-10 py-4 bg-[#FFD700] text-black font-bold rounded-full uppercase tracking-widest hover:bg-white transition-all shadow-lg hover:shadow-xl hover:-translate-y-1">
+            Go to Dashboard
+        </a>
+    </div>
+
+    <!-- Gamification Logic -->
+    <script src="gamification.js"></script>
+    <script>
+        // Trigger Confetti
+        confetti({
+            particleCount: 150,
+            spread: 70,
+            origin: { y: 0.6 },
+            colors: ['#FFD700', '#9A4DFF', '#ffffff']
+        });
+
+        // Upgrade User Locally
+        const params = new URLSearchParams(window.location.search);
+        const plan = params.get('plan');
+
+        if (plan && window.Gamification) {
+            // Apply membership logic locally for immediate gratification
+            // In a real app, this would verify the Stripe Session ID first
+            window.Gamification.setMembership(plan);
+        }
+    </script>
+</body>
+
+</html>

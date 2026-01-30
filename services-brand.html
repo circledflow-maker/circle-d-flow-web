@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brands | D Gallery</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        midnight: '#0D0D0F',
+                        violet: '#5A2A84',
+                        electric: '#9A4DFF',
+                        amber: '#FFAE42',
+                        mist: '#A8A8B3',
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Inter"', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="bg-midnight text-white font-sans antialiased overflow-x-hidden selection:bg-amber selection:text-midnight">
+    <!-- Custom Cursor -->
+    <div id="cursor"
+        class="fixed w-12 h-12 pointer-events-none z-[200] transition-transform duration-100 hidden md:block">
+        <img src="Assets/images/logo.png" class="w-full h-full object-contain drop-shadow-lg" alt="Cursor">
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 py-6 px-8 flex justify-between items-center bg-midnight/80 backdrop-blur-md">
+        <a href="Index.html"
+            class="text-2xl font-serif font-bold tracking-wider hover:text-amber transition-colors">KYH</a>
+
+        <!-- Desktop Menu -->
+        <div class="hidden md:flex items-center gap-8">
+            <a href="impressum.html"
+                class="text-sm uppercase tracking-widest hover:text-electric transition-colors">Impressum</a>
+            <a href="Index.html#contact"
+                class="text-sm uppercase tracking-widest hover:text-electric transition-colors">Book Now</a>
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <button id="menu-btn" class="md:hidden text-white focus:outline-none">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16">
+                </path>
+            </svg>
+        </button>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu"
+        class="fixed inset-0 bg-midnight z-40 flex flex-col items-center justify-center space-y-8 text-2xl font-serif transform translate-x-full transition-transform duration-300 md:hidden">
+        <a href="Index.html#about" class="mobile-link hover:text-amber">Philosophy</a>
+        <a href="Index.html#portfolio" class="mobile-link hover:text-amber">Portfolio</a>
+        <a href="Index.html#services" class="mobile-link hover:text-amber">Services</a>
+        <a href="Index.html#community" class="mobile-link hover:text-amber">Community</a>
+        <a href="Index.html#contact" class="mobile-link hover:text-amber">Contact</a>
+        <div class="h-px w-12 bg-white/20 my-4"></div>
+        <a href="impressum.html" class="mobile-link text-lg text-mist hover:text-white">Impressum</a>
+        <a href="privacy.html" class="mobile-link text-lg text-mist hover:text-white">Privacy Policy</a>
+    </div>
+
+    <!-- Header -->
+    <header class="pt-40 pb-20 px-8 text-center">
+        <h1 class="text-5xl md:text-7xl font-serif font-bold mb-6 text-amber">Brands</h1>
+        <p class="text-xl text-mist font-light max-w-2xl mx-auto">
+            Professionalism meets authentic networking. Crisp headshots and engaging event coverage.
+        </p>
+    </header>
+
+    <!-- Section 1: Studio -->
+    <section class="py-20 px-8 border-t border-white/5">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-3xl font-serif font-bold mb-12 flex items-center gap-4">
+                <span class="w-12 h-px bg-amber"></span>
+                Studio
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Placeholder Images -->
+                <div class="aspect-[3/4] bg-white/5 rounded-lg overflow-hidden group relative">
+                    <div class="absolute inset-0 flex items-center justify-center text-mist/20 text-4xl font-serif">1
+                    </div>
+                </div>
+                <div class="aspect-[3/4] bg-white/5 rounded-lg overflow-hidden group relative">
+                    <div class="absolute inset-0 flex items-center justify-center text-mist/20 text-4xl font-serif">2
+                    </div>
+                </div>
+                <div class="aspect-[3/4] bg-white/5 rounded-lg overflow-hidden group relative">
+                    <div class="absolute inset-0 flex items-center justify-center text-mist/20 text-4xl font-serif">3
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 2: In Flow -->
+    <section class="py-20 px-8 border-t border-white/5 bg-white/5">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-3xl font-serif font-bold mb-12 flex items-center gap-4">
+                <span class="w-12 h-px bg-electric"></span>
+                In Flow
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Placeholder Images -->
+                <div class="aspect-[3/4] bg-black/20 rounded-lg overflow-hidden group relative">
+                    <div class="absolute inset-0 flex items-center justify-center text-mist/20 text-4xl font-serif">1
+                    </div>
+                </div>
+                <div class="aspect-[3/4] bg-black/20 rounded-lg overflow-hidden group relative">
+                    <div class="absolute inset-0 flex items-center justify-center text-mist/20 text-4xl font-serif">2
+                    </div>
+                </div>
+                <div class="aspect-[3/4] bg-black/20 rounded-lg overflow-hidden group relative">
+                    <div class="absolute inset-0 flex items-center justify-center text-mist/20 text-4xl font-serif">3
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 px-8 bg-black border-t border-white/10 text-center">
+        <p class="text-mist text-xs opacity-50 uppercase tracking-widest">
+            &copy; 2024 Kiss Your Heart. All rights reserved.
+        </p>
+    </footer>
+
+    <script src="gamification.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

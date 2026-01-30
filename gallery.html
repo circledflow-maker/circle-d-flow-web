@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D Gallery | The Dual View Portfolio</title>
+    <meta name="description" content="Studio Precision & Live Atmosphere – Visuals for Brands, Artists, and People.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        midnight: '#0D0D0F',
+                        violet: '#5A2A84',
+                        electric: '#9A4DFF',
+                        amber: '#FFAE42',
+                        mist: '#A8A8B3',
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Inter"', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Split Screen Hero Styles */
+        .split-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .split-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            overflow: hidden;
+        }
+        .layer-top {
+            width: 50%; /* Initial state */
+            z-index: 2;
+            border-right: 2px solid #FFAE42; /* Amber separator */
+        }
+        
+        /* Comparison Slider Styles */
+        .comparison-container {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            overflow: hidden;
+            border-radius: 0.5rem;
+        }
+        .comparison-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .comparison-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 50%;
+            height: 100%;
+            overflow: hidden;
+            border-right: 2px solid white;
+            z-index: 10;
+        }
+        .comparison-slider-handle {
+            position: absolute;
+            top: 50%;
+            left: 50%; /* Dynamic */
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+            border: 2px solid white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+            cursor: ew-resize;
+            pointer-events: none; /* Let clicks pass through to container for easier handling */
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            .split-container {
+                display: flex;
+                flex-direction: column;
+            }
+            .split-layer {
+                position: relative;
+                width: 100%;
+                height: 50%;
+            }
+            .layer-top {
+                width: 100%;
+                border-right: none;
+                border-bottom: 2px solid #FFAE42;
+            }
+            .split-interaction-overlay {
+                display: none; /* Disable slider on mobile for hero, just stack */
+            }
+        }
+    </style>
+</head>
+<body class="bg-midnight text-white font-sans antialiased overflow-x-hidden selection:bg-electric selection:text-white">
+    <!-- Custom Cursor -->
+    <div id="cursor" class="fixed w-12 h-12 pointer-events-none z-[200] transition-transform duration-100 hidden md:block">
+        <img src="Assets/images/logo.png" class="w-full h-full object-contain drop-shadow-lg" alt="Cursor">
+    </div>
+    
+    <!-- Navigation (Simplified) -->
+    <nav class="fixed w-full z-50 py-6 px-8 flex justify-between items-center mix-blend-difference">
+        <a href="Index.html" class="text-2xl font-serif font-bold tracking-wider hover:text-amber transition-colors">KYH</a>
+        
+        <!-- Desktop Menu -->
+        <div class="hidden md:flex items-center gap-8">
+            <!-- Services Dropdown -->
+            <div class="relative group">
+                <button class="text-sm uppercase tracking-widest hover:text-electric transition-colors flex items-center gap-1 focus:outline-none text-white">
+                    Services
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </button>
+                <div class="absolute top-full left-1/2 -translate-x-1/2 pt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
+                    <div class="bg-midnight/90 backdrop-blur-md border border-white/10 rounded-lg p-4 min-w-[200px] flex flex-col gap-3 shadow-xl text-left">
+                        <a href="services-artist.html" class="text-sm uppercase tracking-widest text-mist hover:text-electric transition-colors">Artist</a>
+                        <a href="services-brand.html" class="text-sm uppercase tracking-widest text-mist hover:text-amber transition-colors">Brand</a>
+                        <a href="services-individual.html" class="text-sm uppercase tracking-widest text-mist hover:text-violet transition-colors">Individual</a>
+                        <div class="h-px bg-white/10"></div>
+                        <a href="services-wedding.html" class="text-sm uppercase tracking-widest text-mist hover:text-white transition-colors">Wedding</a>
+                        <a href="services-citytrip.html" class="text-sm uppercase tracking-widest text-mist hover:text-white transition-colors">Citytrip</a>
+                        <a href="services-community.html" class="text-sm uppercase tracking-widest text-mist hover:text-white transition-colors">Community</a>
+                    </div>
+                </div>
+            </div>
+
+            <a href="impressum.html" class="text-sm uppercase tracking-widest hover:text-electric transition-colors">Impressum</a>
+            <a href="Index.html#contact" class="text-sm uppercase tracking-widest hover:text-electric transition-colors">Book Now</a>
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <button id="menu-btn" class="md:hidden text-white focus:outline-none">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="fixed inset-0 bg-midnight z-40 flex flex-col items-center justify-center space-y-8 text-2xl font-serif transform translate-x-full transition-transform duration-300 md:hidden">
+        <a href="Index.html#about" class="mobile-link hover:text-amber">Philosophy</a>
+        <a href="Index.html#portfolio" class="mobile-link hover:text-amber">Portfolio</a>
+        <a href="Index.html#services" class="mobile-link hover:text-amber">Services</a>
+        <a href="Index.html#community" class="mobile-link hover:text-amber">Community</a>
+        <a href="Index.html#contact" class="mobile-link hover:text-amber">Contact</a>
+        <div class="h-px w-12 bg-white/20 my-4"></div>
+        <a href="impressum.html" class="mobile-link text-lg text-mist hover:text-white">Impressum</a>
+        <a href="privacy.html" class="mobile-link text-lg text-mist hover:text-white">Privacy Policy</a>
+    </div>
+
+    <!-- 1. Hero Section (The Hook) -->
+    <section id="hero" class="relative h-screen w-full">
+        <div class="split-container" id="hero-split">
+            <!-- Right Side (Bottom Layer) - Live/Event Shot -->
+            <div class="split-layer layer-bottom" style="background-image: url('Assets/images/Nikon Transfer 2/HempyRoots14.okt005/DSC_1236.JPG');">
+                <div class="absolute inset-0 bg-black/40"></div>
+            </div>
+            
+            <!-- Left Side (Top Layer) - Studio Shot -->
+            <div class="split-layer layer-top" id="hero-top-layer" style="background-image: url('Assets/images/Portrait/1-DSC_0759.jpg');">
+                <div class="absolute inset-0 bg-black/20"></div>
+            </div>
+
+            <!-- Overlay Text -->
+            <div class="absolute inset-0 z-30 flex flex-col items-center justify-center text-center pointer-events-none px-4">
+                <h1 class="text-5xl md:text-8xl font-serif font-bold mb-4 tracking-tighter drop-shadow-2xl">
+                    Curated Perfection. <br/>
+                    <span class="text-electric italic">Raw Energy.</span>
+                </h1>
+                <p class="text-lg md:text-xl text-white/90 max-w-2xl mx-auto mb-12 font-light drop-shadow-lg">
+                    Studio Precision & Live Atmosphere – Visuals for Brands, Artists, and People.
+                </p>
+                <a href="#mirror-portfolio" class="pointer-events-auto px-8 py-3 border border-white bg-black/20 backdrop-blur-sm hover:bg-white hover:text-midnight transition-all duration-300 uppercase tracking-widest text-sm">
+                    Explore the Work
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. The "Mirror" Portfolio -->
+    <section id="mirror-portfolio" class="py-24 px-8 bg-midnight">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-4xl md:text-6xl font-serif font-bold text-center mb-16">
+                Two Sides of the <span class="text-amber">Story</span>
+            </h2>
+
+            <div class="space-y-24">
+                <!-- Block A: FOR ARTISTS -->
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div class="order-2 md:order-1">
+                        <span class="text-electric text-sm font-bold tracking-widest uppercase mb-2 block">For Artists</span>
+                        <h3 class="text-3xl font-serif font-bold text-white mb-4">The Identity</h3>
+                        <p class="text-mist font-light leading-relaxed mb-6">
+                            From the press kit to the mosh pit. We build your visual identity by capturing both your polished persona and your raw performance energy.
+                        </p>
+                        <div class="flex gap-2">
+                            <span class="px-3 py-1 border border-white/20 rounded-full text-xs text-mist">Stage</span>
+                            <span class="px-3 py-1 border border-white/20 rounded-full text-xs text-mist">Studio</span>
+                        </div>
+                    </div>
+                    <div class="order-1 md:order-2">
+                        <div class="comparison-container group" id="comp-artists">
+                            <!-- After Image (Background) - Live -->
+                            <img src="Assets/images/Nikon Transfer 2/yesyoucanspray/DSC_3803.JPG" class="comparison-image" alt="Artist Live">
+                            <!-- Before Image (Overlay) - Studio -->
+                            <div class="comparison-overlay" style="width: 50%;">
+                                <img src="Assets/images/Portrait/2-DSC_1097.jpg" class="comparison-image" alt="Artist Studio" style="width: 100%; height: 100%; object-fit: cover; object-position: left;">
+                            </div>
+                            <!-- Handle -->
+                            <div class="comparison-slider-handle" style="left: 50%;">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path></svg>
+                            </div>
+                        </div>
+                        <p class="text-center text-xs text-mist mt-2 opacity-50">Drag to compare</p>
+                    </div>
+                </div>
+
+                <!-- Block B: FOR COMPANIES -->
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div class="order-1">
+                        <div class="comparison-container group" id="comp-companies">
+                            <!-- After Image (Background) - Event -->
+                            <img src="Assets/images/Nikon Transfer 2/HempyRoots14.okt005/DSC_1241.JPG" class="comparison-image" alt="Company Event">
+                            <!-- Before Image (Overlay) - Headshot -->
+                            <div class="comparison-overlay" style="width: 50%;">
+                                <img src="Assets/images/Portrait/13-DSC_3374.jpg" class="comparison-image" alt="Company Headshot" style="width: 100%; height: 100%; object-fit: cover; object-position: left;">
+                            </div>
+                            <!-- Handle -->
+                            <div class="comparison-slider-handle" style="left: 50%;">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path></svg>
+                            </div>
+                        </div>
+                        <p class="text-center text-xs text-mist mt-2 opacity-50">Drag to compare</p>
+                    </div>
+                    <div class="order-2">
+                        <span class="text-amber text-sm font-bold tracking-widest uppercase mb-2 block">For Companies</span>
+                        <h3 class="text-3xl font-serif font-bold text-white mb-4">The Brand</h3>
+                        <p class="text-mist font-light leading-relaxed mb-6">
+                            Professionalism meets authentic networking. Documenting your brand culture through crisp headshots and engaging event coverage.
+                        </p>
+                        <div class="flex gap-2">
+                            <span class="px-3 py-1 border border-white/20 rounded-full text-xs text-mist">Corporate</span>
+                            <span class="px-3 py-1 border border-white/20 rounded-full text-xs text-mist">Events</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Block C: FOR PRIVATE CLIENTS -->
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div class="order-2 md:order-1">
+                        <span class="text-violet text-sm font-bold tracking-widest uppercase mb-2 block">For Private Clients</span>
+                        <h3 class="text-3xl font-serif font-bold text-white mb-4">The Memory</h3>
+                        <p class="text-mist font-light leading-relaxed mb-6">
+                            The perfect shot, and the fun we had taking it. We capture the beautiful final result and the unguarded laughter behind the scenes.
+                        </p>
+                        <div class="flex gap-2">
+                            <span class="px-3 py-1 border border-white/20 rounded-full text-xs text-mist">Private</span>
+                            <span class="px-3 py-1 border border-white/20 rounded-full text-xs text-mist">Personal</span>
+                        </div>
+                    </div>
+                    <div class="order-1 md:order-2">
+                        <div class="comparison-container group" id="comp-private">
+                            <!-- After Image (Background) - BTS/Fun -->
+                            <img src="Assets/images/Nikon Transfer 2/15novhempy015/DSC_8333.JPG" class="comparison-image" alt="Private Fun">
+                            <!-- Before Image (Overlay) - Portrait -->
+                            <div class="comparison-overlay" style="width: 50%;">
+                                <img src="Assets/images/Portrait/23-DSC_5184.jpg" class="comparison-image" alt="Private Portrait" style="width: 100%; height: 100%; object-fit: cover; object-position: left;">
+                            </div>
+                            <!-- Handle -->
+                            <div class="comparison-slider-handle" style="left: 50%;">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l4-4 4 4m0 6l-4 4-4-4"></path></svg>
+                            </div>
+                        </div>
+                        <p class="text-center text-xs text-mist mt-2 opacity-50">Drag to compare</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. The "Process" Section -->
+    <section class="py-24 bg-midnight relative overflow-hidden border-t border-white/5">
+        <div class="max-w-6xl mx-auto px-8 mb-12">
+            <h2 class="text-3xl md:text-5xl font-serif font-bold text-white mb-4">Behind The Scenes</h2>
+            <p class="text-mist max-w-xl">More than just a click. A comfortable space to create.</p>
+        </div>
+        
+        <!-- Horizontal Scroll Strip -->
+        <div class="flex overflow-x-auto pb-8 px-8 gap-4 no-scrollbar snap-x">
+            <!-- Item 1 -->
+            <div class="flex-none w-80 md:w-96 aspect-[4/3] bg-white/5 rounded-lg overflow-hidden snap-center relative group grayscale hover:grayscale-0 transition-all duration-500">
+                <img src="Assets/images/Nikon Transfer 2/004/DSC_0758.JPG" class="w-full h-full object-cover" alt="Process 1">
+                <div class="absolute bottom-0 left-0 p-4 bg-gradient-to-t from-black/80 to-transparent w-full">
+                    <p class="text-white text-sm">Setting the Scene</p>
+                </div>
+            </div>
+            <!-- Item 2 -->
+            <div class="flex-none w-80 md:w-96 aspect-[4/3] bg-white/5 rounded-lg overflow-hidden snap-center relative group grayscale hover:grayscale-0 transition-all duration-500">
+                <img src="Assets/images/Nikon Transfer 2/HempyRoots14.okt004/DSC_1173.JPG" class="w-full h-full object-cover" alt="Process 2">
+                <div class="absolute bottom-0 left-0 p-4 bg-gradient-to-t from-black/80 to-transparent w-full">
+                    <p class="text-white text-sm">In the Flow</p>
+                </div>
+            </div>
+            <!-- Item 3 -->
+            <div class="flex-none w-80 md:w-96 aspect-[4/3] bg-white/5 rounded-lg overflow-hidden snap-center relative group grayscale hover:grayscale-0 transition-all duration-500">
+                <img src="Assets/images/Nikon Transfer 2/manuel23okt007/DSC_3689.JPG" class="w-full h-full object-cover" alt="Process 3">
+                <div class="absolute bottom-0 left-0 p-4 bg-gradient-to-t from-black/80 to-transparent w-full">
+                    <p class="text-white text-sm">Reviewing the Shot</p>
+                </div>
+            </div>
+            <!-- Item 4 -->
+            <div class="flex-none w-80 md:w-96 aspect-[4/3] bg-white/5 rounded-lg overflow-hidden snap-center relative group grayscale hover:grayscale-0 transition-all duration-500">
+                <img src="Assets/images/Nikon Transfer 2/cakesonboobs.village underground011/DSC_5300.JPG" class="w-full h-full object-cover" alt="Process 4">
+                <div class="absolute bottom-0 left-0 p-4 bg-gradient-to-t from-black/80 to-transparent w-full">
+                    <p class="text-white text-sm">Creating Magic</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center mt-12 px-8">
+            <p class="text-xl text-white font-serif italic">"Whether on stage or in the studio, I create an atmosphere where you can be yourself."</p>
+        </div>
+    </section>
+
+    <!-- 4. Service Menu -->
+    <section class="py-24 px-8 bg-midnight/50">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid md:grid-cols-3 gap-12 border-t border-white/10 pt-12">
+                
+                <!-- Column 1: Artists -->
+                <div class="space-y-6 group">
+                    <h3 class="text-2xl font-serif font-bold text-electric">Artists</h3>
+                    <ul class="space-y-3 text-mist text-sm">
+                        <li class="flex items-center"><span class="w-1.5 h-1.5 bg-electric rounded-full mr-2"></span>EPK Photos</li>
+                        <li class="flex items-center"><span class="w-1.5 h-1.5 bg-electric rounded-full mr-2"></span>Live Coverage</li>
+                        <li class="flex items-center"><span class="w-1.5 h-1.5 bg-electric rounded-full mr-2"></span>Social Media Content</li>
+                    </ul>
+                    <a href="https://calendar.app.google/XbmJUDtaSWecgEXHA" target="_blank" class="inline-block text-white border-b border-electric pb-1 hover:text-electric transition-colors text-sm uppercase tracking-widest">
+                        Book for Tour/Promo ->
+                    </a>
+                </div>
+
+                <!-- Column 2: Brands -->
+                <div class="space-y-6 group">
+                    <h3 class="text-2xl font-serif font-bold text-amber">Brands</h3>
+                    <ul class="space-y-3 text-mist text-sm">
+                        <li class="flex items-center"><span class="w-1.5 h-1.5 bg-amber rounded-full mr-2"></span>Event Documentation</li>
+                        <li class="flex items-center"><span class="w-1.5 h-1.5 bg-amber rounded-full mr-2"></span>Headshots</li>
+                        <li class="flex items-center"><span class="w-1.5 h-1.5 bg-amber rounded-full mr-2"></span>Branding Stories</li>
+                    </ul>
+                    <a href="mailto:contact@kissyourheart.com?subject=Brand Inquiry" class="inline-block text-white border-b border-amber pb-1 hover:text-amber transition-colors text-sm uppercase tracking-widest">
+                        Request Quote ->
+                    </a>
+                </div>
+
+                <!-- Column 3: Private -->
+                <div class="space-y-6 group">
+                    <h3 class="text-2xl font-serif font-bold text-violet">Private</h3>
+                    <ul class="space-y-3 text-mist text-sm">
+                        <li class="flex items-center"><span class="w-1.5 h-1.5 bg-violet rounded-full mr-2"></span>Portraits</li>
+                        <li class="flex items-center"><span class="w-1.5 h-1.5 bg-violet rounded-full mr-2"></span>Celebrations</li>
+                        <li class="flex items-center"><span class="w-1.5 h-1.5 bg-violet rounded-full mr-2"></span>Personal Projects</li>
+                    </ul>
+                    <a href="https://calendar.app.google/XbmJUDtaSWecgEXHA" target="_blank" class="inline-block text-white border-b border-violet pb-1 hover:text-violet transition-colors text-sm uppercase tracking-widest">
+                        Let's Chat ->
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Booking Modal -->
+    <div id="booking-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-black/95 backdrop-blur-md opacity-0 transition-opacity duration-500">
+        <div class="booking-content relative bg-gradient-to-br from-[#1a0b2e] to-[#0D0D0F] border border-white/10 max-w-4xl w-full mx-4 rounded-2xl shadow-2xl overflow-hidden flex flex-col h-[80vh] md:h-auto md:min-h-[600px]">
+            
+            <!-- Close Button -->
+            <button id="close-booking-btn" class="absolute top-4 right-4 z-20 text-white/50 hover:text-white transition-colors p-2">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+
+            <!-- Progress Bar -->
+            <div class="absolute top-0 left-0 w-full h-1 bg-white/10 z-10">
+                <div id="booking-progress" class="h-full bg-electric transition-all duration-500" style="width: 33%"></div>
+            </div>
+
+            <div class="flex flex-col md:flex-row h-full">
+                <!-- Left Column: Visual/Context -->
+                <div class="w-full md:w-1/3 bg-cover bg-center relative hidden md:block" style="background-image: url('Assets/images/Nikon Transfer 2/HempyRoots14.okt005/DSC_1236.JPG');">
+                    <div class="absolute inset-0 bg-violet/80 mix-blend-multiply"></div>
+                    <div class="absolute inset-0 bg-gradient-to-b from-transparent to-[#1a0b2e]"></div>
+                    <div class="absolute bottom-0 left-0 p-8">
+                        <h3 class="text-3xl font-serif font-bold text-white mb-2" id="booking-step-title">Select Service</h3>
+                        <p class="text-white/80 text-sm" id="booking-step-desc">Choose the experience that fits your vision.</p>
+                    </div>
+                </div>
+
+                <!-- Right Column: Form Steps -->
+                <div class="w-full md:w-2/3 p-8 md:p-12 flex flex-col relative overflow-y-auto">
+                    
+                    <!-- Step 1: Service Selection -->
+                    <div id="step-1" class="booking-step flex-1 flex flex-col">
+                        <h3 class="text-2xl font-serif font-bold text-white mb-8 md:hidden">Select Service</h3>
+                        <div class="grid gap-4">
+                            <button class="service-option p-6 border border-white/10 rounded-lg hover:border-electric hover:bg-white/5 transition-all text-left group" data-service="Artists">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-xl font-serif font-bold text-white group-hover:text-electric transition-colors">Artists</span>
+                                    <span class="text-electric opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                                </div>
+                                <p class="text-sm text-mist">Tour coverage, EPK, Social Content.</p>
+                            </button>
+                            <button class="service-option p-6 border border-white/10 rounded-lg hover:border-amber hover:bg-white/5 transition-all text-left group" data-service="Brands">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-xl font-serif font-bold text-white group-hover:text-amber transition-colors">Brands</span>
+                                    <span class="text-amber opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                                </div>
+                                <p class="text-sm text-mist">Events, Headshots, Branding.</p>
+                            </button>
+                            <button class="service-option p-6 border border-white/10 rounded-lg hover:border-violet hover:bg-white/5 transition-all text-left group" data-service="Private">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-xl font-serif font-bold text-white group-hover:text-violet transition-colors">Private</span>
+                                    <span class="text-violet opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                                </div>
+                                <p class="text-sm text-mist">Portraits, Personal Projects.</p>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Details Form -->
+                    <div id="step-2" class="booking-step hidden flex-1 flex flex-col">
+                        <h3 class="text-2xl font-serif font-bold text-white mb-6 md:hidden">Your Details</h3>
+                        <form id="booking-form" class="space-y-6">
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div class="space-y-2">
+                                    <label class="text-xs uppercase tracking-widest text-mist">Name</label>
+                                    <input type="text" name="name" required class="w-full bg-white/5 border border-white/10 rounded p-3 text-white focus:border-electric focus:outline-none transition-colors">
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="text-xs uppercase tracking-widest text-mist">Email</label>
+                                    <input type="email" name="email" required class="w-full bg-white/5 border border-white/10 rounded p-3 text-white focus:border-electric focus:outline-none transition-colors">
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-xs uppercase tracking-widest text-mist">Direction of Photography</label>
+                                <textarea name="direction" rows="4" placeholder="Tell me about your vision, location ideas, or specific needs..." class="w-full bg-white/5 border border-white/10 rounded p-3 text-white focus:border-electric focus:outline-none transition-colors"></textarea>
+                            </div>
+                        </form>
+                        <div class="mt-auto pt-8 flex justify-between">
+                            <button class="back-btn text-mist hover:text-white transition-colors text-sm uppercase tracking-widest">Back</button>
+                            <button id="to-step-3" class="px-8 py-3 bg-electric text-white font-bold uppercase tracking-widest hover:bg-violet transition-colors rounded">Next Step</button>
+                        </div>
+                                </div>
+                                <div class="pt-2">
+                                    <span class="text-mist block mb-1">Vision</span>
+                                    <p class="text-white/80 italic" id="summary-vision">-</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-auto pt-8 flex justify-between">
+                            <button class="back-btn text-mist hover:text-white transition-colors text-sm uppercase tracking-widest">Back</button>
+                            <button id="confirm-booking" class="px-8 py-3 bg-amber text-midnight font-bold uppercase tracking-widest hover:bg-white transition-colors rounded shadow-lg shadow-amber/20">Confirm Booking</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. Footer -->
+    <footer class="py-12 px-8 bg-black relative overflow-hidden">
+        <div class="absolute inset-0 opacity-20 bg-[url('Assets/images/Nikon%20Transfer%202/003/DSC_0712.JPG')] bg-cover bg-center mix-blend-overlay"></div>
+        <div class="relative z-10 max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+            <div class="text-center md:text-left">
+                <h4 class="text-2xl font-serif font-bold text-white mb-2">Ready to capture the moment?</h4>
+                <p class="text-mist text-sm">Let's create something timeless together.</p>
+            </div>
+            
+            <div class="flex gap-6">
+                <a href="https://instagram.com/KYheart.lx" target="_blank" class="text-white hover:text-electric transition-colors">
+                    <span class="sr-only">Instagram</span>
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                </a>
+                <a href="#" class="text-white hover:text-amber transition-colors">
+                    <span class="sr-only">LinkedIn</span>
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                </a>
+            </div>
+        </div>
+        <div class="text-center mt-8 text-xs text-mist opacity-50">
+            &copy; 2024 Kiss Your Heart. All rights reserved.
+        </div>
+    </footer>
+
+    <script src="gallery.js"></script>
+</body>
+</html>

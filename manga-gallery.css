@@ -1,0 +1,365 @@
+/* --- Manga Book Modal --- */
+#manga-book-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 9000; /* High but below cursor */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+}
+
+#manga-book-modal.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+#manga-book-modal.hidden {
+    display: none;
+}
+
+/* Layout Container (Sidebar + Book) */
+.manga-layout-container {
+    display: flex;
+    width: 95vw;
+    height: 85vh;
+    gap: 2rem;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Story Sidebar */
+.story-sidebar {
+    width: 300px;
+    height: 100%;
+    background: rgba(20, 10, 30, 0.8);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 2rem;
+    overflow-y: auto;
+    color: #fff;
+    font-family: 'Cormorant Garamond', serif;
+    animation: slideInLeft 0.5s ease-out;
+    display: none; /* Hidden by default */
+}
+
+.story-sidebar.visible {
+    display: block;
+}
+
+.story-title {
+    font-size: 2rem;
+    color: #9A4DFF; /* Electric */
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #9A4DFF;
+    padding-bottom: 0.5rem;
+}
+
+.story-text {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #d1d1d1;
+}
+
+.story-text p {
+    margin-bottom: 1rem;
+}
+
+@keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+/* Book Container */
+.manga-book-container {
+    flex: 1;
+    max-width: 1000px; /* Limit width */
+    height: 100%;
+    position: relative;
+    perspective: 1500px;
+}
+
+/* Pages */
+.manga-page {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* Mystic Dark Violet Gradient */
+    background: linear-gradient(135deg, #1a0b2e 0%, #2d1b4e 100%);
+    border: 1px solid #333;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.5);
+    transform-origin: left center;
+    transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+    backface-visibility: hidden; /* Hide back when flipped */
+    will-change: transform; /* Performance Optimization */
+    overflow: hidden;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.manga-page.flipped {
+    transform: rotateY(-180deg);
+    pointer-events: none; /* Let clicks pass through flipped pages */
+}
+
+/* Panel Grid */
+.manga-panel-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 1.5fr 1fr; /* Hero gets more space */
+    gap: 15px;
+    height: 100%;
+    width: 100%;
+}
+
+.manga-panel {
+    /* Thin white frame */
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    overflow: hidden;
+    position: relative;
+    background: #000;
+    cursor: zoom-in; /* Indicate clickable */
+}
+
+/* Hero Panel (First item on page) */
+.manga-panel.hero-panel {
+    grid-column: span 2; /* Full width */
+    grid-row: span 1;
+}
+
+.manga-panel img,
+.manga-panel video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Fill the box */
+    transition: transform 0.5s ease;
+}
+
+.manga-panel:hover img,
+.manga-panel:hover video {
+    transform: scale(1.03);
+}
+
+/* --- Last Page Styling --- */
+.manga-page.last-page {
+    background: #f4f4f4; /* Keep light for contrast or change to dark? User asked for mystic dark */
+    background: linear-gradient(135deg, #1a0b2e 0%, #000 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.last-page-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+.last-page-logo {
+    max-width: 200px;
+    filter: drop-shadow(0 4px 6px rgba(255,255,255,0.1));
+}
+
+.taoist-quote {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.5rem;
+    font-style: italic;
+    color: #fff;
+    max-width: 600px;
+    line-height: 1.6;
+}
+
+.book-session-btn {
+    padding: 1rem 2rem;
+    background: #9A4DFF;
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: transform 0.2s, background 0.2s;
+}
+
+.book-session-btn:hover {
+    background: #7a3ccf;
+    transform: translateY(-3px);
+}
+
+/* Navigation Controls */
+.book-nav-controls {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9100;
+    display: flex;
+    gap: 20px;
+}
+
+.nav-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 30px;
+    transition: all 0.3s;
+    backdrop-filter: blur(5px);
+}
+
+.nav-btn:hover {
+    background: #9A4DFF;
+    border-color: #9A4DFF;
+}
+
+.nav-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    background: transparent;
+    border-color: rgba(255,255,255,0.1);
+}
+
+#close-book-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.5);
+    color: #fff;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 9200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+}
+
+#close-book-btn:hover {
+    background: #fff;
+    color: #000;
+}
+
+/* --- Lightbox --- */
+.lightbox-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.98);
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.lightbox-modal.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.lightbox-content {
+    max-width: 95vw;
+    max-height: 95vh;
+}
+
+.lightbox-content img,
+.lightbox-content video {
+    max-width: 100%;
+    max-height: 95vh;
+    box-shadow: 0 0 50px rgba(154, 77, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+#close-lightbox-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: #fff;
+    font-size: 3rem;
+    cursor: pointer;
+    z-index: 10001;
+    line-height: 1;
+}
+
+/* --- Cursor Fix --- */
+#cursor {
+    z-index: 11000 !important; /* Ensure it's above everything */
+}
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 768px) {
+    .manga-layout-container {
+        flex-direction: column;
+        width: 100vw;
+        height: 100vh;
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .story-sidebar {
+        display: none !important; /* Hide sidebar on mobile to save space */
+    }
+
+    .manga-book-container {
+        width: 100%;
+        height: 80vh; /* Adjust height for mobile */
+        max-width: none;
+    }
+
+    .manga-page {
+        padding: 10px;
+    }
+
+    .manga-panel-grid {
+        gap: 5px;
+    }
+
+    .book-nav-controls {
+        bottom: 10px;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .nav-btn {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+    }
+
+    #close-book-btn {
+        top: 10px;
+        right: 10px;
+        width: 30px;
+        height: 30px;
+        font-size: 1.2rem;
+    }
+    
+    .lightbox-content img,
+    .lightbox-content video {
+        max-width: 98vw;
+        max-height: 80vh;
+    }
+    
+    #close-lightbox-btn {
+        top: 10px;
+        right: 10px;
+        font-size: 2rem;
+    }
+}

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Philosophy: The Flow's Core</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#7f0df2",
+              "background-light": "#f7f5f8",
+              "background-dark": "#191022",
+            },
+            fontFamily: {
+              "display": ["Space Grotesk", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-800 dark:text-gray-200">
+<div class="relative flex min-h-screen w-full flex-col">
+<!-- TopNavBar -->
+<header class="sticky top-0 z-50 flex w-full justify-center border-b border-white/10 bg-background-dark/80 px-4 py-3 backdrop-blur-sm">
+<div class="flex w-full max-w-6xl items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="size-6 text-primary">
+<svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 4H17.3334V17.3334H30.6666V30.6666H44V44H4V4Z" fill="currentColor"></path>
+</svg>
+</div>
+<h2 class="text-white text-lg font-bold">Circle the Flow</h2>
+</div>
+<nav class="hidden items-center gap-8 md:flex">
+<a class="text-white/80 hover:text-white text-sm font-medium transition-colors" href="#">Home</a>
+<a class="text-white text-sm font-bold" href="#">Philosophy</a>
+<a class="text-white/80 hover:text-white text-sm font-medium transition-colors" href="#">Projects</a>
+<a class="text-white/80 hover:text-white text-sm font-medium transition-colors" href="#">Community</a>
+<a class="text-white/80 hover:text-white text-sm font-medium transition-colors" href="#">Contact</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold tracking-wide hover:bg-primary/90 transition-colors">
+<span>Join the Flow</span>
+</button>
+</div>
+</div>
+</header>
+<main class="flex flex-1 flex-col items-center">
+<div class="flex w-full max-w-6xl flex-col">
+<!-- HeroSection -->
+<section class="@container w-full px-4 py-16 sm:px-6 lg:px-8">
+<div class="flex min-h-[60vh] flex-col items-center justify-center gap-6 rounded-xl bg-cover bg-center bg-no-repeat p-8 text-center" data-alt="Mystical floating islands against a purple nebula sky, representing a spiritual journey." style='background-image: linear-gradient(rgba(25, 16, 34, 0.7) 0%, rgba(25, 16, 34, 0.4) 100%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuCggvER-mcRp7ikzN752y-TtM-g6Mq_8a1mYPtw_F7IpUQF5LF5u7qT0dg_CHo233_ucWK57LhAyWAMTBa4E6KmgSGrHW2uok00cy7YUIEfTwQk9Gs6_gy6tV2aIqptSounPbG8D_R1Ch20dWIqTUQlm-n5qreBfWbmOvERyZNAkAyTIz2KHxEuSvfsC9ixGT8ru2dEP-wUK69gtpuPF1x1UZQ_s3CnMHOZk0vZ9pBEBAuJCQd7mIYeBlqlXBcF2btTxcflrtlaSQs");'>
+<div class="flex flex-col gap-4">
+<h1 class="text-white text-4xl font-black leading-tight tracking-tighter @[480px]:text-6xl">
+                                Philosophy: The Flow's Core
+                            </h1>
+<h2 class="text-white/90 text-base font-normal leading-normal @[480px]:text-lg max-w-2xl mx-auto">
+                                Eine künstlerische und wissenschaftliche Gemeinschaft in Lissabon, die als zentraler Hub dient, der verschiedene Funktionen und Untermarken miteinander verbindet.
+                            </h2>
+</div>
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-primary text-white text-base font-bold tracking-wide hover:bg-primary/90 transition-colors">
+<span>Discover Our Values</span>
+</button>
+</div>
+</section>
+<!-- FeatureSection 1: Connection -->
+<section class="flex flex-col gap-10 px-4 py-10 @container sm:px-6 lg:px-8">
+<div class="flex flex-col gap-4">
+<h3 class="text-primary text-sm font-bold uppercase tracking-widest">Panel 1</h3>
+<h2 class="text-white text-3xl font-bold leading-tight tracking-tight @[480px]:text-4xl @[480px]:font-black max-w-3xl">
+                            The Core: Connection
+                        </h2>
+<p class="text-white/80 text-base font-normal leading-relaxed max-w-3xl">
+                            Our philosophy is built on the profound belief in interconnectedness. We are a central hub where diverse paths converge, creating a unified flow of creativity, knowledge, and growth. Like luminous paths connecting floating islands, we bridge disciplines and individuals.
+                        </p>
+</div>
+<div class="grid grid-cols-1 gap-4 @[480px]:grid-cols-2">
+<div class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-xl" data-alt="Abstract image of luminous, glowing paths of light connecting different points in a dark, cosmic space." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBDBM1qhqv-J5-PzVk4kst5BhdTOLOO2TCp7sE-yg770OcElmwmd9a7fb0wMKUo387ugeEW_fyhZVRKdVXO8ymfVCtQyhBUfWb_m3g0dqcuw6sQ77RvwiU5lD5f-uV1d3Z9rJduQizpt1hcQUuxN8a8yUT2Rl_seKbeMKoMlLoZxp7N-Ewaewo9mm87BMbLBmug4oEJU7yJOPLaNZzdtj_WB9iaiZxUMV531GBoZJRljG_55ZOccwyGUFR03NATB1lqOCeNkWVAHzU");'></div>
+<div class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-xl" data-alt="A group of diverse people collaborating and connecting in a creative space, silhouetted against a bright light." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD4PlNedc7Lh2JQW2-W1CUXlmY_r4rc-a3MZutsTfoTIUTQWfYjSb70nGk34mQqLhP80P6g7y_KSuD3ImwhpYvmKt2SR672E5axRE_PShZ16mfYRahF1M_7GvPvKUse_AsS43FQyKFL5Hto-iHDXsZDUq221P8f1n4_XRaFoNfUllYbrkW6gnXaK7g86YSwmuFfLacKygZayWPFl6FC0n71WP3ycyIaxfHcHa8Z6tVq6k62dIVG2rZYWVSlFezypIQsxRsMVLNZO3c");'></div>
+</div>
+</section>
+<!-- FeatureSection 2: Gratitude -->
+<section class="flex flex-col gap-10 px-4 py-10 @container sm:px-6 lg:px-8">
+<div class="flex flex-col gap-4 text-right items-end">
+<h3 class="text-primary text-sm font-bold uppercase tracking-widest">Panel 2</h3>
+<h2 class="text-white text-3xl font-bold leading-tight tracking-tight @[480px]:text-4xl @[480px]:font-black max-w-3xl">
+                            The Fuel: Gratitude
+                        </h2>
+<p class="text-white/80 text-base font-normal leading-relaxed max-w-3xl">
+                           Gratitude is the energy that fuels our community. We cultivate an environment of appreciation and a positive mindset, which allows creativity to flourish. This is visually represented by glowing flora and energy flowing upwards from ancient, wise ruins.
+                        </p>
+</div>
+<div class="grid grid-cols-1 gap-4">
+<div class="w-full h-80 bg-center bg-no-repeat bg-cover rounded-xl" data-alt="A fantastical landscape with ancient ruins and bioluminescent, glowing plants and flowers, with light particles rising upwards." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAI2o4qQoAXeOkzLaC0MSOOZu3J13CKPWthzRvOGBJGz8UjTq22aPDJMLVw3LBeBe4vkPzf8OfhnKCt0b6661MRDhmxNLI9t5JGfOPEwScoFzoKLBjkE_SEU14mUFOsJJXrPwEA3Of4IS928fsQDphrj4boNorPA9vUmY6fwmXVzaJx5RGKEx3SIbwHzhTh8Nhn0kPjyG3tXCHxlV0ANiStK6_-w_ueX2fmBswOhFQXiXwUujD8Il85f8ChimkRzj94_P4oolNjoNY");'></div>
+</div>
+</section>
+<!-- FeatureSection 3: Overcoming Blockades -->
+<section class="flex flex-col gap-10 px-4 py-10 @container sm:px-6 lg:px-8">
+<div class="flex flex-col gap-4">
+<h3 class="text-primary text-sm font-bold uppercase tracking-widest">Panel 3</h3>
+<h2 class="text-white text-3xl font-bold leading-tight tracking-tight @[480px]:text-4xl @[480px]:font-black max-w-3xl">
+                            The Challenge: Overcoming Blockades
+                        </h2>
+<p class="text-white/80 text-base font-normal leading-relaxed max-w-3xl">
+                            We believe that personal and collective growth comes from courageously facing challenges. Our community provides the support to break through barriers, both internal and external, transforming obstacles into opportunities for evolution.
+                        </p>
+</div>
+<div class="grid grid-cols-1 gap-4">
+<div class="w-full h-80 bg-center bg-no-repeat bg-cover rounded-xl" data-alt="A powerful, symbolic image of a person breaking through a crystalline or stone barrier, with light shining from the cracks." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCwuNHLCggBPayOvYXCdweFa3ovBWz_Mcm2OOmHSPJO6h3NHqsAjn_eI5Pi95wOEjPvwnSdZ54cg78-K-zi04mvgzc7BLYsy9tqiaHWDfh-EuwJPg6qVsEThlzGtzoTTSZxby1CzNEvw83aCIGhwGWv2c4TYQlQc07XtKkSggV3grvRzWn3nGgOgDZAbbHpIguJj8zd8RMpDumIrF_IC9oo058gOibQ2-qL3q5s6QZuzAOoaveuk2BBCBwEwz848LTsuVwU6OVLh5Y");'></div>
+</div>
+</section>
+<!-- Quotes Section -->
+<section class="flex flex-col gap-10 px-4 py-10 @container sm:px-6 lg:px-8">
+<div class="flex flex-col gap-4 items-center text-center">
+<h3 class="text-primary text-sm font-bold uppercase tracking-widest">Voices of the Flow</h3>
+<h2 class="text-white text-3xl font-bold leading-tight tracking-tight @[480px]:text-4xl @[480px]:font-black max-w-3xl">
+                           Wisdom from the Core
+                        </h2>
+</div>
+<div class="grid grid-cols-1 gap-8 md:grid-cols-2">
+<div class="flex flex-col gap-4 rounded-xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
+<p class="text-white/90 text-lg italic leading-relaxed">"In the flow, we don't just find ourselves; we create ourselves. Every connection is a new line of code in our collective story."</p>
+<span class="font-bold text-primary">- Founder A</span>
+</div>
+<div class="flex flex-col gap-4 rounded-xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
+<p class="text-white/90 text-lg italic leading-relaxed">"Gratitude is our universal language. It's the rhythm that unites the diverse beats of our community into a single, powerful harmony."</p>
+<span class="font-bold text-primary">- Founder B</span>
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="w-full px-4 py-16 sm:px-6 lg:px-8">
+<div class="flex flex-col items-center justify-center gap-6 rounded-xl bg-primary/20 p-8 text-center md:p-12">
+<div class="flex flex-col gap-4">
+<h2 class="text-white text-3xl font-black leading-tight tracking-tighter @[480px]:text-5xl">
+                                Become Part of the Movement
+                            </h2>
+<p class="text-white/90 text-base font-normal leading-normal @[480px]:text-lg max-w-2xl mx-auto">
+                                Your journey is unique, but here, it connects to a larger current. Join us to create, grow, and redefine what's possible together.
+                            </p>
+</div>
+<div class="flex flex-col sm:flex-row gap-4">
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-primary text-white text-base font-bold tracking-wide hover:bg-primary/90 transition-colors">
+<span>Join the Flow</span>
+</button>
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-white/10 text-white text-base font-bold tracking-wide hover:bg-white/20 transition-colors">
+<span>Explore Our Projects</span>
+</button>
+</div>
+</div>
+</section>
+</div>
+</main>
+</div>
+</body></html>

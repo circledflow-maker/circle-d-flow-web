@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | Circle D Flow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-left-color: #6366f1;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-[#0F0A13] text-white min-h-screen flex items-center justify-center p-4">
+
+    <!-- Checkout Container -->
+    <div
+        class="w-full max-w-4xl bg-[#1a1625] border border-white/5 rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row shadow-purple-900/20">
+
+        <!-- Order Summary (Left) -->
+        <div class="w-full md:w-1/2 p-8 bg-[#141118] border-r border-white/5 relative flex flex-col justify-between">
+            <div>
+                <div class="flex items-center gap-2 mb-8 text-white/50">
+                    <span class="material-symbols-outlined text-sm">arrow_back</span>
+                    <a href="membership.html" class="text-sm font-bold hover:text-white transition-colors">Back</a>
+                </div>
+
+                <h3 class="text-xs font-bold uppercase tracking-widest text-[#9A4DFF] mb-2">Subscribe to</h3>
+                <h1 class="text-3xl font-bold mb-4" id="plan-name">Loading...</h1>
+                <div class="text-4xl font-bold mb-8">
+                    €<span id="plan-price">--</span><span class="text-lg text-white/50 font-normal">/mo</span>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3 text-sm text-gray-300">
+                        <span class="material-symbols-outlined text-[#9A4DFF]">check_circle</span>
+                        <span>Instant Access to Features</span>
+                    </div>
+                    <div class="flex items-center gap-3 text-sm text-gray-300">
+                        <span class="material-symbols-outlined text-[#9A4DFF]">check_circle</span>
+                        <span>Cancel Anytime</span>
+                    </div>
+                    <div class="flex items-center gap-3 text-sm text-gray-300">
+                        <span class="material-symbols-outlined text-[#9A4DFF]">check_circle</span>
+                        <span>Secure SSL Payment</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 pt-8 border-t border-white/5 flex justify-between items-center text-xs text-white/30">
+                <span>Powered by Stripe</span>
+                <div class="flex gap-2">
+                    <span>Terms</span>
+                    <span>Privacy</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Action (Right) -->
+        <div class="w-full md:w-1/2 p-8 relative flex flex-col justify-center">
+            <h2 class="text-xl font-bold mb-6 text-center">Complete Your Subscription</h2>
+            <p class="text-white/60 text-sm text-center mb-8">
+                You will be redirected to Stripe's secure payment page to complete your purchase. No payment information
+                is stored on our servers.
+            </p>
+
+            <button id="checkout-btn"
+                class="w-full py-4 bg-[#635BFF] hover:bg-[#5851CC] text-white font-bold rounded-xl uppercase tracking-widest transition-all shadow-lg flex items-center justify-center gap-2">
+                <span>Proceed to Secure Checkout</span>
+                <span class="material-symbols-outlined text-sm">lock</span>
+            </button>
+
+            <div id="error-message" class="mt-4 text-red-500 text-sm text-center hidden"></div>
+
+        </div>
+    </div>
+
+    <!-- Stripe JS -->
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const planId = params.get('plan');
+        const price = params.get('price');
+
+        // IMPORTANT: Replace with your actual Stripe Publishable Key
+        const stripe = Stripe('pk_test_placeholder');
+
+        // Plan Configuration (Replace with actual Price IDs from Stripe Dashboard)
+        const PLAN_CONFIG = {
+            'rising': {
+                name: 'Rising Artist',
+                price: '9',
+                priceId: 'price_placeholder_rising'
+            },
+            'master': {
+                name: 'Master Circle',
+                price: '29',
+                priceId: 'price_placeholder_master'
+            }
+        };
+
+        // Init Page
+        const plan = PLAN_CONFIG[planId];
+        if (plan) {
+            document.getElementById('plan-name').textContent = plan.name;
+            document.getElementById('plan-price').textContent = price || plan.price;
+        } else {
+            document.getElementById('plan-name').textContent = 'Unknown Plan';
+            document.getElementById('checkout-btn').disabled = true;
+            document.getElementById('checkout-btn').classList.add('opacity-50', 'cursor-not-allowed');
+        }
+
+        // Handle Checkout
+        document.getElementById('checkout-btn').addEventListener('click', async () => {
+            const btn = document.getElementById('checkout-btn');
+            btn.disabled = true;
+            btn.innerHTML = '<div class="spinner border-2 bg-transparent w-4 h-4"></div> Redirecting...';
+
+            if (!plan || !plan.priceId) {
+                console.warn("Simulating Stripe Redirect (No Price ID)");
+                // Simulation Fallback for Testing without real keys
+                setTimeout(() => {
+                    window.location.href = `success.html?plan=${planId}&session_id=simulated_session`;
+                }, 1500);
+                return;
+            }
+
+            try {
+                const { error } = await stripe.redirectToCheckout({
+                    lineItems: [{ price: plan.priceId, quantity: 1 }],
+                    mode: 'subscription',
+                    successUrl: window.location.origin + `/success.html?plan=${planId}&session_id={CHECKOUT_SESSION_ID}`,
+                    cancelUrl: window.location.origin + '/membership.html',
+                });
+
+                if (error) {
+                    throw error;
+                }
+            } catch (e) {
+                console.error(e);
+                // Fallback for visual demonstration if keys are invalid
+                if (e.message.includes("No such price") || e.message.includes("Invalid API Key")) {
+                    window.location.href = `success.html?plan=${planId}&session_id=simulated_session`;
+                } else {
+                    document.getElementById('error-message').textContent = e.message;
+                    document.getElementById('error-message').classList.remove('hidden');
+                    btn.disabled = false;
+                    btn.textContent = 'Proceed to Secure Checkout';
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

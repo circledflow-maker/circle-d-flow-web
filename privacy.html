@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy | Kiss Your Heart</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        midnight: '#0D0D0F',
+                        violet: '#5A2A84',
+                        electric: '#9A4DFF',
+                        amber: '#FFAE42',
+                        mist: '#A8A8B3',
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Inter"', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="bg-midnight text-white font-sans antialiased selection:bg-electric selection:text-white">
+
+    <!-- Navigation (Simplified) -->
+    <!-- Navigation (Simplified) -->
+    <nav class="w-full py-6 px-8 flex justify-between items-center bg-midnight/80 backdrop-blur-md fixed top-0 z-50">
+        <a href="Index.html"
+            class="text-2xl font-serif font-bold tracking-wider hover:text-amber transition-colors">KYH</a>
+
+        <!-- Desktop Menu -->
+        <div class="hidden md:block">
+            <a href="Index.html" class="text-sm uppercase tracking-widest hover:text-electric transition-colors">Back to
+                Home</a>
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <button id="menu-btn" class="md:hidden text-white focus:outline-none">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16">
+                </path>
+            </svg>
+        </button>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu"
+        class="fixed inset-0 bg-midnight z-40 flex flex-col items-center justify-center space-y-8 text-2xl font-serif transform translate-x-full transition-transform duration-300 md:hidden">
+        <a href="Index.html#about" class="mobile-link hover:text-amber">Philosophy</a>
+        <a href="Index.html#portfolio" class="mobile-link hover:text-amber">Portfolio</a>
+        <a href="Index.html#services" class="mobile-link hover:text-amber">Services</a>
+        <a href="Index.html#community" class="mobile-link hover:text-amber">Community</a>
+        <a href="Index.html#contact" class="mobile-link hover:text-amber">Contact</a>
+        <div class="h-px w-12 bg-white/20 my-4"></div>
+        <a href="impressum.html" class="mobile-link text-lg text-mist hover:text-white">Impressum</a>
+        <a href="privacy.html" class="mobile-link text-lg text-mist hover:text-white">Privacy Policy</a>
+    </div>
+
+    <main class="pt-32 pb-20 px-4 max-w-3xl mx-auto">
+        <h1 class="text-4xl md:text-6xl font-serif font-bold mb-12 text-center">Privacy Policy</h1>
+
+        <div class="space-y-12 text-mist font-light leading-relaxed">
+
+            <section class="space-y-4">
+                <h2 class="text-2xl font-serif text-white">1. Human Rights & Data Protection</h2>
+                <p>
+                    We believe that privacy is a fundamental human right. Your data belongs to you. We operate under the
+                    principle of data minimization: we only collect what is absolutely necessary to provide our services
+                    to you, and we treat your information with the utmost respect and security, in accordance with the
+                    General Data Protection Regulation (GDPR) and international human rights standards.
+                </p>
+            </section>
+
+            <section class="space-y-4">
+                <h2 class="text-2xl font-serif text-white">2. Data Collection</h2>
+                <p>
+                    We collect personal data only when you voluntarily provide it to us, for example, when you use our
+                    booking form or contact us via email. This data may include:
+                </p>
+                <ul class="list-disc pl-5 space-y-2">
+                    <li>Name</li>
+                    <li>Email address</li>
+                    <li>Information provided in your message or booking request</li>
+                </ul>
+            </section>
+
+            <section class="space-y-4">
+                <h2 class="text-2xl font-serif text-white">3. Purpose of Use</h2>
+                <p>
+                    Your data is used solely for the purpose of:
+                </p>
+                <ul class="list-disc pl-5 space-y-2">
+                    <li>Processing your booking requests</li>
+                    <li>Communicating with you regarding your sessions</li>
+                    <li>Fulfilling our contractual obligations</li>
+                </ul>
+                <p>
+                    We do not sell, trade, or rent your personal identification information to others.
+                </p>
+            </section>
+
+            <section class="space-y-4">
+                <h2 class="text-2xl font-serif text-white">4. Your Rights</h2>
+                <p>
+                    You have the right to:
+                </p>
+                <ul class="list-disc pl-5 space-y-2">
+                    <li>Request access to the personal data we hold about you.</li>
+                    <li>Request correction of any incorrect data.</li>
+                    <li>Request deletion of your personal data ("Right to be forgotten").</li>
+                    <li>Withdraw your consent at any time.</li>
+                </ul>
+                <p>
+                    To exercise these rights, please contact us at: <a href="mailto:Circle.D.Flow@gmail.com"
+                        class="text-electric hover:text-amber transition-colors">Circle.D.Flow@gmail.com</a>
+                </p>
+            </section>
+
+            <section class="space-y-4">
+                <h2 class="text-2xl font-serif text-white">5. Third-Party Services</h2>
+                <p>
+                    We may use third-party services (such as Google Calendar for bookings) to facilitate our operations.
+                    These providers have their own privacy policies, and we encourage you to review them. We ensure that
+                    any third-party partners respect your data rights.
+                </p>
+            </section>
+
+            <section class="space-y-4">
+                <h2 class="text-2xl font-serif text-white">6. Cookies & Tracking</h2>
+                <p>
+                    We use cookies and local storage to enhance your experience on our website. These technologies help
+                    us remember your preferences (such as theme settings or booking progress) and understand how you
+                    interact with our site.
+                </p>
+                <p>
+                    We may also use third-party cookies from services like Stripe (for secure payments) and Google (for
+                    calendar integration). You can control your cookie preferences through your browser settings or our
+                    cookie banner.
+                </p>
+            </section>
+
+            <section class="space-y-4">
+                <h2 class="text-2xl font-serif text-white">7. Contact</h2>
+                <p>
+                    For any questions regarding this privacy policy or your data rights, please contact:<br>
+                    <strong class="text-white">KissYourHeart</strong><br>
+                    Email: Circle.D.Flow@gmail.com
+                </p>
+            </section>
+
+        </div>
+    </main>
+
+    <footer class="py-8 text-center text-mist text-xs opacity-50 uppercase tracking-widest border-t border-white/5">
+        &copy; 2024 Kiss Your Heart. All Rights Reserved.
+    </footer>
+
+    <script src="gamification.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

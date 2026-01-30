@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kiss Your Heart: Payments &amp; Support (with MBway)</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#7f0df2",
+                        "background-light": "#f7f5f8",
+                        "background-dark": "#191022",
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "Noto Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<div class="px-4 sm:px-10 md:px-20 lg:px-40 flex flex-1 justify-center py-5">
+<div class="layout-content-container flex flex-col w-full max-w-[960px] flex-1">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-white/10 px-4 md:px-10 py-3">
+<div class="flex items-center gap-4 text-white">
+<div class="size-6 text-primary">
+<svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M13.8261 30.5736C16.7203 29.8826 20.2244 29.4783 24 29.4783C27.7756 29.4783 31.2797 29.8826 34.1739 30.5736C36.9144 31.2278 39.9967 32.7669 41.3563 33.8352L24.8486 7.36089C24.4571 6.73303 23.5429 6.73303 23.1514 7.36089L6.64374 33.8352C8.00331 32.7669 11.0856 31.2278 13.8261 30.5736Z" fill="currentColor"></path>
+<path clip-rule="evenodd" d="M39.998 35.764C39.9944 35.7463 39.9875 35.7155 39.9748 35.6706C39.9436 35.5601 39.8949 35.4259 39.8346 35.2825C39.8168 35.2403 39.7989 35.1993 39.7813 35.1602C38.5103 34.2887 35.9788 33.0607 33.7095 32.5189C30.9875 31.8691 27.6413 31.4783 24 31.4783C20.3587 31.4783 17.0125 31.8691 14.2905 32.5189C12.0012 33.0654 9.44505 34.3104 8.18538 35.1832C8.17384 35.2075 8.16216 35.233 8.15052 35.2592C8.09919 35.3751 8.05721 35.4886 8.02977 35.589C8.00356 35.6848 8.00039 35.7333 8.00004 35.7388C8.00004 35.739 8 35.7393 8.00004 35.7388C8.00004 35.7641 8.0104 36.0767 8.68485 36.6314C9.34546 37.1746 10.4222 37.7531 11.9291 38.2772C14.9242 39.319 19.1919 40 24 40C28.8081 40 33.0758 39.319 36.0709 38.2772C37.5778 37.7531 38.6545 37.1746 39.3151 36.6314C39.9006 36.1499 39.9857 35.8511 39.998 35.764ZM4.95178 32.7688L21.4543 6.30267C22.6288 4.4191 25.3712 4.41909 26.5457 6.30267L43.0534 32.777C43.0709 32.8052 43.0878 32.8338 43.104 32.8629L41.3563 33.8352C43.104 32.8629 43.1038 32.8626 43.104 32.8629L43.1051 32.865L43.1065 32.8675L43.1101 32.8739L43.1199 32.8918C43.1276 32.906 43.1377 32.9246 43.1497 32.9473C43.1738 32.9925 43.2062 33.0545 43.244 33.1299C43.319 33.2792 43.4196 33.489 43.5217 33.7317C43.6901 34.1321 44 34.9311 44 35.7391C44 37.4427 43.003 38.7775 41.8558 39.7209C40.6947 40.6757 39.1354 41.4464 37.385 42.0552C33.8654 43.2794 29.133 44 24 44C18.867 44 14.1346 43.2794 10.615 42.0552C8.86463 41.4464 7.30529 40.6757 6.14419 39.7209C4.99695 38.7775 3.99999 37.4427 3.99999 35.7391C3.99999 34.8725 4.29264 34.0922 4.49321 33.6393C4.60375 33.3898 4.71348 33.1804 4.79687 33.0311C4.83898 32.9556 4.87547 32.8935 4.9035 32.8471C4.91754 32.8238 4.92954 32.8043 4.93916 32.7889L4.94662 32.777L4.95178 32.7688ZM35.9868 29.004L24 9.77997L12.0131 29.004C12.4661 28.8609 12.9179 28.7342 13.3617 28.6282C16.4281 27.8961 20.0901 27.4783 24 27.4783C27.9099 27.4783 31.5719 27.8961 34.6383 28.6282C35.082 28.7342 35.5339 28.8609 35.9868 29.004Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">Kiss Your Heart</h2>
+</div>
+<div class="hidden md:flex flex-1 justify-end gap-8">
+<div class="flex items-center gap-9">
+<a class="text-white/80 hover:text-white text-sm font-medium leading-normal" href="#">Home</a>
+<a class="text-white/80 hover:text-white text-sm font-medium leading-normal" href="#">Services</a>
+<a class="text-white/80 hover:text-white text-sm font-medium leading-normal" href="#">Projects</a>
+<a class="text-white/80 hover:text-white text-sm font-medium leading-normal" href="#">About</a>
+</div>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/90">
+<span class="truncate">Contact</span>
+</button>
+</div>
+</header>
+<main class="flex flex-col gap-8 mt-10">
+<div class="flex flex-wrap justify-between gap-3 p-4">
+<div class="flex min-w-72 flex-col gap-3">
+<p class="text-white text-4xl font-black leading-tight tracking-[-0.033em]">Channel Your Energy</p>
+<p class="text-[#ab9cba] text-base font-normal leading-normal">Become part of the flow. Your support nurtures creative transformation.</p>
+</div>
+</div>
+<div class="flex px-4 py-3">
+<div class="flex h-12 flex-1 items-center justify-center rounded-full bg-white/5 p-1.5">
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-full px-2 has-[:checked]:bg-background-dark has-[:checked]:shadow-[0_0_4px_rgba(0,0,0,0.1)] has-[:checked]:text-white text-[#ab9cba] text-sm font-medium leading-normal">
+<span class="truncate">Pay for Services</span>
+<input checked="" class="invisible w-0" name="payment-type" type="radio" value="Pay for Services"/>
+</label>
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-full px-2 has-[:checked]:bg-background-dark has-[:checked]:shadow-[0_0_4px_rgba(0,0,0,0.1)] has-[:checked]:text-white text-[#ab9cba] text-sm font-medium leading-normal">
+<span class="truncate">Support a Project</span>
+<input class="invisible w-0" name="payment-type" type="radio" value="Support a Project"/>
+</label>
+</div>
+</div>
+<h2 class="text-white text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">Unlock Your Transformation</h2>
+<div class="flex overflow-x-auto [-ms-scrollbar-style:none] [scrollbar-width:none] [&amp;::-webkit-scrollbar]:hidden">
+<div class="flex items-stretch p-4 gap-4 w-full">
+<div class="flex h-full flex-1 flex-col gap-4 rounded bg-white/5 shadow-[0_0_4px_rgba(0,0,0,0.1)] min-w-60">
+<div class="w-full bg-center bg-no-repeat aspect-[3/4] bg-cover rounded flex flex-col" data-alt="Abstract purple and pink light trails representing a creative photoshoot" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD8asWCmF8bgP84jc5uzeptgk_QS9LqxSsYhgvyjwg3ZGsMbWDEWshV7Yyij2-gHiMA5taWg3PCW8ceZN0IACgDC3nscpt_VOT5A4TvAzNzzrG4yp0xmgYMDCd-wcgUoUw4d6UPMH9u0GPcM1oNqeGzoHZjr7emWqXUpyu0aomwbAzTfU4xsVlnpX3OPBybCpftLeyyD2XZT-s03Sj9ru5R0mBe6cBq3PHZ8Eem2obbgti766XKt-7chApScFuHIXnUpMWNw5pcJNI");'></div>
+<div class="flex flex-col flex-1 justify-between p-4 pt-0 gap-4">
+<div>
+<p class="text-white text-base font-medium leading-normal">Photoshoot Session</p>
+<p class="text-[#ab9cba] text-sm font-normal leading-normal">Capture your essence and begin a visual journey.</p>
+</div>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-white/10 hover:bg-white/20 text-white text-sm font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">Select</span>
+</button>
+</div>
+</div>
+<div class="flex h-full flex-1 flex-col gap-4 rounded bg-white/5 shadow-[0_0_4px_rgba(0,0,0,0.1)] min-w-60">
+<div class="w-full bg-center bg-no-repeat aspect-[3/4] bg-cover rounded flex flex-col" data-alt="Golden geometric shapes and lines forming a brand identity concept" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBh7q9ii5vMoPOQCkbhWFKa4TcBq1SZz6V51f_Zz1hMUpQ0L0F2AEU9Rqex8ywNQy4le-tP8Gkg7JOCPctpPfiIr8GaUtJsv_5XxnyyM2LA1hdVvW2VCvXAKMRTgN8_R7I4w9a5EFGFLSyJ6VZsN06bG0U-IwF5SxC2mr41SbMT_Qw6vcZj4iDcjcgo2cKxuxmBSMrjhSEz_xIZL_TDfDGC2yHvY62tLOVTYuFzCJVsMlSy62kOyf6w9d7cSkUP4sq7Sg_GFmM4VzE");'></div>
+<div class="flex flex-col flex-1 justify-between p-4 pt-0 gap-4">
+<div>
+<p class="text-white text-base font-medium leading-normal">Branding Package</p>
+<p class="text-[#ab9cba] text-sm font-normal leading-normal">Craft a unique brand identity that resonates deeply.</p>
+</div>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-white/10 hover:bg-white/20 text-white text-sm font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">Select</span>
+</button>
+</div>
+</div>
+<div class="flex h-full flex-1 flex-col gap-4 rounded bg-white/5 shadow-[0_0_4px_rgba(0,0,0,0.1)] min-w-60">
+<div class="w-full bg-center bg-no-repeat aspect-[3/4] bg-cover rounded flex flex-col" data-alt="A person editing video on a glowing futuristic interface" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBHQoA7mNufFWWvNq_U1QD9td9f4zzD2ydwlpez3lJLIu_iegFsCRDHtRdLIfi2bsernImQDU-BE06PVIwyHd5hnV0wj-iiMBfw0rrFJsDoYJCwrUeWzwF6xI9_jQu835P0-4aZdlX0OR4ARFPGfj1w1SpefF4PolKM-EbyXN1BX4V_oDjHWP5QXfO5XK391h7i-8Fo66e_CnSAVvUz5Knxg_YTYxioJybh5vbFqtxRkqtiuV2dQDh0NIqnU0yGYOIuXlwGpw_TJRI");'></div>
+<div class="flex flex-col flex-1 justify-between p-4 pt-0 gap-4">
+<div>
+<p class="text-white text-base font-medium leading-normal">Video Production</p>
+<p class="text-[#ab9cba] text-sm font-normal leading-normal">Bring your story to life with compelling motion.</p>
+</div>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-white/10 hover:bg-white/20 text-white text-sm font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">Select</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-6 p-4">
+<h3 class="text-white text-lg font-bold">Energy Input</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="relative">
+<label class="block text-sm font-medium text-[#ab9cba] mb-2" for="name">Full Name</label>
+<input class="w-full h-12 px-4 bg-white/5 border border-white/10 rounded text-white placeholder:text-white/40 focus:ring-2 focus:ring-primary focus:border-primary transition-colors" id="name" placeholder="Enter your name" type="text"/>
+</div>
+<div class="relative">
+<label class="block text-sm font-medium text-[#ab9cba] mb-2" for="email">Email Address</label>
+<input class="w-full h-12 px-4 bg-white/5 border border-white/10 rounded text-white placeholder:text-white/40 focus:ring-2 focus:ring-primary focus:border-primary transition-colors" id="email" placeholder="Enter your email" type="email"/>
+</div>
+<div class="relative md:col-span-2">
+<label class="block text-sm font-medium text-[#ab9cba] mb-2" for="amount">Amount (€)</label>
+<div class="relative">
+<span class="absolute inset-y-0 left-0 flex items-center pl-4 text-[#ab9cba]">€</span>
+<input class="w-full h-12 pl-8 pr-4 bg-white/5 border border-white/10 rounded text-white placeholder:text-white/40 focus:ring-2 focus:ring-primary focus:border-primary transition-colors" id="amount" placeholder="50.00" type="number"/>
+</div>
+</div>
+</div>
+</div>
+<div class="p-4 bg-primary/10 rounded-lg mx-4 my-4 border border-primary/30">
+<p class="text-center text-white font-medium">Your support directly nurtures the 'Flow' of a new photographic series.</p>
+</div>
+<div class="flex flex-col gap-6 p-4">
+<h3 class="text-white text-lg font-bold">Choose Your Portal</h3>
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+<button class="flex items-center justify-center gap-3 h-14 px-4 rounded bg-white/10 hover:bg-white/20 border border-white/20 text-white font-semibold transition-colors">
+<span class="material-symbols-outlined text-primary">credit_card</span>
+<span>Credit Card</span>
+</button>
+<button class="flex items-center justify-center gap-3 h-14 px-4 rounded bg-white/10 hover:bg-white/20 border border-white/20 text-white font-semibold transition-colors">
+<span class="material-symbols-outlined text-primary">account_balance_wallet</span>
+<span>PayPal</span>
+</button>
+<button class="flex items-center justify-center gap-3 h-14 px-4 rounded bg-white/10 hover:bg-white/20 border border-white/20 text-white font-semibold transition-colors">
+<span class="material-symbols-outlined text-primary">ios</span>
+<span>Apple Pay</span>
+</button>
+<button class="relative flex items-center justify-center gap-3 h-14 px-4 rounded bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-500 text-white font-semibold transition-all duration-300 hover:shadow-lg hover:shadow-yellow-500/30 border border-transparent">
+<span class="material-symbols-outlined">qr_code_2</span>
+<span>MBway</span>
+</button>
+</div>
+<div class="mt-6 p-6 bg-white/5 rounded-lg border border-white/10">
+<div class="flex flex-col gap-4">
+<h4 class="text-white text-base font-bold">Pay with MBway</h4>
+<p class="text-[#ab9cba] text-sm">Enter your phone number associated with your MBway account to receive a payment notification.</p>
+<div class="relative">
+<label class="block text-sm font-medium text-[#ab9cba] mb-2" for="phone">Phone Number</label>
+<div class="flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-white/40">smartphone</span>
+<input class="w-full h-12 pl-10 pr-4 bg-white/5 border border-white/10 rounded text-white placeholder:text-white/40 focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 transition-colors" id="phone" placeholder="912 345 678" type="tel"/>
+</div>
+</div>
+<p class="text-xs text-[#ab9cba]">Confirm the payment on your MBway app to complete the transaction.</p>
+</div>
+</div>
+</div>
+<div class="p-4 mt-4">
+<button class="w-full flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-14 px-8 bg-primary text-white text-lg font-bold leading-normal tracking-[0.015em] hover:bg-primary/90 transition-colors">
+<span class="truncate">Channel Your Support</span>
+</button>
+</div>
+</main>
+</div>
+</div>
+</div>
+</div>
+
+</body></html>

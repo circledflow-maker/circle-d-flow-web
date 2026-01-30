@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html class="dark" lang="de"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Circle the Flow - Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+        .glow-border {
+            border-image: linear-gradient(120deg, #7f0df2, #fcd34d) 1;
+        }
+        @keyframes pulse-glow {
+            0%, 100% {
+                box-shadow: 0 0 25px -5px rgba(127, 13, 242, 0.3), 0 0 15px -5px rgba(127, 13, 242, 0.2), 0 0 35px -5px rgba(252, 211, 77, 0.2), 0 0 20px -5px rgba(252, 211, 77, 0.1);
+            }
+            50% {
+                box-shadow: 0 0 35px -5px rgba(127, 13, 242, 0.4), 0 0 20px -5px rgba(127, 13, 242, 0.3), 0 0 45px -5px rgba(252, 211, 77, 0.3), 0 0 25px -5px rgba(252, 211, 77, 0.2);
+            }
+        }
+        .animate-pulse-glow {
+            animation: pulse-glow 3s infinite ease-in-out;
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#7f0df2",
+              "background-light": "#f7f5f8",
+              "background-dark": "#191022",
+              "gold": "#fcd34d",
+            },
+            fontFamily: {
+              "display": ["Space Grotesk", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+            boxShadow: {
+              'primary-glow': '0 0 25px -5px rgba(127, 13, 242, 0.3), 0 0 15px -5px rgba(127, 13, 242, 0.2)',
+              'gold-glow': '0 0 25px -5px rgba(252, 211, 77, 0.3), 0 0 15px -5px rgba(252, 211, 77, 0.2)',
+            }
+          },
+        },
+      }
+    </script>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark">
+<div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
+<div class="flex h-full min-h-screen">
+<aside class="flex w-64 flex-col bg-[#141118]/80 backdrop-blur-sm p-4 border-r border-white/5">
+<div class="flex flex-col gap-4 flex-grow">
+<div class="flex items-center gap-3 p-2">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="User avatar with an abstract purple and gold background" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA0b_iFTMaqdQcvXJuRAXFR1AYWk8CjTCjOhyoqsWBcr0OYG6-dXVy6h3ntw8PmiaBs47TlP41KCk-ZllVgjmXpz6lY4e6Hd0ljSPIARqAi2TE2KJM7XXoDF4xfo6ANwVPkvXToMZgFYdEuFufAgNuY8uKsCsY15r4hMRPqz37upId0-5vTafc05US-COYupCDvBpeHKVaII5MHseiBYWal7ecZflaraoAETvndm_hGOR3HZV-fvaxJSszSQ_1V6TmJEqngAGFg11Q");'></div>
+<div class="flex flex-col">
+<h1 class="text-white text-base font-medium leading-normal">Alex Weber</h1>
+<p class="text-[#ab9cba] text-sm font-normal leading-normal">Circle the Flow Mitglied</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2 mt-4">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/20 text-primary" href="#">
+<span class="material-symbols-outlined fill">dashboard</span>
+<p class="text-sm font-medium leading-normal">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 transition-colors" href="#">
+<span class="material-symbols-outlined">view_kanban</span>
+<p class="text-sm font-medium leading-normal">Planboards</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 transition-colors" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<p class="text-sm font-medium leading-normal">Inventar</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 transition-colors" href="#">
+<span class="material-symbols-outlined">folder_open</span>
+<p class="text-sm font-medium leading-normal">Dateiverwaltung</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 transition-colors" href="#">
+<span class="material-symbols-outlined">group</span>
+<p class="text-sm font-medium leading-normal">Mitglieder</p>
+</a>
+</nav>
+</div>
+<div class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<p class="text-sm font-medium leading-normal">Einstellungen</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 transition-colors" href="#">
+<span class="material-symbols-outlined">logout</span>
+<p class="text-sm font-medium leading-normal">Logout</p>
+</a>
+</div>
+</aside>
+<main class="flex-1 p-6 lg:p-10">
+<div class="mx-auto max-w-7xl">
+<div class="flex flex-wrap justify-between gap-4 items-center mb-8">
+<div class="flex flex-col gap-2">
+<p class="text-white text-4xl font-bold leading-tight tracking-tighter">Willkommen zurück, Alex!</p>
+<p class="text-[#ab9cba] text-base font-normal leading-normal">Dein persönliches Artefakt-Dashboard.</p>
+</div>
+<button class="bg-primary/20 text-primary border border-primary/50 hover:bg-primary/30 transition-colors px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-medium">
+<span class="material-symbols-outlined text-base">add_circle</span>
+Widget hinzufügen
+</button>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<div class="lg:col-span-2 flex flex-col gap-6">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="bg-[#141118]/80 backdrop-blur-sm border border-transparent rounded-xl p-6 flex flex-col gap-4 glow-border animate-pulse-glow">
+<div class="flex justify-between items-center">
+<h2 class="text-xl font-bold text-white tracking-tight flex items-center gap-2">
+<span class="material-symbols-outlined text-gold">all_inbox</span>
+Ungelesene Mitteilungen
+</h2>
+<span class="text-sm font-bold bg-gradient-to-br from-primary to-gold text-transparent bg-clip-text">3 Neu</span>
+</div>
+<div class="flex flex-col gap-4 divide-y divide-white/10">
+<div class="flex items-start gap-4 pt-4 first:pt-0">
+<div class="relative">
+<div class="w-10 h-10 rounded-full bg-center bg-cover" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBBbValpys4TwaLvyu7PYQyxEjGZ8IW4EIzhuYB51mYsVI3TMim-DIOmpp0yPDGZAyxO51YAJTjs_N05cNj8UwCHjOgycGa7oLOJu9ZHannD5ZcfGFoNSRyfePPryiDzszCVY2Bro-b9-wIaz1WulB9_BV1k1r43rBm7jF0kW7E7PMkT5NG9Q923uBwStGawd35ney5J27b6fBg0wT-zv5wAJgnQEuS5qug5h7eTqifuKN4EdqpjyA6bA3LQOn6qK7nb_QzVYL2Ei0")'></div>
+<span class="absolute bottom-0 right-0 block h-3 w-3 rounded-full bg-primary border-2 border-[#141118]"></span>
+</div>
+<div class="flex-1">
+<p class="text-sm text-slate-300"><span class="font-semibold text-white">Maria S.</span> hat eine neue Anfrage gestellt.</p>
+<p class="text-sm text-gold font-medium truncate">Inventar-Anfrage: DJI Mavic 3</p>
+</div>
+</div>
+<div class="flex items-start gap-4 pt-4 first:pt-0">
+<div class="relative">
+<div class="w-10 h-10 rounded-full bg-center bg-cover" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDtxmIDI9jtBln0QD1IYLe8OB22lNKl6kLkHHTxjHAiyM8HZFqfcZTz-zPwVLc8QMtY2H9buSCGEGzftXWi-Zqs6ZqM-rDb7h0haoyas-Otiqs42epEgjCL6De2qLBu8u6dPrAD1L3r1sURQ-Jos6b7jkRjYh_aC4u3KDPY35fDfxxb3EdECuTXL69_a46Xda2_eWERJD2AjDHCuw6WgmN0pWzTfnUGZ90zAfjUV9cV_edEUp_3T5kup4XI97f6vaoI7l6nRgcV9Dw")'></div>
+<span class="absolute bottom-0 right-0 block h-3 w-3 rounded-full bg-primary border-2 border-[#141118]"></span>
+</div>
+<div class="flex-1">
+<p class="text-sm text-slate-300"><span class="font-semibold text-white">System-Update</span></p>
+<p class="text-sm text-gold font-medium truncate">Neuer Kommentar zu 'Album Artwork Konzept'</p>
+</div>
+</div>
+<div class="flex items-start gap-4 pt-4 first:pt-0">
+<div class="relative">
+<div class="w-10 h-10 rounded-full bg-center bg-cover" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBOh4GyGMUr8n9uSq-2-uHsU3SOiBIYKz7fyTLH-GZBxO2HglHPzhyEYBngZ9MTFE_hVZC03FaiF3aTf_AYUk7Rs3XNzh4jp6uvhsk62b7shrJkoK9qeTvdpXvusMeKaSUGh1FJNmsUXq5WGAQXCyHbluGyKJ_ouPU9IfNG6vLzhsqeZY560UTmzpEB2aKsAJZs58nlH0NJooXlZ_b2UjgA0-19TlVCZzMoXutEhPdzXv9lCez2EA1nqZ5B09_-xpTKsUazbqOBQx8")'></div>
+<span class="absolute bottom-0 right-0 block h-3 w-3 rounded-full bg-primary border-2 border-[#141118]"></span>
+</div>
+<div class="flex-1">
+<p class="text-sm text-slate-300"><span class="font-semibold text-white">Projekt 'Mystica'</span> hat eine neue Datei.</p>
+<p class="text-sm text-gold font-medium truncate">Synthwave_Loop_Final.wav</p>
+</div>
+</div>
+</div>
+<a class="mt-2 w-full text-center bg-primary/20 hover:bg-primary/30 border border-primary/50 text-primary transition-colors text-sm font-medium py-2 rounded-lg" href="#">Alle Benachrichtigungen anzeigen</a>
+</div>
+<div class="bg-[#141118]/80 backdrop-blur-sm border border-primary/30 rounded-xl p-6 flex flex-col gap-4 shadow-primary-glow">
+<div class="flex justify-between items-center">
+<h2 class="text-xl font-bold text-white tracking-tight flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">event</span>
+Anstehende Events
+</h2>
+</div>
+<div class="flex flex-col gap-4">
+<div class="flex items-center gap-4">
+<div class="flex flex-col items-center justify-center bg-primary/10 text-primary p-2 rounded-lg w-14">
+<span class="text-xs font-bold">JUL</span>
+<span class="text-2xl font-bold">28</span>
+</div>
+<div>
+<h3 class="font-medium text-white">Community Jam Session</h3>
+<p class="text-sm text-slate-400">19:00 Uhr - Main Hall</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex flex-col items-center justify-center bg-white/10 text-white p-2 rounded-lg w-14">
+<span class="text-xs font-bold">AUG</span>
+<span class="text-2xl font-bold">05</span>
+</div>
+<div>
+<h3 class="font-medium text-white">Workshop: Visuelle Alchemie</h3>
+<p class="text-sm text-slate-400">14:00 Uhr - Studio 3</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-[#141118]/80 backdrop-blur-sm border border-white/10 rounded-xl p-6 flex flex-col gap-4">
+<div class="flex justify-between items-center">
+<h2 class="text-xl font-bold text-white tracking-tight">Letzte Planboards</h2>
+<a class="text-sm font-medium text-primary hover:text-primary/80" href="#">Alle anzeigen</a>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+<div class="bg-cover bg-center flex flex-col gap-3 rounded-lg justify-end p-3 aspect-[4/3] shadow-lg shadow-primary/10" data-alt="Futuristic glowing crystal cave concept art" style='background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 100%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuBOh4GyGMUr8n9uSq-2-uHsU3SOiBIYKz7fyTLH-GZBxO2HglHPzhyEYBngZ9MTFE_hVZC03FaiF3aTf_AYUk7Rs3XNzh4jp6uvhsk62b7shrJkoK9qeTvdpXvusMeKaSUGh1FJNmsUXq5WGAQXCyHbluGyKJ_ouPU9IfNG6vLzhsqeZY560UTmzpEB2aKsAJZs58nlH0NJooXlZ_b2UjgA0-19TlVCZzMoXutEhPdzXv9lCez2EA1nqZ5B09_-xpTKsUazbqOBQx8");'>
+<p class="text-white text-sm font-bold leading-tight">Projekt Mystica Visuals</p>
+</div>
+<div class="bg-cover bg-center flex flex-col gap-3 rounded-lg justify-end p-3 aspect-[4/3] shadow-lg shadow-primary/10" data-alt="Abstract album artwork with swirling purple and gold colors" style='background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 100%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuDtxmIDI9jtBln0QD1IYLe8OB22lNKl6kLkHHTxjHAiyM8HZFqfcZTz-zPwVLc8QMtY2H9buSCGEGzftXWi-Zqs6ZqM-rDb7h0haoyas-Otiqs42epEgjCL6De2qLBu8u6dPrAD1L3r1sURQ-Jos6b7jkRjYh_aC4u3KDPY35fDfxxb3EdECuTXL69_a46Xda2_eWERJD2AjDHCuw6WgmN0pWzTfnUGZ90zAfjUV9cV_edEUp_3T5kup4XI97f6vaoI7l6nRgcV9Dw");'>
+<p class="text-white text-sm font-bold leading-tight">Album Artwork Konzept</p>
+</div>
+<div class="bg-cover bg-center flex flex-col gap-3 rounded-lg justify-end p-3 aspect-[4/3] shadow-lg shadow-primary/10" data-alt="Night shot of a Lisbon street with tram lights" style='background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 100%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuDKC9WxqG2OIhrT9KWNUD6ie5Aq3xevX9BdAlJNZaElCrfBVodR1NUKKRiuMZwYDKy7bHT_yun0RavtRF090H1HI0XPHt_YVMEAsi5opfjInXPFYjZTKnKhms30g-_AdMXgQN_4kIVXwzA94eW-OZfmnwZHPCpjyqSI3LOE2velUmTO6V7vxm2u3gN4utFBqpf5PYz5SE0XeQj1gFGjlaYUGIzkQE7JPJVX32P_mQ4z5kBsisvo1WoTqKR4Qu0U2HgZF1LnRitdrtY");'>
+<p class="text-white text-sm font-bold leading-tight">Kurzfilm 'Lissabon bei Nacht'</p>
+</div>
+</div>
+</div>
+</div>
+<div class="lg:col-span-1 flex flex-col gap-6">
+<div class="bg-[#141118]/80 backdrop-blur-sm border border-white/10 rounded-xl p-6 flex flex-col gap-4">
+<div class="flex justify-between items-center">
+<h2 class="text-xl font-bold text-white tracking-tight">Inventar-Status</h2>
+</div>
+<div class="flex flex-col gap-4">
+<div class="flex items-center gap-3">
+<div class="bg-green-500/10 p-2 rounded-full"><span class="material-symbols-outlined text-green-400">check_circle</span></div>
+<div class="flex-grow">
+<p class="text-white">Sony A7 IV</p>
+<p class="text-sm text-green-400">Verfügbar</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="bg-yellow-500/10 p-2 rounded-full"><span class="material-symbols-outlined text-yellow-400">person_alert</span></div>
+<div class="flex-grow">
+<p class="text-white">Rode NT1</p>
+<p class="text-sm text-yellow-400">Ausgeliehen (Maria)</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="bg-red-500/10 p-2 rounded-full"><span class="material-symbols-outlined text-red-400">error</span></div>
+<div class="flex-grow">
+<p class="text-white">DJI Mavic 3</p>
+<p class="text-sm text-red-400">Bedarf gemeldet</p>
+</div>
+</div>
+</div>
+<a class="mt-4 w-full text-center bg-white/10 hover:bg-white/20 transition-colors text-white text-sm font-medium py-2 rounded-lg" href="#">Inventar verwalten</a>
+</div>
+<div class="bg-[#141118]/80 backdrop-blur-sm border border-white/10 rounded-xl p-6 flex flex-col gap-4">
+<h2 class="text-xl font-bold text-white tracking-tight">Aktive Projekte</h2>
+<div class="flex flex-col gap-4">
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-center text-sm">
+<p class="text-white">Projekt Mystica Visuals</p>
+<p class="text-slate-400">75%</p>
+</div>
+<div class="w-full bg-white/10 rounded-full h-2">
+<div class="bg-primary h-2 rounded-full" style="width: 75%"></div>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-center text-sm">
+<p class="text-white">Kurzfilm 'Lissabon bei Nacht'</p>
+<p class="text-slate-400">40%</p>
+</div>
+<div class="w-full bg-white/10 rounded-full h-2">
+<div class="bg-primary h-2 rounded-full" style="width: 40%"></div>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-center text-sm">
+<p class="text-white">Album Artwork Konzept</p>
+<p class="text-slate-400">90%</p>
+</div>
+<div class="w-full bg-white/10 rounded-full h-2">
+<div class="bg-primary h-2 rounded-full" style="width: 90%"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+</body></html>

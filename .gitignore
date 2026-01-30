@@ -1,0 +1,29 @@
+# OS & IDE
+.DS_Store
+.vscode/
+
+# Large Media Files (Use external links instead)
+*.MOV
+*.mp4
+*.avi
+*.mkv
+*.webm
+
+# Archives & Documents
+*.zip
+*.tar
+*.gz
+*.pdf
+*.dmg
+
+# Specific Large Files
+Multiversos.pdf
+PRODUCT_LAB-20260126T205805Z-3-001.zip
+
+# Node
+node_modules/
+*.pdf
+*.mp4
+node_modules/
+*.pdf
+*.MOV

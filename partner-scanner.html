@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scanner | African Queen Kitchen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #000;
+            color: white;
+        }
+    </style>
+</head>
+
+<body class="flex flex-col min-h-screen">
+
+    <!-- Partner Branding -->
+    <div class="p-6 bg-[#1a1a1a] border-b border-white/10 flex items-center justify-between">
+        <h1 class="font-bold text-lg text-amber-500">African Queen Kitchen</h1>
+        <div class="px-2 py-1 bg-green-500/20 text-green-400 text-xs font-bold rounded uppercase">Partner App</div>
+    </div>
+
+    <!-- Scanner View -->
+    <div class="flex-1 flex flex-col items-center justify-center p-6 space-y-8">
+
+        <div
+            class="relative w-64 h-64 border-4 border-white/20 rounded-3xl flex items-center justify-center overflow-hidden">
+            <div class="absolute inset-0 animate-pulse bg-white/5"></div>
+            <span class="material-symbols-outlined text-6xl text-white/20">qr_code_scanner</span>
+            <div class="absolute w-full h-0.5 bg-red-500 top-1/2 shadow-[0_0_10px_rgba(239,68,68,0.8)]"></div>
+        </div>
+
+        <div class="text-center">
+            <h2 class="text-2xl font-bold mb-2">Scan Customer Code</h2>
+            <p class="text-white/50 text-sm">Align QR code within frame</p>
+        </div>
+
+        <!-- Manual Entry for Testing -->
+        <div class="w-full max-w-xs space-y-4">
+            <input type="text" id="voucher-input" placeholder="Enter Voucher ID (e.g. vch_123)"
+                class="w-full bg-[#333] border-none rounded-xl px-4 py-4 text-center text-lg font-mono placeholder:text-white/20 focus:ring-2 focus:ring-amber-500 outline-none">
+            <button onclick="redeem()"
+                class="w-full py-4 bg-amber-500 text-black font-bold uppercase rounded-xl hover:bg-amber-400 transition-colors">
+                Redeem Voucher
+            </button>
+        </div>
+    </div>
+
+    <script src="gamification.js"></script>
+    <script src="notifications.js"></script>
+    <script>
+        function redeem() {
+            const id = document.getElementById('voucher-input').value.trim();
+            if (!id) return;
+
+            if (window.Gamification) {
+                // In a real app, we'd verify with server. Here we check local state directly.
+                const success = window.Gamification.redeemVoucher(id);
+
+                if (success) {
+                    alert('✅ VALID VOUCHER! \n\nMeal/Snack Redeemed Successfully.');
+                    // Notify User
+                    if (window.Notifications) window.Notifications.send('success', `Your voucher at African Queen Kitchen was redeemed!`, 'user');
+                } else {
+                    alert('❌ INVALID OR USED.\n\nThis voucher code is not valid.');
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kiss Your Heart | Flow Photography</title>
+    <meta name="description"
+        content="Capturing the true essence of people, places, and communities. Flow-driven photography in Lisbon.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        midnight: '#0D0D0F',
+                        violet: '#5A2A84',
+                        electric: '#9A4DFF',
+                        amber: '#FFAE42',
+                        mist: '#A8A8B3',
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Inter"', 'sans-serif'],
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'fade-in': 'fadeIn 1s ease-out forwards',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="manga-gallery.css">
+</head>
+
+<body class="bg-midnight text-white font-sans antialiased overflow-x-hidden selection:bg-electric selection:text-white">
+    <!-- Custom Cursor -->
+    <div id="cursor" class="fixed w-12 h-12 pointer-events-none z-50 transition-transform duration-100 hidden md:block">
+        <img src="Assets/images/logo.png" class="w-full h-full object-contain drop-shadow-lg" alt="Cursor">
+    </div>
+
+    <!-- Navigation -->
+    <nav id="navbar"
+        class="fixed w-full z-40 transition-all duration-300 py-6 px-8 flex justify-between items-center mix-blend-difference">
+        <a href="#hero" class="text-2xl font-serif font-bold tracking-wider hover:text-amber transition-colors">KYH</a>
+
+        <div class="hidden md:flex space-x-8 text-sm uppercase tracking-widest items-center">
+            <a href="index.html" class="hover:text-electric transition-colors font-bold">Circle D Flow</a>
+            <a href="#about" class="hover:text-electric transition-colors">Philosophy</a>
+            <a href="#portfolio" class="hover:text-electric transition-colors">Portfolio</a>
+
+            <!-- Services Dropdown -->
+            <div class="relative group">
+                <button class="hover:text-electric transition-colors flex items-center gap-1 focus:outline-none">
+                    Services
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+                <div
+                    class="absolute top-full left-1/2 -translate-x-1/2 pt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
+                    <div
+                        class="bg-midnight/90 backdrop-blur-md border border-white/10 rounded-lg p-4 min-w-[200px] flex flex-col gap-3 shadow-xl">
+                        <a href="services-artist.html" class="hover:text-electric transition-colors">Artist</a>
+                        <a href="services-brand.html" class="hover:text-amber transition-colors">Brand</a>
+                        <a href="services-individual.html" class="hover:text-violet transition-colors">Individual</a>
+                        <div class="h-px bg-white/10"></div>
+                        <a href="services-wedding.html" class="hover:text-white transition-colors">Wedding</a>
+                        <a href="services-citytrip.html" class="hover:text-white transition-colors">Citytrip</a>
+                        <a href="services-community.html" class="hover:text-white transition-colors">Community</a>
+                        <div class="h-px bg-white/10"></div>
+                        <a href="booking.html" class="hover:text-amber transition-colors font-bold">Book Now</a>
+                    </div>
+                </div>
+            </div>
+
+            <a href="#community" class="hover:text-electric transition-colors">Community</a>
+
+            <a href="#contact" class="hover:text-electric transition-colors">Contact</a>
+            <a href="impressum.html" class="hover:text-electric transition-colors">Impressum</a>
+        </div>
+
+        <button id="menu-btn" class="md:hidden text-white focus:outline-none">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16">
+                </path>
+            </svg>
+        </button>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu"
+        class="fixed inset-0 bg-midnight z-30 flex flex-col items-center justify-center space-y-8 text-2xl font-serif transform translate-x-full transition-transform duration-300 md:hidden">
+        <a href="#about" class="mobile-link hover:text-amber">Philosophy</a>
+        <a href="#portfolio" class="mobile-link hover:text-amber">Portfolio</a>
+        <a href="#services" class="mobile-link hover:text-amber">Services</a>
+        <a href="booking.html" class="mobile-link hover:text-amber font-bold">Book Now</a>
+        <a href="#community" class="mobile-link hover:text-amber">Community</a>
+
+        <a href="#contact" class="mobile-link hover:text-amber">Contact</a>
+        <div class="h-px w-12 bg-white/20 my-4"></div>
+        <a href="impressum.html" class="mobile-link text-lg text-mist hover:text-white">Impressum</a>
+        <a href="privacy.html" class="mobile-link text-lg text-mist hover:text-white">Privacy Policy</a>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section id="hero" class="relative h-screen flex items-center justify-center overflow-hidden">
+            <div class="absolute inset-0 z-0">
+                <video autoplay loop muted playsinline class="w-full h-full object-cover opacity-60">
+                    <source src="Assets/video/hero.mp4" type="video/mp4">
+                </video>
+                <div class="absolute inset-0 bg-gradient-to-b from-midnight/30 via-transparent to-midnight"></div>
+            </div>
+            <div class="relative z-10 text-center px-4">
+                <h1 class="text-5xl md:text-7xl lg:text-9xl font-serif font-bold mb-4 tracking-tighter">
+                    Feel your <span class="text-electric italic">flow</span>
+                </h1>
+                <p class="text-lg md:text-xl text-mist max-w-2xl mx-auto mb-12 font-light">
+                    Capturing the moment you become yourself.
+                </p>
+                <a href="javascript:void(0)"
+                    class="offer-btn inline-block px-8 py-3 border border-white hover:bg-white hover:text-midnight transition-all duration-300 uppercase tracking-widest text-sm"
+                    data-service="General Inquiry">
+                    Let's Create
+                </a>
+            </div>
+        </section>
+
+        <!-- Philosophy / About Section -->
+        <section id="about" class="py-24 px-8 bg-midnight relative overflow-hidden">
+            <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-center">
+                <div class="space-y-8">
+                    <h2 class="text-4xl md:text-6xl font-serif font-bold text-white">
+                        The Art of <span class="text-amber italic">Flow</span>
+                    </h2>
+                    <div class="space-y-6 text-mist font-light leading-relaxed">
+                        <p>
+                            My foundation is built on service, community, experience, and emotional understanding—skills
+                            that now flow into every creative project I touch.
+                        </p>
+                        <p>
+                            A transformative year in Japan awakened my fascination for intrinsic values, community
+                            energy, and flow states. Through <strong>Taoism & Wu Wei</strong>, I discovered the ancient
+                            wisdom of effortless action, where mastery feels like play.
+                        </p>
+                        <p>
+                            <strong>My Mission:</strong> Helping people enter their authentic creative flow, from
+                            photography to community building.
+                        </p>
+                    </div>
+                    <div class="pt-4">
+                        <h3 class="text-xl font-serif text-white mb-4">Experience & Expertise</h3>
+                        <ul class="space-y-2 text-sm text-mist">
+                            <li class="flex items-center"><span
+                                    class="w-2 h-2 bg-electric rounded-full mr-3"></span>Hospitality Trained (Marriott)
+                            </li>
+                            <li class="flex items-center"><span
+                                    class="w-2 h-2 bg-electric rounded-full mr-3"></span>Entertainment Experience (Jazz
+                                Hotel Stuttgart)</li>
+                            <li class="flex items-center"><span
+                                    class="w-2 h-2 bg-electric rounded-full mr-3"></span>Digital Expertise (Google Ads,
+                                WIX)</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="relative">
+                    <!-- Portrait of Hope -->
+                    <div class="aspect-[3/4] bg-white/5 rounded-lg overflow-hidden relative group">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-t from-midnight via-transparent to-transparent opacity-60">
+                        </div>
+                        <img src="Assets/images/Nikon%20Transfer%202/cakesonboobs.village%20underground011/DSC_5188.JPG"
+                            alt="Hope Bruce"
+                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Portfolio Section (Manga Volumes) -->
+        <section id="portfolio" class="py-24 px-8 bg-midnight relative">
+            <div class="max-w-6xl mx-auto">
+                <h2 class="text-4xl md:text-6xl font-serif font-bold text-center mb-16">
+                    Visual <span class="text-electric">Volumes</span>
+                </h2>
+
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- Volume 1: Portrait Flow -->
+                    <div class="volume-cover group cursor-pointer relative aspect-[2/3] bg-white/5 rounded-lg overflow-hidden border-2 border-transparent hover:border-electric transition-all duration-300"
+                        data-category="portrait">
+                        <img src="Assets/images/Portrait/1-DSC_0759.jpg"
+                            class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+                            alt="Volume 1">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex flex-col justify-end p-6">
+                            <span class="text-electric text-sm font-bold tracking-widest uppercase mb-2">Volume
+                                01</span>
+                            <h3 class="text-3xl font-serif font-bold text-white">Portrait Flow</h3>
+                            <p
+                                class="text-mist text-sm mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-4 group-hover:translate-y-0">
+                                Click to Read</p>
+                        </div>
+                    </div>
+
+                    <!-- Volume 2: Event Energy -->
+                    <div class="volume-cover group cursor-pointer relative aspect-[2/3] bg-white/5 rounded-lg overflow-hidden border-2 border-transparent hover:border-amber transition-all duration-300"
+                        data-category="events">
+                        <img src="Assets/images/Nikon Transfer 2/HempyRoots14.okt005/DSC_1236.JPG"
+                            class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+                            alt="Volume 2">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex flex-col justify-end p-6">
+                            <span class="text-amber text-sm font-bold tracking-widest uppercase mb-2">Volume 02</span>
+                            <h3 class="text-3xl font-serif font-bold text-white">Event Energy</h3>
+                            <p
+                                class="text-mist text-sm mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-4 group-hover:translate-y-0">
+                                Click to Read</p>
+                        </div>
+                    </div>
+
+                    <!-- Volume 3: Community -->
+                    <div class="volume-cover group cursor-pointer relative aspect-[2/3] bg-white/5 rounded-lg overflow-hidden border-2 border-transparent hover:border-violet transition-all duration-300"
+                        data-category="community">
+                        <img src="Assets/images/Nikon Transfer 2/15novhempy015/DSC_8333.JPG"
+                            class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+                            alt="Volume 3">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex flex-col justify-end p-6">
+                            <span class="text-violet text-sm font-bold tracking-widest uppercase mb-2">Volume 03</span>
+                            <h3 class="text-3xl font-serif font-bold text-white">Community</h3>
+                            <p
+                                class="text-mist text-sm mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-4 group-hover:translate-y-0">
+                                Click to Read</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Offer Modal (Redesigned) -->
+        <div id="offer-modal"
+            class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-black/95 backdrop-blur-md opacity-0 transition-opacity duration-500">
+            <div
+                class="offer-content relative bg-gradient-to-br from-[#1a0b2e] to-[#0D0D0F] border border-white/10 max-w-4xl w-full mx-4 rounded-2xl shadow-2xl transform scale-95 transition-transform duration-500 overflow-hidden flex flex-col md:flex-row">
+
+                <!-- Close Button -->
+                <button id="close-offer-btn"
+                    class="absolute top-4 right-4 z-10 text-white/50 hover:text-white transition-colors p-2">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                            d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+
+                <!-- Left Column: Visual/Hook -->
+                <div class="w-full md:w-2/5 bg-cover bg-center relative hidden md:block"
+                    style="background-image: url('Assets/images/Nikon%20Transfer%202/HempyRoots14.okt005/DSC_1236.JPG');">
+                    <div class="absolute inset-0 bg-violet/60 mix-blend-multiply"></div>
+                    <div class="absolute inset-0 bg-gradient-to-b from-transparent to-[#1a0b2e]"></div>
+                    <div class="absolute bottom-0 left-0 p-8">
+                        <h3 class="text-3xl font-serif font-bold text-white mb-2">Start Your Journey</h3>
+                        <p class="text-white/80 text-sm">Step into the flow and let's create something timeless.</p>
+                    </div>
+                </div>
+
+                <!-- Right Column: Content -->
+                <div class="w-full md:w-3/5 p-8 md:p-12 flex flex-col justify-center">
+                    <h3 class="text-3xl font-serif font-bold text-white mb-8 md:hidden">Start Your Journey</h3>
+
+                    <div class="space-y-8">
+                        <!-- Step 1 -->
+                        <div class="flex gap-4">
+                            <div
+                                class="flex-shrink-0 w-10 h-10 rounded-full bg-electric/20 flex items-center justify-center text-electric font-bold">
+                                1</div>
+                            <div>
+                                <h4 class="text-white font-bold mb-1">The Connection</h4>
+                                <p class="text-mist text-sm font-light leading-relaxed">
+                                    We'll arrange an initial conversation to discuss inspirations, equipment (lenses,
+                                    cameras), and schedule. Preparation is key to the flow.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div class="flex gap-4">
+                            <div
+                                class="flex-shrink-0 w-10 h-10 rounded-full bg-amber/20 flex items-center justify-center text-amber font-bold">
+                                2</div>
+                            <div>
+                                <h4 class="text-white font-bold mb-1">Rights & Trust</h4>
+                                <p class="text-mist text-sm font-light leading-relaxed">
+                                    We reserve the right to use images freely after consultation. Your recorded images
+                                    are available for <strong>20 days</strong> in the gallery before deletion.
+                                </p>
+                                <a href="#"
+                                    class="text-[10px] text-white/30 hover:text-white/60 transition-colors mt-1 block">*EU
+                                    Data Protection Regulations apply.</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="mt-10 flex flex-col gap-4">
+                        <a href="https://calendar.app.google/XbmJUDtaSWecgEXHA" target="_blank"
+                            class="group relative px-8 py-4 bg-electric text-white font-bold uppercase tracking-widest hover:bg-violet transition-all rounded text-center overflow-hidden">
+                            <span class="relative z-10">Contact to Book</span>
+                            <div
+                                class="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700">
+                            </div>
+                        </a>
+
+                        <div class="relative text-center">
+                            <span class="bg-[#1a0b2e] px-2 text-xs text-white/30 relative z-10">OR</span>
+                            <div class="absolute top-1/2 left-0 w-full h-px bg-white/10 -z-0"></div>
+                        </div>
+
+                        <a href="https://docs.google.com/forms/d/1w--BxTEh71STsIVV2j-Uyg_gVF_I3BNhO5Wpf-YjXx4/preview"
+                            target="_blank"
+                            class="text-center px-8 py-3 border border-white/20 text-amber hover:border-amber hover:bg-amber/10 transition-all uppercase tracking-widest text-sm rounded">
+                            Join Circle D Flow
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Manga Book Modal -->
+        <div id="manga-book-modal" class="book-modal hidden">
+            <div class="close-book" id="close-book-btn">&times;</div>
+
+            <div class="manga-layout-container">
+                <!-- Story Sidebar (Left) -->
+                <div id="manga-story-sidebar" class="story-sidebar hidden">
+                    <div class="story-content">
+                        <h3 class="story-title">The Will of D.</h3>
+                        <div class="story-text">
+                            <!-- Dynamic Story Content -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Book Container (Right/Center) -->
+                <div class="manga-book-container">
+                    <!-- Pages will be dynamically generated by manga.js -->
+                </div>
+            </div>
+
+            <div class="book-nav-controls">
+                <button id="prev-page-btn" class="nav-btn">Prev</button>
+                <button id="next-page-btn" class="nav-btn">Next</button>
+            </div>
+        </div>
+
+        <!-- Lightbox Modal -->
+        <div id="lightbox-modal" class="lightbox-modal hidden">
+            <div class="close-lightbox" id="close-lightbox-btn">&times;</div>
+            <div class="lightbox-content">
+                <!-- Dynamic Content -->
+            </div>
+        </div>
+
+        <!-- Services Section -->
+        <section id="services" class="py-24 px-8 bg-midnight/50">
+            <div class="max-w-6xl mx-auto">
+                <h2 class="text-4xl md:text-6xl font-serif font-bold text-center mb-8">
+                    Services & <span class="text-amber">Investment</span>
+                </h2>
+
+                <div class="text-center mb-16">
+                    <a href="gallery.html"
+                        class="inline-block px-10 py-4 bg-amber text-midnight font-bold border-2 border-white hover:bg-white hover:text-midnight transition-all duration-300 uppercase tracking-widest text-sm rounded shadow-lg hover:shadow-amber/50 transform hover:scale-105">
+                        Klick here for more Insight
+                    </a>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Card 1: Community Offer -->
+                    <div
+                        class="service-card relative z-10 p-8 border border-white/10 hover:border-amber transition-colors bg-white/5 rounded-lg group cursor-pointer">
+                        <h3 class="text-2xl font-serif mb-2 text-amber">Community Offer</h3>
+                        <p class="text-3xl font-bold text-white mb-4">FREE</p>
+                        <p class="text-mist text-sm mb-6">For Circle D Flow members & test shoots: 1-hour shoot + 10
+                            edited images.</p>
+                        <a href="javascript:void(0)"
+                            class="offer-btn text-xs uppercase tracking-widest border-b border-transparent group-hover:border-amber transition-all"
+                            data-service="Community Offer">Join Circle</a>
+                    </div>
+
+                    <!-- Card 2: Standard Shooting -->
+                    <div
+                        class="service-card relative z-10 p-8 border border-white/10 hover:border-electric transition-colors bg-white/5 rounded-lg group cursor-pointer">
+                        <h3 class="text-2xl font-serif mb-2">Standard Shooting</h3>
+                        <p class="text-3xl font-bold text-electric mb-4">40€ <span
+                                class="text-sm font-normal text-mist">/ hour</span></p>
+                        <p class="text-mist text-sm mb-6">Pure shooting session. No edits included. Perfect for raw
+                            content.</p>
+                        <a href="javascript:void(0)"
+                            class="offer-btn text-xs uppercase tracking-widest border-b border-transparent group-hover:border-electric transition-all"
+                            data-service="Standard Shooting">Book Now</a>
+                    </div>
+
+                    <!-- Card 3: Full Package -->
+                    <div
+                        class="service-card relative z-10 p-8 border border-electric bg-white/5 rounded-lg group overflow-hidden cursor-pointer">
+                        <div class="absolute top-0 right-0 bg-electric text-white text-xs px-3 py-1">Popular</div>
+                        <h3 class="text-2xl font-serif mb-2">Full Package</h3>
+                        <p class="text-3xl font-bold text-electric mb-4">50€ <span
+                                class="text-sm font-normal text-mist">/ hour</span></p>
+                        <p class="text-mist text-sm mb-6">Includes 20 professionally edited images. The complete
+                            experience.</p>
+                        <a href="javascript:void(0)"
+                            class="offer-btn text-xs uppercase tracking-widest border-b border-transparent group-hover:border-electric transition-all"
+                            data-service="Full Package">Book Now</a>
+                    </div>
+
+                    <!-- Card 4: Studio Sessions -->
+                    <div
+                        class="service-card relative z-10 p-8 border border-white/10 hover:border-electric transition-colors bg-white/5 rounded-lg group cursor-pointer">
+                        <h3 class="text-2xl font-serif mb-2">Studio Sessions</h3>
+                        <p class="text-3xl font-bold text-electric mb-4">Hourly <span
+                                class="text-sm font-normal text-mist">+ Rental</span></p>
+                        <p class="text-mist text-sm mb-6">Standard hourly rate plus separate studio rental costs.</p>
+                        <a href="javascript:void(0)"
+                            class="offer-btn text-xs uppercase tracking-widest border-b border-transparent group-hover:border-electric transition-all"
+                            data-service="Studio Sessions">Book Now</a>
+                    </div>
+
+                    <!-- Card 5: Creative Projects -->
+                    <div
+                        class="service-card relative z-10 p-8 border border-white/10 hover:border-electric transition-colors bg-white/5 rounded-lg group cursor-pointer">
+                        <h3 class="text-2xl font-serif mb-2">Creative Projects</h3>
+                        <p class="text-3xl font-bold text-electric mb-4">Custom</p>
+                        <p class="text-mist text-sm mb-6">Individual artistic collaborations by agreement.</p>
+                        <a href="javascript:void(0)"
+                            class="offer-btn text-xs uppercase tracking-widest border-b border-transparent group-hover:border-electric transition-all"
+                            data-service="Creative Projects">Inquire</a>
+                    </div>
+
+                    <!-- Card 6: Special Branding -->
+                    <div
+                        class="service-card relative z-10 p-8 border border-white/10 hover:border-electric transition-colors bg-white/5 rounded-lg group cursor-pointer">
+                        <h3 class="text-2xl font-serif mb-2">Special Branding</h3>
+                        <p class="text-3xl font-bold text-electric mb-4">Custom</p>
+                        <p class="text-mist text-sm mb-6">Complete support: Logo design, philosophy, and marketing.</p>
+                        <a href="javascript:void(0)"
+                            class="offer-btn text-xs uppercase tracking-widest border-b border-transparent group-hover:border-electric transition-all"
+                            data-service="Special Branding">Inquire</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Booking Modal -->
+        <div id="booking-modal"
+            class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-black/95 backdrop-blur-md opacity-0 transition-opacity duration-500">
+            <div
+                class="booking-content relative bg-gradient-to-br from-[#1a0b2e] to-[#0D0D0F] border border-white/10 max-w-4xl w-full mx-4 rounded-2xl shadow-2xl overflow-hidden flex flex-col h-[80vh] md:h-auto md:min-h-[600px]">
+
+                <!-- Close Button -->
+                <button id="close-booking-btn"
+                    class="absolute top-4 right-4 z-20 text-white/50 hover:text-white transition-colors p-2">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                            d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+
+                <!-- Progress Bar -->
+                <div class="absolute top-0 left-0 w-full h-1 bg-white/10 z-10">
+                    <div id="booking-progress" class="h-full bg-electric transition-all duration-500"
+                        style="width: 33%"></div>
+                </div>
+
+                <div class="flex flex-col md:flex-row h-full">
+                    <!-- Left Column: Visual/Context -->
+                    <div class="w-full md:w-1/3 bg-cover bg-center relative hidden md:block"
+                        style="background-image: url('Assets/images/Nikon Transfer 2/HempyRoots14.okt005/DSC_1236.JPG');">
+                        <div class="absolute inset-0 bg-violet/80 mix-blend-multiply"></div>
+                        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-[#1a0b2e]"></div>
+                        <div class="absolute bottom-0 left-0 p-8">
+                            <h3 class="text-3xl font-serif font-bold text-white mb-2" id="booking-step-title">Select
+                                Service</h3>
+                            <p class="text-white/80 text-sm" id="booking-step-desc">Choose the experience that fits your
+                                vision.</p>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Form Steps -->
+                    <div class="w-full md:w-2/3 p-8 md:p-12 flex flex-col relative overflow-y-auto">
+
+                        <!-- Step 1: Service Selection -->
+                        <div id="step-1" class="booking-step flex-1 flex flex-col">
+                            <h3 class="text-2xl font-serif font-bold text-white mb-8 md:hidden">Select Service</h3>
+                            <div class="grid gap-4">
+                                <button
+                                    class="service-option p-6 border border-white/10 rounded-lg hover:border-electric hover:bg-white/5 transition-all text-left group"
+                                    data-service="Artists">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <span
+                                            class="text-xl font-serif font-bold text-white group-hover:text-electric transition-colors">Artists</span>
+                                        <span
+                                            class="text-electric opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                                    </div>
+                                    <p class="text-sm text-mist">Tour coverage, EPK, Social Content.</p>
+                                </button>
+                                <button
+                                    class="service-option p-6 border border-white/10 rounded-lg hover:border-amber hover:bg-white/5 transition-all text-left group"
+                                    data-service="Brands">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <span
+                                            class="text-xl font-serif font-bold text-white group-hover:text-amber transition-colors">Brands</span>
+                                        <span
+                                            class="text-amber opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                                    </div>
+                                    <p class="text-sm text-mist">Events, Headshots, Branding.</p>
+                                </button>
+                                <button
+                                    class="service-option p-6 border border-white/10 rounded-lg hover:border-violet hover:bg-white/5 transition-all text-left group"
+                                    data-service="Private">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <span
+                                            class="text-xl font-serif font-bold text-white group-hover:text-violet transition-colors">Private</span>
+                                        <span
+                                            class="text-violet opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                                    </div>
+                                    <p class="text-sm text-mist">Portraits, Personal Projects.</p>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Details Form -->
+                        <div id="step-2" class="booking-step hidden flex-1 flex flex-col">
+                            <h3 class="text-2xl font-serif font-bold text-white mb-6 md:hidden">Your Details</h3>
+                            <form id="booking-form" class="space-y-6">
+                                <div class="grid md:grid-cols-2 gap-6">
+                                    <div class="space-y-2">
+                                        <label class="text-xs uppercase tracking-widest text-mist">Name</label>
+                                        <input type="text" name="name" required
+                                            class="w-full bg-white/5 border border-white/10 rounded p-3 text-white focus:border-electric focus:outline-none transition-colors">
+                                    </div>
+                                    <div class="space-y-2">
+                                        <label class="text-xs uppercase tracking-widest text-mist">Email</label>
+                                        <input type="email" name="email" required
+                                            class="w-full bg-white/5 border border-white/10 rounded p-3 text-white focus:border-electric focus:outline-none transition-colors">
+                                    </div>
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="text-xs uppercase tracking-widest text-mist">Direction of
+                                        Photography</label>
+                                    <textarea name="direction" rows="4"
+                                        placeholder="Tell me about your vision, location ideas, or specific needs..."
+                                        class="w-full bg-white/5 border border-white/10 rounded p-3 text-white focus:border-electric focus:outline-none transition-colors"></textarea>
+                                </div>
+                            </form>
+                            <div class="mt-auto pt-8 flex justify-between">
+                                <button
+                                    class="back-btn text-mist hover:text-white transition-colors text-sm uppercase tracking-widest">Back</button>
+                                <button id="to-step-3"
+                                    class="px-8 py-3 bg-electric text-white font-bold uppercase tracking-widest hover:bg-violet transition-colors rounded">Next
+                                    Step</button>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Confirmation -->
+                        <div id="step-3" class="booking-step hidden flex-1 flex flex-col">
+                            <h3 class="text-2xl font-serif font-bold text-white mb-6 md:hidden">Confirm Booking</h3>
+                            <div class="bg-white/5 rounded-lg p-6 border border-white/10 mb-8">
+                                <h4 class="text-lg font-bold text-white mb-4">Summary</h4>
+                                <div class="space-y-3 text-sm">
+                                    <div class="flex justify-between border-b border-white/10 pb-2">
+                                        <span class="text-mist">Service</span>
+                                        <span class="text-white font-bold" id="summary-service">-</span>
+                                    </div>
+                                    <div class="flex justify-between border-b border-white/10 pb-2">
+                                        <span class="text-mist">Name</span>
+                                        <span class="text-white" id="summary-name">-</span>
+                                    </div>
+                                    <div class="flex justify-between border-b border-white/10 pb-2">
+                                        <span class="text-mist">Email</span>
+                                        <span class="text-white" id="summary-email">-</span>
+                                    </div>
+                                    <div class="pt-2">
+                                        <span class="text-mist block mb-1">Vision</span>
+                                        <p class="text-white/80 italic" id="summary-vision">-</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-auto pt-8 flex justify-between">
+                                <button
+                                    class="back-btn text-mist hover:text-white transition-colors text-sm uppercase tracking-widest">Back</button>
+                                <button id="confirm-booking"
+                                    class="px-8 py-3 bg-amber text-midnight font-bold uppercase tracking-widest hover:bg-white transition-colors rounded shadow-lg shadow-amber/20">Confirm
+                                    Booking</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Community Section -->
+        <section id="community" class="py-24 px-8 bg-midnight relative overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-r from-violet/20 to-transparent pointer-events-none"></div>
+            <div class="max-w-4xl mx-auto text-center space-y-12">
+                <h2 class="text-4xl md:text-6xl font-serif font-bold">
+                    Circle D <span class="text-electric">Flow</span>
+                </h2>
+                <p class="text-xl text-mist font-light leading-relaxed">
+                    A growing collective in Lisbon celebrating creativity, cultural freedom, artistic exchange, and
+                    community energy.
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-8 text-left max-w-2xl mx-auto">
+                    <div class="space-y-2">
+                        <h4 class="text-lg font-serif text-white">1. Creativity</h4>
+                        <p class="text-sm text-mist">Unleashing artistic expression.</p>
+                    </div>
+                    <div class="space-y-2">
+                        <h4 class="text-lg font-serif text-white">2. Authentic Flow</h4>
+                        <p class="text-sm text-mist">Awakening unique purpose.</p>
+                    </div>
+                    <div class="space-y-2">
+                        <h4 class="text-lg font-serif text-white">3. Cultural Freedom</h4>
+                        <p class="text-sm text-mist">Celebrating diverse voices.</p>
+                    </div>
+                    <div class="space-y-2">
+                        <h4 class="text-lg font-serif text-white">4. Community Energy</h4>
+                        <p class="text-sm text-mist">Building connections.</p>
+                    </div>
+                </div>
+                <a href="#"
+                    class="inline-block px-12 py-4 bg-electric text-white font-bold uppercase tracking-widest hover:bg-violet transition-colors rounded-full">
+                    Join the Circle
+                </a>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-24 px-8 bg-midnight">
+            <div class="max-w-4xl mx-auto text-center">
+                <h2 class="text-4xl md:text-6xl font-serif font-bold mb-8">
+                    Kiss Your <span class="text-amber">Heart</span>
+                </h2>
+                <p class="text-xl text-mist mb-12">
+                    Let's feel your flow and create something real together.
+                </p>
+
+                <div class="flex flex-col md:flex-row justify-center items-center gap-8">
+                    <a href="mailto:contact@kissyourheart.com"
+                        class="px-8 py-3 border border-white hover:bg-white hover:text-midnight transition-all uppercase tracking-widest">
+                        Book Your Session
+                    </a>
+                    <a href="https://instagram.com/KYheart.lx" target="_blank"
+                        class="px-8 py-3 border border-white hover:bg-electric hover:border-electric hover:text-white transition-all uppercase tracking-widest">
+                        @KYheart.lx
+                    </a>
+                </div>
+
+                <footer class="mt-24 text-mist text-xs uppercase tracking-widest opacity-50">
+                    &copy; 2024 Kiss Your Heart. All rights reserved.
+                </footer>
+            </div>
+        </section>
+    </main>
+
+    <!-- Audio Player (Right) -->
+    <div class="fixed bottom-8 right-8 z-50">
+        <button id="audio-btn"
+            class="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:border-electric transition-colors bg-midnight/50 backdrop-blur-sm">
+            <!-- Treble Clef Icon -->
+            <svg id="audio-icon-on" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                    d="M11.5 2C11.5 2 11.5 2 11.5 2C10.67 2 10 2.67 10 3.5C10 4.33 10.67 5 11.5 5C12.33 5 13 4.33 13 3.5C13 3.42 12.99 3.34 12.98 3.26C13.6 3.64 14 4.31 14 5.08C14 6.27 12.94 7.21 11.77 7.21C11.68 7.21 11.59 7.2 11.5 7.2C9.57 7.2 8 8.77 8 10.7C8 12.63 9.57 14.2 11.5 14.2C11.5 14.2 11.5 14.2 11.5 14.2C12.33 14.2 13 13.53 13 12.7C13 11.87 12.33 11.2 11.5 11.2C10.67 11.2 10 11.87 10 12.7C10 12.78 10.01 12.86 10.02 12.94C9.4 12.56 9 11.89 9 11.12C9 9.93 10.06 8.99 11.23 8.99C11.32 8.99 11.41 9 11.5 9C13.43 9 15 7.43 15 5.5C15 3.57 13.43 2 11.5 2ZM11.5 15.5C9.57 15.5 8 17.07 8 19C8 20.93 9.57 22.5 11.5 22.5C13.43 22.5 15 20.93 15 19C15 17.07 13.43 15.5 11.5 15.5ZM11.5 20.5C10.67 20.5 10 19.83 10 19C10 18.17 10.67 17.5 11.5 17.5C12.33 17.5 13 18.17 13 19C13 19.83 12.33 20.5 11.5 20.5Z" />
+            </svg>
+            <svg id="audio-icon-off" class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                    d="M11.5 2C11.5 2 11.5 2 11.5 2C10.67 2 10 2.67 10 3.5C10 4.33 10.67 5 11.5 5C12.33 5 13 4.33 13 3.5C13 3.42 12.99 3.34 12.98 3.26C13.6 3.64 14 4.31 14 5.08C14 6.27 12.94 7.21 11.77 7.21C11.68 7.21 11.59 7.2 11.5 7.2C9.57 7.2 8 8.77 8 10.7C8 12.63 9.57 14.2 11.5 14.2C11.5 14.2 11.5 14.2 11.5 14.2C12.33 14.2 13 13.53 13 12.7C13 11.87 12.33 11.2 11.5 11.2C10.67 11.2 10 11.87 10 12.7C10 12.78 10.01 12.86 10.02 12.94C9.4 12.56 9 11.89 9 11.12C9 9.93 10.06 8.99 11.23 8.99C11.32 8.99 11.41 9 11.5 9C13.43 9 15 7.43 15 5.5C15 3.57 13.43 2 11.5 2ZM11.5 15.5C9.57 15.5 8 17.07 8 19C8 20.93 9.57 22.5 11.5 22.5C13.43 22.5 15 20.93 15 19C15 17.07 13.43 15.5 11.5 15.5ZM11.5 20.5C10.67 20.5 10 19.83 10 19C10 18.17 10.67 17.5 11.5 17.5C12.33 17.5 13 18.17 13 19C13 19.83 12.33 20.5 11.5 20.5Z"
+                    opacity="0.3" />
+                <line x1="4" y1="4" x2="20" y2="20" stroke="currentColor" stroke-width="2" />
+            </svg>
+        </button>
+        <audio id="bg-music" loop>
+            <source src="assets/audio/ambient.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+
+    <!-- Scripts -->
+    <script src="gamification.js"></script>
+    <script src="script.js?v=4"></script>
+    <script src="manga.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="de"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kiss Your Heart: Client Portal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300..700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#7f0df2",
+                        "background-light": "#f7f5f8",
+                        "background-dark": "#191022",
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings:
+                'FILL' 0,
+                'wght' 400,
+                'GRAD' 0,
+                'opsz' 24
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings:
+                'FILL' 1,
+                'wght' 400,
+                'GRAD' 0,
+                'opsz' 24
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-800 dark:text-gray-200">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="flex flex-row min-h-screen">
+<!-- SideNavBar -->
+<aside class="w-64 bg-background-light dark:bg-[#141118] p-4 flex flex-col justify-between border-r border-gray-200/10 dark:border-white/10">
+<div class="flex flex-col gap-4">
+<div class="flex gap-3 items-center">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Abstract purple and gold circular portal" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBQ9aQM3KV8ee7PpKNNHu5hWzMO_1seXtLm278RGY92mfo1EwbO3y8OqEdgijlXU2wftvQmqRDfDkng-p1r0FvAndoM7DevgsdbtDe5hZB0zXDVpeaDE0nVJFQDBeNCTyl5lQmvCirTs5SQkxvxCurpfvDr8r3GYVNzeo2msqWsDBUqPRP5jK-paacjfN1sD42-HuyopYueRZU6OCWLupudT2FVsINCQZMIDyDLN8sxaCM3c5OfKlcdPR9Mm5NsBW_f1s4HerLVFF0");'></div>
+<div class="flex flex-col">
+<h1 class="text-black dark:text-white text-base font-medium leading-normal">Dimension Portal</h1>
+<p class="text-gray-500 dark:text-[#ab9cba] text-sm font-normal leading-normal">Kiss Your Heart</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2 mt-4">
+<a class="flex items-center gap-3 px-3 py-2 rounded-full bg-primary/10 dark:bg-[#302839] text-primary dark:text-white" href="#">
+<span class="material-symbols-outlined fill">dashboard</span>
+<p class="text-sm font-medium leading-normal">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-white hover:bg-primary/10 dark:hover:bg-white/5 rounded-full" href="#">
+<span class="material-symbols-outlined">folder</span>
+<p class="text-sm font-medium leading-normal">Projects</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-white hover:bg-primary/10 dark:hover:bg-white/5 rounded-full" href="#">
+<span class="material-symbols-outlined">photo_library</span>
+<p class="text-sm font-medium leading-normal">Gallery</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-white hover:bg-primary/10 dark:hover:bg-white/5 rounded-full" href="#">
+<span class="material-symbols-outlined">chat_bubble</span>
+<p class="text-sm font-medium leading-normal">Messages</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-white hover:bg-primary/10 dark:hover:bg-white/5 rounded-full" href="#">
+<span class="material-symbols-outlined">credit_card</span>
+<p class="text-sm font-medium leading-normal">Payments</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-white hover:bg-primary/10 dark:hover:bg-white/5 rounded-full" href="#">
+<span class="material-symbols-outlined">settings</span>
+<p class="text-sm font-medium leading-normal">Settings</p>
+</a>
+</nav>
+</div>
+<div class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 text-gray-700 dark:text-white hover:bg-primary/10 dark:hover:bg-white/5 rounded-full" href="#">
+<span class="material-symbols-outlined">logout</span>
+<p class="text-sm font-medium leading-normal">Logout</p>
+</a>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 p-8 overflow-y-auto">
+<div class="max-w-4xl mx-auto">
+<!-- PageHeading -->
+<header class="flex flex-wrap justify-between gap-3 mb-8">
+<div class="flex flex-col gap-3">
+<h1 class="text-gray-900 dark:text-white text-4xl font-black leading-tight tracking-[-0.033em]">Welcome back, Anna</h1>
+<p class="text-gray-500 dark:text-[#ab9cba] text-base font-normal leading-normal">Here's the current flow of your branding project.</p>
+</div>
+</header>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<div class="lg:col-span-2">
+<!-- SectionHeader for Timeline -->
+<h2 class="text-gray-900 dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em] mb-4">Project Timeline</h2>
+<!-- Timeline -->
+<div class="grid grid-cols-[40px_1fr] gap-x-2 bg-background-light dark:bg-[#141118]/60 p-6 rounded-lg">
+<div class="flex flex-col items-center gap-1 pt-3">
+<span class="material-symbols-outlined fill text-primary">check_circle</span>
+<div class="w-[1.5px] bg-primary h-full grow"></div>
+</div>
+<div class="flex flex-1 flex-col pb-6">
+<p class="text-gray-900 dark:text-white text-base font-medium leading-normal">Concept</p>
+<p class="text-primary text-base font-normal leading-normal">Completed</p>
+</div>
+<div class="flex flex-col items-center gap-1">
+<div class="w-[1.5px] bg-primary h-2"></div>
+<span class="material-symbols-outlined fill text-primary animate-pulse">sync</span>
+<div class="w-[1.5px] bg-gray-300 dark:bg-[#473b54] h-full grow"></div>
+</div>
+<div class="flex flex-1 flex-col pb-6">
+<p class="text-gray-900 dark:text-white text-base font-medium leading-normal">Photoshoot</p>
+<p class="text-primary text-base font-normal leading-normal">In Progress</p>
+</div>
+<div class="flex flex-col items-center gap-1">
+<div class="w-[1.5px] bg-gray-300 dark:bg-[#473b54] h-2"></div>
+<span class="material-symbols-outlined text-gray-500 dark:text-white">radio_button_unchecked</span>
+<div class="w-[1.5px] bg-gray-300 dark:bg-[#473b54] h-full grow"></div>
+</div>
+<div class="flex flex-1 flex-col pb-6">
+<p class="text-gray-900 dark:text-white text-base font-medium leading-normal">Editing</p>
+<p class="text-gray-500 dark:text-[#ab9cba] text-base font-normal leading-normal">Next Up</p>
+</div>
+<div class="flex flex-col items-center gap-1 pb-3">
+<div class="w-[1.5px] bg-gray-300 dark:bg-[#473b54] h-2"></div>
+<span class="material-symbols-outlined text-gray-500 dark:text-white">radio_button_unchecked</span>
+</div>
+<div class="flex flex-1 flex-col">
+<p class="text-gray-900 dark:text-white text-base font-medium leading-normal">Final Delivery</p>
+<p class="text-gray-500 dark:text-[#ab9cba] text-base font-normal leading-normal">Pending</p>
+</div>
+</div>
+</div>
+<div class="lg:col-span-1">
+<!-- Financial Crystals Section -->
+<h2 class="text-gray-900 dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em] mb-4">Financial Crystals</h2>
+<div class="space-y-4">
+<div class="bg-background-light dark:bg-[#141118]/60 p-4 rounded-lg border border-gray-200/50 dark:border-white/10 flex justify-between items-center">
+<div>
+<p class="text-gray-900 dark:text-white font-medium">Invoice #0012</p>
+<p class="text-sm text-gray-500 dark:text-[#ab9cba]">Due: 15 July 2024</p>
+</div>
+<div class="text-right">
+<p class="text-lg font-bold text-gray-900 dark:text-white">€1,250</p>
+<span class="text-xs font-semibold px-2 py-1 bg-green-200/50 text-green-800 dark:bg-green-500/20 dark:text-green-300 rounded-full">Paid</span>
+</div>
+</div>
+<div class="bg-background-light dark:bg-[#141118]/60 p-4 rounded-lg border border-gray-200/50 dark:border-white/10 flex justify-between items-center">
+<div>
+<p class="text-gray-900 dark:text-white font-medium">Invoice #0013</p>
+<p class="text-sm text-gray-500 dark:text-[#ab9cba]">Due: 30 July 2024</p>
+</div>
+<div class="text-right">
+<p class="text-lg font-bold text-gray-900 dark:text-white">€1,500</p>
+<span class="text-xs font-semibold px-2 py-1 bg-yellow-200/50 text-yellow-800 dark:bg-yellow-500/20 dark:text-yellow-300 rounded-full">Due</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- SectionHeader -->
+<h2 class="text-gray-900 dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em] pt-10 pb-4">Galerie der Kreationen</h2>
+<!-- ImageGrid -->
+<div class="grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-6">
+<div class="flex flex-col gap-3">
+<div class="w-full bg-center bg-no-repeat aspect-[3/4] bg-cover rounded-lg" data-alt="Artistic moodboard with purple and pink tones and abstract shapes." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuChRsTGn-Cnm8g8XeADlspyOfAbNA7k8VR8c87ulNv_SQyYEu7L5XUafbUeFUA_Nd8BuP2Ty8IC0OZnitOlApoBIEseiTOaGRAS_j7u8KnAg4vVFhk635HGoo1sPuSThC61XQyUi_dCJCNJVWe5-TWl-db6d76l1l5hTGNesWtHihaT8-KsiKEaUqwpdTdXOwHPrB2xxNzi82lSBikaPkGS2w3aaLq4jdvfHJzHofMTaUKmRLFWvfFFt7AUcMbtSDa86P1ZaNkf8uI")'></div>
+<div>
+<p class="text-gray-900 dark:text-white text-base font-medium leading-normal">Moodboard V1</p>
+<p class="text-gray-500 dark:text-[#ab9cba] text-sm font-normal leading-normal">Awaiting Approval</p>
+</div>
+</div>
+<div class="flex flex-col gap-3">
+<div class="w-full bg-center bg-no-repeat aspect-[3/4] bg-cover rounded-lg" data-alt="Elegant pencil sketches of brand logos and visual concepts." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCCeFPMdOM6e0Sr0CPVkxHaI_bD_x4jw_x5-c9OzRXEoM4p8Br3E1qiTrq4YER6sBVPdZaLwGlh1qWQf2pEIrGifrWK698GMnW7y8cjFsikuYHmXphHQr5n1QVusRvsqVUmFZ9bPEpMly0KqREla4xot4E8POP9wjKqpny8777aiFhiBqOJWsph10KV35mb_M5l6vjW_zityCvsaKbvfvUgfJx9gXlGXEh5B3nyUmsEIDqzcxQbp4VtE_fIZeEpvWuvZsI-oGtdVUA")'></div>
+<div>
+<p class="text-gray-900 dark:text-white text-base font-medium leading-normal">Initial Sketches</p>
+<p class="text-gray-500 dark:text-[#ab9cba] text-sm font-normal leading-normal">Approved</p>
+</div>
+</div>
+<div class="flex flex-col gap-3">
+<div class="w-full bg-center bg-no-repeat aspect-[3/4] bg-cover rounded-lg" data-alt="Preview of a professional photoshoot with a model in a vibrant setting." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDtaIZTIXhQNwbrv1oKHcvvsNHu_amjH-gTnLCjrR1LKH-dLv9bxTT5-Zp1Iy867MuVrTpkO2qC8zenbZPZoI8ZhylZVK2Im7AtDk6G_F11lifskc6N_wjI3IVaEKmTqdrh3Hdmm1U9lloR6tXWBgHMhcqLfB4YckgR2UYW1DS_TwtLyv4IfgKA4FUVznIzIwXXQQkORrogbFUmqx-FDRtI-mnCQUf-zfIlW9LyjnzcMRcQHROWXN-qUzUU3mrsSDmVsM6RrrrBkdk")'></div>
+<div>
+<p class="text-gray-900 dark:text-white text-base font-medium leading-normal">Photo Preview 1</p>
+<p class="text-gray-500 dark:text-[#ab9cba] text-sm font-normal leading-normal">Awaiting Approval</p>
+</div>
+</div>
+<div class="flex flex-col gap-3">
+<div class="w-full bg-center bg-no-repeat aspect-[3/4] bg-cover rounded-lg" data-alt="Draft of a brand logo featuring a heart and abstract lines." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCiQgc1pZ-gx_D0sOHpUjWxwS6tR3eEl2a-C0JKozi6-ZMcwJryP6Y5VcrlTTogJKzgT_TwHatV_lujExVT_uatqoeonjUqJrxWFV3Z19yH0CxH_VnMSjtdEZr5XDYjlszvxySn5mGLSbtfjo4O1n6nF3J6h8lGdX3zxA13DDbP2GXwFwO-kwQ9xH6w1UT5DeEqm3NTvPrlPndOnz83wn-RcIvm4e77AyP_d3tMDNhBpY0B4ED93az2pVRiqNE8AuYHyMEmqh-u4po")'></div>
+<div>
+<p class="text-gray-900 dark:text-white text-base font-medium leading-normal">Brand Logo Draft</p>
+<p class="text-gray-500 dark:text-[#ab9cba] text-sm font-normal leading-normal">Commented</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+</body></html>

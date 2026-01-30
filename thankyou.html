@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You | D Gallery</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        midnight: '#0D0D0F',
+                        violet: '#5A2A84',
+                        electric: '#9A4DFF',
+                        amber: '#FFAE42',
+                        mist: '#A8A8B3',
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Inter"', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 1.5s ease-out forwards',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .flow-bg {
+            background: radial-gradient(circle at center, #1a0b2e 0%, #0D0D0F 100%);
+        }
+    </style>
+</head>
+<body class="bg-midnight text-white font-sans antialiased h-screen flex flex-col items-center justify-center flow-bg overflow-hidden relative">
+    
+    <!-- Custom Cursor -->
+    <div id="cursor" class="fixed w-12 h-12 pointer-events-none z-50 transition-transform duration-100 hidden md:block">
+        <img src="Assets/images/logo.png" class="w-full h-full object-contain drop-shadow-lg" alt="Cursor">
+    </div>
+
+    <!-- Background Elements -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-electric/10 rounded-full blur-3xl animate-pulse"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-amber/10 rounded-full blur-3xl animate-pulse" style="animation-delay: 1s;"></div>
+    </div>
+
+    <div class="relative z-10 text-center px-4 max-w-2xl animate-fade-in">
+        <!-- Logo or Icon -->
+        <div class="mb-8 flex justify-center">
+            <svg class="w-16 h-16 text-electric" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        </div>
+
+        <h1 class="text-5xl md:text-7xl font-serif font-bold mb-6">
+            Your journey has <span class="text-electric italic">begun</span>.
+        </h1>
+        
+        <p class="text-xl text-mist font-light mb-12 leading-relaxed">
+            Thank you for trusting the flow. We have received your request and will be in touch shortly to capture your moment.
+        </p>
+
+        <div class="space-y-4">
+            <a href="index.html" class="inline-block px-10 py-4 border border-white hover:bg-white hover:text-midnight transition-all duration-300 uppercase tracking-widest text-sm rounded relative z-50 cursor-pointer">
+                Return to Home
+            </a>
+        </div>
+    </div>
+
+    <footer class="absolute bottom-8 text-mist text-xs opacity-30 uppercase tracking-widest">
+        &copy; 2024 Kiss Your Heart
+    </footer>
+
+    <script>
+        // Simple Cursor Logic (Inline for this simple page)
+        const cursor = document.getElementById('cursor');
+        document.addEventListener('mousemove', (e) => {
+            if (window.innerWidth > 768) {
+                cursor.style.transform = `translate(${e.clientX - 24}px, ${e.clientY - 24}px)`;
+            }
+        });
+
+        // Hover Effect
+        const links = document.querySelectorAll('a');
+        links.forEach(link => {
+            link.addEventListener('mouseenter', () => {
+                if (window.innerWidth > 768) {
+                    cursor.classList.add('cursor-active');
+                    // Ensure default cursor is hidden but click works
+                    link.style.cursor = 'none';
+                }
+            });
+            link.addEventListener('mouseleave', () => {
+                if (window.innerWidth > 768) {
+                    cursor.classList.remove('cursor-active');
+                    link.style.cursor = 'pointer'; // Restore pointer
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Membership | Circle D Flow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body
+    class="bg-[#0F0A13] text-white min-h-screen relative overflow-x-hidden selection:bg-electric selection:text-white">
+
+    <!-- Custom Cursor -->
+    <div id="cursor"
+        class="fixed w-12 h-12 pointer-events-none z-[200] transition-transform duration-100 hidden md:block">
+        <img src="Assets/images/logo.png" class="w-full h-full object-contain drop-shadow-lg" alt="Cursor">
+    </div>
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 transition-all duration-300 border-b border-white/5 bg-[#0F0A13]/80 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-3">
+                <span class="font-serif font-bold text-xl tracking-wide">Circle D Flow</span>
+            </a>
+            <a href="dashboard.html"
+                class="text-xs font-bold uppercase tracking-widest text-mist hover:text-white transition-colors">Back to
+                Dashboard</a>
+        </div>
+    </nav>
+
+    <main class="pt-32 pb-20 px-6 max-w-7xl mx-auto">
+        <div class="text-center mb-16">
+            <h1 class="text-5xl md:text-6xl font-serif font-bold mb-4">Elevate Your Flow<span
+                    class="text-electric">.</span></h1>
+            <p class="text-mist text-lg max-w-2xl mx-auto">Unlock multipliers, exclusive benefits, and full creative
+                control.</p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+
+            <!-- Tier 1 -->
+            <div
+                class="p-8 rounded-2xl bg-white/5 border border-white/10 flex flex-col hover:border-white/20 transition-all text-center relative">
+                <div
+                    class="w-16 h-16 rounded-full border-2 border-mist flex items-center justify-center mx-auto mb-4 opacity-70">
+                    <span class="material-symbols-outlined text-3xl text-mist">circle</span>
+                </div>
+                <h2 class="text-3xl font-serif font-bold mb-2">Free Flow</h2>
+                <div class="text-4xl font-bold mb-6">€0<span class="text-lg text-mist font-normal">/mo</span></div>
+                <p class="text-sm text-mist italic mb-6">"Enter the flow. Start your journey, collect XP, and trade
+                    art."</p>
+
+                <ul class="space-y-4 mb-8 flex-1 text-sm text-mist text-left">
+                    <li class="flex items-center gap-2">
+                        <span class="text-electric">✓</span>
+                        <span><strong>2x Marketplace Slots</strong><br><span class="text-xs opacity-60">Buy & Sell
+                                (Level 1-4).</span></span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <span class="text-electric">✓</span>
+                        <span><strong>1x Museum Item</strong><br><span class="text-xs opacity-60">Showcase your best
+                                piece.</span></span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <span class="text-electric">✓</span>
+                        <span><strong>50MB Storage</strong><br><span class="text-xs opacity-60">Enough for profile
+                                essentials.</span></span>
+                    </li>
+                </ul>
+
+                <button onclick="selectTier('free')"
+                    class="w-full py-3 bg-white/10 hover:bg-white/20 rounded-xl font-bold uppercase tracking-widest text-sm transition-all">Current
+                    Plan</button>
+            </div>
+
+            <!-- Tier 2 -->
+            <div
+                class="p-8 rounded-2xl bg-gradient-to-br from-electric/10 to-purple-900/10 border border-electric/50 flex flex-col relative overflow-hidden group text-center shadow-[0_0_30px_rgba(124,58,237,0.1)]">
+                <div class="absolute inset-0 bg-electric/5 animate-pulse opacity-50"></div>
+                <!-- Silver Aura Icon -->
+                <div
+                    class="w-16 h-16 rounded-full border-2 border-gray-300 flex items-center justify-center mx-auto mb-4 bg-gray-500/20 shadow-[0_0_20px_rgba(200,200,200,0.4)] relative z-10">
+                    <span class="material-symbols-outlined text-3xl text-gray-200">auto_awesome</span>
+                </div>
+
+                <h2 class="text-3xl font-serif font-bold mb-2 relative z-10">Rising Artist</h2>
+                <div class="text-4xl font-bold mb-6 relative z-10">€9<span
+                        class="text-lg text-mist font-normal">/mo</span></div>
+                <p class="text-sm text-mist italic mb-6 relative z-10">"Accelerate your growth. More slots, more
+                    storage, more snacks."</p>
+
+                <ul class="space-y-4 mb-8 flex-1 text-sm text-gray-300 text-left relative z-10">
+                    <li class="flex items-center gap-2">
+                        <span class="text-amber">★</span>
+                        <span><strong>20 Marketplace Slots</strong><br><span class="text-xs opacity-60">Expand your
+                                shop.</span></span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <span class="text-electric">✓</span>
+                        <span><strong>5 Museum Spots</strong><br><span class="text-xs opacity-60">Curate a small
+                                gallery.</span></span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <span class="text-electric">✓</span>
+                        <span><strong>5GB High-Res Storage</strong><br><span class="text-xs opacity-60">Store quality
+                                assets.</span></span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <span class="text-electric">✓</span>
+                        <span><strong>Monthly Snack Voucher</strong><br><span class="text-xs opacity-60">Free snack at
+                                African Queen.</span></span>
+                    </li>
+                </ul>
+
+                <button onclick="selectTier('rising')"
+                    class="w-full py-3 bg-electric hover:bg-electric/90 text-white rounded-xl font-bold uppercase tracking-widest text-sm transition-all shadow-lg shadow-electric/25 relative z-10">Upgrade</button>
+            </div>
+
+            <!-- Tier 3 -->
+            <div
+                class="p-8 rounded-2xl bg-black border-2 border-yellow-500 flex flex-col relative overflow-hidden text-center shadow-[0_0_50px_rgba(255,215,0,0.2)]">
+                <!-- Golden Aura Animation -->
+                <div
+                    class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-yellow-500/10 via-transparent to-transparent animate-pulse">
+                </div>
+
+                <!-- Golden Aura Icon/Badge -->
+                <div
+                    class="w-20 h-20 rounded-full border-2 border-yellow-400 flex items-center justify-center mx-auto mb-4 bg-yellow-900/20 shadow-[0_0_20px_rgba(255,215,0,0.5)] relative z-10 group-hover:scale-110 transition-transform">
+                    <span class="material-symbols-outlined text-4xl text-yellow-400">workspace_premium</span>
+                </div>
+
+                <h2 class="text-3xl font-serif font-bold mb-2 text-yellow-500 relative z-10">Master Circle</h2>
+                <div class="text-4xl font-bold mb-2 flex items-baseline justify-center gap-2 relative z-10">
+                    <span id="master-price" class="text-white">€29</span><span
+                        class="text-lg text-mist font-normal">/mo</span>
+                </div>
+                <div id="loyalty-discount" class="hidden text-xs text-green-400 font-bold mb-4 relative z-10">Level 7
+                    Loyalty Discount Active (-€10)</div>
+                <p class="text-sm text-yellow-200/60 italic mb-6 relative z-10">"The ultimate creator status. Unlimited
+                    freedom."</p>
+
+                <ul class="space-y-4 mb-8 flex-1 text-sm text-gray-300 text-left relative z-10">
+                    <li class="flex items-center gap-2">
+                        <span class="text-yellow-500">★</span>
+                        <span><strong>Unlimited Everything</strong><br><span class="text-xs opacity-60">Marketplace,
+                                Museum, Storage.</span></span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <span class="text-yellow-500">★</span>
+                        <span><strong>Host Competitions</strong><br><span class="text-xs opacity-60">Create & Ticket
+                                your own events.</span></span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <span class="text-yellow-500">★</span>
+                        <span><strong>Full Meal Voucher</strong><br><span class="text-xs opacity-60">Monthly feast at
+                                African Queen.</span></span>
+                    </li>
+                    <li class="flex items-center gap-2"><span class="text-yellow-500">★</span> Curator Status (Manage
+                        Exhibitions)</li>
+                </ul>
+
+                <button onclick="selectTier('master')"
+                    class="w-full py-3 bg-yellow-600/20 hover:bg-yellow-600/30 text-yellow-500 border border-yellow-500 rounded-xl font-bold uppercase tracking-widest text-sm transition-all relative z-10">Join
+                    the Circle</button>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script src="notifications.js"></script>
+    <script src="gamification.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const level = window.Gamification.getLevel();
+
+            // Level 7 Discount Logic
+            if (level >= 7) {
+                document.getElementById('master-price').textContent = '€19';
+                document.getElementById('master-price').classList.add('text-green-400');
+                document.getElementById('loyalty-discount').classList.remove('hidden');
+            }
+        });
+
+        function selectTier(tier) {
+            if (tier === 'free') {
+                alert('You are already on the Free Plan.');
+                return;
+            }
+
+            const prices = {
+                'rising': 9,
+                'master': document.getElementById('master-price').innerText.replace('€', '') // Dynamic price
+            };
+
+            const price = prices[tier];
+            // Redirect to Simulated Stripe Checkout
+            window.location.href = `checkout.html?plan=${tier}&price=${price}`;
+        }
+    </script>
+</body>
+
+</html>

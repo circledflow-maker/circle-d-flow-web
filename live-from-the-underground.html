@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Livefromtheunderground / Outbreak Tunes | The Pulse</title>
+    <meta name="description"
+        content="The frequency that moves your spirit. Event Management, DJ Booking, and Music Production in Lisbon.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        midnight: '#0D0D0F',
+                        violet: '#5A2A84',
+                        electric: '#9A4DFF',
+                        amber: '#FFAE42',
+                        mist: '#A8A8B3',
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Inter"', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body
+    class="bg-midnight text-white font-sans antialiased overflow-x-hidden selection:bg-purple-500 selection:text-white">
+    <!-- Custom Cursor -->
+    <div id="cursor"
+        class="fixed w-12 h-12 pointer-events-none z-[200] transition-transform duration-100 hidden md:block">
+        <img src="Assets/images/logo.png" class="w-full h-full object-contain drop-shadow-lg" alt="Cursor">
+    </div>
+
+    <!-- Mobile Wave Overlay -->
+    <div id="mobile-wave-menu"
+        class="fixed inset-0 bg-background-dark/95 backdrop-blur-xl z-[100] transform translate-y-full opacity-0 pointer-events-none transition-all duration-500 ease-out flex flex-col items-center justify-center space-y-8">
+        <button id="mobile-close-btn" class="absolute top-8 right-8 text-white/50 hover:text-white">
+            <span class="material-symbols-outlined text-4xl">close</span>
+        </button>
+
+        <a href="index.html"
+            class="text-4xl font-serif font-bold text-white hover:text-electric transition-colors">Home</a>
+        <a href="events.html"
+            class="text-4xl font-serif font-bold text-white hover:text-electric transition-colors">Events</a>
+        <a href="marketplace.html"
+            class="text-4xl font-serif font-bold text-white hover:text-electric transition-colors">Marketplace</a>
+        <a href="blog.html"
+            class="text-4xl font-serif font-bold text-white hover:text-electric transition-colors">Community</a>
+
+        <div class="h-px w-24 bg-white/20 my-4"></div>
+
+        <a href="login.html" id="mobile-auth-link"
+            class="text-2xl text-mystic-gold font-bold tracking-widest uppercase">Enter the Circle</a>
+    </div>
+
+    <!-- The Flow Bar (Fixed Navigation) -->
+    <header id="flow-bar"
+        class="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-5xl bg-black/60 backdrop-blur-md border border-purple-500/30 rounded-full px-6 py-3 flex items-center justify-between shadow-[0_0_20px_rgba(0,0,0,0.5)] transition-all duration-300 hover:border-purple-500/60">
+        <!-- Logo -->
+        <a href="index.html" class="flex items-center gap-3 group">
+            <img src="Assets/images/logo.png" alt="Circle D Flow"
+                class="w-8 h-8 object-contain group-hover:rotate-12 transition-transform">
+            <span
+                class="text-white font-bold tracking-tight hidden md:block group-hover:text-mystic-gold transition-colors">Circle
+                D Flow</span>
+        </a>
+
+        <!-- Desktop Nav -->
+        <nav class="hidden md:flex items-center gap-8 h-full">
+            <!-- Trinity Dropdown -->
+            <div class="relative group h-10 flex items-center">
+                <button
+                    class="nav-link flex items-center gap-1 focus:outline-none uppercase tracking-widest text-xs font-bold text-white group-hover:text-mystic-gold transition-colors">
+                    The Trinity <span class="material-symbols-outlined text-sm">expand_more</span>
+                </button>
+                <!-- Dropdown Content -->
+                <div
+                    class="absolute top-full left-1/2 -translate-x-1/2 pt-6 opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-300">
+                    <div
+                        class="flex gap-4 p-4 bg-black/90 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl w-[400px]">
+                        <a href="kiss-your-heart.html"
+                            class="flex-1 flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-white/5 transition-colors group/card">
+                            <span class="text-2xl group-hover/card:scale-110 transition-transform">👁️</span>
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-electric">Visuals</span>
+                        </a>
+                        <a href="live-from-the-underground.html"
+                            class="flex-1 flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-white/5 transition-colors group/card">
+                            <span class="text-2xl group-hover/card:scale-110 transition-transform">🎧</span>
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-purple-400">Sound</span>
+                        </a>
+                        <a href="african-queen-kitchen.html"
+                            class="flex-1 flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-white/5 transition-colors group/card">
+                            <span class="text-2xl group-hover/card:scale-110 transition-transform">🥘</span>
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-amber">Taste</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <a href="events.html"
+                class="nav-link uppercase tracking-widest text-xs font-bold text-white hover:text-mystic-gold transition-colors">Events</a>
+            <a href="marketplace.html"
+                class="nav-link uppercase tracking-widest text-xs font-bold text-white hover:text-mystic-gold transition-colors">Marketplace</a>
+            <a href="blog.html"
+                class="nav-link uppercase tracking-widest text-xs font-bold text-white hover:text-mystic-gold transition-colors">Community</a>
+        </nav>
+
+        <!-- Auth / Mobile Toggle -->
+        <div class="flex items-center gap-4">
+            <!-- Desktop Auth -->
+            <div id="desktop-auth" class="hidden md:block">
+                <!-- Will be populated by JS -->
+                <a href="login.html"
+                    class="px-6 py-2 bg-white text-midnight font-bold rounded-full text-xs uppercase tracking-widest hover:bg-mystic-gold hover:scale-105 transition-all shadow-[0_0_10px_rgba(255,255,255,0.3)]">
+                    Enter the Circle
+                </a>
+            </div>
+
+            <!-- Mobile Hamburger -->
+            <button id="hamburger-btn" class="md:hidden text-white z-50 relative focus:outline-none group">
+                <svg class="w-8 h-8 group-hover:text-mystic-gold transition-all duration-300" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16">
+                    </path>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section id="hero"
+            class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 bg-black">
+            <div class="absolute inset-0 z-0">
+                <div
+                    class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-orange-600/20 via-black to-black opacity-90">
+                </div>
+                <!-- Anime speed lines overlay -->
+                <div
+                    class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]">
+                </div>
+                <img src="https://placehold.co/1920x1080/000000/orange?text=TENKAICHI+CYPHER" alt="Cypher"
+                    class="w-full h-full object-cover opacity-30 grayscale contrast-150 mix-blend-color-dodge">
+                <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black"></div>
+            </div>
+
+            <div class="relative z-10 text-center px-4 max-w-6xl mx-auto">
+                <div class="mb-6 flex items-center justify-center gap-3 opacity-90 animate-pulse">
+                    <span
+                        class="text-xs font-bold tracking-[0.5em] uppercase text-orange-500 shadow-orange-500/50 drop-shadow-[0_0_10px_rgba(255,165,0,0.8)]">The
+                        Saga Begins</span>
+                </div>
+
+                <h1
+                    class="text-7xl md:text-9xl font-black mb-8 tracking-tighter leading-none skew-x-[-10deg] transform">
+                    <span
+                        class="block text-transparent bg-clip-text bg-gradient-to-b from-orange-400 to-red-600 drop-shadow-[0_0_20px_rgba(255,69,0,0.6)]"
+                        style="-webkit-text-stroke: 2px white;">UNDERGROUND</span>
+                    <span
+                        class="block text-white italic text-6xl md:text-8xl mt-2 drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]">TOURNAMENT</span>
+                </h1>
+
+                <div class="flex flex-col md:flex-row items-center justify-center gap-8 mb-16 font-mono">
+                    <div
+                        class="px-8 py-3 border-2 border-orange-500/50 bg-black/80 backdrop-blur-md transform -skew-x-12 hover:skew-x-0 transition-transform duration-300">
+                        <span class="text-lg font-black uppercase tracking-widest text-white">Main Stage Area</span>
+                    </div>
+                    <div
+                        class="hidden md:flex items-center justify-center w-12 h-12 bg-orange-500 rounded-full text-black font-bold text-xl animate-bounce">
+                        VS</div>
+                    <div
+                        class="px-8 py-3 border-2 border-red-500/50 bg-black/80 backdrop-blur-md transform skew-x-12 hover:skew-x-0 transition-transform duration-300">
+                        <span class="text-lg font-black uppercase tracking-widest text-red-500">April 16th</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Registration / Auto-Close Logic -->
+            <div id="registration-container" class="space-y-6">
+                <a href="https://forms.gle/kaMXJj6VN2CLm8ke7" target="_blank"
+                    class="group relative inline-flex items-center gap-6 px-16 py-6 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white text-2xl font-black uppercase tracking-[0.2em] skew-x-[-10deg] transform transition-all duration-300 hover:scale-105 hover:shadow-[0_0_50px_rgba(255,69,0,0.6)] border-2 border-yellow-400">
+                    <span class="skew-x-[10deg]">Enter Battle</span>
+                    <span
+                        class="material-symbols-outlined skew-x-[10deg] text-3xl group-hover:translate-x-2 transition-transform">swords</span>
+                    <!-- Energy Particles -->
+                    <span class="absolute -top-2 -right-2 w-4 h-4 bg-yellow-400 animate-ping"></span>
+                    <span class="absolute -bottom-2 -left-2 w-4 h-4 bg-yellow-400 animate-ping delay-100"></span>
+                </a>
+                <p class="text-xs text-orange-400/80 uppercase tracking-[0.3em] font-bold">Limit Breakers Only •
+                    Auto-Seal at Start</p>
+            </div>
+            <p class="text-xs text-white/40 uppercase tracking-widest">Unlimited Entries • Auto-Closes at Start
+            </p>
+            </div>
+
+            <div id="registration-closed"
+                class="hidden p-6 bg-red-500/10 border border-red-500/30 rounded max-w-md mx-auto">
+                <p class="text-red-400 font-bold uppercase tracking-widest text-sm">Registration Closed</p>
+                <p class="text-white/60 text-xs mt-2">The tournament has begun. See you in the pit.</p>
+            </div>
+
+            </div>
+        </section>
+
+        <!-- Prize Pool: The Ultimate Flow Package -->
+        <section class="py-24 px-6 bg-[#050505] relative overflow-hidden">
+            <!-- Golden Aura Background -->
+            <div
+                class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-yellow-500/10 rounded-full blur-[120px] animate-pulse">
+            </div>
+
+            <div class="max-w-7xl mx-auto relative z-10">
+                <div class="text-center mb-20">
+                    <h2
+                        class="text-4xl md:text-6xl font-black italic tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-yellow-300 via-yellow-500 to-orange-600 drop-shadow-[0_0_15px_rgba(255,215,0,0.5)] mb-4">
+                        THE ULTIMATE FLOW PACKAGE
+                    </h2>
+                    <p class="text-yellow-200/60 uppercase tracking-[0.4em] text-sm">Legendary Loot for the Champion</p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- Prize 1 -->
+                    <div
+                        class="group relative bg-black border-2 border-yellow-600/30 p-1 transform skew-y-2 hover:skew-y-0 transition-all duration-500 hover:scale-105 hover:border-yellow-400 hover:shadow-[0_0_30px_rgba(255,215,0,0.3)]">
+                        <div
+                            class="relative bg-gradient-to-b from-gray-900 to-black p-8 h-full flex flex-col items-center text-center">
+                            <div
+                                class="w-24 h-24 rounded-full bg-yellow-900/20 flex items-center justify-center mb-6 border border-yellow-500/50 group-hover:rotate-[360deg] transition-transform duration-1000">
+                                <span class="material-symbols-outlined text-5xl text-yellow-500">mic_external_on</span>
+                            </div>
+                            <h3 class="text-2xl font-black font-mono text-white mb-2 uppercase italic">Mainstage
+                                Ascension</h3>
+                            <p class="text-gray-400 text-sm mb-4">Opening Act slot on April 16th.<br>Command the crowd.
+                            </p>
+                            <span
+                                class="mt-auto inline-block px-4 py-1 bg-yellow-600/20 border border-yellow-600 text-yellow-500 text-[10px] font-bold uppercase tracking-widest">Grand
+                                Prize</span>
+                        </div>
+                    </div>
+
+                    <!-- Prize 2 -->
+                    <div
+                        class="group relative bg-black border-2 border-purple-600/30 p-1 transform -skew-y-2 hover:skew-y-0 transition-all duration-500 hover:scale-105 hover:border-purple-500 hover:shadow-[0_0_30px_rgba(147,51,234,0.3)]">
+                        <div
+                            class="relative bg-gradient-to-b from-gray-900 to-black p-8 h-full flex flex-col items-center text-center">
+                            <div
+                                class="w-24 h-24 rounded-full bg-purple-900/20 flex items-center justify-center mb-6 border border-purple-500/50 group-hover:scale-110 transition-transform">
+                                <span class="material-symbols-outlined text-5xl text-purple-400">movie_filter</span>
+                            </div>
+                            <h3 class="text-2xl font-black font-mono text-white mb-2 uppercase italic">Visual Legacy
+                            </h3>
+                            <p class="text-gray-400 text-sm">Professional Music Video Short<br>& KYHeart Photoshoot.</p>
+                        </div>
+                    </div>
+
+                    <!-- Prize 3 (Champion's Choice Preview) -->
+                    <div
+                        class="group relative bg-black border-2 border-blue-600/30 p-1 transform skew-y-2 hover:skew-y-0 transition-all duration-500 hover:scale-105 hover:border-cyan-400 hover:shadow-[0_0_30px_rgba(34,211,238,0.3)]">
+                        <div
+                            class="relative bg-gradient-to-b from-gray-900 to-black p-8 h-full flex flex-col items-center text-center">
+                            <div
+                                class="w-24 h-24 rounded-full bg-blue-900/20 flex items-center justify-center mb-6 border border-cyan-500/50 group-hover:scale-110 transition-transform">
+                                <span class="material-symbols-outlined text-5xl text-cyan-400">diamond</span>
+                            </div>
+                            <h3 class="text-2xl font-black font-mono text-white mb-2 uppercase italic">Champion's Choice
+                            </h3>
+                            <p class="text-gray-400 text-sm">Choose Your Path:<br><span
+                                    class="text-cyan-400 font-bold">Master</span> (Lv.7) vs <span
+                                    class="text-orange-400 font-bold">Architect</span> (Free Slots)</p>
+                            <button onclick="document.getElementById('champion-modal').classList.remove('hidden')"
+                                class="mt-4 text-[10px] underline text-white/50 hover:text-white cursor-pointer opacity-50 hover:opacity-100">Preview
+                                Choice</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Live Dashboard (Tenkaichi Roster) -->
+        <section class="py-24 px-6 bg-[#0a080c] relative border-t-2 border-orange-900/30">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+                    <div>
+                        <h2 class="text-4xl md:text-5xl font-black italic mb-4 uppercase text-white"><span
+                                class="text-orange-600">Warrior</span> Roster</h2>
+                        <p class="text-gray-500 font-mono text-sm uppercase tracking-widest">Active Combatants •
+                            Real-Time Scouter Data</p>
+                    </div>
+                </div>
+
+                <!-- Artist Grid (Mock) -->
+                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6 mb-16">
+                    <!-- Participant 1 -->
+                    <div
+                        class="bg-white/5 rounded-none border-l-4 border-orange-500 p-4 flex flex-col items-center hover:bg-white/10 transition-colors relative overflow-hidden group">
+                        <div
+                            class="w-20 h-20 rounded-full border-2 border-white/20 mb-3 overflow-hidden group-hover:scale-110 transition-transform">
+                            <img src="https://placehold.co/100x100/333/white?text=MC"
+                                class="w-full h-full object-cover mix-blend-overlay">
+                        </div>
+                        <span class="font-black text-lg text-white uppercase italic">Lil Vibe</span>
+                        <div class="w-full mt-2">
+                            <div class="flex justify-between text-[8px] uppercase font-bold text-orange-500 mb-1">
+                                <span>Power Lvl</span>
+                                <span>4,200</span>
+                            </div>
+                            <div class="h-1 bg-gray-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-orange-500 w-[60%] shadow-[0_0_10px_orange]"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Participant 2 -->
+                    <div
+                        class="bg-white/5 rounded-none border-l-4 border-purple-500 p-4 flex flex-col items-center hover:bg-white/10 transition-colors relative overflow-hidden group">
+                        <div
+                            class="w-20 h-20 rounded-full border-2 border-white/20 mb-3 overflow-hidden group-hover:scale-110 transition-transform">
+                            <img src="https://placehold.co/100x100/333/white?text=DJ"
+                                class="w-full h-full object-cover mix-blend-overlay">
+                        </div>
+                        <span class="font-black text-lg text-white uppercase italic">DJ Static</span>
+                        <div class="w-full mt-2">
+                            <div class="flex justify-between text-[8px] uppercase font-bold text-purple-500 mb-1">
+                                <span>Power Lvl</span>
+                                <span>9,001</span>
+                            </div>
+                            <div class="h-1 bg-gray-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-purple-500 w-[90%] shadow-[0_0_10px_purple]"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Add more placeholders if needed -->
+                    <div
+                        class="bg-white/5 border border-dashed border-white/10 p-4 flex flex-col items-center justify-center opacity-50 hover:opacity-100 transition-opacity cursor-pointer">
+                        <span class="text-4xl text-white/20 mb-2">+</span>
+                        <span class="text-[10px] uppercase tracking-widest text-white/30">Join Fight</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Floating Social Hub -->
+            <div class="fixed bottom-8 left-8 z-40">
+                <a href="#"
+                    class="flex items-center gap-3 px-6 py-3 bg-black border border-pink-500 text-pink-500 rounded-full shadow-[0_0_20px_rgba(236,72,153,0.3)] hover:bg-pink-500 hover:text-white transition-all hover:-translate-y-1">
+                    <span class="material-symbols-outlined">groups</span>
+                    <span class="font-bold text-sm uppercase tracking-wider">Scouter Chat (IG)</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Champion's Choice Modal (Hidden by default) -->
+        <div id="champion-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
+            <div class="absolute inset-0 bg-black/95 backdrop-blur-xl"
+                onclick="document.getElementById('champion-modal').classList.add('hidden')"></div>
+            <div
+                class="relative z-10 w-full max-w-4xl bg-black border-2 border-yellow-500 p-8 md:p-12 text-center rounded-xl shadow-[0_0_100px_rgba(255,215,0,0.2)]">
+                <h3
+                    class="text-4xl md:text-6xl font-black italic text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-orange-500 mb-2">
+                    CHOOSE YOUR DESTINY</h3>
+                <p class="text-white/60 uppercase tracking-widest mb-12 text-sm">You have proven your strength. How will
+                    you rule?</p>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- Path A: Master -->
+                    <button onclick="selectPath('master')"
+                        class="group relative p-8 border border-white/10 bg-white/5 hover:bg-purple-900/20 hover:border-purple-500 transition-all text-left">
+                        <div class="flex items-center gap-4 mb-4">
+                            <span class="material-symbols-outlined text-4xl text-purple-400">crown</span>
+                            <div class="text-2xl font-black text-white italic">THE MASTER</div>
+                        </div>
+                        <ul class="text-sm text-gray-400 space-y-2 mb-6 font-mono">
+                            <li class="flex gap-2"><span class="text-green-500">✓</span> Instant Lvl 7 Promotion</li>
+                            <li class="flex gap-2"><span class="text-green-500">✓</span> Master Circle @ 19€/mo</li>
+                            <li class="flex gap-2"><span class="text-green-500">✓</span> Full Event Creation Rights</li>
+                        </ul>
+                        <div
+                            class="px-4 py-2 bg-purple-600 text-white font-bold uppercase text-center text-xs tracking-widest group-hover:bg-purple-500 transition-colors">
+                            Select Path</div>
+                    </button>
+
+                    <!-- Path B: Architect -->
+                    <button onclick="selectPath('architect')"
+                        class="group relative p-8 border border-white/10 bg-white/5 hover:bg-orange-900/20 hover:border-orange-500 transition-all text-left">
+                        <div class="flex items-center gap-4 mb-4">
+                            <span class="material-symbols-outlined text-4xl text-orange-400">engineering</span>
+                            <div class="text-2xl font-black text-white italic">THE ARCHITECT</div>
+                        </div>
+                        <ul class="text-sm text-gray-400 space-y-2 mb-6 font-mono">
+                            <li class="flex gap-2"><span class="text-green-500">✓</span> Remain Independent</li>
+                            <li class="flex gap-2"><span class="text-green-500">✓</span> 3x Free Public Quest Slots</li>
+                            <li class="flex gap-2"><span class="text-green-500">✓</span> No Monthly Subscription</li>
+                        </ul>
+                        <div
+                            class="px-4 py-2 bg-orange-600 text-white font-bold uppercase text-center text-xs tracking-widest group-hover:bg-orange-500 transition-colors">
+                            Select Path</div>
+                    </button>
+                </div>
+                <button onclick="document.getElementById('champion-modal').classList.add('hidden')"
+                    class="mt-12 text-white/30 text-xs hover:text-white uppercase tracking-widest">Close
+                    Preview</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Audio Player (Global) -->
+    <div class="fixed bottom-8 right-8 z-50">
+        <button id="audio-btn"
+            class="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:border-purple-500 transition-colors bg-midnight/50 backdrop-blur-sm">
+            <span class="material-symbols-outlined text-white">music_note</span>
+        </button>
+        <audio id="bg-music" loop>
+            <source src="assets/audio/ambient.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+
+    <script src="script.js"></script>
+    <!-- Add Material Symbols for placeholders icons -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        rel="stylesheet" />
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Auto-Close Logic
+            const TOURNAMENT_START = new Date('2026-04-16T20:00:00'); // Example: April 16th, 8 PM
+            const now = new Date();
+
+            if (now > TOURNAMENT_START) {
+                document.getElementById('registration-container').classList.add('hidden');
+                document.getElementById('registration-closed').classList.remove('hidden');
+            }
+
+            // Champion Logic Check
+            if (window.Gamification && window.Gamification.state.isChampion && !window.Gamification.state.championPath) {
+                document.getElementById('champion-modal').classList.remove('hidden');
+            }
+        });
+
+        function selectPath(path) {
+            if (window.Gamification) {
+                window.Gamification.setChampionPath(path);
+                document.getElementById('champion-modal').classList.add('hidden');
+
+                // Visual Feedback
+                const msg = path === 'master' ? 'Welcome to the Master Circle, Champion.' : 'Go forth and build, Architect.';
+                alert(msg);
+
+                // Explode Confetti or similar here
+            }
+        }
+    </script>
+</body>
+
+</html>

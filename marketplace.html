@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketplace | Circle D Flow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0F0A13;
+            color: white;
+        }
+
+        .font-serif {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .text-electric {
+            color: #9A4DFF;
+        }
+
+        .text-amber {
+            color: #FFAE42;
+        }
+
+        .bg-electric {
+            background-color: #9A4DFF;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-[#0F0A13] text-white min-h-screen relative overflow-x-hidden selection:bg-electric selection:text-white">
+
+    <!-- Custom Cursor -->
+    <div id="cursor"
+        class="fixed w-12 h-12 pointer-events-none z-[200] transition-transform duration-100 hidden md:block">
+        <img src="Assets/images/logo.png" class="w-full h-full object-contain drop-shadow-lg" alt="Cursor">
+    </div>
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 transition-all duration-300 border-b border-white/5 bg-[#0F0A13]/80 backdrop-blur-md"
+        id="navbar">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-3 group">
+                <div
+                    class="relative w-10 h-10 overflow-hidden rounded-full border border-white/20 group-hover:border-electric transition-colors">
+                    <img src="Assets/images/logo.png" alt="CDF Logo" class="w-full h-full object-cover">
+                </div>
+                <span
+                    class="font-serif font-bold text-xl tracking-wide group-hover:text-electric transition-colors">Circle
+                    D Flow</span>
+            </a>
+            <div class="flex items-center gap-6">
+                <!-- Wallet Display -->
+                <div class="hidden md:flex items-center gap-2 px-3 py-1 bg-white/5 rounded-full border border-white/10">
+                    <span class="material-symbols-outlined text-amber text-sm">token</span>
+                    <span id="token-balance" class="font-bold text-sm">0 Flow</span>
+                </div>
+                <div id="desktop-auth"></div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-32 pb-20 px-6 max-w-7xl mx-auto">
+        <!-- Header -->
+        <div class="flex flex-col md:flex-row justify-between items-end gap-6 mb-16">
+            <div>
+                <h1 class="text-5xl md:text-6xl font-serif font-bold mb-4 leading-tight">The Marketplace<span
+                        class="text-electric">.</span></h1>
+                <p class="text-mist text-lg max-w-xl">Exchange Flow Tokens for exclusive gear, digital assets, and
+                    community services.</p>
+            </div>
+
+            <a href="marketplace-upload.html"
+                class="px-6 py-3 bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl font-bold uppercase tracking-widest text-sm transition-all flex items-center gap-2">
+                <span class="material-symbols-outlined">add</span>
+                List an Item
+            </a>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="grid md:grid-cols-3 gap-8" id="products-grid">
+            <!-- Dynamic Content Load -->
+        </div>
+
+        <!-- Lightbox / Product Detail Modal -->
+        <div id="product-modal"
+            class="fixed inset-0 z-[300] bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+            <div class="bg-[#1A1420] border border-white/10 rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto flex flex-col md:flex-row shadow-2xl transform scale-95 transition-transform duration-300"
+                id="modal-content">
+                <!-- Populated by JS -->
+            </div>
+            <button onclick="closeModal()" class="absolute top-6 right-6 text-white/50 hover:text-white">
+                <span class="material-symbols-outlined text-4xl">close</span>
+            </button>
+        </div>
+    </main>
+
+    <script src="notifications.js"></script>
+    <script src="gamification.js"></script>
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            updateBalance();
+            renderMarketplace();
+        });
+
+        function updateBalance() {
+            if (window.Gamification) {
+                const bal = window.Gamification.getTokens();
+                document.getElementById('token-balance').textContent = `${bal} Flow`;
+            }
+        }
+
+        // Mock Data + LocalStorage
+        const SYSTEM_LISTINGS = [
+            { id: 'sys_1', title: 'CDF Official Tee', price: 500, priceEur: 38.50, image: 'https://placehold.co/400x400/1a1a1a/white?text=CDF+T-Shirt', description: 'Limited edition community tee.', type: 'manual' },
+            { id: 'sys_2', title: 'Creator Asset Pack', price: 200, priceEur: 15.00, image: 'https://placehold.co/400x400/1a1a1a/white?text=Digital+Pack', description: 'Royalty-free visuals.', type: 'manual' },
+            { id: 'sys_3', title: 'VIP Event Pass', price: 1000, priceEur: 75.00, image: 'https://placehold.co/400x400/1a1a1a/white?text=Vip+Pass', description: 'Skip the queue.', type: 'manual' }
+        ];
+
+        function renderMarketplace() {
+            const userListings = JSON.parse(localStorage.getItem('cdf_listings') || '[]');
+            const allItems = [...userListings, ...SYSTEM_LISTINGS];
+
+            const grid = document.getElementById('products-grid');
+            if (!grid) return;
+
+            grid.innerHTML = allItems.map(item => `
+                <div class="group relative bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-electric/50 transition-all">
+                    <div class="h-64 bg-black/50 relative overflow-hidden">
+                        <img src="${item.image}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute top-4 right-4 bg-black/80 backdrop-blur px-3 py-1 rounded-full border border-white/10 flex flex-col items-end">
+                            <span class="text-amber font-bold text-sm">${item.price} Flow</span>
+                            ${item.priceEur ? `<span class="text-white/60 text-[10px] font-bold">€${parseFloat(item.priceEur).toFixed(2)}</span>` : ''}
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2">${item.title}</h3>
+                        <p class="text-mist text-sm mb-6 truncate">${item.description}</p>
+                        <button onclick="openProduct('${item.id}')" 
+                            class="w-full py-3 bg-white/10 hover:bg-electric hover:text-white border border-white/10 rounded-xl font-bold uppercase tracking-wider transition-all">
+                            View Details
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        window.openProduct = function (id) {
+            const userListings = JSON.parse(localStorage.getItem('cdf_listings') || '[]');
+            const allItems = [...userListings, ...SYSTEM_LISTINGS];
+            const item = allItems.find(i => i.id === id);
+
+            if (!item) return;
+
+            const modal = document.getElementById('product-modal');
+            const content = document.getElementById('modal-content');
+
+            const priceEur = item.priceEur ? parseFloat(item.priceEur).toFixed(2) : 'N/A';
+
+            // Render Details
+            content.innerHTML = `
+                <div class="w-full md:w-1/2 h-64 md:h-auto bg-black/50 relative">
+                     <img src="${item.image}" class="w-full h-full object-cover absolute inset-0">
+                </div>
+                <div class="p-8 md:p-12 flex flex-col justify-center flex-1">
+                    <span class="text-amber font-bold tracking-widest uppercase text-xs mb-2">${item.type === 'external' ? 'External Link' : 'Community Deal'}</span>
+                    <h2 class="text-3xl md:text-4xl font-serif font-bold mb-4">${item.title}</h2>
+                    <p class="text-mist text-lg mb-8 leading-relaxed">${item.description}</p>
+                    
+                    <div class="flex items-center gap-4 mb-8 p-4 bg-white/5 rounded-xl justify-between">
+                         <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-electric to-blue-500"></div>
+                            <div>
+                                <p class="font-bold text-sm">${item.owner || 'Circle D Flow'}</p>
+                                <p class="text-xs text-green-400">Response time: &lt; 24h</p>
+                            </div>
+                         </div>
+                         <div class="text-right">
+                            <p class="text-amber font-bold text-xl">${item.price} Flow</p>
+                            ${item.priceEur ? `<p class="text-white/50 text-sm">Or €${priceEur}</p>` : ''}
+                         </div>
+                    </div>
+
+                    <div class="mt-auto space-y-3">
+                        ${item.type === 'external'
+                    ? `<a href="${item.externalUrl}" target="_blank" onclick="trackClick('${item.id}')" class="block w-full text-center py-4 bg-white text-black font-bold uppercase tracking-widest rounded-xl hover:bg-mystic-gold transition-colors">Visit Shop <span class="material-symbols-outlined align-middle text-lg ml-1">open_in_new</span></a>`
+                    : `
+                            <div class="grid grid-cols-2 gap-4">
+                                <button onclick="buyItem('${item.title}', ${item.price}, '${item.id}')" class="py-4 bg-web-electric/20 border border-electric/50 text-electric hover:bg-electric hover:text-white font-bold uppercase rounded-xl transition-all">
+                                    Pay with Flow
+                                </button>
+                                <button onclick="buyItemEur('${item.title}', ${item.priceEur || 0}, '${item.id}')" class="py-4 bg-white text-black font-bold uppercase rounded-xl hover:bg-gray-200 transition-all">
+                                    Pay €${priceEur}
+                                </button>
+                            </div>
+                            `
+                }
+                    </div>
+                </div>
+            `;
+
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95');
+                content.classList.add('scale-100');
+            }, 10);
+        };
+
+        window.closeModal = function () {
+            const modal = document.getElementById('product-modal');
+            const content = document.getElementById('modal-content');
+
+            modal.classList.add('opacity-0');
+            content.classList.remove('scale-100');
+            content.classList.add('scale-95');
+
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        };
+
+        window.buyItem = function (name, cost, id) {
+            if (!window.Gamification) return;
+
+            if (window.Gamification.spendTokens(cost, `Bought ${name}`)) {
+                alert(`Successfully purchased ${name} with Flow!`);
+                updateBalance();
+                closeModal();
+                if (window.Notifications) window.Notifications.send('success', `Bought ${name} for ${cost} Flow.`, 'user');
+            } else {
+                alert('Not enough Flow Tokens!');
+            }
+        }
+
+        window.buyItemEur = function (name, cost, id) {
+            // Simulate Payment Gateway
+            const confirmed = confirm(`Proceed to payment gateway for €${cost.toFixed(2)}?`);
+            if (confirmed) {
+                // Mock Success
+                alert(`Payment Successful! You purchased ${name}.`);
+                closeModal();
+                if (window.Notifications) {
+                    window.Notifications.send('success', `Purchased ${name} for €${cost.toFixed(2)}.`, 'user');
+                    // Admin sees revenue
+                    window.Notifications.send('action_required', `SALE: ${name} sold for €${cost.toFixed(2)}.`, 'admin');
+
+                    // Add to Funds (Simulated)
+                    if (window.Gamification) window.Gamification.addPendingFunds(cost);
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

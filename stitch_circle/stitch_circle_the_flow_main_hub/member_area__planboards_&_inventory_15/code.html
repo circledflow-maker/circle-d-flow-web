@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html class="dark" lang="de"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Circle the Flow - Mitgliederbereich</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#7f0df2",
+              "background-light": "#f7f5f8",
+              "background-dark": "#191022",
+            },
+            fontFamily: {
+              "display": ["Space Grotesk", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+            boxShadow: {
+              'glow-purple': '0 0 15px 5px rgba(127, 13, 242, 0.3)',
+              'glow-gold': '0 0 15px 5px rgba(255, 215, 0, 0.2)',
+            }
+          },
+        },
+      }
+    </script>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark">
+<div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
+<div class="flex h-full min-h-screen">
+<aside class="flex w-64 flex-col bg-[#141118]/80 backdrop-blur-sm p-4 border-r border-white/5 z-20">
+<div class="flex flex-col gap-4 flex-grow">
+<div class="flex items-center gap-3 p-2">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="User avatar with an abstract purple and gold background" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA0b_iFTMaqdQcvXJuRAXFR1AYWk8CjTCjOhyoqsWBcr0OYG6-dXVy6h3ntw8PmiaBs47TlP41KCk-ZllVgjmXpz6lY4e6Hd0ljSPIARqAi2TE2KJM7XXoDF4xfo6ANwVPkvXToMZgFYdEuFufAgNuY8uKsCsY15r4hMRPqz37upId0-5vTafc05US-COYupCDvBpeHKVaII5MHseiBYWal7ecZflaraoAETvndm_hGOR3HZV-fvaxJSszSQ_1V6TmJEqngAGFg11Q");'></div>
+<div class="flex flex-col">
+<h1 class="text-white text-base font-medium leading-normal">Alex Weber</h1>
+<p class="text-[#ab9cba] text-sm font-normal leading-normal">Circle the Flow Mitglied</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2 mt-4">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<p class="text-sm font-medium leading-normal">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/20 text-primary" href="#">
+<span class="material-symbols-outlined fill">view_kanban</span>
+<p class="text-sm font-medium leading-normal">Planboards</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 transition-colors" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<p class="text-sm font-medium leading-normal">Inventar</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 transition-colors" href="#">
+<span class="material-symbols-outlined">folder_open</span>
+<p class="text-sm font-medium leading-normal">Dateiverwaltung</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 transition-colors" href="#">
+<span class="material-symbols-outlined">group</span>
+<p class="text-sm font-medium leading-normal">Mitglieder</p>
+</a>
+</nav>
+</div>
+<div class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<p class="text-sm font-medium leading-normal">Einstellungen</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 transition-colors" href="#">
+<span class="material-symbols-outlined">logout</span>
+<p class="text-sm font-medium leading-normal">Logout</p>
+</a>
+</div>
+</aside>
+<main class="flex-1 p-0 relative overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center -z-10" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBOh4GyGMUr8n9uSq-2-uHsU3SOiBIYKz7fyTLH-GZBxO2HglHPzhyEYBngZ9MTFE_hVZC03FaiF3aTf_AYUk7Rs3XNzh4jp6uvhsk62b7shrJkoK9qeTvdpXvusMeKaSUGh1FJNmsUXq5WGAQXCyHbluGyKJ_ouPU9IfNG6vLzhsqeZY560UTmzpEB2aKsAJZs58nlH0NJooXlZ_b2UjgA0-19TlVCZzMoXutEhPdzXv9lCez2EA1nqZ5B09_-xpTKsUazbqOBQx8"); filter: blur(20px) brightness(0.4); transform: scale(1.1);'></div>
+<div class="relative h-full flex flex-col p-6 lg:p-10">
+<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+<div class="flex flex-col gap-1">
+<p class="text-white text-4xl font-bold leading-tight tracking-tighter">Planboard: Projekt Mystica</p>
+<p class="text-[#ab9cba] text-base font-normal leading-normal">Eine immersive Welt für deine kreativen Ideen.</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center -space-x-2">
+<img alt="User 1" class="inline-block size-9 rounded-full ring-2 ring-background-dark" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDL1j_ZRKYNbAFsiywu2bgnbaMLiD_tN4eTycVa5_c5MqAytcBY7vr26SqBTnxGaICAZutHrPHWUELHc4ACU65IWHWKmaDRLNlarnHAFSSbV_JqdGZhpiuiIu-ptSC3TPYFM9THqimevvLx6oF1xPtDtFW_ahr-fkjaUdMMA9nKiHLWqs2S_Rja30zoy8pmSjNYlDqhZktkWGOmH4ONxO_5e3j0_trLhJFNOd5H-l1JTxqW9NgzE4keZ_Bo3SaTvtulsxOH0zUPRPg"/>
+<img alt="User 2" class="inline-block size-9 rounded-full ring-2 ring-background-dark" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHI5pF8XG1NIVhRBO2C5H_mSP1AuHqKJmfcvPm9MXfL9i-xrSR4IYKvGkw0GM_K3ExIcoO37WWQU-0HxH9TfNrSDW0nwHDvYwCazWvSmaeo7Pwbacr4n8VMP1vBZX0wkf1tIrTMO6KLW3pmyrGd5sjaR0bnn2no7ad4KY7MN181ooVLQOtB04u4mhHIkiSCTH3I2kH65DQNHv_neLzwyb9kgCgxX2Xwe3w-Wq0fQ1MBVWRIFr-K4UOFqmSzV96GsO4zDS283BH-7A"/>
+<img alt="User 3" class="inline-block size-9 rounded-full ring-2 ring-background-dark" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB9F1HVjHcZ9YOjFxqXwHgCfHkRU_sYRIEZFog0pzMc54V-VZY_0tFnnByPvSuHaioHGdCfp1RNS6ID6oHxJg_il58eR7ZmKsRgcWfP9QWTFuqrs-bVKn6JksJWnjBWF7gVqRmYF7DWZ9dwiusytZB5VMf9K-cDTYhL5H5c2cFiKB0-xh-pu4SLjHItkG3Pa_B7l9IsFtjGiGo_TCBjvrEkh2ZSlrAr0KO2FvGD5fyRIiS900bZwrgOgJL3sWc1IYTYPbZNlR2AP4w"/>
+</div>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary/80 text-white rounded-lg font-medium text-sm transition-colors">
+<span class="material-symbols-outlined text-base">add</span>
+<span>Artefakt</span>
+</button>
+</div>
+</div>
+<div class="mb-8">
+<div class="w-full bg-black/30 rounded-full h-2.5">
+<div class="bg-gradient-to-r from-primary to-yellow-400 h-2.5 rounded-full" style="width: 75%"></div>
+</div>
+<div class="flex justify-between text-xs text-[#ab9cba] mt-2">
+<span>Konzept</span>
+<span>In Arbeit</span>
+<span class="text-white font-medium">Review</span>
+<span>Abgeschlossen</span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 flex-1 overflow-y-auto pb-10">
+<div class="group relative aspect-[3/4] bg-[#141118]/50 border border-white/10 rounded-xl p-3 flex flex-col justify-end shadow-lg backdrop-blur-sm hover:border-primary transition-all duration-300 shadow-glow-purple">
+<img alt="Night shot of a Lisbon street with tram lights" class="absolute inset-0 w-full h-full object-cover rounded-xl opacity-70 group-hover:opacity-100 transition-opacity" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKC9WxqG2OIhrT9KWNUD6ie5Aq3xevX9BdAlJNZaElCrfBVodR1NUKKRiuMZwYDKy7bHT_yun0RavtRF090H1HI0XPHt_YVMEAsi5opfjInXPFYjZTKnKhms30g-_AdMXgQN_4kIVXwzA94eW-OZfmnwZHPCpjyqSI3LOE2velUmTO6V7vxm2u3gN4utFBqpf5PYz5SE0XeQj1gFGjlaYUGIzkQE7JPJVX32P_mQ4z5kBsisvo1WoTqKR4Qu0U2HgZF1LnRitdrtY"/>
+<div class="relative z-10 p-2 bg-black/40 rounded-lg backdrop-blur-sm">
+<p class="text-white text-sm font-bold leading-tight">Mood: Lissabon Nacht</p>
+<p class="text-xs text-slate-300 mt-1">Bild</p>
+</div>
+</div>
+<div class="group relative aspect-[3/4] bg-[#141118]/50 border border-white/10 rounded-xl p-3 flex flex-col justify-end shadow-lg backdrop-blur-sm hover:border-yellow-400 transition-all duration-300 shadow-glow-gold">
+<video autoplay="" class="absolute inset-0 w-full h-full object-cover rounded-xl opacity-70 group-hover:opacity-100 transition-opacity" loop="" muted="">
+<source src="https://assets.mixkit.co/videos/preview/mixkit-black-and-purple-smoke-1935-large.mp4" type="video/mp4"/>
+</video>
+<div class="relative z-10 p-2 bg-black/40 rounded-lg backdrop-blur-sm">
+<p class="text-white text-sm font-bold leading-tight">Visual Effect Test</p>
+<p class="text-xs text-slate-300 mt-1">Video</p>
+</div>
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+<span class="material-symbols-outlined text-white text-5xl drop-shadow-lg">play_circle</span>
+</div>
+</div>
+<div class="aspect-[3/4] bg-[#141118]/50 border border-white/10 rounded-xl p-4 flex flex-col shadow-lg backdrop-blur-sm hover:border-primary transition-all duration-300">
+<h3 class="font-bold text-amber-300 mb-2">Ideen-Kristall</h3>
+<p class="text-slate-300 text-sm flex-1">"Schweben soll es, als wäre die Schwerkraft nur eine Empfehlung. Leuchtende Pfade verbinden Gedankeninseln. Die Farbpalette muss das Mysterium atmen: tiefes Violett und das Gold einer fernen Supernova..."</p>
+<div class="flex justify-between items-center mt-3 text-xs text-slate-400">
+<span>Textnotiz</span>
+<span class="material-symbols-outlined text-base">sticky_note_2</span>
+</div>
+</div>
+<div class="group relative aspect-[3/4] bg-[#141118]/50 border border-white/10 rounded-xl p-4 flex flex-col justify-center items-center shadow-lg backdrop-blur-sm hover:border-primary transition-all duration-300 shadow-glow-purple">
+<div class="w-full h-24 flex items-center justify-center gap-0.5">
+<div class="w-1 h-4 bg-primary/40 animate-[pulse_1s_ease-in-out_infinite]"></div>
+<div class="w-1 h-10 bg-primary/60 animate-[pulse_1.2s_ease-in-out_infinite]"></div>
+<div class="w-1 h-16 bg-primary animate-[pulse_0.8s_ease-in-out_infinite]"></div>
+<div class="w-1 h-8 bg-primary/70 animate-[pulse_1.5s_ease-in-out_infinite]"></div>
+<div class="w-1 h-12 bg-primary/80 animate-[pulse_1s_ease-in-out_infinite]"></div>
+<div class="w-1 h-5 bg-primary/50 animate-[pulse_1.3s_ease-in-out_infinite]"></div>
+<div class="w-1 h-16 bg-primary animate-[pulse_0.8s_ease-in-out_infinite]"></div>
+<div class="w-1 h-10 bg-primary/60 animate-[pulse_1.2s_ease-in-out_infinite]"></div>
+<div class="w-1 h-4 bg-primary/40 animate-[pulse_1s_ease-in-out_infinite]"></div>
+</div>
+<div class="text-center mt-4">
+<p class="text-white text-sm font-bold leading-tight">Synthwave_Loop.wav</p>
+<p class="text-xs text-slate-300 mt-1">Sound-Snippet</p>
+</div>
+<style> @keyframes pulse { 50% { opacity: .5; transform: scaleY(0.5); } } </style>
+</div>
+<div class="aspect-[3/4] bg-[#141118]/50 border border-amber-400 rounded-xl p-4 flex flex-col shadow-lg backdrop-blur-sm shadow-glow-gold">
+<h3 class="font-bold text-amber-300 mb-2 flex items-center gap-2">
+<span class="material-symbols-outlined text-base fill">comment</span>
+<span>Diskussion</span>
+</h3>
+<div class="flex-1 space-y-3 overflow-y-auto text-sm pr-1">
+<div class="flex items-start gap-2">
+<img alt="User 2" class="size-6 rounded-full mt-1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAe7pPMWbE19uRyVEUuLKIeC_Rj3-ZwTjCjHGc72d3ZGciUsOdEKAjOF1AlCxSIKFU3hTmIz-mDbo1X0heSJZPfkvBf3AxvdT7VHomCzmMlVBbjBYwZ8T2Z2SNm2ItiBZ3ThGzbyK2p7yUdgEWrZhu8tQbEwfMm1Qg-ryLbRlRLrbbyuCdq_CJOMOXjX56XFIgxZE00Kploi8A29TFivgUQ6-cpWkIlnHSbF98-aQZ9YiRSMWxTILrPiVDzpKEW8YEDr6xRTejP9f8"/>
+<div>
+<p class="text-slate-200 bg-white/5 rounded-lg px-2 py-1">Die Stimmung im Video ist perfekt! Können wir das als Referenz für die Hauptvisuals nehmen?</p>
+<span class="text-xs text-slate-400 pl-1">Maria</span>
+</div>
+</div>
+<div class="flex items-start gap-2">
+<img alt="User 1" class="size-6 rounded-full mt-1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCEsY-pRQLmSSS6Nto8qhgx60n2_rezcxuxcnQjucV0jCAjCeATIs3V8UhhuHXgDqk8VM5QCvPxWmE_RD9rE4uDFPQohUgTan_ZXmchBEGXlcbBaOJ3zsy1Xth2beoG7SXOSfdkfjKp3ON0X4Nuul_dicedzCZ56I4mq4YgoocT6GFkHm-jjAvkJ1v1wuBbhcj4lBhswkOuaJ3N42qSxI4T-qIVkj8fdOULN6WrWLhGFC_SZ3pOIK_GQ5W6wPRqFTvu8Gdqeehsuj8"/>
+<div>
+<p class="text-slate-200 bg-white/5 rounded-lg px-2 py-1">Absolut. Ich lade gleich noch ein paar Texturen hoch, die dazu passen.</p>
+<span class="text-xs text-slate-400 pl-1">Alex</span>
+</div>
+</div>
+</div>
+</div>
+<div class="aspect-[3/4] border-2 border-dashed border-white/20 rounded-xl flex flex-col justify-center items-center text-center p-4 text-slate-400 hover:border-primary hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-4xl">add_circle</span>
+<p class="mt-2 text-sm font-medium">Neues Artefakt ablegen</p>
+<p class="text-xs">oder klicken zum Hochladen</p>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+
+</body></html>

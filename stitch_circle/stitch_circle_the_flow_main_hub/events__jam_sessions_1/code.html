@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html class="dark" lang="de"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Events: Jam Sessions with Archive</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+      }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#7f0df2",
+              "background-light": "#f7f5f8",
+              "background-dark": "#191022",
+            },
+            fontFamily: {
+              display: ["Space Grotesk", "sans-serif"],
+            },
+            borderRadius: { DEFAULT: "1rem", lg: "2rem", xl: "3rem", full: "9999px" },
+          },
+        },
+      };
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-800 dark:text-gray-200">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<div class="px-4 sm:px-8 md:px-16 lg:px-24 xl:px-40 flex flex-1 justify-center py-5">
+<div class="layout-content-container flex flex-col max-w-5xl flex-1">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-white/10 px-4 md:px-10 py-3">
+<div class="flex items-center gap-4 text-white">
+<div class="size-6 text-primary">
+<svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 4H17.3334V17.3334H30.6666V30.6666H44V44H4V4Z" fill="currentColor"></path>
+</svg>
+</div>
+<h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">Circle the Flow</h2>
+</div>
+<nav class="hidden md:flex flex-1 justify-center gap-9">
+<a class="text-white/80 hover:text-white transition-colors text-sm font-medium leading-normal" href="#">Home</a>
+<a class="text-primary hover:text-primary/80 transition-colors text-sm font-bold leading-normal" href="#">Events</a>
+<a class="text-white/80 hover:text-white transition-colors text-sm font-medium leading-normal" href="#">Community</a>
+<a class="text-white/80 hover:text-white transition-colors text-sm font-medium leading-normal" href="#">About</a>
+</nav>
+<div class="flex items-center gap-2">
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/90 transition-colors">
+<span class="truncate">Login</span>
+</button>
+<button class="hidden sm:flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-white/10 text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-white/20 transition-colors">
+<span class="truncate">Sign Up</span>
+</button>
+<div class="hidden sm:block bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="User avatar image with a colorful gradient" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCCGVicYOLy5snzAvBmC5LHfD0SggYMdnb5NPGLBePTl93aol9u0riPcuWNlaV35iHUCXE9i01Frf-HzZU0JCW5Qmj3vmz6o2BvvFbIrwIsKsjbzqTk-d7YKlUNG4InQ8MA2b5ACy0myp6WGKMCmoMG7C49HXc5nZxBAVNRLOFL3dkeOT_jUhpwfNv-Dh1sBHR35V_2cMjrXLVB4vnp7PuDPyl7RK2romlqYsZv6OCNtGDWCoSpCqFEkyv5R7BekHlI9UCmCUrLlu4');"></div>
+</div>
+</header>
+<div class="flex flex-wrap justify-between gap-3 p-4 pt-12 text-center items-center flex-col">
+<div class="flex min-w-72 flex-col gap-3">
+<p class="text-white text-5xl md:text-6xl font-black leading-tight tracking-[-0.033em]">Jam Sessions</p>
+<p class="text-white/60 text-lg font-normal leading-normal">Tune into the Flow of the City</p>
+</div>
+</div>
+<div class="flex gap-3 p-3 overflow-x-auto justify-center">
+<button class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-full bg-white/10 pl-4 pr-2 hover:bg-white/20 transition-colors">
+<p class="text-white text-sm font-medium leading-normal">All Dates</p>
+<span class="material-symbols-outlined text-white text-base">expand_more</span>
+</button>
+<button class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-full bg-white/10 pl-4 pr-2 hover:bg-white/20 transition-colors">
+<p class="text-white text-sm font-medium leading-normal">By Genre</p>
+<span class="material-symbols-outlined text-white text-base">expand_more</span>
+</button>
+<button class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-full bg-white/10 pl-4 pr-2 hover:bg-white/20 transition-colors">
+<p class="text-white text-sm font-medium leading-normal">By Artist</p>
+<span class="material-symbols-outlined text-white text-base">expand_more</span>
+</button>
+<button class="flex h-8 shrink-0 items-center justify-center gap-x-2 rounded-full bg-white/10 pl-4 pr-2 hover:bg-white/20 transition-colors">
+<p class="text-white text-sm font-medium leading-normal">Near Me</p>
+<span class="material-symbols-outlined text-white text-base">my_location</span>
+</button>
+</div>
+<div class="flex px-4 py-8">
+<div class="w-full bg-center bg-no-repeat aspect-[2/1] bg-cover rounded-lg object-cover relative overflow-hidden" data-alt="A mystical, dark-themed map of Lisbon with glowing points of interest." data-location="Lisbon" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCkI3idYs8vMmv2WjDH-7yx5FSUAP4CFEboMwHs0mUq1dbEEkhE2lc_RBVGgcoYqwm9h6960LcTqIqTHIb1D-AFH5n7EmxhaGfIEsu9f6DoNis3pq7GaOM-9U4WV7zTLkWSm76hQGFtgsAuHoMmvv20-yssBmS5RCL6b-Y1zprMRu50hPINwnNBktMPAd0z2UVpDCltTIoxxJlyzeLmxhDGXSA_w4SN8teB2hlYwJ0bvtk6WLU58nIEcYTuys3gIswF2bTf00C9IUc');">
+<div class="absolute inset-0 bg-background-dark/70 backdrop-blur-sm"></div>
+<div class="absolute top-[40%] left-[30%]">
+<div class="w-4 h-4 rounded-full bg-amber-400 absolute animate-ping"></div>
+<div class="w-4 h-4 rounded-full bg-amber-400 absolute"></div>
+</div>
+<div class="absolute top-[65%] left-[55%]">
+<div class="w-3 h-3 rounded-full bg-amber-400 absolute animate-ping delay-500"></div>
+<div class="w-3 h-3 rounded-full bg-amber-400 absolute"></div>
+</div>
+<div class="absolute top-[25%] left-[70%]">
+<div class="w-5 h-5 rounded-full bg-amber-400 absolute animate-ping delay-1000"></div>
+<div class="w-5 h-5 rounded-full bg-amber-400 absolute"></div>
+</div>
+<div class="absolute bottom-4 left-4 bg-background-dark/50 backdrop-blur-md p-3 rounded-lg border border-white/10">
+<h3 class="text-white font-bold text-lg">Time Map: Lisbon</h3>
+<p class="text-white/70 text-sm">Live Jam Session Radar</p>
+</div>
+</div>
+</div>
+<h2 class="text-white text-3xl font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">Upcoming Sessions</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
+<div class="flex flex-col gap-4 p-5 rounded-lg border border-white/10 bg-white/[.05] hover:bg-white/[.08] transition-all cursor-pointer">
+<div class="flex flex-col gap-2">
+<p class="text-sm font-medium text-primary">Fri, 28 Oct @ 21:00</p>
+<h3 class="text-xl font-bold text-white">Cosmic Echoes Jam</h3>
+<div class="flex items-center gap-2 text-white/70">
+<span class="material-symbols-outlined text-base">location_on</span>
+<p class="text-sm">Alley Cat Music Club</p>
+</div>
+</div>
+<p class="text-sm text-white/60 font-light">A journey through psychedelic soundscapes and ambient grooves. Bring your own flow.</p>
+<div class="mt-auto flex flex-col gap-4">
+<div class="flex items-center gap-2">
+<p class="text-xs text-white/70 font-medium">Artists:</p>
+<div class="flex -space-x-2">
+<div class="size-6 rounded-full border-2 border-background-dark bg-cover" data-alt="Avatar of an artist" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuArFgth_7zCdLwyRevQ8QV0Qg0UNxyTJkpXgfIEx3c1_cx6-KaJstLjX1czWC2mJi4pgGGHL-679bPhHtlMmdm-Kwdy931kCsDeJQBw_fHigjmj30_ZYgJMLLhTNvV3yeeS9155vJDpwVHm9oZa8MBn2E1JbnoGcZWcgUTTU_eVBYTbnxJ1TFCQ-NeYk5ZMm4kqi2LzmoKqZoLjh18sGlTq0TlTpquopRCwPeZyp5QLzkRrSVOSG925v22V8Bg43AaMqtfi_j_Yt4Q');"></div>
+<div class="size-6 rounded-full border-2 border-background-dark bg-cover" data-alt="Avatar of an artist" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC3yOUueQ3DaBlqVoIcwwSvgnwa41txB3T2_JQ6d5cwKCw-pfQV3Rbu0kn6b6hWFmb5lVbclj7pwP1gfGGNcYGHtZvZtoIwkPSSBLcrVym9p9WdWUoBLfScBTLjFRsppYdkP1XMvtu89PtPuvTVC6UpIAq8WrjIVlKZgQv1rI9oHrNiU5feilJV_kQrzAIkwyjb8Wg5ZGjFVCvWCh6-ueNrfXY2hMgvLdmSsX9-3-ZgDZB8z-xdaErFvuZSVatGSmVrqveUfYRzVfw');"></div>
+</div>
+</div>
+<button class="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/90 transition-colors gap-2">
+<span class="material-symbols-outlined text-lg">join_inner</span>
+<span class="truncate">Portal Jump</span>
+</button>
+</div>
+</div>
+<div class="flex flex-col gap-4 p-5 rounded-lg border border-white/10 bg-white/[.05] hover:bg-white/[.08] transition-all cursor-pointer">
+<div class="flex flex-col gap-2">
+<p class="text-sm font-medium text-primary">Sat, 29 Oct @ 22:00</p>
+<h3 class="text-xl font-bold text-white">Rhythmic Alchemy Session</h3>
+<div class="flex items-center gap-2 text-white/70">
+<span class="material-symbols-outlined text-base">location_on</span>
+<p class="text-sm">The Groove Temple</p>
+</div>
+</div>
+<p class="text-sm text-white/60 font-light">Fusing lo-fi beats with live jazz improvisation. A session for the soul.</p>
+<div class="mt-auto flex flex-col gap-4">
+<div class="flex items-center gap-2">
+<p class="text-xs text-white/70 font-medium">Artists:</p>
+<div class="flex -space-x-2">
+<div class="size-6 rounded-full border-2 border-background-dark bg-cover" data-alt="Avatar of an artist" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDfy_igaqM9igpFe1jSYXJ4CRaAAPtBxMDmELIFh04Uh41Dbwri3sAVNOnp2gVAxLGyjP0XSNfMZu90Kg9fubn18jJD4pwh0Zr06RcJgC-d79Yf3k3ic4cVQ2CM_TYCg2HvPEVIjFPHagE_HGhXenZu-LSSM-Igh3ylr1XDvlmQ4OpGxc2aMhtBZMfeuVmZB5NS0a-r080ekduMIcbzok8no353LsqJsPKeNoYHDWxIEHvC1pTPtLACvKfJBLvw55xuWZrLacCfQks');"></div>
+<div class="size-6 rounded-full border-2 border-background-dark bg-cover" data-alt="Avatar of an artist" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDvEn9P3cyon3c3TRGTnW9KLlyyJexFuOAeIALp1noQ_uqAAXG6m0yoVzJLLsTIjdy-9cgzaVQBrUxBb37UjM8CeDcGsjlgWkZs2tV3Wul6pWWOJE6uQZn6BFe3JwZe1bIKO4OXrY5Qg7GIueMvhgj53uCgXy-Jl6xdYFUfWGSwzu1er_mfJtT_eEaRpcWnlQ9aggk3tC16uk042E7ezY1CJoZ7NCFI9tYuXCgKB-MmTWc87AWjdvasY46bZFGxRFKojpfSj2uMuTA');"></div>
+<div class="size-6 rounded-full border-2 border-background-dark bg-cover" data-alt="Avatar of an artist" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAsY_P3x_itqBorpdn0kULjs6NSd62ql5w5k9JXjg5bQ4BWj8PE-MVVaDME0dJPSUVSMbMdxciItX2XoAcof1wWfvV2Xk91pezorZGCqd5LSxAvEebwjMb3YlB1I9bVizRHh3LKGzrE9nCJTLN9KXTrk7iLmdnI_Vm9roS3dotdutHL7Mr3qpDJIORYX5pw5MfKDe8d3k-cCbyiB2mWp-1Ao74hG-tyOLl_7yF9zTQRxj3-ILKvdAa2TorVVgMXLfaaPgA5MZZOGNk');"></div>
+</div>
+</div>
+<button class="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/90 transition-colors gap-2">
+<span class="material-symbols-outlined text-lg">join_inner</span>
+<span class="truncate">Portal Jump</span>
+</button>
+</div>
+</div>
+<div class="flex flex-col gap-4 p-5 rounded-lg border border-white/10 bg-white/[.05] hover:bg-white/[.08] transition-all cursor-pointer">
+<div class="flex flex-col gap-2">
+<p class="text-sm font-medium text-primary">Sun, 30 Oct @ 19:30</p>
+<h3 class="text-xl font-bold text-white">Future Funk Nexus</h3>
+<div class="flex items-center gap-2 text-white/70">
+<span class="material-symbols-outlined text-base">location_on</span>
+<p class="text-sm">Synthwave Station</p>
+</div>
+</div>
+<p class="text-sm text-white/60 font-light">High-energy electronic jam with a touch of 80s nostalgia. Expect neon lights and heavy bass.</p>
+<div class="mt-auto flex flex-col gap-4">
+<div class="flex items-center gap-2">
+<p class="text-xs text-white/70 font-medium">Artists:</p>
+<div class="flex -space-x-2">
+<div class="size-6 rounded-full border-2 border-background-dark bg-cover" data-alt="Avatar of an artist" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBBpynIA8ry-yU7SV7OBSS9g0kGrUtbTK_R1wtJjA8LGLlSop6SrUDYeZSWhYD1aQpVMocmUEk4OHbdSjsKzzmLt-yIPDnXv8CEgKk6fl_udiqQCbgBEQilyIP0W9PhKFMnPDe6eu9kDhTZ_S6IYDD9n6BLRPx-utK8St1fgvZYJ1HWuoRS1jwbCUdNMWb_pJZX2D6hFuOIJQWydmxrEU8Yknq6WKA0gspLrM0cOJeVlaa939CAwiUsh41iM2Rnw6mq6XYcSoBK8d4');"></div>
+</div>
+</div>
+<button class="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/90 transition-colors gap-2">
+<span class="material-symbols-outlined text-lg">join_inner</span>
+<span class="truncate">Portal Jump</span>
+</button>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-8 p-4 mt-16">
+<div class="flex flex-col items-center text-center gap-3">
+<h2 class="text-white text-3xl font-bold leading-tight tracking-[-0.015em]">Chronicle Portal</h2>
+<p class="text-white/60 text-lg font-normal leading-normal max-w-2xl">Revisit the echoes of past sessions. Filter the flow of memories by date, theme, or artist to find inspiration and relive the magic.</p>
+</div>
+<div class="flex flex-wrap items-center justify-center gap-4">
+<div class="relative">
+<input class="bg-white/5 border border-white/10 rounded-full h-10 pl-10 pr-4 text-white placeholder-white/40 text-sm focus:ring-primary focus:border-primary transition-colors" placeholder="Search by theme..." type="text"/>
+<span class="material-symbols-outlined text-white/50 absolute left-3 top-1/2 -translate-y-1/2 text-lg">search</span>
+</div>
+<button class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-white/5 border border-white/10 px-4 hover:bg-white/10 transition-colors">
+<p class="text-white text-sm font-medium leading-normal">Filter by Date</p>
+<span class="material-symbols-outlined text-white/70 text-base">calendar_month</span>
+</button>
+<button class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-white/5 border border-white/10 px-4 hover:bg-white/10 transition-colors">
+<p class="text-white text-sm font-medium leading-normal">Filter by Artist</p>
+<span class="material-symbols-outlined text-white/70 text-base">mic</span>
+</button>
+</div>
+<div class="relative pl-8 py-8">
+<div class="absolute left-[31px] top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary/50 via-amber-400/50 to-primary/50"></div>
+<div class="relative mb-12">
+<div class="absolute -left-8 top-1 w-6 h-6 rounded-full bg-amber-400/50 border-2 border-amber-400/80 flex items-center justify-center shadow-[0_0_15px_rgba(251,191,36,0.5)]">
+<div class="w-2 h-2 rounded-full bg-amber-300"></div>
+</div>
+<p class="text-amber-400/80 text-sm font-bold mb-2">September 2024</p>
+<div class="flex flex-col gap-4 p-5 rounded-lg border border-white/10 bg-white/[.03] opacity-70 hover:opacity-100 hover:bg-white/[.05] hover:border-primary/50 hover:shadow-[0_0_20px_rgba(127,13,242,0.3)] transition-all cursor-pointer">
+<h3 class="text-xl font-bold text-white/80">Solar Flare Sonata</h3>
+<p class="text-sm text-white/50 font-light">An evening of warm, sun-drenched melodies and acoustic vibes.</p>
+<div class="flex items-center gap-2 text-white/60">
+<span class="material-symbols-outlined text-base">history</span>
+<p class="text-sm">View Details &amp; Recordings</p>
+</div>
+</div>
+</div>
+<div class="relative mb-12">
+<div class="absolute -left-8 top-1 w-6 h-6 rounded-full bg-amber-400/50 border-2 border-amber-400/80 flex items-center justify-center shadow-[0_0_15px_rgba(251,191,36,0.5)]">
+<div class="w-2 h-2 rounded-full bg-amber-300"></div>
+</div>
+<p class="text-amber-400/80 text-sm font-bold mb-2">August 2024</p>
+<div class="flex flex-col gap-4 p-5 rounded-lg border border-white/10 bg-white/[.03] opacity-70 hover:opacity-100 hover:bg-white/[.05] hover:border-primary/50 hover:shadow-[0_0_20px_rgba(127,13,242,0.3)] transition-all cursor-pointer">
+<h3 class="text-xl font-bold text-white/80">Lunar Tides Lo-fi</h3>
+<p class="text-sm text-white/50 font-light">Chilled beats and moonlit improvisations that calmed the city's pulse.</p>
+<div class="flex items-center gap-2 text-white/60">
+<span class="material-symbols-outlined text-base">history</span>
+<p class="text-sm">View Details &amp; Recordings</p>
+</div>
+</div>
+</div>
+<div class="relative">
+<div class="absolute -left-8 top-1 w-6 h-6 rounded-full bg-amber-400/50 border-2 border-amber-400/80 flex items-center justify-center shadow-[0_0_15px_rgba(251,191,36,0.5)]">
+<div class="w-2 h-2 rounded-full bg-amber-300"></div>
+</div>
+<p class="text-amber-400/80 text-sm font-bold mb-2">July 2024</p>
+<div class="flex flex-col gap-4 p-5 rounded-lg border border-white/10 bg-white/[.03] opacity-70 hover:opacity-100 hover:bg-white/[.05] hover:border-primary/50 hover:shadow-[0_0_20px_rgba(127,13,242,0.3)] transition-all cursor-pointer">
+<h3 class="text-xl font-bold text-white/80">Quantum Bass Drop</h3>
+<p class="text-sm text-white/50 font-light">Exploring the deep frequencies and rhythmic paradoxes of electronic music.</p>
+<div class="flex items-center gap-2 text-white/60">
+<span class="material-symbols-outlined text-base">history</span>
+<p class="text-sm">View Details &amp; Recordings</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+</body></html>

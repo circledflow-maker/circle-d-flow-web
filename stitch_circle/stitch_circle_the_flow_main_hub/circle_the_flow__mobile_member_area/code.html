@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Circle the Flow: Mobile Member Area</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#7f0df2",
+              "background-light": "#f7f5f8",
+              "background-dark": "#191022",
+              "card-dark": "#211b27",
+              "card-light": "#ffffff",
+              "text-main-light": "#191022",
+              "text-main-dark": "#f7f5f8",
+              "text-secondary-light": "#6c5f7c",
+              "text-secondary-dark": "#ab9cba",
+            },
+            fontFamily: {
+              "display": ["Space Grotesk", "sans-serif"]
+            },
+            borderRadius: {
+              "DEFAULT": "0.5rem",
+              "lg": "1rem",
+              "xl": "1.5rem",
+              "full": "9999px"
+            },
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24
+      }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="relative mx-auto flex h-auto min-h-screen w-full max-w-md flex-col overflow-x-hidden">
+<div class="flex h-full grow flex-col pb-24">
+<!-- Header -->
+<header class="flex items-center justify-between p-4 sticky top-0 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm z-10">
+<div class="flex items-center gap-3">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="User avatar image" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD8HhJmPHO1PZ2HvOBtZdvsDw0WjTnZbL4fUdRaYnomB9lJfv7QYqclI32tuZ034ciXI3MK0Z0D7cJbf-RJ_m4PPWtd3fNspszllKtxx00_QykcigHivd0Ugv9QaSqRcXwJn5oXKNTzY-adMZmblwikuxF83t1LbHfa1lYvGPgLK6cUgxsM5_AlA72BbcLd-Yt0iZEVfHrWAoe4jHp2F1fK2FIiM9Is-F4BlDpVsaYJntdKA_ryY3-A-lwSiGFz4D35tFYkgrxT7yU");'></div>
+<div class="flex flex-col">
+<h1 class="text-text-main-light dark:text-text-main-dark text-base font-medium leading-normal">Lumina</h1>
+<p class="text-text-secondary-light dark:text-text-secondary-dark text-sm font-normal leading-normal">Level 12 Sorcerer</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-text-main-light dark:text-text-main-dark">
+<span class="material-symbols-outlined">search</span>
+</button>
+<button class="p-2 text-text-main-light dark:text-text-main-dark">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</header>
+<main class="flex flex-1 flex-col px-4">
+<!-- Page Heading -->
+<div class="flex flex-wrap justify-between gap-3 py-4">
+<div class="flex min-w-72 flex-col gap-1">
+<p class="text-text-main-light dark:text-text-main-dark text-4xl font-black leading-tight tracking-[-0.033em]">Dashboard</p>
+<p class="text-text-secondary-light dark:text-text-secondary-dark text-base font-normal leading-normal">Welcome back, Lumina!</p>
+</div>
+</div>
+<!-- Current Quest Card -->
+<div class="py-4 @container">
+<div class="flex flex-col items-stretch justify-start rounded-xl">
+<div class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-xl" data-alt="Mystical image of a sunken library" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCU8erheMOgWOHHL2hpjiN3OqaiRxzTZyMz63PibB7dvdNj7U0PF2zFrooICAHdLfc7-XR4osfTJficaL7vicVFGGHiI0EqZyKLflsAMKB2RCW9sNFVzlbtm172uK6jQFdt98Nt9iPxa9QDlh8JypI4fknZ8cq5Wzc3DQxg29SRrcITZwqMoiNoTwCYgvEuA4GU5sAYJdZWSKFLBcaypvxHYprtnf3H5CgVheAVb4y0urbkhrfxfUjAlrxu3YjXAwjezQ-LE1KQ770");'></div>
+<div class="flex w-full grow flex-col items-stretch justify-center gap-1 py-4">
+<p class="text-text-secondary-light dark:text-text-secondary-dark text-sm font-normal leading-normal">Current Quest</p>
+<p class="text-text-main-light dark:text-text-main-dark text-lg font-bold leading-tight tracking-[-0.015em]">The Alchemist's Riddle</p>
+<div class="flex items-end gap-3 justify-between">
+<div class="flex flex-col gap-1">
+<p class="text-text-secondary-light dark:text-text-secondary-dark text-base font-normal leading-normal">Find the three hidden runes in the Sunken Library.</p>
+<p class="text-text-secondary-light dark:text-text-secondary-dark text-sm font-normal leading-normal">Time Left: 2 days</p>
+</div>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-8 px-4 bg-primary text-white text-sm font-medium leading-normal">
+<span class="truncate">Continue</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Section Header -->
+<h2 class="text-text-main-light dark:text-text-main-dark text-[22px] font-bold leading-tight tracking-[-0.015em] pb-3 pt-5">Upcoming Events</h2>
+<!-- Events Carousel -->
+<div class="flex overflow-y-auto [-ms-scrollbar-style:none] [scrollbar-width:none] [&amp;::-webkit-scrollbar]:hidden -mx-4">
+<div class="flex items-stretch px-4 gap-3">
+<div class="flex h-full flex-1 flex-col gap-4 rounded-xl bg-card-light dark:bg-card-dark shadow-[0_0_4px_rgba(0,0,0,0.1)] min-w-60">
+<div class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-xl flex flex-col" data-alt="Abstract image of stars and nebula" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBEwct4G5SMUItfiod_SRW7OadTwyClhz6vvxBaC4dKLFXH4bR3H01ZQIQTELWEmr4oEF1OzzWQL9RVpRCKLVIrf_SJuT73rLsTPAl_R973PwTS_F8wVPDuTVWh0Ar-fJxVUdmVPQfqegc6qOTvWIRplcrUCpZYMdWgRJz2FjpzrhiLrPI79WkHKgIxRlEOTAgn3z0OAmKzJHiLdpCOBz-gnjqOyTKYdlWUvpRt7VsFFfGGpOtsfCZ5v8iAKfzpHnOmlUAVuBgOYmE");'></div>
+<div class="flex flex-col flex-1 justify-between p-4 pt-0 gap-4">
+<div>
+<p class="text-text-main-light dark:text-text-main-dark text-base font-medium leading-normal">Starlight Symposium</p>
+<p class="text-text-secondary-light dark:text-text-secondary-dark text-sm font-normal leading-normal">Tomorrow, 8:00 PM</p>
+</div>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-primary/20 text-primary text-sm font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">RSVP</span>
+</button>
+</div>
+</div>
+<div class="flex h-full flex-1 flex-col gap-4 rounded-xl bg-card-light dark:bg-card-dark shadow-[0_0_4px_rgba(0,0,0,0.1)] min-w-60">
+<div class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-xl flex flex-col" data-alt="Abstract image representing weaving threads of light" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAdnII3-f2BaZ2Z3VLW7GFCYN_Pzv9s7zSeFueYU0eQcjkA79XUfbPp4l7Z4zf4sct9nM7HknFChdwJQMzDIiPz21yleKoNJRWiS0lpgvmCenkChwmmI0A6JW_uW2vmPrACZ-QdnyIQ1mdbxJ6NDg14RSH7G9kdpvJd4koMhXdpZSo9zptmLvkf-en6NJQw3_0tsujPYDCyPO92kt8h8Mw8GLelQl4nNrVG6JAYVyZataRRb_nAht4YOK19RxFORC1R_qrbmz0bIRw");'></div>
+<div class="flex flex-col flex-1 justify-between p-4 pt-0 gap-4">
+<div>
+<p class="text-text-main-light dark:text-text-main-dark text-base font-medium leading-normal">Aether Weaving Workshop</p>
+<p class="text-text-secondary-light dark:text-text-secondary-dark text-sm font-normal leading-normal">Next Friday, 6:00 PM</p>
+</div>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-primary/20 text-primary text-sm font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">RSVP</span>
+</button>
+</div>
+</div>
+<div class="flex h-full flex-1 flex-col gap-4 rounded-xl bg-card-light dark:bg-card-dark shadow-[0_0_4px_rgba(0,0,0,0.1)] min-w-60">
+<div class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-xl flex flex-col" data-alt="Image of a futuristic narrative book" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCbSc0vZ11F_JmMv-H6XwN4tBgZK6ip9GHAsk-PjrCtFws54RGwyNeUoT0Ua9hgyOulNRfVOEh-sacxT-ZcLWmj1lP7QcCoWNUPCN2HzVns9xHWOg94r37QPhHwyLHE3vox3WlKDG_M0qMv3AyI6v50MEYcLfxbTZJYlgT7dYL4fRGotO-NhdApQtrmVz_pF-qJ8-eR4lombsziBylt64cVXLc6DEz32X_lAy3aTATK37Rvos-f9oN73M42xsRbFp3Kj-ZDT96b2Qg");'></div>
+<div class="flex flex-col flex-1 justify-between p-4 pt-0 gap-4">
+<div>
+<p class="text-text-main-light dark:text-text-main-dark text-base font-medium leading-normal">Quantum Narratives</p>
+<p class="text-text-secondary-light dark:text-text-secondary-dark text-sm font-normal leading-normal">In 2 Weeks, 7:00 PM</p>
+</div>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-primary/20 text-primary text-sm font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">RSVP</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Recent Rewards Section -->
+<h2 class="text-text-main-light dark:text-text-main-dark text-[22px] font-bold leading-tight tracking-[-0.015em] pb-3 pt-8">Recent Rewards</h2>
+<div class="grid grid-cols-2 gap-4">
+<div class="flex flex-col items-center gap-2 rounded-xl bg-card-light dark:bg-card-dark p-4">
+<div class="flex items-center justify-center size-16 bg-primary/20 rounded-full text-primary">
+<span class="material-symbols-outlined !text-4xl">local_fire_department</span>
+</div>
+<p class="text-text-main-light dark:text-text-main-dark font-medium text-center">Quest Master</p>
+<p class="text-text-secondary-light dark:text-text-secondary-dark text-sm text-center">Completed 10 quests</p>
+</div>
+<div class="flex flex-col items-center gap-2 rounded-xl bg-card-light dark:bg-card-dark p-4">
+<div class="flex items-center justify-center size-16 bg-primary/20 rounded-full text-primary">
+<span class="material-symbols-outlined !text-4xl">group</span>
+</div>
+<p class="text-text-main-light dark:text-text-main-dark font-medium text-center">Community Pillar</p>
+<p class="text-text-secondary-light dark:text-text-secondary-dark text-sm text-center">Attended 5 events</p>
+</div>
+</div>
+</main>
+</div>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm border-t border-white/10">
+<div class="flex justify-around items-center h-20 px-4">
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined !font-['Material_Symbols_Outlined']" style="font-variation-settings: 'FILL' 1, 'wght' 700">dashboard</span>
+<span class="text-xs font-bold">Dashboard</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-text-secondary-light dark:text-text-secondary-dark" href="#">
+<span class="material-symbols-outlined">view_kanban</span>
+<span class="text-xs font-medium">Planboards</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-text-secondary-light dark:text-text-secondary-dark" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="text-xs font-medium">Inventory</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-text-secondary-light dark:text-text-secondary-dark" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="text-xs font-medium">Profile</span>
+</a>
+</div>
+</nav>
+</div>
+</body></html>

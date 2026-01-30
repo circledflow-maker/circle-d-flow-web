@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html class="dark" lang="de">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Circle the Flow - Community Hub</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24
+        }
+        /* Video Background Styles */
+        #video-bg {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            z-index: -1;
+            object-fit: cover;
+            opacity: 0.6;
+        }
+        .bg-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(13, 13, 15, 0.7); /* midnight with opacity */
+            z-index: -1;
+        }
+    </style>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#8A2BE2",
+              "background-light": "#f7f5f8",
+              "background-dark": "#191022",
+              "mystic-gold": "#FFD700"
+            },
+            fontFamily: {
+              "display": ["Plus Jakarta Sans", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-800 dark:text-gray-200">
+
+<!-- Video Background -->
+<video autoplay loop muted playsinline id="video-bg">
+    <source src="../Assets/video/hero.mp4" type="video/mp4">
+</video>
+<div class="bg-overlay"></div>
+
+<div class="relative w-full overflow-x-hidden">
+    <!-- Top Navigation Bar -->
+    <header class="sticky top-0 z-50 w-full bg-background-dark/80 backdrop-blur-lg">
+        <nav class="container mx-auto flex items-center justify-between whitespace-nowrap px-6 py-3">
+            <div class="flex items-center gap-4 text-white">
+                <a href="../index.html" class="size-6 text-mystic-gold hover:text-white transition-colors">
+                    <svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4 4H17.3334V17.3334H30.6666V30.6666H44V44H4V4Z" fill="currentColor"></path>
+                    </svg>
+                </a>
+                <h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">Circle the Flow</h2>
+            </div>
+            <div class="hidden items-center gap-8 md:flex">
+                <a class="text-white text-sm font-medium leading-normal hover:text-mystic-gold transition-colors" href="#">Philosophie</a>
+                <a class="text-white text-sm font-medium leading-normal hover:text-mystic-gold transition-colors" href="#">Events</a>
+                <a class="text-white text-sm font-medium leading-normal hover:text-mystic-gold transition-colors" href="#">Community</a>
+                <a class="text-white text-sm font-medium leading-normal hover:text-mystic-gold transition-colors" href="#">Partner</a>
+                <a class="text-white text-sm font-medium leading-normal hover:text-mystic-gold transition-colors" href="#">Portfolio</a>
+                <a class="text-white text-sm font-medium leading-normal hover:text-mystic-gold transition-colors" href="#">Kontakt</a>
+            </div>
+            <div class="flex items-center gap-4">
+                <button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-mystic-gold text-background-dark text-sm font-bold leading-normal tracking-[0.015em] hover:opacity-90 transition-opacity">
+                    <span class="truncate">Member Login</span>
+                </button>
+                <button class="md:hidden text-white">
+                    <span class="material-symbols-outlined">menu</span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-10 md:py-20">
+        <!-- Hero Section -->
+        <section class="mb-20 md:mb-32">
+            <div class="@container">
+                <div class="flex min-h-[60vh] flex-col gap-6 rounded-xl bg-cover bg-center bg-no-repeat @[480px]:gap-8 items-center justify-center p-4 border border-primary/20" data-alt="Ethereal floating islands under a purple and gold nebula sky, representing a mystical world." style='background-image: linear-gradient(rgba(25, 16, 34, 0.7) 0%, rgba(25, 16, 34, 0.9) 100%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuCAXBpCXpzttFSVwcmZvwHhz0S6dtLqucOKUPqKTgutLp9WN2-bq_eEr25XojjX3jDOrdsT2nP9LuQMpUJ-2RK3CoPZqLTNIpbZ5Rj_xW9HlQHE1WcqZNtw37o6Hw3y81TZPPzfSW1qdAvchCoftDvvh9j5GWOSJfTZvRuuvOZXhCOo7VYPxGtWd_394TugyAOgb1VB8IFFhZXg6MbafyZYHBnNcWr8YDGaPu4lj1hvA5GaS1eitwNF257T2udxYIS58xIO_HzzDeQ");'>
+                    <div class="flex flex-col gap-4 text-center">
+                        <h1 class="text-mystic-gold text-4xl font-black leading-tight tracking-[-0.033em] @[480px]:text-6xl @[480px]:font-black @[480px]:leading-tight @[480px]:tracking-[-0.033em]">
+                            Feel your flow.
+                        </h1>
+                        <h2 class="text-white text-base font-normal leading-normal @[480px]:text-lg @[480px]:font-normal @[480px]:leading-normal max-w-2xl">
+                            An artistic and scientific community in Lisbon serving as a central hub to foster creation, adventure, and connection.
+                        </h2>
+                    </div>
+                    <button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 @[480px]:h-12 @[480px]:px-6 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] @[480px]:text-base @[480px]:font-bold @[480px]:leading-normal @[480px]:tracking-[0.015em] hover:opacity-90 transition-opacity">
+                        <span class="truncate">Discover the Community</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Philosophy Section -->
+        <section class="text-center max-w-3xl mx-auto mb-20 md:mb-32">
+            <h2 class="text-mystic-gold text-3xl font-bold leading-tight tracking-[-0.015em] mb-4">Our Philosophy</h2>
+            <p class="text-white/80 text-lg font-normal leading-relaxed">
+                Circle the Flow is a sanctuary for artists, thinkers, and creators. We believe in the power of collaboration, adventure, and authentic self-expression, inspired by the deep bond of friendship and the raw energy of hip-hop culture.
+            </p>
+        </section>
+
+        <!-- Manga-Style Panel Grid -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-20 md:mb-32">
+            <!-- Manga Fotobook Panel (Modified Time Map) -->
+            <div class="flex flex-col gap-4 p-6 border border-primary/30 rounded-xl bg-background-dark/50">
+                <h3 class="text-2xl font-bold text-mystic-gold">Manga Photobook</h3>
+                <p class="text-white/80">Dive into our visual volumes. Your story, told in the style of a manga.</p>
+                <div class="aspect-video w-full rounded-lg overflow-hidden border-2 border-primary/50">
+                    <a href="../index.html#portfolio" class="block w-full h-full relative group">
+                        <img alt="Manga Fotobook Cover" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIIIqqFI9SfD88bkr62z0ggbt9PxDCrzGn-NKgIWNMrIaMgbkXYLcTPeCHXEiMTrpXQM56EouclQUGicnFAai-U_d8Yv_nq3Q6kt6jsP1GW0HcpTGVMqQEbMxkfXSKYoxuZm3Rq9Reinz_GlS7DdfwMx1IHkdaS7gH2zRFc4D_Oxj5eY_Di8Q6xWuf2I19sR0x_jehb4jWV-ZuoCZz6lEhoFioQrwX7iHSJGDt_v4XIgQbfn_XM4cuYHnUJqZIdU3LPOCehJnLeHM"/>
+                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <span class="text-white font-bold text-lg">Go to Portfolio</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Partner Spotlight Panel -->
+            <div class="flex flex-col gap-4 p-6 border border-primary/30 rounded-xl bg-background-dark/50">
+                <h3 class="text-2xl font-bold text-mystic-gold">Partner Spotlight</h3>
+                <p class="text-white/80">Our "Treasure Map" of local partners. Discover the gems that support and enrich our community.</p>
+                <div class="grid grid-cols-3 gap-4 flex-1 items-center">
+                    <div class="aspect-square bg-white/10 rounded-lg flex items-center justify-center p-2"><img alt="Logo des Partners 1" class="max-w-full max-h-10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCttZyH4JPUvWpdkKX18OgS7SOv6Ff9mfwxFo1ObsvqFQ9DBXkhKSzHdxWpnfncatzwT9s_n5x3z5idxuMiH5ufBMzeq_uBswJUAaeziKDqfB-wnKw3fhhcOqTF_5nx8Nk1UVjVQFb0mIvhrHFS_D9EU0C2DOP2N9OfiJOufJkFPTY1d9RDg9x63sW-_EmUA376nLi-LRTkfxXBeldAn95CScHydXZPBVwX3sZ7NQaCYpJzhLFRTLyHLX_mMaShwBplxDugBss0zJ0"/></div>
+                    <div class="aspect-square bg-white/10 rounded-lg flex items-center justify-center p-2"><img alt="Logo des Partners 2" class="max-w-full max-h-10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfDv5p2PChbZA2DXjO7k1YGYRYsnOCEzbMgmMDFGQJAptR5g6HII0m03OjlMwj4TUAwAIc3mnXaTxwUR9wkLQbv1yzqxwqkxeYr5uJRIHZ7EJW5KsJloENaWzMOeYobAbuEbIQiAUTmEZ7oE_nO5YV3_Jr5zUYL4P-Zme9O6147QUe1MPBFkWPcTkVK61XuAZun9sZxNVuoJdwl5QTNHF2vympinYPYHjB9159_jS7BLnJgs603zI9A4_pBg7rpfO7cHDtpwc9tEY"/></div>
+                    <div class="aspect-square bg-white/10 rounded-lg flex items-center justify-center p-2"><img alt="Logo des Partners 3" class="max-w-full max-h-10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDTnUFFT3flMqUsylKAQM-5HwTz-5uGo0R6Safgk0a9_MPMgOYq9COmOj_7Dtk0UrccA7D1NTk7QI3W3LgsvWThOQ3Hsn-h-nOMRP525z2N-eEWJc5CKKyX4S9Eorx6u8IwSIUQujmooZcuT50s-zpKgqoZ0X_h_ex2M9eIBulPPYAAgKK1ELR2JveG0y8ZgfI8To5xcvIvUJjj8ScP8T13X8W8y6sJr9T6yYLIs2RHPtjkCRzMjFjdjNG9gRAp9us0FfEAvhhVeDU"/></div>
+                    <div class="aspect-square bg-white/10 rounded-lg flex items-center justify-center p-2"><img alt="Logo des Partners 4" class="max-w-full max-h-10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdFXgUQuSgR_XEn--cN3AO1gRDIHuUSrYM-vaCZaWrSBy8tTa7fsg-FHjXwFwC2qgcp8cNo4U_0w8kzcdXBO2Vcr6cjmFhgXqD1bUIqWUBWNlTmTjXPPpLvafJ5l53C-hhL2MPBqbm9EQvup6qOR4rRWtZxx2iBwIZWkUjCuj9zZmbht33SfpP2AoxLKwhlGGbkBzGSxt_d_DDI98Z4osqsiaop3DmiDC37zCVQLoqsMhHEhaO9aEQq0arYQniCu4mPCqwqUGGckU"/></div>
+                    <div class="aspect-square bg-white/10 rounded-lg flex items-center justify-center p-2"><img alt="Logo des Partners 5" class="max-w-full max-h-10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXqi8qZU1MTU5FS0K8v21xbWz_oi8BOWeo8OHfB0zas4u-vPjduClr9fT5bCgLFH_tYPoIZFaG6rAVSi1fzp9p85e7PYVBtuqfWuvPMT6zBin3vyHoRs8EuuNEkKkx01cqfvI1Xt8uIJMEmQNuTxCPaMmwtvm9at6wplPwaqxNckp2OWO8vtiYyY9k03vsg3R8N_oNN9SSS2dlF79lnJhOFPFMEuAniPd0R_lS0RE9AAYWX9N3GQ7lKNZQXZEP-lhXwICN6iilZBI"/></div>
+                    <div class="aspect-square bg-white/10 rounded-lg flex items-center justify-center p-2"><img alt="Logo des Partners 6" class="max-w-full max-h-10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBWWAoljJF-spDI7bMtn_lfV2tfySYLZyCoRuJ0bYrEbF_pk11N08o-LYdyD0F1VnHQYqPOe0-iOpQVO0wQ8kJ2PysV8_tK-4wBJOFSHQ8HEohhTzgeG7SFLh37NkjMxzRjjOJKxqjXtaAVr9sjyYMRw1XmHXfSb0oqSkzvUtL-VP60P2SCsm8BPxh8UZWpcRY1CSsqvLp-veYOcH1X7CAcElL5Ygmh0vOdEchlLRasH0nml0Ao-ZvO54MSkYSjNdIQyd8zAELWuC0"/></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- The Flow Blog -->
+        <section class="mb-20 md:mb-32">
+            <h2 class="text-mystic-gold text-3xl font-bold leading-tight tracking-[-0.015em] mb-8 text-center">The Flow Blog</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Blog Post 1 -->
+                <div class="group flex flex-col bg-background-dark/50 rounded-xl overflow-hidden border border-primary/30">
+                    <div class="aspect-video overflow-hidden">
+                        <img alt="Artist working on digital art" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBoXSrZJEZkupp7U9A-_Y-DcXsPl2sXlQcEDUA8krVFaNsaC3xrj_NZMcyxGwXDQC8qGRj4Gf_uwHfA7kpW6SVcKR5f8iVoPdWHByroI_MQvf_i1shVHqSKQ-6GX3IT3MII-rvXAZhANdCH2_1kjXspOcDc29K3xMypMM9D6QiaLutuq-MQw1l3upFRSRUIjSOZtbhYUNMaHOua6081TQzuRpiKN-m-3C6Zht9fC4_mULHbmAyFFh27nQTKqi3V2XYFBBo5yuBNAYI"/>
+                    </div>
+                    <div class="p-6 flex flex-col flex-1">
+                        <h4 class="text-xl font-bold text-white mb-2">The Art of Digital Alchemy</h4>
+                        <p class="text-white/70 text-sm mb-4 flex-1">How modern tools reignite ancient creativity techniques.</p>
+                        <a class="text-mystic-gold font-bold text-sm flex items-center gap-2" href="#">Read More <span class="material-symbols-outlined">arrow_forward</span></a>
+                    </div>
+                </div>
+                <!-- Blog Post 2 -->
+                <div class="group flex flex-col bg-background-dark/50 rounded-xl overflow-hidden border border-primary/30">
+                    <div class="aspect-video overflow-hidden">
+                        <img alt="Headphones in a music studio" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvOEcb-1qvSSjL5ll24YDzHqTo09p_Maz8gEP0xNxI-epYBUoun_U8fJqsAJ_8H2THocf582Is5fpacAk6XRLhtMbZ93A8k7IyN9zBhqciW4kBZ0H1sgW69xUx5NeySKA1pSO5wxLgjJ3Ep0V6DEwU6QOC-UzNjSVDRPbWKp_S71c-gwcRQRsU5Z7tHoGC5oeO3MkirgcAvHNNHWrLacmNxZwnT_2d3Ym7j5VTkMfj09jh3t-zvqrMVfgyZIixwnxk_djYhnHeVOY"/>
+                    </div>
+                    <div class="p-6 flex flex-col flex-1">
+                        <h4 class="text-xl font-bold text-white mb-2">Hip-Hop &amp; Flow State</h4>
+                        <p class="text-white/70 text-sm mb-4 flex-1">An investigation into the connection between beatmaking and meditative states.</p>
+                        <a class="text-mystic-gold font-bold text-sm flex items-center gap-2" href="#">Read More <span class="material-symbols-outlined">arrow_forward</span></a>
+                    </div>
+                </div>
+                <!-- Blog Post 3 -->
+                <div class="group flex flex-col bg-background-dark/50 rounded-xl overflow-hidden border border-primary/30">
+                    <div class="aspect-video overflow-hidden">
+                        <img alt="Friends laughing in Lisbon" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDU6VUMPHUEZJgKVj_2sLlM7XfEchW4t63c7VIGkVpBr50BSyED4RqEooNXmNxGikQIcJj1lO284xgnQjwBcuyxJP6cFxzCtZKg9QKZidCzWFxd_41uVzd8eV_jrDFuLIOkPHs8D8DDNw2H3DG20XDhFEjx0w_C8TJF3z_3H5KQx0pS0rq6rhA_IuWO-48vtl8wLtDg79bKlCUy43NxInt21KwCiEQVn6S8yfc7tw_CvGYXUwp-Wxgy0ErEogG4kn9z9_fuJu_E6vo"/>
+                    </div>
+                    <div class="p-6 flex flex-col flex-1">
+                        <h4 class="text-xl font-bold text-white mb-2">The Power of Community</h4>
+                        <p class="text-white/70 text-sm mb-4 flex-1">Why collaboration is the key to true creative unfolding.</p>
+                        <a class="text-mystic-gold font-bold text-sm flex items-center gap-2" href="#">Read More <span class="material-symbols-outlined">arrow_forward</span></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gateway Sections -->
+        <section class="space-y-8 mb-20 md:mb-32">
+            <!-- Kiss Your Heart -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 items-center gap-8 p-8 rounded-xl bg-gradient-to-br from-primary/20 to-transparent border border-primary/30">
+                <div class="flex flex-col gap-4">
+                    <h3 class="text-3xl font-bold text-white">Kiss Your Heart</h3>
+                    <p class="text-lg text-white/80">Photography &amp; Brand Building with Soul. We reveal the essence of your brand through a unique manga aesthetic and powerful storytelling.</p>
+                    <a class="flex min-w-[84px] max-w-fit cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-mystic-gold text-background-dark text-base font-bold leading-normal tracking-[0.015em] hover:opacity-90 transition-opacity" href="#">
+                        <span class="truncate">Discover Portfolios</span>
+                    </a>
+                </div>
+                <div class="relative w-full aspect-video rounded-lg overflow-hidden border-2 border-mystic-gold/50">
+                    <img alt="Manga style portrait" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIIIqqFI9SfD88bkr62z0ggbt9PxDCrzGn-NKgIWNMrIaMgbkXYLcTPeCHXEiMTrpXQM56EouclQUGicnFAai-U_d8Yv_nq3Q6kt6jsP1GW0HcpTGVMqQEbMxkfXSKYoxuZm3Rq9Reinz_GlS7DdfwMx1IHkdaS7gH2zRFc4D_Oxj5eY_Di8Q6xWuf2I19sR0x_jehb4jWV-ZuoCZz6lEhoFioQrwX7iHSJGDt_v4XIgQbfn_XM4cuYHnUJqZIdU3LPOCehJnLeHM"/>
+                </div>
+            </div>
+            <!-- Outbreak Tunes -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 items-center gap-8 p-8 rounded-xl bg-gradient-to-bl from-primary/20 to-transparent border border-primary/30">
+                <div class="relative w-full aspect-video rounded-lg overflow-hidden border-2 border-mystic-gold/50 lg:order-last">
+                    <img alt="Music production setup" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSmd6JehGvue7ZFYAqCXXDjL4XHNSL5-cnajRcLftuAsoHpchVTfHhxW-aladIzBDhxp2tESQb0GU3JM2cDaBRUCsrzG1AZtZ-oyv7ALjxSUgxBL1Jzoh7Qn0QWSsGMV-_HMyFfoGyrULyGN_byPmNPSD4fqfF4LqpjP63fvvC0WI35kmZ5JQB5CfHUXeXl9_AskV9Sxf5l4y7FPhthHToAGzq8N02EqXzCeSXYHR7Nuhg4VjyLP8Ln24R5joYaYCB6zirvqLdy04"/>
+                </div>
+                <div class="flex flex-col gap-4">
+                    <h3 class="text-3xl font-bold text-white">Outbreak Tunes</h3>
+                    <p class="text-lg text-white/80">Music production that breaks boundaries. From hip-hop beats to experimental soundscapes – here is where the soundtrack of your vision is created.</p>
+                    <a class="flex min-w-[84px] max-w-fit cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-mystic-gold text-background-dark text-base font-bold leading-normal tracking-[0.015em] hover:opacity-90 transition-opacity" href="#">
+                        <span class="truncate">Listen to the Beats</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-background-dark border-t border-primary/20">
+        <div class="container mx-auto px-6 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="md:col-span-1">
+                    <div class="flex items-center gap-4 text-white mb-4">
+                        <div class="size-6 text-mystic-gold">
+                            <svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M4 4H17.3334V17.3334H30.6666V30.6666H44V44H4V4Z" fill="currentColor"></path>
+                            </svg>
+                        </div>
+                        <h2 class="text-white text-lg font-bold leading-tight">Circle the Flow</h2>
+                    </div>
+                    <p class="text-white/60 text-sm">Kunst, Wissenschaft &amp; Community. Lissabon.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-mystic-gold mb-4">Navigation</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a class="text-white/80 hover:text-white" href="#">Philosophie</a></li>
+                        <li><a class="text-white/80 hover:text-white" href="#">Events</a></li>
+                        <li><a class="text-white/80 hover:text-white" href="#">Community</a></li>
+                        <li><a class="text-white/80 hover:text-white" href="#">Kontakt</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-mystic-gold mb-4">Services</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a class="text-white/80 hover:text-white" href="#">Kiss Your Heart</a></li>
+                        <li><a class="text-white/80 hover:text-white" href="#">Outbreak Tunes</a></li>
+                        <li><a class="text-white/80 hover:text-white" href="#">Portfolio</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-mystic-gold mb-4">Werde Teil des Flows</h4>
+                    <p class="text-white/60 text-sm mb-4">Erhalte Updates zu Events und Projekten direkt in dein Postfach.</p>
+                    <form class="flex gap-2">
+                        <input class="w-full bg-white/10 border-primary/50 text-white rounded-md text-sm focus:ring-mystic-gold focus:border-mystic-gold" placeholder="Deine E-Mail" type="email"/>
+                        <button class="h-10 px-4 bg-primary text-white font-bold rounded-md text-sm hover:opacity-90" type="submit">Senden</button>
+                    </form>
+                </div>
+            </div>
+            <div class="mt-12 border-t border-primary/20 pt-8 text-center text-sm text-white/50">
+                <p>© 2024 Circle the Flow. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</div>
+
+<!-- Audio Player (Right) -->
+<div class="fixed bottom-8 right-8 z-50">
+    <button id="audio-btn" class="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:border-electric transition-colors bg-background-dark/50 backdrop-blur-sm">
+        <!-- Treble Clef Icon -->
+        <svg id="audio-icon-on" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 24 24" style="color: white;">
+            <path d="M11.5 2C11.5 2 11.5 2 11.5 2C10.67 2 10 2.67 10 3.5C10 4.33 10.67 5 11.5 5C12.33 5 13 4.33 13 3.5C13 3.42 12.99 3.34 12.98 3.26C13.6 3.64 14 4.31 14 5.08C14 6.27 12.94 7.21 11.77 7.21C11.68 7.21 11.59 7.2 11.5 7.2C9.57 7.2 8 8.77 8 10.7C8 12.63 9.57 14.2 11.5 14.2C11.5 14.2 11.5 14.2 11.5 14.2C12.33 14.2 13 13.53 13 12.7C13 11.87 12.33 11.2 11.5 11.2C10.67 11.2 10 11.87 10 12.7C10 12.78 10.01 12.86 10.02 12.94C9.4 12.56 9 11.89 9 11.12C9 9.93 10.06 8.99 11.23 8.99C11.32 8.99 11.41 9 11.5 9C13.43 9 15 7.43 15 5.5C15 3.57 13.43 2 11.5 2ZM11.5 15.5C9.57 15.5 8 17.07 8 19C8 20.93 9.57 22.5 11.5 22.5C13.43 22.5 15 20.93 15 19C15 17.07 13.43 15.5 11.5 15.5ZM11.5 20.5C10.67 20.5 10 19.83 10 19C10 18.17 10.67 17.5 11.5 17.5C12.33 17.5 13 18.17 13 19C13 19.83 12.33 20.5 11.5 20.5Z"/>
+        </svg>
+        <svg id="audio-icon-off" class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" style="color: white;">
+            <path d="M11.5 2C11.5 2 11.5 2 11.5 2C10.67 2 10 2.67 10 3.5C10 4.33 10.67 5 11.5 5C12.33 5 13 4.33 13 3.5C13 3.42 12.99 3.34 12.98 3.26C13.6 3.64 14 4.31 14 5.08C14 6.27 12.94 7.21 11.77 7.21C11.68 7.21 11.59 7.2 11.5 7.2C9.57 7.2 8 8.77 8 10.7C8 12.63 9.57 14.2 11.5 14.2C11.5 14.2 11.5 14.2 11.5 14.2C12.33 14.2 13 13.53 13 12.7C13 11.87 12.33 11.2 11.5 11.2C10.67 11.2 10 11.87 10 12.7C10 12.78 10.01 12.86 10.02 12.94C9.4 12.56 9 11.89 9 11.12C9 9.93 10.06 8.99 11.23 8.99C11.32 8.99 11.41 9 11.5 9C13.43 9 15 7.43 15 5.5C15 3.57 13.43 2 11.5 2ZM11.5 15.5C9.57 15.5 8 17.07 8 19C8 20.93 9.57 22.5 11.5 22.5C13.43 22.5 15 20.93 15 19C15 17.07 13.43 15.5 11.5 15.5ZM11.5 20.5C10.67 20.5 10 19.83 10 19C10 18.17 10.67 17.5 11.5 17.5C12.33 17.5 13 18.17 13 19C13 19.83 12.33 20.5 11.5 20.5Z" opacity="0.3"/>
+            <line x1="4" y1="4" x2="20" y2="20" stroke="currentColor" stroke-width="2"/>
+        </svg>
+    </button>
+    <audio id="bg-music" loop>
+        <source src="../Assets/audio/ambient.mp3" type="audio/mpeg">
+    </audio>
+</div>
+
+<script>
+    // Audio Player Logic
+    const audioBtn = document.getElementById('audio-btn');
+    const bgMusic = document.getElementById('bg-music');
+    const iconOn = document.getElementById('audio-icon-on');
+    const iconOff = document.getElementById('audio-icon-off');
+
+    // Try to restore state
+    const isPlaying = localStorage.getItem('musicPlaying') === 'true';
+    if (isPlaying) {
+        bgMusic.play().then(() => {
+            iconOn.classList.remove('hidden');
+            iconOff.classList.add('hidden');
+        }).catch(() => {
+            // Autoplay might be blocked
+            console.log("Autoplay blocked");
+        });
+    }
+
+    audioBtn.addEventListener('click', () => {
+        if (bgMusic.paused) {
+            bgMusic.play();
+            iconOn.classList.remove('hidden');
+            iconOff.classList.add('hidden');
+            localStorage.setItem('musicPlaying', 'true');
+        } else {
+            bgMusic.pause();
+            iconOn.classList.add('hidden');
+            iconOff.classList.remove('hidden');
+            localStorage.setItem('musicPlaying', 'false');
+        }
+    });
+</script>
+
+</body>
+</html>

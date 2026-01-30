@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html class="dark" lang="de"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Circle the Flow - Belohnungs-Kammer</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+        .amulet {
+            filter: drop-shadow(0 0 10px #FFD700) drop-shadow(0 0 20px #7f0df2);
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#7f0df2",
+              "background-light": "#f7f5f8",
+              "background-dark": "#191022",
+              "gold": "#FFD700",
+            },
+            fontFamily: {
+              "display": ["Space Grotesk", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark">
+<div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
+<div class="flex h-full min-h-screen">
+<aside class="flex w-64 flex-col bg-[#141118]/80 backdrop-blur-sm p-4 border-r border-white/5">
+<div class="flex flex-col gap-4 flex-grow">
+<div class="flex items-center gap-3 p-2">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="User avatar with an abstract purple and gold background" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA0b_iFTMaqdQcvXJuRAXFR1AYWk8CjTCjOhyoqsWBcr0OYG6-dXVy6h3ntw8PmiaBs47TlP41KCk-ZllVgjmXpz6lY4e6Hd0ljSPIARqAi2TE2KJM7XXoDF4xfo6ANwVPkvXToMZgFYdEuFufAgNuY8uKsCsY15r4hMRPqz37upId0-5vTafc05US-COYupCDvBpeHKVaII5MHseiBYWal7ecZflaraoAETvndm_hGOR3HZV-fvaxJSszSQ_1V6TmJEqngAGFg11Q");'></div>
+<div class="flex flex-col">
+<h1 class="text-white text-base font-medium leading-normal">Alex Weber</h1>
+<p class="text-[#ab9cba] text-sm font-normal leading-normal">Circle the Flow Mitglied</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2 mt-4">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<p class="text-sm font-medium leading-normal">Dashboard</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 transition-colors" href="#">
+<span class="material-symbols-outlined">view_kanban</span>
+<p class="text-sm font-medium leading-normal">Planboards</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 transition-colors" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<p class="text-sm font-medium leading-normal">Inventar</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 transition-colors" href="#">
+<span class="material-symbols-outlined">folder_open</span>
+<p class="text-sm font-medium leading-normal">Dateiverwaltung</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 transition-colors" href="#">
+<span class="material-symbols-outlined">person</span>
+<p class="text-sm font-medium leading-normal">Profil</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/20 text-primary" href="#">
+<span class="material-symbols-outlined fill">military_tech</span>
+<p class="text-sm font-medium leading-normal">Badges &amp; Belohnungen</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 transition-colors" href="#">
+<span class="material-symbols-outlined">group</span>
+<p class="text-sm font-medium leading-normal">Mitglieder</p>
+</a>
+</nav>
+</div>
+<div class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<p class="text-sm font-medium leading-normal">Einstellungen</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 transition-colors" href="#">
+<span class="material-symbols-outlined">logout</span>
+<p class="text-sm font-medium leading-normal">Logout</p>
+</a>
+</div>
+</aside>
+<main class="flex-1 p-6 lg:p-10">
+<div class="mx-auto max-w-7xl">
+<div class="relative overflow-hidden bg-gradient-to-br from-primary to-background-dark border border-white/10 rounded-xl p-8 text-center shadow-2xl shadow-primary/20">
+<div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-10"></div>
+<div class="relative">
+<h1 class="text-gold text-4xl md:text-5xl font-bold leading-tight tracking-tighter">Belohnungs-Kammer</h1>
+<p class="text-[#ab9cba] text-lg mt-3 max-w-3xl mx-auto">Tausche deine hart verdienten Flow Punkte und Badges gegen exklusive Glücks-Artefakte und Verdienst-Fragmente ein.</p>
+<div class="mt-6 inline-flex items-center gap-4 bg-black/30 p-3 px-6 rounded-full border border-white/10">
+<span class="material-symbols-outlined text-gold text-3xl">toll</span>
+<div class="text-left">
+<p class="text-white text-2xl font-bold">1,250</p>
+<p class="text-slate-400 text-sm">Verfügbare Flow Punkte</p>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-10">
+<h2 class="text-white text-3xl font-bold tracking-tight">Verfügbare Glücks-Artefakte</h2>
+<div class="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+<div class="flex flex-col bg-[#141118] border border-white/10 rounded-xl overflow-hidden transition-all duration-300 hover:border-gold hover:shadow-lg hover:shadow-gold/10">
+<div class="bg-center bg-no-repeat aspect-video bg-cover" data-alt="A professional photography session in a modern studio setting with soft lighting" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD-ZUv5H63pUrmU4GBDCh9o3R-nhQjAohFi1TeC2RWP8DGUkL5hia08TV44bL7kMc7WQFRdCRq-xngfhzY-DcR3n3Jt9vjwFqIxDvEBJcMSV6QA_L8qS_BUvIZK4fSlMA1lYvyd69ESAtEcVvbMb4wRVacoxrAlsnGqYTyb7lBKmfsqkgkD9l-XTmms4nea7em3ix6RlfAiahQHA-2JpjmfRD_7Yh8wr6SVcK38BRGSxFaMOzl4sZ6whr0USkYCXjQuB0VpMM5_tCM");'></div>
+<div class="p-5 flex flex-col flex-grow">
+<p class="text-gold text-sm font-medium">Kiss Your Heart</p>
+<h3 class="text-white text-xl font-bold mt-1">Portfolio Fotografie-Session</h3>
+<p class="text-slate-400 text-sm mt-2 flex-grow">Erhalte 20% Rabatt auf eine professionelle Fotosession für dein Portfolio oder Brand Building.</p>
+<div class="flex items-center justify-between mt-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-gold">toll</span>
+<span class="text-white font-bold text-lg">500</span>
+</div>
+<button class="bg-primary hover:bg-primary/80 text-white text-sm font-bold py-2 px-4 rounded-lg transition-colors">Einlösen</button>
+</div>
+</div>
+</div>
+<div class="flex flex-col bg-[#141118] border border-white/10 rounded-xl overflow-hidden transition-all duration-300 hover:border-gold hover:shadow-lg hover:shadow-gold/10">
+<div class="bg-center bg-no-repeat aspect-video bg-cover" data-alt="A music production studio with a mixing console, speakers, and soundproofing panels" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAOME0vbxwGcRYRokKxS-oEmkJ_amoXdvNboidT76BzCPPzDhUOl29iTyc86qE9HVrkwwHhK4AMxbuBeIPrjROTOwJR5myrmJa1s7Kvk5xnWqUJJJ7Q3dpKVoPQcbbewdrZ4wr1BFOH3kcO95x0hGOzzXwk_lLOPPq_rCt4VF2hn7TTcUnnPSEy7zcoDvj1wFdQaVyjJ8NbTcg4f5HAIIz3n3UHoTmVHsXaN2DZ_pwTmFV7mSFUga9n6mi14DMm_H4eYPM2Vk49-Rg");'></div>
+<div class="p-5 flex flex-col flex-grow">
+<p class="text-gold text-sm font-medium">Outbreak Tunes</p>
+<h3 class="text-white text-xl font-bold mt-1">Mixing &amp; Mastering Service</h3>
+<p class="text-slate-400 text-sm mt-2 flex-grow">15% Vergünstigung auf Mixing- oder Mastering-Dienstleistungen für deinen nächsten Hit.</p>
+<div class="flex items-center justify-between mt-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-gold">toll</span>
+<span class="text-white font-bold text-lg">750</span>
+</div>
+<button class="bg-primary hover:bg-primary/80 text-white text-sm font-bold py-2 px-4 rounded-lg transition-colors">Einlösen</button>
+</div>
+</div>
+</div>
+<div class="flex flex-col bg-[#141118] border border-white/10 rounded-xl overflow-hidden transition-all duration-300 hover:border-gold hover:shadow-lg hover:shadow-gold/10">
+<div class="bg-center bg-no-repeat aspect-video bg-cover" data-alt="A person teaching a small group in a creative workshop environment" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCAQ6we7QJb5Mt3ddhgduzQNNxDi1QgOuYbjcdZH-V_b01AHV5SCXJpF3EVTpagZrMqFFcnI_VB6ByF2cd5o_fNZheVsN8KhFZ9sNBv4T7iQCcGNxZ70UgIjkp8wiOqqKF77ad1Ja4H1vj9b0SZlfYyiagiZ2HyICzczSXmXAQegwojGYt7Agg3sTM4j_Hrjs1PjtVBJVzqdyTqv894jYJ2-hvG-dFStRE7N8hWk06xuv6-D14w0KgjWTq5b0g-s8NI3_pGFPJTHE4");'></div>
+<div class="p-5 flex flex-col flex-grow">
+<p class="text-gold text-sm font-medium">Circle the Flow</p>
+<h3 class="text-white text-xl font-bold mt-1">Exklusive Masterclass</h3>
+<p class="text-slate-400 text-sm mt-2 flex-grow">Sichere dir einen Platz in einem spezialisierten Workshop, der nur für Mitglieder zugänglich ist.</p>
+<div class="flex items-center justify-between mt-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-gold">toll</span>
+<span class="text-white font-bold text-lg">1000</span>
+</div>
+<button class="bg-primary hover:bg-primary/80 text-white text-sm font-bold py-2 px-4 rounded-lg transition-colors">Einlösen</button>
+</div>
+</div>
+</div>
+<div class="flex flex-col bg-[#141118] border border-white/10 rounded-xl overflow-hidden transition-all duration-300 hover:border-gold hover:shadow-lg hover:shadow-gold/10">
+<div class="bg-center bg-no-repeat aspect-video bg-cover" data-alt="Stylish merchandise like t-shirts and hoodies with the Circle the Flow logo" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC8aSZP24kK7x0td9iSjqlNqq-FRlkqaFscrI2IEHPCtmmjcrpWIrXWZDPTl2JNwRIEylAb0kwxYNnWAut5IYPr5wgUzM6E2W8q8YVIX6xh-fTPEYLCoIWGP2pkp1Q1tnzhHA7OUxYyrMRs2f7HETI40bRAsIjVevuHBePIIxnBXybBNQzzG8iJomVocirXF6qqVUtKFVQFQbUlWLWVI31p9rMRHbNmxGaw9Sh6xijALtLnxNFOJ4vh44mJVDlF66jxQCDyG6H4Hc8");'></div>
+<div class="p-5 flex flex-col flex-grow">
+<p class="text-gold text-sm font-medium">Circle the Flow</p>
+<h3 class="text-white text-xl font-bold mt-1">Merchandise Rabatt</h3>
+<p class="text-slate-400 text-sm mt-2 flex-grow">Ein Gutschein für 25% Rabatt auf alle Merchandise-Artikel oder Event-Tickets.</p>
+<div class="flex items-center justify-between mt-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-gold">toll</span>
+<span class="text-white font-bold text-lg">400</span>
+</div>
+<button class="bg-primary hover:bg-primary/80 text-white text-sm font-bold py-2 px-4 rounded-lg transition-colors">Einlösen</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-12 bg-gradient-to-tr from-black/20 via-primary/20 to-black/20 p-8 rounded-xl border border-primary/50 text-center">
+<h2 class="text-2xl font-bold text-white">Magische Transaktion Erfolgreich!</h2>
+<p class="text-slate-300 mt-2">Dein "Portfolio Fotografie-Session" Glücks-Artefakt wurde deinem Inventar hinzugefügt. Ein Bestätigungscode wurde an deine E-Mail gesendet.</p>
+<div class="mt-6 flex justify-center">
+<div class="flex flex-col items-center gap-4">
+<div class="flex items-center gap-4 text-white">
+<span class="material-symbols-outlined text-3xl text-gold">toll</span>
+<span class="text-xl font-bold">1,250</span>
+<span class="material-symbols-outlined text-2xl text-primary animate-pulse">arrow_right_alt</span>
+<span class="text-xl font-bold text-red-400">-500</span>
+<span class="material-symbols-outlined text-2xl text-primary">equal</span>
+<span class="text-xl font-bold text-green-400">750</span>
+</div>
+<button class="mt-4 bg-gold hover:bg-gold/80 text-background-dark font-bold py-2 px-6 rounded-lg flex items-center gap-2 transition-colors">
+            Zum Inventar
+            <span class="material-symbols-outlined">inventory_2</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+</body></html>

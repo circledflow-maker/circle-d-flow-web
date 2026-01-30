@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html class="dark" lang="de"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kiss Your Heart: Services &amp; Portfolio</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style type="text/tailwindcss">
+        :root {
+            --primary-glow: 0 0 15px 2px rgba(127, 13, 242, 0.6);
+            --gold-glow: 0 0 15px 2px rgba(255, 215, 0, 0.5);
+        }
+        .image-comparison-slider {
+            position: relative;
+            overflow: hidden;
+            cursor: col-resize;
+        }
+        .image-comparison-slider .img-after {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%);
+        }
+        .image-comparison-slider .slider-line {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, #FFD700, transparent);
+            transform: translateX(-50%);
+            pointer-events: none;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+        .image-comparison-slider .slider-handle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 44px;
+            height: 44px;
+            background-color: rgba(25, 16, 34, 0.7);
+            backdrop-filter: blur(4px);
+            border: 1px solid #FFD700;
+            color: #FFD700;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            box-shadow: var(--gold-glow);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .image-comparison-slider:hover .slider-line {
+            opacity: 1;
+        }
+         .image-comparison-slider:hover .slider-handle {
+            transform: translate(-50%, -50%) scale(1.1);
+            box-shadow: 0 0 25px 5px rgba(255, 215, 0, 0.6);
+        }
+    </style>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#7f0df2",
+                        "gold": "#FFD700",
+                        "background-light": "#f7f5f8",
+                        "background-dark": "#100a19",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "Noto Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "1rem",
+                        "2xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    boxShadow: {
+                        'primary-glow': '0 0 15px 2px rgba(127, 13, 242, 0.6)',
+                        'gold-glow': '0 0 15px 2px rgba(255, 215, 0, 0.5)',
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-white">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<header class="fixed top-0 left-0 right-0 z-50 px-4 sm:px-8 md:px-20 lg:px-40 py-3 backdrop-blur-md bg-background-dark/50 border-b border-solid border-white/10 transition-all duration-300">
+<div class="flex items-center justify-between whitespace-nowrap max-w-[1280px] mx-auto">
+<a class="flex items-center gap-4 text-white group" href="#">
+<div class="size-6 text-primary group-hover:text-gold transition-colors duration-300">
+<svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M13.8261 30.5736C16.7203 29.8826 20.2244 29.4783 24 29.4783C27.7756 29.4783 31.2797 29.8826 34.1739 30.5736C36.9144 31.2278 39.9967 32.7669 41.3563 33.8352L24.8486 7.36089C24.4571 6.73303 23.5429 6.73303 23.1514 7.36089L6.64374 33.8352C8.00331 32.7669 11.0856 31.2278 13.8261 30.5736Z" fill="currentColor"></path>
+<path clip-rule="evenodd" d="M39.998 35.764C39.9944 35.7463 39.9875 35.7155 39.9748 35.6706C39.9436 35.5601 39.8949 35.4259 39.8346 35.2825C39.8168 35.2403 39.7989 35.1993 39.7813 35.1602C38.5103 34.2887 35.9788 33.0607 33.7095 32.5189C30.9875 31.8691 27.6413 31.4783 24 31.4783C20.3587 31.4783 17.0125 31.8691 14.2905 32.5189C12.0012 33.0654 9.44505 34.3104 8.18538 35.1832C8.17384 35.2075 8.16216 35.233 8.15052 35.2592C8.09919 35.3751 8.05721 35.4886 8.02977 35.589C8.00356 35.6848 8.00039 35.7333 8.00004 35.7388C8.00004 35.739 8 35.7393 8.00004 35.7388C8.00004 35.7641 8.0104 36.0767 8.68485 36.6314C9.34546 37.1746 10.4222 37.7531 11.9291 38.2772C14.9242 39.319 19.1919 40 24 40C28.8081 40 33.0758 39.319 36.0709 38.2772C37.5778 37.7531 38.6545 37.1746 39.3151 36.6314C39.9006 36.1499 39.9857 35.8511 39.998 35.764ZM4.95178 32.7688L21.4543 6.30267C22.6288 4.4191 25.3712 4.41909 26.5457 6.30267L43.0534 32.777C43.0709 32.8052 43.0878 32.8338 43.104 32.8629L41.3563 33.8352C43.104 32.8629 43.1038 32.8626 43.104 32.8629L43.1051 32.865L43.1065 32.8675L43.1101 32.8739L43.1199 32.8918C43.1276 32.906 43.1377 32.9246 43.1497 32.9473C43.1738 32.9925 43.2062 33.0545 43.244 33.1299C43.319 33.2792 43.4196 33.489 43.5217 33.7317C43.6901 34.1321 44 34.9311 44 35.7391C44 37.4427 43.003 38.7775 41.8558 39.7209C40.6947 40.6757 39.1354 41.4464 37.385 42.0552C33.8654 43.2794 29.133 44 24 44C18.867 44 14.1346 43.2794 10.615 42.0552C8.86463 41.4464 7.30529 40.6757 6.14419 39.7209C4.99695 38.7775 3.99999 37.4427 3.99999 35.7391C3.99999 34.8725 4.29264 34.0922 4.49321 33.6393C4.60375 33.3898 4.71348 33.1804 4.79687 33.0311C4.83898 32.9556 4.87547 32.8935 4.9035 32.8471C4.91754 32.8238 4.92954 32.8043 4.93916 32.7889L4.94662 32.777L4.95178 32.7688ZM35.9868 29.004L24 9.77997L12.0131 29.004C12.4661 28.8609 12.9179 28.7342 13.3617 28.6282C16.4281 27.8961 20.0901 27.4783 24 27.4783C27.9099 27.4783 31.5719 27.8961 34.6383 28.6282C35.082 28.7342 35.5339 28.8609 35.9868 29.004Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em] group-hover:text-gold transition-colors duration-300">Kiss Your Heart</h2>
+</a>
+<div class="hidden md:flex flex-1 justify-end items-center gap-8">
+<nav class="flex items-center gap-9">
+<a class="text-white/80 hover:text-white text-sm font-medium leading-normal relative after:content-[''] after:absolute after:left-0 after:bottom-[-4px] after:w-full after:h-[2px] after:bg-gold after:scale-x-0 after:origin-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-left" href="#services">Services</a>
+<a class="text-white/80 hover:text-white text-sm font-medium leading-normal relative after:content-[''] after:absolute after:left-0 after:bottom-[-4px] after:w-full after:h-[2px] after:bg-gold after:scale-x-0 after:origin-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-left" href="#portfolio">Portfolio</a>
+<a class="text-white/80 hover:text-white text-sm font-medium leading-normal relative after:content-[''] after:absolute after:left-0 after:bottom-[-4px] after:w-full after:h-[2px] after:bg-gold after:scale-x-0 after:origin-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-left" href="#process">Prozess</a>
+<a class="text-white/80 hover:text-white text-sm font-medium leading-normal relative after:content-[''] after:absolute after:left-0 after:bottom-[-4px] after:w-full after:h-[2px] after:bg-gold after:scale-x-0 after:origin-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-left" href="#contact">Kontakt</a>
+</nav>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-5 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/80 transition-all duration-300 shadow-primary-glow hover:scale-105">
+<span class="truncate">Anfragen</span>
+</button>
+</div>
+<div class="md:hidden">
+<button class="text-white p-2">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</div>
+</header>
+<main class="flex-1">
+<div class="px-4 sm:px-8 md:px-20 lg:px-40 flex flex-1 justify-center py-5 pt-24">
+<div class="layout-content-container flex flex-col max-w-[1280px] flex-1">
+<div class="@container">
+<div class="@[480px]:p-4">
+<div class="relative flex min-h-[60vh] md:min-h-[70vh] flex-col gap-6 bg-cover bg-center bg-no-repeat @[480px]:gap-8 @[480px]:rounded-2xl items-center justify-center p-4 text-center overflow-hidden" data-alt="A mystical, artistic portrait with purple and gold hues.">
+<div class="absolute inset-0 bg-cover bg-center scale-100" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAgLTXZ7AUbG43BqV4BXUsQk_LLIs7Bg2dUNtrosRDcEnp4uaIzB5waFjJhbsnBm_S1fkx5On8AdugPnXESdoJDZcSIdfe9umtlChOvrnilu7dprkUqNFXt2VJQy993bviInCAxyeOvM0QRQ-no13fclrPWGPklszAEELJLpGt8wzXfu7zdZud888i28DWATezd4l5baBA1d8SN-_6uMZ5Fe2WX-WpBckMnc8J-NH3CsqS1G0ETILUsuqqlijlYl8yd1GyDhbP8FSc");'></div>
+<div class="absolute inset-0" style="background: radial-gradient(ellipse at center, rgba(16, 10, 25, 0.4) 0%, rgba(16, 10, 25, 0.9) 100%);"></div>
+<div class="relative z-10 flex flex-col gap-4 items-center">
+<h1 class="text-white text-4xl font-black leading-tight tracking-[-0.033em] @[480px]:text-6xl @[480px]:font-black @[480px]:leading-tight @[480px]:tracking-[-0.033em] drop-shadow-lg">Photography &amp; Brand Building</h1>
+<h2 class="text-white/80 text-sm font-normal leading-normal @[480px]:text-lg @[480px]:font-normal @[480px]:leading-normal max-w-2xl mx-auto drop-shadow-sm">Wir verwandeln rohe Energie in unvergessliche visuelle Geschichten und Markenidentitäten.</h2>
+<a class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-12 px-6 mt-4 @[480px]:h-14 @[480px]:px-8 bg-primary text-white text-base font-bold leading-normal tracking-[0.015em] @[480px]:text-lg @[480px]:font-bold @[480px]:leading-normal @[480px]:tracking-[0.015em] hover:bg-primary/80 transition-all duration-300 shadow-primary-glow hover:scale-105" href="#services">
+<span class="truncate">Unsere Services</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+<section class="mt-20 md:mt-28" id="services">
+<div class="text-center px-4">
+<h2 class="text-3xl md:text-4xl font-bold leading-tight tracking-[-0.015em] text-white">Unsere Reiseziele</h2>
+<p class="text-white/70 mt-2 max-w-xl mx-auto">Wähle deine kreative Reise. Jedes Paket ist ein Tor zu einer neuen Dimension deiner Vision.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12 p-4">
+<div class="bg-white/5 p-8 rounded-2xl flex flex-col text-left border border-white/10 hover:border-primary transition-all duration-300 hover:shadow-primary-glow/50 transform hover:-translate-y-2">
+<div class="flex items-center gap-4 mb-4">
+<div class="bg-gradient-to-br from-primary to-purple-500 text-white p-3 rounded-full shadow-lg shadow-primary/30">
+<span class="material-symbols-outlined text-2xl">photo_camera</span>
+</div>
+<h3 class="text-xl font-bold">Essenz Portrait</h3>
+</div>
+<p class="text-white/70 text-sm mb-6 flex-grow">Ein tiefgründiges Fotoshooting, um deine einzigartige Persönlichkeit oder Marke einzufangen.</p>
+<ul class="text-white/90 text-sm space-y-3 mb-8">
+<li class="flex items-start gap-3"><span class="material-symbols-outlined text-gold text-base mt-0.5">spark</span>2-stündiges Fotoshooting</li>
+<li class="flex items-start gap-3"><span class="material-symbols-outlined text-gold text-base mt-0.5">spark</span>15 hochauflösende, bearbeitete Bilder</li>
+<li class="flex items-start gap-3"><span class="material-symbols-outlined text-gold text-base mt-0.5">spark</span>Online-Galerie zur Auswahl</li>
+</ul>
+<a class="mt-auto text-center w-full flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-5 bg-white/10 text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-white/20 transition-all duration-300" href="#contact">Anfragen</a>
+</div>
+<div class="bg-white/10 p-8 rounded-2xl flex flex-col text-left border-2 border-primary transition-all duration-300 shadow-primary-glow transform scale-105">
+<div class="flex items-center gap-4 mb-4">
+<div class="bg-gradient-to-br from-primary to-purple-500 text-white p-3 rounded-full shadow-lg shadow-primary/30">
+<span class="material-symbols-outlined text-2xl">auto_stories</span>
+</div>
+<h3 class="text-xl font-bold">Brand Genesis</h3>
+</div>
+<p class="text-white/70 text-sm mb-6 flex-grow">Das komplette Paket: Wir bauen deine visuelle Identität von Grund auf mit Fotografie und Storytelling.</p>
+<ul class="text-white/90 text-sm space-y-3 mb-8">
+<li class="flex items-start gap-3"><span class="material-symbols-outlined text-gold text-base mt-0.5">spark</span>Strategie-Workshop</li>
+<li class="flex items-start gap-3"><span class="material-symbols-outlined text-gold text-base mt-0.5">spark</span>Umfassendes Brand-Fotoshooting</li>
+<li class="flex items-start gap-3"><span class="material-symbols-outlined text-gold text-base mt-0.5">spark</span>40+ bearbeitete Bilder &amp; Brand-Assets</li>
+<li class="flex items-start gap-3"><span class="material-symbols-outlined text-gold text-base mt-0.5">spark</span>Visueller Styleguide</li>
+</ul>
+<a class="mt-auto text-center w-full flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-11 px-5 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/80 transition-all duration-300" href="#contact">Anfragen</a>
+</div>
+<div class="bg-white/5 p-8 rounded-2xl flex flex-col text-left border border-white/10 hover:border-primary transition-all duration-300 hover:shadow-primary-glow/50 transform hover:-translate-y-2">
+<div class="flex items-center gap-4 mb-4">
+<div class="bg-gradient-to-br from-primary to-purple-500 text-white p-3 rounded-full shadow-lg shadow-primary/30">
+<span class="material-symbols-outlined text-2xl">brush</span>
+</div>
+<h3 class="text-xl font-bold">Creative Vision</h3>
+</div>
+<p class="text-white/70 text-sm mb-6 flex-grow">Künstlerische Leitung für dein Projekt, von der Konzeption bis zur finalen Umsetzung.</p>
+<ul class="text-white/90 text-sm space-y-3 mb-8">
+<li class="flex items-start gap-3"><span class="material-symbols-outlined text-gold text-base mt-0.5">spark</span>Konzeptentwicklung &amp; Moodboard</li>
+<li class="flex items-start gap-3"><span class="material-symbols-outlined text-gold text-base mt-0.5">spark</span>Begleitung am Set</li>
+<li class="flex items-start gap-3"><span class="material-symbols-outlined text-gold text-base mt-0.5">spark</span>Post-Produktions-Supervision</li>
+</ul>
+<a class="mt-auto text-center w-full flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-5 bg-white/10 text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-white/20 transition-all duration-300" href="#contact">Anfragen</a>
+</div>
+</div>
+</section>
+<section class="mt-20 md:mt-28" id="portfolio">
+<div class="text-center px-4">
+<h2 class="text-3xl md:text-4xl font-bold leading-tight tracking-[-0.015em] text-white">Visual Volumes</h2>
+<p class="text-white/70 mt-2 max-w-xl mx-auto">Tauche ein in unsere immersiven Galerien. Jedes Projekt ist eine Storytelling-Dimension, die darauf wartet, entdeckt zu werden.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4 mt-12">
+<a class="group relative aspect-[3/4] rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-primary-glow" href="#">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" data-alt="Manga-style image of a character with a determined look." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAieudUSycxZxjtoAktRDRqmYh7hZZdenLukUk4ClUVb758Ozaw7w0bL4EjmXxqUbQgv91dd4B4oHBVrgtVvK5qgtlQ4jwTMWR2KwHukIg85LjTDcKMyh5kVJ0Ry5Iod3pGotXTmfDk4thJcyYJ3L22Foacu970OAH67CLivcwjarlGAYQMU-Zjg043Fsu_y-PjGHNnNqCGDnlXsTeKCdNkQLyYQvI3wsNN94HYndrhrFPPpNNHH2t0yChG-fKPbUFgK_raio_B0Ho");'></div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-4 md:p-6 w-full flex flex-col justify-end h-full">
+<div>
+<h3 class="text-white text-xl font-bold leading-tight line-clamp-2">The Will of D.</h3>
+<p class="text-white/80 text-sm mt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">Eine epische visuelle Reise.</p>
+</div>
+<div class="absolute bottom-6 right-6 flex items-center justify-center size-12 bg-primary/70 backdrop-blur-sm rounded-full text-white opacity-0 group-hover:opacity-100 scale-50 group-hover:scale-100 transition-all duration-300">
+<span class="material-symbols-outlined">arrow_forward</span>
+</div>
+</div>
+</a>
+<a class="group relative aspect-[3/4] rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-primary-glow" href="#">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" data-alt="High-energy photo of a person in motion with light trails." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBaRm7zvOuCa9qDQYKXMIXkcJx0_xRE3uIeJY9DCF-RtMjXXrfo5zMnsTvzDbmzGHeH9RqJm2meazAd_qK9x2rzLs6Yd0FXmOF2FmFT-VdgKLdfaOyhCNz9gok0l8mprJjny3_xJxXjCfm_EJPLJILe1YbRWEpkGCDgS1qn3ErUsevWEPohMF_DZpxsrDZlQVmxxMN8InjreUnlBKmJhcsJZp3RVUKltB55krMzbnipPRXeNPfm7oSda3ryr9rHpv_q3moTqRGsyMs");'></div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-4 md:p-6 w-full flex flex-col justify-end h-full">
+<div>
+<h3 class="text-white text-xl font-bold leading-tight line-clamp-2">Raw Energy Project</h3>
+<p class="text-white/80 text-sm mt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">Die Essenz purer Bewegung.</p>
+</div>
+<div class="absolute bottom-6 right-6 flex items-center justify-center size-12 bg-primary/70 backdrop-blur-sm rounded-full text-white opacity-0 group-hover:opacity-100 scale-50 group-hover:scale-100 transition-all duration-300">
+<span class="material-symbols-outlined">arrow_forward</span>
+</div>
+</div>
+</a>
+<a class="group relative aspect-[3/4] rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-primary-glow" href="#">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" data-alt="Mystical purple-themed branding photography." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBTSS6vYbi40jmpgaGMpOg1adGkRSLtLL4pRrxxDR62SbJwM1H1IPxdGVAvNGCGFmdzNQZWXpuOVGgKAPXxcoTXl9o73dgpcXnI7EdpEQ767GEdfZPrdqk_hq2ahJS47KHMd_AAO1WCY7hqW7k_RPdinCfrVbEmwcyoWXhAR4NEVrPkuyv0C35DPNqULzXkJThHfuSqDl61fUao3v0deTCq_xz6DL2aUW0I7_bivg4tksrQwgOPJKUfusZNyZualYXn3Gc3J8VYiY4");'></div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-4 md:p-6 w-full flex flex-col justify-end h-full">
+<div>
+<h3 class="text-white text-xl font-bold leading-tight line-clamp-2">Brand Story: Mystic Purple</h3>
+<p class="text-white/80 text-sm mt-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">Eine Marke mit Seele.</p>
+</div>
+<div class="absolute bottom-6 right-6 flex items-center justify-center size-12 bg-primary/70 backdrop-blur-sm rounded-full text-white opacity-0 group-hover:opacity-100 scale-50 group-hover:scale-100 transition-all duration-300">
+<span class="material-symbols-outlined">arrow_forward</span>
+</div>
+</div>
+</a>
+</div>
+</section>
+<section class="mt-20 md:mt-28" id="process">
+<div class="text-center px-4">
+<h2 class="text-3xl md:text-4xl font-bold leading-tight tracking-[-0.015em] text-white">Der Prozess: Studio vs. Flow</h2>
+<p class="text-white/70 mt-2 max-w-xl mx-auto">Erlebe die Transformation von kontrollierter Präzision zu dynamischer, roher Energie.</p>
+</div>
+<div class="p-4 mt-12">
+<div class="image-comparison-slider rounded-2xl aspect-video w-full shadow-lg shadow-black/30 border border-white/10" id="slider-container">
+<img alt="A clean, professional studio portrait." class="img-before w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbY250guc9nvlv6gSbKjm4x0a-9cjXHnij0pKmwY_bk_PfRoaZkFdp2-OoWXqxy43NQfb33IUhAollf4QL1B4pyKExWFcCGuv--JBy2yvIenRlB_8TeYy-AGZAHzVihPZU7cEKieXvHK5O5Y0Oqz_BDBty-3KsnjRu4mGsX6BJdRlhgQstHJ8HURe5zlhLrpItDFa1Z2jOAQS90RombA0jAsyhAvOFXPx09QeqzSBfF-7WieGjxJgGYxP5no5PcVE7k8_ufKyjnu8"/>
+<img alt="An expressive, dynamic outdoor portrait." class="img-after" src="https://lh3.googleusercontent.com/aida-public/AB6AXuApxgvyAfhBaXs4KKduqQyS0R-4d5-GKwR94Sr6zXkXRxDvKV9GS-VUCHUAVhqE4o4s1aL7qiN3GQF59I4qplBZPXqK2xPmIwlX2v7d0Kd_KqeTad9VJsMNpEQVqEg6U7fJa7F2jjUQ32hHYzFYKa_HIOTklKSOPqA3UkzzVYG2Zo1tyvCxZv3c93FKg4QhUIpUTRQJeWMoe9ASyDHs6tylD15_sEv6rJRCdzUWzRgtVHSkT9obkX-QhxATukF4IMpLMJZcHFFANqQ"/>
+<div class="slider-line"></div>
+<div class="slider-handle">
+<span class="material-symbols-outlined text-2xl font-semibold transform rotate-90">unfold_more</span>
+</div>
+</div>
+</div>
+</section>
+<section class="mt-24 mb-10 text-center text-white bg-gradient-to-br from-primary/20 to-transparent rounded-2xl p-8 md:p-16 border border-primary/30" id="contact">
+<h2 class="text-3xl md:text-5xl font-black mb-4">Tor zur Transformation</h2>
+<p class="text-white/80 max-w-lg mx-auto mb-8 text-lg">Bereit für dein Abenteuer? Lass uns gemeinsam Magie erschaffen. Fordere jetzt eine unverbindliche Beratung an.</p>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-14 px-8 bg-gold text-background-dark text-lg font-bold leading-normal tracking-[0.015em] mx-auto hover:bg-gold/80 transition-all duration-300 shadow-gold-glow hover:scale-105">
+<span class="truncate">Ruf zum Abenteuer</span>
+</button>
+</section>
+</div>
+</div>
+</main>
+</div>
+<script>
+        const slider = document.getElementById('slider-container');
+        if (slider) {
+            const imageAfter = slider.querySelector('.img-after');
+            const sliderLine = slider.querySelector('.slider-line');
+            const sliderHandle = slider.querySelector('.slider-handle');
+            let isDragging = false;
+            function updateSlider(x) {
+                const rect = slider.getBoundingClientRect();
+                let position = (x - rect.left) / rect.width * 100;
+                position = Math.max(0, Math.min(100, position));
+                imageAfter.style.clipPath = `polygon(${position}% 0, 100% 0, 100% 100%, ${position}% 100%)`;
+                sliderLine.style.left = `${position}%`;
+                sliderHandle.style.left = `${position}%`;
+            }
+            slider.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                slider.classList.add('dragging');
+                updateSlider(e.clientX);
+            });
+            slider.addEventListener('touchstart', (e) => {
+                isDragging = true;
+                slider.classList.add('dragging');
+                updateSlider(e.touches[0].clientX);
+            }, { passive: true });
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+                slider.classList.remove('dragging');
+            });
+            document.addEventListener('touchend', () => {
+                isDragging = false;
+                slider.classList.remove('dragging');
+            });
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                    updateSlider(e.clientX);
+                }
+            });
+            document.addEventListener('touchmove', (e) => {
+                if (isDragging) {
+                    updateSlider(e.touches[0].clientX);
+                }
+            }, { passive: true });
+        }
+    </script>
+
+</body></html>

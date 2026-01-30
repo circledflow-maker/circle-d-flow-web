@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Listing | Circle D Flow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body
+    class="bg-[#0F0A13] text-white min-h-screen relative overflow-x-hidden selection:bg-electric selection:text-white">
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 transition-all duration-300 border-b border-white/5 bg-[#0F0A13]/80 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-3">
+                <span class="font-serif font-bold text-xl tracking-wide">Circle D Flow</span>
+            </a>
+            <a href="marketplace.html"
+                class="text-xs font-bold uppercase tracking-widest text-mist hover:text-white transition-colors">Back to
+                Market</a>
+        </div>
+    </nav>
+
+    <main class="pt-32 pb-20 px-6 max-w-2xl mx-auto">
+        <h1 class="text-4xl font-serif font-bold mb-2">List Your Flow</h1>
+        <p class="text-mist mb-10">Share your creations or services with the community.</p>
+
+        <form id="upload-form" class="space-y-6">
+
+            <!-- Type Selector -->
+            <div class="grid grid-cols-2 gap-4">
+                <label class="cursor-pointer">
+                    <input type="radio" name="listing_type" value="manual" class="peer sr-only" checked
+                        onchange="toggleLinkField()">
+                    <div
+                        class="p-4 rounded-xl bg-white/5 border border-white/10 peer-checked:border-electric peer-checked:bg-electric/10 transition-all text-center">
+                        <span class="material-symbols-outlined text-2xl mb-2">handshake</span>
+                        <p class="font-bold text-sm">Community Deal</p>
+                        <p class="text-[10px] text-mist">Transaction via Token/Msg</p>
+                    </div>
+                </label>
+                <label class="cursor-pointer">
+                    <input type="radio" name="listing_type" value="external" class="peer sr-only"
+                        onchange="toggleLinkField()">
+                    <div
+                        class="p-4 rounded-xl bg-white/5 border border-white/10 peer-checked:border-electric peer-checked:bg-electric/10 transition-all text-center">
+                        <span class="material-symbols-outlined text-2xl mb-2">link</span>
+                        <p class="font-bold text-sm">External Link</p>
+                        <p class="text-[10px] text-mist">Shopify / Etsy / Other</p>
+                    </div>
+                </label>
+            </div>
+
+            <!-- Basic Info -->
+            <div class="space-y-4">
+                <input type="text" name="title" required placeholder="Item Title"
+                    class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus:border-electric outline-none">
+
+                <div class="grid grid-cols-2 gap-4" id="price-container">
+                    <div class="relative">
+                        <span class="absolute left-3 top-3 text-mist">€</span>
+                        <input type="number" name="price_eur" id="input-eur" placeholder="Price (EUR)" step="0.01"
+                            class="w-full bg-white/5 border border-white/10 rounded-lg pl-8 pr-4 py-3 focus:border-electric outline-none"
+                            oninput="calculateFlow()">
+                    </div>
+                    <div class="relative">
+                        <span class="absolute left-3 top-3 text-amber text-xs pt-1">Flow</span>
+                        <input type="number" name="price" id="input-flow" required placeholder="Credits"
+                            class="w-full bg-white/5 border border-white/10 rounded-lg pl-12 pr-4 py-3 focus:border-electric outline-none">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="flex items-center text-xs text-mist pl-1">
+                        1 EUR ≈ 13 Flow
+                    </div>
+                    <input type="file" id="image-upload" accept="image/*"
+                        class="w-full text-sm text-mist file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-electric file:text-white hover:file:bg-electric/80">
+                </div>
+
+                <textarea name="description" rows="4" required placeholder="Description..."
+                    class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus:border-electric outline-none"></textarea>
+            </div>
+
+            <!-- Dynamic Link Field -->
+            <div id="external-link-field" class="hidden">
+                <input type="url" name="external_url" placeholder="https://yourshop.com/product/..."
+                    class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus:border-electric outline-none">
+            </div>
+
+            <!-- Owner Info -->
+            <div class="p-4 bg-white/5 rounded-xl space-y-4 border border-white/5">
+                <p class="text-xs font-bold uppercase text-amber tracking-widest">Seller Requirement</p>
+                <input type="email" name="owner_email" required "email" placeholder="Your Email (for notifications)"
+                    class="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-3 focus:border-amber outline-none">
+                <p class="text-[10px] text-mist">* You must respond to inquiries within 24h.</p>
+            </div>
+
+            <button type="submit"
+                class="w-full py-4 bg-electric text-white font-bold rounded-xl uppercase tracking-widest hover:bg-electric/90 transition-all shadow-lg shadow-electric/25">
+                Post Listing
+            </button>
+
+        </form>
+    </main>
+
+    <script src="notifications.js"></script>
+    <script src="gamification.js"></script>
+    <script src="script.js"></script>
+    <script>
+        const EUR_TO_FLOW = 13;
+        const params = new URLSearchParams(window.location.search);
+        const isMuseum = params.get('type') === 'museum';
+
+        // Init Mode
+        if (isMuseum) {
+            document.title = "Contribute to Museum | Circle D Flow";
+            document.querySelector('h1').textContent = "Contribute Artifact";
+            document.querySelector('p.text-mist').textContent = "Showcase your masterpiece in the Community Museum. Not for sale.";
+
+            // Hide Type Selector & Price
+            document.querySelector('.grid.grid-cols-2.gap-4').classList.add('hidden'); // Type selector
+            document.getElementById('price-container').classList.add('hidden'); // Price container (need to add ID)
+            document.querySelector('button[type="submit"]').textContent = "Submit to Curator";
+
+            // Create hidden input for type
+            const form = document.getElementById('upload-form');
+            const hiddenType = document.createElement('input');
+            hiddenType.type = 'hidden';
+            hiddenType.name = 'listing_type';
+            hiddenType.value = 'museum_artifact';
+            form.appendChild(hiddenType);
+        }
+
+        function calculateFlow() {
+            const eur = parseFloat(document.getElementById('input-eur').value) || 0;
+            const flow = Math.round(eur * EUR_TO_FLOW);
+            document.getElementById('input-flow').value = flow;
+        }
+
+        function toggleLinkField() {
+            if (isMuseum) return; // Disable toggle in museum mode
+            const types = document.getElementsByName('listing_type');
+            let selected;
+            for (const t of types) if (t.checked) selected = t.value;
+
+            const field = document.getElementById('external-link-field');
+            if (selected === 'external') {
+                field.classList.remove('hidden');
+                field.querySelector('input').setAttribute('required', 'true');
+            } else {
+                field.classList.add('hidden');
+                field.querySelector('input').removeAttribute('required');
+            }
+        }
+
+        document.getElementById('upload-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+
+            // Limit Check for Museum
+            if (isMuseum && window.Gamification) {
+                // Mock usage check - in real app, fetch actual count
+                if (!window.Gamification.checkLimit('items_museum', 0)) {
+                    return; // Upsell triggered by checkLimit
+                }
+            }
+
+            // Create Listing Object
+            const listing = {
+                id: (isMuseum ? 'mus_' : 'lst_') + Date.now(),
+                title: formData.get('title'),
+                price: isMuseum ? 0 : formData.get('price'),
+                priceEur: isMuseum ? 0 : formData.get('price_eur'),
+                description: formData.get('description'),
+                type: formData.get('listing_type') || 'museum_artifact',
+                externalUrl: formData.get('external_url'),
+                email: formData.get('owner_email'),
+                image: 'https://placehold.co/400x400/2a1a3a/white?text=' + encodeURIComponent(formData.get('title').substring(0, 3)),
+                owner: 'Current User', // Mock
+                isMuseumItem: isMuseum,
+                timestamp: new Date().toISOString()
+            };
+
+            // Save to LocalStorage (Mock Backend)
+            const key = isMuseum ? 'cdf_museum_items' : 'cdf_listings';
+            const items = JSON.parse(localStorage.getItem(key) || '[]');
+            items.unshift(listing);
+            localStorage.setItem(key, JSON.stringify(items));
+
+            // Notify
+            if (window.Notifications) {
+                const msg = isMuseum ? `Artifact "${listing.title}" submitted for curation!` : `Listing "${listing.title}" created!`;
+                window.Notifications.send('success', msg, 'user');
+                if (!isMuseum) window.Notifications.send('info', `New Marketplace Item: ${listing.title}`, 'all');
+            }
+
+            // Award XP for Museum Contribution
+            if (isMuseum && window.Gamification) {
+                window.Gamification.addXP(150, 'Museum Contribution');
+            }
+
+            alert(isMuseum ? 'Artifact submitted!' : 'Listing successful!');
+            window.location.href = isMuseum ? 'services-community.html' : 'marketplace.html';
+        });
+    </script>
+</body>
+
+</html>

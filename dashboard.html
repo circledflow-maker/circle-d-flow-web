@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Dashboard - Circle D Flow</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        rel="stylesheet" />
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24
+        }
+
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+
+        @keyframes marquee {
+            0% {
+                transform: translateX(100%);
+            }
+
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        .animate-marquee {
+            animation: marquee 20s linear infinite;
+            display: inline-block;
+        }
+
+        @keyframes scan {
+            0% {
+                top: 0%;
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                top: 100%;
+                opacity: 0;
+            }
+        }
+
+        .animate-scan {
+            animation: scan 3s ease-in-out infinite;
+        }
+    </style>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#8A2BE2",
+                        "background-light": "#f7f5f8",
+                        "background-dark": "#191022",
+                        "mystic-gold": "#FFD700"
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                    boxShadow: {
+                        'glow-primary': '0 0 15px 5px rgba(138, 43, 226, 0.3)',
+                        'glow-gold': '0 0 15px 5px rgba(255, 215, 0, 0.3)',
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-800 dark:text-gray-200">
+
+    <div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
+        <div class="flex h-full min-h-screen">
+            <!-- Sidebar -->
+            <aside class="flex w-64 flex-col bg-[#141118]/80 backdrop-blur-sm p-4 border-r border-white/5">
+                <div class="flex flex-col gap-4 flex-grow">
+                    <!-- Profile Section with Gamification -->
+                    <div
+                        class="flex flex-col items-center p-4 bg-white/5 rounded-xl border border-white/10 relative overflow-hidden group">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-br from-electric/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                        </div>
+                        <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-16 mb-2 ring-2 ring-electric"
+                            data-alt="User avatar"
+                            style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA0b_iFTMaqdQcvXJuRAXFR1AYWk8CjTCjOhyoqsWBcr0OYG6-dXVy6h3ntw8PmiaBs47TlP41KCk-ZllVgjmXpz6lY4e6Hd0ljSPIARqAi2TE2KJM7XXoDF4xfo6ANwVPkvXToMZgFYdEuFufAgNuY8uKsCsY15r4hMRPqz37upId0-5vTafc05US-COYupCDvBpeHKVaII5MHseiBYWal7ecZflaraoAETvndm_hGOR3HZV-fvaxJSszSQ_1V6TmJEqngAGFg11Q");'>
+                        </div>
+                        <h1 class="text-white text-lg font-bold leading-normal relative z-10" id="dash-user-name">Alex
+                            Weber</h1>
+                        <p class="text-electric text-xs font-bold uppercase tracking-widest mb-2 relative z-10"
+                            id="dash-user-level-text">Level 3: Flow Seeker</p>
+
+                        <div class="flex gap-1 mb-2 relative z-10" title="Reputation Rank" id="dash-user-stars">
+                            <!-- Populated by JS -->
+                        </div>
+
+                        <!-- Trust Badges -->
+                        <div class="flex gap-2 mb-3 relative z-10" id="dash-user-badges">
+                            <!-- Populated by JS -->
+                        </div>
+
+                        <!-- XP Bar -->
+                        <div class="w-full h-1 bg-white/10 rounded-full mt-1 relative z-10">
+                            <div class="h-full bg-electric rounded-full transition-all duration-1000" style="width: 0%"
+                                id="dash-xp-fill"></div>
+                        </div>
+                        <p class="text-[10px] text-mist mt-1 w-full text-right" id="dash-xp-text">--- / --- XP</p>
+                    </div>
+
+                    <nav class="flex flex-col gap-2 mt-4">
+                        <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 hover:text-white transition-colors"
+                            href="index.html">
+                            <span class="material-symbols-outlined">home</span>
+                            <p class="text-sm font-medium leading-normal">Home</p>
+                        </a>
+                        <a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/20 text-primary hover:bg-primary/30 transition-colors"
+                            href="dashboard.html">
+                            <span class="material-symbols-outlined filled">dashboard</span>
+                            <p class="text-sm font-medium leading-normal">Dashboard</p>
+                        </a>
+
+                        <div class="h-px bg-white/5 my-2"></div>
+                        <p class="px-3 text-xs font-bold text-mist uppercase tracking-widest">Community</p>
+
+                        <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 hover:text-electric transition-colors"
+                            href="marketplace.html">
+                            <span class="material-symbols-outlined">storefront</span>
+                            <p class="text-sm font-medium leading-normal">Marketplace</p>
+                        </a>
+                        <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 hover:text-purple-500 transition-colors"
+                            href="events.html">
+                            <span class="material-symbols-outlined">calendar_month</span>
+                            <p class="text-sm font-medium leading-normal">My Events</p>
+                        </a>
+                        <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 hover:text-amber transition-colors"
+                            href="#">
+                            <span class="material-symbols-outlined">diversity_3</span>
+                            <p class="text-sm font-medium leading-normal">Circle Connections</p>
+                        </a>
+
+                        <div class="h-px bg-white/5 my-2"></div>
+                        <p class="px-3 text-xs font-bold text-mist uppercase tracking-widest">Tools</p>
+
+                        <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 transition-colors"
+                            href="#">
+                            <span class="material-symbols-outlined">inventory_2</span>
+                            <p class="text-sm font-medium leading-normal">Equipment</p>
+                        </a>
+                        <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 transition-colors"
+                            href="#">
+                            <span class="material-symbols-outlined">book</span>
+                            <p class="text-sm font-medium leading-normal">Reservations</p>
+                        </a>
+                    </nav>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 transition-colors"
+                        href="#">
+                        <span class="material-symbols-outlined">settings</span>
+                        <p class="text-sm font-medium leading-normal">Settings</p>
+                    </a>
+                    <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 transition-colors"
+                        href="index.html">
+                        <span class="material-symbols-outlined">logout</span>
+                        <p class="text-sm font-medium leading-normal">Logout</p>
+                    </a>
+                </div>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="flex-1 p-6 lg:p-10 relative">
+                <!-- Sales Ticker -->
+                <div
+                    class="w-full bg-electric/10 border-b border-electric/20 overflow-hidden py-2 mb-8 rounded-lg relative">
+                    <div class="animate-marquee whitespace-nowrap text-sm font-bold text-electric tracking-widest">
+                        Kreativlon.Art just sold a custom piece! • DJ Qter released a new pack! • Hempy just joined the
+                        Circle! • New Quest Available: "Urban Explorer" • Level 7 Unlocked for Early Adopters
+                    </div>
+                </div>
+
+                <div class="mx-auto max-w-7xl">
+                    <!-- Header & Quick Actions -->
+                    <div class="flex flex-wrap items-center justify-between gap-6 mb-12">
+                        <div class="flex flex-col gap-1">
+                            <h2 class="text-white text-4xl font-serif font-bold leading-tight tracking-tighter">My Flow
+                            </h2>
+                            <p class="text-[#ab9cba] text-base font-normal leading-normal">Welcome back, Alex. Your
+                                energy is rising.</p>
+                        </div>
+                        <div class="flex gap-3">
+                            <button onclick="document.getElementById('upload-modal').showModal()"
+                                class="flex items-center gap-2 px-5 py-3 bg-electric/20 text-electric rounded-lg border border-electric/50 hover:bg-electric/30 transition-all">
+                                <span class="material-symbols-outlined">upload</span>
+                                <span class="font-bold text-sm uppercase tracking-wide">Upload Product</span>
+                            </button>
+                            <a href="event-create.html"
+                                class="flex items-center gap-2 px-5 py-3 bg-mystic-gold/20 text-mystic-gold rounded-lg border border-mystic-gold/50 hover:bg-mystic-gold/30 transition-all shadow-glow-gold">
+                                <span class="material-symbols-outlined">add_circle</span>
+                                <span class="font-bold text-sm uppercase tracking-wide">Host Event</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Manager Access Panel -->
+                    <div class="mb-8 p-6 bg-white/5 border border-white/10 rounded-xl">
+                        <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-mystic-gold">admin_panel_settings</span>
+                            Manager Access
+                        </h3>
+                        <div class="flex flex-wrap gap-4">
+                            <button onclick="requestManagerAccess('admin')"
+                                class="px-4 py-2 bg-red-900/50 hover:bg-red-900 text-white font-bold rounded uppercase text-sm border border-red-500/30">
+                                Admin (Pirates)
+                            </button>
+                            <button onclick="requestManagerAccess('kitchen')"
+                                class="px-4 py-2 bg-amber/20 hover:bg-amber/40 text-amber font-bold rounded uppercase text-sm border border-amber/30">
+                                Kitchen Manager
+                            </button>
+                            <button onclick="requestManagerAccess('sound')"
+                                class="px-4 py-2 bg-purple-900/50 hover:bg-purple-900 text-purple-400 font-bold rounded uppercase text-sm border border-purple-500/30">
+                                Sound Manager
+                            </button>
+                            <button id="feedback-btn" onclick="submitFeedback()"
+                                class="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white font-bold rounded uppercase text-sm border border-gray-600">
+                                Report Bug
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Upload Modal (Opening Mask) -->
+                    <dialog id="upload-modal"
+                        class="bg-[#1a1a1a] text-white border border-[#FFD700] rounded-xl p-8 max-w-2xl w-full backdrop:bg-black/80">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-3xl font-serif font-bold text-[#FFD700]">Upload to The Flow</h2>
+                            <button onclick="document.getElementById('upload-modal').close()"
+                                class="text-white hover:text-red-500">
+                                <span class="material-symbols-outlined">close</span>
+                            </button>
+                        </div>
+
+                        <form id="unified-upload-form" class="space-y-6">
+                            <div>
+                                <label
+                                    class="block text-sm font-bold text-white/70 mb-2 uppercase tracking-widest">Type</label>
+                                <select id="upload-type"
+                                    class="w-full bg-black/50 border border-white/20 rounded p-3 text-white focus:border-[#FFD700] outline-none">
+                                    <option value="marketplace">Marketplace Listing</option>
+                                    <option value="museum" disabled id="opt-museum">Museum Artifact (Admin Only)
+                                    </option>
+                                    <option value="dish" disabled id="opt-kitchen">Kitchen Menu Item</option>
+                                    <option value="event" disabled id="opt-sound">Event / Contest</option>
+                                </select>
+                            </div>
+
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div>
+                                    <label
+                                        class="block text-sm font-bold text-white/70 mb-2 uppercase tracking-widest">Title
+                                        / Name</label>
+                                    <input type="text" name="title" required
+                                        class="w-full bg-black/50 border border-white/20 rounded p-3 text-white focus:border-[#FFD700] outline-none">
+                                </div>
+                                <div>
+                                    <label
+                                        class="block text-sm font-bold text-white/70 mb-2 uppercase tracking-widest">Price
+                                        (€)</label>
+                                    <input type="number" name="price" id="upload-price"
+                                        class="w-full bg-black/50 border border-white/20 rounded p-3 text-white focus:border-[#FFD700] outline-none">
+                                    <span class="text-xs text-white/40">Leave 0 for Museum/Events</span>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label
+                                    class="block text-sm font-bold text-white/70 mb-2 uppercase tracking-widest">Description</label>
+                                <textarea name="description" rows="3" required
+                                    class="w-full bg-black/50 border border-white/20 rounded p-3 text-white focus:border-[#FFD700] outline-none"></textarea>
+                            </div>
+
+                            <!-- Dynamic Fields based on Type can be handled by JS, generic for now -->
+
+                            <div>
+                                <button type="submit"
+                                    class="w-full py-4 bg-[#FFD700] text-black font-bold uppercase tracking-widest hover:bg-white transition-colors">
+                                    Submit to Flow
+                                </button>
+                            </div>
+                        </form>
+                    </dialog>
+
+                    <!-- Admin Panel (Hidden by Default) -->
+                    <div id="admin-panel"
+                        class="hidden mb-12 p-6 bg-red-500/10 border border-red-500/30 rounded-xl relative overflow-hidden">
+                        <div class="absolute inset-0 bg-red-500/5 pointer-events-none"></div>
+                        <div class="relative z-10">
+                            <h3 class="text-2xl font-bold text-red-500 mb-6 flex items-center gap-2">
+                                <span class="material-symbols-outlined">security</span>
+                                Admin Dashboard
+                            </h3>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- Admin Stats -->
+                                <div class="p-4 bg-background-dark/50 rounded-lg border border-white/10">
+                                    <h4 class="text-white font-bold mb-4">System Overview</h4>
+                                    <div class="flex justify-between items-center mb-2">
+                                        <span class="text-mist">Total Payouts</span>
+                                        <span class="text-white font-mono">0.00€</span>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-mist">Pending Tickets</span>
+                                        <span class="text-white font-mono" id="admin-pending-tickets">0</span>
+                                    </div>
+                                </div>
+
+                                <!-- Check-in Simulation -->
+                                <div class="p-4 bg-background-dark/50 rounded-lg border border-white/10 md:col-span-2">
+                                    <h4 class="text-white font-bold mb-4">Event Check-in (Simulation)</h4>
+                                    <div class="flex gap-4 items-end">
+                                        <label class="block flex-1">
+                                            <span class="text-xs text-mist font-bold uppercase">Ticket ID</span>
+                                            <input type="text" id="scan-ticket-id"
+                                                class="w-full bg-white/5 border border-white/10 rounded px-2 py-1 text-white text-sm"
+                                                placeholder="tkt_...">
+                                        </label>
+                                        <button onclick="simulateCheckIn()"
+                                            class="px-4 py-1.5 bg-green-500/20 text-green-500 border border-green-500/50 rounded hover:bg-green-500/30 transition-colors font-bold text-sm">
+                                            Check In
+                                        </button>
+                                        <button onclick="simulateNoShow()"
+                                            class="px-4 py-1.5 bg-red-500/20 text-red-500 border border-red-500/50 rounded hover:bg-red-500/30 transition-colors font-bold text-sm">
+                                            Mark No-Show
+                                        </button>
+                                    </div>
+                                    <p id="scan-result" class="text-xs text-mist mt-2 min-h-[1.5em]"></p>
+                                </div>
+
+                                <!-- Notifications / Game Master Alerts -->
+                                <div class="p-4 bg-background-dark/50 rounded-lg border border-white/10 md:col-span-2">
+                                    <h4 class="text-white font-bold mb-4 flex items-center justify-between">
+                                        <span>Game Master Alerts</span>
+                                        <button onclick="clearNotifications()"
+                                            class="text-xs text-electric hover:underline">Clear</button>
+                                    </h4>
+                                    <div id="admin-notifications" class="space-y-2 max-h-48 overflow-y-auto">
+                                        <!-- Populated via JS -->
+                                        <p class="text-xs text-mist">No recent alerts.</p>
+                                    </div>
+                                </div>
+
+                                <!-- Fund Management (72h Release Simulation) -->
+                                <div class="p-4 bg-background-dark/50 rounded-lg border border-white/10 md:col-span-2">
+                                    <h4 class="text-white font-bold mb-4">Escrow / Fund Management</h4>
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div class="p-3 bg-black/30 rounded border border-white/5">
+                                            <p class="text-[10px] text-mist uppercase font-bold">Pending (Escrow)</p>
+                                            <p id="admin-pending-funds" class="text-xl font-bold text-white">€0.00</p>
+                                        </div>
+                                        <div class="p-3 bg-black/30 rounded border border-white/5">
+                                            <p class="text-[10px] text-mist uppercase font-bold">Released (Available)
+                                            </p>
+                                            <p id="admin-available-funds" class="text-xl font-bold text-green-400">€0.00
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="mt-4 flex gap-4">
+                                        <button onclick="simulateTicketSale()"
+                                            class="px-3 py-1.5 bg-blue-500/20 text-blue-400 border border-blue-500/50 rounded text-xs font-bold hover:bg-blue-500/30">
+                                            + Simulate Sale (€50)
+                                        </button>
+                                        <button onclick="simulateFundRelease()"
+                                            class="px-3 py-1.5 bg-green-500/20 text-green-400 border border-green-500/50 rounded text-xs font-bold hover:bg-green-500/30">
+                                            releaseFunds(72h_Check)
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Profile Card -->
+                    <div class="glass-panel p-8 rounded-3xl relative overflow-hidden md:col-span-1">
+                        <div class="relative z-10">
+                            <div class="flex items-center gap-4 mb-6">
+                                <div class="w-20 h-20 rounded-full border-2 border-electric p-1">
+                                    <img src="Assets/images/logo.png" class="w-full h-full object-cover rounded-full">
+                                </div>
+                                <div>
+                                    <h2 class="text-2xl font-serif font-bold">Flow Seeker</h2>
+                                    <p class="text-mist text-sm" id="user-rank">Novice</p>
+                                    <div class="mt-2">
+                                        <p class="text-[10px] text-electric font-bold uppercase tracking-widest mb-1">
+                                            Power Level</p>
+                                        <span id="membership-badge"
+                                            class="inline-block px-3 py-1 rounded text-xs font-bold uppercase bg-white/10 text-white/50 border border-white/10 shadow-[0_0_10px_rgba(0,0,0,0.5)]">Free
+                                            Flow</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-center bg-black/20 p-4 rounded-xl">
+                                    <span class="text-sm font-bold text-mist">Flow Credits</span>
+                                    <span class="text-electric font-bold text-xl" id="token-display">0</span>
+                                </div>
+
+                                <a href="membership.html"
+                                    class="block w-full py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-center text-xs font-bold uppercase tracking-widest transition-all">
+                                    Manage Membership
+                                </a>
+
+                                <a href="marketplace-upload.html"
+                                    class="block w-full py-3 bg-electric hover:bg-electric/90 text-white rounded-xl text-center text-xs font-bold uppercase tracking-widest transition-all flex items-center justify-center gap-2">
+                                    <span class="material-symbols-outlined text-sm">storefront</span>
+                                    List Marketplace Item
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Voucher Wallet (Dynamic) -->
+                        <div id="voucher-wallet" class="mt-6 pt-6 border-t border-white/5 hidden">
+                            <p class="text-[10px] font-bold uppercase tracking-widest text-amber mb-3">Your Vouchers</p>
+                            <div id="voucher-list" class="space-y-2">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Scouter Dashboard (Level 3+) -->
+                    <div id="scouter-dashboard"
+                        class="hidden mb-12 p-1 relative overflow-hidden rounded-xl border border-neon-blue/50 shadow-[0_0_20px_rgba(0,229,255,0.2)]">
+                        <div class="absolute inset-0 bg-neon-blue/5 backdrop-blur-sm"></div>
+                        <div class="relative z-10 p-6 flex flex-col md:flex-row items-center justify-between gap-6">
+                            <div class="flex items-center gap-4">
+                                <div class="p-3 bg-neon-blue/20 rounded-full border border-neon-blue animate-pulse">
+                                    <span class="material-symbols-outlined text-neon-blue text-3xl">radar</span>
+                                </div>
+                                <div>
+                                    <h3 class="text-2xl font-bold text-white font-display uppercase tracking-widest">
+                                        Scouter Active</h3>
+                                    <p class="text-neon-blue text-sm font-mono">Scanning Local Flow Levels...</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-8 text-center">
+                                <div>
+                                    <p class="text-[10px] uppercase tracking-widest text-mist">Nearby Artists</p>
+                                    <p class="text-2xl font-bold text-white font-mono">12</p>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] uppercase tracking-widest text-mist">High Value Loot</p>
+                                    <p class="text-2xl font-bold text-white font-mono">3</p>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] uppercase tracking-widest text-mist">Power Level</p>
+                                    <p class="text-2xl font-bold text-neon-blue font-mono">Over 9000</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Decorative Scan Line -->
+                        <div
+                            class="absolute top-0 left-0 w-full h-[2px] bg-neon-blue/50 shadow-[0_0_10px_#00E5FF] animate-scan">
+                        </div>
+                    </div>
+
+                    <!-- Stats / Gamification Overview -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+                        <div class="p-6 bg-white/5 border border-white/10 rounded-xl">
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="p-2 bg-electric/20 rounded-lg text-electric">
+                                    <span class="material-symbols-outlined">stars</span>
+                                </div>
+                                <span class="text-xs text-green-400 font-bold">+12%</span>
+                            </div>
+                            <p class="text-mist text-sm uppercase tracking-widest">Reputation</p>
+                            <h3 class="text-2xl font-bold text-white">4.8 <span
+                                    class="text-sm font-normal text-white/50">/ 5.0</span></h3>
+                        </div>
+                        <div class="p-6 bg-white/5 border border-white/10 rounded-xl">
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="p-2 bg-amber/20 rounded-lg text-amber">
+                                    <span class="material-symbols-outlined">payments</span>
+                                </div>
+                            </div>
+                            <p class="text-mist text-sm uppercase tracking-widest">Flow Credits</p>
+                            <h3 class="text-2xl font-bold text-white">1,250 <span
+                                    class="text-sm font-normal text-white/50">FC</span></h3>
+                        </div>
+                        <div class="p-6 bg-white/5 border border-white/10 rounded-xl">
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="p-2 bg-purple-500/20 rounded-lg text-purple-500">
+                                    <span class="material-symbols-outlined">shopping_bag</span>
+                                </div>
+                                <span class="text-xs text-white/50">2 Active</span>
+                            </div>
+                            <p class="text-mist text-sm uppercase tracking-widest">Sales</p>
+                            <h3 class="text-2xl font-bold text-white">345€</h3>
+                        </div>
+                        <div class="p-6 bg-white/5 border border-white/10 rounded-xl">
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="p-2 bg-blue-500/20 rounded-lg text-blue-500">
+                                    <span class="material-symbols-outlined">event</span>
+                                </div>
+                            </div>
+                            <p class="text-mist text-sm uppercase tracking-widest">Upcoming Events</p>
+                            <h3 class="text-2xl font-bold text-white">3</h3>
+                        </div>
+                    </div>
+
+                    <!-- Widgets Grid -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+                        <!-- Column 1: Active Listings (Marketplace) -->
+                        <div class="lg:col-span-2">
+                            <div class="flex justify-between items-center mb-6">
+                                <h3 class="text-xl font-bold text-white">Your Active Listings</h3>
+                                <div class="flex gap-4">
+                                    <a href="event-create.html"
+                                        class="hidden text-sm font-bold text-electric px-3 py-1.5 bg-electric/10 rounded-lg hover:bg-electric hover:text-white transition-all border border-electric/30"
+                                        id="btn-create-event">
+                                        + Create Event
+                                    </a>
+                                    <a href="#"
+                                        class="text-sm text-electric hover:text-white transition-colors self-center">View
+                                        All</a>
+                                </div>
+                            </div>
+                            <div class="space-y-4">
+                                <div
+                                    class="flex items-center gap-4 p-4 bg-white/5 border border-white/10 rounded-lg hover:border-electric transition-colors">
+                                    <div class="size-16 bg-gray-700 rounded-md overflow-hidden">
+                                        <img src="https://placehold.co/100x100/222/white?text=Art"
+                                            class="w-full h-full object-cover">
+                                    </div>
+                                    <div class="flex-grow">
+                                        <h4 class="text-white font-bold">Custom Portrait Session</h4>
+                                        <p class="text-sm text-mist">Art • 50€/hr</p>
+                                    </div>
+                                    <div class="flex items-center gap-4">
+                                        <span class="text-xs text-green-400 font-bold flex items-center gap-1"><span
+                                                class="w-2 h-2 bg-green-400 rounded-full"></span> Active</span>
+                                        <button class="text-white/50 hover:text-white"><span
+                                                class="material-symbols-outlined">edit</span></button>
+                                    </div>
+                                </div>
+                                <div
+                                    class="flex items-center gap-4 p-4 bg-white/5 border border-white/10 rounded-lg hover:border-purple-500 transition-colors">
+                                    <div class="size-16 bg-gray-700 rounded-md overflow-hidden">
+                                        <img src="https://placehold.co/100x100/222/white?text=Beat"
+                                            class="w-full h-full object-cover">
+                                    </div>
+                                    <div class="flex-grow">
+                                        <h4 class="text-white font-bold">Lofi Beat Pack Vol. 2</h4>
+                                        <p class="text-sm text-mist">Music • 25€</p>
+                                    </div>
+                                    <div class="flex items-center gap-4">
+                                        <span class="text-xs text-green-400 font-bold flex items-center gap-1"><span
+                                                class="w-2 h-2 bg-green-400 rounded-full"></span> Active</span>
+                                        <button class="text-white/50 hover:text-white"><span
+                                                class="material-symbols-outlined">edit</span></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Column 2: Active Missions -->
+                        <div>
+                            <div class="flex justify-between items-center mb-6">
+                                <h3 class="text-xl font-bold text-white">Active Missions</h3>
+                                <div class="flex gap-2">
+                                    <span
+                                        class="text-xs font-bold text-electric px-2 py-1 bg-electric/10 rounded border border-electric/20">1
+                                        / 3</span>
+                                </div>
+                            </div>
+
+                            <div class="space-y-4">
+                                <!-- Mission Card 1 (Active) -->
+                                <div
+                                    class="bg-white/5 border border-mystic-gold/30 rounded-xl p-5 relative overflow-hidden group">
+                                    <div class="absolute top-0 left-0 w-1 h-full bg-mystic-gold"></div>
+                                    <div class="flex justify-between items-start mb-2">
+                                        <span
+                                            class="text-[10px] font-bold uppercase tracking-widest text-mystic-gold">Daily
+                                            Quest</span>
+                                        <span
+                                            class="text-xs font-bold text-white bg-white/10 px-2 py-0.5 rounded-full">+50
+                                            XP</span>
+                                    </div>
+                                    <h4 class="text-white font-bold text-lg mb-1">Spread the Flow</h4>
+                                    <p class="text-sm text-mist mb-4">Share your profile on social media and tag
+                                        #CircleDFlow.</p>
+
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex -space-x-2">
+                                            <!-- Avatars of others doing it -->
+                                        </div>
+                                        <button
+                                            class="px-4 py-2 bg-mystic-gold text-background-dark font-bold text-sm rounded-lg hover:bg-white transition-colors">
+                                            Claim
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Mission Card 2 (Available) -->
+                                <div
+                                    class="bg-white/5 border border-white/10 rounded-xl p-5 relative overflow-hidden group hover:border-white/20 transition-colors">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <span
+                                            class="text-[10px] font-bold uppercase tracking-widest text-electric">Weekly
+                                            Side-Quest</span>
+                                        <span
+                                            class="text-xs font-bold text-white bg-white/10 px-2 py-0.5 rounded-full">+100
+                                            XP</span>
+                                    </div>
+                                    <h4 class="text-white font-bold text-lg mb-1">The Local Explorer</h4>
+                                    <p class="text-sm text-mist mb-4">Check-in at 3 Partner locations this week.</p>
+
+                                    <div class="w-full h-1.5 bg-white/10 rounded-full mb-4">
+                                        <div class="h-full bg-electric rounded-full" style="width: 33%"></div>
+                                    </div>
+                                    <div class="flex justify-between text-xs text-white/50">
+                                        <span>1/3 Locations</span>
+                                        <span>2 Days Left</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Equipment Section (Retained but Minimized) -->
+                    <div>
+                        <h3 class="text-xl font-bold text-white mb-6">My Equipment Reservations</h3>
+                        <!-- ... existing item 1 ... -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div
+                                class="relative group bg-[#141118] border border-white/10 rounded-xl overflow-hidden shadow-lg hover:shadow-glow-primary transition-shadow duration-300 flex flex-col">
+                                <div
+                                    class="absolute top-2 right-2 px-2 py-1 text-xs font-bold text-black bg-orange-400 rounded-full z-10">
+                                    In Use</div>
+                                <img class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                                    data-alt="Microphone"
+                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuBehk6E_IQL-ZP5yYeN3HMI2Kfn2AEMcyJ3chrlKhq6caEXzJRIanm1xU-ENmLMXpC9LKultaHjWMVDZ3kmneSDL7sdFDrdLlZDPj3J6CiydwXxelIYbTBbAV8olSmhp4BJdqjvEtfp73MyXZqfNOQuP3cNvRFt58IbIavIubGcatZoxC0Ns6hNC_HGHG6bq5bpYDb8cOcm75K26mMKG0pLAuM-KU0odorOg-gY3vQEdVXXKunYzLObBYE5lwtscOE02U_0rzKNjEQ" />
+                                <div class="p-4 flex flex-col flex-grow">
+                                    <h3 class="text-lg font-bold text-white mt-1">Rode NT1</h3>
+                                    <p class="text-sm text-slate-400 mt-2">Checked out until Jan 20th</p>
+                                    <button
+                                        class="mt-4 w-full py-2 bg-white/10 text-white rounded text-sm hover:bg-white/20">Return
+                                        Item</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="notifications.js"></script>
+    <script src="gamification.js"></script>
+    <script src="script.js"></script>
+    <!-- Upsell Modal -->
+    <div id="upsell-modal"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm hidden">
+        <div
+            class="bg-[#1a1625] border border-electric/50 p-8 rounded-2xl max-w-md w-full text-center relative shadow-glow-primary">
+            <button onclick="closeUpsellModal()" class="absolute top-4 right-4 text-white/50 hover:text-white">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+
+            <div class="w-16 h-16 rounded-full bg-electric/20 flex items-center justify-center mx-auto mb-6">
+                <span class="material-symbols-outlined text-4xl text-electric">rocket_launch</span>
+            </div>
+
+            <h2 id="upsell-title" class="text-2xl font-bold text-white mb-2">Expand Your Flow</h2>
+            <p id="upsell-msg" class="text-gray-300 mb-8">You've reached the limit of your current plan.</p>
+
+            <a href="membership.html"
+                class="block w-full py-3 bg-electric hover:bg-electric/90 text-white rounded-xl font-bold uppercase tracking-widest transition-all">
+                Upgrade Now
+            </a>
+            <button onclick="closeUpsellModal()" class="block w-full mt-3 py-2 text-sm text-white/50 hover:text-white">
+                Maybe Later
+            </button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            updateDashboard();
+            renderAdminPanel(); // Existing Admin Logic
+            renderVouchers();
+
+            // Listen for Upsell
+            window.addEventListener('trigger-upsell', (e) => {
+                const feature = e.detail.feature;
+                showUpsellModal(feature);
+            });
+        });
+
+        function showUpsellModal(feature) {
+            const modal = document.getElementById('upsell-modal');
+            const title = document.getElementById('upsell-title');
+            const msg = document.getElementById('upsell-msg');
+
+            if (modal) {
+                modal.classList.remove('hidden');
+                title.textContent = "Limit Reached!";
+                msg.textContent = `You've hit your limit for ${feature.replace('_', ' ')}. Level up to RISING ARTIST or MASTER CIRCLE for more flow.`;
+            }
+        }
+
+        function closeUpsellModal() {
+            document.getElementById('upsell-modal').classList.add('hidden');
+        }
+
+        function updateDashboard() {
+            if (!window.Gamification) return;
+            const G = window.Gamification;
+
+            // basic stats
+            // These elements are not in the provided HTML, but the instruction implies they exist elsewhere or are to be added.
+            // For now, we'll assume they are part of the profile UI update.
+            const xpDisplay = document.getElementById('xp-display');
+            if (xpDisplay) xpDisplay.textContent = G.state.xp;
+            const userRank = document.getElementById('user-rank');
+            if (userRank) userRank.textContent = G.getRank().name;
+            const tokenDisplay = document.getElementById('token-display');
+            if (tokenDisplay) tokenDisplay.textContent = G.state.tokens;
+
+            // Membership Badge
+            const tier = G.getTier();
+            const badge = document.getElementById('membership-badge');
+            if (badge) {
+                badge.textContent = tier.name;
+                if (tier.id !== 'free') {
+                    badge.classList.remove('bg-white/10', 'text-white/50');
+                    badge.classList.add('bg-electric', 'text-white', 'border-transparent');
+                }
+            }
+
+            // Existing dashboard logic (level, stars, xp bar)
+            const levelText = document.getElementById('dash-user-level-text');
+            const starsContainer = document.getElementById('dash-user-stars');
+            const xpFill = document.getElementById('dash-xp-fill');
+            const xpText = document.getElementById('dash-xp-text');
+
+            // Level Titles
+            const titles = [
+                "Novice", "Initiate", "Explorer", "Flow Seeker", "Flow Master", "Grandmaster", "Legend", "Ascended"
+            ];
+
+            const level = G.getLevel();
+            const xp = G.getXP();
+            const progress = G.getProgressToNextLevel();
+            const nextThreshold = G.getNextLevelThreshold();
+
+            // Update Text
+            if (levelText) levelText.textContent = `Level ${level}: ${titles[level] || "Unknown"}`;
+
+            // Update Stars
+            if (starsContainer) {
+                starsContainer.innerHTML = '';
+                for (let i = 1; i <= 7; i++) {
+                    const span = document.createElement('span');
+                    span.className = 'material-symbols-outlined text-sm ' + (i <= level ? 'text-mystic-gold filled' : 'text-white/20');
+                    span.textContent = 'star';
+                    starsContainer.appendChild(span);
+                }
+            }
+
+            // Update Bar
+            if (xpFill) xpFill.style.width = `${progress}%`;
+            if (xpText) xpText.textContent = `${xp} / ${nextThreshold} XP`;
+
+            // Show Create Event Button if Level >= 5
+            if (level >= 5) {
+                const btn = document.getElementById('btn-create-event');
+                if (btn) btn.classList.remove('hidden');
+            }
+
+            window.addEventListener('xp-added', updateDashboard);
+            window.addEventListener('xp-added', updateDashboard);
+            window.addEventListener('level-up', updateDashboard);
+
+            // Render Badges
+            renderBadges(G);
+        }
+
+        function renderBadges(G) {
+            const container = document.getElementById('dash-user-badges');
+            if (!container) return;
+
+            container.innerHTML = '';
+            const badges = G.state.badges || [];
+
+            badges.forEach(b => {
+                // Find Badge Definition
+                const def = window.BADGES?.[b.id] || { icon: 'verified', name: 'Unknown' };
+
+                const div = document.createElement('div');
+                div.className = 'w-6 h-6 rounded-full bg-white/10 flex items-center justify-center border border-white/20 tooltip-trigger';
+                div.title = def.name;
+                div.innerHTML = `<span class="material-symbols-outlined text-xs text-mystic-gold">${def.icon}</span>`;
+                container.appendChild(div);
+            });
+        }
+
+        function renderVouchers() {
+            if (!window.Gamification) return;
+            const vouchers = window.Gamification.state.vouchers || [];
+            const activeVouchers = vouchers.filter(v => !v.redeemed);
+
+            const wallet = document.getElementById('voucher-wallet');
+            const list = document.getElementById('voucher-list');
+
+            if (activeVouchers.length > 0) {
+                if (wallet) wallet.classList.remove('hidden');
+                if (list) {
+                    list.innerHTML = activeVouchers.map(v => `
+                        <div class="p-3 bg-white/5 border border-white/10 rounded-lg flex items-center gap-3 cursor-pointer hover:bg-white/10 transition-colors" onclick="showVoucherQR('${v.id}')">
+                            <span class="material-symbols-outlined text-amber">restaurant</span>
+                            <div>
+                                <p class="text-xs font-bold text-white">${v.type}</p>
+                                <p class="text-[10px] text-mist">@ ${v.partner}</p>
+                            </div>
+                            <span class="ml-auto material-symbols-outlined text-white/20 text-sm">qr_code</span>
+                        </div>
+                    `).join('');
+                }
+            } else {
+                if (wallet) wallet.classList.add('hidden');
+            }
+        }
+
+        window.showVoucherQR = function (id) {
+            // Simple mock alert for QR
+            const v = window.Gamification.state.vouchers.find(x => x.id === id);
+            alert(`Show this ID to African Queen Kitchen:\n\n${id.toUpperCase()}\n\n(In production, this displays a QR Code)`);
+        }
+
+
+    </script>
+</body>
+
+
+</html>

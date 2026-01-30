@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html class="dark" lang="de"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Circle the Flow - Community Hub</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<style type="text/tailwindcss">
+        .material-symbols-outlined {
+            font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24
+        }
+        .nav-link {
+            @apply relative text-white text-sm font-medium leading-normal transition-colors duration-300;
+        }
+        .nav-link:hover {
+            @apply text-mystic-gold;
+        }
+        .nav-link::after {
+            @apply content-[''] absolute left-1/2 -bottom-1.5 h-1 w-1 -translate-x-1/2 scale-0 rounded-full bg-mystic-gold transition-transform duration-300;
+        }
+        .nav-link.active::after,
+        .nav-link:hover::after {
+            @apply scale-100;
+        }
+        .nav-link.active {
+            @apply text-mystic-gold;
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#8A2BE2",
+              "background-light": "#f7f5f8",
+              "background-dark": "#191022",
+              "mystic-gold": "#FFD700"
+            },
+            fontFamily: {
+              "display": ["Plus Jakarta Sans", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-800 dark:text-gray-200">
+<div class="relative w-full overflow-x-hidden">
+<header class="sticky top-0 z-50 w-full bg-background-dark/80 backdrop-blur-lg">
+<nav class="container mx-auto flex items-center justify-between whitespace-nowrap px-6 py-3">
+<a class="flex items-center gap-4 text-white" href="#">
+<div class="size-6 text-mystic-gold">
+<svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 4H17.3334V17.3334H30.6666V30.6666H44V44H4V4Z" fill="currentColor"></path>
+</svg>
+</div>
+<h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">Circle the Flow</h2>
+</a>
+<div class="hidden items-center gap-6 lg:gap-8 md:flex">
+<a class="nav-link active" href="#">Home</a>
+<a class="nav-link" href="#">Philosophie</a>
+<a class="nav-link" href="#">Events</a>
+<a class="nav-link" href="#">Community</a>
+<a class="nav-link" href="#">Partner</a>
+<a class="nav-link" href="#">Portfolio/Services</a>
+<a class="nav-link" href="#">Kontakt</a>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative group">
+<button class="flex items-center gap-1.5 text-white/80 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-xl">language</span>
+<span class="text-sm font-medium">DE</span>
+</button>
+<div class="absolute right-0 top-full mt-2 w-32 origin-top-right rounded-md bg-background-dark/90 border border-primary/20 shadow-lg ring-1 ring-black ring-opacity-5 scale-95 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-200" role="menu">
+<div class="py-1">
+<a class="block w-full text-left px-4 py-2 text-sm text-mystic-gold" href="#" role="menuitem">Deutsch</a>
+<a class="block w-full text-left px-4 py-2 text-sm text-white/80 hover:text-white hover:bg-white/5" href="#" role="menuitem">English</a>
+<a class="block w-full text-left px-4 py-2 text-sm text-white/80 hover:text-white hover:bg-white/5" href="#" role="menuitem">Português</a>
+</div>
+</div>
+</div>
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-mystic-gold text-background-dark text-sm font-bold leading-normal tracking-[0.015em] hover:opacity-90 transition-opacity">
+<span class="truncate">Member Login</span>
+</button>
+<button class="md:hidden text-white">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</nav>
+</header>
+<main class="container mx-auto px-6 py-10 md:py-20">
+<section class="mb-20 md:mb-32">
+<div class="@container">
+<div class="flex min-h-[60vh] flex-col gap-6 rounded-xl bg-cover bg-center bg-no-repeat @[480px]:gap-8 items-center justify-center p-4 border border-primary/20" data-alt="Ethereal floating islands under a purple and gold nebula sky, representing a mystical world." style='background-image: linear-gradient(rgba(25, 16, 34, 0.7) 0%, rgba(25, 16, 34, 0.9) 100%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuCAXBpCXpzttFSVwcmZvwHhz0S6dtLqucOKUPqKTgutLp9WN2-bq_eEr25XojjX3jDOrdsT2nP9LuQMpUJ-2RK3CoPZqLTNIpbZ5Rj_xW9HlQHE1WcqZNtw37o6Hw3y81TZPPzfSW1qdAvchCoftDvvh9j5GWOSJfTZvRuuvOZXhCOo7VYPxGtWd_394TugyAOgb1VB8IFFhZXg6MbafyZYHBnNcWr8YDGaPu4lj1hvA5GaS1eitwNF257T2udxYIS58xIO_HzzDeQ");'>
+<div class="flex flex-col gap-4 text-center">
+<h1 class="text-mystic-gold text-4xl font-black leading-tight tracking-[-0.033em] @[480px]:text-6xl @[480px]:font-black @[480px]:leading-tight @[480px]:tracking-[-0.033em]">
+                                Feel your flow.
+                            </h1>
+<h2 class="text-white text-base font-normal leading-normal @[480px]:text-lg @[480px]:font-normal @[480px]:leading-normal max-w-2xl">
+                                Eine künstlerische und wissenschaftliche Gemeinschaft in Lissabon, die als zentraler Hub dient, um Schöpfung, Abenteuer und Verbindung zu fördern.
+                            </h2>
+</div>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 @[480px]:h-12 @[480px]:px-6 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] @[480px]:text-base @[480px]:font-bold @[480px]:leading-normal @[480px]:tracking-[0.015em] hover:opacity-90 transition-opacity">
+<span class="truncate">Entdecke die Community</span>
+</button>
+</div>
+</div>
+</section>
+<section class="text-center max-w-3xl mx-auto mb-20 md:mb-32">
+<h2 class="text-mystic-gold text-3xl font-bold leading-tight tracking-[-0.015em] mb-4">Unsere Philosophie</h2>
+<p class="text-white/80 text-lg font-normal leading-relaxed">
+                    Circle the Flow ist ein Zufluchtsort für Künstler, Denker und Schöpfer. Wir glauben an die Kraft der Zusammenarbeit, des Abenteuers und der authentischen Selbstentfaltung, inspiriert von der tiefen Verbundenheit von Freundschaft und der rohen Energie der Hip-Hop-Kultur.
+                </p>
+</section>
+<section class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-20 md:mb-32">
+<div class="flex flex-col gap-4 p-6 border border-primary/30 rounded-xl bg-background-dark/50">
+<h3 class="text-2xl font-bold text-mystic-gold">Time Map: Jam Finder</h3>
+<p class="text-white/80">Entdecke Live-Jam-Sessions und Events auf unserer interaktiven Karte von Lissabon. Finde deinen Flow in Echtzeit.</p>
+<div class="aspect-video w-full rounded-lg overflow-hidden border-2 border-primary/50">
+<img alt="Eine stilisierte, leuchtende Karte von Lissabon mit glühenden Punkten, die Live-Events anzeigen." class="w-full h-full object-cover" data-location="Lissabon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1eafXMGA2qfjqgP0ydkQ-s75Z_Yz4PSd_AnRUe_b_-4S6WfCInxLHbGQ-uAWN-zdbytGHV15NFsfunFDVywyVIuSCX2_fc9RWUhzTbcWjgwk93lVxLo_8exl4q_gKux7bZG5mSjq4DntSPX0-kIaAQqnJptwK1UfIDrwQm_cz1AAVndQu7hTt6SSspmuxjfUiUhYtOsxMLqLB4ShzjKXGWNCOmVD7z3OihFucXQ7ovJobawkcETPHUVzEm0JHPO3Owl2iEX0uQa0"/>
+</div>
+</div>
+<div class="flex flex-col gap-4 p-6 border border-primary/30 rounded-xl bg-background-dark/50">
+<h3 class="text-2xl font-bold text-mystic-gold">Partner Spotlight</h3>
+<p class="text-white/80">Unsere "Schatzkarte" lokaler Partner. Entdecke die Juwelen, die unsere Community unterstützen und bereichern.</p>
+<div class="grid grid-cols-3 gap-4 flex-1 items-center">
+<div class="aspect-square bg-white/10 rounded-lg flex items-center justify-center p-2"><img alt="Logo des Partners 1" class="max-w-full max-h-10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCttZyH4JPUvWpdkKX18OgS7SOv6Ff9mfwxFo1ObsvqFQ9DBXkhKSzHdxWpnfncatzwT9s_n5x3z5idxuMiH5ufBMzeq_uBswJUAaeziKDqfB-wnKw3fhhcOqTF_5nx8Nk1UVjVQFb0mIvhrHFS_D9EU0C2DOP2N9OfiJOufJkFPTY1d9RDg9x63sW-_EmUA376nLi-LRTkfxXBeldAn95CScHydXZPBVwX3sZ7NQaCYpJzhLFRTLyHLX_mMaShwBplxDugBss0zJ0"/></div>
+<div class="aspect-square bg-white/10 rounded-lg flex items-center justify-center p-2"><img alt="Logo des Partners 2" class="max-w-full max-h-10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfDv5p2PChbZA2DXjO7k1YGYRYsnOCEzbMgmMDFGQJAptR5g6HII0m03OjlMwj4TUAwAIc3mnXaTxwUR9wkLQbv1yzqxwqkxeYr5uJRIHZ7EJW5KsJloENaWzMOeYobAbuEbIQiAUTmEZ7oE_nO5YV3_Jr5zUYL4P-Zme9O6147QUe1MPBFkWPcTkVK61XuAZun9sZxNVuoJdwl5QTNHF2vympinYPYHjB9159_jS7BLnJgs603zI9A4_pBg7rpfO7cHDtpwc9tEY"/></div>
+<div class="aspect-square bg-white/10 rounded-lg flex items-center justify-center p-2"><img alt="Logo des Partners 3" class="max-w-full max-h-10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDTnUFFT3flMqUsylKAQM-5HwTz-5uGo0R6Safgk0a9_MPMgOYq9COmOj_7Dtk0UrccA7D1NTk7QI3W3LgsvWThOQ3Hsn-h-nOMRP525z2N-eEWJc5CKKyX4S9Eorx6u8IwSIUQujmooZcuT50s-zpKgqoZ0X_h_ex2M9eIBulPPYAAgKK1ELR2JveG0y8ZgfI8To5xcvIvUJjj8ScP8T13X8W8y6sJr9T6yYLIs2RHPtjkCRzMjFjdjNG9gRAp9us0FfEAvhhVeDU"/></div>
+<div class="aspect-square bg-white/10 rounded-lg flex items-center justify-center p-2"><img alt="Logo des Partners 4" class="max-w-full max-h-10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdFXgUQuSgR_XEn--cN3AO1gRDIHuUSrYM-vaCZaWrSBy8tTa7fsg-FHjXwFwC2qgcp8cNo4U_0w8kzcdXBO2Vcr6cjmFhgXqD1bUIqWUBWNlTmTjXPPpLvafJ5l53C-hhL2MPBqbm9EQvup6qOR4rRWtZxx2iBwIZWkUjCuj9zZmbht33SfpP2AoxLKwhlGGbkBzGSxt_d_DDI98Z4osqsiaop3DmiDC37zCVQLoqsMhHEhaO9aEQq0arYQniCu4mPCqwqUGGckU"/></div>
+<div class="aspect-square bg-white/10 rounded-lg flex items-center justify-center p-2"><img alt="Logo des Partners 5" class="max-w-full max-h-10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXqi8qZU1MTU5FS0K8v21xbWz_oi8BOWeo8OHfB0zas4u-vPjduClr9fT5bCgLFH_tYPoIZFaG6rAVSi1fzp9p85e7PYVBtuqfWuvPMT6zBin3vyHoRs8EuuNEkKkx01cqfvI1Xt8uIJMEmQNuTxCPaMmwtvm9at6wplPwaqxNckp2OWO8vtiYyY9k03vsg3R8N_oNN9SSS2dlF79lnJhOFPFMEuAniPd0R_lS0RE9AAYWX9N3GQ7lKNZQXZEP-lhXwICN6iilZBI"/></div>
+<div class="aspect-square bg-white/10 rounded-lg flex items-center justify-center p-2"><img alt="Logo des Partners 6" class="max-w-full max-h-10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBWWAoljJF-spDI7bMtn_lfV2tfySYLZyCoRuJ0bYrEbF_pk11N08o-LYdyD0F1VnHQYqPOe0-iOpQVO0wQ8kJ2PysV8_tK-4wBJOFSHQ8HEohhTzgeG7SFLh37NkjMxzRjjOJKxqjXtaAVr9sjyYMRw1XmHXfSb0oqSkzvUtL-VP60P2SCsm8BPxh8UZWpcRY1CSsqvLp-veYOcH1X7CAcElL5Ygmh0vOdEchlLRasH0nml0Ao-ZvO54MSkYSjNdIQyd8zAELWuC0"/></div>
+</div>
+</div>
+</section>
+<section class="mb-20 md:mb-32">
+<h2 class="text-mystic-gold text-3xl font-bold leading-tight tracking-[-0.015em] mb-8 text-center">The Flow Blog</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<div class="group flex flex-col bg-background-dark/50 rounded-xl overflow-hidden border border-primary/30">
+<div class="aspect-video overflow-hidden">
+<img alt="Ein Künstler arbeitet an einem leuchtenden digitalen Kunstwerk auf einem Tablet." class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBoXSrZJEZkupp7U9A-_Y-DcXsPl2sXlQcEDUA8krVFaNsaC3xrj_NZMcyxGwXDQC8qGRj4Gf_uwHfA7kpW6SVcKR5f8iVoPdWHByroI_MQvf_i1shVHqSKQ-6GX3IT3MII-rvXAZhANdCH2_1kjXspOcDc29K3xMypMM9D6QiaLutuq-MQw1l3upFRSRUIjSOZtbhYUNMaHOua6081TQzuRpiKN-m-3C6Zht9fC4_mULHbmAyFFh27nQTKqi3V2XYFBBo5yuBNAYI"/>
+</div>
+<div class="p-6 flex flex-col flex-1">
+<h4 class="text-xl font-bold text-white mb-2">Die Kunst der digitalen Alchemie</h4>
+<p class="text-white/70 text-sm mb-4 flex-1">Wie moderne Werkzeuge alte Kreativitätstechniken neu entfachen.</p>
+<a class="text-mystic-gold font-bold text-sm flex items-center gap-2" href="#">Weiterlesen <span class="material-symbols-outlined">arrow_forward</span></a>
+</div>
+</div>
+<div class="group flex flex-col bg-background-dark/50 rounded-xl overflow-hidden border border-primary/30">
+<div class="aspect-video overflow-hidden">
+<img alt="Nahaufnahme von Kopfhörern, die auf einem Mischpult in einem Musikstudio liegen." class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvOEcb-1qvSSjL5ll24YDzHqTo09p_Maz8gEP0xNxI-epYBUoun_U8fJqsAJ_8H2THocf582Is5fpacAk6XRLhtMbZ93A8k7IyN9zBhqciW4kBZ0H1sgW69xUx5NeySKA1pSO5wxLgjJ3Ep0V6DEwU6QOC-UzNjSVDRPbWKp_S71c-gwcRQRsU5Z7tHoGC5oeO3MkirgcAvHNNHWrLacmNxZwnT_2d3Ym7j5VTkMfj09jh3t-zvqrMVfgyZIixwnxk_djYhnHeVOY"/>
+</div>
+<div class="p-6 flex flex-col flex-1">
+<h4 class="text-xl font-bold text-white mb-2">Hip-Hop &amp; Flow State</h4>
+<p class="text-white/70 text-sm mb-4 flex-1">Eine Untersuchung der Verbindung zwischen Beatmaking und meditativen Zuständen.</p>
+<a class="text-mystic-gold font-bold text-sm flex items-center gap-2" href="#">Weiterlesen <span class="material-symbols-outlined">arrow_forward</span></a>
+</div>
+</div>
+<div class="group flex flex-col bg-background-dark/50 rounded-xl overflow-hidden border border-primary/30">
+<div class="aspect-video overflow-hidden">
+<img alt="Eine Gruppe von Freunden lacht zusammen in einer Gasse in Lissabon bei Sonnenuntergang." class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDU6VUMPHUEZJgKVj_2sLlM7XfEchW4t63c7VIGkVpBr50BSyED4RqEooNXmNxGikQIcJj1lO284xgnQjwBcuyxJP6cFxzCtZKg9QKZidCzWFxd_41uVzd8eV_jrDFuLIOkPHs8D8DDNw2H3DG20XDhFEjx0w_C8TJF3z_3H5KQx0pS0rq6rhA_IuWO-48vtl8wLtDg79bKlCUy43NxInt21KwCiEQVn6S8yfc7tw_CvGYXUwp-Wxgy0ErEogG4kn9z9_fuJu_E6vo"/>
+</div>
+<div class="p-6 flex flex-col flex-1">
+<h4 class="text-xl font-bold text-white mb-2">Die Macht der Gemeinschaft</h4>
+<p class="text-white/70 text-sm mb-4 flex-1">Warum Zusammenarbeit der Schlüssel zu wahrer kreativer Entfaltung ist.</p>
+<a class="text-mystic-gold font-bold text-sm flex items-center gap-2" href="#">Weiterlesen <span class="material-symbols-outlined">arrow_forward</span></a>
+</div>
+</div>
+</div>
+</section>
+<section class="space-y-8 mb-20 md:mb-32">
+<div class="grid grid-cols-1 lg:grid-cols-2 items-center gap-8 p-8 rounded-xl bg-gradient-to-br from-primary/20 to-transparent border border-primary/30">
+<div class="flex flex-col gap-4">
+<h3 class="text-3xl font-bold text-white">Kiss Your Heart</h3>
+<p class="text-lg text-white/80">Fotografie &amp; Brand Building mit Seele. Wir enthüllen die Essenz deiner Marke durch eine einzigartige Manga-Ästhetik und kraftvolles Storytelling.</p>
+<a class="flex min-w-[84px] max-w-fit cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-mystic-gold text-background-dark text-base font-bold leading-normal tracking-[0.015em] hover:opacity-90 transition-opacity" href="#">
+<span class="truncate">Entdecke Portfolios</span>
+</a>
+</div>
+<div class="relative w-full aspect-video rounded-lg overflow-hidden border-2 border-mystic-gold/50">
+<img alt="Ein stilvolles Porträt einer Person im Manga-Stil, mit leuchtenden Farben und dynamischen Linien." class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIIIqqFI9SfD88bkr62z0ggbt9PxDCrzGn-NKgIWNMrIaMgbkXYLcTPeCHXEiMTrpXQM56EouclQUGicnFAai-U_d8Yv_nq3Q6kt6jsP1GW0HcpTGVMqQEbMxkfXSKYoxuZm3Rq9Reinz_GlS7DdfwMx1IHkdaS7gH2zRFc4D_Oxj5eY_Di8Q6xWuf2I19sR0x_jehb4jWV-ZuoCZz6lEhoFioQrwX7iHSJGDt_v4XIgQbfn_XM4cuYHnUJqZIdU3LPOCehJnLeHM"/>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 items-center gap-8 p-8 rounded-xl bg-gradient-to-bl from-primary/20 to-transparent border border-primary/30">
+<div class="relative w-full aspect-video rounded-lg overflow-hidden border-2 border-mystic-gold/50 lg:order-last">
+<img alt="Ein Musikproduktions-Setup mit einem Keyboard, einem Laptop und Lautsprechern in einem dunklen Raum mit violetter Beleuchtung." class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSmd6JehGvue7ZFYAqCXXDjL4XHNSL5-cnajRcLftuAsoHpchVTfHhxW-aladIzBDhxp2tESQb0GU3JM2cDaBRUCsrzG1AZtZ-oyv7ALjxSUgxBL1Jzoh7Qn0QWSsGMV-_HMyFfoGyrULyGN_byPmNPSD4fqfF4LqpjP63fvvC0WI35kmZ5JQB5CfHUXeXl9_AskV9Sxf5l4y7FPhthHToAGzq8N02EqXzCeSXYHR7Nuhg4VjyLP8Ln24R5joYaYCB6zirvqLdy04"/>
+</div>
+<div class="flex flex-col gap-4">
+<h3 class="text-3xl font-bold text-white">Outbreak Tunes</h3>
+<p class="text-lg text-white/80">Musikproduktion, die Grenzen sprengt. Von Hip-Hop-Beats bis zu experimentellen Klanglandschaften – hier entsteht der Soundtrack deiner Vision.</p>
+<a class="flex min-w-[84px] max-w-fit cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-mystic-gold text-background-dark text-base font-bold leading-normal tracking-[0.015em] hover:opacity-90 transition-opacity" href="#">
+<span class="truncate">Hör dir die Beats an</span>
+</a>
+</div>
+</div>
+</section>
+</main>
+<footer class="bg-background-dark border-t border-primary/20">
+<div class="container mx-auto px-6 py-12">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+<div class="md:col-span-1">
+<div class="flex items-center gap-4 text-white mb-4">
+<div class="size-6 text-mystic-gold">
+<svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 4H17.3334V17.3334H30.6666V30.6666H44V44H4V4Z" fill="currentColor"></path>
+</svg>
+</div>
+<h2 class="text-white text-lg font-bold leading-tight">Circle the Flow</h2>
+</div>
+<p class="text-white/60 text-sm">Kunst, Wissenschaft &amp; Community. Lissabon.</p>
+</div>
+<div>
+<h4 class="font-bold text-mystic-gold mb-4">Navigation</h4>
+<ul class="space-y-2 text-sm">
+<li><a class="text-white/80 hover:text-white" href="#">Philosophie</a></li>
+<li><a class="text-white/80 hover:text-white" href="#">Events</a></li>
+<li><a class="text-white/80 hover:text-white" href="#">Community</a></li>
+<li><a class="text-white/80 hover:text-white" href="#">Kontakt</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold text-mystic-gold mb-4">Services</h4>
+<ul class="space-y-2 text-sm">
+<li><a class="text-white/80 hover:text-white" href="#">Kiss Your Heart</a></li>
+<li><a class="text-white/80 hover:text-white" href="#">Outbreak Tunes</a></li>
+<li><a class="text-white/80 hover:text-white" href="#">Portfolio</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold text-mystic-gold mb-4">Werde Teil des Flows</h4>
+<p class="text-white/60 text-sm mb-4">Erhalte Updates zu Events und Projekten direkt in dein Postfach.</p>
+<form class="flex gap-2">
+<input class="w-full bg-white/10 border-primary/50 text-white rounded-md text-sm focus:ring-mystic-gold focus:border-mystic-gold" placeholder="Deine E-Mail" type="email"/>
+<button class="h-10 px-4 bg-primary text-white font-bold rounded-md text-sm hover:opacity-90" type="submit">Senden</button>
+</form>
+</div>
+</div>
+<div class="mt-12 border-t border-primary/20 pt-8 text-center text-sm text-white/50">
+<p>© 2024 Circle the Flow. All rights reserved.</p>
+</div>
+</div>
+</footer>
+</div>
+
+</body></html>
