@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academy | Circle D Flow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body
+    class="bg-[#0F0A13] text-white min-h-screen relative overflow-x-hidden selection:bg-electric selection:text-white">
+
+    <!-- Custom Cursor -->
+    <div id="cursor"
+        class="fixed w-12 h-12 pointer-events-none z-[200] transition-transform duration-100 hidden md:block">
+        <img src="Assets/images/logo.png" class="w-full h-full object-contain drop-shadow-lg" alt="Cursor">
+    </div>
+
+    <!-- Desktop Navigation (The Compass) -->
+    <nav
+        class="hidden md:flex fixed top-0 w-full z-50 bg-[#0F0A13]/80 backdrop-blur-xl border-b border-white/5 h-20 items-center justify-between px-12 transition-all duration-300">
+        <div class="flex items-center gap-8">
+            <a href="dashboard.html"
+                class="text-xs font-bold uppercase tracking-widest text-white hover:text-electric transition-colors">Hub</a>
+            <a href="outbreak_tunes.html"
+                class="text-xs font-bold uppercase tracking-widest text-white hover:text-purple-400 transition-colors">Sound</a>
+            <a href="african-queen-kitchen.html"
+                class="text-xs font-bold uppercase tracking-widest text-white hover:text-amber transition-colors">Taste</a>
+            <a href="kiss-your-heart.html"
+                class="text-xs font-bold uppercase tracking-widest text-white hover:text-pink-400 transition-colors">Visuals</a>
+        </div>
+        <a href="index.html" class="absolute left-1/2 -translate-x-1/2 group">
+            <img src="Assets/images/logo.png" alt="Circle D Flow"
+                class="h-10 w-auto group-hover:scale-110 transition-transform duration-300 drop-shadow-[0_0_15px_rgba(98,0,234,0.5)]">
+        </a>
+        <div class="flex items-center gap-8">
+            <a href="marketplace.html"
+                class="text-xs font-bold uppercase tracking-widest text-white hover:text-mystic-gold transition-colors">Style</a>
+            <a href="academy.html"
+                class="text-xs font-bold uppercase tracking-widest text-blue-400 drop-shadow-[0_0_8px_rgba(96,165,250,0.5)]">Knowledge</a>
+            <a href="events.html"
+                class="text-xs font-bold uppercase tracking-widest text-white hover:text-green-400 transition-colors">Space</a>
+            <a href="mindfulness.html"
+                class="text-xs font-bold uppercase tracking-widest text-white hover:text-indigo-400 transition-colors">Spirit</a>
+        </div>
+        <div class="absolute right-6 flex items-center gap-4">
+            <a href="login.html"
+                class="px-5 py-2 bg-white/5 text-white font-bold rounded-full text-[10px] uppercase tracking-widest hover:bg-white hover:text-black transition-all border border-white/10 hover:shadow-[0_0_15px_rgba(255,255,255,0.3)]">Login</a>
+        </div>
+    </nav>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav
+        class="md:hidden fixed bottom-4 left-4 right-4 z-50 bg-[#1A1622]/90 backdrop-blur-xl border border-white/10 rounded-2xl p-4 flex justify-between items-center shadow-2xl safe-area-pb">
+        <a href="dashboard.html"
+            class="flex flex-col items-center gap-1 text-white/50 hover:text-electric transition-colors">
+            <span class="material-symbols-outlined text-xl">dashboard</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider">Hub</span>
+        </a>
+        <a href="academy.html" class="flex flex-col items-center gap-1 text-blue-400 transition-colors">
+            <span class="material-symbols-outlined text-xl">school</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider">Academy</span>
+        </a>
+        <a href="index.html" class="relative -top-6">
+            <div
+                class="w-14 h-14 bg-electric rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(98,0,234,0.6)] border-4 border-[#0F0A13]">
+                <img src="Assets/images/logo.png" class="w-7 h-7 object-contain">
+            </div>
+        </a>
+        <a href="marketplace.html"
+            class="flex flex-col items-center gap-1 text-white/50 hover:text-mystic-gold transition-colors">
+            <span class="material-symbols-outlined text-xl">storefront</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider">Style</span>
+        </a>
+        <button onclick="toggleMobileDrawer()"
+            class="flex flex-col items-center gap-1 text-white/50 hover:text-mystic-gold transition-colors">
+            <span class="material-symbols-outlined text-xl">menu</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider">More</span>
+        </button>
+    </nav>
+
+    <!-- Mobile Drawer -->
+    <div id="mobile-drawer"
+        class="fixed inset-0 bg-black/95 backdrop-blur-xl z-[60] transform translate-y-full transition-transform duration-300 flex flex-col items-center justify-center space-y-8 md:hidden">
+        <button onclick="toggleMobileDrawer()" class="absolute top-8 right-8 text-white/50 hover:text-white">
+            <span class="material-symbols-outlined text-3xl">close</span>
+        </button>
+        <a href="kiss-your-heart.html"
+            class="text-2xl font-bold text-white hover:text-pink-400 tracking-widest">VISUALS</a>
+        <a href="marketplace.html"
+            class="text-2xl font-bold text-white hover:text-mystic-gold tracking-widest">STYLE</a>
+        <a href="academy.html" class="text-2xl font-bold text-blue-400 tracking-widest">KNOWLEDGE</a>
+        <a href="events.html" class="text-2xl font-bold text-white hover:text-green-400 tracking-widest">SPACE</a>
+        <a href="mindfulness.html"
+            class="text-2xl font-bold text-white hover:text-indigo-400 tracking-widest">SPIRIT</a>
+        <div class="h-px w-24 bg-white/10"></div>
+        <a href="login.html"
+            class="px-8 py-3 bg-electric text-white font-bold rounded-full uppercase tracking-widest mt-8 shadow-lg shadow-electric/20">Login</a>
+    </div>
+
+    <!-- Main Content -->
+    <main class="min-h-screen flex flex-col items-center justify-center px-6 relative overflow-hidden">
+        <!-- Background Elements -->
+        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-[100px] pointer-events-none">
+        </div>
+        <div
+            class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-electric/10 rounded-full blur-[100px] pointer-events-none">
+        </div>
+
+        <div
+            class="relative z-10 max-w-2xl text-center space-y-8 glass p-12 rounded-3xl border border-white/10 shadow-2xl">
+            <div
+                class="w-20 h-20 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-6 ring-1 ring-blue-500/50">
+                <span class="material-symbols-outlined text-4xl text-blue-400">school</span>
+            </div>
+
+            <h1 class="text-4xl md:text-5xl font-serif font-bold leading-tight">
+                The Academy<span class="text-blue-400">.</span>
+            </h1>
+
+            <p class="text-xl text-mist leading-relaxed">
+                We are curating a library of knowledge to help you find your Flow. Access tutorials, workshops, and
+                growth resources soon.
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+                <a href="index.html"
+                    class="px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl font-bold uppercase tracking-widest text-sm transition-all flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                    Return Home
+                </a>
+                <button
+                    class="px-8 py-4 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 border border-blue-500/50 rounded-xl font-bold uppercase tracking-widest text-sm transition-all">
+                    Notify Me
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        // Custom Cursor Logic
+        const cursor = document.getElementById('cursor');
+        document.addEventListener('mousemove', (e) => {
+            if (cursor) {
+                cursor.style.transform = `translate(${e.clientX - 24}px, ${e.clientY - 24}px)`;
+            }
+        });
+
+        // Disable custom cursor on touch devices
+        if (cursor && (window.matchMedia("(pointer: coarse)").matches)) {
+            cursor.style.display = 'none';
+        }
+
+        // Mobile Drawer
+        function toggleMobileDrawer() {
+            const drawer = document.getElementById('mobile-drawer');
+            if (drawer) drawer.classList.toggle('translate-y-full');
+        }
+    </script>
+</body>
+
+</html>

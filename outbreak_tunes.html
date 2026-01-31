@@ -88,104 +88,88 @@
             <img src="Assets/images/logo.png" class="w-full h-full object-contain drop-shadow-lg" alt="Cursor">
         </div>
 
-        <!-- Mobile Wave Overlay -->
-        <div id="mobile-wave-menu"
-            class="fixed inset-0 bg-background-dark/95 backdrop-blur-xl z-[100] transform translate-y-full opacity-0 pointer-events-none transition-all duration-500 ease-out flex flex-col items-center justify-center space-y-8">
-            <button id="mobile-close-btn" class="absolute top-8 right-8 text-white/50 hover:text-white">
-                <span class="material-symbols-outlined text-4xl">close</span>
-            </button>
-
-            <a href="index.html"
-                class="text-4xl font-serif font-bold text-white hover:text-electric transition-colors">Home</a>
-            <a href="events.html"
-                class="text-4xl font-serif font-bold text-white hover:text-electric transition-colors">Events</a>
-            <a href="marketplace.html"
-                class="text-4xl font-serif font-bold text-white hover:text-electric transition-colors">Marketplace</a>
-            <a href="blog.html"
-                class="text-4xl font-serif font-bold text-white hover:text-electric transition-colors">Community</a>
-
-            <div class="h-px w-24 bg-white/20 my-4"></div>
-
-            <a href="login.html" id="mobile-auth-link"
-                class="text-2xl text-mystic-gold font-bold tracking-widest uppercase">Enter the Circle</a>
-        </div>
-
-        <!-- The Flow Bar (Fixed Navigation) -->
-        <header id="flow-bar"
-            class="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-5xl bg-black/60 backdrop-blur-md border border-purple-500/30 rounded-full px-6 py-3 flex items-center justify-between shadow-[0_0_20px_rgba(0,0,0,0.5)] transition-all duration-300 hover:border-purple-500/60">
-            <!-- Logo -->
-            <a href="index.html" class="flex items-center gap-3 group">
-                <img src="Assets/images/logo.png" alt="Circle D Flow"
-                    class="w-8 h-8 object-contain group-hover:rotate-12 transition-transform">
-                <span
-                    class="text-white font-bold tracking-tight hidden md:block group-hover:text-mystic-gold transition-colors">Circle
-                    D Flow</span>
-            </a>
-
-            <!-- Desktop Nav -->
-            <nav class="hidden md:flex items-center gap-8 h-full">
-                <!-- Trinity Dropdown -->
-                <div class="relative group h-10 flex items-center">
-                    <button
-                        class="nav-link flex items-center gap-1 focus:outline-none uppercase tracking-widest text-xs font-bold text-white group-hover:text-mystic-gold transition-colors">
-                        The Trinity <span class="material-symbols-outlined text-sm">expand_more</span>
-                    </button>
-                    <!-- Dropdown Content -->
-                    <div
-                        class="absolute top-full left-1/2 -translate-x-1/2 pt-6 opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all duration-300">
-                        <div
-                            class="flex gap-4 p-4 bg-black/90 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl w-[400px]">
-                            <a href="kiss-your-heart.html"
-                                class="flex-1 flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-white/5 transition-colors group/card">
-                                <span class="text-2xl group-hover/card:scale-110 transition-transform">👁️</span>
-                                <span
-                                    class="text-[10px] font-bold uppercase tracking-wider text-electric">Visuals</span>
-                            </a>
-                            <a href="live-from-the-underground.html"
-                                class="flex-1 flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-white/5 transition-colors group/card">
-                                <span class="text-2xl group-hover/card:scale-110 transition-transform">🎧</span>
-                                <span
-                                    class="text-[10px] font-bold uppercase tracking-wider text-purple-400">Sound</span>
-                            </a>
-                            <a href="african-queen-kitchen.html"
-                                class="flex-1 flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-white/5 transition-colors group/card">
-                                <span class="text-2xl group-hover/card:scale-110 transition-transform">🥘</span>
-                                <span class="text-[10px] font-bold uppercase tracking-wider text-amber">Taste</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <a href="events.html"
-                    class="nav-link uppercase tracking-widest text-xs font-bold text-white hover:text-mystic-gold transition-colors">Events</a>
-                <a href="marketplace.html"
-                    class="nav-link uppercase tracking-widest text-xs font-bold text-white hover:text-mystic-gold transition-colors">Marketplace</a>
-                <a href="blog.html"
-                    class="nav-link uppercase tracking-widest text-xs font-bold text-white hover:text-mystic-gold transition-colors">Community</a>
-            </nav>
-
-            <!-- Auth / Mobile Toggle -->
-            <div class="flex items-center gap-4">
-                <!-- Desktop Auth -->
-                <div id="desktop-auth" class="hidden md:block">
-                    <!-- Will be populated by JS -->
-                    <a href="login.html"
-                        class="px-6 py-2 bg-white text-midnight font-bold rounded-full text-xs uppercase tracking-widest hover:bg-mystic-gold hover:scale-105 transition-all shadow-[0_0_10px_rgba(255,255,255,0.3)]">
-                        Enter the Circle
-                    </a>
-                </div>
-
-                <!-- Mobile Hamburger -->
-                <button id="hamburger-btn" class="md:hidden text-white z-50 relative focus:outline-none group">
-                    <svg class="w-8 h-8 group-hover:text-mystic-gold transition-all duration-300" fill="none"
-                        stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 6h16M4 12h16M4 18h16">
-                        </path>
-                    </svg>
-                </button>
+        <!-- Desktop Navigation (The Compass) -->
+        <nav
+            class="hidden md:flex fixed top-0 w-full z-50 bg-[#0F0A13]/80 backdrop-blur-xl border-b border-white/5 h-20 items-center justify-between px-12 transition-all duration-300">
+            <div class="flex items-center gap-8">
+                <a href="dashboard.html"
+                    class="text-xs font-bold uppercase tracking-widest text-white hover:text-electric transition-colors">Hub</a>
+                <a href="outbreak_tunes.html"
+                    class="text-xs font-bold uppercase tracking-widest text-purple-400 drop-shadow-[0_0_8px_rgba(168,85,247,0.8)]">Sound</a>
+                <a href="african-queen-kitchen.html"
+                    class="text-xs font-bold uppercase tracking-widest text-white hover:text-amber transition-colors">Taste</a>
+                <a href="kiss-your-heart.html"
+                    class="text-xs font-bold uppercase tracking-widest text-white hover:text-pink-400 transition-colors">Visuals</a>
             </div>
-        </header>
+            <a href="index.html" class="absolute left-1/2 -translate-x-1/2 group">
+                <img src="Assets/images/logo.png" alt="Circle D Flow"
+                    class="h-10 w-auto group-hover:scale-110 transition-transform duration-300 drop-shadow-[0_0_15px_rgba(98,0,234,0.5)]">
+            </a>
+            <div class="flex items-center gap-8">
+                <a href="marketplace.html"
+                    class="text-xs font-bold uppercase tracking-widest text-white hover:text-mystic-gold transition-colors">Style</a>
+                <a href="academy.html"
+                    class="text-xs font-bold uppercase tracking-widest text-white hover:text-blue-400 transition-colors">Knowledge</a>
+                <a href="events.html"
+                    class="text-xs font-bold uppercase tracking-widest text-white hover:text-green-400 transition-colors">Space</a>
+                <a href="mindfulness.html"
+                    class="text-xs font-bold uppercase tracking-widest text-white hover:text-indigo-400 transition-colors">Spirit</a>
+            </div>
+            <div class="absolute right-6 flex items-center gap-4">
+                <a href="login.html"
+                    class="px-5 py-2 bg-white/5 text-white font-bold rounded-full text-[10px] uppercase tracking-widest hover:bg-white hover:text-black transition-all border border-white/10 hover:shadow-[0_0_15px_rgba(255,255,255,0.3)]">Login</a>
+            </div>
+        </nav>
+
+        <!-- Mobile Bottom Navigation -->
+        <nav
+            class="md:hidden fixed bottom-4 left-4 right-4 z-50 bg-[#1A1622]/90 backdrop-blur-xl border border-white/10 rounded-2xl p-4 flex justify-between items-center shadow-2xl safe-area-pb">
+            <a href="dashboard.html"
+                class="flex flex-col items-center gap-1 text-white/50 hover:text-electric transition-colors">
+                <span class="material-symbols-outlined text-xl">dashboard</span>
+                <span class="text-[9px] font-bold uppercase tracking-wider">Hub</span>
+            </a>
+            <a href="outbreak_tunes.html" class="flex flex-col items-center gap-1 text-purple-400">
+                <span class="material-symbols-outlined text-xl">graphic_eq</span>
+                <span class="text-[9px] font-bold uppercase tracking-wider">Sound</span>
+            </a>
+            <a href="index.html" class="relative -top-6">
+                <div
+                    class="w-14 h-14 bg-electric rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(98,0,234,0.6)] border-4 border-[#0F0A13]">
+                    <img src="Assets/images/logo.png" class="w-7 h-7 object-contain">
+                </div>
+            </a>
+            <a href="african-queen-kitchen.html"
+                class="flex flex-col items-center gap-1 text-white/50 hover:text-amber transition-colors">
+                <span class="material-symbols-outlined text-xl">restaurant</span>
+                <span class="text-[9px] font-bold uppercase tracking-wider">Taste</span>
+            </a>
+            <button onclick="toggleMobileDrawer()"
+                class="flex flex-col items-center gap-1 text-white/50 hover:text-mystic-gold transition-colors">
+                <span class="material-symbols-outlined text-xl">menu</span>
+                <span class="text-[9px] font-bold uppercase tracking-wider">More</span>
+            </button>
+        </nav>
+
+        <!-- Mobile Drawer -->
+        <div id="mobile-drawer"
+            class="fixed inset-0 bg-black/95 backdrop-blur-xl z-[60] transform translate-y-full transition-transform duration-300 flex flex-col items-center justify-center space-y-8 md:hidden">
+            <button onclick="toggleMobileDrawer()" class="absolute top-8 right-8 text-white/50 hover:text-white">
+                <span class="material-symbols-outlined text-3xl">close</span>
+            </button>
+            <a href="kiss-your-heart.html"
+                class="text-2xl font-bold text-white hover:text-pink-400 tracking-widest">VISUALS</a>
+            <a href="marketplace.html"
+                class="text-2xl font-bold text-white hover:text-mystic-gold tracking-widest">STYLE</a>
+            <a href="academy.html"
+                class="text-2xl font-bold text-white hover:text-blue-400 tracking-widest">KNOWLEDGE</a>
+            <a href="events.html" class="text-2xl font-bold text-white hover:text-green-400 tracking-widest">SPACE</a>
+            <a href="mindfulness.html"
+                class="text-2xl font-bold text-white hover:text-indigo-400 tracking-widest">SPIRIT</a>
+            <div class="h-px w-24 bg-white/10"></div>
+            <a href="login.html"
+                class="px-8 py-3 bg-electric text-white font-bold rounded-full uppercase tracking-widest mt-8 shadow-lg shadow-electric/20">Login</a>
+        </div>
 
         <!-- Hero Header Image -->
         <div class="h-[30vh] md:h-[40vh] bg-cover bg-center"
@@ -308,6 +292,31 @@
                     </div>
                 </aside>
             </div>
+            <!-- Dream Fuel: Cypher LX -->
+            <div
+                class="mt-12 mb-12 bg-purple-900/20 border border-purple-500/30 p-8 rounded-2xl relative overflow-hidden group">
+                <div
+                    class="absolute top-0 right-0 w-32 h-32 bg-purple-500/20 rounded-full blur-3xl group-hover:bg-purple-500/30 transition-colors">
+                </div>
+                <div class="relative z-10">
+                    <span class="text-xs font-bold text-purple-400 uppercase tracking-widest mb-2 block">Upcoming
+                        Event</span>
+                    <h3 class="text-3xl font-serif font-bold text-white mb-2">Cypher LX: The Underground</h3>
+                    <p class="text-gray-400 mb-6 max-w-lg">Join the battle. 16 MCs. 1 Champion. Winner takes the pot and
+                        earns the "Cypher Champion" Badge.</p>
+
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <button
+                            class="px-8 py-3 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-xl uppercase tracking-widest transition-colors shadow-lg shadow-purple-600/20">
+                            Register to Battle (15€)
+                        </button>
+                        <button
+                            class="px-8 py-3 bg-white/5 hover:bg-white/10 text-white font-bold rounded-xl uppercase tracking-widest transition-colors border border-white/10">
+                            Buy Spectator Ticket (12€)
+                        </button>
+                    </div>
+                </div>
+            </div>
         </main>
 
         <!-- Footer -->
@@ -388,6 +397,26 @@
 
     <script src="gamification.js"></script>
     <script src="script.js"></script>
+    <script>
+        // Mobile Drawer Toggle
+        function toggleMobileDrawer() {
+            const drawer = document.getElementById('mobile-drawer');
+            if (drawer) drawer.classList.toggle('translate-y-full');
+        }
+
+        // Custom Cursor Logic
+        const cursor = document.getElementById('cursor');
+        document.addEventListener('mousemove', (e) => {
+            if (cursor) {
+                cursor.style.transform = `translate(${e.clientX - 24}px, ${e.clientY - 24}px)`;
+            }
+        });
+
+        // Disable custom cursor on touch devices
+        if (cursor && (window.matchMedia("(pointer: coarse)").matches)) {
+            cursor.style.display = 'none';
+        }
+    </script>
 </body>
 
 </html>

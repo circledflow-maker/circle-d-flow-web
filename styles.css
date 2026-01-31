@@ -12,10 +12,18 @@
 ::-webkit-scrollbar-thumb:hover {
    background: #5A2A84;
 }
-/* Smooth Scroll Behavior */
-html {
-   scroll-behavior: smooth;
+/* Smooth Scroll Behavior & Mobile/Overflow Fixes */
+html, body {
+    scroll-behavior: smooth;
+    overflow-x: hidden; /* Prevent horizontal scroll on mobile */
+    width: 100%;
 }
+
+/* Optimize Mobile Touch */
+button, a {
+    touch-action: manipulation;
+}
+
 /* Cursor Styles */
 * {
     cursor: none !important; /* Hide default cursor everywhere */

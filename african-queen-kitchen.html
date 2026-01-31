@@ -38,27 +38,95 @@
         <img src="AfricanQueenKitchen/AQK Logo.png" class="w-full h-full object-contain drop-shadow-lg" alt="Cursor">
     </div>
 
-    <!-- Navbar Override -->
-    <nav class="fixed w-full z-50 p-4 border-b border-white/5 bg-dark/90 backdrop-blur-md">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <a href="index.html" class="flex items-center gap-2">
-                <img src="AfricanQueenKitchen/AQK Logo.png" class="h-12 w-auto object-contain" alt="AQK Logo">
-                <span class="font-serif font-bold text-xl hidden md:inline ml-2">African Queen</span>
-            </a>
-            <div class="flex items-center gap-4">
-                <div id="xp-badge"
-                    class="hidden md:flex items-center gap-1 bg-white/5 px-3 py-1 rounded-full text-xs font-bold text-amber">
-                    <span>+XP Enabled</span>
-                    <span class="material-symbols-outlined text-sm">bolt</span>
-                </div>
-                <button onclick="toggleCart()" class="relative p-2 hover:bg-white/10 rounded-full transition-colors">
-                    <span class="material-symbols-outlined">shopping_bag</span>
-                    <span id="cart-count"
-                        class="absolute top-0 right-0 w-4 h-4 bg-amber text-black text-[10px] font-bold rounded-full flex items-center justify-center hidden">0</span>
-                </button>
-            </div>
+    <!-- Desktop Navigation (The Compass) -->
+    <nav
+        class="hidden md:flex fixed top-0 w-full z-50 bg-[#0F0A13]/80 backdrop-blur-xl border-b border-white/5 h-20 items-center justify-between px-12 transition-all duration-300">
+        <div class="flex items-center gap-8">
+            <a href="dashboard.html"
+                class="text-xs font-bold uppercase tracking-widest text-white hover:text-electric transition-colors">Hub</a>
+            <a href="outbreak_tunes.html"
+                class="text-xs font-bold uppercase tracking-widest text-white hover:text-purple-400 transition-colors">Sound</a>
+            <a href="african-queen-kitchen.html"
+                class="text-xs font-bold uppercase tracking-widest text-amber drop-shadow-[0_0_8px_rgba(255,191,0,0.8)]">Taste</a>
+            <a href="kiss-your-heart.html"
+                class="text-xs font-bold uppercase tracking-widest text-white hover:text-pink-400 transition-colors">Visuals</a>
+        </div>
+        <a href="index.html" class="absolute left-1/2 -translate-x-1/2 group">
+            <img src="Assets/images/logo.png" alt="Circle D Flow"
+                class="h-10 w-auto group-hover:scale-110 transition-transform duration-300 drop-shadow-[0_0_15px_rgba(98,0,234,0.5)]">
+        </a>
+        <div class="flex items-center gap-8">
+            <a href="marketplace.html"
+                class="text-xs font-bold uppercase tracking-widest text-white hover:text-mystic-gold transition-colors">Style</a>
+            <a href="academy.html"
+                class="text-xs font-bold uppercase tracking-widest text-white hover:text-blue-400 transition-colors">Knowledge</a>
+            <a href="events.html"
+                class="text-xs font-bold uppercase tracking-widest text-white hover:text-green-400 transition-colors">Space</a>
+            <a href="mindfulness.html"
+                class="text-xs font-bold uppercase tracking-widest text-white hover:text-indigo-400 transition-colors">Spirit</a>
+        </div>
+        <div class="absolute right-6 flex items-center gap-4">
+            <a href="login.html"
+                class="px-5 py-2 bg-white/5 text-white font-bold rounded-full text-[10px] uppercase tracking-widest hover:bg-white hover:text-black transition-all border border-white/10 hover:shadow-[0_0_15px_rgba(255,255,255,0.3)]">Login</a>
         </div>
     </nav>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav
+        class="md:hidden fixed bottom-4 left-4 right-4 z-50 bg-[#1A1622]/90 backdrop-blur-xl border border-white/10 rounded-2xl p-4 flex justify-between items-center shadow-2xl safe-area-pb">
+        <a href="dashboard.html"
+            class="flex flex-col items-center gap-1 text-white/50 hover:text-electric transition-colors">
+            <span class="material-symbols-outlined text-xl">dashboard</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider">Hub</span>
+        </a>
+        <a href="outbreak_tunes.html"
+            class="flex flex-col items-center gap-1 text-white/50 hover:text-purple-400 transition-colors">
+            <span class="material-symbols-outlined text-xl">graphic_eq</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider">Sound</span>
+        </a>
+        <a href="index.html" class="relative -top-6">
+            <div
+                class="w-14 h-14 bg-electric rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(98,0,234,0.6)] border-4 border-[#0F0A13]">
+                <img src="Assets/images/logo.png" class="w-7 h-7 object-contain">
+            </div>
+        </a>
+        <a href="african-queen-kitchen.html" class="flex flex-col items-center gap-1 text-amber">
+            <span class="material-symbols-outlined text-xl">restaurant</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider">Taste</span>
+        </a>
+        <button onclick="toggleMobileDrawer()"
+            class="flex flex-col items-center gap-1 text-white/50 hover:text-mystic-gold transition-colors">
+            <span class="material-symbols-outlined text-xl">menu</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider">More</span>
+        </button>
+    </nav>
+
+    <!-- Mobile Drawer -->
+    <div id="mobile-drawer"
+        class="fixed inset-0 bg-black/95 backdrop-blur-xl z-[60] transform translate-y-full transition-transform duration-300 flex flex-col items-center justify-center space-y-8 md:hidden">
+        <button onclick="toggleMobileDrawer()" class="absolute top-8 right-8 text-white/50 hover:text-white">
+            <span class="material-symbols-outlined text-3xl">close</span>
+        </button>
+        <a href="kiss-your-heart.html"
+            class="text-2xl font-bold text-white hover:text-pink-400 tracking-widest">VISUALS</a>
+        <a href="marketplace.html"
+            class="text-2xl font-bold text-white hover:text-mystic-gold tracking-widest">STYLE</a>
+        <a href="academy.html" class="text-2xl font-bold text-white hover:text-blue-400 tracking-widest">KNOWLEDGE</a>
+        <a href="events.html" class="text-2xl font-bold text-white hover:text-green-400 tracking-widest">SPACE</a>
+        <a href="mindfulness.html"
+            class="text-2xl font-bold text-white hover:text-indigo-400 tracking-widest">SPIRIT</a>
+        <div class="h-px w-24 bg-white/10"></div>
+        <a href="login.html"
+            class="px-8 py-3 bg-electric text-white font-bold rounded-full uppercase tracking-widest mt-8 shadow-lg shadow-electric/20">Login</a>
+    </div>
+
+    <!-- Floating Cart Button (Available on Mobile & Desktop) -->
+    <button onclick="toggleCart()"
+        class="fixed bottom-24 right-4 md:bottom-8 md:right-8 z-[55] w-14 h-14 bg-amber text-black rounded-full shadow-[0_0_20px_rgba(255,191,0,0.6)] hover:scale-110 transition-transform flex items-center justify-center">
+        <span class="material-symbols-outlined text-2xl">shopping_bag</span>
+        <span id="cart-count"
+            class="absolute -top-1 -right-1 w-5 h-5 bg-red-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center hidden">0</span>
+    </button>
 
     <!-- Hero -->
     <header class="relative pt-32 pb-20 px-6 text-center overflow-hidden">
@@ -83,6 +151,40 @@
             </a>
         </div>
     </header>
+
+    <!-- Dream Fuel: Food Jam Truck -->
+    <div class="max-w-4xl mx-auto px-6 -mt-8 relative z-20 mb-12">
+        <div
+            class="bg-[#1A1622] border border-amber/30 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center gap-8 shadow-[0_10px_40px_rgba(0,0,0,0.5)]">
+            <div class="w-16 h-16 bg-amber/20 rounded-full flex items-center justify-center flex-shrink-0">
+                <span class="material-symbols-outlined text-3xl text-amber">local_shipping</span>
+            </div>
+            <div class="flex-1 text-center md:text-left">
+                <span class="text-xs font-bold text-amber uppercase tracking-widest mb-1 block">Project: Dream
+                    Fuel</span>
+                <h3 class="text-2xl font-serif font-bold text-white mb-2">The Food Jam Truck</h3>
+                <p class="text-sm text-white/70 mb-4">Help us take the African Queen on the road! Pre-order meals to
+                    fund our mobile kitchen. Every order counts as a vote.</p>
+                <!-- Progress -->
+                <div class="w-full h-3 bg-white/10 rounded-full mb-2">
+                    <div class="h-full bg-gradient-to-r from-amber to-orange-500 rounded-full relative"
+                        style="width: 65%">
+                        <div
+                            class="absolute right-0 -top-1.5 w-6 h-6 bg-white rounded-full shadow-[0_0_15px_rgba(255,191,0,0.8)] border-4 border-[#1A1622]">
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-between text-xs font-bold text-white/50">
+                    <span class="text-amber">€3,250 Raised</span>
+                    <span>Goal: €5,000</span>
+                </div>
+            </div>
+            <button onclick="document.getElementById('menu-grid').scrollIntoView({behavior: 'smooth'})"
+                class="px-8 py-4 bg-amber text-black font-bold uppercase tracking-widest rounded-xl hover:scale-105 transition-transform shadow-lg shadow-amber/20">
+                Fuel the Dream
+            </button>
+        </div>
+    </div>
 
     <main class="max-w-6xl mx-auto px-6 py-12">
         <!-- Categories -->
@@ -233,7 +335,16 @@
     <script src="gamification.js"></script>
     <script src="notifications.js"></script>
     <script>
-        // Menu Data
+
+
+        // Mobile Drawer
+        function toggleMobileDrawer() {
+            const drawer = document.getElementById('mobile-drawer');
+            if (drawer) drawer.classList.toggle('translate-y-full');
+        }
+
+        // --- End of Navigation and Cursor Logic ---
+        // --- Begin Menu Logic ---
         const MENU_ITEMS = [
             // --- Mains (Slices + Alloco) ---
             { id: 101, category: "slice", name: "O’K-RIB (Single Flow)", price: 7.00, desc: "A spicy and savory fish sandwich slice + Alloco.", allergens: ["A", "C", "D", "N"], image: "AfricanQueenKitchen/DSC_9634.JPG" },
@@ -290,35 +401,70 @@
         }
 
         function renderMenu() {
+            const isHost = window.checkGuildStatus() === 'host';
             const grid = document.getElementById('menu-grid');
             grid.innerHTML = MENU_ITEMS.map(item => `
-                <div class="bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-amber/50 transition-all group flex flex-col">
-                    <div class="h-48 bg-black/50 overflow-hidden relative">
-                        <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                        <div class="absolute bottom-0 right-0 bg-amber text-black font-bold px-4 py-1 rounded-tl-xl">
-                            €${item.price.toFixed(2)}
-                        </div>
-                    </div>
-                    <div class="p-6 flex-1 flex flex-col">
-                        <h3 class="text-xl font-bold font-serif mb-2">${item.name}</h3>
-                        <p class="text-white/60 text-sm mb-4 line-clamp-2 flex-1">${item.desc}</p>
-                        
-                        <!-- Allergens -->
-                        <div class="flex gap-2 mb-6">
-                            ${(item.allergens || []).map(code => `
-                                <span class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-[10px] text-white/70" title="${ALLERGENS[code]?.label || code}">
-                                    ${code}
-                                </span>
-                            `).join('')}
-                        </div>
+<div class="bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-amber/50 transition-all group flex flex-col relative">
+    <div class="h-48 bg-black/50 overflow-hidden relative">
+        <img src="${item.image}" alt="${item.name}"
+            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+        <div class="absolute bottom-0 right-0 bg-amber text-black font-bold px-4 py-1 rounded-tl-xl">
+            €${item.price.toFixed(2)}
+        </div>
+        <!-- Host Controls (Overlay) -->
+        ${isHost ? `
+        <div class="absolute top-2 right-2 flex gap-2">
+            <button onclick="updateStock(${item.id}, 1)" class="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-lg">
+                <span class="material-symbols-outlined text-sm">add</span>
+            </button>
+            <button onclick="updateStock(${item.id}, -1)" class="w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-lg">
+                <span class="material-symbols-outlined text-sm">remove</span>
+            </button>
+        </div>
+        ` : ''}
+    </div>
+    <div class="p-6 flex-1 flex flex-col">
+        <h3 class="text-xl font-bold font-serif mb-2">${item.name}</h3>
+        <p class="text-white/60 text-sm mb-4 line-clamp-2 flex-1">${item.desc}</p>
 
-                        <button onclick="addToCart(${item.id})" class="w-full py-3 bg-white/10 hover:bg-amber hover:text-black rounded-xl font-bold uppercase text-xs tracking-widest transition-all flex items-center justify-center gap-2 mt-auto">
-                            <span class="material-symbols-outlined text-sm">add_shopping_cart</span>
-                            Add to Order
-                        </button>
-                    </div>
-                </div>
-            `).join('');
+        <!-- Stock Status (Supporter View) -->
+        <div class="mb-4">
+             <div class="flex items-center gap-2 text-xs font-bold ${isHost ? 'text-amber' : 'text-green-400'}">
+                <span class="w-2 h-2 rounded-full ${isHost ? 'bg-amber' : 'bg-green-400'} animate-pulse"></span>
+                ${isHost ? 'Management Mode Active' : 'In Stock & Fresh'}
+            </div>
+        </div>
+
+        <!-- Allergens -->
+        <div class="flex gap-2 mb-6">
+            ${(item.allergens || []).map(code => `
+            <span class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-[10px] text-white/70"
+                title="${ALLERGENS[code]?.label || code}">
+                ${code}
+            </span>
+            `).join('')}
+        </div>
+
+        <button onclick="addToCart(${item.id})"
+            class="w-full py-3 bg-white/10 hover:bg-amber hover:text-black rounded-xl font-bold uppercase text-xs tracking-widest transition-all flex items-center justify-center gap-2 mt-auto">
+            <span class="material-symbols-outlined text-sm">add_shopping_cart</span>
+            Add to Order
+        </button>
+        
+        <!-- Host: WhatsApp Restock Trigger -->
+        ${isHost ? `
+        <button onclick="window.openWhatsApp('Restock Request: ${item.name} (ID: ${item.id})')" class="mt-2 w-full py-2 border border-white/10 text-white/50 hover:text-white hover:border-white/30 rounded-lg text-[10px] uppercase tracking-widest transition-colors">
+            Request Restock (WhatsApp)
+        </button>
+        ` : ''}
+    </div>
+</div>
+`).join('');
+        }
+
+        // Host Utility
+        function updateStock(id, change) {
+            alert(`Stock Updated for Item ${id}: ${change > 0 ? '+' : ''}${change}`);
         }
 
         function addToCart(id) {
@@ -350,17 +496,17 @@
                 container.innerHTML = '<p class="text-white/30 text-center mt-10 italic">Your Cart is empty.</p>';
             } else {
                 container.innerHTML = cart.map((item, idx) => `
-                    <div class="flex items-center gap-3 bg-white/5 p-3 rounded-lg border border-white/5">
-                        <img src="${item.image}" class="w-12 h-12 rounded object-cover">
-                        <div class="flex-1">
-                            <p class="font-bold text-sm">${item.name}</p>
-                            <p class="text-xs text-amber">€${item.price.toFixed(2)}</p>
-                        </div>
-                        <button onclick="removeFromCart(${idx})" class="text-white/30 hover:text-red-400">
-                            <span class="material-symbols-outlined text-sm">delete</span>
-                        </button>
-                    </div>
-                `).join('');
+<div class="flex items-center gap-3 bg-white/5 p-3 rounded-lg border border-white/5">
+    <img src="${item.image}" class="w-12 h-12 rounded object-cover">
+    <div class="flex-1">
+        <p class="font-bold text-sm">${item.name}</p>
+        <p class="text-xs text-amber">€${item.price.toFixed(2)}</p>
+    </div>
+    <button onclick="removeFromCart(${idx})" class="text-white/30 hover:text-red-400">
+        <span class="material-symbols-outlined text-sm">delete</span>
+    </button>
+</div>
+`).join('');
             }
 
             const total = cart.reduce((sum, i) => sum + i.price, 0);
@@ -387,7 +533,8 @@
             // 1. Notify Admin
             if (window.Notifications) {
                 const orderSummary = cart.map(i => i.name).join(', ');
-                window.Notifications.send('action_required', `Order ${code} [${dateStr} @ ${location}]: ${orderSummary} (€${document.getElementById('cart-final').innerText})`, 'admin');
+                window.Notifications.send('action_required', `Order ${code} [${dateStr} @ ${location}]: ${orderSummary}
+(€${document.getElementById('cart-final').innerText})`, 'admin');
             }
 
             // 2. Add XP

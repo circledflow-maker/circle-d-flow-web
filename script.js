@@ -8,6 +8,170 @@ window.PARTNERS_DATA = [
     { id: 'favela', name: "Favela LX", coords: [38.716241, -9.120880], desc: "Nightlife energy.", image: "Assets/images/logo.png" }
 ];
 
+// --- PROTOCOL BABEL: LOCALIZATION SYSTEM ---
+const TRANSLATIONS = {
+    en: {
+        nav_hub: "Hub",
+        nav_sound: "Sound",
+        nav_taste: "Taste",
+        nav_visuals: "Visuals",
+        nav_style: "Style",
+        nav_knowledge: "Knowledge",
+        nav_space: "Space",
+        nav_spirit: "Spirit",
+        login_btn: "Login",
+        enter_circle: "Enter the Circle",
+        mission_brief: "Mission Briefing",
+        mission_text: "Welcome to the Circle. Connect your wallet, explore the map, and support local artists.",
+        acknowledge: "Acknowledge",
+        welcome_back: "Welcome Back"
+    },
+    pt: {
+        nav_hub: "Centro",
+        nav_sound: "Som",
+        nav_taste: "Sabor",
+        nav_visuals: "Visuais",
+        nav_style: "Estilo",
+        nav_knowledge: "Saber",
+        nav_space: "Espaço",
+        nav_spirit: "Espírito",
+        login_btn: "Entrar",
+        enter_circle: "Entrar no Círculo",
+        mission_brief: "Missão",
+        mission_text: "Bem-vindo ao Círculo. Conecte sua carteira, explore o mapa e apoie artistas locais.",
+        acknowledge: "Confirmar",
+        welcome_back: "Bem-vindo de volta"
+    },
+    de: {
+        nav_hub: "Zentrale",
+        nav_sound: "Klang",
+        nav_taste: "Geschmack",
+        nav_visuals: "Visuelles",
+        nav_style: "Stil",
+        nav_knowledge: "Wissen",
+        nav_space: "Raum",
+        nav_spirit: "Geist",
+        login_btn: "Login",
+        enter_circle: "Tritt dem Kreis bei",
+        mission_brief: "Einsatzbesprechung",
+        mission_text: "Willkommen im Kreis. Verbinde dein Wallet, erkunde die Karte und unterstütze lokale Künstler.",
+        acknowledge: "Bestätigen",
+        welcome_back: "Willkommen zurück"
+    },
+    fr: {
+        nav_hub: "Centre",
+        nav_sound: "Son",
+        nav_taste: "Goût",
+        nav_visuals: "Visuels",
+        nav_style: "Style",
+        nav_knowledge: "Savoir",
+        nav_space: "Espace",
+        nav_spirit: "Esprit",
+        login_btn: "Connexion",
+        enter_circle: "Entrer dans le Cercle",
+        mission_brief: "Briefing de Mission",
+        mission_text: "Bienvenue dans le Cercle. Connectez votre portefeuille, explorez la carte et soutenez les artistes locaux.",
+        acknowledge: "Confirmer",
+        welcome_back: "Bon retour"
+    }
+};
+
+function initLanguageSystem() {
+    const savedLang = localStorage.getItem('appLang');
+    if (!savedLang) {
+        createLanguageOverlay();
+    } else {
+        updateLanguage(savedLang);
+    }
+}
+
+function createLanguageOverlay() {
+    // Check if exists
+    if (document.getElementById('lang-overlay')) return;
+
+    const overlay = document.createElement('div');
+    overlay.id = 'lang-overlay';
+    overlay.className = 'fixed inset-0 z-[9999] bg-black/95 backdrop-blur-2xl flex flex-col items-center justify-center p-6 transition-opacity duration-500';
+
+    const html = `
+        <div class="relative w-full max-w-md text-center space-y-8 animate-fade-in-up">
+            <h2 class="text-3xl font-bold text-white tracking-[0.2em] uppercase drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]">
+                Select Your<br><span class="text-electric animate-pulse">Frequency</span>
+            </h2>
+            
+            <div class="grid gap-4 mt-8">
+                <button onclick="setLanguage('en')" class="lang-btn group relative w-full h-[60px] bg-white/5 border border-white/10 hover:border-electric/50 rounded-xl overflow-hidden transition-all duration-300">
+                    <div class="absolute inset-0 bg-electric/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                    <div class="relative flex items-center justify-center gap-3">
+                        <span class="text-2xl">🇬🇧</span>
+                        <span class="font-bold text-white tracking-widest text-sm uppercase group-hover:text-electric transition-colors">English</span>
+                    </div>
+                </button>
+
+                <button onclick="setLanguage('pt')" class="lang-btn group relative w-full h-[60px] bg-white/5 border border-white/10 hover:border-green-500/50 rounded-xl overflow-hidden transition-all duration-300">
+                    <div class="absolute inset-0 bg-green-500/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                    <div class="relative flex items-center justify-center gap-3">
+                        <span class="text-2xl">🇵🇹</span>
+                        <span class="font-bold text-white tracking-widest text-sm uppercase group-hover:text-green-400 transition-colors">Português</span>
+                    </div>
+                </button>
+
+                <button onclick="setLanguage('de')" class="lang-btn group relative w-full h-[60px] bg-white/5 border border-white/10 hover:border-yellow-500/50 rounded-xl overflow-hidden transition-all duration-300">
+                    <div class="absolute inset-0 bg-yellow-500/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                    <div class="relative flex items-center justify-center gap-3">
+                        <span class="text-2xl">🇩🇪</span>
+                        <span class="font-bold text-white tracking-widest text-sm uppercase group-hover:text-yellow-400 transition-colors">Deutsch</span>
+                    </div>
+                </button>
+
+                <button onclick="setLanguage('fr')" class="lang-btn group relative w-full h-[60px] bg-white/5 border border-white/10 hover:border-blue-500/50 rounded-xl overflow-hidden transition-all duration-300">
+                    <div class="absolute inset-0 bg-blue-500/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                    <div class="relative flex items-center justify-center gap-3">
+                        <span class="text-2xl">🇫🇷</span>
+                        <span class="font-bold text-white tracking-widest text-sm uppercase group-hover:text-blue-400 transition-colors">Français</span>
+                    </div>
+                </button>
+            </div>
+            
+            <p class="text-[10px] text-white/30 uppercase tracking-widest mt-8">Protocol Babel Active</p>
+        </div>
+    `;
+
+    overlay.innerHTML = html;
+    document.body.appendChild(overlay);
+}
+
+window.setLanguage = function (lang) {
+    localStorage.setItem('appLang', lang);
+    updateLanguage(lang);
+
+    // Animate Out
+    const overlay = document.getElementById('lang-overlay');
+    if (overlay) {
+        overlay.style.opacity = '0';
+        setTimeout(() => overlay.remove(), 500);
+    }
+
+    // Trigger Mission Briefing if first time
+    if (!localStorage.getItem('briefingSeen')) {
+        setTimeout(window.initMissionBriefing, 1000);
+    }
+};
+
+window.updateLanguage = function (lang) {
+    const table = TRANSLATIONS[lang] || TRANSLATIONS['en'];
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (table[key]) {
+            el.innerText = table[key];
+        }
+    });
+};
+
+window.toggleLanguageModal = function () {
+    createLanguageOverlay();
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     // Ensure Gamification is available
     if (typeof window.Gamification === 'undefined') {
@@ -20,8 +184,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // Cursor trail removed as per user request
 
     if (cursor) {
+        // Initial Check for Touch
+        if (window.matchMedia("(pointer: coarse)").matches) {
+            cursor.style.display = 'none';
+        }
+
         document.addEventListener('mousemove', (e) => {
-            if (window.innerWidth > 768) {
+            // Only move if desktop and not touch
+            if (window.innerWidth > 768 && !window.matchMedia("(pointer: coarse)").matches) {
                 // Center the 48x48px cursor (offset 24px)
                 cursor.style.transform = `translate(${e.clientX - 24}px, ${e.clientY - 24}px)`;
             }
@@ -113,39 +283,54 @@ document.addEventListener('DOMContentLoaded', () => {
     // Check on load
     checkLightbox();
 
-    // Engagement: Daily Feedback Prompt
-    function checkFeedbackPrompt() {
-        const lastPrompt = localStorage.getItem('cdf_feedback_last_shown');
-        const now = Date.now();
-        const cooldown = 24 * 60 * 60 * 1000;
-
-        if (!lastPrompt || (now - parseInt(lastPrompt) > cooldown)) {
-            // Simple robust "alert" style for now, or use a custom toast if available
-            // Creating a minimal absolute div for non-intrusive prompt
-            const promptDiv = document.createElement('div');
-            promptDiv.className = 'fixed bottom-4 right-4 bg-[#FFD700] text-black p-4 rounded-lg shadow-xl z-50 animate-bounce cursor-pointer hover:scale-105 transition-transform';
-            promptDiv.innerHTML = `
-                <div class="flex items-center gap-2">
-                    <span class="material-symbols-outlined">chat</span>
-                    <div>
-                        <p class="font-bold text-sm">How is your flow today?</p>
-                        <p class="text-[10px]">Click to share feedback</p>
+    // Engagement: Mission Briefing (HUD Notification)
+    function initMissionBriefing() {
+        if (!localStorage.getItem('briefingSeen')) {
+            const briefing = document.createElement('div');
+            briefing.className = 'fixed top-24 right-4 max-w-sm bg-black/90 backdrop-blur-xl border border-electric/50 text-white p-6 rounded-2xl z-[100] shadow-[0_0_30px_rgba(154,77,255,0.3)] transform translate-x-full transition-transform duration-500';
+            briefing.innerHTML = `
+                <div class="flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-full bg-electric/20 flex items-center justify-center border border-electric">
+                        <span class="material-symbols-outlined text-electric">hub</span>
                     </div>
-                    <button onclick="this.parentElement.parentElement.remove()" class="ml-2 text-black/50 hover:text-black">&times;</button>
+                    <div class="flex-1">
+                        <h4 class="font-bold text-electric mb-1 text-sm tracking-widest uppercase">Mission Briefing</h4>
+                        <p class="text-xs text-white/80 leading-relaxed mb-4">
+                            Welcome to the Circle. Connect your wallet, explore the map, and support local artists. 
+                            <br><strong class="text-white">Protocol Yggdrasil active.</strong>
+                        </p>
+                        <button id="accept-briefing" class="w-full py-2 bg-electric text-white font-bold text-xs uppercase tracking-widest rounded hover:bg-white hover:text-black transition-colors">
+                            Acknowledge
+                        </button>
+                    </div>
                 </div>
             `;
-            promptDiv.onclick = (e) => {
-                if (e.target.tagName !== 'BUTTON') {
-                    window.submitFeedback(); // Reuse existing
-                    localStorage.setItem('cdf_feedback_last_shown', now.toString());
-                    promptDiv.remove();
-                }
+            document.body.appendChild(briefing);
+
+            // Animate In
+            setTimeout(() => briefing.classList.remove('translate-x-full'), 1000);
+
+            // Dismiss
+            document.getElementById('accept-briefing').onclick = () => {
+                briefing.classList.add('translate-x-full');
+                localStorage.setItem('briefingSeen', 'true');
+                setTimeout(() => briefing.remove(), 500);
             };
-            document.body.appendChild(promptDiv);
         }
     }
-    // Check after a short delay
-    setTimeout(checkFeedbackPrompt, 5000);
+    initMissionBriefing();
+
+    // Utility: WhatsApp Bridge
+    window.openWhatsApp = function (text) {
+        const phone = "351912345678"; // Replace with actual number if provided, currently generic
+        const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+        window.open(url, '_blank');
+    };
+
+    // Utility: Guild Status Helper
+    window.checkGuildStatus = function () {
+        return localStorage.getItem('userGuild') || 'guest';
+    };
 
     // Logout Function (Global)
     window.logout = function () {

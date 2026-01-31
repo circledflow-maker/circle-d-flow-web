@@ -46,29 +46,93 @@
         <img src="Assets/images/logo.png" class="w-full h-full object-contain drop-shadow-lg" alt="Cursor">
     </div>
 
-    <!-- Navbar -->
-    <nav class="fixed w-full z-50 transition-all duration-300 border-b border-white/5 bg-[#0F0A13]/80 backdrop-blur-md"
-        id="navbar">
-        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-            <a href="index.html" class="flex items-center gap-3 group">
-                <div
-                    class="relative w-10 h-10 overflow-hidden rounded-full border border-white/20 group-hover:border-electric transition-colors">
-                    <img src="Assets/images/logo.png" alt="CDF Logo" class="w-full h-full object-cover">
-                </div>
-                <span
-                    class="font-serif font-bold text-xl tracking-wide group-hover:text-electric transition-colors">Circle
-                    D Flow</span>
-            </a>
-            <div class="flex items-center gap-6">
-                <!-- Wallet Display -->
-                <div class="hidden md:flex items-center gap-2 px-3 py-1 bg-white/5 rounded-full border border-white/10">
-                    <span class="material-symbols-outlined text-amber text-sm">token</span>
-                    <span id="token-balance" class="font-bold text-sm">0 Flow</span>
-                </div>
-                <div id="desktop-auth"></div>
-            </div>
+    <!-- Desktop Navigation (The Compass) -->
+    <nav
+        class="hidden md:flex fixed top-0 w-full z-50 bg-[#0F0A13]/80 backdrop-blur-xl border-b border-white/5 h-20 items-center justify-between px-12 transition-all duration-300">
+        <div class="flex items-center gap-8">
+            <a href="dashboard.html"
+                class="text-xs font-bold uppercase tracking-widest text-white hover:text-electric transition-colors">Hub</a>
+            <a href="outbreak_tunes.html"
+                class="text-xs font-bold uppercase tracking-widest text-white hover:text-purple-400 transition-colors">Sound</a>
+            <a href="african-queen-kitchen.html"
+                class="text-xs font-bold uppercase tracking-widest text-white hover:text-amber transition-colors">Taste</a>
+            <a href="kiss-your-heart.html"
+                class="text-xs font-bold uppercase tracking-widest text-white hover:text-pink-400 transition-colors">Visuals</a>
+        </div>
+        <a href="index.html" class="absolute left-1/2 -translate-x-1/2 group">
+            <img src="Assets/images/logo.png" alt="Circle D Flow"
+                class="h-10 w-auto group-hover:scale-110 transition-transform duration-300 drop-shadow-[0_0_15px_rgba(98,0,234,0.5)]">
+        </a>
+        <div class="flex items-center gap-8">
+            <a href="marketplace.html"
+                class="text-xs font-bold uppercase tracking-widest text-mystic-gold drop-shadow-[0_0_8px_rgba(255,215,0,0.5)]">Style</a>
+            <a href="academy.html"
+                class="text-xs font-bold uppercase tracking-widest text-white hover:text-blue-400 transition-colors">Knowledge</a>
+            <a href="events.html"
+                class="text-xs font-bold uppercase tracking-widest text-white hover:text-green-400 transition-colors">Space</a>
+            <a href="mindfulness.html"
+                class="text-xs font-bold uppercase tracking-widest text-white hover:text-indigo-400 transition-colors">Spirit</a>
+        </div>
+        <div class="absolute right-6 flex items-center gap-4">
+            <a href="login.html"
+                class="px-5 py-2 bg-white/5 text-white font-bold rounded-full text-[10px] uppercase tracking-widest hover:bg-white hover:text-black transition-all border border-white/10 hover:shadow-[0_0_15px_rgba(255,255,255,0.3)]">Login</a>
         </div>
     </nav>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav
+        class="md:hidden fixed bottom-4 left-4 right-4 z-50 bg-[#1A1622]/90 backdrop-blur-xl border border-white/10 rounded-2xl p-4 flex justify-between items-center shadow-2xl safe-area-pb">
+        <a href="dashboard.html"
+            class="flex flex-col items-center gap-1 text-white/50 hover:text-electric transition-colors">
+            <span class="material-symbols-outlined text-xl">dashboard</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider">Hub</span>
+        </a>
+        <a href="marketplace.html" class="flex flex-col items-center gap-1 text-mystic-gold transition-colors">
+            <span class="material-symbols-outlined text-xl">storefront</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider">Style</span>
+        </a>
+        <a href="index.html" class="relative -top-6">
+            <div
+                class="w-14 h-14 bg-electric rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(98,0,234,0.6)] border-4 border-[#0F0A13]">
+                <img src="Assets/images/logo.png" class="w-7 h-7 object-contain">
+            </div>
+        </a>
+        <a href="african-queen-kitchen.html"
+            class="flex flex-col items-center gap-1 text-white/50 hover:text-amber transition-colors">
+            <span class="material-symbols-outlined text-xl">restaurant</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider">Taste</span>
+        </a>
+        <button onclick="toggleMobileDrawer()"
+            class="flex flex-col items-center gap-1 text-white/50 hover:text-mystic-gold transition-colors">
+            <span class="material-symbols-outlined text-xl">menu</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider">More</span>
+        </button>
+    </nav>
+
+    <!-- Mobile Drawer -->
+    <div id="mobile-drawer"
+        class="fixed inset-0 bg-black/95 backdrop-blur-xl z-[60] transform translate-y-full transition-transform duration-300 flex flex-col items-center justify-center space-y-8 md:hidden">
+        <button onclick="toggleMobileDrawer()" class="absolute top-8 right-8 text-white/50 hover:text-white">
+            <span class="material-symbols-outlined text-3xl">close</span>
+        </button>
+        <a href="kiss-your-heart.html"
+            class="text-2xl font-bold text-white hover:text-pink-400 tracking-widest">VISUALS</a>
+        <a href="marketplace.html" class="text-2xl font-bold text-mystic-gold tracking-widest">STYLE</a>
+        <a href="academy.html" class="text-2xl font-bold text-white hover:text-blue-400 tracking-widest">KNOWLEDGE</a>
+        <a href="events.html" class="text-2xl font-bold text-white hover:text-green-400 tracking-widest">SPACE</a>
+        <a href="mindfulness.html"
+            class="text-2xl font-bold text-white hover:text-indigo-400 tracking-widest">SPIRIT</a>
+        <div class="h-px w-24 bg-white/10"></div>
+        <a href="login.html"
+            class="px-8 py-3 bg-electric text-white font-bold rounded-full uppercase tracking-widest mt-8 shadow-lg shadow-electric/20">Login</a>
+    </div>
+
+    <!-- Floating Wallet Widget -->
+    <div id="floating-wallet"
+        class="fixed top-24 right-6 z-40 flex items-center gap-3 px-4 py-2 bg-[#1A1622]/80 backdrop-blur-md border border-mystic-gold/30 rounded-full shadow-lg animate-fade-in md:static md:hidden">
+        <span class="material-symbols-outlined text-amber">token</span>
+        <span id="token-balance" class="font-bold text-white text-sm tracking-wider">0 Flow</span>
+    </div>
 
     <main class="pt-32 pb-20 px-6 max-w-7xl mx-auto">
         <!-- Header -->
@@ -260,6 +324,25 @@
                     if (window.Gamification) window.Gamification.addPendingFunds(cost);
                 }
             }
+        }
+
+        // Custom Cursor Logic
+        const cursor = document.getElementById('cursor');
+        document.addEventListener('mousemove', (e) => {
+            if (cursor) {
+                cursor.style.transform = `translate(${e.clientX - 24}px, ${e.clientY - 24}px)`;
+            }
+        });
+
+        // Disable custom cursor on touch devices
+        if (cursor && (window.matchMedia("(pointer: coarse)").matches)) {
+            cursor.style.display = 'none';
+        }
+
+        // Mobile Drawer
+        function toggleMobileDrawer() {
+            const drawer = document.getElementById('mobile-drawer');
+            if (drawer) drawer.classList.toggle('translate-y-full');
         }
     </script>
 </body>

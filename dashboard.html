@@ -82,112 +82,202 @@
     </script>
 </head>
 
-<body class="bg-background-light dark:bg-background-dark font-display text-gray-800 dark:text-gray-200">
+<body class="bg-[#0F0A13] font-display text-gray-200">
     <script>
-        // Auth Protection: Redirect to login if not authenticated
+        // Auth Protection
         if (localStorage.getItem('isLoggedIn') !== 'true') {
             window.location.href = 'login.html';
         }
     </script>
-    <div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
-        <div class="flex h-full min-h-screen">
-            <!-- Sidebar -->
-            <aside class="flex w-64 flex-col bg-[#141118]/80 backdrop-blur-sm p-4 border-r border-white/5">
-                <div class="flex flex-col gap-4 flex-grow">
-                    <!-- Profile Section with Gamification -->
-                    <div
-                        class="flex flex-col items-center p-4 bg-white/5 rounded-xl border border-white/10 relative overflow-hidden group">
+
+    <!-- Custom Cursor -->
+    <div id="cursor"
+        class="fixed w-12 h-12 pointer-events-none z-[200] transition-transform duration-100 hidden md:block">
+        <img src="Assets/images/logo.png" class="w-full h-full object-contain drop-shadow-lg" alt="Cursor">
+    </div>
+
+    <!-- Desktop Navigation (The Compass) -->
+    <nav
+        class="hidden md:flex fixed top-0 w-full z-50 bg-[#0F0A13]/90 backdrop-blur-xl border-b border-white/5 h-20 items-center justify-between px-12 transition-all duration-300">
+        <div class="hidden md:flex items-center gap-8">
+            <a href="dashboard.html"
+                class="text-xs font-bold uppercase tracking-widest text-electric drop-shadow-[0_0_8px_rgba(154,77,255,0.8)]"
+                data-i18n="nav_hub">Hub</a>
+            <a href="outbreak_tunes.html"
+                class="text-xs font-bold uppercase tracking-widest text-white hover:text-purple-400 transition-colors"
+                data-i18n="nav_sound">Sound</a>
+            <a href="african-queen-kitchen.html"
+                class="text-xs font-bold uppercase tracking-widest text-white hover:text-amber transition-colors"
+                data-i18n="nav_taste">Taste</a>
+            <a href="kiss-your-heart.html"
+                class="text-xs font-bold uppercase tracking-widest text-white hover:text-pink-400 transition-colors"
+                data-i18n="nav_visuals">Visuals</a>
+        </div>
+        <a href="index.html" class="absolute left-1/2 -translate-x-1/2 group">
+            <img src="Assets/images/logo.png" alt="Circle D Flow"
+                class="h-10 w-auto group-hover:scale-110 transition-transform duration-300 drop-shadow-[0_0_15px_rgba(98,0,234,0.5)]">
+        </a>
+        <div class="flex items-center gap-8">
+            <a href="marketplace.html"
+                class="text-xs font-bold uppercase tracking-widest text-white hover:text-mystic-gold transition-colors"
+                data-i18n="nav_style">Style</a>
+            <a href="academy.html"
+                class="text-xs font-bold uppercase tracking-widest text-white hover:text-blue-400 transition-colors"
+                data-i18n="nav_knowledge">Knowledge</a>
+            <a href="events.html"
+                class="text-xs font-bold uppercase tracking-widest text-white hover:text-green-400 transition-colors"
+                data-i18n="nav_space">Space</a>
+            <a href="mindfulness.html"
+                class="text-xs font-bold uppercase tracking-widest text-white hover:text-indigo-400 transition-colors"
+                data-i18n="nav_spirit">Spirit</a>
+        </div>
+        <div class="absolute right-6 flex items-center gap-4">
+            <button onclick="toggleLanguageModal()" class="text-white/50 hover:text-white transition-colors">
+                <span class="material-symbols-outlined text-lg">public</span>
+            </button>
+            <button onclick="logout()"
+                class="px-5 py-2 bg-white/5 text-white font-bold rounded-full text-[10px] uppercase tracking-widest hover:bg-red-500 hover:text-white transition-all border border-white/10">
+                Logout
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav
+        class="md:hidden fixed bottom-4 left-4 right-4 z-50 bg-[#1A1622]/90 backdrop-blur-xl border border-white/10 rounded-2xl p-4 flex justify-between items-center shadow-2xl safe-area-pb">
+        <a href="dashboard.html"
+            class="flex flex-col items-center gap-1 text-electric drop-shadow-[0_0_10px_rgba(154,77,255,0.6)]">
+            <span class="material-symbols-outlined text-xl">dashboard</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider" data-i18n="nav_hub">Hub</span>
+        </a>
+        <a href="outbreak_tunes.html"
+            class="flex flex-col items-center gap-1 text-white/50 hover:text-purple-400 transition-colors">
+            <span class="material-symbols-outlined text-xl">graphic_eq</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider" data-i18n="nav_sound">Sound</span>
+        </a>
+        <a href="index.html" class="relative -top-6">
+            <div
+                class="w-14 h-14 bg-electric rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(98,0,234,0.6)] border-4 border-[#0F0A13]">
+                <img src="Assets/images/logo.png" class="w-7 h-7 object-contain">
+            </div>
+        </a>
+        <a href="african-queen-kitchen.html"
+            class="flex flex-col items-center gap-1 text-white/50 hover:text-amber transition-colors">
+            <span class="material-symbols-outlined text-xl">restaurant</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider" data-i18n="nav_taste">Taste</span>
+        </a>
+        <button onclick="toggleMobileDrawer()"
+            class="flex flex-col items-center gap-1 text-white/50 hover:text-mystic-gold transition-colors">
+            <span class="material-symbols-outlined text-xl">menu</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider">More</span>
+        </button>
+    </nav>
+
+    <!-- Mobile Drawer -->
+    <div id="mobile-drawer"
+        class="fixed inset-0 bg-black/95 backdrop-blur-xl z-[60] transform translate-y-full transition-transform duration-300 flex flex-col items-center justify-center space-y-8 md:hidden">
+        <button onclick="toggleMobileDrawer()" class="absolute top-8 right-8 text-white/50 hover:text-white">
+            <span class="material-symbols-outlined text-3xl">close</span>
+        </button>
+        <a href="kiss-your-heart.html"
+            class="text-2xl font-bold text-white hover:text-pink-400 tracking-widest">VISUALS</a>
+        <a href="marketplace.html"
+            class="text-2xl font-bold text-white hover:text-mystic-gold tracking-widest">STYLE</a>
+        <a href="academy.html" class="text-2xl font-bold text-white hover:text-blue-400 tracking-widest">KNOWLEDGE</a>
+        <a href="events.html" class="text-2xl font-bold text-white hover:text-green-400 tracking-widest">SPACE</a>
+        <a href="mindfulness.html"
+            class="text-2xl font-bold text-white hover:text-indigo-400 tracking-widest">SPIRIT</a>
+        <div class="h-px w-24 bg-white/10"></div>
+        <a href="login.html"
+            class="px-8 py-3 bg-electric text-white font-bold rounded-full uppercase tracking-widest mt-8 shadow-lg shadow-electric/20">Login</a>
+    </div>
+
+    <div class="min-h-screen pt-24 pb-32 px-4 md:px-8">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-4 gap-8">
+
+            <!-- Column 1: The Hunter License (Profile) -->
+            <div class="lg:col-span-1">
+                <div
+                    class="bg-[#141118]/80 backdrop-blur-sm border border-white/5 rounded-2xl p-6 sticky top-24 w-full">
+                    <!-- Profile Header -->
+                    <div class="relative flex flex-col items-center mb-6">
                         <div
-                            class="absolute inset-0 bg-gradient-to-br from-electric/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                            class="w-20 h-20 rounded-full p-1 bg-gradient-to-br from-electric via-purple-500 to-amber mb-3 relative group cursor-pointer">
+                            <div class="w-full h-full rounded-full bg-cover bg-center"
+                                style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA0b_iFTMaqdQcvXJuRAXFR1AYWk8CjTCjOhyoqsWBcr0OYG6-dXVy6h3ntw8PmiaBs47TlP41KCk-ZllVgjmXpz6lY4e6Hd0ljSPIARqAi2TE2KJM7XXoDF4xfo6ANwVPkvXToMZgFYdEuFufAgNuY8uKsCsY15r4hMRPqz37upId0-5vTafc05US-COYupCDvBpeHKVaII5MHseiBYWal7ecZflaraoAETvndm_hGOR3HZV-fvaxJSszSQ_1V6TmJEqngAGFg11Q');">
+                            </div>
+                            <div
+                                class="absolute inset-0 rounded-full bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                <span class="material-symbols-outlined text-white">edit</span>
+                            </div>
                         </div>
-                        <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-16 mb-2 ring-2 ring-electric"
-                            data-alt="User avatar"
-                            style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA0b_iFTMaqdQcvXJuRAXFR1AYWk8CjTCjOhyoqsWBcr0OYG6-dXVy6h3ntw8PmiaBs47TlP41KCk-ZllVgjmXpz6lY4e6Hd0ljSPIARqAi2TE2KJM7XXoDF4xfo6ANwVPkvXToMZgFYdEuFufAgNuY8uKsCsY15r4hMRPqz37upId0-5vTafc05US-COYupCDvBpeHKVaII5MHseiBYWal7ecZflaraoAETvndm_hGOR3HZV-fvaxJSszSQ_1V6TmJEqngAGFg11Q");'>
-                        </div>
-                        <h1 class="text-white text-lg font-bold leading-normal relative z-10" id="dash-user-name">Alex
-                            Weber</h1>
-                        <p class="text-electric text-xs font-bold uppercase tracking-widest mb-2 relative z-10"
-                            id="dash-user-level-text">Level 3: Flow Seeker</p>
-
-                        <div class="flex gap-1 mb-2 relative z-10" title="Reputation Rank" id="dash-user-stars">
-                            <!-- Populated by JS -->
-                        </div>
-
-                        <!-- Trust Badges -->
-                        <div class="flex gap-2 mb-3 relative z-10" id="dash-user-badges">
-                            <!-- Populated by JS -->
-                        </div>
-
-                        <!-- XP Bar -->
-                        <div class="w-full h-1 bg-white/10 rounded-full mt-1 relative z-10">
-                            <div class="h-full bg-electric rounded-full transition-all duration-1000" style="width: 0%"
-                                id="dash-xp-fill"></div>
-                        </div>
-                        <p class="text-[10px] text-mist mt-1 w-full text-right" id="dash-xp-text">--- / --- XP</p>
+                        <h2 class="text-xl font-bold text-white" id="dash-user-name">Alex Weber</h2>
+                        <p class="text-xs font-bold uppercase tracking-widest text-electric" id="dash-user-level-text">
+                            Level 3: Flow Seeker</p>
+                        <div class="flex gap-1 mt-2" id="dash-user-stars"></div>
                     </div>
 
-                    <nav class="flex flex-col gap-2 mt-4">
-                        <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 hover:text-white transition-colors"
-                            href="index.html">
-                            <span class="material-symbols-outlined">home</span>
-                            <p class="text-sm font-medium leading-normal">Home</p>
-                        </a>
-                        <a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/20 text-primary hover:bg-primary/30 transition-colors"
-                            href="dashboard.html">
-                            <span class="material-symbols-outlined filled">dashboard</span>
-                            <p class="text-sm font-medium leading-normal">Dashboard</p>
-                        </a>
+                    <!-- Stats -->
+                    <div class="space-y-4">
+                        <!-- XP -->
+                        <div>
+                            <div class="flex justify-between text-xs mb-1">
+                                <span class="text-gray-400">XP Progress</span>
+                                <span class="text-white" id="dash-xp-text">--- / ---</span>
+                            </div>
+                            <div class="h-1.5 bg-white/10 rounded-full overflow-hidden">
+                                <div id="dash-xp-fill"
+                                    class="h-full bg-gradient-to-r from-electric to-purple-500 w-0 transition-all duration-1000">
+                                </div>
+                            </div>
+                        </div>
 
-                        <div class="h-px bg-white/5 my-2"></div>
-                        <p class="px-3 text-xs font-bold text-mist uppercase tracking-widest">Community</p>
+                        <!-- Nen (Creativity) -->
+                        <div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="material-symbols-outlined text-xs text-electric">psychology</span>
+                                <span class="text-[10px] font-bold uppercase tracking-wider text-white">Nen</span>
+                            </div>
+                            <div class="h-1 bg-white/10 rounded-full overflow-hidden">
+                                <div id="stat-nen" class="h-full bg-electric w-0"></div>
+                            </div>
+                        </div>
 
-                        <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 hover:text-electric transition-colors"
-                            href="marketplace.html">
-                            <span class="material-symbols-outlined">storefront</span>
-                            <p class="text-sm font-medium leading-normal">Marketplace</p>
-                        </a>
-                        <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 hover:text-purple-500 transition-colors"
-                            href="events.html">
-                            <span class="material-symbols-outlined">calendar_month</span>
-                            <p class="text-sm font-medium leading-normal">My Events</p>
-                        </a>
-                        <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 hover:text-amber transition-colors"
-                            href="#">
-                            <span class="material-symbols-outlined">diversity_3</span>
-                            <p class="text-sm font-medium leading-normal">Circle Connections</p>
-                        </a>
+                        <!-- Stamina (Attendance) -->
+                        <div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="material-symbols-outlined text-xs text-amber">bolt</span>
+                                <span class="text-[10px] font-bold uppercase tracking-wider text-white">Stamina</span>
+                            </div>
+                            <div class="h-1 bg-white/10 rounded-full overflow-hidden">
+                                <div id="stat-stamina" class="h-full bg-amber w-0"></div>
+                            </div>
+                        </div>
 
-                        <div class="h-px bg-white/5 my-2"></div>
-                        <p class="px-3 text-xs font-bold text-mist uppercase tracking-widest">Tools</p>
-
-                        <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 transition-colors"
-                            href="#">
-                            <span class="material-symbols-outlined">inventory_2</span>
-                            <p class="text-sm font-medium leading-normal">Equipment</p>
-                        </a>
-                        <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 transition-colors"
-                            href="#">
-                            <span class="material-symbols-outlined">book</span>
-                            <p class="text-sm font-medium leading-normal">Reservations</p>
-                        </a>
-                    </nav>
+                        <!-- Impact (Community) -->
+                        <div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="material-symbols-outlined text-xs text-cyan-400">public</span>
+                                <span class="text-[10px] font-bold uppercase tracking-wider text-white">Impact</span>
+                            </div>
+                            <div class="h-1 bg-white/10 rounded-full overflow-hidden">
+                                <div id="stat-impact" class="h-full bg-cyan-400 w-0"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="flex flex-col gap-1">
-                    <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 transition-colors"
-                        href="#">
-                        <span class="material-symbols-outlined">settings</span>
-                        <p class="text-sm font-medium leading-normal">Settings</p>
-                    </a>
-                    <a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-300 hover:bg-white/10 transition-colors"
-                        href="index.html">
-                        <span class="material-symbols-outlined">logout</span>
-                        <p class="text-sm font-medium leading-normal">Logout</p>
-                    </a>
-                </div>
-            </aside>
 
-            <!-- Main Content -->
-            <main class="flex-1 p-6 lg:p-10 relative">
+                <!-- Tools (Mobile Only / Quick Access) -->
+                <div class="mt-4 md:hidden">
+                    <button
+                        class="w-full py-3 bg-white/5 border border-white/10 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined">inventory_2</span> My Equipment
+                    </button>
+                </div>
+            </div>
+
+            <!-- Column 2: Dashboard Content -->
+            <main class="lg:col-span-3 space-y-8">
                 <!-- Sales Ticker -->
                 <div
                     class="w-full bg-electric/10 border-b border-electric/20 overflow-hidden py-2 mb-8 rounded-lg relative">
@@ -791,6 +881,18 @@
             if (xpFill) xpFill.style.width = `${progress}%`;
             if (xpText) xpText.textContent = `${xp} / ${nextThreshold} XP`;
 
+            // Update Hunter Stats (Nen, Stamina, Impact)
+            if (G.getStats) {
+                const stats = G.getStats();
+                const nenBar = document.getElementById('stat-nen');
+                const staminaBar = document.getElementById('stat-stamina');
+                const impactBar = document.getElementById('stat-impact');
+
+                if (nenBar) nenBar.style.width = `${stats.nen}%`;
+                if (staminaBar) staminaBar.style.width = `${stats.stamina}%`;
+                if (impactBar) impactBar.style.width = `${stats.impact}%`;
+            }
+
             // Show Create Event Button if Level >= 5
             if (level >= 5) {
                 const btn = document.getElementById('btn-create-event');
@@ -859,7 +961,12 @@
 
 
     </script>
-</body>
+    <script>
+        function toggleMobileDrawer() {
+            const drawer = document.getElementById('mobile-drawer');
+            if (drawer) drawer.classList.toggle('translate-y-full');
+        }
+    </script>
 
 
 </html>

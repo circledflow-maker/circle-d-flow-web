@@ -215,13 +215,26 @@
         document.getElementById('login-form').addEventListener('submit', (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
 
-            // Mock Login
+            // Strict Validation
+            if (password !== 'FLOW-GEN-1') {
+                alert('Access Denied. Invalid Protocol Code.');
+                return;
+            }
+
+            // Mock Login (Success)
             localStorage.setItem('isLoggedIn', 'true');
             localStorage.setItem('userEmail', email);
 
+            // Guild Simulation (Random assignment for demo, or default to Supporter)
+            // User can switch manually via Console or Dev Tools if needed, but for Beta we default to Supporter
+            if (!localStorage.getItem('userGuild')) {
+                localStorage.setItem('userGuild', 'supporter');
+            }
+
             // Alert
-            alert('Welcome back!');
+            alert('Protocol Accepted. Welcome to the Circle.');
             window.location.href = 'index.html';
         });
 

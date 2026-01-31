@@ -187,6 +187,23 @@ class GamificationEngine {
     }
 
     /**
+     * Get Hunter Stats (Nen, Stamina, Impact)
+     * Values are 0-100, derived from XP sources or Level.
+     */
+    getStats() {
+        // Mock calculation based on Level + Random Variance (Deterministic hash of XP)
+        // In real app, this would sum specific XP tags.
+        const base = this.state.level * 12;
+        const variance = (this.state.xp % 20); // 0-19 variation
+
+        return {
+            nen: Math.min(100, base + variance + 10),       // Creativity (Base High)
+            stamina: Math.min(100, base + (variance * 2)),  // Event Attendance
+            impact: Math.min(100, base + 5)                 // Community Support
+        };
+    }
+
+    /**
      * Dev Tools
      */
     reset() {
