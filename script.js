@@ -140,13 +140,19 @@ function createLanguageOverlay() {
 }
 
 window.setLanguage = function (lang) {
+    console.log('Language selected:', lang);
     localStorage.setItem('appLang', lang);
     updateLanguage(lang);
 
-    // Hide Overlay
+    // HIDE OVERLAY
     const overlay = document.getElementById('language-overlay');
     if (overlay) {
-        overlay.classList.add('hidden');
+        overlay.style.transition = 'opacity 0.5s ease';
+        overlay.style.opacity = '0'; // Fade out effect
+        setTimeout(() => {
+            overlay.classList.add('hidden'); // Add class for state management
+            overlay.style.display = 'none'; // Remove from flow
+        }, 500);
     }
 
     // Trigger Mission Briefing if first time
@@ -155,22 +161,7 @@ window.setLanguage = function (lang) {
     }
 };
 
-window.setLanguage = function (lang) {
-    localStorage.setItem('appLang', lang);
-    updateLanguage(lang);
 
-    // Animate Out
-    const overlay = document.getElementById('lang-overlay');
-    if (overlay) {
-        overlay.style.opacity = '0';
-        setTimeout(() => overlay.remove(), 500);
-    }
-
-    // Trigger Mission Briefing if first time
-    if (!localStorage.getItem('briefingSeen')) {
-        setTimeout(window.initMissionBriefing, 1000);
-    }
-};
 
 window.updateLanguage = function (lang) {
     const table = TRANSLATIONS[lang] || TRANSLATIONS['en'];
@@ -1033,6 +1024,9 @@ function activateManagerRole(role) {
  * Unified Upload Handler
  */
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize Language System
+    initLanguageSystem();
+
     const form = document.getElementById('unified-upload-form');
     if (form) {
         form.addEventListener('submit', (e) => {

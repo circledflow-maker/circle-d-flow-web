@@ -29,7 +29,7 @@
             }
         }
     </script>
-    </script>
+
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 
@@ -561,9 +561,28 @@
             document.getElementById('success-modal').classList.add('hidden');
         }
     </script>
-    <script src="script.js"></script>
     <script src="notifications.js"></script>
     <script src="gamification.js"></script>
+    <script src="script.js"></script>
+    <!-- CTA: Find Location -->
+    <div class="fixed bottom-24 right-8 z-40 hidden md:block">
+        <a href="events.html"
+            class="bg-amber/90 backdrop-blur-md text-black px-6 py-3 rounded-full font-bold uppercase tracking-widest text-xs hover:bg-white hover:scale-105 transition-all shadow-lg shadow-amber/20 flex items-center gap-2 blink-animation">
+            <span class="material-symbols-outlined">map</span>
+            <span>Find Location</span>
+        </a>
+    </div>
+    <style>
+        @keyframes blink {
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        .blink-animation {
+            animation: blink 2s infinite;
+        }
+    </style>
 </body>
 
 </html>
