@@ -174,14 +174,238 @@ window.setLanguage = function (lang) {
 
 
 
-window.updateLanguage = function (lang) {
-    const table = TRANSLATIONS[lang] || TRANSLATIONS['en'];
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        if (table[key]) {
-            el.innerText = table[key];
+// --- PROTOCOL IDENTITY: DYNAMIC PROFILES ---
+const BETA_MISSIONS = [
+    { id: 'mission_profile', text: 'Complete Profile (Set Name)', xp: 50, karma: 50 },
+    { id: 'mission_museum', text: 'Visit the Museum (Visuals)', xp: 50, karma: 50 },
+    { id: 'mission_glossary', text: 'Contribute to Glossary', xp: 50, karma: 50 },
+    { id: 'mission_ticker', text: 'Broadcast on Ticker', xp: 50, karma: 50 }
+];
+
+window.saveIdentity = function () {
+    const input = document.getElementById('identity-input');
+    const name = input.value.trim();
+
+    if (name) {
+        localStorage.setItem('artistName', name);
+        localStorage.setItem('userLevel', '0');
+        localStorage.setItem('userXP', '0');
+
+        // Hide Modal
+        document.getElementById('identity-modal').classList.add('hidden');
+
+        // Update UI
+        updateProfileDisplay();
+
+        // Show Onboarding
+        initOnboarding();
+
+        // Auto-complete first mission
+        completeTask('mission_profile');
+    } else {
+        input.classList.add('border-red-500');
+        setTimeout(() => input.classList.remove('border-red-500'), 500);
+    }
+};
+
+window.updateProfileDisplay = function () {
+    const name = localStorage.getItem('artistName') || 'Unknown Drifter';
+    const xp = parseInt(localStorage.getItem('userXP') || '0');
+    const level = Math.floor(xp / 100);
+
+    // Update DOM elements
+    const nameEls = document.querySelectorAll('#dash-user-name, #card-user-name');
+    nameEls.forEach(el => el.innerText = name);
+
+    const levelText = `Level ${level}: ${getLevelTitle(level)}`;
+    const levelEls = document.querySelectorAll('#dash-user-level-text');
+    levelEls.forEach(el => el.innerText = levelText);
+
+    const badge = document.getElementById('membership-badge');
+    if (badge) badge.innerText = getLevelTitle(level);
+
+    // Update Stars
+    const starContainer = document.getElementById('dash-user-stars');
+    if (starContainer) {
+        let stars = '';
+        for (let i = 0; i < level; i++) stars += '★';
+        for (let i = level; i < 7; i++) stars += '☆';
+        starContainer.innerText = stars;
+    }
+
+    // Update XP Bar
+    const xpFill = document.getElementById('dash-xp-fill');
+    const xpText = document.getElementById('dash-xp-text');
+    if (xpFill && xpText) {
+        const progress = xp % 100;
+        xpFill.style.width = `${progress}%`;
+        xpText.innerText = `${xp} XP`;
+    }
+};
+
+function getLevelTitle(level) {
+    const titles = ["Drifter", "Novice", "Apprentice", "Flow Seeker", "Artisan", "Master", "Legend", "Oracle"];
+    return titles[level] || "Oracle";
+}
+
+// --- PROTOCOL BETA: GAMIFICATION CHECKLIST ---
+window.initBetaChecklist = function () {
+    const container = document.getElementById('beta-checklist');
+    if (!container) return;
+
+    const completed = JSON.parse(localStorage.getItem('beta_missions_completed') || '[]');
+
+    container.innerHTML = BETA_MISSIONS.map(mission => {
+        const isDone = completed.includes(mission.id);
+        return `
+        <div class="flex items-center gap-4 p-4 rounded-xl border transition-all cursor-pointer group ${isDone ? 'bg-mystic-gold/10 border-mystic-gold/50' : 'bg-white/5 border-white/10 hover:border-white/20'}"
+             onclick="toggleBetaTask('${mission.id}')">
+            <div class="w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${isDone ? 'border-mystic-gold bg-mystic-gold' : 'border-white/30 group-hover:border-white'}">
+                ${isDone ? '<span class="material-symbols-outlined text-black text-sm font-bold">check</span>' : ''}
+            </div>
+            <div class="flex-1">
+                <p class="text-sm font-bold ${isDone ? 'text-mystic-gold line-through' : 'text-white'}">${mission.text}</p>
+            </div>
+            ${!isDone ? `<span class="text-xs font-bold text-white/30 group-hover:text-white transition-colors">+${mission.xp} XP</span>` : ''}
+        </div>
+        `;
+    }).join('');
+};
+
+window.toggleBetaTask = function (id) {
+    const completed = JSON.parse(localStorage.getItem('beta_missions_completed') || '[]');
+
+    if (!completed.includes(id)) {
+        // Mark Complete
+        completed.push(id);
+        localStorage.setItem('beta_missions_completed', JSON.stringify(completed));
+
+        // Award XP
+        const mission = BETA_MISSIONS.find(m => m.id === id);
+        if (mission) {
+            addXP(mission.xp);
         }
-    });
+
+        // Refresh UI
+        initBetaChecklist();
+    }
+};
+
+window.completeTask = function (id) {
+    // Silent completion helper
+    const completed = JSON.parse(localStorage.getItem('beta_missions_completed') || '[]');
+    if (!completed.includes(id)) {
+        completed.push(id);
+        localStorage.setItem('beta_missions_completed', JSON.stringify(completed));
+        const mission = BETA_MISSIONS.find(m => m.id === id);
+        if (mission) addXP(mission.xp);
+        initBetaChecklist(); // Refresh if visible
+    }
+};
+
+window.addXP = function (amount) {
+    let currentXP = parseInt(localStorage.getItem('userXP') || '0');
+    currentXP += amount;
+    localStorage.setItem('userXP', currentXP.toString());
+    updateProfileDisplay();
+
+    // Play Sound (Optional / Placeholder)
+    // const audio = new Audio('Assets/sounds/xp_gain.mp3');
+    // audio.play().catch(e => {}); 
+};
+
+// --- PROTOCOL SOCIAL: MOCK HUB ---
+window.initSocialHub = function () {
+    const container = document.getElementById('social-hub-list');
+    if (!container) return;
+
+    // Mock Data
+    const mockFriends = [
+        { name: "Hempy Roots", status: "online", fp: 450 },
+        { name: "Outbreak Tunes", status: "away", fp: 210 },
+        { name: "DJ Qter", status: "offline", fp: 890 },
+        { name: "Seedge", status: "online", fp: 120 }
+    ];
+
+    container.innerHTML = `
+        <div class="flex items-center gap-3 p-2 rounded-lg bg-white/5 border border-white/10 mb-2">
+             <div class="relative">
+                <div class="w-8 h-8 rounded-full bg-electric flex items-center justify-center font-bold text-xs text-white">ME</div>
+                <div class="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border border-black"></div>
+             </div>
+             <div class="flex-1">
+                 <p class="text-xs font-bold text-white">You</p>
+                 <p class="text-[10px] text-electric">Online</p>
+             </div>
+        </div>
+    ` + mockFriends.map(f => `
+        <div class="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 transition-colors cursor-pointer group">
+             <div class="relative">
+                <div class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-xs text-white/50 group-hover:text-white font-bold">${f.name.substring(0, 2).toUpperCase()}</div>
+                <div class="absolute -bottom-1 -right-1 w-3 h-3 rounded-full border border-black ${getStatusColor(f.status)}"></div>
+             </div>
+             <div class="flex-1">
+                 <p class="text-xs font-bold text-white/80 group-hover:text-white">${f.name}</p>
+                 <p class="text-[10px] text-white/40 group-hover:text-white/60 capitalize">${f.status}</p>
+             </div>
+             <div class="text-[10px] font-mono text-electric opacity-50 group-hover:opacity-100">
+                ${f.fp} FP
+             </div>
+        </div>
+    `).join('');
+};
+
+function getStatusColor(status) {
+    if (status === 'online') return 'bg-green-500';
+    if (status === 'away') return 'bg-yellow-500';
+    return 'bg-gray-500';
+}
+
+// --- PROTOCOL KNOWLEDGE: GLOSSARY ---
+window.submitGlossary = function () {
+    const term = document.getElementById('glossary-term').value;
+    const cat = document.getElementById('glossary-category').value;
+    const def = document.getElementById('glossary-def').value;
+    const sign = document.getElementById('glossary-sign').checked;
+
+    if (!term || !def) {
+        alert("Please provide both a term and a definition.");
+        return;
+    }
+
+    const artistName = localStorage.getItem('artistName') || "Anonymous";
+    const signature = sign ? `\n\nSigned: ${artistName}` : '';
+
+    const message = `*Glossary Submission*\n\nCategory: ${cat}\nTerm: ${term}\nDefinition: ${def}${signature}`;
+
+    window.completeTask('mission_glossary');
+    window.openWhatsApp(message);
+
+    // Clear form
+    document.getElementById('glossary-term').value = '';
+    document.getElementById('glossary-def').value = '';
+    alert("Submission prepared! Sending via WhatsApp...");
+};
+
+// --- ONBOARDING: SHADOW GUIDE ---
+window.initOnboarding = function () {
+    // Only show if Identity is set AND first visit not done
+    if (localStorage.getItem('artistName') && !localStorage.getItem('hasSeenShadowGuide')) {
+        const overlay = document.getElementById('onboarding-overlay');
+        if (overlay) {
+            document.getElementById('onboarding-name').innerText = localStorage.getItem('artistName');
+            overlay.classList.remove('hidden');
+        }
+    }
+};
+
+window.closeOnboarding = function () {
+    const overlay = document.getElementById('onboarding-overlay');
+    if (overlay) {
+        overlay.classList.add('opacity-0', 'transition-opacity', 'duration-500');
+        setTimeout(() => overlay.classList.add('hidden'), 500);
+    }
+    localStorage.setItem('hasSeenShadowGuide', 'true');
 };
 
 window.toggleLanguageModal = function () {
@@ -189,6 +413,21 @@ window.toggleLanguageModal = function () {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize Identity & Gamification
+    const artistName = localStorage.getItem('artistName');
+
+    if (!artistName) {
+        // Show Identity Modal
+        const modal = document.getElementById('identity-modal');
+        if (modal) modal.classList.remove('hidden');
+    } else {
+        updateProfileDisplay();
+        initOnboarding(); // Check if they need shadow guide
+    }
+
+    initBetaChecklist();
+    initSocialHub();
+
     // Ensure Gamification is available
     if (typeof window.Gamification === 'undefined') {
         console.warn('Gamification Engine not loaded. Features will be limited.');
