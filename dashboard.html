@@ -96,6 +96,10 @@
                     // If no user in 2 seconds, redirect.
                     setTimeout(() => {
                         if (!window.netlifyIdentity.currentUser()) {
+                            // Clear Local session to prevent UI mismatch
+                            localStorage.removeItem('isLoggedIn');
+                            localStorage.removeItem('userName');
+                            localStorage.removeItem('userEmail');
                             window.location.href = 'index.html';
                         }
                     }, 2000);

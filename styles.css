@@ -1,37 +1,46 @@
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-   width: 8px;
+    width: 8px;
 }
+
 ::-webkit-scrollbar-track {
-   background: #0D0D0F;
+    background: #0D0D0F;
 }
+
 ::-webkit-scrollbar-thumb {
-   background: #333;
-   border-radius: 4px;
+    background: #333;
+    border-radius: 4px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
-   background: #5A2A84;
+    background: #5A2A84;
 }
+
 /* Smooth Scroll Behavior & Mobile/Overflow Fixes */
-html, body {
+html,
+body {
     scroll-behavior: smooth;
-    overflow-x: hidden; /* Prevent horizontal scroll on mobile */
+    overflow-x: hidden;
+    /* Prevent horizontal scroll on mobile */
     width: 100%;
 }
 
 /* Optimize Mobile Touch */
-button, a {
+button,
+a {
     touch-action: manipulation;
 }
 
 /* Cursor Styles */
 * {
-    cursor: none !important; /* Hide default cursor everywhere */
+    cursor: none !important;
+    /* Hide default cursor everywhere */
 }
 
 @media (max-width: 768px) {
     * {
-        cursor: auto !important; /* Show default cursor on mobile */
+        cursor: auto !important;
+        /* Show default cursor on mobile */
     }
 }
 
@@ -41,10 +50,20 @@ button, a {
     transform: scale(1.2);
     transition: all 0.3s ease;
 }
+
 /* Text Selection */
 ::selection {
-   background: #9A4DFF;
-   color: white;
+    background: #9A4DFF;
+    color: white;
+}
+
+/* --- Hero Title Premium Styles --- */
+.hero-title {
+    letter-spacing: 0.1em;
+    /* Wide, Cinematic look (approx 4px) */
+    margin-bottom: 2rem;
+    text-shadow: 0 0 20px rgba(138, 43, 226, 0.6), 0 0 40px rgba(138, 43, 226, 0.3);
+    /* Neon Glow */
 }
 
 /* --- Offer Modal --- */
@@ -79,14 +98,16 @@ button, a {
     width: 90%;
     max-width: 1200px;
     z-index: 50;
-    
+
     /* Glassmorphism */
     background: rgba(0, 0, 0, 0.6);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(147, 51, 234, 0.3); /* Purple border */
-    border-radius: 9999px; /* Pill shape */
-    
+    border: 1px solid rgba(147, 51, 234, 0.3);
+    /* Purple border */
+    border-radius: 9999px;
+    /* Pill shape */
+
     padding: 0.75rem 2rem;
     transition: all 0.3s ease;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
@@ -106,7 +127,8 @@ button, a {
 }
 
 .nav-link:hover {
-    color: #FFD700; /* Mystic Gold */
+    color: #FFD700;
+    /* Mystic Gold */
     text-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
 }
 
@@ -161,7 +183,8 @@ button, a {
     position: fixed;
     inset: 0;
     background: #0D0D0F;
-    z-index: 49; /* Behind nav bar but above content */
+    z-index: 49;
+    /* Behind nav bar but above content */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -175,7 +198,8 @@ button, a {
 }
 
 .mobile-wave-menu a {
-    font-family: 'Times New Roman', serif; /* Or custom serif */
+    font-family: 'Times New Roman', serif;
+    /* Or custom serif */
     font-size: 2.5rem;
     font-weight: 700;
     color: white;
@@ -188,7 +212,8 @@ button, a {
 .mobile-wave-menu.active a {
     opacity: 1;
     transform: translateY(0);
-    transition-delay: 0.3s; /* Stagger handled in JS optionally */
+    transition-delay: 0.3s;
+    /* Stagger handled in JS optionally */
 }
 
 /* Hamburger Icon Animation */

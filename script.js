@@ -24,21 +24,16 @@ window.openSignup = function () {
 // Auth Success Event
 if (window.netlifyIdentity) {
     window.netlifyIdentity.on('login', user => {
+        console.log("Login detected. Redirecting to HQ...");
         window.netlifyIdentity.close();
-        console.log("Logged in as", user);
 
         // 1. Save Token/User to LocalStorage
         localStorage.setItem('isLoggedIn', 'true');
         localStorage.setItem('userName', user.user_metadata.full_name || user.email.split('@')[0]);
         localStorage.setItem('userEmail', user.email);
 
-        // 2. Redirect to Dashboard (if not already there)
-        if (!window.location.href.includes('dashboard.html')) {
-            window.location.href = 'dashboard.html';
-        } else {
-            // If already on dashboard, reload to update UI
-            window.location.reload();
-        }
+        // 2. FORCE Redirect to Dashboard
+        window.location.href = "dashboard.html";
     });
 
     // Logout Event
@@ -123,12 +118,18 @@ function initLanguageSystem() {
     const overlay = document.getElementById('language-overlay');
 
     if (savedLang) {
-        // Language exists, hide overlay immediately
-        if (overlay) overlay.classList.add('hidden');
+        // Language exists, hide overlay immediately (Prevent Flash)
+        if (overlay) {
+            overlay.classList.add('hidden');
+            overlay.style.display = 'none'; // Double assurance
+        }
         updateLanguage(savedLang);
     } else {
-        // No language, ensure overlay is visible (remove hidden if present)
-        if (overlay) overlay.classList.remove('hidden');
+        // No language, ensure overlay is visible
+        if (overlay) {
+            overlay.classList.remove('hidden');
+            overlay.style.display = 'flex';
+        }
     }
 }
 
@@ -136,7 +137,16 @@ function initLanguageSystem() {
 // We keep the function pointer but make it do nothing or just show the hardcoded one if needed.
 function createLanguageOverlay() {
     const overlay = document.getElementById('language-overlay');
-    if (overlay) overlay.classList.remove('hidden');
+    if (overlay) {
+        overlay.classList.remove('hidden');
+        // Fix for re-opening: Reset styles modified by fade-out
+        overlay.style.display = 'flex';
+        // Small delay to allow display:flex to apply before opacity transition if we wanted a fade-in, 
+        // but for now instant opacity=1 is fine or we can transition it.
+        requestAnimationFrame(() => {
+            overlay.style.opacity = '1';
+        });
+    }
 }
 
 window.setLanguage = function (lang) {
@@ -144,15 +154,16 @@ window.setLanguage = function (lang) {
     localStorage.setItem('appLang', lang);
     updateLanguage(lang);
 
-    // HIDE OVERLAY
+    // HIDE OVERLAY with Fade
     const overlay = document.getElementById('language-overlay');
     if (overlay) {
-        overlay.style.transition = 'opacity 0.5s ease';
-        overlay.style.opacity = '0'; // Fade out effect
+        overlay.style.transition = 'opacity 0.6s ease-out';
+        overlay.style.opacity = '0'; // Fade out
+
         setTimeout(() => {
-            overlay.classList.add('hidden'); // Add class for state management
-            overlay.style.display = 'none'; // Remove from flow
-        }, 500);
+            overlay.classList.add('hidden');
+            overlay.style.display = 'none';
+        }, 600);
     }
 
     // Trigger Mission Briefing if first time
@@ -787,6 +798,19 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('level-up', () => updateNavState());
 
     updateNavState();
+
+    // Auto-Redirect if already logged in (On Homepage Load)
+    if (window.location.pathname === "/" || window.location.pathname.endsWith("/index.html")) {
+        // Check local storage first for speed
+        if (localStorage.getItem('isLoggedIn') === 'true') {
+            // Optional: Check if token is actually valid via Netlify logic if needed, 
+            // but for instant feel rely on LS then netlify will verify on dashboard.
+            // We verify user exists to be safe
+            if (window.netlifyIdentity && window.netlifyIdentity.currentUser()) {
+                window.location.href = "dashboard.html";
+            }
+        }
+    }
 
 
 

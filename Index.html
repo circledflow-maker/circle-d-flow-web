@@ -294,11 +294,12 @@
     <main class="container mx-auto px-6 py-10 md:py-20">
         <!-- Hero Section -->
         <section class="text-center mb-20 md:mb-32">
-            <h1 class="text-5xl md:text-7xl lg:text-8xl font-display font-bold mb-6 tracking-tighter leading-none">
+            <h1
+                class="hero-title text-5xl md:text-7xl lg:text-8xl font-display font-bold mb-6 tracking-tighter leading-none">
                 THE TRUE KINGDOM<br>
                 <span class="bg-clip-text text-transparent bg-gradient-to-r from-electric to-neon-blue">IS HERE.</span>
             </h1>
-            <p class="text-xl text-gray-300 max-w-2xl mx-auto mb-10 font-light tracking-wide">
+            <p class="text-xl text-gray-300 max-w-2xl mx-auto mb-10 font-light tracking-wide leading-relaxed">
                 The central nexus for Lisbon's creators. Visuals, Sound & Taste united in one ecosystem.
             </p>
             <div class="flex flex-col md:flex-row gap-6 justify-center items-center">
@@ -1026,8 +1027,13 @@
                     </form>
                 </div>
             </div>
-            <div class="mt-12 border-t border-primary/20 pt-8 text-center text-sm text-white/50">
+            <div
+                class="mt-12 border-t border-primary/20 pt-8 text-center text-sm text-white/50 flex flex-col items-center gap-4">
                 <p>© 2024 Circle D Flow. All rights reserved.</p>
+                <button onclick="toggleLanguageModal()" class="text-white/30 hover:text-white transition-colors"
+                    title="Change Frequency">
+                    <span class="material-symbols-outlined text-lg">public</span>
+                </button>
             </div>
         </div>
     </footer>
