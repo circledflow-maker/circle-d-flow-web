@@ -60,9 +60,90 @@
             },
         }
     </script>
+    <style>
+        #language-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #000;
+            z-index: 99999 !important;
+            /* Force on top */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 
 <body class="bg-background-light dark:bg-background-dark font-display text-gray-800 dark:text-gray-200">
+    <!-- HARDCODED LANGUAGE OVERLAY (Critical Fix) -->
+    <div id="language-overlay">
+        <div class="relative w-full max-w-md text-center space-y-8 animate-fade-in-up p-6">
+            <h2
+                class="text-3xl font-bold text-white tracking-[0.2em] uppercase drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]">
+                Select Your<br><span class="text-electric animate-pulse">Frequency</span>
+            </h2>
+
+            <div class="grid gap-4 mt-8">
+                <button onclick="setLanguage('en')"
+                    class="group relative w-full h-[60px] bg-white/5 border border-white/10 hover:border-electric/50 rounded-xl overflow-hidden transition-all duration-300">
+                    <div
+                        class="absolute inset-0 bg-electric/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                    </div>
+                    <div class="relative flex items-center justify-center gap-3">
+                        <span class="text-2xl">🇬🇧</span>
+                        <span
+                            class="font-bold text-white tracking-widest text-sm uppercase group-hover:text-electric transition-colors">English</span>
+                    </div>
+                </button>
+
+                <button onclick="setLanguage('pt')"
+                    class="group relative w-full h-[60px] bg-white/5 border border-white/10 hover:border-green-500/50 rounded-xl overflow-hidden transition-all duration-300">
+                    <div
+                        class="absolute inset-0 bg-green-500/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                    </div>
+                    <div class="relative flex items-center justify-center gap-3">
+                        <span class="text-2xl">🇵🇹</span>
+                        <span
+                            class="font-bold text-white tracking-widest text-sm uppercase group-hover:text-green-400 transition-colors">Português</span>
+                    </div>
+                </button>
+
+                <button onclick="setLanguage('de')"
+                    class="group relative w-full h-[60px] bg-white/5 border border-white/10 hover:border-yellow-500/50 rounded-xl overflow-hidden transition-all duration-300">
+                    <div
+                        class="absolute inset-0 bg-yellow-500/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                    </div>
+                    <div class="relative flex items-center justify-center gap-3">
+                        <span class="text-2xl">🇩🇪</span>
+                        <span
+                            class="font-bold text-white tracking-widest text-sm uppercase group-hover:text-yellow-400 transition-colors">Deutsch</span>
+                    </div>
+                </button>
+
+                <button onclick="setLanguage('fr')"
+                    class="group relative w-full h-[60px] bg-white/5 border border-white/10 hover:border-blue-500/50 rounded-xl overflow-hidden transition-all duration-300">
+                    <div
+                        class="absolute inset-0 bg-blue-500/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                    </div>
+                    <div class="relative flex items-center justify-center gap-3">
+                        <span class="text-2xl">🇫🇷</span>
+                        <span
+                            class="font-bold text-white tracking-widest text-sm uppercase group-hover:text-blue-400 transition-colors">Français</span>
+                    </div>
+                </button>
+            </div>
+            <p class="text-[10px] text-white/30 uppercase tracking-widest mt-8">Protocol Babel Active</p>
+        </div>
+    </div>
 
     <!-- Video Background -->
     <video autoplay loop muted playsinline id="video-bg">
@@ -151,11 +232,11 @@
             <button onclick="toggleLanguageModal()" class="text-white/50 hover:text-white transition-colors">
                 <span class="material-symbols-outlined text-lg">public</span>
             </button>
-            <a href="login.html"
+            <button onclick="openLogin()"
                 class="px-5 py-2 bg-white/5 text-white font-bold rounded-full text-[10px] uppercase tracking-widest hover:bg-white hover:text-black transition-all border border-white/10 hover:shadow-[0_0_15px_rgba(255,255,255,0.3)]"
                 data-i18n="login_btn">
                 Login
-            </a>
+            </button>
         </div>
     </nav>
 
@@ -205,28 +286,27 @@
         <a href="mindfulness.html"
             class="text-2xl font-bold text-white hover:text-indigo-400 tracking-widest">SPIRIT</a>
         <div class="h-px w-24 bg-white/10"></div>
-        <a href="login.html"
-            class="px-8 py-3 bg-electric text-white font-bold rounded-full uppercase tracking-widest mt-8 shadow-lg shadow-electric/20">Login</a>
+        <button onclick="openLogin()"
+            class="px-8 py-3 bg-electric text-white font-bold rounded-full uppercase tracking-widest mt-8 shadow-lg shadow-electric/20 w-3/4">Login
+            / Join</button>
     </div>
     <main class="container mx-auto px-6 py-10 md:py-20">
         <!-- Hero Section -->
         <section class="text-center mb-20 md:mb-32">
             <h1 class="text-5xl md:text-7xl lg:text-8xl font-display font-bold mb-6 tracking-tighter leading-none">
-                RECLAIM THE STREETS...<br>
-                <span class="bg-clip-text text-transparent bg-gradient-to-r from-electric to-neon-blue">ENTER THE
-                    FLOW.</span>
+                THE TRUE KINGDOM<br>
+                <span class="bg-clip-text text-transparent bg-gradient-to-r from-electric to-neon-blue">IS HERE.</span>
             </h1>
             <p class="text-xl text-gray-300 max-w-2xl mx-auto mb-10 font-light tracking-wide">
-                Visuals, Sound & Taste. The central hub for the Cypher LX Ecosystem.
-                <br><span class="text-sm text-gray-500 mt-2 block">Join the community. Define the culture.</span>
+                The central nexus for Lisbon's creators. Visuals, Sound & Taste united in one ecosystem.
             </p>
             <div class="flex flex-col md:flex-row gap-6 justify-center items-center">
-                <a href="pricing.html"
+                <button onclick="openSignup()"
                     class="px-10 py-4 bg-electric hover:bg-electric/80 text-white rounded-full font-bold text-lg tracking-widest transition-all transform hover:scale-105 hover:shadow-[0_0_30px_rgba(98,0,234,0.5)] flex items-center gap-3 border border-white/10">
                     <span class="material-symbols-outlined">rocket_launch</span>
                     JOIN THE CIRCLE
-                </a>
-                <a href="#events"
+                </button>
+                <a href="events.html"
                     class="px-10 py-4 bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-full font-bold text-lg tracking-widest transition-all backdrop-blur-md flex items-center gap-3">
                     <span class="material-symbols-outlined">calendar_month</span>
                     VIEW EVENTS

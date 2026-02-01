@@ -8,6 +8,48 @@ window.PARTNERS_DATA = [
     { id: 'favela', name: "Favela LX", coords: [38.716241, -9.120880], desc: "Nightlife energy.", image: "Assets/images/logo.png" }
 ];
 
+// --- NETLIFY IDENTITY AUTHENTICATION ---
+if (window.netlifyIdentity) {
+    window.netlifyIdentity.init();
+}
+
+// Global Auth Triggers
+window.openLogin = function () {
+    if (window.netlifyIdentity) window.netlifyIdentity.open('login');
+};
+window.openSignup = function () {
+    if (window.netlifyIdentity) window.netlifyIdentity.open('signup');
+};
+
+// Auth Success Event
+if (window.netlifyIdentity) {
+    window.netlifyIdentity.on('login', user => {
+        window.netlifyIdentity.close();
+        console.log("Logged in as", user);
+
+        // 1. Save Token/User to LocalStorage
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('userName', user.user_metadata.full_name || user.email.split('@')[0]);
+        localStorage.setItem('userEmail', user.email);
+
+        // 2. Redirect to Dashboard (if not already there)
+        if (!window.location.href.includes('dashboard.html')) {
+            window.location.href = 'dashboard.html';
+        } else {
+            // If already on dashboard, reload to update UI
+            window.location.reload();
+        }
+    });
+
+    // Logout Event
+    window.netlifyIdentity.on('logout', () => {
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('userName');
+        localStorage.removeItem('userEmail');
+        window.location.href = 'index.html';
+    });
+}
+
 // --- PROTOCOL BABEL: LOCALIZATION SYSTEM ---
 const TRANSLATIONS = {
     en: {
@@ -78,68 +120,40 @@ const TRANSLATIONS = {
 
 function initLanguageSystem() {
     const savedLang = localStorage.getItem('appLang');
-    if (!savedLang) {
-        createLanguageOverlay();
-    } else {
+    const overlay = document.getElementById('language-overlay');
+
+    if (savedLang) {
+        // Language exists, hide overlay immediately
+        if (overlay) overlay.classList.add('hidden');
         updateLanguage(savedLang);
+    } else {
+        // No language, ensure overlay is visible (remove hidden if present)
+        if (overlay) overlay.classList.remove('hidden');
     }
 }
 
+// NOTE: createLanguageOverlay function is removed as it's now hardcoded in HTML.
+// We keep the function pointer but make it do nothing or just show the hardcoded one if needed.
 function createLanguageOverlay() {
-    // Check if exists
-    if (document.getElementById('lang-overlay')) return;
-
-    const overlay = document.createElement('div');
-    overlay.id = 'lang-overlay';
-    overlay.className = 'fixed inset-0 z-[9999] bg-black/95 backdrop-blur-2xl flex flex-col items-center justify-center p-6 transition-opacity duration-500';
-
-    const html = `
-        <div class="relative w-full max-w-md text-center space-y-8 animate-fade-in-up">
-            <h2 class="text-3xl font-bold text-white tracking-[0.2em] uppercase drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]">
-                Select Your<br><span class="text-electric animate-pulse">Frequency</span>
-            </h2>
-            
-            <div class="grid gap-4 mt-8">
-                <button onclick="setLanguage('en')" class="lang-btn group relative w-full h-[60px] bg-white/5 border border-white/10 hover:border-electric/50 rounded-xl overflow-hidden transition-all duration-300">
-                    <div class="absolute inset-0 bg-electric/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
-                    <div class="relative flex items-center justify-center gap-3">
-                        <span class="text-2xl">🇬🇧</span>
-                        <span class="font-bold text-white tracking-widest text-sm uppercase group-hover:text-electric transition-colors">English</span>
-                    </div>
-                </button>
-
-                <button onclick="setLanguage('pt')" class="lang-btn group relative w-full h-[60px] bg-white/5 border border-white/10 hover:border-green-500/50 rounded-xl overflow-hidden transition-all duration-300">
-                    <div class="absolute inset-0 bg-green-500/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
-                    <div class="relative flex items-center justify-center gap-3">
-                        <span class="text-2xl">🇵🇹</span>
-                        <span class="font-bold text-white tracking-widest text-sm uppercase group-hover:text-green-400 transition-colors">Português</span>
-                    </div>
-                </button>
-
-                <button onclick="setLanguage('de')" class="lang-btn group relative w-full h-[60px] bg-white/5 border border-white/10 hover:border-yellow-500/50 rounded-xl overflow-hidden transition-all duration-300">
-                    <div class="absolute inset-0 bg-yellow-500/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
-                    <div class="relative flex items-center justify-center gap-3">
-                        <span class="text-2xl">🇩🇪</span>
-                        <span class="font-bold text-white tracking-widest text-sm uppercase group-hover:text-yellow-400 transition-colors">Deutsch</span>
-                    </div>
-                </button>
-
-                <button onclick="setLanguage('fr')" class="lang-btn group relative w-full h-[60px] bg-white/5 border border-white/10 hover:border-blue-500/50 rounded-xl overflow-hidden transition-all duration-300">
-                    <div class="absolute inset-0 bg-blue-500/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
-                    <div class="relative flex items-center justify-center gap-3">
-                        <span class="text-2xl">🇫🇷</span>
-                        <span class="font-bold text-white tracking-widest text-sm uppercase group-hover:text-blue-400 transition-colors">Français</span>
-                    </div>
-                </button>
-            </div>
-            
-            <p class="text-[10px] text-white/30 uppercase tracking-widest mt-8">Protocol Babel Active</p>
-        </div>
-    `;
-
-    overlay.innerHTML = html;
-    document.body.appendChild(overlay);
+    const overlay = document.getElementById('language-overlay');
+    if (overlay) overlay.classList.remove('hidden');
 }
+
+window.setLanguage = function (lang) {
+    localStorage.setItem('appLang', lang);
+    updateLanguage(lang);
+
+    // Hide Overlay
+    const overlay = document.getElementById('language-overlay');
+    if (overlay) {
+        overlay.classList.add('hidden');
+    }
+
+    // Trigger Mission Briefing if first time
+    if (!localStorage.getItem('briefingSeen')) {
+        setTimeout(window.initMissionBriefing, 1000);
+    }
+};
 
 window.setLanguage = function (lang) {
     localStorage.setItem('appLang', lang);
@@ -335,13 +349,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // Logout Function (Global)
     window.logout = function () {
         if (confirm("Are you sure you want to leave the Circle?")) {
-            localStorage.removeItem('isLoggedIn');
-            localStorage.removeItem('userEmail');
-            localStorage.removeItem('userName');
-            localStorage.removeItem('cdf_active_role');
-            // Clear simulated cart
-            localStorage.removeItem('aq_cart');
-            window.location.href = 'index.html';
+            if (window.netlifyIdentity) {
+                window.netlifyIdentity.logout();
+            } else {
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('userEmail');
+                localStorage.removeItem('userName');
+                localStorage.removeItem('cdf_active_role');
+                localStorage.removeItem('aq_cart');
+                window.location.href = 'index.html';
+            }
         }
     }
 

@@ -80,13 +80,41 @@
             },
         }
     </script>
+    </script>
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 
 <body class="bg-[#0F0A13] font-display text-gray-200">
     <script>
-        // Auth Protection
-        if (localStorage.getItem('isLoggedIn') !== 'true') {
-            window.location.href = 'login.html';
+        // Auth Protection with Netlify Identity
+        // Wait for widget to load
+        window.addEventListener('load', () => {
+            if (window.netlifyIdentity) {
+                const user = window.netlifyIdentity.currentUser();
+                if (!user) {
+                    // Check LocalStorage fallback just in case widget is slow, but prefer Widget
+                    // If no user in 2 seconds, redirect.
+                    setTimeout(() => {
+                        if (!window.netlifyIdentity.currentUser()) {
+                            window.location.href = 'index.html';
+                        }
+                    }, 2000);
+                } else {
+                    // Check for Intro Logic only if user is logged in
+                    if (!localStorage.getItem('hasSeenIntro')) {
+                        setTimeout(() => {
+                            const modal = document.getElementById('welcome-intro-modal');
+                            if (modal) modal.classList.remove('hidden');
+                        }, 1000);
+                    }
+                }
+            }
+        });
+
+        function closeIntroModal() {
+            const modal = document.getElementById('welcome-intro-modal');
+            if (modal) modal.classList.add('hidden');
+            localStorage.setItem('hasSeenIntro', 'true');
         }
     </script>
 
@@ -172,6 +200,32 @@
             <span class="text-[9px] font-bold uppercase tracking-wider">More</span>
         </button>
     </nav>
+
+    <!-- Welcome Intro Modal -->
+    <div id="welcome-intro-modal"
+        class="fixed inset-0 z-[300] bg-black/90 backdrop-blur-xl hidden flex items-center justify-center p-4">
+        <div
+            class="bg-[#1A1622] border border-electric/50 rounded-2xl p-8 max-w-md w-full text-center relative overflow-hidden shadow-[0_0_50px_rgba(138,43,226,0.3)]">
+            <!-- Glow Effect -->
+            <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-electric via-mystic-gold to-electric">
+            </div>
+
+            <div
+                class="w-16 h-16 rounded-full bg-electric/20 flex items-center justify-center mx-auto mb-6 border border-electric">
+                <span class="material-symbols-outlined text-3xl text-electric">hub</span>
+            </div>
+
+            <h2 class="text-3xl font-bold text-white mb-4 tracking-wide">Welcome to the Flow.</h2>
+            <p class="text-gray-400 mb-8 leading-relaxed">
+                Here you can connect with Artists, check the Food Stock, and book Studio time. Your journey begins now.
+            </p>
+
+            <button onclick="closeIntroModal()"
+                class="w-full py-4 bg-electric hover:bg-electric/80 text-white font-bold rounded-xl uppercase tracking-widest transition-all hover:scale-[1.02] shadow-lg">
+                Start Exploring
+            </button>
+        </div>
+    </div>
 
     <!-- Mobile Drawer -->
     <div id="mobile-drawer"
