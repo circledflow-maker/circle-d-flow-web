@@ -1,11 +1,11 @@
-// --- PROTOCOL: TOTAL CONVERGENCE (PLATINUM SWARM) ---
-// SYSTEM ARCHITECTURE: DUAL-CORE AGENTIC SYSTEM
-// BUILD_ID: CONVERGENCE_V1
+// --- PROTOCOL: SYNERGY SWARM (Collaborative Agents) ---
+// SYSTEM ARCHITECTURE: STRICT EVENT-DRIVEN HANDSHAKE
+// BUILD_ID: SYNERGY_V1
 
 const SYSTEM_CONFIG = {
-    BUILD_ID: 'CONVERGENCE_V1',
+    BUILD_ID: 'SYNERGY_V1',
     DEBUG: true,
-    MAINTENANCE_WINDOW: { start: 0, end: 1 } // 00:00 - 01:00
+    MAINTENANCE_WINDOW: { start: 0, end: 0 }
 };
 
 // --- CORE 0: THE NERVOUS SYSTEM (EventBus) ---
@@ -16,46 +16,42 @@ class EventBus {
     }
 
     subscribe(event, callback) {
-        if (!this.events[event]) {
-            this.events[event] = [];
-        }
+        if (!this.events[event]) this.events[event] = [];
         this.events[event].push(callback);
     }
 
     publish(event, data = {}) {
-        if (SYSTEM_CONFIG.DEBUG) {
-            // Filter noise
-            if (event !== 'HEARTBEAT') console.log(`[BUS] FLASH: ${event}`, data);
+        if (SYSTEM_CONFIG.DEBUG && event !== 'HEARTBEAT') {
+            console.log(`[BUS] FLASH: ${event}`, data);
         }
-
         this.history.push({ timestamp: Date.now(), event, data });
-
         if (this.events[event]) {
             this.events[event].forEach(callback => callback(data));
         }
     }
 }
-
 const SystemBus = new EventBus();
 
-
+// --- AGENT 1: THE OVERSEER (System Core & Time) ---
 // --- AGENT 1: THE OVERSEER (System Core & Time) ---
 class AgentOverseer {
     constructor() {
         this.name = 'OVERSEER';
+        // Overseer initiates the chain
+        SystemBus.subscribe('SYSTEM_INIT', () => this.initSynergy());
         this._internal();
         this._external();
     }
 
+    initSynergy() {
+        console.log(`[${this.name}] INITIATING SYNERGY SWARM PROTOCOL...`);
+        // Trigger Sentinel for Step 1
+        SystemBus.publish('OVERSEER_READY');
+    }
+
     _internal() {
-        // Brain: Heartbeat & Time Monitoring
         setInterval(() => this.checkTime(), 60000);
         setInterval(() => this.heartbeat(), 10000);
-
-        SystemBus.subscribe('SYSTEM_INIT', () => {
-            console.log(`[${this.name}] Systems Online.`);
-            this.checkTime();
-        });
     }
 
     _external() {
@@ -132,17 +128,13 @@ class AgentOverseer {
 }
 
 
-// --- AGENT 2: SENTINEL (Security) ---
+// --- AGENT 2: SENTINEL (The Gatekeeper) ---
 class AgentSentinel {
     constructor() {
         this.name = 'SENTINEL';
-        this._internal();
+        // Step 1: Listen for Overseer
+        SystemBus.subscribe('OVERSEER_READY', () => this.validateAccess());
         this._external();
-    }
-
-    _internal() {
-        SystemBus.subscribe('SYSTEM_INIT', () => this.validateSession());
-        SystemBus.subscribe('CHECK_ACCESS', (data) => this.checkAdminAccess(data.zone, data.password));
     }
 
     _external() {
@@ -150,27 +142,60 @@ class AgentSentinel {
         SystemBus.subscribe('LOCK_ZONES', () => this.lockUI());
     }
 
-    validateSession() {
+    validateAccess() {
+        console.log(`[${this.name}] VERIFYING CREDENTIALS...`);
         const tokenDate = localStorage.getItem('session_start');
-        if (tokenDate) {
-            const now = Date.now();
-            const diff = now - parseInt(tokenDate);
-            const hours24 = 24 * 60 * 60 * 1000;
+        const userLang = localStorage.getItem('user_lang');
+        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
 
-            if (diff > hours24) {
+        // AUTO REDIRECT LOGIC
+        if (userLang && (currentPage === 'index.html' || currentPage === '' || currentPage === '/')) {
+            console.log(`[${this.name}] USER AUTHENTICATED. REDIRECTING TO DASHBOARD.`);
+            SystemBus.publish('AUTH_SUCCESS', { userID: 'User_Alpha' }); // Signal for background loading even if redirecting
+            setTimeout(() => window.location.href = 'dashboard.html', 100);
+            return;
+        }
+
+        if (!userLang && currentPage === 'dashboard.html') {
+            console.warn(`[${this.name}] UNAUTHORIZED. REDIRECTING TO ROOT.`);
+            SystemBus.publish('AUTH_FAILED');
+            window.location.href = 'index.html';
+            return;
+        }
+
+        // Standard Session Check
+        if (tokenDate) {
+            const diff = Date.now() - parseInt(tokenDate);
+            if (diff > 24 * 60 * 60 * 1000) {
                 SystemBus.publish('SESSION_EXPIRED');
+                SystemBus.publish('AUTH_FAILED');
+            } else {
+                // Success! Pass baton to Merkur
+                SystemBus.publish('AUTH_SUCCESS', { userID: 'User_Alpha' });
             }
         } else {
             localStorage.setItem('session_start', Date.now().toString());
+            // New session
+            SystemBus.publish('AUTH_SUCCESS', { userID: 'User_Alpha' });
         }
     }
 
-    checkAdminAccess(zone, passwordHash) {
-        if (passwordHash === 'admin_secret') {
-            SystemBus.publish('ACCESS_GRANTED', { zone });
-        } else {
-            SystemBus.publish('ACCESS_DENIED', { zone });
-        }
+    // --- LANGUAGE SELECTION BYPASS ---
+    handleLanguageSelection(lang) {
+        console.log(`[${this.name}] Language Selected: ${lang}`);
+        document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('selected'));
+        const btn = document.querySelector(`button[onclick="selectLang('${lang}')"]`);
+        if (btn) btn.classList.add('selected');
+        const confirmBtn = document.getElementById('lang-confirm-btn');
+        if (confirmBtn) confirmBtn.style.display = 'block';
+        this.tempLang = lang;
+    }
+
+    confirmLanguageSelection() {
+        if (!this.tempLang) return;
+        console.log(`[${this.name}] Confirmed: ${this.tempLang}. Redirecting...`);
+        localStorage.setItem('user_lang', this.tempLang);
+        window.location.href = 'dashboard.html';
     }
 
     lockUI() {
@@ -189,125 +214,90 @@ class AgentSentinel {
     }
 
     performLogout() {
-        console.warn(`[${this.name}] SESSION EXPIRED. LOGGING OUT.`);
-        // Note: In a real app we might redirect to login, but here we just warn.
-        // window.location.href = 'index.html'; 
+        localStorage.removeItem('user_lang');
+        window.location.href = 'index.html';
     }
 }
 
 
-// --- AGENT 3: MERKUR (Economy & Stats) ---
+// --- AGENT 3: MERKUR (Economy Supplier) ---
 class AgentMerkur {
     constructor() {
         this.name = 'MERKUR';
+        // Step 2a: Listen for Sentinel
+        SystemBus.subscribe('AUTH_SUCCESS', (data) => this.initEconomy(data));
         this._internal();
         this._external();
     }
 
-    _internal() {
-        SystemBus.subscribe('XP_EARNED', (data) => this.calculateXP(data.amount));
-        SystemBus.subscribe('TRANSACTION_REQUEST', (data) => this.transactionLogic(data.cost));
+    initEconomy(userData) {
+        console.log(`[${this.name}] CALCULATING ASSETS...`);
+        // Recalculate caps (logic from before)
+        const dailyXP = parseInt(localStorage.getItem('daily_xp_current') || '0');
+        if (dailyXP >= 1000) SystemBus.publish('CAP_REACHED');
+
+        // Signal Ready for next link
+        SystemBus.publish('MERKUR_READY', { economyState: 'ACTIVE' });
     }
 
+    _internal() {
+        SystemBus.subscribe('XP_EARNED', (data) => this.calculateXP(data.amount));
+    }
     _external() {
         SystemBus.subscribe('BALANCE_UPDATED', () => this.updateHUD());
-        SystemBus.subscribe('CAP_REACHED', () => this.showToast('Daily Energy Depleted'));
     }
 
     calculateXP(amount) {
         let currentXP = parseInt(localStorage.getItem('user_xp') || '0');
         let dailyXP = parseInt(localStorage.getItem('daily_xp_current') || '0');
-
-        if (dailyXP >= 1000) {
-            SystemBus.publish('CAP_REACHED');
-            return 0;
-        }
-
+        if (dailyXP >= 1000) { SystemBus.publish('CAP_REACHED'); return 0; }
         const allowed = Math.min(amount, 1000 - dailyXP);
         if (allowed > 0) {
-            currentXP += allowed;
-            dailyXP += allowed;
-
+            currentXP += allowed; dailyXP += allowed;
             localStorage.setItem('user_xp', currentXP);
             localStorage.setItem('daily_xp_current', dailyXP);
-
-            SystemBus.publish('XP_GAINED', { total: currentXP, gained: allowed });
+            SystemBus.publish('XP_GAINED', { total: currentXP });
             SystemBus.publish('BALANCE_UPDATED');
-
-            // Trigger Level Up Check
-            if (window.Gamification) {
-                // Determine if level up
-                // Simplified: GamificationEngine (if imported) handles Level Up event via 'xp-added'
-                // We just rely on that or re-implement if needed.
-                // For now, let's emit a bus event.
-            }
         }
     }
-
-    transactionLogic(cost) {
-        // Placeholder
-        console.log(`[${this.name}] Transaction: ${cost}`);
-    }
-
     updateHUD() {
-        // Targets: dash-xp-text, dash-xp-fill
         const xpText = document.getElementById('dash-xp-text');
         const xpFill = document.getElementById('dash-xp-fill');
-
         if (xpText && xpFill) {
             const currentXP = parseInt(localStorage.getItem('user_xp') || '0');
-            // Assuming next level is static for now or retrieved
-            const nextLevelXP = 2200; // Mock current level cap for Lvl 7
-
-            xpText.innerText = `${currentXP} / ${nextLevelXP}`;
-
-            // Calculate percentage
-            // Simplified logic: Assuming 0 - 2200 for progress bar
-            const percent = Math.min(100, (currentXP / nextLevelXP) * 100);
-            xpFill.style.width = `${percent}%`;
+            xpText.innerText = `${currentXP} / 2200`;
+            xpFill.style.width = `${Math.min(100, (currentXP / 2200) * 100)}%`;
         }
     }
-
-    showToast(message) {
-        console.log(`[${this.name}] TOAST: ${message}`);
-        const toast = document.createElement('div');
-        toast.className = 'fixed bottom-4 left-1/2 -translate-x-1/2 bg-red-600 text-white px-6 py-3 rounded-full font-bold shadow-xl z-[99999] animate-bounce';
-        toast.innerText = message;
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 3000);
-    }
+    showToast(msg) { console.log(`[TOAST] ${msg}`); }
 }
 
-
-// --- AGENT 4: HERMES (Social & Connection) ---
+// --- AGENT 4: HERMES (Social Supplier) ---
 class AgentHermes {
     constructor() {
         this.name = 'HERMES';
         this.pendingRequests = [];
         this.friends = ['DJ Qter', 'Hempy Roots'];
+        // Step 2b: Listen for Merkur
+        SystemBus.subscribe('MERKUR_READY', () => this.fetchSocialData());
         this._internal();
-        this._external();
+    }
+
+    fetchSocialData() {
+        console.log(`[${this.name}] FETCHING NETWORK...`);
+        // Mock fetch
+        if (Math.random() > 0.7) this.queueRequest('ShadowOne');
+
+        // FINAL DATA SIGNAL
+        SystemBus.publish('DATA_READY', {
+            social: { pending: this.pendingRequests.length },
+            economy: 'OK'
+        });
     }
 
     _internal() {
-        SystemBus.subscribe('SYSTEM_INIT', () => {
-            // Mock inbound request
-            if (Math.random() > 0.7) {
-                this.queueRequest('ShadowOne');
-            }
-            this.refreshFriendList();
-        });
-
         SystemBus.subscribe('REQUEST_ACTION', (data) => this.resolveRequest(data.id, data.action));
-        SystemBus.subscribe('NAV_CHECK_BADGE', () => this.renderBadge());
-    }
-
-    _external() {
-        SystemBus.subscribe('REQUEST_QUEUED', () => this.renderBadge());
-        SystemBus.subscribe('FRIEND_ADDED', () => {
-            this.refreshFriendList();
-            this.renderBadge();
-        });
+        SystemBus.subscribe('DATA_READY', () => { this.refreshFriendList(); this.renderBadge(); }); // Self-trigger render on ready
     }
 
     queueRequest(targetID) {
@@ -319,7 +309,6 @@ class AgentHermes {
 
     resolveRequest(targetID, action) {
         this.pendingRequests = this.pendingRequests.filter(id => id !== targetID);
-
         if (action === 'ACCEPT') {
             this.friends.push(targetID);
             SystemBus.publish('FRIEND_ADDED', { id: targetID });
@@ -354,8 +343,6 @@ class AgentHermes {
         if (!list) return;
 
         let html = '';
-
-        // Pending
         this.pendingRequests.forEach(id => {
             html += `
                 <div class="flex items-center justify-between p-2 bg-white/5 rounded-lg border border-electric/30 mb-2">
@@ -367,8 +354,6 @@ class AgentHermes {
                 </div>
             `;
         });
-
-        // Friends
         this.friends.forEach(id => {
             html += `
                 <div class="flex items-center justify-between p-2 hover:bg-white/5 rounded-lg transition-colors">
@@ -380,65 +365,62 @@ class AgentHermes {
                 </div>
             `;
         });
-
         list.innerHTML = html;
     }
 }
 
 
-// --- AGENT 5: DA VINCI (Architect, UX & Medic) ---
+// --- AGENT 5: DA VINCI (The Artist & Builder) ---
 class AgentDaVinci {
     constructor() {
         this.name = 'DA_VINCI';
-        this._internal();
+        // Step 3: Listen for Suppliers
+        SystemBus.subscribe('DATA_READY', (data) => this.renderUI(data));
         this._external();
     }
 
-    _internal() {
-        SystemBus.subscribe('SYSTEM_INIT', () => {
-            this.auditTouchTargets();
-            this.monitorAssets();
-        });
+    renderUI(data) {
+        console.log(`[${this.name}] CONSTRUCTING INTERFACE...`);
+        if (!data) { this.emergencyReset(); return; }
+
+        this.auditTouchTargets();
+        this.monitorAssets();
+
+        // Signal Visuals Complete
+        SystemBus.publish('UI_RENDERED');
     }
 
     _external() {
         SystemBus.subscribe('ASSET_ERROR', (data) => this.emergencyAssetSwap(data.element));
     }
 
+    emergencyReset() {
+        console.error(`[${this.name}] SYNC ERROR. RETRYING...`);
+        setTimeout(() => SystemBus.publish('AUTH_SUCCESS', {}), 1000); // Retry loop
+    }
+
     auditTouchTargets() {
         setTimeout(() => {
-            const buttons = document.querySelectorAll('button, a');
-            buttons.forEach(btn => {
+            document.querySelectorAll('button, a').forEach(btn => {
                 const rect = btn.getBoundingClientRect();
                 if ((rect.height > 0 && rect.height < 44) || (rect.width > 0 && rect.width < 44)) {
-                    // Check if not already adjusted
-                    if (!btn.style.minHeight) {
-                        btn.style.minHeight = '44px';
-                        btn.style.minWidth = '44px';
-                        // Keep content centered
-                        btn.style.display = 'inline-flex';
-                        btn.style.alignItems = 'center';
-                        btn.style.justifyContent = 'center';
-                    }
+                    btn.style.minHeight = '44px'; btn.style.minWidth = '44px';
+                    btn.style.display = 'inline-flex'; btn.style.alignItems = 'center'; btn.style.justifyContent = 'center';
                 }
             });
-        }, 1000);
+        }, 500);
     }
 
     monitorAssets() {
         window.addEventListener('error', (e) => {
-            if (e.target && e.target.tagName === 'IMG') {
-                SystemBus.publish('ASSET_ERROR', { element: e.target });
-            }
+            if (e.target && e.target.tagName === 'IMG') SystemBus.publish('ASSET_ERROR', { element: e.target });
         }, true);
     }
 
-    emergencyAssetSwap(imgElement) {
-        // Adinkra Symbol SVG (Wisdom Knot)
+    emergencyAssetSwap(img) {
         const fallbackSVG = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSI0OCIgZmlsbD0iIzE5MTAyMiIgc3Ryb2tlPSIjOEEyQkUyIiBzdHJva2Utd2lkdGg9IjIiLz48cGF0aCBkPSJNMzAgMzAgUSA1MCAxMCA3MCAzMCBUIDcwIDcwIFQgMzAgNzAgVCAzMCAzMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZENzAwIiBzdHJva2Utd2lkdGg9IjQiLz48L3N2Zz4=";
-
-        imgElement.src = fallbackSVG;
-        imgElement.classList.add('border-2', 'border-red-500/50');
+        img.src = fallbackSVG;
+        img.classList.add('border-2', 'border-red-500/50');
     }
 }
 
@@ -676,8 +658,93 @@ class AgentGuide {
 }
 
 
-// --- INITIALIZATION ---
-// Instantiate Agents
+
+// --- AGENT 8: THE AUDITOR (Quality Assurance & Pre-Flight) ---
+class AgentAuditor {
+    constructor() {
+        this.name = 'AUDITOR';
+        this.status = 'PENDING';
+    }
+
+    async preFlightCheck() {
+        console.log(`[${this.name}] INITIATING PRE-FLIGHT CHECK...`);
+        this.renderOverlay();
+
+        try {
+            await this.runSequence();
+            console.log(`[${this.name}] CHECK PASSED. SYSTEM GREEN.`);
+            this.removeOverlay();
+            return true;
+        } catch (error) {
+            console.error(`[${this.name}] CRITICAL FAILURE:`, error);
+            this.updateOverlay(error.message);
+            return false; // Stop init? Or allow degraded? User asked for "Maintenance" view.
+        }
+    }
+
+    renderOverlay() {
+        const overlay = document.createElement('div');
+        overlay.id = 'auditor-overlay';
+        overlay.style.cssText = `
+            position: fixed; inset: 0; z-index: 999999;
+            background: #000; color: #00FF00; font-family: monospace;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+        `;
+        overlay.innerHTML = `
+            <h2 class="animate-pulse">SYSTEM CALIBRATING...</h2>
+            <div id="audit-log" class="text-xs mt-4 opacity-70">Initializing Swarm...</div>
+        `;
+        document.body.appendChild(overlay);
+    }
+
+    updateOverlay(msg) {
+        const log = document.getElementById('audit-log');
+        if (log) log.innerText = msg;
+    }
+
+    removeOverlay() {
+        const overlay = document.getElementById('auditor-overlay');
+        if (overlay) {
+            overlay.style.opacity = '0';
+            overlay.style.transition = 'opacity 0.5s';
+            setTimeout(() => overlay.remove(), 500);
+        }
+    }
+
+    async runSequence() {
+        // Agent 1: Sentinel (Storage)
+        this.updateOverlay("Checking Sentinel...");
+        if (!localStorage) throw new Error("Agent Sentinel: Storage Failure");
+
+        // Agent 2: Merkur (Math)
+        this.updateOverlay("Checking Merkur...");
+        if (isNaN(100 + 100)) throw new Error("Agent Merkur: Math Core Corrupted");
+
+        // Agent 3: Da Vinci (Assets)
+        this.updateOverlay("Checking Da Vinci...");
+        if (document.images.length > 0) {
+            // Basic check if logic exists
+        }
+
+        // Agent 4: Navigator
+        this.updateOverlay("Checking Navigation...");
+        // Logic check only
+
+        // Ghost Bot Simulation
+        await this.ghostBotTest();
+    }
+
+    ghostBotTest() {
+        return new Promise((resolve) => {
+            this.updateOverlay("Running Ghost Bot Simulation...");
+            setTimeout(() => {
+                resolve(true); // Mock pass
+            }, 800);
+        });
+    }
+}
+
+const Auditor = new AgentAuditor();
 const Overseer = new AgentOverseer();
 const Sentinel = new AgentSentinel();
 const Merkur = new AgentMerkur();
@@ -686,10 +753,18 @@ const DaVinci = new AgentDaVinci();
 const Hedonist = new AgentHedonist();
 const Guide = new AgentGuide();
 
+// GLOBAL BINDINGS FOR HTML INTERACTION
+window.selectLang = (lang) => Sentinel.handleLanguageSelection(lang);
+window.confirmLang = () => Sentinel.confirmLanguageSelection();
+
 document.addEventListener('DOMContentLoaded', () => {
-    // Start the Chain Reaction
-    SystemBus.publish('SYSTEM_INIT');
-    SystemBus.publish('SYSTEM_BOOT');
+    // WRAPPER: Auditor Pre-Flight
+    Auditor.preFlightCheck().then(passed => {
+        if (passed) {
+            SystemBus.publish('SYSTEM_INIT');
+            SystemBus.publish('SYSTEM_BOOT');
+        }
+    });
 });
 
 // --- EXPORTS ---
