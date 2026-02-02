@@ -173,149 +173,117 @@
             </div>
         </section>
 
-        <!-- PROTOCOL DA VINCI: THE ROTATING MUSEUM -->
+        <!-- PROTOCOL DA VINCI: THE DYNAMIC GALLERY -->
         <section id="museum" class="py-12 md:py-24 relative overflow-hidden bg-black">
             <!-- Ambient Background Glow -->
             <div
-                class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200%] h-[50%] bg-electric/10 blur-[120px] pointer-events-none">
+                class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200%] h-[50%] bg-pink-500/10 blur-[120px] pointer-events-none">
             </div>
 
             <div class="container mx-auto px-6 relative z-10">
-                <div class="flex flex-col items-center mb-16 text-center">
-                    <span class="text-electric text-xs font-bold uppercase tracking-[0.2em] mb-4 animate-pulse">Now
-                        Exhibiting</span>
-                    <h2 class="text-4xl md:text-7xl font-serif font-bold text-white mb-6">Reality <span
-                            class="text-transparent bg-clip-text bg-gradient-to-r from-electric to-pink-500">Check</span>
-                    </h2>
-                    <p class="text-mist max-w-xl text-sm md:text-base font-light">
-                        A curated collection of moments from the Circle D Flow network.
-                        Swipe to explore the exhibits.
-                    </p>
-                </div>
-
-                <!-- 3D Carousel Container -->
-                <div
-                    class="museum-carousel flex gap-8 overflow-x-auto pb-12 snap-x snap-mandatory scrollbar-hide px-4 md:px-[30vw]">
-
-                    <!-- Exhibit 1 -->
-                    <div
-                        class="museum-item snap-center shrink-0 w-[85vw] md:w-[400px] aspect-[9/16] bg-white/5 rounded-2xl overflow-hidden border border-white/10 relative group transition-all duration-500 hover:scale-105 hover:border-electric hover:shadow-[0_0_30px_rgba(154,77,255,0.3)]">
-                        <video loop muted playsinline
-                            class="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity duration-500 exhibit-video">
-                            <source src="https://pub-24ba376bfccb446996666eaff4dbae12.r2.dev/hero.mp4" type="video/mp4">
-                        </video>
-                        <div
-                            class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90">
-                        </div>
-                        <div
-                            class="absolute bottom-0 left-0 p-8 w-full transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                            <span
-                                class="text-electric text-[10px] uppercase tracking-widest font-bold block mb-2">Exhibit
-                                01</span>
-                            <h3 class="text-2xl font-serif text-white font-bold mb-1">Neon Drift</h3>
-                            <p class="text-white/60 text-xs">By <span class="text-white">@Ghost_Rider</span></p>
-                        </div>
+                <div class="flex flex-col md:flex-row justify-between items-center mb-12 gap-6">
+                    <div class="text-center md:text-left">
+                        <span class="text-pink-500 text-xs font-bold uppercase tracking-[0.2em] mb-4 animate-pulse">Now
+                            Exhibiting</span>
+                        <h2 class="text-4xl md:text-6xl font-serif font-bold text-white mb-2">Kiss Your <span
+                                class="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-500">Heart</span>
+                        </h2>
+                        <p class="text-mist max-w-xl text-sm md:text-base font-light">The Protocol's Living Gallery.
+                            Curated by the Tribe.</p>
                     </div>
-
-                    <!-- Exhibit 2 -->
-                    <div
-                        class="museum-item snap-center shrink-0 w-[85vw] md:w-[400px] aspect-[9/16] bg-white/5 rounded-2xl overflow-hidden border border-white/10 relative group transition-all duration-500 hover:scale-105 hover:border-pink-500 hover:shadow-[0_0_30px_rgba(236,72,153,0.3)]">
-                        <!-- Placeholder for diverse content, reusing hero for demo purposes otherwise would be broken link -->
-                        <video loop muted playsinline
-                            class="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity duration-500 exhibit-video">
-                            <source src="https://pub-24ba376bfccb446996666eaff4dbae12.r2.dev/hero.mp4" type="video/mp4">
-                        </video>
-                        <div
-                            class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90">
-                        </div>
-                        <div
-                            class="absolute bottom-0 left-0 p-8 w-full transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                            <span
-                                class="text-pink-500 text-[10px] uppercase tracking-widest font-bold block mb-2">Exhibit
-                                02</span>
-                            <h3 class="text-2xl font-serif text-white font-bold mb-1">Urban Flora</h3>
-                            <p class="text-white/60 text-xs">By <span class="text-white">@Nature_Boy</span></p>
-                        </div>
-                    </div>
-
-                    <!-- Exhibit 3 -->
-                    <div
-                        class="museum-item snap-center shrink-0 w-[85vw] md:w-[400px] aspect-[9/16] bg-white/5 rounded-2xl overflow-hidden border border-white/10 relative group transition-all duration-500 hover:scale-105 hover:border-amber hover:shadow-[0_0_30px_rgba(255,191,0,0.3)]">
-                        <video loop muted playsinline
-                            class="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity duration-500 exhibit-video">
-                            <source src="https://pub-24ba376bfccb446996666eaff4dbae12.r2.dev/hero.mp4" type="video/mp4">
-                        </video>
-                        <div
-                            class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90">
-                        </div>
-                        <div
-                            class="absolute bottom-0 left-0 p-8 w-full transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                            <span class="text-amber text-[10px] uppercase tracking-widest font-bold block mb-2">Exhibit
-                                03</span>
-                            <h3 class="text-2xl font-serif text-white font-bold mb-1">Golden Hour</h3>
-                            <p class="text-white/60 text-xs">By <span class="text-white">@Sun_Chaser</span></p>
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- Call to Action -->
-                <div class="mt-12 text-center">
-                    <button onclick="submitArt()"
-                        class="group relative inline-flex items-center justify-center px-8 py-4 bg-white/5 border border-white/20 overflow-hidden font-bold text-white uppercase tracking-widest transition-all hover:bg-white hover:text-black hover:scale-105 hover:shadow-[0_0_40px_rgba(255,255,255,0.4)]">
-                        <span
-                            class="absolute w-0 h-0 transition-all duration-500 ease-out bg-white rounded-full group-hover:w-56 group-hover:h-56 opacity-5"></span>
-                        <span class="relative flex items-center gap-3">
-                            <span class="material-symbols-outlined">upload_file</span>
-                            Submit Your Art
-                        </span>
+                    <button id="upload-art-btn"
+                        onclick="document.getElementById('upload-art-form').classList.remove('hidden')"
+                        class="px-8 py-3 bg-pink-500 text-white font-bold rounded-full uppercase tracking-widest hover:scale-105 transition-transform shadow-[0_0_20px_rgba(236,72,153,0.4)] flex items-center gap-2">
+                        <span class="material-symbols-outlined">upload</span>
+                        Upload Masterpiece
                     </button>
-                    <p class="mt-4 text-[10px] text-white/30 uppercase tracking-widest">Join the Permanent Collection
-                    </p>
+                </div>
 
-                    <div class="mt-8">
-                        <a href="marketplace.html"
-                            class="inline-flex items-center gap-2 text-xs text-white/50 hover:text-electric transition-colors">
-                            <span>Inspired? Check the Marketplace</span>
-                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
-                        </a>
+                <!-- Dynamic Grid -->
+                <div id="gallery-grid" class="columns-1 md:columns-2 lg:columns-3 gap-8 space-y-8">
+                    <!-- JS Injected Art -->
+                    <div
+                        class="break-inside-avoid py-20 text-center border-2 border-dashed border-white/10 rounded-3xl bg-white/5">
+                        <span class="material-symbols-outlined text-6xl text-white/10 mb-4">brush</span>
+                        <p class="text-xl text-white/50">The Gallery is awaiting your vision.</p>
+                        <p class="text-sm text-white/30">Upload art to earn 100 XP.</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Styles for Scrollbar Hide & Hover Play -->
-            <style>
-                .scrollbar-hide::-webkit-scrollbar {
-                    display: none;
-                }
-
-                .scrollbar-hide {
-                    -ms-overflow-style: none;
-                    scrollbar-width: none;
-                }
-
-                .museum-carousel {
-                    perspective: 1000px;
-                }
-            </style>
+            <!-- Upload Art Form -->
+            <div id="upload-art-form"
+                class="hidden fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl flex items-center justify-center p-4">
+                <div
+                    class="bg-[#141118] border border-pink-500/30 p-8 rounded-2xl max-w-md w-full relative shadow-[0_0_50px_rgba(236,72,153,0.2)]">
+                    <button onclick="document.getElementById('upload-art-form').classList.add('hidden')"
+                        class="absolute top-4 right-4 text-white/50 hover:text-white">&times;</button>
+                    <h3 class="text-2xl font-serif font-bold text-white mb-2">Submit to Collection</h3>
+                    <div class="space-y-4 mt-6">
+                        <input type="text" id="art-title" placeholder="Artwork Title"
+                            class="w-full bg-black/50 border border-white/10 rounded p-3 text-white focus:border-pink-500 outline-none">
+                        <input type="file" id="art-file" accept="image/*"
+                            class="w-full bg-black/50 border border-white/10 rounded p-3 text-sm text-gray-400">
+                        <button onclick="handleArtSubmit()"
+                            class="w-full py-3 bg-pink-500 text-white font-bold rounded hover:bg-white hover:text-pink-500 transition-colors shadow-lg">Submit
+                            Artwork (+100 XP)</button>
+                    </div>
+                </div>
+            </div>
 
             <script>
-                // Simple Script to Auto-Play video on hover/center
-                document.querySelectorAll('.museum-item').forEach(item => {
-                    const video = item.querySelector('video');
-                    item.addEventListener('mouseenter', () => video.play());
-                    item.addEventListener('mouseleave', () => video.pause());
-                });
+                function renderGallery() {
+                    // Safety check if Creator exists
+                    if (typeof Creator === 'undefined') return;
 
-                function submitArt() {
-                    const name = prompt("Please enter your Artist Name to claim your spot:", "Anonymous");
-                    if (name) {
-                        window.openWhatsApp(`I want to claim my spot in the Museum. My Artist Name is: ${name}`);
-                    }
+                    const grid = document.getElementById('gallery-grid');
+                    const arts = Creator.getArt();
+                    if (arts.length === 0) return;
+
+                    grid.innerHTML = arts.map(art => `
+                        <div class="break-inside-avoid mb-8 group relative rounded-2xl overflow-hidden cursor-pointer border border-white/5 bg-[#141118]">
+                            <img src="${art.image}" class="w-full h-auto object-cover opacity-80 group-hover:opacity-100 transition-all duration-700 group-hover:scale-105">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                                <h3 class="text-xl font-bold text-white">${art.title}</h3>
+                                <p class="text-sm text-pink-400">By ${art.artist}</p>
+                            </div>
+                        </div>
+                    `).join('');
                 }
 
-                // Add to window for global access if needed
-                window.submitArt = submitArt;
+                function handleArtSubmit() {
+                    if (typeof Creator === 'undefined') {
+                        alert("System Error: Creator Module not loaded.");
+                        return;
+                    }
+
+                    const title = document.getElementById('art-title').value;
+                    const fileInput = document.getElementById('art-file');
+
+                    if (!title || !fileInput.files[0]) return alert("Title and Image required.");
+
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        Creator.addArt({
+                            id: Date.now(),
+                            title,
+                            image: e.target.result,
+                            artist: localStorage.getItem('userName') || "Anonymous"
+                        });
+                        renderGallery();
+                        document.getElementById('upload-art-form').classList.add('hidden');
+                        alert("Masterpiece Uploaded!");
+                    };
+                    reader.readAsDataURL(fileInput.files[0]);
+                }
+
+                document.addEventListener('DOMContentLoaded', () => {
+                    renderGallery();
+                    // Slight delay to ensure main script logic is ready if needed, though DOMContentLoaded should suffice
+                    setTimeout(() => {
+                        if (window.initGuide) window.initGuide('kiss-your-heart.html');
+                    }, 1000);
+                });
             </script>
         </section>
 
@@ -911,6 +879,36 @@
             <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
         </a>
     </div>
+    <!-- Bottom Nav (Standardized Agent UI) -->
+    <nav class="fixed bottom-0 left-0 w-full bg-[#0D0D0F]/90 backdrop-blur-md border-t border-purple-900/30 z-[50]">
+        <div class="flex justify-around items-center h-16 max-w-md mx-auto">
+            <a href="dashboard.html"
+                class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-electric transition-colors">
+                <span class="material-symbols-outlined text-2xl">grid_view</span>
+                <span class="text-[10px] uppercase tracking-wider mt-1">Dash</span>
+            </a>
+            <a href="marketplace.html"
+                class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-electric transition-colors">
+                <span class="material-symbols-outlined text-2xl">storefront</span>
+                <span class="text-[10px] uppercase tracking-wider mt-1">Market</span>
+            </a>
+            <a href="kiss-your-heart.html"
+                class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-electric transition-colors">
+                <span class="material-symbols-outlined text-2xl">palette</span>
+                <span class="text-[10px] uppercase tracking-wider mt-1">Art</span>
+            </a>
+            <a href="outbreak_tunes.html"
+                class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-electric transition-colors">
+                <span class="material-symbols-outlined text-2xl">headphones</span>
+                <span class="text-[10px] uppercase tracking-wider mt-1">Sound</span>
+            </a>
+            <a href="partners.html"
+                class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-electric transition-colors">
+                <span class="material-symbols-outlined text-2xl">handshake</span>
+                <span class="text-[10px] uppercase tracking-wider mt-1">Tribe</span>
+            </a>
+        </div>
+    </nav>
 </body>
 
 </html>

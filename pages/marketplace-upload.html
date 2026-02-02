@@ -205,6 +205,15 @@
             // Award XP for Museum Contribution
             if (isMuseum && window.Gamification) {
                 window.Gamification.addXP(150, 'Museum Contribution');
+            } else if (window.Gamification) {
+                // Reward: +50 XP for listing an item (Merchant Quest)
+                window.Gamification.addXP(50, 'Market Listing');
+                // Complete Merchant Quest
+                if (localStorage.getItem('quest_merchant_done') !== 'true') {
+                    localStorage.setItem('quest_merchant_done', 'true');
+                    // Note: We avoid double XP if quest logic is handled elsewhere, 
+                    // but here we ensure the flag is set.
+                }
             }
 
             alert(isMuseum ? 'Artifact submitted!' : 'Listing successful!');

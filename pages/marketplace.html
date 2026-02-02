@@ -87,9 +87,10 @@
             <span class="material-symbols-outlined text-xl">dashboard</span>
             <span class="text-[9px] font-bold uppercase tracking-wider">Hub</span>
         </a>
-        <a href="marketplace.html" class="flex flex-col items-center gap-1 text-mystic-gold transition-colors">
-            <span class="material-symbols-outlined text-xl">storefront</span>
-            <span class="text-[9px] font-bold uppercase tracking-wider">Style</span>
+        <a href="outbreak_tunes.html"
+            class="flex flex-col items-center gap-1 text-white/50 hover:text-purple-400 transition-colors">
+            <span class="material-symbols-outlined text-xl">graphic_eq</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider">Sound</span>
         </a>
         <a href="index.html" class="relative -top-6">
             <div
@@ -136,25 +137,21 @@
 
     <main class="pt-32 pb-20 px-6 max-w-7xl mx-auto">
         <!-- Header -->
-        <div class="flex flex-col md:flex-row justify-between items-end gap-6 mb-16">
-            <div>
-                <h1 class="text-5xl md:text-6xl font-serif font-bold mb-4 leading-tight">The Marketplace<span
-                        class="text-electric">.</span></h1>
-                <p class="text-mist text-lg max-w-xl">Exchange Flow Tokens for exclusive gear, digital assets, and
-                    community services.</p>
+        <div class="flex flex-col md:flex-row justify-between items-center mb-12">
+            <h2 class="text-3xl font-serif font-bold text-white mb-6 md:mb-0">The <span
+                    class="text-mystic-gold italic">Bazaar</span></h2>
+
+            <!-- Actions -->
+            <div class="flex gap-4">
+                <button id="sell-btn" onclick="document.getElementById('listing-modal').showModal()"
+                    class="px-8 py-3 bg-mystic-gold text-black font-bold rounded-full uppercase tracking-widest hover:scale-105 transition-all shadow-[0_0_20px_rgba(255,191,0,0.4)] flex items-center gap-2">
+                    <span class="material-symbols-outlined">storefront</span>
+                    Sell Item
+                </button>
             </div>
-
-            <a href="marketplace-upload.html"
-                class="px-6 py-3 bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl font-bold uppercase tracking-widest text-sm transition-all flex items-center gap-2">
-                <span class="material-symbols-outlined">add</span>
-                List an Item
-            </a>
         </div>
-
         <!-- Products Grid -->
-        <div class="grid md:grid-cols-3 gap-8" id="products-grid">
-            <!-- Dynamic Content Load -->
-        </div>
+        <div class="grid md:grid-cols-3 gap-8" id="products-grid"></div>
 
         <!-- Lightbox / Product Detail Modal -->
         <div id="product-modal"
@@ -167,7 +164,101 @@
                 <span class="material-symbols-outlined text-4xl">close</span>
             </button>
         </div>
+        </div>
+        </div>
     </main>
+
+    <!-- Listing Modal -->
+    <dialog id="listing-modal"
+        class="bg-[#1a1a1a] text-white border border-electric/50 rounded-xl p-8 max-w-2xl w-full backdrop:bg-black/80">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-3xl font-serif font-bold text-electric">List Item</h2>
+            <button onclick="document.getElementById('listing-modal').close()" class="text-white hover:text-red-500">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+
+        <form id="listing-form" class="space-y-6" onsubmit="handleListingSubmit(event)">
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-bold text-white/70 mb-2 uppercase tracking-widest">Item
+                        Name</label>
+                    <input type="text" id="list-title" required
+                        class="w-full bg-black/50 border border-white/20 rounded p-3 text-white focus:border-electric outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-white/70 mb-2 uppercase tracking-widest">Price
+                        (Flow)</label>
+                    <input type="number" id="list-price" required
+                        class="w-full bg-black/50 border border-white/20 rounded p-3 text-white focus:border-electric outline-none">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-bold text-white/70 mb-2 uppercase tracking-widest">Description</label>
+                <textarea id="list-desc" rows="3" required
+                    class="w-full bg-black/50 border border-white/20 rounded p-3 text-white focus:border-electric outline-none"></textarea>
+            </div>
+
+            <div>
+                <label class="block text-sm font-bold text-white/70 mb-2 uppercase tracking-widest">Image</label>
+                <input type="file" id="list-image" accept="image/*" required
+                    class="w-full bg-black/50 border border-white/10 rounded p-3 text-sm text-gray-400">
+            </div>
+
+            <button type="submit"
+                class="w-full py-4 bg-electric text-white font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-colors">
+                Post to Bazaar (+50 XP)
+            </button>
+        </form>
+    </dialog>
+
+    <script>
+        function handleListingSubmit(e) {
+            e.preventDefault();
+            const title = document.getElementById('list-title').value;
+            const price = document.getElementById('list-price').value;
+            const desc = document.getElementById('list-desc').value;
+            const fileInput = document.getElementById('list-image');
+
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (evt) {
+                    const newItem = {
+                        id: 'item-' + Date.now(),
+                        title: title,
+                        price: price,
+                        description: desc,
+                        image: evt.target.result,
+                        owner: localStorage.getItem('userName') || 'Anonymous'
+                    };
+
+                    if (window.CreatorTools) {
+                        window.CreatorTools.createItem(newItem);
+                    } else {
+                        let listings = JSON.parse(localStorage.getItem('cdf_listings') || '[]');
+                        listings.push(newItem);
+                        localStorage.setItem('cdf_listings', JSON.stringify(listings));
+                        if (window.Gamification) window.Gamification.addXP(50, 'Marketplace Listing');
+                    }
+
+                    alert('Item Listed Successfully!');
+                    document.getElementById('listing-modal').close();
+                    location.reload();
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            }
+        }
+    </script>
+
+    <!-- Floating Action Button: Sell Item -->
+    <button onclick="document.getElementById('listing-modal').showModal()"
+        class="fixed bottom-24 right-6 md:bottom-8 z-40 w-14 h-14 bg-electric text-white rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(154,77,255,0.5)] hover:bg-white hover:text-electric hover:scale-110 transition-all group">
+        <span class="material-symbols-outlined text-2xl group-hover:rotate-90 transition-transform">add</span>
+        <span
+            class="absolute right-full mr-4 bg-black/80 text-white text-xs py-1 px-3 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">Sell
+            Item (+50 XP)</span>
+    </button>
 
     <script src="notifications.js"></script>
     <script src="gamification.js"></script>
@@ -186,11 +277,7 @@
         }
 
         // Mock Data + LocalStorage
-        const SYSTEM_LISTINGS = [
-            { id: 'sys_1', title: 'CDF Official Tee', price: 500, priceEur: 38.50, image: 'https://placehold.co/400x400/1a1a1a/white?text=CDF+T-Shirt', description: 'Limited edition community tee.', type: 'manual' },
-            { id: 'sys_2', title: 'Creator Asset Pack', price: 200, priceEur: 15.00, image: 'https://placehold.co/400x400/1a1a1a/white?text=Digital+Pack', description: 'Royalty-free visuals.', type: 'manual' },
-            { id: 'sys_3', title: 'VIP Event Pass', price: 1000, priceEur: 75.00, image: 'https://placehold.co/400x400/1a1a1a/white?text=Vip+Pass', description: 'Skip the queue.', type: 'manual' }
-        ];
+        const SYSTEM_LISTINGS = []; // CLEAN SLATE
 
         function renderMarketplace() {
             const userListings = JSON.parse(localStorage.getItem('cdf_listings') || '[]');
@@ -198,6 +285,21 @@
 
             const grid = document.getElementById('products-grid');
             if (!grid) return;
+
+            if (allItems.length === 0) {
+                // Empty State
+                grid.innerHTML = `
+                    <div class="col-span-1 md:col-span-3 flex flex-col items-center justify-center py-20 bg-white/5 border border-white/5 border-dashed rounded-2xl">
+                        <span class="material-symbols-outlined text-6xl text-white/10 mb-4">inventory_2</span>
+                        <h3 class="text-xl font-bold text-white mb-2">The Market is Silent</h3>
+                        <p class="text-mist text-sm mb-6 max-w-sm text-center">Be the first merchant to list an item in the Kingdom.</p>
+                        <a href="marketplace-upload.html" class="px-6 py-3 bg-electric text-white font-bold rounded-lg uppercase tracking-widest hover:bg-white hover:text-black transition-all">
+                            List Item (+50 XP)
+                        </a>
+                    </div>
+                `;
+                return;
+            }
 
             grid.innerHTML = allItems.map(item => `
                 <div class="group relative bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-electric/50 transition-all">
@@ -351,6 +453,89 @@
         <span class="material-symbols-outlined group-hover:-translate-x-1 transition-transform">arrow_back</span>
         <span class="text-xs font-bold uppercase tracking-widest">Back to Hub</span>
     </a>
+    <!-- Bottom Nav (Standardized Agent UI) -->
+    <nav class="fixed bottom-0 left-0 w-full bg-[#0D0D0F]/90 backdrop-blur-md border-t border-purple-900/30 z-[50]">
+        <div class="flex justify-around items-center h-16 max-w-md mx-auto">
+            <a href="dashboard.html"
+                class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-electric transition-colors">
+                <span class="material-symbols-outlined text-2xl">grid_view</span>
+                <span class="text-[10px] uppercase tracking-wider mt-1">Dash</span>
+            </a>
+            <a href="marketplace.html"
+                class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-electric transition-colors">
+                <span class="material-symbols-outlined text-2xl">storefront</span>
+                <span class="text-[10px] uppercase tracking-wider mt-1">Market</span>
+            </a>
+            <a href="kiss-your-heart.html"
+                class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-electric transition-colors">
+                <span class="material-symbols-outlined text-2xl">palette</span>
+                <span class="text-[10px] uppercase tracking-wider mt-1">Art</span>
+            </a>
+            <a href="outbreak_tunes.html"
+                class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-electric transition-colors">
+                <span class="material-symbols-outlined text-2xl">headphones</span>
+                <span class="text-[10px] uppercase tracking-wider mt-1">Sound</span>
+            </a>
+            <a href="partners.html"
+                class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-electric transition-colors">
+                <span class="material-symbols-outlined text-2xl">handshake</span>
+                <span class="text-[10px] uppercase tracking-wider mt-1">Tribe</span>
+            </a>
+        </div>
+    </nav>
+    <!-- Audio Player (Right) -->
+    <div class="fixed bottom-24 right-8 z-50 md:bottom-8">
+        <button id="audio-btn"
+            class="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:border-electric transition-colors bg-background-dark/50 backdrop-blur-sm">
+            <!-- Treble Clef Icon -->
+            <svg id="audio-icon-on" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 24 24"
+                style="color: white;">
+                <path
+                    d="M11.5 2C11.5 2 11.5 2 11.5 2C10.67 2 10 2.67 10 3.5C10 4.33 10.67 5 11.5 5C12.33 5 13 4.33 13 3.5C13 3.42 12.99 3.34 12.98 3.26C13.6 3.64 14 4.31 14 5.08C14 6.27 12.94 7.21 11.77 7.21C11.68 7.21 11.59 7.2 11.5 7.2C9.57 7.2 8 8.77 8 10.7C8 12.63 9.57 14.2 11.5 14.2C11.5 14.2 11.5 14.2 11.5 14.2C12.33 14.2 13 13.53 13 12.7C13 11.87 12.33 11.2 11.5 11.2C10.67 11.2 10 11.87 10 12.7C10 12.78 10.01 12.86 10.02 12.94C9.4 12.56 9 11.89 9 11.12C9 9.93 10.06 8.99 11.23 8.99C11.32 8.99 11.41 9 11.5 9C13.43 9 15 7.43 15 5.5C15 3.57 13.43 2 11.5 2ZM11.5 15.5C9.57 15.5 8 17.07 8 19C8 20.93 9.57 22.5 11.5 22.5C13.43 22.5 15 20.93 15 19C15 17.07 13.43 15.5 11.5 15.5ZM11.5 20.5C10.67 20.5 10 19.83 10 19C10 18.17 10.67 17.5 11.5 17.5C12.33 17.5 13 18.17 13 19C13 19.83 12.33 20.5 11.5 20.5Z" />
+            </svg>
+            <svg id="audio-icon-off" class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" style="color: white;">
+                <path
+                    d="M11.5 2C11.5 2 11.5 2 11.5 2C10.67 2 10 2.67 10 3.5C10 4.33 10.67 5 11.5 5C12.33 5 13 4.33 13 3.5C13 3.42 12.99 3.34 12.98 3.26C13.6 3.64 14 4.31 14 5.08C14 6.27 12.94 7.21 11.77 7.21C11.68 7.21 11.59 7.2 11.5 7.2C9.57 7.2 8 8.77 8 10.7C8 12.63 9.57 14.2 11.5 14.2C11.5 14.2 11.5 14.2 11.5 14.2C12.33 14.2 13 13.53 13 12.7C13 11.87 12.33 11.2 11.5 11.2C10.67 11.2 10 11.87 10 12.7C10 12.78 10.01 12.86 10.02 12.94C9.4 12.56 9 11.89 9 11.12C9 9.93 10.06 8.99 11.23 8.99C11.32 8.99 11.41 9 11.5 9C13.43 9 15 7.43 15 5.5C15 3.57 13.43 2 11.5 2ZM11.5 15.5C9.57 15.5 8 17.07 8 19C8 20.93 9.57 22.5 11.5 22.5C13.43 22.5 15 20.93 15 19C15 17.07 13.43 15.5 11.5 15.5ZM11.5 20.5C10.67 20.5 10 19.83 10 19C10 18.17 10.67 17.5 11.5 17.5C12.33 17.5 13 18.17 13 19C13 19.83 12.33 20.5 11.5 20.5Z"
+                    opacity="0.3" />
+                <line x1="4" y1="4" x2="20" y2="20" stroke="currentColor" stroke-width="2" />
+            </svg>
+        </button>
+        <audio id="bg-music" loop>
+            <source src="Assets/audio/ambient.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+    <script>
+        // Audio Player Logic
+        const audioBtn = document.getElementById('audio-btn');
+        const bgMusic = document.getElementById('bg-music');
+        const iconOn = document.getElementById('audio-icon-on');
+        const iconOff = document.getElementById('audio-icon-off');
+
+        // Try to restore state
+        const isPlaying = localStorage.getItem('musicPlaying') === 'true';
+        if (isPlaying) {
+            bgMusic.play().then(() => {
+                iconOn.classList.remove('hidden');
+                iconOff.classList.add('hidden');
+            }).catch(() => {
+                console.log("Autoplay blocked");
+            });
+        }
+
+        audioBtn.addEventListener('click', () => {
+            if (bgMusic.paused) {
+                bgMusic.play();
+                iconOn.classList.remove('hidden');
+                iconOff.classList.add('hidden');
+                localStorage.setItem('musicPlaying', 'true');
+            } else {
+                bgMusic.pause();
+                iconOn.classList.add('hidden');
+                iconOff.classList.remove('hidden');
+                localStorage.setItem('musicPlaying', 'false');
+            }
+        });
+    </script>
 </body>
 
 </html>

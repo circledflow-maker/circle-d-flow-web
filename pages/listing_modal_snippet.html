@@ -1,0 +1,82 @@
+<!-- Listing Modal -->
+<dialog id="listing-modal"
+    class="bg-[#1a1a1a] text-white border border-electric/50 rounded-xl p-8 max-w-2xl w-full backdrop:bg-black/80">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-3xl font-serif font-bold text-electric">List Item</h2>
+        <button onclick="document.getElementById('listing-modal').close()" class="text-white hover:text-red-500">
+            <span class="material-symbols-outlined">close</span>
+        </button>
+    </div>
+
+    <form id="listing-form" class="space-y-6" onsubmit="handleListingSubmit(event)">
+        <div class="grid md:grid-cols-2 gap-6">
+            <div>
+                <label class="block text-sm font-bold text-white/70 mb-2 uppercase tracking-widest">Item Name</label>
+                <input type="text" id="list-title" required
+                    class="w-full bg-black/50 border border-white/20 rounded p-3 text-white focus:border-electric outline-none">
+            </div>
+            <div>
+                <label class="block text-sm font-bold text-white/70 mb-2 uppercase tracking-widest">Price (Flow)</label>
+                <input type="number" id="list-price" required
+                    class="w-full bg-black/50 border border-white/20 rounded p-3 text-white focus:border-electric outline-none">
+            </div>
+        </div>
+
+        <div>
+            <label class="block text-sm font-bold text-white/70 mb-2 uppercase tracking-widest">Description</label>
+            <textarea id="list-desc" rows="3" required
+                class="w-full bg-black/50 border border-white/20 rounded p-3 text-white focus:border-electric outline-none"></textarea>
+        </div>
+
+        <div>
+            <label class="block text-sm font-bold text-white/70 mb-2 uppercase tracking-widest">Image</label>
+            <input type="file" id="list-image" accept="image/*" required
+                class="w-full bg-black/50 border border-white/10 rounded p-3 text-sm text-gray-400">
+        </div>
+
+        <button type="submit"
+            class="w-full py-4 bg-electric text-white font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-colors">
+            Post to Bazaar (+50 XP)
+        </button>
+    </form>
+</dialog>
+
+<script>
+    function handleListingSubmit(e) {
+        e.preventDefault();
+        const title = document.getElementById('list-title').value;
+        const price = document.getElementById('list-price').value;
+        const desc = document.getElementById('list-desc').value;
+        const fileInput = document.getElementById('list-image');
+
+        if (fileInput.files && fileInput.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function (evt) {
+                const newItem = {
+                    id: 'item-' + Date.now(),
+                    title: title,
+                    price: price,
+                    description: desc,
+                    image: evt.target.result,
+                    owner: localStorage.getItem('userName') || 'Anonymous'
+                };
+
+                // Save to Creator Tools (or local logic for now)
+                if (window.CreatorTools) {
+                    window.CreatorTools.createItem(newItem);
+                } else {
+                    // Fallback
+                    let listings = JSON.parse(localStorage.getItem('cdf_listings') || '[]');
+                    listings.push(newItem);
+                    localStorage.setItem('cdf_listings', JSON.stringify(listings));
+                    if (window.Gamification) window.Gamification.addXP(50, 'Marketplace Listing');
+                }
+
+                alert('Item Listed Successfully!');
+                document.getElementById('listing-modal').close();
+                location.reload();
+            };
+            reader.readAsDataURL(fileInput.files[0]);
+        }
+    }
+</script>

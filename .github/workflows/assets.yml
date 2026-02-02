@@ -1,0 +1,20 @@
+name: "EXT_LIBRARIAN: Asset Integrity"
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  librarian:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Verify Key Assets
+        run: |
+          if [ ! -f "img/logo.png" ]; then
+            echo "::error::MISSING ASSET: img/logo.png"
+            exit 1
+          fi
+          # Add more asset checks here

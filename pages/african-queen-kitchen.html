@@ -73,34 +73,36 @@
         </div>
     </nav>
 
-    <!-- Mobile Bottom Navigation -->
+    <!-- Mobile Bottom Navigation (Standardized) -->
     <nav
-        class="md:hidden fixed bottom-4 left-4 right-4 z-50 bg-[#1A1622]/90 backdrop-blur-xl border border-white/10 rounded-2xl p-4 flex justify-between items-center shadow-2xl safe-area-pb">
-        <a href="dashboard.html"
-            class="flex flex-col items-center gap-1 text-white/50 hover:text-electric transition-colors">
-            <span class="material-symbols-outlined text-xl">dashboard</span>
-            <span class="text-[9px] font-bold uppercase tracking-wider">Hub</span>
-        </a>
-        <a href="outbreak_tunes.html"
-            class="flex flex-col items-center gap-1 text-white/50 hover:text-purple-400 transition-colors">
-            <span class="material-symbols-outlined text-xl">graphic_eq</span>
-            <span class="text-[9px] font-bold uppercase tracking-wider">Sound</span>
-        </a>
-        <a href="index.html" class="relative -top-6">
-            <div
-                class="w-14 h-14 bg-electric rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(98,0,234,0.6)] border-4 border-[#0F0A13]">
-                <img src="Assets/images/logo.png" class="w-7 h-7 object-contain">
-            </div>
-        </a>
-        <a href="african-queen-kitchen.html" class="flex flex-col items-center gap-1 text-amber">
-            <span class="material-symbols-outlined text-xl">restaurant</span>
-            <span class="text-[9px] font-bold uppercase tracking-wider">Taste</span>
-        </a>
-        <button onclick="toggleMobileDrawer()"
-            class="flex flex-col items-center gap-1 text-white/50 hover:text-mystic-gold transition-colors">
-            <span class="material-symbols-outlined text-xl">menu</span>
-            <span class="text-[9px] font-bold uppercase tracking-wider">More</span>
-        </button>
+        class="fixed bottom-0 left-0 w-full bg-[#0D0D0F]/90 backdrop-blur-md border-t border-purple-900/30 z-[50] md:hidden">
+        <div class="flex justify-around items-center h-16 max-w-md mx-auto">
+            <a href="dashboard.html"
+                class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-electric transition-colors">
+                <span class="material-symbols-outlined text-2xl">grid_view</span>
+                <span class="text-[10px] uppercase tracking-wider mt-1">Dash</span>
+            </a>
+            <a href="marketplace.html"
+                class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-electric transition-colors">
+                <span class="material-symbols-outlined text-2xl">storefront</span>
+                <span class="text-[10px] uppercase tracking-wider mt-1">Market</span>
+            </a>
+            <a href="kiss-your-heart.html"
+                class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-electric transition-colors">
+                <span class="material-symbols-outlined text-2xl">palette</span>
+                <span class="text-[10px] uppercase tracking-wider mt-1">Art</span>
+            </a>
+            <a href="outbreak_tunes.html"
+                class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-electric transition-colors">
+                <span class="material-symbols-outlined text-2xl">headphones</span>
+                <span class="text-[10px] uppercase tracking-wider mt-1">Sound</span>
+            </a>
+            <a href="partners.html"
+                class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-electric transition-colors">
+                <span class="material-symbols-outlined text-2xl">handshake</span>
+                <span class="text-[10px] uppercase tracking-wider mt-1">Tribe</span>
+            </a>
+        </div>
     </nav>
 
     <!-- Mobile Drawer -->

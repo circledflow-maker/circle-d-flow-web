@@ -121,34 +121,36 @@
             </div>
         </nav>
 
-        <!-- Mobile Bottom Navigation -->
+        <!-- Mobile Bottom Navigation (Standardized) -->
         <nav
-            class="md:hidden fixed bottom-4 left-4 right-4 z-50 bg-[#1A1622]/90 backdrop-blur-xl border border-white/10 rounded-2xl p-4 flex justify-between items-center shadow-2xl safe-area-pb">
-            <a href="dashboard.html"
-                class="flex flex-col items-center gap-1 text-white/50 hover:text-electric transition-colors">
-                <span class="material-symbols-outlined text-xl">dashboard</span>
-                <span class="text-[9px] font-bold uppercase tracking-wider">Hub</span>
-            </a>
-            <a href="outbreak_tunes.html" class="flex flex-col items-center gap-1 text-purple-400">
-                <span class="material-symbols-outlined text-xl">graphic_eq</span>
-                <span class="text-[9px] font-bold uppercase tracking-wider">Sound</span>
-            </a>
-            <a href="index.html" class="relative -top-6">
-                <div
-                    class="w-14 h-14 bg-electric rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(98,0,234,0.6)] border-4 border-[#0F0A13]">
-                    <img src="Assets/images/logo.png" class="w-7 h-7 object-contain">
-                </div>
-            </a>
-            <a href="african-queen-kitchen.html"
-                class="flex flex-col items-center gap-1 text-white/50 hover:text-amber transition-colors">
-                <span class="material-symbols-outlined text-xl">restaurant</span>
-                <span class="text-[9px] font-bold uppercase tracking-wider">Taste</span>
-            </a>
-            <button onclick="toggleMobileDrawer()"
-                class="flex flex-col items-center gap-1 text-white/50 hover:text-mystic-gold transition-colors">
-                <span class="material-symbols-outlined text-xl">menu</span>
-                <span class="text-[9px] font-bold uppercase tracking-wider">More</span>
-            </button>
+            class="fixed bottom-0 left-0 w-full bg-[#0D0D0F]/90 backdrop-blur-md border-t border-purple-900/30 z-[50] md:hidden">
+            <div class="flex justify-around items-center h-16 max-w-md mx-auto">
+                <a href="dashboard.html"
+                    class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-electric transition-colors">
+                    <span class="material-symbols-outlined text-2xl">grid_view</span>
+                    <span class="text-[10px] uppercase tracking-wider mt-1">Dash</span>
+                </a>
+                <a href="marketplace.html"
+                    class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-electric transition-colors">
+                    <span class="material-symbols-outlined text-2xl">storefront</span>
+                    <span class="text-[10px] uppercase tracking-wider mt-1">Market</span>
+                </a>
+                <a href="kiss-your-heart.html"
+                    class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-electric transition-colors">
+                    <span class="material-symbols-outlined text-2xl">palette</span>
+                    <span class="text-[10px] uppercase tracking-wider mt-1">Art</span>
+                </a>
+                <a href="outbreak_tunes.html"
+                    class="flex flex-col items-center justify-center w-full h-full text-electric">
+                    <span class="material-symbols-outlined text-2xl">headphones</span>
+                    <span class="text-[10px] uppercase tracking-wider mt-1">Sound</span>
+                </a>
+                <a href="partners.html"
+                    class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-electric transition-colors">
+                    <span class="material-symbols-outlined text-2xl">handshake</span>
+                    <span class="text-[10px] uppercase tracking-wider mt-1">Tribe</span>
+                </a>
+            </div>
         </nav>
 
         <!-- Mobile Drawer -->
@@ -206,7 +208,8 @@
                     </section>
                     <section id="discography">
                         <h2 class="text-2xl font-bold mb-6 text-white">Discography</h2>
-                        <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+                        <div id="playlist-container"
+                            class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
                             <div class="group relative overflow-hidden rounded-lg">
                                 <img alt="Abstract album art with cyberpunk aesthetics"
                                     class="w-full h-auto object-cover aspect-square transition-transform duration-300 group-hover:scale-105"
@@ -298,6 +301,39 @@
                     </div>
                 </aside>
             </div>
+            <!-- Battle Arena (Functional) -->
+            <div id="cypher-arena"
+                class="mb-12 bg-red-900/20 border border-red-500/30 p-8 rounded-2xl relative overflow-hidden group">
+                <div class="absolute inset-0 bg-[url('Assets/images/noise.png')] opacity-10 mix-blend-overlay"></div>
+                <div class="relative z-10">
+                    <div class="flex flex-col md:flex-row justify-between items-center gap-6 mb-6">
+                        <div>
+                            <h3 class="text-3xl font-serif font-bold text-white mb-2 ml-4">⚔️ CYPHER DUEL ⚔️</h3>
+                            <p class="text-red-200/70 max-w-lg font-light ml-4">Select an opponent. Drop bars. Earn
+                                Respect.</p>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <select id="opponent-select"
+                                class="bg-black/50 border border-red-500/30 text-white rounded-lg px-4 py-2 focus:ring-red-500">
+                                <option value="" disabled selected>Choose Opponent...</option>
+                                <option value="Hempy">Hempy (Level 3)</option>
+                                <option value="Will">Will (Level 6)</option>
+                                <option value="B-Boy Ray">B-Boy Ray (Level 2)</option>
+                            </select>
+                            <button onclick="startCypherDuel()"
+                                class="px-8 py-3 bg-red-600 hover:bg-red-500 text-white font-bold rounded-xl uppercase tracking-widest transition-colors shadow-lg shadow-red-600/20 flex items-center gap-2">
+                                <span class="material-symbols-outlined">swords</span>
+                                CHALLENGE
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Battle Log -->
+                    <div id="battle-log"
+                        class="hidden mt-4 p-4 bg-black/40 rounded-lg border border-white/5 font-mono text-sm"></div>
+                </div>
+            </div>
+
             <!-- Dream Fuel: Cypher LX -->
             <div
                 class="mt-12 mb-12 bg-purple-900/20 border border-purple-500/30 p-8 rounded-2xl relative overflow-hidden group">
@@ -374,13 +410,17 @@
                 </div>
                 <div class="mt-12 border-t border-primary/20 pt-8 text-center text-sm text-white/50">
                     <p>© 2024 Circle D Flow. All rights reserved.</p>
+                    <a href="https://www.instagram.com/s0u0mario?igsh=dHJ4dWhtN3ZpN3Rx" target="_blank"
+                        class="block mt-2 text-mystic-gold hover:text-white transition-colors text-xs font-light">
+                        🎵 Sonic Architecture by Mario
+                    </a>
                 </div>
             </div>
         </footer>
     </div>
 
     <!-- Audio Player (Right) -->
-    <div class="fixed bottom-8 right-8 z-50">
+    <div id="music-player" class="fixed bottom-8 right-8 z-50">
         <button id="audio-btn"
             class="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:border-electric transition-colors bg-background-dark/50 backdrop-blur-sm">
             <!-- Treble Clef Icon -->

@@ -61,20 +61,128 @@
         }
     </script>
     <style>
+        /* CRITICAL ONBOARDING STYLES */
         #language-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: #000;
+            inset: 0;
             z-index: 99999 !important;
-            /* Force on top */
+            background-color: #000;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            transition: opacity 0.5s ease;
+        }
+
+        #class-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 10000 !important;
+            background-color: #0d0d0f;
+            /* Deep background */
+            display: none;
+            /* JS SETS TO FLEX */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Mobile Responsive Fixes */
+        /* MOBILE SCROLL SNAP CAROUSEL */
+        @media (max-width: 768px) {
+            #class-overlay {
+                justify-content: flex-start;
+                padding-top: 20vh;
+            }
+
+            #onboarding-carousel {
+                display: flex;
+                overflow-x: auto;
+                scroll-snap-type: x mandatory;
+                gap: 15px;
+                padding: 20px;
+                width: 100%;
+                /* Smooth iOS scroll */
+                -webkit-overflow-scrolling: touch;
+                /* Remove default scrollbar */
+                scrollbar-width: none;
+            }
+
+            #onboarding-carousel::-webkit-scrollbar {
+                display: none;
+            }
+
+            .class-card {
+                min-width: 85vw !important;
+                /* Mobile: Show 1 card fully */
+                scroll-snap-align: center;
+                flex-shrink: 0;
+                /* Reset margin to ensure snap works */
+                margin: 0;
+            }
+
+            /* Desktop override */
+            @media (min-width: 768px) {
+                .class-card {
+                    min-width: 300px !important;
+                }
+            }
+        }
+
+        /* PROTOCOL ROYAL TYPOGRAPHY */
+        .hero-title {
+            /* 1. Fluid Size: Scales automatically between 2rem (mobile) and 5rem (desktop) */
+            font-size: clamp(1.8rem, 5vw, 4.5rem);
+
+            /* 2. Cinematic Spacing: Wider on desktop, tighter on mobile */
+            letter-spacing: clamp(0.2em, 1.5vw, 0.8em);
+
+            /* 3. Layout & Position */
+            text-align: center;
+            width: 100%;
+            max-width: 90vw;
+            /* Prevent edge touching */
+            margin: 0 auto 40px auto;
+            /* Centered with breathing room bottom */
+
+            /* 4. The Royal Style */
+            font-weight: 800;
+            text-transform: uppercase;
+            color: #ffffff;
+            line-height: 1.3;
+
+            /* 5. The Glow (Gold/White Aura) */
+            text-shadow:
+                0 0 10px rgba(255, 255, 255, 0.3),
+                0 0 20px rgba(255, 215, 0, 0.4),
+                /* Gold tint */
+                0 0 40px rgba(0, 0, 0, 0.8);
+            /* Dark backing for contrast */
+        }
+
+        /* Specific Mobile Adjustment to prevent word-break issues */
+        @media (max-width: 768px) {
+            .hero-title {
+                display: flex;
+                flex-direction: column;
+                /* Stack words if needed on tiny screens */
+                gap: 10px;
+                letter-spacing: 0.3em;
+                /* Slightly less spacing on mobile */
+            }
+        }
+
+        /* Selection States */
+        .lang-btn.selected {
+            border-color: #8A2BE2 !important;
+            background: rgba(138, 43, 226, 0.1);
+            box-shadow: 0 0 20px rgba(138, 43, 226, 0.3);
+        }
+
+        .class-card.selected {
+            border-color: #8A2BE2 !important;
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(138, 43, 226, 0.2);
         }
 
         .hidden {
@@ -85,56 +193,45 @@
 </head>
 
 <body class="bg-background-light dark:bg-background-dark font-display text-gray-800 dark:text-gray-200">
-    <!-- HARDCODED LANGUAGE OVERLAY (Critical Fix) -->
+    <!-- OVERLAY 1: LANGUAGE SELECTION -->
     <div id="language-overlay">
         <div class="relative w-full max-w-md text-center space-y-8 animate-fade-in-up p-6">
-            <h2
-                class="text-3xl font-bold text-white tracking-[0.2em] uppercase drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]">
+            <h2 data-translate="choose"
+                class="text-3xl font-bold text-white tracking-[0.2em] uppercase drop-shadow-[0_0_15px_rgba(255,255,255,0.5)] mb-8">
                 Select Your<br><span class="text-electric animate-pulse">Frequency</span>
             </h2>
 
-            <div class="grid gap-4 mt-8">
-                <button onclick="setLanguage('en')"
-                    class="group relative w-full h-[60px] bg-white/5 border border-white/10 hover:border-electric/50 rounded-xl overflow-hidden transition-all duration-300">
-                    <div
-                        class="absolute inset-0 bg-electric/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                    </div>
+            <div class="grid gap-4">
+                <!-- English -->
+                <button onclick="selectLang('en')"
+                    class="lang-btn group relative w-full h-[60px] bg-white/5 border border-white/10 hover:border-electric/50 rounded-xl overflow-hidden transition-all duration-300">
                     <div class="relative flex items-center justify-center gap-3">
                         <span class="text-2xl">🇬🇧</span>
                         <span
                             class="font-bold text-white tracking-widest text-sm uppercase group-hover:text-electric transition-colors">English</span>
                     </div>
                 </button>
-
-                <button onclick="setLanguage('pt')"
-                    class="group relative w-full h-[60px] bg-white/5 border border-white/10 hover:border-green-500/50 rounded-xl overflow-hidden transition-all duration-300">
-                    <div
-                        class="absolute inset-0 bg-green-500/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                    </div>
+                <!-- Portuguese -->
+                <button onclick="selectLang('pt')"
+                    class="lang-btn group relative w-full h-[60px] bg-white/5 border border-white/10 hover:border-green-500/50 rounded-xl overflow-hidden transition-all duration-300">
                     <div class="relative flex items-center justify-center gap-3">
                         <span class="text-2xl">🇵🇹</span>
                         <span
                             class="font-bold text-white tracking-widest text-sm uppercase group-hover:text-green-400 transition-colors">Português</span>
                     </div>
                 </button>
-
-                <button onclick="setLanguage('de')"
-                    class="group relative w-full h-[60px] bg-white/5 border border-white/10 hover:border-yellow-500/50 rounded-xl overflow-hidden transition-all duration-300">
-                    <div
-                        class="absolute inset-0 bg-yellow-500/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                    </div>
+                <!-- German -->
+                <button onclick="selectLang('de')"
+                    class="lang-btn group relative w-full h-[60px] bg-white/5 border border-white/10 hover:border-yellow-500/50 rounded-xl overflow-hidden transition-all duration-300">
                     <div class="relative flex items-center justify-center gap-3">
                         <span class="text-2xl">🇩🇪</span>
                         <span
                             class="font-bold text-white tracking-widest text-sm uppercase group-hover:text-yellow-400 transition-colors">Deutsch</span>
                     </div>
                 </button>
-
-                <button onclick="setLanguage('fr')"
-                    class="group relative w-full h-[60px] bg-white/5 border border-white/10 hover:border-blue-500/50 rounded-xl overflow-hidden transition-all duration-300">
-                    <div
-                        class="absolute inset-0 bg-blue-500/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                    </div>
+                <!-- French -->
+                <button onclick="selectLang('fr')"
+                    class="lang-btn group relative w-full h-[60px] bg-white/5 border border-white/10 hover:border-blue-500/50 rounded-xl overflow-hidden transition-all duration-300">
                     <div class="relative flex items-center justify-center gap-3">
                         <span class="text-2xl">🇫🇷</span>
                         <span
@@ -142,7 +239,196 @@
                     </div>
                 </button>
             </div>
+
+            <!-- CONFIRM BUTTON (Initially Hidden) -->
+            <button id="lang-confirm-btn" onclick="confirmLang()" style="display: none;"
+                class="w-full mt-8 px-10 py-4 bg-electric text-white font-bold rounded-full uppercase tracking-widest hover:bg-white hover:text-black transition-all shadow-[0_0_30px_rgba(98,0,234,0.5)]">
+                CONFIRM / WEITER
+            </button>
             <p class="text-[10px] text-white/30 uppercase tracking-widest mt-8">Protocol Babel Active</p>
+        </div>
+    </div>
+
+    <!-- OVERLAY 2: CLASS SELECTION (The Carousel) -->
+    <div id="class-overlay">
+        <!-- Background Elements -->
+        <div class="absolute inset-0 bg-[url('Assets/images/noise.png')] opacity-5 pointer-events-none"></div>
+        <div class="absolute top-0 w-full h-32 bg-gradient-to-b from-electric/10 to-transparent pointer-events-none">
+        </div>
+
+        <div class="w-full max-w-6xl mx-auto flex flex-col items-center justify-center h-full p-4 relative z-10">
+            <h2 data-translate="choose"
+                class="text-3xl md:text-5xl font-bold text-white tracking-[0.2em] uppercase mb-4 text-center">
+                Choose Your Path
+            </h2>
+            <p class="text-sm md:text-base text-mist mb-12 text-center max-w-lg">
+                Swipe to select your role in the Kingdom.
+            </p>
+
+            <!-- Horizontal Carousel -->
+            <div class="flex gap-4 overflow-x-auto pb-8 snap-x snap-mandatory scrollbar-hide px-4 w-full justify-start items-center h-[400px]"
+                id="onboarding-carousel">
+
+                <!-- 1. Sonic Architect (Mate Masie - Wisdom) -->
+                <div onclick="selectClass('Sonic Architect', this)"
+                    class="class-card min-w-[260px] md:min-w-[300px] snap-center p-8 rounded-2xl bg-white/5 border border-white/10 hover:border-purple-500 cursor-pointer transition-all flex flex-col items-center gap-6 group hover:bg-white/10">
+                    <div
+                        class="w-24 h-24 rounded-full bg-black/50 flex items-center justify-center border border-white/10 shadow-lg group-hover:shadow-purple-500/50 transition-all">
+                        <!-- Symbol: Mate Masie (4 spots) -->
+                        <svg viewBox="0 0 100 100"
+                            class="w-12 h-12 fill-current text-white group-hover:text-purple-500 transition-colors">
+                            <circle cx="30" cy="30" r="12" />
+                            <circle cx="70" cy="30" r="12" />
+                            <circle cx="30" cy="70" r="12" />
+                            <circle cx="70" cy="70" r="12" />
+                        </svg>
+                    </div>
+                    <div class="text-center">
+                        <h4 class="font-bold text-white text-lg">Sonic Architect</h4>
+                        <p class="text-xs text-purple-400 mt-2 uppercase tracking-wider font-bold">Mate Masie</p>
+                        <p class="text-[10px] text-mist mt-1">Wisdom & Sound</p>
+                    </div>
+                </div>
+
+                <!-- 2. Culinary Alchemist (Bese Saka - Abundance) -->
+                <div onclick="selectClass('Culinary Alchemist', this)"
+                    class="class-card min-w-[260px] md:min-w-[300px] snap-center p-8 rounded-2xl bg-white/5 border border-white/10 hover:border-amber cursor-pointer transition-all flex flex-col items-center gap-6 group hover:bg-white/10">
+                    <div
+                        class="w-24 h-24 rounded-full bg-black/50 flex items-center justify-center border border-white/10 shadow-lg group-hover:shadow-amber/50 transition-all">
+                        <!-- Symbol: Bese Saka (Abstract Sack/Pods) -->
+                        <svg viewBox="0 0 100 100"
+                            class="w-12 h-12 fill-current text-white group-hover:text-amber transition-colors">
+                            <path
+                                d="M50 20 C70 20 80 40 80 60 C80 80 65 90 50 90 C35 90 20 80 20 60 C20 40 30 20 50 20 Z"
+                                opacity="0.5" />
+                            <circle cx="40" cy="50" r="8" />
+                            <circle cx="60" cy="50" r="8" />
+                            <circle cx="50" cy="65" r="8" />
+                        </svg>
+                    </div>
+                    <div class="text-center">
+                        <h4 class="font-bold text-white text-lg">Culinary Alchemist</h4>
+                        <p class="text-xs text-amber mt-2 uppercase tracking-wider font-bold">Bese Saka</p>
+                        <p class="text-[10px] text-mist mt-1">Abundance & Taste</p>
+                    </div>
+                </div>
+
+                <!-- 3. Visual Vanguard (Ananse Ntontan - Creativity) -->
+                <div onclick="selectClass('Visual Vanguard', this)"
+                    class="class-card min-w-[260px] md:min-w-[300px] snap-center p-8 rounded-2xl bg-white/5 border border-white/10 hover:border-pink-500 cursor-pointer transition-all flex flex-col items-center gap-6 group hover:bg-white/10">
+                    <div
+                        class="w-24 h-24 rounded-full bg-black/50 flex items-center justify-center border border-white/10 shadow-lg group-hover:shadow-pink-500/50 transition-all">
+                        <!-- Symbol: Ananse Ntontan (Web) -->
+                        <svg viewBox="0 0 100 100"
+                            class="w-12 h-12 stroke-current text-white group-hover:text-pink-500 transition-colors"
+                            fill="none" stroke-width="4">
+                            <circle cx="50" cy="50" r="40" />
+                            <circle cx="50" cy="50" r="25" />
+                            <circle cx="50" cy="50" r="10" />
+                            <path d="M50 10 L50 90 M10 50 L90 50 M22 22 L78 78 M22 78 L78 22" />
+                        </svg>
+                    </div>
+                    <div class="text-center">
+                        <h4 class="font-bold text-white text-lg">Visual Vanguard</h4>
+                        <p class="text-xs text-pink-500 mt-2 uppercase tracking-wider font-bold">Ananse Ntontan</p>
+                        <p class="text-[10px] text-mist mt-1">Creativity & Vision</p>
+                    </div>
+                </div>
+
+                <!-- 4. Word Smith (Sankofa - Learning) -->
+                <div onclick="selectClass('Word Smith', this)"
+                    class="class-card min-w-[260px] md:min-w-[300px] snap-center p-8 rounded-2xl bg-white/5 border border-white/10 hover:border-blue-400 cursor-pointer transition-all flex flex-col items-center gap-6 group hover:bg-white/10">
+                    <div
+                        class="w-24 h-24 rounded-full bg-black/50 flex items-center justify-center border border-white/10 shadow-lg group-hover:shadow-blue-400/50 transition-all">
+                        <!-- Symbol: Sankofa (Heart shape variant) -->
+                        <svg viewBox="0 0 100 100"
+                            class="w-12 h-12 stroke-current text-white group-hover:text-blue-400 transition-colors"
+                            fill="none" stroke-width="6">
+                            <path
+                                d="M50 85 C20 50 10 40 10 30 A20 20 0 0 1 50 30 A20 20 0 0 1 90 30 C90 40 80 50 50 85 Z" />
+                            <path d="M50 30 L50 60 M30 30 L70 30" stroke-width="4" stroke-linecap="round" />
+                        </svg>
+                    </div>
+                    <div class="text-center">
+                        <h4 class="font-bold text-white text-lg">Word Smith</h4>
+                        <p class="text-xs text-blue-400 mt-2 uppercase tracking-wider font-bold">Sankofa</p>
+                        <p class="text-[10px] text-mist mt-1">Learning & Voice</p>
+                    </div>
+                </div>
+
+                <!-- 5. Street Kinetic (Denkyem - Adaptability) -->
+                <div onclick="selectClass('Street Kinetic', this)"
+                    class="class-card min-w-[260px] md:min-w-[300px] snap-center p-8 rounded-2xl bg-white/5 border border-white/10 hover:border-red-500 cursor-pointer transition-all flex flex-col items-center gap-6 group hover:bg-white/10">
+                    <div
+                        class="w-24 h-24 rounded-full bg-black/50 flex items-center justify-center border border-white/10 shadow-lg group-hover:shadow-red-500/50 transition-all">
+                        <!-- Symbol: Denkyem (Crocodile/Oval) -->
+                        <svg viewBox="0 0 100 100"
+                            class="w-12 h-12 fill-current text-white group-hover:text-red-500 transition-colors">
+                            <ellipse cx="50" cy="50" rx="30" ry="20" />
+                            <circle cx="30" cy="30" r="5" />
+                            <circle cx="70" cy="30" r="5" />
+                            <circle cx="30" cy="70" r="5" />
+                            <circle cx="70" cy="70" r="5" />
+                        </svg>
+                    </div>
+                    <div class="text-center">
+                        <h4 class="font-bold text-white text-lg">Street Kinetic</h4>
+                        <p class="text-xs text-red-500 mt-2 uppercase tracking-wider font-bold">Denkyem</p>
+                        <p class="text-[10px] text-mist mt-1">Adaptability & Move</p>
+                    </div>
+                </div>
+
+                <!-- 6. Grid Walker (Hwemudua - Excellence) -->
+                <div onclick="selectClass('Grid Walker', this)"
+                    class="class-card min-w-[260px] md:min-w-[300px] snap-center p-8 rounded-2xl bg-white/5 border border-white/10 hover:border-cyan-400 cursor-pointer transition-all flex flex-col items-center gap-6 group hover:bg-white/10">
+                    <div
+                        class="w-24 h-24 rounded-full bg-black/50 flex items-center justify-center border border-white/10 shadow-lg group-hover:shadow-cyan-400/50 transition-all">
+                        <!-- Symbol: Hwemudua (Measuring Stick) -->
+                        <svg viewBox="0 0 100 100"
+                            class="w-12 h-12 stroke-current text-white group-hover:text-cyan-400 transition-colors"
+                            fill="none" stroke-width="8" stroke-linecap="round">
+                            <line x1="50" y1="10" x2="50" y2="90" />
+                            <line x1="10" y1="50" x2="90" y2="50" />
+                            <line x1="10" y1="20" x2="10" y2="80" stroke-width="4" />
+                            <line x1="90" y1="20" x2="90" y2="80" stroke-width="4" />
+                        </svg>
+                    </div>
+                    <div class="text-center">
+                        <h4 class="font-bold text-white text-lg">Grid Walker</h4>
+                        <p class="text-xs text-cyan-400 mt-2 uppercase tracking-wider font-bold">Hwemudua</p>
+                        <p class="text-[10px] text-mist mt-1">Excellence & Logic</p>
+                    </div>
+                </div>
+
+                <!-- 7. Spirit Guide (Gye Nyame - Supremacy) -->
+                <div onclick="selectClass('Spirit Guide', this)"
+                    class="class-card min-w-[260px] md:min-w-[300px] snap-center p-8 rounded-2xl bg-white/5 border border-white/10 hover:border-mystic-gold cursor-pointer transition-all flex flex-col items-center gap-6 group hover:bg-white/10">
+                    <div
+                        class="w-24 h-24 rounded-full bg-black/50 flex items-center justify-center border border-white/10 shadow-lg group-hover:shadow-mystic-gold/50 transition-all">
+                        <!-- Symbol: Gye Nyame (Twisted Knot / Infinity approx) -->
+                        <svg viewBox="0 0 100 100"
+                            class="w-12 h-12 stroke-current text-white group-hover:text-mystic-gold transition-colors"
+                            fill="none" stroke-width="6" stroke-linecap="round">
+                            <path d="M30 30 Q 50 10 70 30 T 70 70 T 30 70 T 30 30" />
+                            <line x1="50" y1="10" x2="50" y2="90" stroke-width="4" />
+                            <circle cx="50" cy="50" r="10" />
+                        </svg>
+                    </div>
+                    <div class="text-center">
+                        <h4 class="font-bold text-white text-lg">Spirit Guide</h4>
+                        <p class="text-xs text-mystic-gold mt-2 uppercase tracking-wider font-bold">Gye Nyame</p>
+                        <p class="text-[10px] text-mist mt-1">Supremacy of Spirit</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ENTER BUTTON (Initially Hidden) -->
+            <button id="class-confirm-btn" onclick="enterKingdom()" style="display: none;"
+                class="mt-12 px-12 py-5 bg-electric text-white font-bold rounded-full uppercase tracking-widest hover:bg-white hover:text-black transition-all shadow-[0_0_40px_rgba(98,0,234,0.6)] text-lg animate-bounce-slight">
+                ENTER THE KINGDOM
+            </button>
+            <p class="text-[10px] text-mist mt-4 opacity-50">Identity Will Be Minted</p>
         </div>
     </div>
 
@@ -294,8 +580,7 @@
     <main class="container mx-auto px-6 py-10 md:py-20">
         <!-- Hero Section -->
         <section class="text-center mb-20 md:mb-32">
-            <h1
-                class="hero-title text-5xl md:text-7xl lg:text-8xl font-display font-bold mb-6 tracking-tighter leading-none">
+            <h1 class="hero-title mb-6">
                 THE TRUE KINGDOM<br>
                 <span class="bg-clip-text text-transparent bg-gradient-to-r from-electric to-neon-blue">IS HERE.</span>
             </h1>
@@ -875,6 +1160,17 @@
                             <h4 class="text-white font-bold mb-1">Soul Food Pop-Up</h4>
                             <p class="text-sm text-mist">@ AfricanQueenKitchen</p>
                         </div>
+
+                        <!-- Sound Credit -->
+                        <div class="bg-purple-900/10 p-4 rounded-lg border border-purple-500/20">
+                            <span class="text-[10px] font-bold text-purple-400 uppercase mb-1 block">Live
+                                Frequency</span>
+                            <h4 class="text-white font-bold mb-1">Sound by Mario</h4>
+                            <a href="https://www.instagram.com/s0u0mario?igsh=dHJ4dWhtN3ZpN3Rx" target="_blank"
+                                class="text-xs text-mist hover:text-white underline flex items-center gap-1">
+                                <span class="material-symbols-outlined text-[10px]">link</span> Instagram
+                            </a>
+                        </div>
                     </div>
 
                     <div class="mt-auto pt-8">
@@ -974,67 +1270,18 @@
     </section>
 
     <!-- Footer -->
-    <footer class="bg-background-dark border-t border-primary/20">
-        <div class="container mx-auto px-6 py-12">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <div class="md:col-span-1">
-                    <div class="flex items-center gap-4 text-white mb-4">
-                        <div class="size-6">
-                            <img src="Assets/images/logo.png" alt="Circle D Flow Logo"
-                                class="w-full h-full object-contain">
-                        </div>
-                        <h2 class="text-white text-lg font-bold leading-tight">Circle D Flow</h2>
-                    </div>
-                    <p class="text-white/60 text-sm">Art, Science &amp; Community. Lisbon.</p>
-                </div>
-                <div>
-                    <h4 class="font-bold text-mystic-gold mb-4">Explore</h4>
-                    <ul class="space-y-2">
-                        <li><a class="text-white/80 hover:text-white" href="index.html#about">Philosophy</a></li>
-                        <li><a class="text-white/80 hover:text-white" href="events.html">Events</a></li>
-                        <li><a class="text-white/80 hover:text-white" href="blog.html">Community</a></li>
-                        <li><a class="text-white/80 hover:text-white" href="kiss-your-heart.html">Kiss Your
-                                Heart</a></li>
-                        <li><a class="text-white/80 hover:text-white" href="outbreak_tunes.html">Outbreak Tunes</a>
-                        </li>
-                        <li><a class="text-white/80 hover:text-white" href="partners.html">Live on Stage Map</a>
-                        </li>
-                        <li><a class="text-white/80 hover:text-white" href="contact.html">Contact</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="font-bold text-mystic-gold mb-4">Our Pillars</h4>
-                    <ul class="space-y-2">
-                        <li><a class="text-white/80 hover:text-white" href="kiss-your-heart.html">KissYourHeartLX</a>
-                        </li>
-                        <li><a class="text-white/80 hover:text-white"
-                                href="live-from-the-underground.html">Livefromtheunderground</a></li>
-                        <li><a class="text-white/80 hover:text-white"
-                                href="african-queen-kitchen.html">AfricanQueenKitchen</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="font-bold text-mystic-gold mb-4">Join the Flow</h4>
-                    <p class="text-white/60 text-sm mb-4">Get updates on events and projects directly in your inbox.
-                    </p>
-                    <form class="flex gap-2">
-                        <input
-                            class="w-full bg-white/10 border-primary/50 text-white rounded-md text-sm focus:ring-mystic-gold focus:border-mystic-gold"
-                            placeholder="Your E-Mail" type="email" />
-                        <button
-                            class="h-10 px-4 bg-primary text-white font-bold rounded-md text-sm hover:opacity-90 whitespace-nowrap"
-                            type="submit">Sign Up</button>
-                    </form>
-                </div>
-            </div>
-            <div
-                class="mt-12 border-t border-primary/20 pt-8 text-center text-sm text-white/50 flex flex-col items-center gap-4">
-                <p>© 2024 Circle D Flow. All rights reserved.</p>
-                <button onclick="toggleLanguageModal()" class="text-white/30 hover:text-white transition-colors"
-                    title="Change Frequency">
-                    <span class="material-symbols-outlined text-lg">public</span>
-                </button>
-            </div>
+    <footer class="relative z-10 py-8 text-center border-t border-white/5 bg-black/80 backdrop-blur-xl">
+        <div class="flex flex-col gap-2 items-center justify-center">
+            <p class="text-xs text-white/30 uppercase tracking-[0.2em]">Circle D Flow © 2025</p>
+            <p
+                class="text-[10px] text-electric/50 uppercase tracking-widest hover:text-electric transition-colors cursor-pointer">
+                System: v1.0_LIVE
+            </p>
+            <a href="https://www.instagram.com/mariosonicarch/" target="_blank"
+                class="text-[10px] text-mystic-gold/70 hover:text-mystic-gold uppercase tracking-widest transition-all mt-2 flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm">music_note</span>
+                Sonic Architecture by Mario
+            </a>
         </div>
     </footer>
     </div>

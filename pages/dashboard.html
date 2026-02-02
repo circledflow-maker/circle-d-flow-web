@@ -1,0 +1,1902 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Dashboard - Circle D Flow</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        rel="stylesheet" />
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24
+        }
+
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+
+        @keyframes marquee {
+            0% {
+                transform: translateX(100%);
+            }
+
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        .animate-marquee {
+            animation: marquee 20s linear infinite;
+            display: inline-block;
+        }
+
+        @keyframes scan {
+            0% {
+                top: 0%;
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                top: 100%;
+                opacity: 0;
+            }
+        }
+
+        .animate-scan {
+            animation: scan 3s ease-in-out infinite;
+        }
+    </style>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#8A2BE2",
+                        "background-light": "#f7f5f8",
+                        "background-dark": "#191022",
+                        "mystic-gold": "#FFD700"
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                    boxShadow: {
+                        'glow-primary': '0 0 15px 5px rgba(138, 43, 226, 0.3)',
+                        'glow-gold': '0 0 15px 5px rgba(255, 215, 0, 0.3)',
+                    }
+                },
+            },
+        }
+    </script>
+    </script>
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+</head>
+
+<body class="bg-[#0F0A13] font-display text-gray-200">
+    <script>
+        // Auth Protection with Netlify Identity
+        // Wait for widget to load
+        window.addEventListener('load', () => {
+            if (window.netlifyIdentity) {
+                const user = window.netlifyIdentity.currentUser();
+                if (!user) {
+                    // Check LocalStorage fallback just in case widget is slow, but prefer Widget
+                    // If no user in 2 seconds, redirect.
+                    setTimeout(() => {
+                        if (!window.netlifyIdentity.currentUser()) {
+                            // Clear Local session to prevent UI mismatch
+                            localStorage.removeItem('isLoggedIn');
+                            localStorage.removeItem('userName');
+                            localStorage.removeItem('userEmail');
+                            window.location.href = 'index.html';
+                        }
+                    }, 2000);
+                } else {
+                    // Check for Intro Logic only if user is logged in
+                    if (!localStorage.getItem('hasSeenIntro')) {
+                        setTimeout(() => {
+                            const modal = document.getElementById('welcome-intro-modal');
+                            if (modal) modal.classList.remove('hidden');
+                        }, 1000);
+                    }
+                }
+            }
+        });
+
+        function closeIntroModal() {
+            const modal = document.getElementById('welcome-intro-modal');
+            if (modal) modal.classList.add('hidden');
+            localStorage.setItem('hasSeenIntro', 'true');
+        }
+    </script>
+
+    <!-- Custom Cursor -->
+    <div id="cursor"
+        class="fixed w-12 h-12 pointer-events-none z-[200] transition-transform duration-100 hidden md:block">
+        <img src="Assets/images/logo.png" class="w-full h-full object-contain drop-shadow-lg" alt="Cursor">
+    </div>
+
+    <!-- Desktop Navigation (The Compass) -->
+    <nav
+        class="hidden md:flex fixed top-0 w-full z-50 bg-[#0F0A13]/90 backdrop-blur-xl border-b border-white/5 h-20 items-center justify-between px-12 transition-all duration-300">
+        <div class="hidden md:flex items-center gap-8">
+            <a href="dashboard.html"
+                class="text-xs font-bold uppercase tracking-widest text-electric drop-shadow-[0_0_8px_rgba(154,77,255,0.8)]"
+                data-i18n="nav_hub">Hub</a>
+            <a href="outbreak_tunes.html"
+                class="text-xs font-bold uppercase tracking-widest text-white hover:text-purple-400 transition-colors"
+                data-i18n="nav_sound">Sound</a>
+            <a href="african-queen-kitchen.html"
+                class="text-xs font-bold uppercase tracking-widest text-white hover:text-amber transition-colors"
+                data-i18n="nav_taste">Taste</a>
+            <a href="kiss-your-heart.html"
+                class="text-xs font-bold uppercase tracking-widest text-white hover:text-pink-400 transition-colors"
+                data-i18n="nav_visuals">Visuals</a>
+        </div>
+        <a href="index.html" class="absolute left-1/2 -translate-x-1/2 group">
+            <img src="Assets/images/logo.png" alt="Circle D Flow"
+                class="h-10 w-auto group-hover:scale-110 transition-transform duration-300 drop-shadow-[0_0_15px_rgba(98,0,234,0.5)]">
+        </a>
+        <div class="flex items-center gap-8">
+            <a href="marketplace.html"
+                class="text-xs font-bold uppercase tracking-widest text-white hover:text-mystic-gold transition-colors"
+                data-i18n="nav_style">Style</a>
+            <a href="codex.html"
+                class="text-xs font-bold uppercase tracking-widest text-white hover:text-blue-400 transition-colors"
+                data-i18n="nav_knowledge">The Codex</a>
+            <a href="events.html"
+                class="text-xs font-bold uppercase tracking-widest text-white hover:text-green-400 transition-colors"
+                data-i18n="nav_space">Space</a>
+            <a href="mindfulness.html"
+                class="text-xs font-bold uppercase tracking-widest text-white hover:text-indigo-400 transition-colors"
+                data-i18n="nav_spirit">Spirit</a>
+        </div>
+        <div class="absolute right-6 flex items-center gap-4">
+            <button onclick="toggleLanguageModal()" class="text-white/50 hover:text-white transition-colors">
+                <span class="material-symbols-outlined text-lg">public</span>
+            </button>
+            <button onclick="logout()"
+                class="px-5 py-2 bg-white/5 text-white font-bold rounded-full text-[10px] uppercase tracking-widest hover:bg-red-500 hover:text-white transition-all border border-white/10">
+                Logout
+            </button>
+        </div>
+    </nav>
+
+    <!-- Global News Ticker -->
+    <div id="global-news-ticker"
+        class="hidden md:flex fixed top-20 w-full z-40 bg-electric/10 border-b border-electric/20 py-1 overflow-hidden backdrop-blur-sm">
+        <div id="news-marquee"
+            class="whitespace-nowrap animate-marquee text-[10px] font-bold uppercase tracking-[0.2em] text-electric flex justify-center w-full">
+            <!-- Injected via JS -->
+        </div>
+    </div>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav
+        class="md:hidden fixed bottom-4 left-4 right-4 z-50 bg-[#1A1622]/90 backdrop-blur-xl border border-white/10 rounded-2xl p-4 flex justify-between items-center shadow-2xl safe-area-pb">
+        <a href="dashboard.html"
+            class="flex flex-col items-center gap-1 text-electric drop-shadow-[0_0_10px_rgba(154,77,255,0.6)]">
+            <span class="material-symbols-outlined text-xl">dashboard</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider" data-i18n="nav_hub">Hub</span>
+        </a>
+        <a href="outbreak_tunes.html"
+            class="flex flex-col items-center gap-1 text-white/50 hover:text-purple-400 transition-colors">
+            <span class="material-symbols-outlined text-xl">graphic_eq</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider" data-i18n="nav_sound">Sound</span>
+        </a>
+        <a href="index.html" class="relative -top-6">
+            <div
+                class="w-14 h-14 bg-electric rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(98,0,234,0.6)] border-4 border-[#0F0A13]">
+                <img src="Assets/images/logo.png" class="w-7 h-7 object-contain">
+            </div>
+        </a>
+        <a href="african-queen-kitchen.html"
+            class="flex flex-col items-center gap-1 text-white/50 hover:text-amber transition-colors">
+            <span class="material-symbols-outlined text-xl">restaurant</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider" data-i18n="nav_taste">Taste</span>
+        </a>
+        <button onclick="toggleMobileDrawer()"
+            class="flex flex-col items-center gap-1 text-white/50 hover:text-mystic-gold transition-colors">
+            <span class="material-symbols-outlined text-xl">menu</span>
+            <span class="text-[9px] font-bold uppercase tracking-wider">More</span>
+        </button>
+    </nav>
+
+    <!-- Identity Modal (First Contact) -->
+    <div id="identity-modal"
+        class="fixed inset-0 z-[400] bg-black/95 backdrop-blur-xl hidden flex items-center justify-center p-4">
+        <div
+            class="bg-[#191022] border border-electric/50 rounded-2xl p-8 max-w-md w-full text-center relative overflow-hidden shadow-[0_0_50px_rgba(138,43,226,0.5)]">
+            <h2 class="text-3xl font-bold text-white mb-4 tracking-wide font-display">Identify Yourself</h2>
+            <p class="text-gray-400 mb-6 leading-relaxed">
+                To enter the Circle, you must declare your name. This will be your handle in the Beta Protocol.
+            </p>
+            <input type="text" id="identity-input" placeholder="Enter Artist / Profile Name"
+                class="w-full bg-black/50 border border-white/20 rounded-xl p-4 text-center text-white text-lg font-bold focus:border-electric focus:ring-1 focus:ring-electric outline-none mb-6 placeholder:text-white/20">
+            <button onclick="saveIdentity()"
+                class="w-full py-4 bg-electric hover:bg-electric/80 text-white font-bold rounded-xl uppercase tracking-widest transition-all hover:scale-[1.02] shadow-lg">
+                Confirm Identity
+            </button>
+        </div>
+    </div>
+
+    <!-- Onboarding Shadow Guide -->
+    <div id="onboarding-overlay" class="fixed inset-0 z-[350] bg-black/80 hidden pointer-events-auto">
+        <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-8">
+            <h2 class="text-4xl font-bold text-white mb-4 text-electric drop-shadow-[0_0_15px_rgba(138,43,226,0.8)]">
+                Welcome, <span id="onboarding-name">Traveler</span>.</h2>
+            <p class="text-xl text-white/80 max-w-2xl mb-12">
+                This is your HQ. From here, you control your journey.<br>
+                Complete the <strong class="text-mystic-gold">Beta Checklist</strong> to earn your first stripes.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl w-full text-left mb-12">
+                <div class="p-6 border border-white/10 rounded-xl bg-white/5 backdrop-blur-sm relative">
+                    <div
+                        class="absolute -top-3 -left-3 w-8 h-8 bg-electric rounded-full flex items-center justify-center font-bold">
+                        1</div>
+                    <h3 class="font-bold text-white mb-2">Track Progress</h3>
+                    <p class="text-sm text-mist">Your XP and Level are displayed on the left. Everything you do adds to
+                        your score.</p>
+                </div>
+                <div class="p-6 border border-white/10 rounded-xl bg-white/5 backdrop-blur-sm relative">
+                    <div
+                        class="absolute -top-3 -left-3 w-8 h-8 bg-amber rounded-full flex items-center justify-center font-bold text-black">
+                        2</div>
+                    <h3 class="font-bold text-white mb-2">Connect</h3>
+                    <p class="text-sm text-mist">See your Circle in the "Connected" panel. Send flow to friends.</p>
+                </div>
+                <div class="p-6 border border-white/10 rounded-xl bg-white/5 backdrop-blur-sm relative">
+                    <div
+                        class="absolute -top-3 -left-3 w-8 h-8 bg-cyan-400 rounded-full flex items-center justify-center font-bold text-black">
+                        3</div>
+                    <h3 class="font-bold text-white mb-2">Contribute</h3>
+                    <p class="text-sm text-mist">Add to the Knowledge Base. Share slang, tech, or locations.</p>
+                </div>
+            </div>
+
+            <button onclick="closeOnboarding()"
+                class="px-10 py-4 bg-white text-black font-bold rounded-full uppercase tracking-widest hover:scale-105 transition-transform shadow-[0_0_20px_rgba(255,255,255,0.4)]">
+                Start Flow
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Drawer -->
+    <div id="mobile-drawer"
+        class="fixed inset-0 bg-black/95 backdrop-blur-xl z-[60] transform translate-y-full transition-transform duration-300 flex flex-col items-center justify-center space-y-8 md:hidden">
+        <button onclick="toggleMobileDrawer()" class="absolute top-8 right-8 text-white/50 hover:text-white">
+            <span class="material-symbols-outlined text-3xl">close</span>
+        </button>
+        <a href="kiss-your-heart.html"
+            class="text-2xl font-bold text-white hover:text-pink-400 tracking-widest">VISUALS</a>
+        <a href="marketplace.html"
+            class="text-2xl font-bold text-white hover:text-mystic-gold tracking-widest">STYLE</a>
+        <a href="codex.html" class="text-2xl font-bold text-white hover:text-blue-400 tracking-widest">THE CODEX</a>
+        <a href="events.html" class="text-2xl font-bold text-white hover:text-green-400 tracking-widest">SPACE</a>
+        <a href="mindfulness.html"
+            class="text-2xl font-bold text-white hover:text-indigo-400 tracking-widest">SPIRIT</a>
+        <div class="h-px w-24 bg-white/10"></div>
+        <a href="login.html"
+            class="px-8 py-3 bg-electric text-white font-bold rounded-full uppercase tracking-widest mt-8 shadow-lg shadow-electric/20">Login</a>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <dialog id="edit-profile-modal"
+        class="bg-[#191022] border border-electric/50 rounded-2xl p-8 max-w-md w-full text-white backdrop:bg-black/90">
+        <h2 class="text-2xl font-bold mb-6 font-display">Edit Profile</h2>
+        <form method="dialog" class="space-y-4">
+            <div>
+                <label class="block text-xs font-bold uppercase tracking-widest text-[#ab9cba] mb-2">Display
+                    Name</label>
+                <input type="text" id="edit-name"
+                    class="w-full bg-black/50 border border-white/20 rounded-xl p-3 text-white focus:border-electric outline-none">
+            </div>
+            <div>
+                <label class="block text-xs font-bold uppercase tracking-widest text-[#ab9cba] mb-2">Avatar URL
+                    (Optional)</label>
+                <input type="text" id="edit-avatar" placeholder="https://..."
+                    class="w-full bg-black/50 border border-white/20 rounded-xl p-3 text-white focus:border-electric outline-none mb-2">
+
+                <div class="relative group">
+                    <label class="block text-xs font-bold uppercase tracking-widest text-[#ab9cba] mb-2">OR Upload
+                        Image</label>
+                    <input type="file" id="profile-upload" accept="image/*"
+                        class="w-full bg-black/50 border border-white/20 rounded-xl p-3 text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-electric/20 file:text-electric hover:file:bg-electric/30">
+                </div>
+            </div>
+            <div class="flex gap-4 pt-4">
+                <button type="button" onclick="saveProfile()"
+                    class="flex-1 py-3 bg-electric hover:bg-electric/80 rounded-xl font-bold uppercase tracking-widest transition-all">Save
+                    Changes</button>
+                <button
+                    class="px-6 py-3 border border-white/10 rounded-xl hover:bg-white/5 transition-all">Cancel</button>
+            </div>
+        </form>
+    </dialog>
+
+    <div class="min-h-screen pt-24 pb-32 px-4 md:px-8">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-4 gap-8">
+            <!-- Header Globe Icon (Absolute position for now or integrated) -->
+            <div class="absolute top-24 right-8 z-40 hidden md:block">
+                <button onclick="toggleLanguageModal()"
+                    class="w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-white/50 hover:text-white transition-all"
+                    title="Language">
+                    <span class="material-symbols-outlined text-lg">public</span>
+                </button>
+            </div>
+
+            <!-- Column 1: The Hunter License (Profile) -->
+            <div class="lg:col-span-1">
+                <div id="stats-container"
+                    class="bg-[#141118]/80 backdrop-blur-sm border border-white/5 rounded-2xl p-6 sticky top-24 w-full">
+                    <!-- Profile Header -->
+                    <div class="relative flex flex-col items-center mb-6">
+                        <div onclick="document.getElementById('edit-profile-modal').showModal()"
+                            class="w-20 h-20 rounded-full p-1 bg-gradient-to-br from-electric via-purple-500 to-amber mb-3 relative group cursor-pointer">
+                            <img id="dash-avatar-img" src="Assets/images/logo.png"
+                                class="w-full h-full object-cover rounded-full bg-black">
+                            <div
+                                class="absolute inset-0 rounded-full bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                <span class="material-symbols-outlined text-white">edit</span>
+                            </div>
+                        </div>
+                        <h2 class="text-xl font-bold text-white" id="dash-user-name">Loading Identity...</h2>
+                        <p class="text-xs font-bold uppercase tracking-widest text-[#ab9cba] mb-1"
+                            id="dash-user-level-text">
+                            Level 0: Drifter</p>
+                        <div class="flex gap-1 mt-1 justify-center" id="dash-user-stars">☆☆☆☆☆☆☆</div>
+                    </div>
+
+                    <!-- Stats -->
+                    <div class="space-y-4">
+                        <!-- XP -->
+                        <div>
+                            <div class="flex justify-between text-xs mb-1">
+                                <span class="text-gray-400">XP Progress</span>
+                                <span class="text-white" id="dash-xp-text">0 / 100</span>
+                            </div>
+                            <div class="h-1.5 bg-white/10 rounded-full overflow-hidden">
+                                <div id="dash-xp-fill"
+                                    class="h-full bg-gradient-to-r from-electric to-purple-500 w-0 transition-all duration-1000">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Nen (Creativity) -->
+                        <div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="material-symbols-outlined text-xs text-electric">psychology</span>
+                                <span class="text-[10px] font-bold uppercase tracking-wider text-white">Nen</span>
+                            </div>
+                            <div class="h-1 bg-white/10 rounded-full overflow-hidden">
+                                <div id="stat-nen" class="h-full bg-electric w-0"></div>
+                            </div>
+                        </div>
+
+                        <!-- Stamina (Attendance) -->
+                        <div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="material-symbols-outlined text-xs text-amber">bolt</span>
+                                <span class="text-[10px] font-bold uppercase tracking-wider text-white">Stamina</span>
+                            </div>
+                            <div class="h-1 bg-white/10 rounded-full overflow-hidden">
+                                <div id="stat-stamina" class="h-full bg-amber w-0"></div>
+                            </div>
+                        </div>
+
+                        <!-- Impact (Community) -->
+                        <div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="material-symbols-outlined text-xs text-cyan-400">public</span>
+                                <span class="text-[10px] font-bold uppercase tracking-wider text-white">Impact</span>
+                            </div>
+                            <div class="h-1 bg-white/10 rounded-full overflow-hidden">
+                                <div id="stat-impact" class="h-full bg-cyan-400 w-0"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Connected Circle (Sidebar Social Hub) -->
+                <div id="social-hub"
+                    class="mt-8 bg-[#141118]/80 backdrop-blur-sm border border-white/5 rounded-2xl p-6 w-full">
+                    <h3 class="text-sm font-bold text-white uppercase tracking-widest mb-4 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-green-400 text-sm">radio_button_checked</span>
+                        Connected Circle
+                    </h3>
+
+                    <!-- Community Uplink Widget -->
+                    <div class="mb-6 space-y-3">
+                        <a href="https://ig.me/j/Aba13pmaSn6Yo3TH/" target="_blank"
+                            class="flex items-center gap-3 p-3 bg-gradient-to-r from-purple-900/40 to-pink-900/40 border border-white/10 rounded-xl hover:border-pink-500/50 transition-all group">
+                            <span class="text-xl">📸</span>
+                            <div>
+                                <h4 class="text-xs font-bold text-white group-hover:text-pink-300">Instagram Jam</h4>
+                                <p class="text-[10px] text-white/50">Join the Visual Loop</p>
+                            </div>
+                        </a>
+                        <a href="https://chat.whatsapp.com/L4rZ7rcdBwgJ85tn7D5fO7?mode=gi_t" target="_blank"
+                            class="flex items-center gap-3 p-3 bg-gradient-to-r from-green-900/40 to-emerald-900/40 border border-white/10 rounded-xl hover:border-green-500/50 transition-all group">
+                            <span class="text-xl">💬</span>
+                            <div>
+                                <h4 class="text-xs font-bold text-white group-hover:text-green-300">WhatsApp Crew</h4>
+                                <p class="text-[10px] text-white/50">Real-time Comms</p>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div id="social-hub-list" class="space-y-4">
+                        <!-- Mock Friends Injected via JS -->
+                        <div class="text-xs text-mist text-center py-4">Scanning frequencies...</div>
+                    </div>
+                </div>
+
+                <!-- Flow Network (User + Friends) -->
+                <div class="mt-8 bg-[#141118]/80 backdrop-blur-sm border border-white/5 rounded-2xl p-6 w-full">
+                    <h3 class="text-sm font-bold text-white uppercase tracking-widest mb-4 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-green-400 text-sm">hub</span>
+                        Flow Network
+                    </h3>
+
+                    <!-- Search Agent -->
+                    <div class="mb-4 relative">
+                        <span class="material-symbols-outlined absolute left-3 top-2.5 text-mist text-lg">search</span>
+                        <input type="text" id="social-search" oninput="searchUsers(this.value)"
+                            placeholder="Search Agent..."
+                            class="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-2 text-xs text-white focus:border-electric outline-none">
+                    </div>
+
+                    <div id="flow-network-list" class="space-y-4 max-h-[300px] overflow-y-auto pr-1 scrollbar-hide">
+                        <!-- Populated by JS -->
+                        <div class="text-xs text-mist text-center py-4">Syncing Network...</div>
+                    </div>
+                </div>
+
+                <!-- WIDGET: FLOW PHILOLOGY (Linguist Quest) -->
+                <div class="mt-8 bg-blue-900/10 border border-blue-500/20 rounded-2xl p-6 relative overflow-hidden">
+                    <div class="absolute -right-4 -top-4 text-blue-500/10 rotate-12">
+                        <span class="material-symbols-outlined text-9xl">translate</span>
+                    </div>
+                    <h3
+                        class="text-sm font-bold text-blue-300 uppercase tracking-widest mb-2 flex items-center gap-2 relative z-10">
+                        <span class="material-symbols-outlined text-sm">school</span> Flow Philology
+                    </h3>
+                    <p class="text-xs text-mist mb-4 relative z-10">
+                        In the Kingdom, words have power.
+                    </p>
+
+                    <div id="quiz-container" class="relative z-10">
+                        <p class="text-white text-sm font-bold mb-3">"What does the term 'Fluxo' signify in our lore?"
+                        </p>
+                        <div class="grid grid-cols-1 gap-2">
+                            <button onclick="submitLinguistQuiz('A')"
+                                class="text-left px-3 py-2 rounded bg-black/40 border border-white/10 hover:border-blue-400 text-xs text-gray-300 transition-colors">[A]
+                                To Stop abruptly</button>
+                            <button onclick="submitLinguistQuiz('B')"
+                                class="text-left px-3 py-2 rounded bg-black/40 border border-white/10 hover:border-blue-400 text-xs text-gray-300 transition-colors">[B]
+                                The River of Connection</button>
+                            <button onclick="submitLinguistQuiz('C')"
+                                class="text-left px-3 py-2 rounded bg-black/40 border border-white/10 hover:border-blue-400 text-xs text-gray-300 transition-colors">[C]
+                                A Hard Barrier</button>
+                        </div>
+                    </div>
+                    <div id="quiz-result"
+                        class="hidden relative z-10 mt-2 p-2 bg-green-500/20 border border-green-500/50 rounded text-green-400 text-xs font-bold text-center">
+                        Correct! +50 XP
+                    </div>
+                </div>
+
+                <!-- Tools (Mobile Only / Quick Access) -->
+                <div class="mt-4 md:hidden">
+                    <button
+                        class="w-full py-3 bg-white/5 border border-white/10 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined">inventory_2</span> My Equipment
+                    </button>
+                </div>
+            </div>
+
+            <!-- Column 2: Dashboard Content -->
+            <main class="lg:col-span-3 space-y-8">
+
+                <!-- RPG: CLASS SELECTION CAROUSEL -->
+                <div id="class-selection-carousel" class="w-full relative group mb-8">
+                    <h3 class="text-sm font-bold text-mist uppercase tracking-widest mb-4">Select Your Role (Adinkra
+                        Archetypes)</h3>
+
+                    <!-- Scroll Container -->
+                    <div class="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide"
+                        id="adinkra-carousel">
+                        <!-- Class 1: Sonic Architect -->
+                        <div onclick="selectClass('Sonic Architect')"
+                            class="min-w-[160px] snap-center p-6 rounded-2xl bg-[#141118] border border-white/10 hover:border-electric cursor-pointer transition-all flex flex-col items-center gap-4 group/card relative overflow-hidden">
+                            <div
+                                class="absolute inset-0 bg-gradient-to-br from-electric/0 to-electric/10 opacity-0 group-hover/card:opacity-100 transition-opacity">
+                            </div>
+                            <div
+                                class="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center border border-white/10 group-hover/card:border-electric/50 transition-colors">
+                                <span
+                                    class="material-symbols-outlined text-3xl text-white group-hover/card:text-electric transition-colors">hearing</span>
+                            </div>
+                            <div class="text-center relative z-10">
+                                <h4 class="font-bold text-white text-sm">Sonic Architect</h4>
+                                <p class="text-[10px] text-mist mt-1">Mate Masie</p>
+                            </div>
+                        </div>
+
+                        <!-- Class 2: Culinary Alchemist -->
+                        <div onclick="selectClass('Culinary Alchemist')"
+                            class="min-w-[160px] snap-center p-6 rounded-2xl bg-[#141118] border border-white/10 hover:border-amber cursor-pointer transition-all flex flex-col items-center gap-4 group/card relative overflow-hidden">
+                            <div
+                                class="absolute inset-0 bg-gradient-to-br from-amber/0 to-amber/10 opacity-0 group-hover/card:opacity-100 transition-opacity">
+                            </div>
+                            <div
+                                class="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center border border-white/10 group-hover/card:border-amber/50 transition-colors">
+                                <span
+                                    class="material-symbols-outlined text-3xl text-white group-hover/card:text-amber transition-colors">restaurant</span>
+                            </div>
+                            <div class="text-center relative z-10">
+                                <h4 class="font-bold text-white text-sm">Culinary Alchemist</h4>
+                                <p class="text-[10px] text-mist mt-1">Bese Saka</p>
+                            </div>
+                        </div>
+
+                        <!-- Class 3: Visual Vanguard -->
+                        <div onclick="selectClass('Visual Vanguard')"
+                            class="min-w-[160px] snap-center p-6 rounded-2xl bg-[#141118] border border-white/10 hover:border-pink-500 cursor-pointer transition-all flex flex-col items-center gap-4 group/card relative overflow-hidden">
+                            <div
+                                class="absolute inset-0 bg-gradient-to-br from-pink-500/0 to-pink-500/10 opacity-0 group-hover/card:opacity-100 transition-opacity">
+                            </div>
+                            <div
+                                class="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center border border-white/10 group-hover/card:border-pink-500/50 transition-colors">
+                                <span
+                                    class="material-symbols-outlined text-3xl text-white group-hover/card:text-pink-500 transition-colors">palette</span>
+                            </div>
+                            <div class="text-center relative z-10">
+                                <h4 class="font-bold text-white text-sm">Visual Vanguard</h4>
+                                <p class="text-[10px] text-mist mt-1">Ananse Ntontan</p>
+                            </div>
+                        </div>
+
+                        <!-- Class 4: Word Smith -->
+                        <div onclick="selectClass('Word Smith')"
+                            class="min-w-[160px] snap-center p-6 rounded-2xl bg-[#141118] border border-white/10 hover:border-blue-400 cursor-pointer transition-all flex flex-col items-center gap-4 group/card relative overflow-hidden">
+                            <div
+                                class="absolute inset-0 bg-gradient-to-br from-blue-400/0 to-blue-400/10 opacity-0 group-hover/card:opacity-100 transition-opacity">
+                            </div>
+                            <div
+                                class="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center border border-white/10 group-hover/card:border-blue-400/50 transition-colors">
+                                <span
+                                    class="material-symbols-outlined text-3xl text-white group-hover/card:text-blue-400 transition-colors">mic_external_on</span>
+                            </div>
+                            <div class="text-center relative z-10">
+                                <h4 class="font-bold text-white text-sm">Word Smith</h4>
+                                <p class="text-[10px] text-mist mt-1">Sankofa</p>
+                            </div>
+                        </div>
+
+                        <!-- Class 5: Street Kinetic -->
+                        <div onclick="selectClass('Street Kinetic')"
+                            class="min-w-[160px] snap-center p-6 rounded-2xl bg-[#141118] border border-white/10 hover:border-red-500 cursor-pointer transition-all flex flex-col items-center gap-4 group/card relative overflow-hidden">
+                            <div
+                                class="absolute inset-0 bg-gradient-to-br from-red-500/0 to-red-500/10 opacity-0 group-hover/card:opacity-100 transition-opacity">
+                            </div>
+                            <div
+                                class="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center border border-white/10 group-hover/card:border-red-500/50 transition-colors">
+                                <span
+                                    class="material-symbols-outlined text-3xl text-white group-hover/card:text-red-500 transition-colors">directions_run</span>
+                            </div>
+                            <div class="text-center relative z-10">
+                                <h4 class="font-bold text-white text-sm">Street Kinetic</h4>
+                                <p class="text-[10px] text-mist mt-1">Denkyem</p>
+                            </div>
+                        </div>
+
+                        <!-- Class 6: Grid Walker -->
+                        <div onclick="selectClass('Grid Walker')"
+                            class="min-w-[160px] snap-center p-6 rounded-2xl bg-[#141118] border border-white/10 hover:border-green-500 cursor-pointer transition-all flex flex-col items-center gap-4 group/card relative overflow-hidden">
+                            <div
+                                class="absolute inset-0 bg-gradient-to-br from-green-500/0 to-green-500/10 opacity-0 group-hover/card:opacity-100 transition-opacity">
+                            </div>
+                            <div
+                                class="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center border border-white/10 group-hover/card:border-green-500/50 transition-colors">
+                                <span
+                                    class="material-symbols-outlined text-3xl text-white group-hover/card:text-green-500 transition-colors">grid_view</span>
+                            </div>
+                            <div class="text-center relative z-10">
+                                <h4 class="font-bold text-white text-sm">Grid Walker</h4>
+                                <p class="text-[10px] text-mist mt-1">Hwemudua</p>
+                            </div>
+                        </div>
+
+                        <!-- Class 7: Spirit Guide -->
+                        <div onclick="selectClass('Spirit Guide')"
+                            class="min-w-[160px] snap-center p-6 rounded-2xl bg-[#141118] border border-white/10 hover:border-purple-500 cursor-pointer transition-all flex flex-col items-center gap-4 group/card relative overflow-hidden">
+                            <div
+                                class="absolute inset-0 bg-gradient-to-br from-purple-500/0 to-purple-500/10 opacity-0 group-hover/card:opacity-100 transition-opacity">
+                            </div>
+                            <div
+                                class="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center border border-white/10 group-hover/card:border-purple-500/50 transition-colors">
+                                <span
+                                    class="material-symbols-outlined text-3xl text-white group-hover/card:text-purple-500 transition-colors">self_improvement</span>
+                            </div>
+                            <div class="text-center relative z-10">
+                                <h4 class="font-bold text-white text-sm">Spirit Guide</h4>
+                                <p class="text-[10px] text-mist mt-1">Gye Nyame</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ADMIN TOOL: KITCHEN COMMAND (Hidden by default) -->
+                <div id="kitchen-widget" class="hidden mb-8 p-6 bg-amber/5 border border-amber/20 rounded-2xl">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                            <span class="material-symbols-outlined text-amber">soup_kitchen</span>
+                            Kitchen Command
+                        </h3>
+                        <div id="kitchen-status"
+                            class="w-3 h-3 rounded-full bg-red-500 shadow-[0_0_10px_rgba(255,0,0,0.5)]"></div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block text-xs font-bold text-mist mb-1">Bread/Buns Stock</label>
+                            <input type="number" id="kitchen-stock"
+                                class="w-full bg-black/50 border border-white/10 rounded-lg p-2 text-white outline-none focus:border-amber">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-mist mb-1">Dishware Count</label>
+                            <div class="flex items-center gap-2 h-10">
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="checkbox" id="kitchen-dishware"
+                                        class="w-4 h-4 rounded bg-white/10 border-white/20 text-amber focus:ring-amber">
+                                    <span class="text-sm text-white">Sufficient?</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label
+                            class="flex items-center gap-2 cursor-pointer bg-red-500/10 p-3 rounded-lg border border-red-500/20 hover:bg-red-500/20 transition-colors">
+                            <input type="checkbox" id="kitchen-haccp"
+                                class="w-5 h-5 rounded bg-black/50 border-red-500 text-red-500 focus:ring-red-500">
+                            <span class="font-bold text-red-400">HACCP Compliance Check (Critical)</span>
+                        </label>
+                    </div>
+                    <textarea id="kitchen-log" rows="2" placeholder="Master Log Entry..."
+                        class="w-full bg-black/50 border border-white/10 rounded-lg p-2 text-white mb-4 outline-none focus:border-amber"></textarea>
+                    <button onclick="updateKitchenStatus()"
+                        class="w-full py-2 bg-amber text-black font-bold rounded-lg hover:bg-white transition-colors">Update
+                        Status</button>
+                </div>
+
+                <!-- ADMIN TOOL: CYPHER LX CONTROL (Hidden by default) -->
+                <div id="cypher-widget" class="hidden mb-8 p-6 bg-electric/5 border border-electric/20 rounded-2xl">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                            <span class="material-symbols-outlined text-electric">equalizer</span>
+                            Cypher LX Control
+                        </h3>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-bold text-electric animate-pulse">LIVE</span>
+                            <div class="w-3 h-3 rounded-full bg-red-500 shadow-[0_0_10px_rgba(255,0,0,0.5)]"></div>
+                        </div>
+                    </div>
+                    <div class="space-y-3 mb-6">
+                        <label
+                            class="flex items-center justify-between p-3 bg-black/40 rounded-lg border border-white/5 cursor-pointer hover:border-electric/50 transition-all">
+                            <span class="text-sm font-bold text-white">Mic Levels / Soundcheck</span>
+                            <input type="checkbox" id="cypher-mic"
+                                class="w-5 h-5 rounded bg-black border-white/20 text-electric focus:ring-electric">
+                        </label>
+                        <label
+                            class="flex items-center justify-between p-3 bg-black/40 rounded-lg border border-white/5 cursor-pointer hover:border-electric/50 transition-all">
+                            <span class="text-sm font-bold text-white">Recording Active</span>
+                            <input type="checkbox" id="cypher-rec"
+                                class="w-5 h-5 rounded bg-black border-white/20 text-red-500 focus:ring-red-500">
+                        </label>
+                        <label
+                            class="flex items-center justify-between p-3 bg-black/40 rounded-lg border border-white/5 cursor-pointer hover:border-electric/50 transition-all">
+                            <span class="text-sm font-bold text-white">Artist Lineup Sorted</span>
+                            <input type="checkbox" id="cypher-lineup"
+                                class="w-5 h-5 rounded bg-black border-white/20 text-electric focus:ring-electric">
+                        </label>
+                        <label
+                            class="flex items-center justify-between p-3 bg-black/40 rounded-lg border border-white/5 cursor-pointer hover:border-electric/50 transition-all">
+                            <span class="text-sm font-bold text-white">Cables & Safety Check</span>
+                            <input type="checkbox" id="cypher-safety"
+                                class="w-5 h-5 rounded bg-black border-white/20 text-green-500 focus:ring-green-500">
+                        </label>
+                    </div>
+                    <button onclick="broadcastCypherStatus()"
+                        class="w-full py-2 bg-electric text-white font-bold rounded-lg hover:bg-white hover:text-black transition-colors shadow-[0_0_15px_rgba(138,43,226,0.2)]">
+                        Broadcast Status to Ticker
+                    </button>
+                </div>
+
+                <!-- BATTLE ARENA: SPARRING RING -->
+                <div
+                    class="mb-8 p-6 bg-gradient-to-br from-red-900/20 to-black border border-red-500/20 rounded-2xl relative overflow-hidden">
+                    <div class="absolute inset-0 bg-[url('Assets/images/noise.png')] opacity-10 mix-blend-overlay">
+                    </div>
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-start mb-6">
+                            <div>
+                                <h3 class="text-2xl font-serif font-bold text-white italic">Sparring Ring</h3>
+                                <p class="text-sm text-red-200/50">Challenge peers to gain Combat XP</p>
+                            </div>
+                            <span class="material-symbols-outlined text-4xl text-red-500/20">swords</span>
+                        </div>
+
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="flex-1">
+                                <label class="block text-xs font-bold uppercase text-red-400 mb-2">Select
+                                    Opponent</label>
+                                <select id="battle-opponent"
+                                    class="w-full bg-black/50 border border-red-500/30 rounded-xl p-3 text-white outline-none focus:border-red-500">
+                                    <option value="Hempy Roots">Hempy Roots (Lvl 5)</option>
+                                    <option value="DJ Qter">DJ Qter (Lvl 8)</option>
+                                    <option value="Outbreak Tunes">Outbreak Tunes (Lvl 4)</option>
+                                </select>
+                            </div>
+                            <div class="flex items-end">
+                                <button onclick="challengeFriend()"
+                                    class="px-6 py-3 bg-red-600 hover:bg-red-500 text-white font-bold rounded-xl uppercase tracking-widest shadow-[0_0_20px_rgba(220,38,38,0.4)] transition-all active:scale-95">
+                                    FIGHT
+                                </button>
+                            </div>
+                        </div>
+                        <div id="battle-log"
+                            class="text-xs font-mono text-red-200/70 h-16 overflow-y-auto border-t border-red-500/10 pt-2">
+                            Awaiting challenger...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sales Ticker -->
+                <div
+                    class="w-full bg-electric/10 border-b border-electric/20 overflow-hidden py-2 mb-8 rounded-lg relative">
+                    <div class="animate-marquee whitespace-nowrap text-sm font-bold text-electric tracking-widest">
+                        Kreativlon.Art just sold a custom piece! • DJ Qter released a new pack! • Hempy just joined the
+                        Circle! • New Quest Available: "Urban Explorer" • Level 7 Unlocked for Early Adopters
+                    </div>
+                </div>
+
+                <div class="mx-auto max-w-7xl">
+                    <!-- Header & Quick Actions -->
+                    <div class="flex flex-wrap items-center justify-between gap-6 mb-12">
+                        <div class="flex flex-col gap-1">
+                            <h2 class="text-white text-4xl font-serif font-bold leading-tight tracking-tighter">My Flow
+                            </h2>
+                            <p class="text-[#ab9cba] text-base font-normal leading-normal">Welcome back, Alex. Your
+                                energy is rising.</p>
+                        </div>
+                        <div class="flex gap-3">
+                            <button onclick="document.getElementById('upload-modal').showModal()"
+                                class="flex items-center gap-2 px-5 py-3 bg-electric/20 text-electric rounded-lg border border-electric/50 hover:bg-electric/30 transition-all">
+                                <span class="material-symbols-outlined">upload</span>
+                                <span class="font-bold text-sm uppercase tracking-wide">Upload Product</span>
+                            </button>
+                            <a href="event-create.html"
+                                class="flex items-center gap-2 px-5 py-3 bg-mystic-gold/20 text-mystic-gold rounded-lg border border-mystic-gold/50 hover:bg-mystic-gold/30 transition-all shadow-glow-gold">
+                                <span class="material-symbols-outlined">add_circle</span>
+                                <span class="font-bold text-sm uppercase tracking-wide">Host Event</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- PROTOCOL DAILY GRIND: THE QUEST LOG -->
+                    <div id="daily-quest-card"
+                        class="mb-8 p-6 bg-gradient-to-r from-purple-900/40 to-black border border-purple-500/30 rounded-2xl relative overflow-hidden group">
+                        <div
+                            class="absolute inset-0 bg-purple-500/5 group-hover:bg-purple-500/10 transition-colors duration-500">
+                        </div>
+                        <div class="relative z-10 flex flex-col md:flex-row justify-between items-center gap-6">
+
+                            <!-- Left: Quest Info -->
+                            <div class="flex-1 text-center md:text-left">
+                                <div class="flex items-center justify-center md:justify-start gap-2 mb-2">
+                                    <span
+                                        class="px-2 py-1 bg-purple-500/20 text-purple-300 text-[10px] font-bold uppercase tracking-widest rounded border border-purple-500/30">Daily
+                                        Quest</span>
+                                    <span class="text-xs text-purple-200" id="quest-timer">Resets in 12:45:00</span>
+                                </div>
+                                <h3 class="text-2xl font-serif font-bold text-white mb-2" id="quest-title">Loading
+                                    Quest...</h3>
+                                <p class="text-purple-200/70 text-sm mb-4" id="quest-desc">Decrypting mission
+                                    parameters...</p>
+
+                                <!-- Quest Action Area -->
+                                <div id="quest-action-area">
+                                    <!-- Dynamic Buttons / Inputs injected by JS -->
+                                    <button
+                                        class="px-6 py-2 bg-white/5 animate-pulse rounded text-xs">Syncing...</button>
+                                </div>
+                            </div>
+
+                            <!-- Right: Rewards -->
+                            <div
+                                class="flex flex-col items-center justify-center p-4 bg-black/40 rounded-xl border border-white/5 min-w-[120px]">
+                                <span
+                                    class="material-symbols-outlined text-gold text-3xl mb-1 text-mystic-gold">military_tech</span>
+                                <span class="text-xl font-bold text-white">+<span id="quest-xp-reward">50</span>
+                                    XP</span>
+                                <span class="text-[10px] text-white/40 uppercase tracking-widest">Upon Completion</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PROTOCOL: CROWDSOURCED TICKER BROADCAST -->
+                    <div class="mb-8 p-6 bg-white/5 border border-white/10 rounded-2xl">
+                        <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-electric">campaign</span>
+                            Broadcast to Network
+                        </h3>
+                        <div class="flex flex-col md:flex-row gap-4">
+                            <div class="flex-1">
+                                <input type="text" id="ticker-input" placeholder="What's the vibe in Lisbon right now?"
+                                    class="w-full bg-black/50 border border-white/20 rounded-xl p-3 text-white focus:border-electric focus:ring-1 focus:ring-electric outline-none transition-all placeholder:text-white/20">
+                            </div>
+                            <div class="flex gap-2">
+                                <button onclick="setTickerVibe('fire')"
+                                    class="vibe-btn p-3 rounded-xl bg-white/5 hover:bg-orange-500/20 text-white/50 hover:text-orange-500 border border-white/10 transition-all"
+                                    title="Hype / Fire">
+                                    Toquem de Fogo 🔥
+                                </button>
+                                <button onclick="setTickerVibe('ice')"
+                                    class="vibe-btn p-3 rounded-xl bg-white/5 hover:bg-blue-500/20 text-white/50 hover:text-blue-500 border border-white/10 transition-all"
+                                    title="Chill / Cool">
+                                    Chill 🌊
+                                </button>
+                                <button onclick="setTickerVibe('skull')"
+                                    class="vibe-btn p-3 rounded-xl bg-white/5 hover:bg-red-500/20 text-white/50 hover:text-red-500 border border-white/10 transition-all"
+                                    title="Dead / Avoid">
+                                    Off / Dead ☠️
+                                </button>
+                            </div>
+                            <button onclick="broadcastTicker()"
+                                class="px-6 py-3 bg-electric text-white font-bold rounded-xl hover:bg-electric/80 transition-all shadow-lg shadow-electric/20 uppercase text-xs tracking-widest">
+                                Broadcast
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- BETA PROTOCOL CHECKLIST WIDGET -->
+                    <div
+                        class="mb-8 p-8 bg-[#0F0A13] border-l-4 border-mystic-gold rounded-r-2xl shadow-lg relative overflow-hidden">
+                        <div class="flex justify-between items-center mb-6">
+                            <div>
+                                <h3 class="text-2xl font-serif font-bold text-white">Beta Protocol Checklist</h3>
+                                <p class="text-sm text-mist">Complete these missions to earn your credentials.</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-xs font-bold uppercase tracking-widest text-mystic-gold">Rewards</p>
+                                <p class="text-lg font-bold text-white">+50 XP / Task</p>
+                            </div>
+                        </div>
+
+                        <div id="beta-checklist" class="space-y-3">
+                            <!-- Mission 1: Initialize (Profile) -->
+                            <button onclick="startQuest('mission_profile')" id="mission-profile-btn"
+                                class="w-full flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/10 hover:border-electric transition-all text-left group">
+                                <div
+                                    class="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-electric group-hover:border-electric transition-colors">
+                                    <span class="material-symbols-outlined text-xs text-white"
+                                        id="mission-profile-icon">person</span>
+                                </div>
+                                <div>
+                                    <span
+                                        class="block font-bold text-white group-hover:text-electric transition-colors">Initialize</span>
+                                    <span class="text-xs text-mist">Complete Profile & Class</span>
+                                </div>
+                            </button>
+
+                            <!-- Mission 2: Merchant (Marketplace) -->
+                            <button onclick="startQuest('mission_market')" id="mission-merchant-btn"
+                                class="w-full flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/10 hover:border-mystic-gold transition-all text-left group">
+                                <div
+                                    class="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-mystic-gold group-hover:border-mystic-gold transition-colors">
+                                    <span class="material-symbols-outlined text-xs text-white group-hover:text-black"
+                                        id="mission-merchant-icon">storefront</span>
+                                </div>
+                                <div>
+                                    <span
+                                        class="block font-bold text-white group-hover:text-mystic-gold transition-colors">Merchant</span>
+                                    <span class="text-xs text-mist">Scout the Bazaar</span>
+                                </div>
+                            </button>
+
+                            <!-- Mission 3: Curator (Art) -->
+                            <button onclick="startQuest('mission_art')" id="mission-curator-btn"
+                                class="w-full flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/10 hover:border-pink-400 transition-all text-left group">
+                                <div
+                                    class="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-pink-400 group-hover:border-pink-400 transition-colors">
+                                    <span class="material-symbols-outlined text-xs text-white"
+                                        id="mission-curator-icon">palette</span>
+                                </div>
+                                <div>
+                                    <span
+                                        class="block font-bold text-white group-hover:text-pink-400 transition-colors">Curator</span>
+                                    <span class="text-xs text-mist">Visit the Gallery</span>
+                                </div>
+                            </button>
+
+                            <!-- Mission 4: Frequency (Sound) -->
+                            <button onclick="startQuest('mission_sound')" id="mission-sound-btn"
+                                class="w-full flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/10 hover:border-cyan-400 transition-all text-left group">
+                                <div
+                                    class="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-cyan-400 group-hover:border-cyan-400 transition-colors">
+                                    <span class="material-symbols-outlined text-xs text-white"
+                                        id="mission-sound-icon">graphic_eq</span>
+                                </div>
+                                <div>
+                                    <span
+                                        class="block font-bold text-white group-hover:text-cyan-400 transition-colors">Frequency</span>
+                                    <span class="text-xs text-mist">Check Audio Levels</span>
+                                </div>
+                            </button>
+
+                            <!-- Mission 5: Feedback (Ticker) -->
+                            <button
+                                onclick="document.getElementById('ticker-input').scrollIntoView({behavior: 'smooth'})"
+                                id="mission-ticker-btn"
+                                class="w-full flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/10 hover:border-electric transition-all text-left group">
+                                <div
+                                    class="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-electric group-hover:border-electric transition-colors">
+                                    <span class="material-symbols-outlined text-xs text-white"
+                                        id="mission-ticker-icon">campaign</span>
+                                </div>
+                                <div>
+                                    <span
+                                        class="block font-bold text-white group-hover:text-electric transition-colors">Feedback</span>
+                                    <span class="text-xs text-mist">Broadcast on Ticker</span>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- KNOWLEDGE BASE: GLOSSARY CONTRIBUTION -->
+                    <div
+                        class="mb-12 p-8 bg-blue-900/10 border border-blue-500/20 rounded-2xl relative overflow-hidden group">
+                        <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                            <span class="material-symbols-outlined text-9xl text-blue-500">menu_book</span>
+                        </div>
+                        <h3 class="text-2xl font-serif font-bold text-white mb-4 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-blue-400">auto_stories</span>
+                            Contribute to Knowledge Base
+                        </h3>
+                        <p class="text-white/70 mb-6 max-w-2xl">
+                            The Circle runs on shared wisdom. Submit a term, location, or insight to be added to the
+                            Glossary.
+                        </p>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                            <div class="md:col-span-2">
+                                <input id="glossary-term" type="text" placeholder="Term / Insight (e.g., 'Flow State')"
+                                    class="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:border-blue-400 outline-none">
+                            </div>
+                            <div>
+                                <select id="glossary-category"
+                                    class="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:border-blue-400 outline-none">
+                                    <option value="Slang">Slang</option>
+                                    <option value="Location">Location</option>
+                                    <option value="Tech">Tech / Tools</option>
+                                    <option value="Philosophy">Philosophy</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <textarea id="glossary-def" rows="2" placeholder="Definition or Description..."
+                                class="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:border-blue-400 outline-none"></textarea>
+                        </div>
+
+                        <div class="flex justify-between items-center">
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" id="glossary-sign" checked
+                                    class="w-4 h-4 rounded bg-white/10 border-white/20 text-blue-500 focus:ring-blue-500/50">
+                                <span class="text-sm text-white/60">Sign with my Artist Name</span>
+                            </label>
+                            <button onclick="submitGlossary()"
+                                class="px-6 py-2 bg-blue-500 text-white font-bold rounded-lg hover:bg-blue-400 transition-colors shadow-lg shadow-blue-500/20 flex items-center gap-2">
+                                <span class="material-symbols-outlined text-sm">send</span>
+                                Submit Entry
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Upload Modal (Opening Mask) -->
+                    <dialog id="upload-modal"
+                        class="bg-[#1a1a1a] text-white border border-[#FFD700] rounded-xl p-8 max-w-2xl w-full backdrop:bg-black/80">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-3xl font-serif font-bold text-[#FFD700]">Upload to The Flow</h2>
+                            <button onclick="document.getElementById('upload-modal').close()"
+                                class="text-white hover:text-red-500">
+                                <span class="material-symbols-outlined">close</span>
+                            </button>
+                        </div>
+
+                        <form id="unified-upload-form" class="space-y-6">
+                            <div>
+                                <label
+                                    class="block text-sm font-bold text-white/70 mb-2 uppercase tracking-widest">Type</label>
+                                <select id="upload-type"
+                                    class="w-full bg-black/50 border border-white/20 rounded p-3 text-white focus:border-[#FFD700] outline-none">
+                                    <option value="marketplace">Marketplace Listing</option>
+                                    <option value="museum" disabled id="opt-museum">Museum Artifact (Admin Only)
+                                    </option>
+                                    <option value="dish" disabled id="opt-kitchen">Kitchen Menu Item</option>
+                                    <option value="event" disabled id="opt-sound">Event / Contest</option>
+                                </select>
+                            </div>
+
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div>
+                                    <label
+                                        class="block text-sm font-bold text-white/70 mb-2 uppercase tracking-widest">Title
+                                        / Name</label>
+                                    <input type="text" name="title" required
+                                        class="w-full bg-black/50 border border-white/20 rounded p-3 text-white focus:border-[#FFD700] outline-none">
+                                </div>
+                                <div>
+                                    <label
+                                        class="block text-sm font-bold text-white/70 mb-2 uppercase tracking-widest">Price
+                                        (€)</label>
+                                    <input type="number" name="price" id="upload-price"
+                                        class="w-full bg-black/50 border border-white/20 rounded p-3 text-white focus:border-[#FFD700] outline-none">
+                                    <span class="text-xs text-white/40">Leave 0 for Museum/Events</span>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label
+                                    class="block text-sm font-bold text-white/70 mb-2 uppercase tracking-widest">Description</label>
+                                <textarea name="description" rows="3" required
+                                    class="w-full bg-black/50 border border-white/20 rounded p-3 text-white focus:border-[#FFD700] outline-none"></textarea>
+                            </div>
+
+                            <!-- Dynamic Fields based on Type can be handled by JS, generic for now -->
+
+                            <div>
+                                <button type="submit"
+                                    class="w-full py-4 bg-[#FFD700] text-black font-bold uppercase tracking-widest hover:bg-white transition-colors">
+                                    Submit to Flow
+                                </button>
+                            </div>
+                        </form>
+                    </dialog>
+
+                    <!-- Admin Panel (Hidden by Default) -->
+                    <div id="admin-panel"
+                        class="hidden mb-12 p-6 bg-red-500/10 border border-red-500/30 rounded-xl relative overflow-hidden">
+                        <div class="absolute inset-0 bg-red-500/5 pointer-events-none"></div>
+                        <div class="relative z-10">
+                            <h3 class="text-2xl font-bold text-red-500 mb-6 flex items-center gap-2">
+                                <span class="material-symbols-outlined">security</span>
+                                Admin Dashboard
+                            </h3>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- Admin Stats -->
+                                <div class="p-4 bg-background-dark/50 rounded-lg border border-white/10">
+                                    <h4 class="text-white font-bold mb-4">System Overview</h4>
+                                    <div class="flex justify-between items-center mb-2">
+                                        <span class="text-mist">Total Payouts</span>
+                                        <span class="text-white font-mono">0.00€</span>
+                                    </div>
+                                    <footer class="mt-24 border-t border-white/5 py-12 text-center">
+                                        <div class="flex flex-col md:flex-row justify-center items-center gap-8 mb-8">
+                                            <a href="rules.html"
+                                                class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-mist hover:text-white transition-colors">
+                                                <span class="material-symbols-outlined text-sm">gavel</span> Community
+                                                Rules
+                                            </a>
+                                            <a href="mailto:circle.d.flow@gmail.com"
+                                                class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-mist hover:text-white transition-colors">
+                                                <span class="material-symbols-outlined text-sm">support</span> Support
+                                            </a>
+                                        </div>
+                                        <p class="text-mist text-xs">
+                                            &copy; 2026 Circle D Flow. Built with <span class="text-electric">♥</span>
+                                            by the Community.
+                                        </p>
+                                    </footer>
+
+                                    <!-- CHAT OVERLAY -->
+                                    <div id="chat-overlay"
+                                        class="hidden fixed bottom-4 right-4 md:bottom-20 md:right-20 w-80 bg-[#1A1622] border border-white/10 rounded-2xl shadow-2xl overflow-hidden flex flex-col z-[100] transition-all duration-300 animate-slide-up">
+
+                                        <!-- Chat Header -->
+                                        <div class="p-3 bg-white/5 border-b border-white/10 flex justify-between items-center cursor-pointer"
+                                            onclick="toggleChatWindow()">
+                                            <div class="flex items-center gap-3">
+                                                <div class="relative">
+                                                    <img src="Assets/images/logo.png" id="chat-header-avatar"
+                                                        class="w-8 h-8 rounded-full border border-white/10 bg-black object-cover">
+                                                    <span
+                                                        class="absolute bottom-0 right-0 w-2 h-2 bg-green-500 rounded-full border border-black"></span>
+                                                </div>
+                                                <div>
+                                                    <h4 id="chat-header-name" class="text-sm font-bold text-white">User
+                                                        Name</h4>
+                                                    <p class="text-[10px] text-green-400">Online</p>
+                                                </div>
+                                            </div>
+                                            <button onclick="closeChat()" class="text-white/50 hover:text-white">
+                                                <span class="material-symbols-outlined text-sm">close</span>
+                                            </button>
+                                        </div>
+
+                                        <!-- Messages Area -->
+                                        <div id="chat-messages"
+                                            class="flex-1 h-64 p-4 overflow-y-auto space-y-3 bg-black/20 flex flex-col">
+                                            <!-- Dynamic Messages -->
+                                            <div
+                                                class="self-start bg-white/10 text-white text-xs p-3 rounded-tr-xl rounded-br-xl rounded-bl-xl max-w-[80%]">
+                                                Connection established. Secure channel open.
+                                            </div>
+                                        </div>
+
+                                        <!-- Input Area -->
+                                        <div class="p-3 bg-white/5 border-t border-white/10 flex gap-2">
+                                            <input type="text" id="chat-input" placeholder="Type a message..."
+                                                class="flex-1 bg-black/50 border border-white/10 rounded-lg px-3 py-2 text-xs text-white focus:border-electric outline-none"
+                                                onkeypress="handleChatKey(event)">
+                                            <button onclick="sendMessage()"
+                                                class="p-2 bg-electric text-white rounded-lg hover:bg-white hover:text-black transition-colors">
+                                                <span class="material-symbols-outlined text-sm">send</span>
+                                            </button>
+                                        </div>
+                                    </div> <span class="text-white font-mono" id="admin-pending-tickets">0</span>
+                                </div>
+                            </div>
+
+                            <!-- Check-in Simulation -->
+                            <div class="p-4 bg-background-dark/50 rounded-lg border border-white/10 md:col-span-2">
+                                <h4 class="text-white font-bold mb-4">Event Check-in (Simulation)</h4>
+                                <div class="flex gap-4 items-end">
+                                    <label class="block flex-1">
+                                        <span class="text-xs text-mist font-bold uppercase">Ticket ID</span>
+                                        <input type="text" id="scan-ticket-id"
+                                            class="w-full bg-white/5 border border-white/10 rounded px-2 py-1 text-white text-sm"
+                                            placeholder="tkt_...">
+                                    </label>
+                                    <button onclick="simulateCheckIn()"
+                                        class="px-4 py-1.5 bg-green-500/20 text-green-500 border border-green-500/50 rounded hover:bg-green-500/30 transition-colors font-bold text-sm">
+                                        Check In
+                                    </button>
+                                    <button onclick="simulateNoShow()"
+                                        class="px-4 py-1.5 bg-red-500/20 text-red-500 border border-red-500/50 rounded hover:bg-red-500/30 transition-colors font-bold text-sm">
+                                        Mark No-Show
+                                    </button>
+                                </div>
+                                <p id="scan-result" class="text-xs text-mist mt-2 min-h-[1.5em]"></p>
+                            </div>
+
+                            <!-- Notifications / Game Master Alerts -->
+                            <div class="p-4 bg-background-dark/50 rounded-lg border border-white/10 md:col-span-2">
+                                <h4 class="text-white font-bold mb-4 flex items-center justify-between">
+                                    <span>Game Master Alerts</span>
+                                    <button onclick="clearNotifications()"
+                                        class="text-xs text-electric hover:underline">Clear</button>
+                                </h4>
+                                <div id="admin-notifications" class="space-y-2 max-h-48 overflow-y-auto">
+                                    <!-- Populated via JS -->
+                                    <!-- Weekly Champion Widget -->
+                                    <div class="p-4 border-l border-white/10">
+                                        <p class="text-[10px] text-mist uppercase tracking-widest mb-1">Weekly
+                                            Champion</p>
+                                        <div class="flex items-center gap-2">
+                                            <span
+                                                class="material-symbols-outlined text-mystic-gold text-sm">emoji_events</span>
+                                            <span class="text-xs font-bold text-white">DJ Qter (890 XP)</span>
+                                        </div>
+                                    </div>
+
+                                    <p class="text-xs text-mist">&copy; 2024 Circle D Flow. All Rights Reserved.</p>
+                                </div>
+                            </div>
+
+                            <!-- Fund Management (72h Release Simulation) -->
+                            <div class="p-4 bg-background-dark/50 rounded-lg border border-white/10 md:col-span-2">
+                                <h4 class="text-white font-bold mb-4">Escrow / Fund Management</h4>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div class="p-3 bg-black/30 rounded border border-white/5">
+                                        <p class="text-[10px] text-mist uppercase font-bold">Pending (Escrow)</p>
+                                        <p id="admin-pending-funds" class="text-xl font-bold text-white">€0.00</p>
+                                    </div>
+                                    <div class="p-3 bg-black/30 rounded border border-white/5">
+                                        <p class="text-[10px] text-mist uppercase font-bold">Released (Available)
+                                        </p>
+                                        <p id="admin-available-funds" class="text-xl font-bold text-green-400">€0.00
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="mt-4 flex gap-4">
+                                    <button onclick="simulateTicketSale()"
+                                        class="px-3 py-1.5 bg-blue-500/20 text-blue-400 border border-blue-500/50 rounded text-xs font-bold hover:bg-blue-500/30">
+                                        + Simulate Sale (€50)
+                                    </button>
+                                    <button onclick="simulateFundRelease()"
+                                        class="px-3 py-1.5 bg-green-500/20 text-green-400 border border-green-500/50 rounded text-xs font-bold hover:bg-green-500/30">
+                                        releaseFunds(72h_Check)
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Card -->
+                <div id="social-hub" class="glass-panel p-8 rounded-3xl relative overflow-hidden md:col-span-1">
+                    <div class="relative z-10">
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="w-20 h-20 rounded-full border-2 border-electric p-1">
+                                <img src="Assets/images/logo.png" class="w-full h-full object-cover rounded-full">
+                            </div>
+                            <div>
+                                <h2 class="text-2xl font-serif font-bold" id="card-user-name">---</h2>
+                                <p class="text-mist text-sm" id="user-rank">Unidentified</p>
+                                <div class="mt-2">
+                                    <p class="text-[10px] text-electric font-bold uppercase tracking-widest mb-1">
+                                        Power Level</p>
+                                    <span id="membership-badge"
+                                        class="inline-block px-3 py-1 rounded text-xs font-bold uppercase bg-white/10 text-white/50 border border-white/10 shadow-[0_0_10px_rgba(0,0,0,0.5)]">Drifter</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center bg-black/20 p-4 rounded-xl">
+                                <span class="text-sm font-bold text-mist">Flow Credits</span>
+                                <span class="text-electric font-bold text-xl" id="token-display">0.00</span>
+                            </div>
+
+                            <a href="membership.html"
+                                class="block w-full py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-center text-xs font-bold uppercase tracking-widest transition-all">
+                                Manage Membership
+                            </a>
+
+                            <a href="marketplace-upload.html"
+                                class="block w-full py-3 bg-electric hover:bg-electric/90 text-white rounded-xl text-center text-xs font-bold uppercase tracking-widest transition-all flex items-center justify-center gap-2">
+                                <span class="material-symbols-outlined text-sm">storefront</span>
+                                List Marketplace Item
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Voucher Wallet (Dynamic) -->
+                    <div id="voucher-wallet" class="mt-6 pt-6 border-t border-white/5 hidden">
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-amber mb-3">Your Vouchers</p>
+                        <div id="voucher-list" class="space-y-2">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+                <!-- Scouter Dashboard (Level 3+) -->
+                <div id="scouter-dashboard"
+                    class="hidden mb-12 p-1 relative overflow-hidden rounded-xl border border-neon-blue/50 shadow-[0_0_20px_rgba(0,229,255,0.2)]">
+                    <div class="absolute inset-0 bg-neon-blue/5 backdrop-blur-sm"></div>
+                    <div class="relative z-10 p-6 flex flex-col md:flex-row items-center justify-between gap-6">
+                        <div class="flex items-center gap-4">
+                            <div class="p-3 bg-neon-blue/20 rounded-full border border-neon-blue animate-pulse">
+                                <span class="material-symbols-outlined text-neon-blue text-3xl">radar</span>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-bold text-white font-display uppercase tracking-widest">
+                                    Scouter Active</h3>
+                                <p class="text-neon-blue text-sm font-mono">Scanning Local Flow Levels...</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-8 text-center">
+                            <div>
+                                <p class="text-[10px] uppercase tracking-widest text-mist">Nearby Artists</p>
+                                <p class="text-2xl font-bold text-white font-mono">12</p>
+                            </div>
+                            <div>
+                                <p class="text-[10px] uppercase tracking-widest text-mist">High Value Loot</p>
+                                <p class="text-2xl font-bold text-white font-mono">3</p>
+                            </div>
+                            <div>
+                                <p class="text-[10px] uppercase tracking-widest text-mist">Power Level</p>
+                                <p class="text-2xl font-bold text-neon-blue font-mono">Over 9000</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Decorative Scan Line -->
+                    <div
+                        class="absolute top-0 left-0 w-full h-[2px] bg-neon-blue/50 shadow-[0_0_10px_#00E5FF] animate-scan">
+                    </div>
+                </div>
+
+                <!-- Stats / Gamification Overview -->
+                <div id="stats-container" class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+                    <div class="p-6 bg-white/5 border border-white/10 rounded-xl">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="p-2 bg-electric/20 rounded-lg text-electric">
+                                <span class="material-symbols-outlined">stars</span>
+                            </div>
+                            <span class="text-xs text-green-400 font-bold">+12%</span>
+                        </div>
+                        <p class="text-mist text-sm uppercase tracking-widest">Reputation</p>
+                        <h3 class="text-2xl font-bold text-white">4.8 <span class="text-sm font-normal text-white/50">/
+                                5.0</span></h3>
+                    </div>
+                    <div class="p-6 bg-white/5 border border-white/10 rounded-xl">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="p-2 bg-amber/20 rounded-lg text-amber">
+                                <span class="material-symbols-outlined">payments</span>
+                            </div>
+                        </div>
+                        <p class="text-mist text-sm uppercase tracking-widest">Flow Credits</p>
+                        <h3 class="text-2xl font-bold text-white">1,250 <span
+                                class="text-sm font-normal text-white/50">FC</span></h3>
+                    </div>
+                    <div class="p-6 bg-white/5 border border-white/10 rounded-xl">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="p-2 bg-purple-500/20 rounded-lg text-purple-500">
+                                <span class="material-symbols-outlined">shopping_bag</span>
+                            </div>
+                            <span class="text-xs text-white/50">2 Active</span>
+                        </div>
+                        <p class="text-mist text-sm uppercase tracking-widest">Sales</p>
+                        <h3 class="text-2xl font-bold text-white">345€</h3>
+                    </div>
+                    <div class="p-6 bg-white/5 border border-white/10 rounded-xl">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="p-2 bg-blue-500/20 rounded-lg text-blue-500">
+                                <span class="material-symbols-outlined">event</span>
+                            </div>
+                        </div>
+                        <p class="text-mist text-sm uppercase tracking-widest">Upcoming Events</p>
+                        <h3 class="text-2xl font-bold text-white">3</h3>
+                    </div>
+                </div>
+
+                <!-- Widgets Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+                    <!-- Column 1: Active Listings (Marketplace) -->
+                    <div class="lg:col-span-2">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-xl font-bold text-white">Your Active Listings</h3>
+                            <div class="flex gap-4">
+                                <a href="event-create.html"
+                                    class="hidden text-sm font-bold text-electric px-3 py-1.5 bg-electric/10 rounded-lg hover:bg-electric hover:text-white transition-all border border-electric/30"
+                                    id="btn-create-event">
+                                    + Create Event
+                                </a>
+                                <a href="#"
+                                    class="text-sm text-electric hover:text-white transition-colors self-center">View
+                                    All</a>
+                            </div>
+                        </div>
+                        <div class="space-y-4">
+                            <div
+                                class="flex items-center gap-4 p-4 bg-white/5 border border-white/10 rounded-lg hover:border-electric transition-colors">
+                                <div class="size-16 bg-gray-700 rounded-md overflow-hidden">
+                                    <img src="https://placehold.co/100x100/222/white?text=Art"
+                                        class="w-full h-full object-cover">
+                                </div>
+                                <div class="flex-grow">
+                                    <h4 class="text-white font-bold">Custom Portrait Session</h4>
+                                    <p class="text-sm text-mist">Art • 50€/hr</p>
+                                </div>
+                                <div class="flex items-center gap-4">
+                                    <span class="text-xs text-green-400 font-bold flex items-center gap-1"><span
+                                            class="w-2 h-2 bg-green-400 rounded-full"></span> Active</span>
+                                    <button class="text-white/50 hover:text-white"><span
+                                            class="material-symbols-outlined">edit</span></button>
+                                </div>
+                            </div>
+                            <div
+                                class="flex items-center gap-4 p-4 bg-white/5 border border-white/10 rounded-lg hover:border-purple-500 transition-colors">
+                                <div class="size-16 bg-gray-700 rounded-md overflow-hidden">
+                                    <img src="https://placehold.co/100x100/222/white?text=Beat"
+                                        class="w-full h-full object-cover">
+                                </div>
+                                <div class="flex-grow">
+                                    <h4 class="text-white font-bold">Lofi Beat Pack Vol. 2</h4>
+                                    <p class="text-sm text-mist">Music • 25€</p>
+                                </div>
+                                <div class="flex items-center gap-4">
+                                    <span class="text-xs text-green-400 font-bold flex items-center gap-1"><span
+                                            class="w-2 h-2 bg-green-400 rounded-full"></span> Active</span>
+                                    <button class="text-white/50 hover:text-white"><span
+                                            class="material-symbols-outlined">edit</span></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Column 2: Active Missions -->
+                    <div id="mission-board">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-xl font-bold text-white">Active Missions</h3>
+                            <div class="flex gap-2">
+                                <span
+                                    class="text-xs font-bold text-electric px-2 py-1 bg-electric/10 rounded border border-electric/20">1
+                                    / 3</span>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4">
+                            <!-- Mission Card 1 (Active) -->
+                            <div
+                                class="bg-white/5 border border-mystic-gold/30 rounded-xl p-5 relative overflow-hidden group">
+                                <div class="absolute top-0 left-0 w-1 h-full bg-mystic-gold"></div>
+                                <div class="flex justify-between items-start mb-2">
+                                    <span class="text-[10px] font-bold uppercase tracking-widest text-mystic-gold">Daily
+                                        Quest</span>
+                                    <span class="text-xs font-bold text-white bg-white/10 px-2 py-0.5 rounded-full">+50
+                                        XP</span>
+                                </div>
+                                <h4 class="text-white font-bold text-lg mb-1">Spread the Flow</h4>
+                                <p class="text-sm text-mist mb-4">Share your profile on social media and tag
+                                    #CircleDFlow.</p>
+
+                                <div class="flex items-center justify-between">
+                                    <div class="flex -space-x-2">
+                                        <!-- Avatars of others doing it -->
+                                    </div>
+                                    <button
+                                        class="px-4 py-2 bg-mystic-gold text-background-dark font-bold text-sm rounded-lg hover:bg-white transition-colors">
+                                        Claim
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Mission Card 2 (Available) -->
+                            <div
+                                class="bg-white/5 border border-white/10 rounded-xl p-5 relative overflow-hidden group hover:border-white/20 transition-colors">
+                                <div class="flex justify-between items-start mb-2">
+                                    <span class="text-[10px] font-bold uppercase tracking-widest text-electric">Weekly
+                                        Side-Quest</span>
+                                    <span class="text-xs font-bold text-white bg-white/10 px-2 py-0.5 rounded-full">+100
+                                        XP</span>
+                                </div>
+                                <h4 class="text-white font-bold text-lg mb-1">The Local Explorer</h4>
+                                <p class="text-sm text-mist mb-4">Check-in at 3 Partner locations this week.</p>
+
+                                <div class="w-full h-1.5 bg-white/10 rounded-full mb-4">
+                                    <div class="h-full bg-electric rounded-full" style="width: 33%"></div>
+                                </div>
+                                <div class="flex justify-between text-xs text-white/50">
+                                    <span>1/3 Locations</span>
+                                    <span>2 Days Left</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Equipment Section (Retained but Minimized) -->
+                <div>
+                    <h3 class="text-xl font-bold text-white mb-6">My Equipment Reservations</h3>
+                    <!-- ... existing item 1 ... -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div
+                            class="relative group bg-[#141118] border border-white/10 rounded-xl overflow-hidden shadow-lg hover:shadow-glow-primary transition-shadow duration-300 flex flex-col">
+                            <div
+                                class="absolute top-2 right-2 px-2 py-1 text-xs font-bold text-black bg-orange-400 rounded-full z-10">
+                                In Use</div>
+                            <img class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                                data-alt="Microphone"
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBehk6E_IQL-ZP5yYeN3HMI2Kfn2AEMcyJ3chrlKhq6caEXzJRIanm1xU-ENmLMXpC9LKultaHjWMVDZ3kmneSDL7sdFDrdLlZDPj3J6CiydwXxelIYbTBbAV8olSmhp4BJdqjvEtfp73MyXZqfNOQuP3cNvRFt58IbIavIubGcatZoxC0Ns6hNC_HGHG6bq5bpYDb8cOcm75K26mMKG0pLAuM-KU0odorOg-gY3vQEdVXXKunYzLObBYE5lwtscOE02U_0rzKNjEQ" />
+                            <div class="p-4 flex flex-col flex-grow">
+                                <h3 class="text-lg font-bold text-white mt-1">Rode NT1</h3>
+                                <p class="text-sm text-slate-400 mt-2">Checked out until Jan 20th</p>
+                                <button
+                                    class="mt-4 w-full py-2 bg-white/10 text-white rounded text-sm hover:bg-white/20">Return
+                                    Item</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+        </div>
+        <!-- BETA FEEDBACK & ADMIN TOOLS -->
+        <div class="mt-12 pt-8 border-t border-white/5 text-center pb-24">
+            <div class="flex flex-col md:flex-row justify-center items-center gap-6">
+                <!-- Bug Report -->
+                <!-- Bug Report (Netlify Form Trigger) -->
+                <button onclick="openFeedbackModal()"
+                    class="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs font-bold text-mist hover:text-white transition-all flex items-center gap-2">
+                    <span class="material-symbols-outlined text-base">bug_report</span>
+                    Report Feedback (Live)
+                </button>
+
+                <!-- Feedback Modal -->
+                <dialog id="feedback-modal"
+                    class="bg-[#141118] border border-electric/30 rounded-2xl p-8 max-w-md w-full backdrop:bg-black/90">
+                    <h2 class="text-xl font-bold text-white mb-4">Transmission Override</h2>
+                    <p class="text-xs text-mist mb-6">Report bugs or submit feedback directly to the Architects.</p>
+
+                    <form name="beta-feedback" method="POST" data-netlify="true" class="space-y-4">
+                        <input type="hidden" name="form-name" value="beta-feedback">
+
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-gray-400 mb-2">Agent Name</label>
+                            <input type="text" name="agent_name" id="feedback-agent-name" readonly
+                                class="w-full bg-black/50 border border-white/10 rounded-xl p-3 text-white/50 cursor-not-allowed">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-gray-400 mb-2">Category</label>
+                            <select name="category"
+                                class="w-full bg-black/50 border border-white/10 rounded-xl p-3 text-white outline-none focus:border-electric">
+                                <option value="Bug">System Glitch (Bug)</option>
+                                <option value="Feature">Feature Request</option>
+                                <option value="Design">Visual/UI Feedback</option>
+                                <option value="Other">Other Signal</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-gray-400 mb-2">Message</label>
+                            <textarea name="message" rows="4" placeholder="Describe the anomaly..." required
+                                class="w-full bg-black/50 border border-white/10 rounded-xl p-3 text-white outline-none focus:border-electric"></textarea>
+                        </div>
+
+                        <div class="flex gap-4 pt-2">
+                            <button type="submit"
+                                class="flex-1 py-3 bg-electric hover:bg-electric/80 text-white font-bold rounded-xl uppercase tracking-widest transition-all">
+                                Transmit
+                            </button>
+                            <button type="button" onclick="document.getElementById('feedback-modal').close()"
+                                class="px-6 py-3 border border-white/10 rounded-xl text-white hover:bg-white/5 font-bold uppercase tracking-widest transition-all">
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+                </dialog>
+
+                <!-- Dev Tools Toggle -->
+                <div class="relative group">
+                    <button
+                        class="px-4 py-2 bg-black/50 border border-red-500/20 rounded-lg text-xs font-bold text-red-500/50 hover:text-red-400 hover:border-red-500/50 transition-all flex items-center gap-2">
+                        <span class="material-symbols-outlined text-base">construction</span>
+                        Dev Tools
+                    </button>
+                    <!-- Dropdown -->
+                    <div
+                        class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 bg-black/90 border border-red-500/30 rounded-xl p-2 hidden group-hover:block backdrop-blur-xl">
+                        <div class="text-[10px] font-bold text-red-500 uppercase tracking-widest text-center mb-2">
+                            Simulate Identity</div>
+                        <button onclick="switchRole('Kitchen')"
+                            class="w-full text-left px-3 py-2 hover:bg-white/10 rounded text-xs text-white mb-1">
+                            Switch: Kitchen (Secure)
+                        </button>
+                        <button onclick="switchRole('Sound')"
+                            class="w-full text-left px-3 py-2 hover:bg-white/10 rounded text-xs text-white mb-1">
+                            Switch: Sound (Secure)
+                        </button>
+                        <button onclick="switchRole('User')"
+                            class="w-full text-left px-3 py-2 hover:bg-white/10 rounded text-xs text-mist">
+                            Reset Identity
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <p class="text-[10px] text-white/20 mt-6 uppercase tracking-widest">&copy; 2024 Protocol Genesis. Level 0
+                Clearance.</p>
+        </div>
+        </main>
+    </div>
+    </div>
+
+    <script src="notifications.js"></script>
+    <script src="gamification.js"></script>
+    <script src="quests.js"></script>
+
+    <!-- Mission Briefing Modal (Genesis Flow) -->
+    <div id="mission-modal"
+        class="fixed inset-0 z-[100] bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-6 animate-fade-in">
+        <div
+            class="bg-[#1A1622] border border-electric p-8 rounded-2xl max-w-lg w-full text-center shadow-[0_0_50px_rgba(154,77,255,0.2)]">
+            <div class="mb-6">
+                <span class="material-symbols-outlined text-6xl text-electric animate-pulse">fingerprint</span>
+            </div>
+            <h2 class="text-3xl font-bold text-white mb-2 uppercase tracking-widest">Identity Confirmed</h2>
+            <div class="py-4 border-y border-white/10 my-4 space-y-2">
+                <p class="text-mist text-sm uppercase tracking-wider">Agent: <span class="text-white font-bold"
+                        id="mission-user">...</span></p>
+                <p class="text-mist text-sm uppercase tracking-wider">Class: <span class="text-electric font-bold"
+                        id="mission-class">...</span></p>
+            </div>
+            <p class="text-white mb-8 leading-relaxed">Your Mission: Populate the Market. Decrypt the Codex. Honor the
+                Flow.</p>
+            <button onclick="closeMissionModal()"
+                class="w-full py-4 bg-electric text-white font-bold uppercase tracking-widest rounded-xl hover:bg-white hover:text-black transition-all shadow-lg hover:shadow-electric/50">
+                ACKNOWLEDGE
+            </button>
+        </div>
+    </div>
+
+    <!-- Upsell Modal -->
+    <div id="upsell-modal"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm hidden">
+        <div
+            class="bg-[#1a1625] border border-electric/50 p-8 rounded-2xl max-w-md w-full text-center relative shadow-glow-primary">
+            <button onclick="closeUpsellModal()" class="absolute top-4 right-4 text-white/50 hover:text-white">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+
+            <div class="w-16 h-16 rounded-full bg-electric/20 flex items-center justify-center mx-auto mb-6">
+                <span class="material-symbols-outlined text-4xl text-electric">rocket_launch</span>
+            </div>
+
+            <h2 id="upsell-title" class="text-2xl font-bold text-white mb-2">Expand Your Flow</h2>
+            <p id="upsell-msg" class="text-gray-300 mb-8">You've reached the limit of your current plan.</p>
+
+            <a href="membership.html"
+                class="block w-full py-3 bg-electric hover:bg-electric/90 text-white rounded-xl font-bold uppercase tracking-widest transition-all">
+                Upgrade Now
+            </a>
+            <button onclick="closeUpsellModal()" class="block w-full mt-3 py-2 text-sm text-white/50 hover:text-white">
+                Maybe Later
+            </button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            updateDashboard();
+            renderAdminPanel(); // Existing Admin Logic
+            renderVouchers();
+            checkMissionBriefing(); // Genesis Flow Trigger
+
+            // Listen for Upsell
+            window.addEventListener('trigger-upsell', (e) => {
+                const feature = e.detail.feature;
+                showUpsellModal(feature);
+            });
+        });
+
+        function showUpsellModal(feature) {
+            const modal = document.getElementById('upsell-modal');
+            const title = document.getElementById('upsell-title');
+            const msg = document.getElementById('upsell-msg');
+
+            if (modal) {
+                modal.classList.remove('hidden');
+                title.textContent = "Limit Reached!";
+                msg.textContent = `You've hit your limit for ${feature.replace('_', ' ')}. Level up to RISING ARTIST or MASTER CIRCLE for more flow.`;
+            }
+        }
+
+        function closeUpsellModal() {
+            document.getElementById('upsell-modal').classList.add('hidden');
+        }
+
+        // --- GENESIS FLOW: MISSION BRIEFING ---
+        function closeMissionModal() {
+            document.getElementById('mission-modal').classList.add('hidden');
+            localStorage.setItem('briefingSeen', 'true');
+        }
+
+        function checkMissionBriefing() {
+            if (!localStorage.getItem('briefingSeen')) {
+                const m = document.getElementById('mission-modal');
+                if (m) {
+                    document.getElementById('mission-user').textContent = localStorage.getItem('userName') || 'Agent';
+                    document.getElementById('mission-class').textContent = localStorage.getItem('userClass') || 'Undecided';
+                    m.classList.remove('hidden');
+                }
+            }
+        }
+
+        function updateDashboard() {
+            if (!window.Gamification) return;
+            const G = window.Gamification;
+
+            // basic stats
+            // These elements are not in the provided HTML, but the instruction implies they exist elsewhere or are to be added.
+            // For now, we'll assume they are part of the profile UI update.
+            const xpDisplay = document.getElementById('xp-display');
+            if (xpDisplay) xpDisplay.textContent = G.state.xp;
+            const userRank = document.getElementById('user-rank');
+            if (userRank) userRank.textContent = G.getRank().name;
+            const tokenDisplay = document.getElementById('token-display');
+            if (tokenDisplay) tokenDisplay.textContent = G.state.tokens;
+
+            // Membership Badge
+            const tier = G.getTier();
+            const badge = document.getElementById('membership-badge');
+            if (badge) {
+                badge.textContent = tier.name;
+                if (tier.id !== 'free') {
+                    badge.classList.remove('bg-white/10', 'text-white/50');
+                    badge.classList.add('bg-electric', 'text-white', 'border-transparent');
+                }
+            }
+
+            // Existing dashboard logic (level, stars, xp bar)
+            const levelText = document.getElementById('dash-user-level-text');
+            const starsContainer = document.getElementById('dash-user-stars');
+            const xpFill = document.getElementById('dash-xp-fill');
+            const xpText = document.getElementById('dash-xp-text');
+
+            // Level Titles
+            const titles = [
+                "Novice", "Initiate", "Explorer", "Flow Seeker", "Flow Master", "Grandmaster", "Legend", "Ascended"
+            ];
+
+            const level = G.getLevel();
+            const xp = G.getXP();
+            const progress = G.getProgressToNextLevel();
+            const nextThreshold = G.getNextLevelThreshold();
+
+            // Update Text
+            if (levelText) levelText.textContent = `Level ${level}: ${titles[level] || "Unknown"}`;
+
+            // Update Stars
+            if (starsContainer) {
+                starsContainer.innerHTML = '';
+                for (let i = 1; i <= 7; i++) {
+                    const span = document.createElement('span');
+                    span.className = 'material-symbols-outlined text-sm ' + (i <= level ? 'text-mystic-gold filled' : 'text-white/20');
+                    span.textContent = 'star';
+                    starsContainer.appendChild(span);
+                }
+            }
+
+            // Update Bar
+            if (xpFill) xpFill.style.width = `${progress}%`;
+            if (xpText) xpText.textContent = `${xp} / ${nextThreshold} XP`;
+
+            // Update Hunter Stats (Nen, Stamina, Impact)
+            if (G.getStats) {
+                const stats = G.getStats();
+                const nenBar = document.getElementById('stat-nen');
+                const staminaBar = document.getElementById('stat-stamina');
+                const impactBar = document.getElementById('stat-impact');
+
+                if (nenBar) nenBar.style.width = `${stats.nen}%`;
+                if (staminaBar) staminaBar.style.width = `${stats.stamina}%`;
+                if (impactBar) impactBar.style.width = `${stats.impact}%`;
+            }
+
+            // Show Create Event Button if Level >= 5
+            if (level >= 5) {
+                const btn = document.getElementById('btn-create-event');
+                if (btn) btn.classList.remove('hidden');
+            }
+
+            window.addEventListener('xp-added', updateDashboard);
+            window.addEventListener('level-up', updateDashboard);
+
+            // Render Badges
+            renderBadges(G);
+        }
+
+        function renderBadges(G) {
+            const container = document.getElementById('dash-user-badges');
+            if (!container) return;
+
+            container.innerHTML = '';
+            const badges = G.state.badges || [];
+
+            badges.forEach(b => {
+                // Find Badge Definition
+                const def = window.BADGES?.[b.id] || { icon: 'verified', name: 'Unknown' };
+
+                const div = document.createElement('div');
+                div.className = 'w-6 h-6 rounded-full bg-white/10 flex items-center justify-center border border-white/20 tooltip-trigger';
+                div.title = def.name;
+                div.innerHTML = `<span class="material-symbols-outlined text-xs text-mystic-gold">${def.icon}</span>`;
+                container.appendChild(div);
+            });
+        }
+
+        function renderVouchers() {
+            if (!window.Gamification) return;
+            const vouchers = window.Gamification.state.vouchers || [];
+            const activeVouchers = vouchers.filter(v => !v.redeemed);
+
+            const wallet = document.getElementById('voucher-wallet');
+            const list = document.getElementById('voucher-list');
+
+            if (activeVouchers.length > 0) {
+                if (wallet) wallet.classList.remove('hidden');
+                if (list) {
+                    list.innerHTML = activeVouchers.map(v => `
+                        <div class="p-3 bg-white/5 border border-white/10 rounded-lg flex items-center gap-3 cursor-pointer hover:bg-white/10 transition-colors" onclick="showVoucherQR('${v.id}')">
+                            <span class="material-symbols-outlined text-amber">restaurant</span>
+                            <div>
+                                <p class="text-xs font-bold text-white">${v.type}</p>
+                                <p class="text-[10px] text-mist">@ ${v.partner}</p>
+                            </div>
+                            <span class="ml-auto material-symbols-outlined text-white/20 text-sm">qr_code</span>
+                        </div>
+                    `).join('');
+                }
+            } else {
+                if (wallet) wallet.classList.add('hidden');
+            }
+        }
+
+        window.showVoucherQR = function (id) {
+            // Simple mock alert for QR
+            const v = window.Gamification.state.vouchers.find(x => x.id === id);
+            alert(`Show this ID to African Queen Kitchen:\n\n${id.toUpperCase()}\n\n(In production, this displays a QR Code)`);
+        }
+
+
+    </script>
+    <script>
+        function toggleMobileDrawer() {
+            const drawer = document.getElementById('mobile-drawer');
+            if (drawer) drawer.classList.toggle('translate-y-full');
+        }
+    </script>
+
+
+    <!-- Audio Player (Right) -->
+    <div class="fixed bottom-24 right-8 z-50 md:bottom-8">
+        <button id="audio-btn"
+            class="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:border-electric transition-colors bg-background-dark/50 backdrop-blur-sm">
+            <!-- Treble Clef Icon -->
+            <svg id="audio-icon-on" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 24 24"
+                style="color: white;">
+                <path
+                    d="M11.5 2C11.5 2 11.5 2 11.5 2C10.67 2 10 2.67 10 3.5C10 4.33 10.67 5 11.5 5C12.33 5 13 4.33 13 3.5C13 3.42 12.99 3.34 12.98 3.26C13.6 3.64 14 4.31 14 5.08C14 6.27 12.94 7.21 11.77 7.21C11.68 7.21 11.59 7.2 11.5 7.2C9.57 7.2 8 8.77 8 10.7C8 12.63 9.57 14.2 11.5 14.2C11.5 14.2 11.5 14.2 11.5 14.2C12.33 14.2 13 13.53 13 12.7C13 11.87 12.33 11.2 11.5 11.2C10.67 11.2 10 11.87 10 12.7C10 12.78 10.01 12.86 10.02 12.94C9.4 12.56 9 11.89 9 11.12C9 9.93 10.06 8.99 11.23 8.99C11.32 8.99 11.41 9 11.5 9C13.43 9 15 7.43 15 5.5C15 3.57 13.43 2 11.5 2ZM11.5 15.5C9.57 15.5 8 17.07 8 19C8 20.93 9.57 22.5 11.5 22.5C13.43 22.5 15 20.93 15 19C15 17.07 13.43 15.5 11.5 15.5ZM11.5 20.5C10.67 20.5 10 19.83 10 19C10 18.17 10.67 17.5 11.5 17.5C12.33 17.5 13 18.17 13 19C13 19.83 12.33 20.5 11.5 20.5Z" />
+            </svg>
+            <svg id="audio-icon-off" class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" style="color: white;">
+                <path
+                    d="M11.5 2C11.5 2 11.5 2 11.5 2C10.67 2 10 2.67 10 3.5C10 4.33 10.67 5 11.5 5C12.33 5 13 4.33 13 3.5C13 3.42 12.99 3.34 12.98 3.26C13.6 3.64 14 4.31 14 5.08C14 6.27 12.94 7.21 11.77 7.21C11.68 7.21 11.59 7.2 11.5 7.2C9.57 7.2 8 8.77 8 10.7C8 12.63 9.57 14.2 11.5 14.2C11.5 14.2 11.5 14.2 11.5 14.2C12.33 14.2 13 13.53 13 12.7C13 11.87 12.33 11.2 11.5 11.2C10.67 11.2 10 11.87 10 12.7C10 12.78 10.01 12.86 10.02 12.94C9.4 12.56 9 11.89 9 11.12C9 9.93 10.06 8.99 11.23 8.99C11.32 8.99 11.41 9 11.5 9C13.43 9 15 7.43 15 5.5C15 3.57 13.43 2 11.5 2ZM11.5 15.5C9.57 15.5 8 17.07 8 19C8 20.93 9.57 22.5 11.5 22.5C13.43 22.5 15 20.93 15 19C15 17.07 13.43 15.5 11.5 15.5ZM11.5 20.5C10.67 20.5 10 19.83 10 19C10 18.17 10.67 17.5 11.5 17.5C12.33 17.5 13 18.17 13 19C13 19.83 12.33 20.5 11.5 20.5Z"
+                    opacity="0.3" />
+                <line x1="4" y1="4" x2="20" y2="20" stroke="currentColor" stroke-width="2" />
+            </svg>
+        </button>
+        <audio id="bg-music" loop>
+            <source src="Assets/audio/ambient.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+    <script>
+        // Audio Player Logic
+        const audioBtn = document.getElementById('audio-btn');
+        const bgMusic = document.getElementById('bg-music');
+        const iconOn = document.getElementById('audio-icon-on');
+        const iconOff = document.getElementById('audio-icon-off');
+
+        // Try to restore state
+        const isPlaying = localStorage.getItem('musicPlaying') === 'true';
+        if (isPlaying) {
+            bgMusic.play().then(() => {
+                iconOn.classList.remove('hidden');
+                iconOff.classList.add('hidden');
+            }).catch(() => {
+                console.log("Autoplay blocked");
+            });
+        }
+
+        audioBtn.addEventListener('click', () => {
+            if (bgMusic.paused) {
+                bgMusic.play();
+                iconOn.classList.remove('hidden');
+                iconOff.classList.add('hidden');
+                localStorage.setItem('musicPlaying', 'true');
+            } else {
+                bgMusic.pause();
+                iconOn.classList.add('hidden');
+                iconOff.classList.remove('hidden');
+                localStorage.setItem('musicPlaying', 'false');
+            }
+        });
+    </script>
+</body>
+
+</html>
