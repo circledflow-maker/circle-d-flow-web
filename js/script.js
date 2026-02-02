@@ -757,14 +757,122 @@ const Guide = new AgentGuide();
 window.selectLang = (lang) => Sentinel.handleLanguageSelection(lang);
 window.confirmLang = () => Sentinel.confirmLanguageSelection();
 
-document.addEventListener('DOMContentLoaded', () => {
-    // WRAPPER: Auditor Pre-Flight
-    Auditor.preFlightCheck().then(passed => {
-        if (passed) {
-            SystemBus.publish('SYSTEM_INIT');
-            SystemBus.publish('SYSTEM_BOOT');
+// --- UTILITY: ON-SCREEN DEBUGGER (The Blackbox) ---
+class OnScreenDebugger {
+    constructor() {
+        this.console = null;
+        this.init();
+    }
+
+    init() {
+        // Create Console UI
+        if (!document.getElementById('debug-console')) {
+            const div = document.createElement('div');
+            div.id = 'debug-console';
+            document.body.appendChild(div);
         }
-    });
+        this.console = document.getElementById('debug-console');
+
+        // Show if requested or critical
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('debug') === 'true') this.show();
+
+        // Intercept native console
+        this.intercept('log', 'log-info');
+        this.intercept('error', 'log-error');
+        this.intercept('warn', 'log-warn');
+    }
+
+    show() {
+        if (this.console) this.console.classList.add('active');
+    }
+
+    log(msg, type = 'log-info') {
+        if (!this.console) return;
+        const line = document.createElement('div');
+        line.className = type;
+        line.innerText = `> ${msg}`;
+        this.console.prepend(line); // Newest on top
+    }
+
+    intercept(method, cssClass) {
+        const original = console[method];
+        console[method] = (...args) => {
+            original.apply(console, args);
+            // Convert args to string safely
+            const msg = args.map(arg => typeof arg === 'object' ? JSON.stringify(arg) : String(arg)).join(' ');
+            this.log(msg, cssClass);
+            // Auto-show on error
+            if (method === 'error') this.show();
+        };
+    }
+}
+
+// Global Logger Helper
+const Debugger = new OnScreenDebugger();
+window.logToScreen = (msg) => console.log(msg);
+window.logError = (msg) => console.error(msg);
+
+
+// --- INITIALIZATION CORE (Protocol: Ironclad Stability) ---
+document.addEventListener('DOMContentLoaded', () => {
+    try {
+        console.log("[CORE] System Boot Sequence Initiated...");
+
+        // 1. ACTIVATE MOUSE (Fail-Safe)
+        // Only if JS runs do we hide the cursor (via CSS class)
+        document.body.classList.add('js-active');
+
+        // 2. SIMPLIFIED NAVIGATION CORE (Direct Logic)
+        // We bind these DIRECTLY to ensure they work even if Agents fail.
+        const langBtns = document.querySelectorAll('.lang-btn');
+        if (langBtns.length === 0) console.warn("[CORE] Warning: No Language Buttons found.");
+
+        langBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation(); // Stop bubbling
+                const lang = btn.dataset.lang || 'en';
+                console.log(`[CORE] VALID ACTION: Language Select [${lang}]`);
+
+                // Visual Update
+                langBtns.forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                document.getElementById('lang-confirm-btn')?.style.setProperty('display', 'block');
+
+                // Store
+                localStorage.setItem('user_lang', lang);
+
+                // Notify Sentinel (if alive)
+                if (typeof Sentinel !== 'undefined') {
+                    Sentinel.handleLanguageSelection(lang);
+                }
+            });
+        });
+
+        // 3. CONFIRM BUTTON BYPASS
+        const confirmBtn = document.getElementById('lang-confirm-btn');
+        if (confirmBtn) {
+            confirmBtn.addEventListener('click', (e) => {
+                console.log("[CORE] FORCE REDIRECT INITIATED.");
+                e.stopPropagation();
+                window.location.href = 'dashboard.html';
+            });
+        }
+
+        // 4. AGENT SWARM INIT (Wrapped)
+        // Now that core inputs are safe, we try to boot the Swarm.
+        Auditor.preFlightCheck().then(passed => {
+            if (passed) {
+                SystemBus.publish('SYSTEM_INIT');
+                SystemBus.publish('SYSTEM_BOOT');
+            } else {
+                console.error("[CORE] Swarm Init Failed. Core Navigation still active.");
+            }
+        });
+
+    } catch (err) {
+        console.error("CRITICAL BOOT ERROR:", err);
+    }
 });
 
 // --- EXPORTS ---
