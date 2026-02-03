@@ -1,52 +1,44 @@
-/* ANTIGRAVITY SYSTEM - IRON CONSTITUTION PROTOCOL
-   Status: FAIL-SAFE MODE (Windows Edit)
-   Rule: UI must work even if Logic fails.
-*/
-
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("🚀 System initializing in Fail-Safe Mode...");
-
-    // 1. SICHERHEITS-CHECK: Maus sichtbar machen
-    document.body.style.cursor = 'auto'; 
-    document.body.classList.add('js-loaded');
-
-    // 2. NAVIGATIONS-LOGIK (Die "Harte" Methode)
-    const interactiveButtons = document.querySelectorAll('button, .lang-btn, .login-btn, a');
-
-    interactiveButtons.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            // Wenn es ein Link ist (<a>), lassen wir ihn normal arbeiten
-            if (btn.tagName === 'A') return;
-
-            // Visuelles Feedback für Buttons
-            btn.style.opacity = '0.5';
-            console.log("Button clicked:", btn.innerText);
-
-            // PRÜFUNG: Ist es ein Sprach-Button?
-            const text = btn.innerText.toUpperCase();
-            if (text.includes('DE') || text.includes('EN') || text.includes('PT') || text.includes('FR') || btn.classList.contains('lang-btn')) {
-                // Sofortiger Redirect
-                console.log("Redirecting to Dashboard...");
-                localStorage.setItem('user_lang', text);
-                
-                // WICHTIG: Pfad prüfen. Falls pages/dashboard.html existiert:
-                setTimeout(() => {
-                    // Wir versuchen beide Pfade sicherheitshalber
-                    if (window.location.href.includes('pages')) {
-                        window.location.href = 'dashboard.html';
-                    } else {
-                        window.location.href = 'pages/dashboard.html';
-                    }
-                }, 100);
-            }
-        });
-    });
-
-    // 3. FEHLER-MELDER
-    window.onerror = function(msg, url, line) {
-        console.error("System Error: " + msg + " Line: " + line);
-        return false;
-    };
-
-    console.log("✅ System ready. Navigation unlocked.");
+    console.log("System Status: ONLINE");
+    document.body.style.cursor = 'auto'; // Maus sicherstellen
+    
+    // Check: Sind wir auf dem Dashboard?
+    if (window.location.pathname.includes('dashboard')) {
+        initGameProtocol();
+    }
 });
+
+function initGameProtocol() {
+    console.log("🎲 Initializing Game Protocol...");
+
+    // Prüfen: War der Spieler schon hier?
+    const hasVisited = localStorage.getItem('player_initialized');
+
+    if (!hasVisited) {
+        // Wenn NEIN: Zeige Begrüßung
+        showWelcomeOverlay();
+    }
+}
+
+function showWelcomeOverlay() {
+    // Erstellt den schwarzen Begrüßungs-Screen
+    const overlay = document.createElement('div');
+    overlay.className = 'fixed inset-0 bg-black/95 z-50 flex flex-col items-center justify-center p-6 text-center animate-in fade-in duration-500';
+    overlay.innerHTML = `
+        <div class="max-w-md w-full space-y-6">
+            <h1 class="text-4xl font-bold text-white tracking-wider mb-2">SYSTEM UNLOCKED</h1>
+            <p class="text-gray-400 text-lg">Identity verified.<br>Welcome to the Flow Network.</p>
+            
+            <div class="bg-gray-900/50 p-6 rounded-2xl border border-white/10 text-left">
+                <p class="text-xs text-yellow-500 font-bold mb-2 uppercase tracking-widest">Current Objective</p>
+                <p class="text-white text-md">Dein Dashboard ist deine Zentrale. Wähle unten deine <span class="text-blue-400">Klasse</span>, um deine Reise zu beginnen.</p>
+            </div>
+            
+            <button onclick="this.parentElement.parentElement.remove(); localStorage.setItem('player_initialized', 'true');" 
+                class="w-full bg-white text-black font-bold py-4 rounded-xl hover:scale-105 transition-transform text-xl shadow-[0_0_20px_rgba(255,255,255,0.3)]">
+                ENTER THE LOOP
+            </button>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+}
