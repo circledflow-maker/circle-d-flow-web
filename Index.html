@@ -203,51 +203,24 @@
             </h2>
 
             <div class="grid gap-4">
-                <!-- English -->
-                <button onclick="selectLang('en')"
-                    class="lang-btn group relative w-full h-[60px] bg-white/5 border border-white/10 hover:border-electric/50 rounded-xl overflow-hidden transition-all duration-300">
-                    <div class="relative flex items-center justify-center gap-3">
-                        <span class="text-2xl">🇬🇧</span>
-                        <span
-                            class="font-bold text-white tracking-widest text-sm uppercase group-hover:text-electric transition-colors">English</span>
-                    </div>
-                </button>
-                <!-- Portuguese -->
-                <button onclick="selectLang('pt')"
-                    class="lang-btn group relative w-full h-[60px] bg-white/5 border border-white/10 hover:border-green-500/50 rounded-xl overflow-hidden transition-all duration-300">
-                    <div class="relative flex items-center justify-center gap-3">
-                        <span class="text-2xl">🇵🇹</span>
-                        <span
-                            class="font-bold text-white tracking-widest text-sm uppercase group-hover:text-green-400 transition-colors">Português</span>
-                    </div>
-                </button>
-                <!-- German -->
-                <button onclick="selectLang('de')"
-                    class="lang-btn group relative w-full h-[60px] bg-white/5 border border-white/10 hover:border-yellow-500/50 rounded-xl overflow-hidden transition-all duration-300">
-                    <div class="relative flex items-center justify-center gap-3">
-                        <span class="text-2xl">🇩🇪</span>
-                        <span
-                            class="font-bold text-white tracking-widest text-sm uppercase group-hover:text-yellow-400 transition-colors">Deutsch</span>
-                    </div>
-                </button>
-                <!-- French -->
-                <button onclick="selectLang('fr')"
-                    class="lang-btn group relative w-full h-[60px] bg-white/5 border border-white/10 hover:border-blue-500/50 rounded-xl overflow-hidden transition-all duration-300">
-                    <div class="relative flex items-center justify-center gap-3">
-                        <span class="text-2xl">🇫🇷</span>
-                        <span
-                            class="font-bold text-white tracking-widest text-sm uppercase group-hover:text-blue-400 transition-colors">Français</span>
-                    </div>
-                </button>
+                <a href="pages/dashboard.html" class="lang-btn group relative w-full flex items-center justify-center p-4 border-2 border-white/20 rounded-xl hover:bg-white/10 transition-all cursor-pointer mb-4" onclick="localStorage.setItem('user_lang', 'en')">
+        <span class="text-2xl mr-2">🇬🇧</span> <span class="font-bold text-white">ENGLISH</span>
+    </a>
+
+    <a href="pages/dashboard.html" class="lang-btn group relative w-full flex items-center justify-center p-4 border-2 border-white/20 rounded-xl hover:bg-white/10 transition-all cursor-pointer mb-4" onclick="localStorage.setItem('user_lang', 'pt')">
+        <span class="text-2xl mr-2">🇵🇹</span> <span class="font-bold text-white">PORTUGUÊS</span>
+    </a>
+
+    <a href="pages/dashboard.html" class="lang-btn group relative w-full flex items-center justify-center p-4 border-2 border-white/20 rounded-xl hover:bg-white/10 transition-all cursor-pointer mb-4" onclick="localStorage.setItem('user_lang', 'de')">
+        <span class="text-2xl mr-2">🇩🇪</span> <span class="font-bold text-white">DEUTSCH</span>
+    </a>
+
+    <a href="pages/dashboard.html" class="lang-btn group relative w-full flex items-center justify-center p-4 border-2 border-white/20 rounded-xl hover:bg-white/10 transition-all cursor-pointer mb-4" onclick="localStorage.setItem('user_lang', 'fr')">
+        <span class="text-2xl mr-2">🇫🇷</span> <span class="font-bold text-white">FRANÇAIS</span>
+    </a>
             </div>
 
-            <!-- CONFIRM BUTTON (Initially Hidden) -->
-            <button id="lang-confirm-btn" onclick="confirmLang()" style="display: none;"
-                class="w-full mt-8 px-10 py-4 bg-electric text-white font-bold rounded-full uppercase tracking-widest hover:bg-white hover:text-black transition-all shadow-[0_0_30px_rgba(98,0,234,0.5)]">
-                CONFIRM / WEITER
-            </button>
-            <p class="text-[10px] text-white/30 uppercase tracking-widest mt-8">Protocol Babel Active</p>
-        </div>
+                   </div>
     </div>
 
     <!-- OVERLAY 2: CLASS SELECTION (The Carousel) -->

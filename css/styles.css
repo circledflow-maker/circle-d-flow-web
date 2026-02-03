@@ -40,7 +40,7 @@ a {
 
 /* Enhanced: Mouse hidden ONLY if JS is running */
 body.js-active * {
-    cursor: none !important;
+
 }
 
 @media (max-width: 768px) {
