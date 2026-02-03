@@ -150,7 +150,10 @@ window.checkAccess = function(page, requiredLevel) {
         const missing = System.caps[requiredLevel] - System.player.xp;
         AgentGuide.speak(`🔒 ${t.locked} ${requiredLevel}. (${missing} XP missing)`);
     } else {
-        window.location.href = `pages/${page}.html`;
+        // Smart Path Detection: Check if we are already in the 'pages/' folder
+        const isPagesDir = window.location.pathname.includes('/pages/');
+        const prefix = isPagesDir ? '' : 'pages/';
+        window.location.href = `${prefix}${page}.html`;
     }
 };
 

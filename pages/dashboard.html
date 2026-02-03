@@ -82,6 +82,7 @@
     </script>
     </script>
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <script src="../js/social.js"></script>
 </head>
 
 <body class="bg-[#0F0A13] font-display text-gray-200">
@@ -100,7 +101,7 @@
                             localStorage.removeItem('isLoggedIn');
                             localStorage.removeItem('userName');
                             localStorage.removeItem('userEmail');
-                            window.location.href = 'index.html';
+                            window.location.href = '../index.html';
                         }
                     }, 2000);
                 } else {
@@ -145,7 +146,7 @@
                 class="text-xs font-bold uppercase tracking-widest text-white hover:text-pink-400 transition-colors"
                 data-i18n="nav_visuals">Visuals</a>
         </div>
-        <a href="index.html" class="absolute left-1/2 -translate-x-1/2 group">
+        <a href="../index.html" class="absolute left-1/2 -translate-x-1/2 group">
             <img src="Assets/images/logo.png" alt="Circle D Flow"
                 class="h-10 w-auto group-hover:scale-110 transition-transform duration-300 drop-shadow-[0_0_15px_rgba(98,0,234,0.5)]">
         </a>
@@ -196,7 +197,7 @@
             <span class="material-symbols-outlined text-xl">graphic_eq</span>
             <span class="text-[9px] font-bold uppercase tracking-wider" data-i18n="nav_sound">Sound</span>
         </a>
-        <a href="index.html" class="relative -top-6">
+        <a href="../index.html" class="relative -top-6">
             <div
                 class="w-14 h-14 bg-electric rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(98,0,234,0.6)] border-4 border-[#0F0A13]">
                 <img src="Assets/images/logo.png" class="w-7 h-7 object-contain">
@@ -454,7 +455,7 @@
                     <!-- Search Agent -->
                     <div class="mb-4 relative">
                         <span class="material-symbols-outlined absolute left-3 top-2.5 text-mist text-lg">search</span>
-                        <input type="text" id="social-search" oninput="searchUsers(this.value)"
+                        <input type="text" id="social-search" oninput="Social.searchUsers(this.value)"
                             placeholder="Search Agent..."
                             class="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-2 text-xs text-white focus:border-electric outline-none">
                     </div>
