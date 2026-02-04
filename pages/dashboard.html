@@ -2,6 +2,7 @@
 <html class="dark" lang="en">
 
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>Dashboard - Circle D Flow</title>
@@ -126,7 +127,7 @@
     <!-- Custom Cursor -->
     <div id="cursor"
         class="fixed w-12 h-12 pointer-events-none z-[200] transition-transform duration-100 hidden md:block">
-        <img src="Assets/images/logo.png" class="w-full h-full object-contain drop-shadow-lg" alt="Cursor">
+        <img src="../Assets/images/logo.png" class="w-full h-full object-contain drop-shadow-lg" alt="Cursor">
     </div>
 
     <!-- Desktop Navigation (The Compass) -->
@@ -147,7 +148,7 @@
                 data-i18n="nav_visuals">Visuals</a>
         </div>
         <a href="../index.html" class="absolute left-1/2 -translate-x-1/2 group">
-            <img src="Assets/images/logo.png" alt="Circle D Flow"
+            <img src="../Assets/images/logo.png" alt="Circle D Flow"
                 class="h-10 w-auto group-hover:scale-110 transition-transform duration-300 drop-shadow-[0_0_15px_rgba(98,0,234,0.5)]">
         </a>
         <div class="flex items-center gap-8">
@@ -200,7 +201,7 @@
         <a href="../index.html" class="relative -top-6">
             <div
                 class="w-14 h-14 bg-electric rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(98,0,234,0.6)] border-4 border-[#0F0A13]">
-                <img src="Assets/images/logo.png" class="w-7 h-7 object-contain">
+                <img src="../Assets/images/logo.png" class="w-7 h-7 object-contain">
             </div>
         </a>
         <a href="african-queen-kitchen.html"
@@ -347,7 +348,7 @@
                     <div class="relative flex flex-col items-center mb-6">
                         <div onclick="document.getElementById('edit-profile-modal').showModal()"
                             class="w-20 h-20 rounded-full p-1 bg-gradient-to-br from-electric via-purple-500 to-amber mb-3 relative group cursor-pointer">
-                            <img id="dash-avatar-img" src="Assets/images/logo.png"
+                            <img id="dash-avatar-img" src="../Assets/images/logo.png"
                                 class="w-full h-full object-cover rounded-full bg-black">
                             <div
                                 class="absolute inset-0 rounded-full bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
@@ -1123,7 +1124,7 @@
                                             onclick="toggleChatWindow()">
                                             <div class="flex items-center gap-3">
                                                 <div class="relative">
-                                                    <img src="Assets/images/logo.png" id="chat-header-avatar"
+                                                    <img src="../Assets/images/logo.png" id="chat-header-avatar"
                                                         class="w-8 h-8 rounded-full border border-white/10 bg-black object-cover">
                                                     <span
                                                         class="absolute bottom-0 right-0 w-2 h-2 bg-green-500 rounded-full border border-black"></span>
@@ -1244,7 +1245,7 @@
                     <div class="relative z-10">
                         <div class="flex items-center gap-4 mb-6">
                             <div class="w-20 h-20 rounded-full border-2 border-electric p-1">
-                                <img src="Assets/images/logo.png" class="w-full h-full object-cover rounded-full">
+                                <img src="../Assets/images/logo.png" class="w-full h-full object-cover rounded-full">
                             </div>
                             <div>
                                 <h2 class="text-2xl font-serif font-bold" id="card-user-name">---</h2>
@@ -1596,8 +1597,8 @@
     </div>
     </div>
 
-    <script src="notifications.js"></script>
-    <script src="gamification.js"></script>
+    <script src="../js/notifications.js"></script>
+    <script src="../js/gamification.js"></script>
     <script src="quests.js"></script>
 
     <!-- Mission Briefing Modal (Genesis Flow) -->
@@ -1650,7 +1651,7 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="../js/script.js"></script>
     <script>
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
@@ -1863,7 +1864,7 @@
             </svg>
         </button>
         <audio id="bg-music" loop>
-            <source src="Assets/audio/ambient.mp3" type="audio/mpeg">
+            <source src="../Assets/audio/ambient.mp3" type="audio/mpeg">
         </audio>
     </div>
     <script>
