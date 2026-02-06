@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Obsidian Colosseum | Circle D Flow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #050505; color: white; overflow-x: hidden; }
+        .font-serif { font-family: 'Playfair Display', serif; }
+        
+        /* Obsidian Background */
+        .bg-obsidian {
+            background-color: #0F0A13;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%231a1a1a' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        /* Parallax Container */
+        .parallax-wrapper {
+            perspective: 10px;
+            height: 100vh;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        /* Hologram Gradients */
+        .hologram-border {
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3), inset 0 0 20px rgba(0, 255, 255, 0.1);
+            border: 1px solid rgba(0, 255, 255, 0.4);
+        }
+        
+        .hologram-text {
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+        }
+
+        .gold-glow {
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+        }
+
+        /* Scrollbar Hide */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Portal Card 3D */
+        .portal-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .portal-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 30px rgba(138, 43, 226, 0.4);
+            z-index: 10;
+        }
+
+        /* Ticker Animation */
+        @keyframes ticker {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        .ticker-content {
+            display: inline-block;
+            white-space: nowrap;
+            animation: ticker 30s linear infinite;
+        }
+    </style>
+</head>
+<body class="bg-[#050505] text-white">
+
+    <!-- 1. The Header (Status Bar) -->
+    <header class="fixed top-0 w-full z-50 bg-black/80 backdrop-blur-md border-b border-white/10 h-16 flex items-center justify-between px-6">
+        <!-- Rank / Nen -->
+        <div class="flex items-center gap-4">
+            <a href="dashboard.html" class="flex items-center gap-2 text-white/50 hover:text-white transition-colors">
+                <span class="material-symbols-outlined">arrow_back</span>
+                <span class="text-xs font-bold uppercase tracking-widest hidden md:block">Command</span>
+            </a>
+            <div class="h-8 w-px bg-white/10 mx-2"></div>
+            <div class="flex flex-col">
+                <span class="text-[10px] uppercase tracking-widest text-white/40">Current Status</span>
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span class="font-bold text-sm tracking-wider" id="user-rank-display">Initiate</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kingdom Pulse Ticker -->
+        <div class="hidden md:flex flex-1 mx-8 h-8 bg-white/5 rounded-full overflow-hidden items-center relative border border-white/5">
+            <div class="absolute left-0 z-10 pl-3 pr-2 bg-gradient-to-r from-black to-transparent h-full flex items-center">
+                <span class="material-symbols-outlined text-red-500 text-sm animate-pulse">emergency_recording</span>
+            </div>
+            <div class="w-full overflow-hidden">
+                <div class="ticker-content text-xs font-mono text-cyan-400 pl-8" id="colosseum-ticker">
+                    +++ WELCOME TO THE OBSIDIAN COLOSSEUM +++ PROVE YOUR FLOW +++ KNOWLEDGE IS POWER +++
+                </div>
+            </div>
+            <div class="absolute right-0 z-10 w-8 h-full bg-gradient-to-l from-black to-transparent"></div>
+        </div>
+
+        <!-- Comic Search Bar -->
+        <button onclick="alert('Comic Search functionality coming in Phase 4!')" class="group relative">
+            <div class="w-10 h-10 rounded-full bg-electric/20 border border-electric flex items-center justify-center group-hover:bg-electric transition-colors">
+                <span class="material-symbols-outlined text-electric group-hover:text-white">search</span>
+            </div>
+        </button>
+    </header>
+
+    <!-- 2. The Core (Parallax View) -->
+    <main class="pt-24 pb-20 px-6 h-screen flex flex-col relative overflow-hidden">
+        
+        <!-- Background Elements (Parallax Horizon) -->
+        <div class="absolute inset-0 opacity-20 pointer-events-none">
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-purple-900/30 blur-[150px] rounded-full"></div>
+            <!-- Yggdrasil Silhouette could go here -->
+        </div>
+
+        <div class="flex-1 flex gap-6 relative z-10">
+            
+            <!-- LEFT: The Sage's Throne (Leaderboard) -->
+            <aside class="hidden lg:flex w-64 flex-col gap-4 perspective-1000">
+                <div class="bg-black/40 border border-white/10 rounded-2xl p-6 hologram-border h-full flex flex-col">
+                    <h2 class="text-xl font-serif font-bold text-amber-400 mb-6 flex items-center gap-2">
+                        <span class="material-symbols-outlined">emoji_events</span>
+                        Kings of Flow
+                    </h2>
+                    <div id="leaderboard-list" class="space-y-3 flex-1 overflow-y-auto no-scrollbar">
+                        <!-- Injected by Referee -->
+                        <div class="h-10 bg-white/5 animate-pulse rounded"></div>
+                        <div class="h-10 bg-white/5 animate-pulse rounded"></div>
+                        <div class="h-10 bg-white/5 animate-pulse rounded"></div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- CENTER: The 5 Portals (Horizontal Scroll) -->
+            <section class="flex-1 min-w-0 flex flex-col justify-center">
+                <div class="text-center mb-8">
+                    <h1 class="text-4xl md:text-6xl font-bold font-serif uppercase tracking-widest hologram-text mb-2">The 5 Pillars</h1>
+                    <p class="text-white/50 text-sm tracking-[0.2em] uppercase">Choose your battlefield</p>
+                </div>
+
+                <!-- Scroll Container Wrapper -->
+                <div class="relative group px-12">
+                     <!-- Left Button -->
+                    <button onclick="document.getElementById('battle-fields').scrollBy({left: -300, behavior: 'smooth'})" 
+                        class="absolute left-0 top-1/2 -translate-y-1/2 w-12 h-12 bg-black/50 border border-white/10 rounded-full flex items-center justify-center hover:bg-white hover:text-black hover:scale-110 transition-all z-20 backdrop-blur-sm shadow-[0_0_20px_rgba(0,0,0,0.8)] opacity-0 group-hover:opacity-100">
+                        <span class="material-symbols-outlined">chevron_left</span>
+                    </button>
+
+                    <!-- Scroll Container -->
+                    <div class="flex gap-6 overflow-x-auto pb-12 px-4 no-scrollbar snap-x snap-mandatory scroll-smooth" id="battle-fields">
+                        <!-- Portals Injected by Referee -->
+                    </div>
+
+                    <!-- Right Button -->
+                    <button onclick="document.getElementById('battle-fields').scrollBy({left: 300, behavior: 'smooth'})" 
+                        class="absolute right-0 top-1/2 -translate-y-1/2 w-12 h-12 bg-black/50 border border-white/10 rounded-full flex items-center justify-center hover:bg-white hover:text-black hover:scale-110 transition-all z-20 backdrop-blur-sm shadow-[0_0_20px_rgba(0,0,0,0.8)] opacity-0 group-hover:opacity-100">
+                        <span class="material-symbols-outlined">chevron_right</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- RIGHT: The Live Action (Feed) -->
+            <aside class="hidden lg:flex w-64 flex-col gap-4">
+                <div class="bg-black/40 border border-white/10 rounded-2xl p-6 hologram-border h-full flex flex-col">
+                    <h2 class="text-xl font-serif font-bold text-cyan-400 mb-6 flex items-center gap-2">
+                        <span class="material-symbols-outlined">history_edu</span>
+                        Live Legacy
+                    </h2>
+                    <div id="legacy-feed" class="space-y-4 flex-1 overflow-y-auto no-scrollbar opacity-70">
+                        <div class="text-xs text-white/30 italic text-center mt-10">Waiting for signals...</div>
+                    </div>
+                </div>
+            </aside>
+
+        </div>
+
+        <!-- 3. Hologram Duel Overlay (Hidden by Default) -->
+        <div id="duel-overlay" class="fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl hidden flex items-center justify-center">
+            
+            <!-- VS Container -->
+            <div class="w-full max-w-5xl px-6 relative">
+                <button onclick="Referee.closeDuel()" class="absolute -top-12 right-6 text-white/30 hover:text-white transition-colors flex items-center gap-2">
+                    <span class="text-xs uppercase tracking-widest">Abort</span>
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+
+                <div id="duel-content" class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center text-center">
+                    <!-- Dynamic Duel UI injected here -->
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- 4. Flowee's Navigator (Bottom Right) -->
+    <div id="flowee-agent" class="fixed bottom-8 right-8 z-50 cursor-pointer group">
+         <div id="flowee-bubble" class="absolute bottom-full right-0 mb-4 w-48 bg-white text-black p-3 rounded-xl rounded-br-none text-xs font-bold shadow-lg opacity-0 transition-opacity duration-300 pointer-events-none">
+            Welcome to the Arena!
+        </div>
+        <div id="flowee-visual" class="w-16 h-16 transition-transform duration-300 group-hover:scale-110">
+            <img src="../Assets/images/flowee.png" class="w-full h-full object-contain drop-shadow-[0_0_15px_rgba(255,191,0,0.6)]">
+        </div>
+    </div>
+
+    <script src="../js/gamification.js"></script>
+    <script src="../js/notifications.js"></script>
+    <script src="../js/agents/cortex.js"></script>
+    <script src="../js/agents/bridge_pusher.js"></script>
+    <script src="../js/agents/referee.js"></script>
+    <script src="../js/agents/flowee.js"></script>
+    <script src="../js/agents/helper.js" defer></script>
+</body>
+</html>

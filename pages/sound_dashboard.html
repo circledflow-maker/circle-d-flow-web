@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sound-Command | DJ Qter</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        electric: '#9A4DFF',
+                        dark: '#0F0A13',
+                        panel: '#1A1622',
+                        success: '#00FF94',
+                        danger: '#FF2A51'
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- SOUND CREW AGENTS -->
+    <script src='../js/agents/sound_engineer.js' defer></script>
+    <script src='../js/agents/bass_pusher.js' defer></script>
+    <script src='../js/agents/tour_coordinator.js' defer></script>
+    <script src='../js/dashboard_logic.js' defer></script>
+</head>
+<body class="bg-dark text-white min-h-screen flex flex-col font-sans">
+
+    <!-- The Gate (Lock Screen) -->
+    <div id="the-gate" class="fixed inset-0 z-[100] bg-dark flex flex-col items-center justify-center p-6">
+        <div class="mb-8 relative">
+            <div class="absolute inset-0 bg-electric/20 blur-xl rounded-full animate-pulse"></div>
+            <span class="material-symbols-outlined text-8xl text-electric relative z-10">lock</span>
+        </div>
+        <h1 class="text-4xl font-bold mb-2 tracking-tighter">RESTRICTED FREQUENCY</h1>
+        <p class="text-white/50 mb-8 max-w-md text-center">Only DJ Qter and certified Sound Engineers may access the Sound-Command.</p>
+        
+        <div class="flex flex-col gap-4 w-full max-w-xs">
+            <input type="password" id="access-code" placeholder="Enter Sonic Key..." 
+                class="bg-white/5 border border-white/10 rounded-xl px-6 py-4 text-center text-xl tracking-[1em] focus:outline-none focus:border-electric transition-colors">
+            <button onclick="unlockConsole()" class="py-4 bg-electric text-white font-bold rounded-xl uppercase tracking-widest hover:bg-white hover:text-black transition-all shadow-[0_0_20px_rgba(154,77,255,0.4)]">
+                Initialize System
+            </button>
+        </div>
+        <p id="error-msg" class="text-danger mt-4 text-sm hidden">ACCESS DENIED. FREQUENCY MISMATCH.</p>
+    </div>
+
+    <!-- MAIN CONSOLE (Hidden by default) -->
+    <div id="console-ui" class="flex-1 flex flex-col hidden opacity-0 transition-opacity duration-1000 min-h-screen">
+        <!-- Top Bar -->
+        <header class="h-20 border-b border-white/5 bg-panel/90 backdrop-blur-md sticky top-0 z-50 flex items-center justify-between px-8 shadow-lg">
+            <div class="flex items-center gap-4">
+                <div class="w-3 h-3 bg-success rounded-full animate-pulse shadow-[0_0_10px_#00FF94]"></div>
+                <h1 class="text-xl font-bold tracking-widest text-white/80">SOUND-COMMAND v2.0 (BUDOKAI)</h1>
+            </div>
+            <div class="flex items-center gap-6">
+                 <div class="text-right">
+                    <div class="text-[10px] text-white/40 uppercase tracking-widest">System Status</div>
+                    <div class="text-success font-bold text-sm">OPTIMAL</div>
+                 </div>
+                 <button onclick="logout()" class="p-2 hover:bg-white/10 rounded-lg transition-colors text-white/50 hover:text-white">
+                    <span class="material-symbols-outlined">power_settings_new</span>
+                 </button>
+            </div>
+        </header>
+
+        <!-- Main Dashboard Grid -->
+        <main class="flex-1 p-8 grid grid-cols-1 md:grid-cols-2 gap-8 pb-20">
+            
+            <!-- 1. Stage-Master (Tournament Control) -->
+            <div class="bg-panel border border-white/5 rounded-2xl p-6 relative group hover:border-electric/30 transition-colors">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-lg font-bold flex items-center gap-2">
+                        <span class="material-symbols-outlined text-electric">swords</span>
+                        Stage-Master (Budokai)
+                    </h2>
+                    <span class="text-[10px] bg-electric/20 text-electric px-2 py-1 rounded font-bold">LIVE CTRL</span>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="bg-black/40 p-4 rounded-xl border border-white/5">
+                        <div class="text-xs text-white/40 mb-2 uppercase tracking-wide">Current Matchup</div>
+                        <div class="flex justify-between items-center text-lg font-bold">
+                            <input type="text" value="Hempy" class="bg-transparent border-b border-white/10 w-24 text-center focus:border-electric outline-none">
+                            <span class="text-electric text-xs">VS</span>
+                            <input type="text" value="Ray" class="bg-transparent border-b border-white/10 w-24 text-center focus:border-electric outline-none">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <button onclick="declareWinner('Hempy')" class="py-3 bg-white/5 hover:bg-success/20 hover:text-success border border-white/5 rounded-lg font-bold text-xs uppercase transition-all">
+                            Adv. Hempy
+                        </button>
+                        <button onclick="declareWinner('Ray')" class="py-3 bg-white/5 hover:bg-success/20 hover:text-success border border-white/5 rounded-lg font-bold text-xs uppercase transition-all">
+                            Adv. Ray
+                        </button>
+                    </div>
+                    <button onclick="updateBracket()" class="w-full py-3 bg-electric/10 text-electric border border-electric/30 hover:bg-electric hover:text-white rounded-lg flex items-center justify-center gap-2 transition-all font-bold uppercase text-xs">
+                        <span class="material-symbols-outlined text-sm">sync</span> Sync Bracket to Arena
+                    </button>
+                </div>
+            </div>
+
+            <!-- 2. The Flyer-Engine (Event Creator) -->
+             <div class="bg-panel border border-white/5 rounded-2xl p-6 relative group hover:border-pink-500/30 transition-colors">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-lg font-bold flex items-center gap-2">
+                        <span class="material-symbols-outlined text-pink-500">campaign</span>
+                        The Flyer-Engine
+                    </h2>
+                    <span class="text-[10px] bg-pink-500/20 text-pink-500 px-2 py-1 rounded font-bold">PROJECTOR</span>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <input id="flyer-artist" type="text" placeholder="Artist Name" class="bg-black/20 border border-white/10 rounded px-3 py-2 text-sm focus:border-pink-500 outline-none">
+                        <input id="flyer-title" type="text" placeholder="Event Title" class="bg-black/20 border border-white/10 rounded px-3 py-2 text-sm focus:border-pink-500 outline-none">
+                    </div>
+                    <input id="flyer-loc" type="text" placeholder="Location (e.g. KYH Studio)" class="w-full bg-black/20 border border-white/10 rounded px-3 py-2 text-sm focus:border-pink-500 outline-none">
+                    <input id="flyer-date" type="datetime-local" class="w-full bg-black/20 border border-white/10 rounded px-3 py-2 text-sm focus:border-pink-500 outline-none text-white/50">
+                    
+                    <button onclick="publishFlyer()" class="w-full py-3 bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white rounded-lg flex items-center justify-center gap-2 transition-all font-bold uppercase text-xs shadow-lg shadow-pink-600/20">
+                        <span class="material-symbols-outlined text-sm">rocket_launch</span> Project to Wall
+                    </button>
+                </div>
+            </div>
+
+            <!-- 3. Jam Ignition (Live Lab) -->
+            <div class="bg-panel border border-white/5 rounded-2xl p-6 relative group hover:border-danger/30 transition-colors">
+                 <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-lg font-bold flex items-center gap-2">
+                        <span class="material-symbols-outlined text-danger">graphic_eq</span>
+                        Jam Ignition
+                    </h2>
+                    <div class="w-2 h-2 rounded-full bg-white/10 group-hover:bg-danger transition-colors"></div>
+                </div>
+
+                <div class="flex flex-col items-center justify-center h-48">
+                    <button id="jam-btn" onclick="toggleJamSession()" 
+                        class="w-32 h-32 rounded-full border-4 border-white/10 flex flex-col items-center justify-center gap-1 hover:scale-105 hover:border-danger hover:shadow-[0_0_40px_rgba(255,42,81,0.4)] transition-all group/btn bg-gradient-to-br from-panel to-black">
+                        <span class="material-symbols-outlined text-4xl text-white/30 group-hover/btn:text-danger transition-colors">mic_off</span>
+                        <span class="text-[10px] font-bold text-white/30 group-hover/btn:text-white tracking-widest uppercase">Go Live</span>
+                    </button>
+                </div>
+                <p class="text-center text-xs text-white/30 mt-4">Triggers "Bass-Welle" global alert.</p>
+            </div>
+
+            <!-- 4. Kingdom Vibe (Audio Override) -->
+            <div class="bg-panel border border-white/5 rounded-2xl p-6 relative group hover:border-electric/30 transition-colors">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-lg font-bold flex items-center gap-2">
+                        <span class="material-symbols-outlined text-electric">album</span>
+                        Kingdom Vibe
+                    </h2>
+                </div>
+
+                <div class="space-y-4">
+                    <!-- Tracks -->
+                    <div onclick="setVibe('Lisbon Flow')" class="flex items-center gap-3 p-3 hover:bg-white/5 border border-white/10 rounded-lg cursor-pointer group/track transition-all active:scale-95">
+                        <div class="w-8 h-8 rounded bg-electric flex items-center justify-center">
+                            <span class="material-symbols-outlined text-sm text-black">equalizer</span>
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-sm font-bold text-white">Lisbon Flow</div>
+                            <div class="text-[10px] text-electric">Default Frequency</div>
+                        </div>
+                    </div>
+                     <div onclick="setVibe('Cypher Hype')" class="flex items-center gap-3 p-3 hover:bg-white/5 border border-white/10 rounded-lg cursor-pointer group/track transition-all active:scale-95">
+                        <div class="w-8 h-8 rounded bg-danger flex items-center justify-center">
+                            <span class="material-symbols-outlined text-sm text-white">local_fire_department</span>
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-sm font-bold text-white">Cypher Hype</div>
+                            <div class="text-[10px] text-danger">High Energy Override</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. SCOUTING REPORT (Challenger Review) -->
+            <div class="md:col-span-2 bg-panel border border-white/5 rounded-2xl p-6 relative group hover:border-mystic-gold/30 transition-colors">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-lg font-bold flex items-center gap-2">
+                        <span class="material-symbols-outlined text-mystic-gold">visibility</span>
+                        Scouting Report
+                    </h2>
+                    <span class="text-[10px] bg-mystic-gold/20 text-mystic-gold px-2 py-1 rounded font-bold">PENDING APPROVAL</span>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="text-xs text-white/40 uppercase tracking-widest border-b border-white/10">
+                                <th class="py-3 px-4">Timestamp</th>
+                                <th class="py-3 px-4">Z-Fighter</th>
+                                <th class="py-3 px-4">Style</th>
+                                <th class="py-3 px-4 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="scouting-list" class="text-sm font-mono">
+                            <!-- Populated by JS -->
+                            <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                <td class="py-3 px-4 text-white/50">--:--</td>
+                                <td class="py-3 px-4 font-bold text-white">No Pending Challengers</td>
+                                <td class="py-3 px-4 text-white/50">-</td>
+                                <td class="py-3 px-4 text-right"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function unlockConsole() {
+            const code = document.getElementById('access-code').value;
+            if (code === 'BASSLINE') { 
+                document.getElementById('the-gate').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('the-gate').style.display = 'none';
+                    const consoleUI = document.getElementById('console-ui');
+                    consoleUI.classList.remove('hidden');
+                    // Small delay to trigger transition
+                    setTimeout(() => consoleUI.style.opacity = '1', 50);
+                }, 500);
+            } else {
+                const err = document.getElementById('error-msg');
+                err.classList.remove('hidden');
+                document.getElementById('access-code').classList.add('border-danger');
+            }
+        }
+
+        // --- STAGE MASTER ---
+        function updateBracket() {
+            // Mock sync
+            if(window.SoundEngineer) {
+                window.SoundEngineer.refreshBracketUI();
+                alert("STAGE-MASTER: Bracket Synced to Mainframe.");
+            }
+        }
+        
+        function declareWinner(winner) {
+            alert(`STAGE-MASTER: ${winner} ADVANCED TO NEXT ROUND.`);
+        }
+
+        // --- FLYER ENGINE ---
+        function publishFlyer() {
+            const artist = document.getElementById('flyer-artist').value;
+            const title = document.getElementById('flyer-title').value;
+            const loc = document.getElementById('flyer-loc').value;
+            const date = document.getElementById('flyer-date').value;
+            
+            if(window.TourCoordinator) {
+                window.TourCoordinator.publishEvent(artist, title, loc, date);
+                alert("FLYER-ENGINE: Projection Updated Successfully.");
+            } else {
+                console.error("Tour Coordinator Agent Offline");
+            }
+        }
+
+        // --- JAM IGNITION ---
+        function toggleJamSession() {
+            const btn = document.getElementById('jam-btn');
+            const icon = btn.querySelector('.material-symbols-outlined');
+            const text = btn.querySelector('span:last-child');
+            const isLive = btn.classList.contains('border-danger');
+
+            if (!isLive) {
+                btn.classList.add('border-danger', 'shadow-[0_0_40px_#FF2A51]', 'animate-pulse');
+                btn.classList.remove('border-white/10');
+                icon.innerText = 'mic';
+                icon.classList.remove('text-white/30');
+                icon.classList.add('text-danger');
+                text.innerText = 'ON AIR';
+                text.classList.remove('text-white/30');
+                text.classList.add('text-danger');
+                
+                if(window.BassPusher) window.BassPusher.triggerJam();
+            } else {
+                btn.classList.remove('border-danger', 'shadow-[0_0_40px_#FF2A51]', 'animate-pulse');
+                btn.classList.add('border-white/10');
+                icon.innerText = 'mic_off';
+                icon.classList.add('text-white/30');
+                icon.classList.remove('text-danger');
+                text.innerText = 'GO LIVE';
+                text.classList.add('text-white/30');
+                text.classList.remove('text-danger');
+            }
+        }
+        
+        // --- KINGDOM VIBE ---
+        function setVibe(vibe) {
+            localStorage.setItem('kingdom_vibe', vibe);
+            alert(`KINGDOM VIBE SET TO: ${vibe}`);
+            // In a real app, this would trigger a global event via localStorage listener on other pages
+        }
+
+        function logout() { location.reload(); }
+        window.onload = () => document.getElementById('access-code').focus();
+    </script>
+    <script src="../js/agents/flowee.js" defer></script>
+    <script src="../js/agents/bridge_pusher.js" defer></script>
+    <div id="flowee-agent" class="fixed bottom-8 left-8 z-50 flex flex-col items-center group cursor-pointer"></div>
+    <script src="../js/agents/helper.js" defer></script>
+</body>
+</html>

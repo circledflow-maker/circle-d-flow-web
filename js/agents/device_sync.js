@@ -1,48 +1,56 @@
 /**
- * Agent 2: The Synchronizer (Cross-Device Mirror)
- * Ensures desktop features translate to mobile behaviors.
+ * Agent 3: The Synchronizer (Device Sync)
+ * Ensures user state is consistent across all open tabs/windows.
  */
 
 class DeviceSyncAgent {
     constructor() {
         this.name = "The Synchronizer";
-        this.isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
         this.init();
     }
 
     init() {
-        console.log(`[Phoenix-EE] ${this.name} online. Mode: ${this.isTouch ? 'Touch' : 'Mouse'}`);
-
-        if (this.isTouch) {
-            this.optimizeForTouch();
-        }
-    }
-
-    optimizeForTouch() {
-        // 1. Hover-to-Click mapping
-        // Find elements with hover effects that might need touch handling
-        const hoverElements = document.querySelectorAll('.group, .hover\\:scale-105');
+        console.log(`[Phoenix-EE] ${this.name} online.`);
         
-        hoverElements.forEach(el => {
-            // Ensure they trigger nicely on tap
-            el.addEventListener('touchstart', function() {
-                this.classList.add('touch-active');
-            }, {passive: true});
-            
-            el.addEventListener('touchend', function() {
-                setTimeout(() => this.classList.remove('touch-active'), 300);
-            }, {passive: true});
-        });
-
-        // 2. Increase Tap Targets for small links
-        const smallLinks = document.querySelectorAll('a, button');
-        smallLinks.forEach(link => {
-            const rect = link.getBoundingClientRect();
-            if (rect.width < 44 || rect.height < 44) {
-                // Add a class or style that ensures min-height/width via padding if strict consistency is needed
-                // console.log(`[${this.name}] Small tap target detected:`, link);
+        // Listen for changes in other tabs
+        window.addEventListener('storage', (event) => {
+            if (event.key === 'circle_user_state') {
+                this.handleStateChange(event.newValue);
             }
         });
+    }
+
+    handleStateChange(newStateJson) {
+        if (!newStateJson) return; // Cleared
+
+        try {
+            const newState = JSON.parse(newStateJson);
+            const currentState = JSON.parse(localStorage.getItem('circle_user_state') || '{}');
+
+            // Detected a Status Change (e.g. Login in other tab)
+            if (newState.status !== currentState.status) {
+                console.log(`[${this.name}] Syncing state: ${currentState.status} -> ${newState.status}`);
+                
+                // If we became authenticated elsewhere...
+                if (newState.status === 'member' || newState.status === 'authenticated') {
+                    // If we are on the login page/iframe, we MUST go to dashboard
+                    if (window.location.href.includes('login.html')) {
+                        const isPages = window.location.pathname.includes('/pages/');
+                        window.location.href = isPages ? 'dashboard.html' : 'pages/dashboard.html';
+                    } else {
+                        // Otherwise just reload to update the UI
+                        window.location.reload(); 
+                    }
+                }
+                
+                // If we logged out elsewhere, reload to show login
+                if (newState.status === 'fresh' && (currentState.status === 'member' || currentState.status === 'visitor')) {
+                    window.location.reload();
+                }
+            }
+        } catch (e) {
+            console.error(`[${this.name}] Sync Error:`, e);
+        }
     }
 }
 

@@ -1,359 +1,180 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Codex | Circle D Flow</title>
+    <title>The Kingdom of Science | Circle D Flow</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link href="https://fonts.googleapis.com/css2?family=Reenie+Beanie&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link rel="stylesheet" href="../css/styles.css">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        midnight: '#0D0D0F',
-                        electric: '#9A4DFF',
-                        amber: '#FFAE42',
-                        mist: '#A8A8B3',
-                        'mystic-gold': '#FFD700',
+                        stone: '#8A8A8C',
+                        blueprint: '#0047AB',
+                        scienceGreen: '#00FF41',
+                        chalk: '#F0F0F0',
                     },
                     fontFamily: {
-                        serif: ['"Playfair Display"', 'serif'],
-                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        hand: ['"Reenie Beanie"', 'cursive'],
+                        code: ['"Share Tech Mono"', 'monospace'],
                     },
+                    backgroundImage: {
+                        'stone-texture': "url('https://www.transparenttextures.com/patterns/concrete-wall.png')",
+                        'blueprint-grid': "linear-gradient(#0047AB 1px, transparent 1px), linear-gradient(90deg, #0047AB 1px, transparent 1px)",
+                    }
                 }
             }
         }
     </script>
+    <style>
+        /* PETRIFICATION EFFECT */
+        .petrified-layer {
+            position: absolute;
+            inset: 0;
+            background-color: #5a5a5a;
+            background-image: url('https://www.transparenttextures.com/patterns/cracked-concrete.png');
+            z-index: 10;
+            transition: all 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+        }
+
+        .depetrified {
+            clip-path: polygon(0 0, 100% 0, 100% 0, 0 0); /* Reveals underneath */
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .science-glow {
+            box-shadow: 0 0 15px #00FF41, inset 0 0 10px #00FF41;
+        }
+
+        /* Blueprint Card Hover */
+        .blueprint-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .blueprint-card:hover {
+            transform: translateY(-5px) rotate(1deg);
+            box-shadow: 10px 10px 0px #0047AB;
+        }
+    </style>
 </head>
+<body class="bg-[#1a1a1a] text-white min-h-screen relative overflow-x-hidden">
 
-<body class="bg-midnight text-white min-h-screen relative overflow-x-hidden selection:bg-electric selection:text-white">
-
-    <!-- Custom Cursor -->
-    <div id="cursor"
-        class="fixed w-12 h-12 pointer-events-none z-[200] transition-transform duration-100 hidden md:block">
-        <img src="../Assets/images/logo.png" class="w-full h-full object-contain drop-shadow-lg" alt="Cursor">
-    </div>
-
-    <!-- Desktop Navigation (The Compass) -->
-    <nav
-        class="hidden md:flex fixed top-0 w-full z-50 bg-midnight/80 backdrop-blur-xl border-b border-white/5 h-20 items-center justify-between px-12 transition-all duration-300">
-        <div class="flex items-center gap-8">
-            <a href="dashboard.html"
-                class="text-xs font-bold uppercase tracking-widest text-white hover:text-electric transition-colors">Hub</a>
-            <a href="outbreak_tunes.html"
-                class="text-xs font-bold uppercase tracking-widest text-white hover:text-purple-400 transition-colors">Sound</a>
-            <a href="african-queen-kitchen.html"
-                class="text-xs font-bold uppercase tracking-widest text-white hover:text-amber transition-colors">Taste</a>
-            <a href="kiss-your-heart.html"
-                class="text-xs font-bold uppercase tracking-widest text-white hover:text-pink-400 transition-colors">Visuals</a>
-        </div>
-        <a href="../Index.html" class="absolute left-1/2 -translate-x-1/2 group">
-            <img src="../Assets/images/logo.png" alt="Circle D Flow"
-                class="h-10 w-auto group-hover:scale-110 transition-transform duration-300 drop-shadow-[0_0_15px_rgba(98,0,234,0.5)]">
+    <!-- NAVIGATION (Standard) -->
+    <nav class="fixed top-0 w-full z-50 bg-black/80 backdrop-blur border-b border-white/10 h-16 flex items-center justify-between px-6">
+        <a href="dashboard.html" class="font-code text-scienceGreen tracking-widest text-xs hover:underline flex items-center gap-2">
+            <span class="material-symbols-outlined text-sm">science</span> KINGDOM OF SCIENCE
         </a>
-        <div class="flex items-center gap-8">
-            <a href="marketplace.html"
-                class="text-xs font-bold uppercase tracking-widest text-white hover:text-mystic-gold transition-colors">Style</a>
-            <a href="academy.html"
-                class="text-xs font-bold uppercase tracking-widest text-blue-400 drop-shadow-[0_0_8px_rgba(96,165,250,0.5)]">The
-                Codex</a>
-            <a href="events.html"
-                class="text-xs font-bold uppercase tracking-widest text-white hover:text-green-400 transition-colors">Space</a>
-            <a href="mindfulness.html"
-                class="text-xs font-bold uppercase tracking-widest text-white hover:text-indigo-400 transition-colors">Spirit</a>
-        </div>
-        <div class="absolute right-6 flex items-center gap-4">
-            <a href="login.html" id="desktop-auth-btn"
-                class="px-5 py-2 bg-white/5 text-white font-bold rounded-full text-[10px] uppercase tracking-widest hover:bg-white hover:text-black transition-all border border-white/10 hover:shadow-[0_0_15px_rgba(255,255,255,0.3)]">Login</a>
+        <div class="flex gap-4">
+             <a href="dashboard.html" class="text-white/50 hover:text-white font-code text-xs">HUB</a>
+             <a href="codex.html" class="text-white/50 hover:text-white font-code text-xs">CHRONO-RECORD</a>
         </div>
     </nav>
 
-    <!-- Mobile Bottom Navigation -->
-    <nav
-        class="md:hidden fixed bottom-4 left-4 right-4 z-50 bg-[#1A1622]/90 backdrop-blur-xl border border-white/10 rounded-2xl p-4 flex justify-between items-center shadow-2xl safe-area-pb">
-        <a href="dashboard.html"
-            class="flex flex-col items-center gap-1 text-white/50 hover:text-electric transition-colors">
-            <span class="material-symbols-outlined text-xl">dashboard</span>
-            <span class="text-[9px] font-bold uppercase tracking-wider">Hub</span>
-        </a>
-        <a href="academy.html" class="flex flex-col items-center gap-1 text-blue-400 transition-colors">
-            <span class="material-symbols-outlined text-xl">auto_stories</span>
-            <span class="text-[9px] font-bold uppercase tracking-wider">Codex</span>
-        </a>
-        <a href="../Index.html" class="relative -top-6">
-            <div
-                class="w-14 h-14 bg-electric rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(98,0,234,0.6)] border-4 border-[#0F0A13]">
-                <img src="../Assets/images/logo.png" class="w-7 h-7 object-contain">
-            </div>
-        </a>
-        <a href="marketplace.html"
-            class="flex flex-col items-center gap-1 text-white/50 hover:text-mystic-gold transition-colors">
-            <span class="material-symbols-outlined text-xl">storefront</span>
-            <span class="text-[9px] font-bold uppercase tracking-wider">Style</span>
-        </a>
-        <button onclick="toggleMobileDrawer()"
-            class="flex flex-col items-center gap-1 text-white/50 hover:text-mystic-gold transition-colors">
-            <span class="material-symbols-outlined text-xl">menu</span>
-            <span class="text-[9px] font-bold uppercase tracking-wider">More</span>
-        </button>
-    </nav>
-
-    <!-- Mobile Drawer -->
-    <div id="mobile-drawer"
-        class="fixed inset-0 bg-black/95 backdrop-blur-xl z-[60] transform translate-y-full transition-transform duration-300 flex flex-col items-center justify-center space-y-8 md:hidden">
-        <button onclick="toggleMobileDrawer()" class="absolute top-8 right-8 text-white/50 hover:text-white">
-            <span class="material-symbols-outlined text-3xl">close</span>
-        </button>
-        <a href="kiss-your-heart.html"
-            class="text-2xl font-bold text-white hover:text-pink-400 tracking-widest">VISUALS</a>
-        <a href="marketplace.html"
-            class="text-2xl font-bold text-white hover:text-mystic-gold tracking-widest">STYLE</a>
-        <a href="academy.html" class="text-2xl font-bold text-blue-400 tracking-widest">THE CODEX</a>
-        <a href="events.html" class="text-2xl font-bold text-white hover:text-green-400 tracking-widest">SPACE</a>
-        <a href="mindfulness.html"
-            class="text-2xl font-bold text-white hover:text-indigo-400 tracking-widest">SPIRIT</a>
-    </div>
-
-    <!-- Main Content -->
-    <main class="min-h-screen pt-32 pb-24 px-6 relative max-w-4xl mx-auto">
-        <!-- Header -->
-        <div class="text-center mb-16 space-y-4">
-            <span
-                class="inline-block py-1 px-3 border border-blue-500/30 rounded-full text-[10px] text-blue-400 font-bold uppercase tracking-[0.2em] animate-pulse">Classified</span>
-            <h1 class="text-5xl md:text-7xl font-serif font-bold text-white">The <span
-                    class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-electric">Codex</span></h1>
-            <p class="text-mist max-w-xl mx-auto">Decypher the hidden history of the Circle. Knowledge is power, but it
-                must be earned.</p>
+    <!-- HEADER SECTION (The Stone World) -->
+    <section class="relative h-[60vh] flex items-center justify-center overflow-hidden">
+        <!-- Background (Techno) -->
+        <div class="absolute inset-0 bg-blueprint bg-opacity-20 bg-[size:40px_40px] opacity-50 z-0" style="background-image: linear-gradient(#0047AB 1px, transparent 1px), linear-gradient(90deg, #0047AB 1px, transparent 1px);"></div>
+        
+        <!-- Foreground (Stone Overlay) -->
+        <div id="hero-stone" class="petrified-layer flex items-center justify-center">
+            <h1 class="text-8xl md:text-9xl font-hand text-stone-300 tracking-tighter drop-shadow-xl select-none">STONE WORLD</h1>
         </div>
 
-        <!-- Codex Entries Grid -->
-        <div class="space-y-6" id="codex-grid">
-            <!-- Entry 1: Origins (100 XP) -->
-            <div id="codex-entry-1"
-                class="group relative bg-[#141118] border border-white/10 rounded-2xl p-8 overflow-hidden transition-all duration-500 hover:border-blue-400/30"
-                data-xp-req="100">
-                <div class="flex flex-col md:flex-row gap-8 items-start relative z-10">
-                    <!-- Icon -->
-                    <div
-                        class="w-16 h-16 shrink-0 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center group-hover:bg-blue-500/20 transition-colors">
-                        <span class="material-symbols-outlined text-3xl text-blue-400">history_edu</span>
-                    </div>
+        <!-- Hidden Tech Title -->
+        <div class="relative z-0 text-center">
+            <h1 class="text-7xl md:text-8xl font-code text-scienceGreen font-bold tracking-tight animate-pulse">KINGDOM OF SCIENCE</h1>
+            <p class="font-hand text-2xl text-white mt-4 rotate-2">"From Stone to Stars... We rebuild everything!"</p>
+        </div>
 
-                    <!-- Content -->
-                    <div class="flex-1">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="text-2xl font-serif font-bold text-white">The Origins</h3>
-                            <div
-                                class="lock-status flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-mist">
-                                <span class="material-symbols-outlined text-sm">lock</span>
-                                Encrypted
-                            </div>
-                        </div>
+        <div class="absolute bottom-10 animate-bounce cursor-pointer z-50 text-white mixer-blend-difference" onclick="KingdomScience.crackStone()">
+            <span class="material-symbols-outlined text-4xl">keyboard_double_arrow_down</span>
+        </div>
+    </section>
 
-                        <!-- Locked Content (Blurred) -->
-                        <div class="codex-content-locked filter blur-sm select-none opacity-50 relative">
-                            <p class="mb-4">The Circle began not as a place, but as a frequency. It was whisper in the
-                                underground, a signal amidst the noise...</p>
-                            <p>Data corrupted. Segment missing. Synchronization required.</p>
-                        </div>
+    <!-- CONTENT: THE BLUEPRINT ENGINE -->
+    <section class="py-24 px-6 md:px-24 relative z-20 bg-[#111]">
+        <div class="flex justify-between items-end mb-12 border-b-2 border-dashed border-white/20 pb-4">
+            <div>
+                <span class="font-hand text-4xl text-yellow-400 -rotate-2 inline-block">Roadmap of Inventions</span>
+                <h2 class="font-code text-4xl text-white">THE BLUEPRINT ENGINE</h2>
+            </div>
+            <div class="text-right hidden md:block">
+                <p class="font-code text-xs text-scienceGreen">SYS.STATUS: ONLINE</p>
+                <p class="font-code text-xs text-white/50">RES: 10,000,000%</p>
+            </div>
+        </div>
 
-                        <!-- Unlocked Content (Hidden initially) -->
-                        <div class="codex-content-unlocked hidden text-mist leading-relaxed">
-                            <p class="mb-4">The Circle began not as a place, but as a frequency. It was a whisper in the
-                                underground, a signal amidst the noise of the modern world. Founders gathered in the
-                                shadow of the old city, united by a single purpose: to restore the Flow.</p>
-                            <p>They utilized Adinkra symbols not just as art, but as keys—archetypes that unlock
-                                potential within the human spirit. Sankofa taught us to retrieve what was lost; Gye
-                                Nyame reminded us of our supremacy over fear.</p>
-                        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="blueprint-grid">
+            <!-- Cards Injected by JS -->
+            <!-- Example Static Card -->
+            <div class="blueprint-card bg-blueprint/10 border-2 border-blueprint p-6 relative group overflow-hidden">
+                <div class="absolute top-2 right-2 text-blueprint opacity-50 font-code text-6xl font-bold">01</div>
+                <h3 class="font-hand text-3xl text-white mb-2 rotate-1">Kit-Kat's Truck</h3>
+                <div class="h-32 bg-blueprint/20 my-4 border border-dashed border-white/30 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-6xl text-white/20">local_shipping</span>
+                </div>
+                <p class="font-code text-xs text-white/70 mb-4 h-12">Mobile food unit. Requires: Engine parts, Oil, and heavy metal plating.</p>
+                
+                <div class="w-full bg-black h-2 rounded-full overflow-hidden mb-2">
+                    <div class="bg-scienceGreen h-full w-[45%]"></div>
+                </div>
+                <div class="flex justify-between text-[10px] font-code text-white/50 mb-4">
+                    <span>PROGRESS</span>
+                    <span>45%</span>
+                </div>
 
-                        <!-- Unlock Message -->
-                        <div class="unlock-msg mt-6 pt-4 border-t border-white/5 text-xs text-red-400 font-mono hidden">
-                            // SECURITY LEVEL RED: User Sync Level insufficient. Requires 100 XP.
-                        </div>
+                <button class="w-full py-2 bg-blueprint text-white font-code font-bold hover:bg-white hover:text-blueprint transition-colors uppercase">
+                    Donate Material
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTENT: LABORATORY QUIZ -->
+    <section class="py-24 px-6 md:px-24 bg-stone-900 relative overflow-hidden">
+        <div class="absolute top-0 right-0 p-24 opacity-5 pointer-events-none">
+            <span class="material-symbols-outlined text-[300px]">biotech</span>
+        </div>
+
+        <div class="max-w-3xl mx-auto bg-black/50 border-4 border-white p-8 md:p-12 relative">
+            <!-- Tape Effect -->
+            <div class="absolute -top-6 left-1/2 -translate-x-1/2 w-32 h-10 bg-yellow-400/80 rotate-1 shadow-lg"></div>
+
+            <h2 class="font-hand text-5xl text-center text-white mb-8">The Laboratory of Knowledge</h2>
+            
+            <div id="quiz-container" class="space-y-6">
+                <!-- Question -->
+                <div class="bg-white/5 p-6 border-l-4 border-scienceGreen">
+                    <p class="font-code text-lg text-white mb-4">Q1: Which frequency resonates best with the Circle's Core Value?</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <button onclick="KingdomScience.checkAnswer(this, false)" class="p-3 border border-white/20 hover:bg-white/10 text-left font-hand text-xl transition-all">A. 440Hz (Standard)</button>
+                        <button onclick="KingdomScience.checkAnswer(this, true)" class="p-3 border border-white/20 hover:bg-white/10 text-left font-hand text-xl transition-all">B. 432Hz (Natural Flow)</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Entry 2: The Adinkra Keys (Dynamic) -->
-            <div id="codex-adinkra-container">
-                <!-- Will be populated by JS from adinkraDB -->
-                <div id="codex-entry-2"
-                    class="group relative bg-[#141118] border border-white/10 rounded-2xl p-8 overflow-hidden transition-all duration-500 hover:border-amber/30"
-                    data-xp-req="50">
-                    <div class="flex flex-col md:flex-row gap-8 items-start relative z-10">
-                        <!-- Icon -->
-                        <div
-                            class="w-16 h-16 shrink-0 rounded-xl bg-amber/10 border border-amber/20 flex items-center justify-center group-hover:bg-amber/20 transition-colors">
-                            <span class="material-symbols-outlined text-3xl text-amber">auto_awesome</span>
-                        </div>
-
-                        <!-- Content -->
-                        <div class="flex-1">
-                            <div class="flex justify-between items-center mb-4">
-                                <h3 class="text-2xl font-serif font-bold text-white">The 7 Keys</h3>
-                                <div
-                                    class="lock-status flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-mist">
-                                    <span class="material-symbols-outlined text-sm">lock</span>
-                                    Encrypted
-                                </div>
-                            </div>
-                            <!-- Locked Content -->
-                            <div class="codex-content-locked filter blur-sm select-none opacity-50 relative">
-                                <p class="mb-4">Adinkra are visual aphorisms. They comprise a system of preserving and
-                                    transmitting deep truths...</p>
-                                <p>Data corrupted. Segment missing. Synchronization required.</p>
-                            </div>
-                            <!-- Unlocked Content -->
-                            <div class="codex-content-unlocked hidden text-mist leading-relaxed">
-                                <p class="mb-6">The 7 Pillars of the Kingdom. Each symbol represents a path:</p>
-
-                                <div id="adinkra-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <!-- JS Injected Here -->
-                                </div>
-                            </div>
-                            <!-- Unlock Message -->
-                            <div
-                                class="unlock-msg mt-6 pt-4 border-t border-white/5 text-xs text-red-400 font-mono hidden">
-                                // SECURITY LEVEL ORANGE: Requires 50 XP.
-                            </div>
-                        </div>
-                    </div>
+            <div id="quiz-reward" class="hidden mt-8 text-center animate-bounce">
+                <div class="inline-block p-4 border-2 border-scienceGreen rounded-full bg-scienceGreen/10">
+                    <span class="material-symbols-outlined text-4xl text-scienceGreen">science</span>
                 </div>
+                <p class="font-code text-scienceGreen mt-2">NEW FORMULA ACQUIRED!</p>
             </div>
-
-            <!-- Entry 3: The Revolution (500 XP) -->
-            <div id="codex-entry-3"
-                class="group relative bg-[#141118] border border-white/10 rounded-2xl p-8 overflow-hidden transition-all duration-500 hover:border-electric/30"
-                data-xp-req="500">
-                <div class="flex flex-col md:flex-row gap-8 items-start relative z-10">
-                    <!-- Icon -->
-                    <div
-                        class="w-16 h-16 shrink-0 rounded-xl bg-electric/10 border border-electric/20 flex items-center justify-center group-hover:bg-electric/20 transition-colors">
-                        <span class="material-symbols-outlined text-3xl text-electric">bolt</span>
-                    </div>
-
-                    <!-- Content -->
-                    <div class="flex-1">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="text-2xl font-serif font-bold text-white">The Revolution</h3>
-                            <div
-                                class="lock-status flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-mist">
-                                <span class="material-symbols-outlined text-sm">lock</span>
-                                Encrypted
-                            </div>
-                        </div>
-                        <!-- Locked Content -->
-                        <div class="codex-content-locked filter blur-sm select-none opacity-50 relative">
-                            <p class="mb-4">The ultimate goal of the Flow Network is decentralization. Moving power from
-                                the few back to the creators...</p>
-                            <p>Data corrupted. Segment missing. Synchronization required.</p>
-                        </div>
-                        <!-- Unlocked Content -->
-                        <div class="codex-content-unlocked hidden text-mist leading-relaxed">
-                            <p class="mb-4">The ultimate goal of the Flow Network is decentralization. Moving power from
-                                the few back to the creators. By tokenizing creative output, we bypass the middleman
-                                entirely.</p>
-                            <p>This is not just an economy; it is a resistance. "Kiss Your Heart" is the command code
-                                for self-love in a world designed to make you forget it.</p>
-                        </div>
-                        <!-- Unlock Message -->
-                        <div class="unlock-msg mt-6 pt-4 border-t border-white/5 text-xs text-red-400 font-mono hidden">
-                            // SECURITY LEVEL PURPLE: User Sync Level insufficient. Requires 500 XP.
-                        </div>
-                    </div>
-                </div>
-            </div>
-
         </div>
+    </section>
 
-        <!-- Footer / Bug Report -->
-        <div class="mt-24 text-center border-t border-white/5 pt-8">
-            <p class="text-xs text-mist mb-4">&copy; 2024 Circle D Flow. All Rights Reserved.</p>
-            <a href="mailto:circle.d.flow@gmail.com?subject=Beta%20Bug%20Report"
-                class="text-[10px] text-white/20 hover:text-white transition-colors flex items-center justify-center gap-2">
-                <span class="material-symbols-outlined text-sm">bug_report</span>
-                Report Signal Glitch
-            </a>
-        </div>
-    </main>
+    <!-- Flowee Container -->
+    <div id="flowee-lab" class="fixed bottom-8 left-8 z-50 pointer-events-none"></div>
 
-    <script src="../js/script.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // 1. Get User XP
-            let xp = 0;
-            try {
-                const stats = JSON.parse(localStorage.getItem('userStats') || '{"xp":0}');
-                xp = stats.xp;
-            } catch (e) { console.error("Stats parse error", e); }
-
-            console.log("CODEX INIT: User XP =", xp);
-
-            // 1.5 Populate Adinkra Keys from DB (if exists)
-            const adinkraList = document.getElementById('adinkra-list');
-            if (adinkraList && typeof adinkraDB !== 'undefined') {
-                adinkraList.innerHTML = adinkraDB.map(item => `
-                    <div class="p-3 bg-white/5 rounded-lg border border-white/5 hover:border-amber/50 transition-colors">
-                        <h4 class="text-white font-bold text-sm mb-1">${item.name}</h4>
-                        <p class="text-[10px] text-amber uppercase tracking-wider mb-2">${item.role}</p>
-                        <p class="text-xs text-mist leading-snug">${item.desc}</p>
-                    </div>
-                `).join('');
-            }
-
-            // 2. Iterate Entries
-            document.querySelectorAll('[id^="codex-entry-"]').forEach(entry => {
-                const req = parseInt(entry.dataset.xpReq || 0);
-                const isUnlocked = xp >= req;
-
-                const lockedContent = entry.querySelector('.codex-content-locked');
-                const unlockedContent = entry.querySelector('.codex-content-unlocked');
-                const lockStatus = entry.querySelector('.lock-status');
-                const unlockMsg = entry.querySelector('.unlock-msg');
-
-                if (isUnlocked) {
-                    // Unlock UI
-                    entry.classList.remove('border-white/10');
-                    entry.classList.add('border-mystic-gold', 'shadow-[0_0_20px_rgba(255,215,0,0.1)]');
-
-                    lockedContent.classList.add('hidden');
-                    unlockedContent.classList.remove('hidden');
-
-                    if (lockStatus) {
-                        lockStatus.innerHTML = `<span class="material-symbols-outlined text-sm text-mystic-gold">lock_open</span> <span class="text-mystic-gold">Decrypted</span>`;
-                    }
-                    if (unlockMsg) unlockMsg.classList.add('hidden');
-
-                } else {
-                    // Locked UI
-                    if (unlockMsg) {
-                        unlockMsg.classList.remove('hidden');
-                        unlockMsg.innerText = `// MISSING DATA FRAGMENT: Requires ${req} XP Flow to decrypt. Current: ${xp}`;
-                    }
-                }
-            });
-
-            // Custom Cursor Logic
-            const cursor = document.getElementById('cursor');
-            document.addEventListener('mousemove', (e) => {
-                if (cursor) cursor.style.transform = `translate(${e.clientX - 24}px, ${e.clientY - 24}px)`;
-            });
-
-            // Mobile Drawer
-            window.toggleMobileDrawer = function () {
-                const drawer = document.getElementById('mobile-drawer');
-                if (drawer) drawer.classList.toggle('translate-y-full');
-            }
-        });
-    </script>
+    <script src="../js/kingdom_science.js"></script>
+    <script src="../js/agents/visual_eye.js"></script>
+    <script src="../js/agents/helper.js"></script>
+    <script src="../js/agents/bridge_pusher.js"></script>
+    <script src="../js/agents/flowee.js"></script>
+    <div id="flowee-agent" class="fixed bottom-8 left-8 z-50 flex flex-col items-center group cursor-pointer"></div>
 </body>
-
 </html>

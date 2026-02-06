@@ -1,7 +1,11 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html class="dark" lang="en">
 
 <head>
+    <meta name="description" content="Login to your Circle D Flow account to access your private gallery and rewards.">
+    <meta property="og:title" content="Circle D Flow | Login">
+    <meta property="og:description" content="Login to your Circle D Flow account to access your private gallery and rewards.">
+    <meta property="og:type" content="website">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
@@ -61,6 +65,13 @@
             },
         }
     </script>
+    </script>
+    <script src="../js/agents/visual_eye.js" defer></script>
+    <script src="../js/agents/flowee.js" defer></script>
+    <script src="../js/agents/helper.js" defer></script>
+    <script src="../js/agents/bridge_pusher.js" defer></script>
+    <script src="../js/agents/device_sync.js" defer></script>
+    <script src="../js/agents/stress_test.js" defer></script>
 </head>
 
 <body class="bg-background-light dark:bg-background-dark font-display text-gray-800 dark:text-gray-200">
@@ -69,21 +80,54 @@
     <video autoplay loop muted playsinline id="video-bg">
         <source src="https://pub-24ba376bfccb446996666eaff4dbae12.r2.dev/hero.mp4" type="video/mp4">
     </video>
-    <div class="bg-overlay"></div>
+    <!-- Overlay increased to 0.95 to match Void -->
+    <div class="bg-overlay" style="background: rgba(13, 13, 15, 0.95);"></div>
 
     <div class="flex flex-col min-h-screen relative z-10">
-        <!-- Navbar -->
+        <!-- Navbar (The Compass - Full) -->
         <nav
-            class="w-full fixed z-50 transition-all duration-300 border-b border-white/5 bg-[#0F0A13]/80 backdrop-blur-md">
-            <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-                <a href="../index.html" class="text-white font-bold text-xl tracking-wide flex items-center gap-2">
-                    <span class="material-symbols-outlined text-mystic-gold">all_inclusive</span>
-                    Circle D Flow
-                </a>
-                <div class="flex items-center gap-6">
-                    <a class="text-white text-sm font-medium leading-normal hover:text-mystic-gold transition-colors"
-                        href="contact.html">Contact</a>
-                </div>
+            class="hidden md:flex fixed top-0 w-full z-50 bg-[#0F0A13]/80 backdrop-blur-xl border-b border-white/5 h-20 items-center justify-between px-12 transition-all duration-300">
+            <!-- Left: Core Paths -->
+            <div class="flex items-center gap-8">
+                <a href="dashboard.html"
+                    class="text-xs font-bold uppercase tracking-widest text-white hover:text-electric transition-colors"
+                    data-i18n="nav_hub">Hub</a>
+                <a href="outbreak_tunes.html"
+                    class="text-xs font-bold uppercase tracking-widest text-white hover:text-purple-400 transition-colors"
+                    data-i18n="nav_sound">Sound</a>
+                <a href="african-queen-kitchen.html"
+                    class="text-xs font-bold uppercase tracking-widest text-white hover:text-amber transition-colors"
+                    data-i18n="nav_taste">Taste</a>
+                <a href="kiss-your-heart.html"
+                    class="text-xs font-bold uppercase tracking-widest text-white hover:text-pink-400 transition-colors"
+                    data-i18n="nav_visuals">Visuals</a>
+            </div>
+
+            <!-- Center: Logo -->
+            <a href="../index.html" class="absolute left-1/2 -translate-x-1/2 group">
+                <img src="../Assets/images/logo.png" alt="Circle D Flow" width="40" height="40"
+                    class="h-10 w-auto group-hover:scale-110 transition-transform duration-300 drop-shadow-[0_0_15px_rgba(98,0,234,0.5)]">
+            </a>
+
+            <!-- Right: Explorer Paths -->
+            <div class="flex items-center gap-8">
+                <a href="marketplace.html"
+                    class="text-xs font-bold uppercase tracking-widest text-white hover:text-mystic-gold transition-colors"
+                    data-i18n="nav_style">Style</a>
+                <a href="academy.html"
+                    class="text-xs font-bold uppercase tracking-widest text-white hover:text-blue-400 transition-colors"
+                    data-i18n="nav_knowledge">Knowledge</a>
+                <a href="events.html"
+                    class="text-xs font-bold uppercase tracking-widest text-white hover:text-green-400 transition-colors"
+                    data-i18n="nav_space">Space</a>
+                <a href="mindfulness.html"
+                    class="text-xs font-bold uppercase tracking-widest text-white hover:text-indigo-400 transition-colors"
+                    data-i18n="nav_spirit">Spirit</a>
+            </div>
+
+            <!-- Login Button Placeholder (Hidden or simple back) -->
+            <div class="absolute right-6 flex items-center gap-4">
+                 <!-- Since we are on login page, maybe show 'Create Account' or nothing -->
             </div>
         </nav>
 
@@ -99,7 +143,7 @@
                         <!-- Dev Helper -->
                         <button type="button" onclick="loginAsAdmin()"
                             class="mt-2 px-3 py-1 bg-white/5 border border-white/10 rounded text-xs text-white/40 hover:text-mystic-gold hover:border-mystic-gold transition-colors">
-                            ⚡ Dev: Login as Admin
+                            âš¡ Dev: Login as Admin
                         </button>
                     </div>
                     <form class="space-y-6" id="login-form">
@@ -107,14 +151,14 @@
                             <label for="email" class="block text-sm font-medium text-white/80 mb-2">Email
                                 Address</label>
                             <input type="email" id="email" name="email"
-                                class="w-full bg-white/10 border-primary/50 text-white rounded-lg focus:ring-mystic-gold focus:border-mystic-gold placeholder-white/30"
+                                class="w-full bg-white/10 border-primary/50 text-white rounded-lg focus:ring-mystic-gold focus:border-mystic-gold placeholder-white/50"
                                 placeholder="you@example.com" required>
                         </div>
                         <div>
                             <label for="password" class="block text-sm font-medium text-white/80 mb-2">Password</label>
                             <input type="password" id="password" name="password"
-                                class="w-full bg-white/10 border-primary/50 text-white rounded-lg focus:ring-mystic-gold focus:border-mystic-gold placeholder-white/30"
-                                placeholder="••••••••" required>
+                                class="w-full bg-white/10 border-primary/50 text-white rounded-lg focus:ring-mystic-gold focus:border-mystic-gold placeholder-white/50"
+                                placeholder="********" required>
                         </div>
                         <div class="flex items-center justify-between text-sm">
                             <label class="flex items-center text-white/60 hover:text-white cursor-pointer">
@@ -145,22 +189,22 @@
                         <div>
                             <label for="reg-name" class="block text-sm font-medium text-white/80 mb-2">Full Name</label>
                             <input type="text" id="reg-name" name="name"
-                                class="w-full bg-white/10 border-primary/50 text-white rounded-lg focus:ring-mystic-gold focus:border-mystic-gold placeholder-white/30"
+                                class="w-full bg-white/10 border-primary/50 text-white rounded-lg focus:ring-mystic-gold focus:border-mystic-gold placeholder-white/50"
                                 placeholder="John Doe" required>
                         </div>
                         <div>
                             <label for="reg-email" class="block text-sm font-medium text-white/80 mb-2">Email
                                 Address</label>
                             <input type="email" id="reg-email" name="email"
-                                class="w-full bg-white/10 border-primary/50 text-white rounded-lg focus:ring-mystic-gold focus:border-mystic-gold placeholder-white/30"
+                                class="w-full bg-white/10 border-primary/50 text-white rounded-lg focus:ring-mystic-gold focus:border-mystic-gold placeholder-white/50"
                                 placeholder="you@example.com" required>
                         </div>
                         <div>
                             <label for="reg-password"
                                 class="block text-sm font-medium text-white/80 mb-2">Password</label>
                             <input type="password" id="reg-password" name="password"
-                                class="w-full bg-white/10 border-primary/50 text-white rounded-lg focus:ring-mystic-gold focus:border-mystic-gold placeholder-white/30"
-                                placeholder="••••••••" required>
+                                class="w-full bg-white/10 border-primary/50 text-white rounded-lg focus:ring-mystic-gold focus:border-mystic-gold placeholder-white/50"
+                                placeholder="********" required>
                         </div>
                         <button type="submit"
                             class="w-full h-12 bg-mystic-gold text-background-dark font-bold rounded-lg hover:bg-white transition-colors shadow-lg shadow-mystic-gold/20">
@@ -179,7 +223,7 @@
         <!-- Footer -->
         <footer class="bg-background-dark border-t border-primary/20 mt-auto relative z-10">
             <div class="container mx-auto px-6 py-8 text-center text-sm text-white/50">
-                <p>© 2024 Circle D Flow. All rights reserved.</p>
+                <p>Â© 2024 Circle D Flow. All rights reserved.</p>
             </div>
         </footer>
     </div>
@@ -209,7 +253,7 @@
                 // We can't easily access Gamification class here without loading it, so we rely on the email check in script.js
             }
             alert('Logged in as Admin!');
-            window.location.href = 'index.html';
+            window.location.href = '../index.html';
         }
 
         // Login Logic
@@ -227,16 +271,26 @@
             // Mock Login (Success)
             localStorage.setItem('isLoggedIn', 'true');
             localStorage.setItem('userEmail', email);
+            localStorage.setItem('cdf_user_role', 'member'); // Critical for BridgePusher protection
 
             // Guild Simulation (Random assignment for demo, or default to Supporter)
-            // User can switch manually via Console or Dev Tools if needed, but for Beta we default to Supporter
             if (!localStorage.getItem('userGuild')) {
                 localStorage.setItem('userGuild', 'supporter');
             }
 
-            // Alert
-            alert('Protocol Accepted. Welcome to the Circle.');
-            window.location.href = 'index.html';
+            // Non-blocking UI Notification
+            const loginBtn = document.querySelector('button[type="submit"]');
+            loginBtn.innerHTML = 'Connecting to Kingdom...';
+            loginBtn.disabled = true;
+
+            // Use BridgePusher to handle state and redirection
+            console.log("Attempting redirection logic...");
+            
+            // Introduce a small delay for the user to see "Connecting..."
+            setTimeout(() => {
+                 // Force Direct Redirect - Bypass Agent for now to solve "nothing happens"
+                 window.location.href = 'dashboard.html';
+            }, 800);
         });
 
         // Register Logic
@@ -248,16 +302,20 @@
             // Mock Register
             localStorage.setItem('isLoggedIn', 'true');
             localStorage.setItem('userEmail', email);
+            localStorage.setItem('userEmail', email);
             localStorage.setItem('userName', name); // Store name too
+            localStorage.setItem('cdf_user_role', 'member');
 
             // Gamification Boost for Signup
             const pendingXP = localStorage.getItem('pendingXP') || 0;
             localStorage.setItem('pendingXP', parseInt(pendingXP) + 100); // 100 XP for signup
 
             alert('Account Created! Welcome to the Circle.');
-            window.location.href = 'index.html';
+            window.location.href = '../index.html';
         });
     </script>
+    <div id="flowee-agent" class="fixed bottom-8 left-8 z-50 flex flex-col items-center group cursor-pointer"></div>
 </body>
 
 </html>
+

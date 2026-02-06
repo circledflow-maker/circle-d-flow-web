@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circle D Flow | Business Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        amber: '#FFBF00',
+                        dark: '#0F0A13',
+                        gold: '#D4AF37'
+                    },
+                    fontFamily: {
+                        serif: ['Playfair Display', 'serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-dark text-white font-sans min-h-screen relative overflow-x-hidden selection:bg-amber selection:text-black">
+
+    <!-- THE GATE (Password Protection) -->
+    <div id="the-gate" class="fixed inset-0 z-[100] bg-dark flex flex-col items-center justify-center p-6">
+        <div class="max-w-md w-full text-center space-y-8">
+            <img src="../Assets/images/logo.png" class="w-24 h-24 object-contain mx-auto opacity-50 mb-4">
+            <div>
+                <h1 class="text-3xl font-serif font-bold text-white mb-2 tracking-wide">The Business Portal</h1>
+                <p class="text-white/40 text-sm uppercase tracking-[0.2em]">Authorized Personnel Only</p>
+            </div>
+            
+            <div class="relative group">
+                <input type="password" id="access-code" placeholder="Enter Access Code" 
+                    class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-4 text-center text-xl tracking-[0.5em] focus:outline-none focus:border-amber transition-all placeholder:text-white/10 placeholder:tracking-normal placeholder:text-sm">
+                <div class="absolute inset-0 rounded-xl border border-amber/0 group-hover:border-amber/20 pointer-events-none transition-all"></div>
+            </div>
+            
+            <button onclick="unlockPortal()" class="w-full py-4 bg-amber text-black font-bold uppercase tracking-widest rounded-xl hover:bg-white transition-all shadow-[0_0_30px_rgba(255,191,0,0.1)] hover:shadow-[0_0_50px_rgba(255,191,0,0.4)]">
+                Initialize
+            </button>
+            
+            <p id="gate-error" class="text-red-500 text-xs tracking-widest hidden animate-pulse">Access Denied</p>
+        </div>
+    </div>
+
+    <!-- MAIN PORTAL (Hidden by default) -->
+    <div id="portal-content" class="hidden opacity-0 transition-opacity duration-1000">
+        
+        <!-- Navigation -->
+        <nav class="fixed top-0 w-full z-50 bg-dark/80 backdrop-blur-xl border-b border-white/5 h-16 flex items-center justify-between px-6">
+            <div class="flex items-center gap-4">
+                <a href="../Index.html" class="text-white/50 hover:text-white transition-colors">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                </a>
+                <span class="text-xs font-bold text-amber uppercase tracking-widest">Investor View v1.0</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="flex items-center gap-2 text-[10px] text-white/40 uppercase tracking-widest">
+                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                    Live Data
+                </div>
+            </div>
+        </nav>
+
+        <!-- TOP LAYER: High-Gloss Vision -->
+        <header class="relative pt-32 pb-20 px-6 border-b border-white/10 overflow-hidden">
+            <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5"></div>
+            <div class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-amber/5 to-transparent"></div>
+            
+            <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-end justify-between gap-12 relative z-10">
+                <div class="max-w-2xl">
+                    <span class="inline-block px-3 py-1 bg-amber/10 border border-amber/30 rounded-full text-[10px] font-bold text-amber uppercase tracking-widest mb-6">Phase 2: The Mobile Throne</span>
+                    <h2 class="text-5xl md:text-7xl font-serif font-bold text-white mb-6 leading-tight">
+                        Scaling <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber to-yellow-200">Flavor.</span><br>
+                        Powered by <span class="text-white/30">Data.</span>
+                    </h2>
+                    <p class="text-white/60 text-lg max-w-xl leading-relaxed">
+                        We are not just building a kitchen; we are constructing a decentralized food network. 
+                        Validated by community demand. Optimized by autonomic agents.
+                    </p>
+                </div>
+                
+                <!-- Hero Data Card -->
+                <div class="bg-[#15121A] border border-white/10 p-8 rounded-2xl shadow-2xl w-full md:w-auto min-w-[300px]">
+                    <div class="text-xs text-white/40 uppercase tracking-widest mb-2">Total Project Value</div>
+                    <div class="text-4xl font-mono font-bold text-white mb-4">€124,500<span class="text-amber text-lg">.00</span></div>
+                    <div class="flex items-center gap-2 text-green-400 text-sm font-bold bg-green-400/10 px-3 py-1 rounded w-fit">
+                        <span class="material-symbols-outlined text-sm">trending_up</span>
+                        +18.4% MoM
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- BOTTOM LAYER: Data Grid -->
+        <main class="max-w-7xl mx-auto px-6 py-12 space-y-12">
+            
+            <!-- SCALE INDICATOR -->
+            <section>
+                <div class="flex justify-between items-end mb-8">
+                    <h3 class="text-2xl font-serif font-bold text-white">The Scale Indicator</h3>
+                    <p class="text-white/40 text-sm text-right">Real-Time Roadmap Velocity</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Current Engine -->
+                    <div class="bg-[#15121A] border border-white/5 rounded-2xl p-8 relative overflow-hidden group hover:border-amber/30 transition-colors">
+                        <div class="absolute top-4 right-4 text-white/10 group-hover:text-amber/20 transition-colors">
+                            <span class="material-symbols-outlined text-6xl">storefront</span>
+                        </div>
+                        <h4 class="text-amber font-bold uppercase tracking-widest text-xs mb-2">Current Stability</h4>
+                        <div class="text-3xl font-bold text-white mb-1">The Ghost-Host</div>
+                        <p class="text-white/50 text-sm mb-8">Partner: African Queen (Favela LX)</p>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between text-xs text-white/60 mb-1">
+                                    <span>Capacity Utilization</span>
+                                    <span class="text-white">85%</span>
+                                </div>
+                                <div class="w-full h-1 bg-white/10 rounded-full">
+                                    <div class="h-full bg-white w-[85%] rounded-full"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-xs text-white/60 mb-1">
+                                    <span>Partner ROI</span>
+                                    <span class="text-green-400">+22%</span>
+                                </div>
+                                <div class="w-full h-1 bg-white/10 rounded-full">
+                                    <div class="h-full bg-green-400 w-[22%] rounded-full"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Future Engine -->
+                    <div class="bg-[#15121A] border border-white/5 rounded-2xl p-8 relative overflow-hidden group hover:border-amber/30 transition-colors">
+                         <div class="absolute top-4 right-4 text-white/10 group-hover:text-amber/20 transition-colors">
+                            <span class="material-symbols-outlined text-6xl">local_shipping</span>
+                        </div>
+                        <h4 class="text-amber font-bold uppercase tracking-widest text-xs mb-2">Target Velocity</h4>
+                        <div class="text-3xl font-bold text-white mb-1">The Mobile Throne</div>
+                        <p class="text-white/50 text-sm mb-8">Asset: Circle D Food Truck</p>
+
+                         <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between text-xs text-white/60 mb-1">
+                                    <span>Funding Progress</span>
+                                    <span class="text-amber font-bold">65%</span>
+                                </div>
+                                <div class="w-full h-2 bg-white/10 rounded-full">
+                                    <div class="h-full bg-gradient-to-r from-amber to-orange-500 w-[65%] rounded-full shadow-[0_0_15px_rgba(255,191,0,0.5)]"></div>
+                                </div>
+                            </div>
+                             <div class="flex justify-between items-center bg-amber/5 p-3 rounded-lg border border-amber/10 mt-4">
+                                <span class="text-xs text-amber font-bold">Projected Launch</span>
+                                <span class="text-sm font-mono text-white">Q3 2026</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SYNERGY & AGENTS -->
+            <section class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Agent Feed -->
+                <div class="lg:col-span-2 bg-[#15121A] border border-white/5 rounded-2xl p-8">
+                    <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-amber">smart_toy</span>
+                        Autonomic Scaling Logs
+                    </h3>
+                    
+                    <div class="space-y-4 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+                        <!-- Log Items (Simulated) -->
+                        <div class="flex gap-4 items-start p-4 bg-white/5 rounded-xl border-l-2 border-green-500">
+                            <div class="bg-green-500/10 p-2 rounded-lg text-green-500">
+                                <span class="material-symbols-outlined text-sm">payments</span>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold text-white">ROI-Analyst</h4>
+                                <p class="text-xs text-white/60 mt-1">Daily yield across 3 partner locations exceeds benchmark by 12%. Recommendation: Increase supply for 'Jollof Rice'.</p>
+                                <span class="text-[10px] text-white/30 mt-2 block font-mono">10:42 AM</span>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-4 items-start p-4 bg-white/5 rounded-xl border-l-2 border-purple-500">
+                            <div class="bg-purple-500/10 p-2 rounded-lg text-purple-500">
+                                <span class="material-symbols-outlined text-sm">hub</span>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold text-white">Synergy-Pusher</h4>
+                                <p class="text-xs text-white/60 mt-1">Cross-pollination trigger: 5 users from 'Favela LX' purchased 'Outbreak Tunes' merch after meal check-in.</p>
+                                <span class="text-[10px] text-white/30 mt-2 block font-mono">09:15 AM</span>
+                            </div>
+                        </div>
+                        
+                         <div class="flex gap-4 items-start p-4 bg-white/5 rounded-xl border-l-2 border-blue-500">
+                            <div class="bg-blue-500/10 p-2 rounded-lg text-blue-500">
+                                <span class="material-symbols-outlined text-sm">map</span>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold text-white">Expansion-Scout</h4>
+                                <p class="text-xs text-white/60 mt-1">Heatmap Alert: High concentration of members detected in 'Marvila'. Flagging as potential new outpost.</p>
+                                <span class="text-[10px] text-white/30 mt-2 block font-mono">08:30 AM</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Call to Action -->
+                <div class="bg-gradient-to-b from-amber/20 to-[#15121A] border border-amber/30 rounded-2xl p-8 flex flex-col justify-between text-center">
+                    <div>
+                        <div class="w-16 h-16 bg-amber text-black rounded-full flex items-center justify-center mx-auto mb-6 shadow-[0_0_25px_rgba(255,191,0,0.5)]">
+                            <span class="material-symbols-outlined text-3xl">handshake</span>
+                        </div>
+                        <h3 class="text-2xl font-serif font-bold text-white mb-2">Join the Legend</h3>
+                        <p class="text-white/70 text-sm mb-6">Secure your stake in the future of decentralized gastronomy.</p>
+                    </div>
+                    <button class="w-full py-4 bg-gradient-to-r from-yellow-500 to-amber-600 text-black font-bold uppercase tracking-widest rounded-xl hover:scale-105 transition-transform shadow-lg border border-white/20">
+                        Contact Board
+                    </button>
+                </div>
+            </section>
+
+        </main>
+        
+        <footer class="border-t border-white/5 py-8 text-center text-white/20 text-xs uppercase tracking-widest">
+            Circle D Flow // Business Intelligence Unit
+        </footer>
+    </div>
+
+    <script>
+        function unlockPortal() {
+            const input = document.getElementById('access-code');
+            const gate = document.getElementById('the-gate');
+            const portal = document.getElementById('portal-content');
+            const error = document.getElementById('gate-error');
+            
+            // Simple Gate Logic (In production this would be server-side)
+            if (input.value === 'KINGDOM' || input.value === 'kingdom' || input.value === '1234') {
+                gate.style.transition = 'opacity 0.8s ease-out';
+                gate.style.opacity = '0';
+                
+                setTimeout(() => {
+                    gate.style.display = 'none';
+                    portal.classList.remove('hidden');
+                    
+                    // Fade In Portal
+                    setTimeout(() => {
+                        portal.classList.remove('opacity-0');
+                    }, 50);
+                    
+                }, 800);
+            } else {
+                error.classList.remove('hidden');
+                input.classList.add('border-red-500', 'text-red-500');
+                setTimeout(() => {
+                    error.classList.add('hidden');
+                    input.classList.remove('border-red-500', 'text-red-500');
+                }, 2000);
+            }
+        }
+    </script>
+    
+    <!-- SCALING AGENTS -->
+    <script src="../js/agents/roi_analyst.js" defer></script>
+    <script src="../js/agents/synergy_pusher.js" defer></script>
+    <script src="../js/agents/expansion_scout.js" defer></script>
+    <script src="../js/agents/flowee.js" defer></script>
+    <script src="../js/agents/bridge_pusher.js" defer></script>
+    <div id="flowee-agent" class="fixed bottom-8 left-8 z-50 flex flex-col items-center group cursor-pointer"></div>
+    <script src="../js/agents/helper.js" defer></script>
+</body>
+</html>

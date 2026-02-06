@@ -1,0 +1,59 @@
+{
+    "quests": [
+        {
+            "id": "daily_vibe",
+            "type": "daily",
+            "title": "Daily Vibe Check",
+            "description": "Broadcast a status update to the network.",
+            "xp": 50,
+            "karma": 5,
+            "actionLink": "#ticker",
+            "actionText": "Broadcast"
+        },
+        {
+            "id": "daily_scout",
+            "type": "daily",
+            "title": "Local Scout",
+            "description": "Visit a Partner page and check their latest offers.",
+            "xp": 30,
+            "karma": 2,
+            "actionLink": "partners.html",
+            "actionText": "Scout"
+        },
+        {
+            "id": "event_cypher",
+            "type": "event",
+            "title": "Turnier: Cypher King",
+            "description": "Melde dich für das Rap-Battle am Freitag an.",
+            "xp": 200,
+            "karma": 20,
+            "actionLink": "battle.html",
+            "actionText": "Registrieren",
+            "expires": "2026-03-01T00:00:00Z"
+        }
+    ],
+    "skills": [
+        {
+            "id": "skill_demo_1",
+            "userId": "current_user",
+            "title": "Custom Beat Production",
+            "category": "Music",
+            "price": 150,
+            "currency": "EUR",
+            "status": "active",
+            "views": 24,
+            "likes": 5
+        },
+        {
+            "id": "skill_demo_2",
+            "userId": "current_user",
+            "title": "Logo Design Service",
+            "category": "Design",
+            "price": 200,
+            "currency": "EUR",
+            "status": "active",
+            "views": 12,
+            "likes": 8
+        }
+    ]
+}

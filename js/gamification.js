@@ -24,6 +24,12 @@ class GamificationEngine {
             this.saveState();
         }
 
+        // Ensure Karma State exists (Integration)
+        if (typeof this.state.karma === 'undefined') {
+            this.state.karma = 0;
+            this.saveState();
+        }
+
         // Configuration
         this.LEVEL_THRESHOLDS = {
             2: 100,
@@ -76,7 +82,9 @@ class GamificationEngine {
             isChampion: false, // Tournament Winner Flag
             championPath: null, // 'master' or 'architect'
             freePublicQuestSlots: 0, // Architect Perk
-            badges: [] // Earned Badges
+            freePublicQuestSlots: 0, // Architect Perk
+            badges: [], // Earned Badges
+            karma: 0 // Trust Factor
         };
     }
 
@@ -128,6 +136,40 @@ class GamificationEngine {
     }
 
     /**
+     * Add Karma (Trust Factor)
+     * @param {number} amount - Amount of Karma to add (can be negative)
+     * @param {string} source - Reason for change
+     */
+    addKarma(amount, source) {
+         if (!amount) return;
+         this.state.karma = (this.state.karma || 0) + amount;
+         this.saveState();
+         
+         console.log(`[Gamification] Karma Update: ${amount > 0 ? '+' : ''}${amount} (${source}). Total: ${this.state.karma}`);
+         
+         window.dispatchEvent(new CustomEvent('karma-update', {
+             detail: { amount, source, total: this.state.karma }
+         }));
+         
+         // Visual Feedback
+         if (amount > 0) this.showToast('Karma Increased', `${source}: +${amount}`);
+         if (amount < 0) this.showToast('Karma Lost', `${source}: ${amount}`);
+    }
+
+    getKarma() {
+        return this.state.karma || 0;
+    }
+
+    getKarmaRank() {
+        const k = this.state.karma || 0;
+        if (k < 0) return { name: "Rogue", color: "text-red-500", icon: "warning" };
+        if (k < 50) return { name: "Drifter", color: "text-gray-400", icon: "wind_power" };
+        if (k < 200) return { name: "Reliable", color: "text-blue-400", icon: "handshake" };
+        if (k < 500) return { name: "Trusted", color: "text-purple-500", icon: "verified" };
+        return { name: "Guardian", color: "text-yellow-400", icon: "shield_person" };
+    }
+
+    /**
      * Calculate current level based on XP
      */
     calculateLevel() {
@@ -153,7 +195,7 @@ class GamificationEngine {
         }));
 
         // Here we could trigger a modal or confetti
-        alert(`🎉 LEVEL UP! You are now Level ${newLevel}. Check your dashboard for new perks.`);
+        // alert(`Level Up: ${newLevel}`); // Removed in favor of Apex Lightbox
     }
 
     /**
@@ -165,6 +207,17 @@ class GamificationEngine {
 
     getXP() {
         return this.state.xp;
+    }
+
+    getRank() {
+        const titles = [
+            "Novice", "Initiate", "Explorer", "Flow Seeker", "Flow Master", "Grandmaster", "Legend", "Ascended"
+        ];
+        const index = Math.min(this.state.level, titles.length - 1);
+        return {
+            name: titles[index],
+            icon: 'verified' // Default icon
+        };
     }
 
     getNextLevelThreshold() {
@@ -389,6 +442,7 @@ class GamificationEngine {
             if (type === 'rising') this.addVoucher('Snack Voucher', 'African Queen Kitchen');
             if (type === 'master') this.addVoucher('Full Meal Voucher', 'African Queen Kitchen');
 
+            localStorage.setItem('apex_upgrade_event', type);
             this.saveState();
             window.location.reload();
         }

@@ -1,8 +1,12 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
+    <meta name="description" content="The Circle Marketplace: Discover unique services, art, and collaborations from the Circle D Flow community partners.">
+    <meta property="og:title" content="Circle D Flow | Marketplace">
+    <meta property="og:description" content="The Circle Marketplace: Discover unique services, art, and collaborations from the Circle D Flow community partners.">
+    <meta property="og:type" content="website">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Marketplace | Circle D Flow</title>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -40,11 +44,8 @@
 <body
     class="bg-[#0F0A13] text-white min-h-screen relative overflow-x-hidden selection:bg-electric selection:text-white">
 
-    <!-- Custom Cursor -->
-    <div id="cursor"
-        class="fixed w-12 h-12 pointer-events-none z-[200] transition-transform duration-100 hidden md:block">
-        <img src="../Assets/images/logo.png" class="w-full h-full object-contain drop-shadow-lg" alt="Cursor">
-    </div>
+    <!-- Custom Cursor Removed as per user request -->
+    <!-- <div id="cursor" ...> </div> -->
 
     <!-- Desktop Navigation (The Compass) -->
     <nav
@@ -135,80 +136,153 @@
         <span id="token-balance" class="font-bold text-white text-sm tracking-wider">0 Flow</span>
     </div>
 
-    <main class="pt-32 pb-20 px-6 max-w-7xl mx-auto">
-        <!-- Header -->
-        <div class="flex flex-col md:flex-row justify-between items-center mb-12">
-            <h2 class="text-3xl font-serif font-bold text-white mb-6 md:mb-0">The <span
-                    class="text-mystic-gold italic">Bazaar</span></h2>
+    <style>
+        /* Day/Night Transition */
+        body { transition: background-color 1.5s ease, color 1s ease; }
+        
+        .day-market {
+            background: linear-gradient(to bottom, #87CEEB 0%, #E0F7FA 100%); /* Lisbon Sky */
+            color: #0F0A13;
+        }
+        .day-market .text-white { color: #0F0A13 !important; }
+        .day-market .text-white\/50 { color: rgba(15, 10, 19, 0.6) !important; }
+        .day-market .stall-wrapper { filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1)); }
+        /* Make neon text darker in day */
+        .day-market .neon-text { text-shadow: none; color: #4a4a4a; }
 
-            <!-- Actions -->
-            <div class="flex gap-4">
-                <button id="sell-btn" onclick="document.getElementById('listing-modal').showModal()"
-                    class="px-8 py-3 bg-mystic-gold text-black font-bold rounded-full uppercase tracking-widest hover:scale-105 transition-all shadow-[0_0_20px_rgba(255,191,0,0.4)] flex items-center gap-2">
-                    <span class="material-symbols-outlined">storefront</span>
-                    Sell Item
-                </button>
+        .night-market {
+            background: radial-gradient(circle at 50% 20%, #1a1a2e 0%, #000000 100%); /* Deep Night */
+            color: white;
+        }
+        .night-market .stall-wrapper { filter: drop-shadow(0 0 20px rgba(154, 77, 255, 0.2)); }
+        .night-market .stall-structure { box-shadow: 0 0 30px rgba(154, 77, 255, 0.1); border-color: rgba(154,77,255,0.3); }
+
+        /* Stall Transitions */
+        .stall-wrapper {
+             transition: transform 0.3s ease-out, filter 0.3s ease-out, z-index 0s;
+        }
+
+        /* Hide Standard Navigation (Immersive Mode) - Force Override */
+        nav.fixed.top-0, nav.md\:flex, nav.md\:hidden { 
+            display: none !important; 
+            opacity: 0 !important; 
+            pointer-events: none !important; 
+        }
+        
+        /* Show Back Button */
+        a[href="dashboard.html"].fixed.bottom-8.left-8 {
+            display: flex !important;
+            z-index: 1000;
+        }
+
+        /* Street Scroll Styling - Fixed for Horizontal Scroll */
+        #street-wrapper {
+            perspective: 1000px;
+            scroll-behavior: smooth;
+            width: 100vw;
+            overflow-x: scroll; /* Force scrollable */
+            white-space: nowrap; /* Keep items in line */
+            -webkit-overflow-scrolling: touch;
+        }
+        #street-container {
+            display: flex; /* Flexrow */
+            padding-left: 20vw; /* Center start */
+            padding-right: 20vw;
+            width: max-content; /* Allow growth */
+        }
+        
+        /* Hide Scrollbar -> Clean look */
+        #street-wrapper::-webkit-scrollbar { display: none; }
+        
+        /* Layout Adjustments */
+        .stall-wrapper {
+             scroll-snap-align: center;
+        }
+    </style>
+
+    <main class="relative min-h-screen flex flex-col justify-center overflow-hidden">
+        
+        <!-- Environment: The Sky & Background Layers (Parallax potential) -->
+        <div class="absolute inset-0 z-0 pointer-events-none">
+            <!-- Background elements like clouds or stars can go here -->
+        </div>
+
+        <!-- HUD: Auction & Status (Floating Top) -->
+        <div class="fixed top-24 left-0 w-full px-8 z-40 flex justify-between items-start pointer-events-none">
+            <div class="pointer-events-auto">
+                <h1 class="text-4xl md:text-6xl font-serif font-bold mb-2 drop-shadow-lg">The <span class="italic text-electric">Bazaar</span></h1>
+                <div class="bg-black/50 backdrop-blur text-white px-4 py-1 rounded-full inline-block text-xs font-mono uppercase tracking-widest border border-white/10">
+                    Walking View Active
+                </div>
+            </div>
+
+            <!-- Auction Timer (Anime Style) -->
+            <div class="flex flex-col items-end pointer-events-auto">
+                <span class="text-[10px] text-red-500 font-bold uppercase tracking-widest animate-pulse mb-1 bg-black/50 px-2 rounded">● Hunter Auction Live</span>
+                <div class="bg-black/80 border border-red-500/30 px-4 py-2 rounded-lg shadow-[0_0_20px_rgba(239,68,68,0.2)]">
+                    <span id="auction-timer" class="font-mono text-xl md:text-2xl font-bold text-red-500 tracking-widest">00:00:00:00</span>
+                </div>
             </div>
         </div>
-        <!-- Products Grid -->
-        <div class="grid md:grid-cols-3 gap-8" id="products-grid"></div>
 
-        <!-- Lightbox / Product Detail Modal -->
-        <div id="product-modal"
-            class="fixed inset-0 z-[300] bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
-            <div class="bg-[#1A1420] border border-white/10 rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto flex flex-col md:flex-row shadow-2xl transform scale-95 transition-transform duration-300"
-                id="modal-content">
-                <!-- Populated by JS -->
+        <!-- THE STREET (Horizontal Scroll) -->
+        <div id="street-wrapper" class="relative z-10 w-full h-[60dvh] md:h-[600px] flex items-center overflow-x-auto overflow-y-hidden custom-scrollbar touch-pan-x">
+            <div id="street-container" class="flex items-end gap-0 px-12 pb-12">
+                <!-- Stalls injected by Merchant Agent -->
             </div>
-            <button onclick="closeModal()" class="absolute top-6 right-6 text-white/50 hover:text-white">
-                <span class="material-symbols-outlined text-4xl">close</span>
-            </button>
         </div>
+
+        <!-- Floor/Ground Visual -->
+        <div class="absolute bottom-0 w-full h-[30vh] bg-gradient-to-t from-[#0F0A13] via-[#0F0A13]/90 to-transparent z-0 pointer-events-none"></div>
+
+        <!-- The Blacklist (Footer Marquee) -->
+        <div class="fixed bottom-20 left-0 w-full border-t border-red-900/30 bg-black/90 py-2 z-30">
+            <div class="flex items-center gap-4">
+                <div class="px-4 text-red-500 text-[10px] font-bold uppercase tracking-widest whitespace-nowrap">The Blacklist</div>
+                <div class="overflow-hidden w-full">
+                    <div id="blacklist-marquee" class="whitespace-nowrap animate-marquee">
+                        <!-- Injected by Merchant Agent -->
+                    </div>
+                </div>
+            </div>
         </div>
-        </div>
+
     </main>
 
-    <!-- Listing Modal -->
-    <dialog id="listing-modal"
-        class="bg-[#1a1a1a] text-white border border-electric/50 rounded-xl p-8 max-w-2xl w-full backdrop:bg-black/80">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-3xl font-serif font-bold text-electric">List Item</h2>
-            <button onclick="document.getElementById('listing-modal').close()" class="text-white hover:text-red-500">
+    <!-- Floating Action Button: Sell Item (Preserved) -->
+    <button onclick="document.getElementById('listing-modal').showModal()"
+        class="fixed bottom-32 right-8 z-50 w-16 h-16 bg-electric text-white rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(154,77,255,0.6)] hover:bg-white hover:text-electric hover:scale-110 transition-all group animate-bounce-slow">
+        <span class="material-symbols-outlined text-3xl group-hover:rotate-90 transition-transform">storefront</span>
+    </button>
+
+    <!-- Listing Modal (Preserved but styled) -->
+    <dialog id="listing-modal" class="bg-[#0F0A13] text-white border border-amber-400/30 rounded-2xl p-8 max-w-2xl w-full backdrop:bg-black/90 shadow-[0_0_50px_rgba(251,191,36,0.1)]">
+        <!-- Form content handles by previous logic, just ensuring styles match -->
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-3xl font-serif font-bold text-amber-400">Secure Deposit</h2>
+            <button onclick="document.getElementById('listing-modal').close()" class="text-white/50 hover:text-white">
                 <span class="material-symbols-outlined">close</span>
             </button>
         </div>
-
-        <form id="listing-form" class="space-y-6" onsubmit="handleListingSubmit(event)">
+        <!-- ... Form ... --> 
+         <form id="listing-form" class="space-y-6" onsubmit="handleListingSubmit(event)">
+            <!-- Re-implementing simplified form for consistency -->
             <div class="grid md:grid-cols-2 gap-6">
                 <div>
-                    <label class="block text-sm font-bold text-white/70 mb-2 uppercase tracking-widest">Item
-                        Name</label>
-                    <input type="text" id="list-title" required
-                        class="w-full bg-black/50 border border-white/20 rounded p-3 text-white focus:border-electric outline-none">
+                    <label class="block text-xs font-bold text-amber-400 mb-2 uppercase tracking-widest">Artifact</label>
+                    <input type="text" id="list-title" required class="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:border-amber-400 outline-none transition-colors">
                 </div>
                 <div>
-                    <label class="block text-sm font-bold text-white/70 mb-2 uppercase tracking-widest">Price
-                        (Flow)</label>
-                    <input type="number" id="list-price" required
-                        class="w-full bg-black/50 border border-white/20 rounded p-3 text-white focus:border-electric outline-none">
+                    <label class="block text-xs font-bold text-amber-400 mb-2 uppercase tracking-widest">Value (Flow)</label>
+                    <input type="number" id="list-price" required class="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:border-amber-400 outline-none transition-colors">
                 </div>
             </div>
-
             <div>
-                <label class="block text-sm font-bold text-white/70 mb-2 uppercase tracking-widest">Description</label>
-                <textarea id="list-desc" rows="3" required
-                    class="w-full bg-black/50 border border-white/20 rounded p-3 text-white focus:border-electric outline-none"></textarea>
+                <label class="block text-xs font-bold text-amber-400 mb-2 uppercase tracking-widest">Description</label>
+                <textarea id="list-desc" rows="3" required class="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:border-amber-400 outline-none transition-colors"></textarea>
             </div>
-
-            <div>
-                <label class="block text-sm font-bold text-white/70 mb-2 uppercase tracking-widest">Image</label>
-                <input type="file" id="list-image" accept="image/*" required
-                    class="w-full bg-black/50 border border-white/10 rounded p-3 text-sm text-gray-400">
-            </div>
-
-            <button type="submit"
-                class="w-full py-4 bg-electric text-white font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-colors">
-                Post to Bazaar (+50 XP)
+            <button type="submit" class="w-full py-4 bg-amber-400 text-black font-bold uppercase tracking-widest hover:bg-white transition-all rounded-lg">
+                Mint to Vault (+50 XP)
             </button>
         </form>
     </dialog>
@@ -252,11 +326,12 @@
     </script>
 
     <!-- Floating Action Button: Sell Item -->
+    <!-- Floating Action Button: Sell Item -->
     <button onclick="document.getElementById('listing-modal').showModal()"
-        class="fixed bottom-24 right-6 md:bottom-8 z-40 w-14 h-14 bg-electric text-white rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(154,77,255,0.5)] hover:bg-white hover:text-electric hover:scale-110 transition-all group">
+        class="fixed bottom-8 left-8 md:bottom-8 md:right-24 z-40 w-14 h-14 bg-electric text-white rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(154,77,255,0.5)] hover:bg-white hover:text-electric hover:scale-110 transition-all group">
         <span class="material-symbols-outlined text-2xl group-hover:rotate-90 transition-transform">add</span>
         <span
-            class="absolute right-full mr-4 bg-black/80 text-white text-xs py-1 px-3 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">Sell
+            class="absolute left-full ml-4 bg-black/80 text-white text-xs py-1 px-3 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">Sell
             Item (+50 XP)</span>
     </button>
 
@@ -307,7 +382,7 @@
                         <img src="${item.image}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                         <div class="absolute top-4 right-4 bg-black/80 backdrop-blur px-3 py-1 rounded-full border border-white/10 flex flex-col items-end">
                             <span class="text-amber font-bold text-sm">${item.price} Flow</span>
-                            ${item.priceEur ? `<span class="text-white/60 text-[10px] font-bold">€${parseFloat(item.priceEur).toFixed(2)}</span>` : ''}
+                            ${item.priceEur ? `<span class="text-white/60 text-[10px] font-bold">â‚¬${parseFloat(item.priceEur).toFixed(2)}</span>` : ''}
                         </div>
                     </div>
                     <div class="p-6">
@@ -354,7 +429,7 @@
                          </div>
                          <div class="text-right">
                             <p class="text-amber font-bold text-xl">${item.price} Flow</p>
-                            ${item.priceEur ? `<p class="text-white/50 text-sm">Or €${priceEur}</p>` : ''}
+                            ${item.priceEur ? `<p class="text-white/50 text-sm">Or â‚¬${priceEur}</p>` : ''}
                          </div>
                     </div>
 
@@ -363,11 +438,11 @@
                     ? `<a href="${item.externalUrl}" target="_blank" onclick="trackClick('${item.id}')" class="block w-full text-center py-4 bg-white text-black font-bold uppercase tracking-widest rounded-xl hover:bg-mystic-gold transition-colors">Visit Shop <span class="material-symbols-outlined align-middle text-lg ml-1">open_in_new</span></a>`
                     : `
                             <div class="grid grid-cols-2 gap-4">
-                                <button onclick="buyItem('${item.title}', ${item.price}, '${item.id}')" class="py-4 bg-web-electric/20 border border-electric/50 text-electric hover:bg-electric hover:text-white font-bold uppercase rounded-xl transition-all">
+                                <button onclick="buyItem('${item.title}', ${item.price}, '${item.id}', '${item.owner || 'Circle D Flow'}')" class="py-4 bg-web-electric/20 border border-electric/50 text-electric hover:bg-electric hover:text-white font-bold uppercase rounded-xl transition-all">
                                     Pay with Flow
                                 </button>
                                 <button onclick="buyItemEur('${item.title}', ${item.priceEur || 0}, '${item.id}')" class="py-4 bg-white text-black font-bold uppercase rounded-xl hover:bg-gray-200 transition-all">
-                                    Pay €${priceEur}
+                                    Pay â‚¬${priceEur}
                                 </button>
                             </div>
                             `
@@ -397,7 +472,15 @@
             }, 300);
         };
 
-        window.buyItem = function (name, cost, id) {
+        window.buyItem = function (name, cost, id, seller = 'Circle D Flow') {
+            if (window.Merchant && window.Merchant.buyItem) {
+                // Use the enhanced Merchant Agent logic
+                window.Merchant.buyItem(id, name, cost, seller);
+                closeModal();
+                return;
+            }
+
+            // Fallback (if Merchant not loaded)
             if (!window.Gamification) return;
 
             if (window.Gamification.spendTokens(cost, `Bought ${name}`)) {
@@ -412,15 +495,15 @@
 
         window.buyItemEur = function (name, cost, id) {
             // Simulate Payment Gateway
-            const confirmed = confirm(`Proceed to payment gateway for €${cost.toFixed(2)}?`);
+            const confirmed = confirm(`Proceed to payment gateway for â‚¬${cost.toFixed(2)}?`);
             if (confirmed) {
                 // Mock Success
                 alert(`Payment Successful! You purchased ${name}.`);
                 closeModal();
                 if (window.Notifications) {
-                    window.Notifications.send('success', `Purchased ${name} for €${cost.toFixed(2)}.`, 'user');
+                    window.Notifications.send('success', `Purchased ${name} for â‚¬${cost.toFixed(2)}.`, 'user');
                     // Admin sees revenue
-                    window.Notifications.send('action_required', `SALE: ${name} sold for €${cost.toFixed(2)}.`, 'admin');
+                    window.Notifications.send('action_required', `SALE: ${name} sold for â‚¬${cost.toFixed(2)}.`, 'admin');
 
                     // Add to Funds (Simulated)
                     if (window.Gamification) window.Gamification.addPendingFunds(cost);
@@ -454,37 +537,23 @@
         <span class="text-xs font-bold uppercase tracking-widest">Back to Hub</span>
     </a>
     <!-- Bottom Nav (Standardized Agent UI) -->
-    <nav class="fixed bottom-0 left-0 w-full bg-[#0D0D0F]/90 backdrop-blur-md border-t border-purple-900/30 z-[50]">
-        <div class="flex justify-around items-center h-16 max-w-md mx-auto">
-            <a href="dashboard.html"
-                class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-electric transition-colors">
-                <span class="material-symbols-outlined text-2xl">grid_view</span>
-                <span class="text-[10px] uppercase tracking-wider mt-1">Dash</span>
-            </a>
-            <a href="marketplace.html"
-                class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-electric transition-colors">
-                <span class="material-symbols-outlined text-2xl">storefront</span>
-                <span class="text-[10px] uppercase tracking-wider mt-1">Market</span>
-            </a>
-            <a href="kiss-your-heart.html"
-                class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-electric transition-colors">
-                <span class="material-symbols-outlined text-2xl">palette</span>
-                <span class="text-[10px] uppercase tracking-wider mt-1">Art</span>
-            </a>
-            <a href="outbreak_tunes.html"
-                class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-electric transition-colors">
-                <span class="material-symbols-outlined text-2xl">headphones</span>
-                <span class="text-[10px] uppercase tracking-wider mt-1">Sound</span>
-            </a>
-            <a href="partners.html"
-                class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-electric transition-colors">
-                <span class="material-symbols-outlined text-2xl">handshake</span>
-                <span class="text-[10px] uppercase tracking-wider mt-1">Tribe</span>
-            </a>
-        </div>
+    <!-- Bottom Nav (HIDDEN for Bazaar Immersion) -->
+    <nav class="fixed bottom-0 left-0 w-full bg-[#0D0D0F]/90 backdrop-blur-md border-t border-purple-900/30 z-[50] hidden">
+        <!-- Content Hidden -->
     </nav>
+    
+    <!-- Navigation Controls (For Desktop Scrolling) -->
+    <button id="nav-arrow-left" onclick="document.getElementById('street-wrapper').scrollBy({left: -400, behavior: 'smooth'})" 
+        class="fixed left-4 top-1/2 -translate-y-1/2 z-40 w-12 h-12 bg-black/50 hover:bg-electric text-white rounded-full flex items-center justify-center border border-white/20 transition-all hidden md:flex">
+        <span class="material-symbols-outlined">chevron_left</span>
+    </button>
+    
+    <button id="nav-arrow-right" onclick="document.getElementById('street-wrapper').scrollBy({left: 400, behavior: 'smooth'})" 
+        class="fixed right-4 top-1/2 -translate-y-1/2 z-40 w-12 h-12 bg-black/50 hover:bg-electric text-white rounded-full flex items-center justify-center border border-white/20 transition-all hidden md:flex">
+        <span class="material-symbols-outlined">chevron_right</span>
+    </button>
     <!-- Audio Player (Right) -->
-    <div class="fixed bottom-24 right-8 z-50 md:bottom-8">
+    <div class="fixed bottom-8 right-8 z-50">
         <button id="audio-btn"
             class="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:border-electric transition-colors bg-background-dark/50 backdrop-blur-sm">
             <!-- Treble Clef Icon -->
@@ -536,6 +605,162 @@
             }
         });
     </script>
+    <!-- Secure Deposit Modal (The Vault) -->
+    <dialog id="listing-modal" class="bg-transparent p-0 backdrop:bg-black/80 backdrop:backdrop-blur-sm open:animate-fade-in">
+        <!-- ... existing content ... -->
+        <div class="w-[500px] bg-[#0F0A13] border-2 border-amber-500/50 rounded-3xl shadow-[0_0_50px_rgba(245,158,11,0.2)] relative overflow-hidden">
+             <!-- ... existing form ... -->
+              <!-- Header -->
+            <div class="p-6 border-b border-white/10 flex justify-between items-center bg-gradient-to-r from-amber-900/20 to-transparent">
+                <h2 class="text-2xl font-serif font-bold text-amber-500 flex items-center gap-2">
+                    <span class="material-symbols-outlined">lock</span> Secure Deposit
+                </h2>
+                <button onclick="document.getElementById('listing-modal').close()" 
+                    class="text-white/50 hover:text-white hover:rotate-90 transition-all material-symbols-outlined">close</button>
+            </div>
+            
+            <!-- Form -->
+            <div class="p-8 space-y-6">
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-amber-500 uppercase tracking-widest">Artifact Name</label>
+                    <input type="text" id="deposit-name" placeholder="e.g. Golden Beat Pack" 
+                        class="w-full bg-black/50 border border-white/10 rounded-xl p-4 text-white placeholder-white/20 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 transition-all">
+                </div>
+                
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-amber-500 uppercase tracking-widest">Value (Flow)</label>
+                    <input type="number" id="deposit-price" placeholder="500" 
+                        class="w-full bg-black/50 border border-white/10 rounded-xl p-4 text-white placeholder-white/20 focus:border-amber-500 focus:outline-none transition-all">
+                </div>
+                
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-amber-500 uppercase tracking-widest">Description</label>
+                    <textarea id="deposit-desc" rows="3" placeholder="Describe your creation..." 
+                        class="w-full bg-black/50 border border-white/10 rounded-xl p-4 text-white placeholder-white/20 focus:border-amber-500 focus:outline-none transition-all resize-none"></textarea>
+                </div>
+                
+                <button onclick="mintItem()" 
+                    class="w-full py-4 bg-white text-black font-bold uppercase tracking-widest rounded-xl hover:bg-amber-400 hover:scale-[1.02] transition-all shadow-[0_0_20px_rgba(255,255,255,0.3)] mt-4 flex items-center justify-center gap-2 group">
+                    <span>Mint to Vault</span>
+                    <span class="bg-black/10 px-2 py-0.5 rounded text-[10px] font-mono group-hover:bg-black/20">+50 XP</span>
+                </button>
+            </div>
+            
+            <!-- Secure Footer -->
+            <div class="bg-black/50 p-3 text-center border-t border-white/5">
+                <p class="text-[10px] text-white/30 uppercase tracking-widest flex items-center justify-center gap-1">
+                    <span class="material-symbols-outlined text-sm">verified_user</span> Encrypted by The Sentry
+                </p>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Purchase Success Modal (The Receipt) -->
+    <dialog id="success-modal" class="bg-transparent p-0 backdrop:bg-black/80 backdrop:backdrop-blur-sm open:animate-scale-in">
+        <div class="w-[400px] bg-white text-black rounded-3xl shadow-[0_0_100px_rgba(255,255,255,0.5)] relative overflow-hidden text-center p-8 border-4 border-[#0F0A13]">
+            <div class="absolute top-0 left-0 w-full h-2 bg-electric"></div>
+            
+            <div class="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl animate-bounce-slow">
+                <span class="material-symbols-outlined text-4xl text-white">check</span>
+            </div>
+            
+            <h2 class="text-3xl font-serif font-bold mb-2">Deal Sealed!</h2>
+            <p class="text-black/60 text-sm font-mono uppercase tracking-widest mb-6" id="success-item-name">Golden Beat Pack</p>
+            
+            <div class="bg-gray-100 p-4 rounded-xl mb-6 border border-gray-200 border-dashed">
+                <div class="flex justify-between text-xs font-bold uppercase text-gray-500 mb-2">
+                    <span>Transaction ID</span>
+                    <span class="font-mono text-black">#TX-9928</span>
+                </div>
+                <div class="flex justify-between text-lg font-bold">
+                    <span>Total Paid</span>
+                    <span class="text-electric" id="success-price">500 Flow</span>
+                </div>
+            </div>
+
+            <button onclick="document.getElementById('success-modal').close(); location.reload();" 
+                class="w-full py-3 bg-black text-white font-bold uppercase tracking-widest rounded-xl hover:bg-electric transition-colors shadow-lg">
+                Collect Artifact
+            </button>
+        </div>
+    </dialog>
+
+    <script>
+        function mintItem() {
+            const name = document.getElementById('deposit-name').value;
+            const price = document.getElementById('deposit-price').value;
+            
+            if(!name || !price) {
+                alert("The Vault requires a Name and Value.");
+                return;
+            }
+            
+            // Logic
+            if(window.Gamification) window.Gamification.addXP(50, 'Minted Artifact');
+            
+            // Visual Feedback
+            const btn = document.querySelector('#listing-modal button[onclick="mintItem()"]');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = `<span class="material-symbols-outlined animate-spin">sync</span> Minting...`;
+            
+            setTimeout(() => {
+                alert(`Artifact '${name}' deposited to the Golden Vault!`);
+                document.getElementById('listing-modal').close();
+                btn.innerHTML = originalText;
+                
+                // Add to System (Simulated)
+                const mockItem = {
+                    id: 'user-' + Date.now(),
+                    title: name,
+                    price: price,
+                    description: document.getElementById('deposit-desc').value,
+                    owner: 'You', // In real app, user profile
+                    image: '../Assets/images/placeholder_card.png', 
+                    type: 'community'
+                };
+                
+                // Store
+                const current = JSON.parse(localStorage.getItem('cdf_listings') || '[]');
+                current.push(mockItem);
+                localStorage.setItem('cdf_listings', JSON.stringify(current));
+                
+                // Refresh Grid
+                if(window.renderMarketplace) window.renderMarketplace();
+                
+                // Cleanup inputs
+                document.getElementById('deposit-name').value = '';
+                document.getElementById('deposit-price').value = '';
+                document.getElementById('deposit-desc').value = '';
+
+            }, 1000);
+        }
+    </script>
+
+    <!-- Flowee Agent (The Guide) -->
+    <div id="flowee-agent" class="fixed top-32 right-8 z-[100] w-32 h-32 hidden md:block cursor-pointer group hover:scale-110 transition-transform">
+        <!-- Speech Bubble -->
+        <div id="flowee-bubble" class="absolute right-full top-0 mr-4 w-56 bg-white/10 backdrop-blur-md border border-amber-400 text-white p-4 rounded-xl rounded-tr-none shadow-[0_0_20px_rgba(251,191,36,0.2)] text-xs font-mono leading-tight opacity-0 pointer-events-none transition-all duration-300">
+            Yo Captain!
+        </div>
+        <!-- Visual (Pirate Phoenix) -->
+        <div id="flowee-visual" class="w-full h-full animate-bounce-slow drop-shadow-[0_0_15px_rgba(251,191,36,0.6)]">
+            <img src="../Assets/images/flowee.png" class="w-full h-full object-contain filter hover:brightness-110 transition-all">
+        </div>
+    </div>
+
+    <!-- UTILITIES -->
+    <script src="../js/gamification.js"></script>
+    <script src="../js/notifications.js"></script>
+    
+    <!-- PHOENIX-EE CORE AGENTS -->
+    <script src="../js/agents/visual_eye.js"></script>
+    <script src="../js/agents/flowee.js"></script>
+    <script src="../js/agents/merchant.js"></script>
+
+    <script src="../js/agents/bridge_pusher.js" defer></script>
+    <script src="../js/agents/helper.js" defer></script>
 </body>
 
 </html>
+
+

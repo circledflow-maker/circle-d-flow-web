@@ -1,75 +1,81 @@
 /**
- * Agent 4: The Destroyer (Stress-Test)
- * Simulates chaos to find weak points.
- * Usage: Type 'startChaos()' in console.
+ * Agent 4: The Sentinel (Performance Monitor)
+ * Formerly 'Stress Test'. Monitors FPS and simplifies visuals if needed.
  */
 
-class StressTestAgent {
+class PerformanceAgent {
     constructor() {
-        this.name = "The Destroyer";
-        this.active = false;
+        this.name = "The Sentinel";
+        this.frameCount = 0;
+        this.lastTime = performance.now();
+        this.fps = 60;
+        this.lowFpsCount = 0;
+        this.isOptimized = false;
         
-        // Expose to global
-        window.startChaos = () => this.start();
-        window.stopChaos = () => this.stop();
-
-        // Auto-start if query param present
-        if (new URLSearchParams(window.location.search).has('chaos')) {
-            this.start();
-        }
+        this.init();
     }
 
-    start() {
-        if (this.active) return;
-        this.active = true;
-        console.warn(`[${this.name}] CHAOS MODE INITIATED. BRACE YOURSELF.`);
-
-        this.interval = setInterval(() => {
-            this.performAction();
-        }, 300); // Fast actions
+    init() {
+        console.log(`[Phoenix-EE] ${this.name} online.`);
+        this.monitor();
     }
 
-    stop() {
-        this.active = false;
-        clearInterval(this.interval);
-        console.log(`[${this.name}] Chaos mode deactivated.`);
-    }
+    monitor() {
+        const now = performance.now();
+        this.frameCount++;
 
-    performAction() {
-        const actions = ['scroll', 'click', 'input'];
-        const action = actions[Math.floor(Math.random() * actions.length)];
+        if (now >= this.lastTime + 1000) {
+            this.fps = this.frameCount;
+            this.frameCount = 0;
+            this.lastTime = now;
 
-        try {
-            switch(action) {
-                case 'scroll':
-                    window.scrollTo({
-                        top: Math.random() * document.body.scrollHeight,
-                        behavior: 'smooth'
-                    });
-                    break;
-                case 'click':
-                    const clickables = document.querySelectorAll('button, a, div');
-                    const target = clickables[Math.floor(Math.random() * clickables.length)];
-                    if (target) {
-                        target.click();
-                        // Highlight clicked element
-                        target.style.outline = "2px solid red";
-                        setTimeout(() => target.style.outline = "", 200);
-                    }
-                    break;
-                case 'input':
-                    const inputs = document.querySelectorAll('input, textarea');
-                    const input = inputs[Math.floor(Math.random() * inputs.length)];
-                    if (input) {
-                        input.value = "CHAOS_" + Math.random().toString(36).substring(7);
-                    }
-                    break;
+            // Health Check
+            if (this.fps < 30) {
+                this.lowFpsCount++;
+                console.warn(`[${this.name}] Low FPS detected: ${this.fps}`);
+            } else {
+                this.lowFpsCount = Math.max(0, this.lowFpsCount - 1); // Recover
             }
-        } catch (e) {
-            console.error(`[${this.name}] Exception caught:`, e);
+
+            // Trigger Optimization if sustained lag
+            if (this.lowFpsCount > 3 && !this.isOptimized) {
+                this.optimize();
+            }
+        }
+
+        requestAnimationFrame(() => this.monitor());
+    }
+
+    optimize() {
+        console.warn(`[${this.name}] Sustained Low FPS. Engaging Optimization Protocol.`);
+        
+        // 1. Disable Blurs
+        document.body.classList.add('reduce-motion');
+        const style = document.createElement('style');
+        style.innerHTML = `
+            * {
+                backdrop-filter: none !important;
+                box-shadow: none !important;
+                transition: none !important;
+                animation: none !important;
+            }
+            .bg-overlay { opacity: 1 !important; background: #000 !important; }
+        `;
+        document.head.appendChild(style);
+
+        // 2. Notify User
+        this.notify("Visuals optimized for smoother flow.");
+        this.isOptimized = true;
+    }
+
+    notify(msg) {
+        // Use BridgePusher's flowee if available, or simple console
+        if (window.BridgePusher && window.BridgePusher.elements.floweeText) {
+             // Don't interrupt flow if intro is active, but we can log it
+             console.log(`[${this.name}] Notification: ${msg}`);
         }
     }
 }
 
 // Initialize
-new StressTestAgent();
+new PerformanceAgent();

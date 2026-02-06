@@ -40,7 +40,7 @@ a {
 
 /* Enhanced: Mouse hidden ONLY if JS is running */
 body.js-active * {
-
+    cursor: none;
 }
 
 @media (max-width: 768px) {
@@ -116,6 +116,21 @@ body.js-active * {
 /* --- Offer Modal --- */
 #offer-modal.active {
     opacity: 1;
+}
+
+#offer-modal.active .offer-content {
+    transform: scale(1);
+}
+
+.offer-content {
+    /* Glassmorphism handled by Tailwind classes in HTML, 
+       but we can add specific border/shadow enhancements here */
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+/* Ensure modal is above everything */
+#offer-modal {
+    z-index: 10000;
 }
 
 #offer-modal.active .offer-content {
@@ -369,4 +384,276 @@ body.js-active * {
     border: 1px dashed rgba(255, 255, 255, 0.1);
     border-radius: 1rem;
     color: rgba(255, 255, 255, 0.4);
+}
+
+/* --- COMMUNITY LOG & PRISMA STYLES --- */
+
+/* Card Stack Layout */
+.card-stack {
+    perspective: 1000px;
+}
+
+/* Prisma Card - Holographic Glass */
+.prisma-card {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transform-style: preserve-3d;
+}
+
+.prisma-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 0 30px rgba(138, 43, 226, 0.15), 0 0 10px rgba(138, 43, 226, 0.3); 
+}
+
+/* Hologram Border Effect */
+.prisma-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(138, 43, 226, 0.8), transparent);
+    opacity: 0.5;
+    transition: opacity 0.3s;
+}
+
+.prisma-card:hover::before {
+    opacity: 1;
+    animation: hologram-scan 2s linear infinite;
+}
+
+@keyframes hologram-scan {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* Text Glows */
+.shadow-neon {
+    text-shadow: 0 0 5px rgba(138, 43, 226, 0.5);
+}
+
+/* Section Containers */
+.spec-container {
+    padding: 1px; /* inner spacing for potential border gradient */
+}
+
+/* --- ZEN VOID DASHBOARD --- */
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(138, 43, 226, 0.3);
+    border-radius: 3px;
+}
+
+#prisma-menu.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* #prisma-menu.active .menu-branch {
+    transform: none; 
+   Removed to allow Tailwind classes (translate-x/y) to take effect when active.
+} */
+
+/* Detail Overlay */
+#detail-overlay {
+    box-shadow: -10px 0 50px rgba(0,0,0,0.8);
+}
+
+#detail-overlay.active {
+    transform: translateX(0);
+}
+
+/* Branch Animations */
+.menu-branch {
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    /* Ensure opacity transition is handled */
+}
+
+/* 
+   When menu is NOT active, collapse to center.
+   We use !important to override the Tailwind utility classes.
+*/
+#prisma-menu:not(.active) .menu-branch {
+    transform: translate(0, 0) !important; 
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* 
+   FORCE ACTIVE POSITIONS 
+   Bypassing Tailwind conflicts by defining explicit positions in CSS.
+   Order: 1:Identity(Top), 2:Provision(Right), 3:Connection(Bottom), 4:Intel(Left)
+*/
+
+/* Mobile Positions (Base) */
+#prisma-menu.active .menu-branch:nth-child(1) { transform: translateY(-8rem); }  /* -32 */
+#prisma-menu.active .menu-branch:nth-child(2) { transform: translateX(8rem); }   /* 32 */
+#prisma-menu.active .menu-branch:nth-child(3) { transform: translateY(8rem); }    /* 32 */
+#prisma-menu.active .menu-branch:nth-child(4) { transform: translateX(-8rem); }   /* -32 */
+
+/* Desktop Positions (md: equivalent) */
+@media (min-width: 768px) {
+    #prisma-menu.active .menu-branch:nth-child(1) { transform: translateY(-12rem); } /* -48 */
+    #prisma-menu.active .menu-branch:nth-child(2) { transform: translateX(12rem); }  /* 48 */
+    #prisma-menu.active .menu-branch:nth-child(3) { transform: translateY(12rem); }   /* 48 */
+    #prisma-menu.active .menu-branch:nth-child(4) { transform: translateX(-12rem); }  /* -48 */
+}
+
+/* 
+   FORCE VISIBILITY & STAGGERED ANIMATION (CSS PUSHER)
+   Ensures branches appear even if JS loop fails.
+*/
+#prisma-menu.active .menu-branch {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+}
+
+/* Stagger delays */
+#prisma-menu.active .menu-branch:nth-child(1) { transition-delay: 0.1s; }
+#prisma-menu.active .menu-branch:nth-child(2) { transition-delay: 0.2s; }
+#prisma-menu.active .menu-branch:nth-child(3) { transition-delay: 0.3s; }
+#prisma-menu.active .menu-branch:nth-child(4) { transition-delay: 0.4s; }
+
+/* --- GENESIS PROTOCOL (Initiation) --- */
+
+/* Gate Overlay */
+.gate-overlay {
+    backdrop-filter: blur(5px); /* Dramatic prelude blur */
+}
+
+/* Gate Split Animation */
+.gate-left, .gate-right {
+    will-change: transform;
+}
+
+/* Quiz Options */
+.genesis-option {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.genesis-option:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 10px 30px -10px rgba(138, 43, 226, 0.3);
+}
+
+/* Text Highlights */
+.text-shadow-neon {
+    text-shadow: 0 0 10px rgba(138, 43, 226, 0.5), 0 0 20px rgba(138, 43, 226, 0.3);
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in-up {
+    animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes pulseSlow {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(0.95); opacity: 0.8; }
+}
+
+.animate-pulse-slow {
+    animation: pulseSlow 3s infinite ease-in-out;
+}
+
+/* --- BAZAAR & FLOWEE ANIMATIONS --- */
+
+@keyframes bounce-slow {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.animate-bounce-slow {
+    animation: bounce-slow 3s infinite ease-in-out;
+}
+
+@keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+    animation: spin-slow 8s linear infinite;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+@keyframes marquee {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+}
+
+.animate-marquee {
+    display: inline-block;
+    animation: marquee 20s linear infinite;
+}
+
+@keyframes flowee-talk {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1) rotate(5deg); }
+}
+
+.animate-flowee-talk {
+    animation: flowee-talk 0.2s infinite;
+}
+
+.animate-flowee-fly {
+    animation: bounce-slow 4s infinite ease-in-out;
+}
+
+/* --- SCRIPTORIUM STYLES --- */
+
+.perspective-2000 { perspective: 2000px; }
+.transform-style-3d { transform-style: preserve-3d; }
+.backface-hidden { backface-visibility: hidden; }
+
+.book-page {
+    transition: transform 1.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+    transform-origin: left center;
+}
+
+/* Manga Panels */
+.manga-panel {
+    box-shadow: 6px 6px 0px rgba(0,0,0,1);
+    border: 3px solid #000;
+    transition: all 0.3s ease;
+}
+
+.manga-panel:hover {
+    transform: translateY(-2px);
+    box-shadow: 8px 8px 0px rgba(154, 77, 255, 0.8); /* Electric Shadow */
+}
+
+.text-cipher {
+    color: #9A4DFF;
+    font-weight: bold;
+    text-shadow: 0 0 5px rgba(154, 77, 255, 0.3);
+}
+
+/* Living Map Markers */
+.map-marker {
+    transition: all 0.3s ease;
+}
+.map-marker:hover {
+    transform: scale(1.5);
+    filter: drop-shadow(0 0 10px #FFD700);
 }

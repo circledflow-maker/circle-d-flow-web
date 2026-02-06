@@ -1,7 +1,11 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html class="dark" lang="en">
 
 <head>
+    <meta name="description" content="Outbreak Tunes: The sonic heartbeat of Circle D Flow. Music and playlists to inspire your flow.">
+    <meta property="og:title" content="Circle D Flow | Outbreak_Tunes">
+    <meta property="og:description" content="Outbreak Tunes: The sonic heartbeat of Circle D Flow. Music and playlists to inspire your flow.">
+    <meta property="og:type" content="website">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
@@ -14,6 +18,29 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
         rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        electric: '#9A4DFF',
+                        dark: '#0F0A13',
+                        panel: '#1A1622',
+                        danger: '#FF2A51',
+                        'mystic-gold': '#FFD700'
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        mono: ['Courier New', 'monospace']
+                    },
+                    animation: {
+                        'spin-slow': 'spin 3s linear infinite',
+                        'pulse-fast': 'pulse 0.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
     <style>
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24
@@ -29,6 +56,21 @@
             z-index: -1;
             object-fit: cover;
             opacity: 0.6;
+        }
+
+        /* Scouter Scrollbar */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(0, 255, 0, 0.1);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #4ade80; /* green-400 */
+            border-radius: 2px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #22c55e; /* green-500 */
         }
 
         .bg-overlay {
@@ -89,39 +131,8 @@
             <img src="../Assets/images/logo.png" class="w-full h-full object-contain drop-shadow-lg" alt="Cursor">
         </div>
 
-        <!-- Desktop Navigation (The Compass) -->
-        <nav
-            class="hidden md:flex fixed top-0 w-full z-50 bg-[#0F0A13]/80 backdrop-blur-xl border-b border-white/5 h-20 items-center justify-between px-12 transition-all duration-300">
-            <div class="flex items-center gap-8">
-                <a href="dashboard.html"
-                    class="text-xs font-bold uppercase tracking-widest text-white hover:text-electric transition-colors">Hub</a>
-                <a href="outbreak_tunes.html"
-                    class="text-xs font-bold uppercase tracking-widest text-purple-400 drop-shadow-[0_0_8px_rgba(168,85,247,0.8)]">Sound</a>
-                <a href="african-queen-kitchen.html"
-                    class="text-xs font-bold uppercase tracking-widest text-white hover:text-amber transition-colors">Taste</a>
-                <a href="kiss-your-heart.html"
-                    class="text-xs font-bold uppercase tracking-widest text-white hover:text-pink-400 transition-colors">Visuals</a>
-            </div>
-            <a href="../index.html" class="absolute left-1/2 -translate-x-1/2 group">
-                <img src="../Assets/images/logo.png" alt="Circle D Flow"
-                    class="h-10 w-auto group-hover:scale-110 transition-transform duration-300 drop-shadow-[0_0_15px_rgba(98,0,234,0.5)]">
-            </a>
-            <div class="flex items-center gap-8">
-                <a href="marketplace.html"
-                    class="text-xs font-bold uppercase tracking-widest text-white hover:text-mystic-gold transition-colors">Style</a>
-                <a href="academy.html"
-                    class="text-xs font-bold uppercase tracking-widest text-white hover:text-blue-400 transition-colors">Knowledge</a>
-                <a href="events.html"
-                    class="text-xs font-bold uppercase tracking-widest text-white hover:text-green-400 transition-colors">Space</a>
-                <a href="mindfulness.html"
-                    class="text-xs font-bold uppercase tracking-widest text-white hover:text-indigo-400 transition-colors">Spirit</a>
-            </div>
-            <div class="absolute right-6 flex items-center gap-4">
-                <a href="login.html"
-                    class="px-5 py-2 bg-white/5 text-white font-bold rounded-full text-[10px] uppercase tracking-widest hover:bg-white hover:text-black transition-all border border-white/10 hover:shadow-[0_0_15px_rgba(255,255,255,0.3)]">Login</a>
-            </div>
-        </nav>
-
+        <!-- Desktop Navigation REMOVED via User Request -->
+        
         <!-- Mobile Bottom Navigation (Standardized) -->
         <nav
             class="fixed bottom-0 left-0 w-full bg-[#0D0D0F]/90 backdrop-blur-md border-t border-purple-900/30 z-[50] md:hidden">
@@ -174,192 +185,305 @@
                 class="px-8 py-3 bg-electric text-white font-bold rounded-full uppercase tracking-widest mt-8 shadow-lg shadow-electric/20">Login</a>
         </div>
 
-        <!-- Hero Header Image -->
-        <div class="h-[30vh] md:h-[40vh] bg-cover bg-center"
-            style='background-image: linear-gradient(to top, rgba(25, 16, 34, 1) 5%, rgba(25, 16, 34, 0.2) 70%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuDwSo0OSUWqySWR5IWbFvGP1M9GKUQmz8skGUVhtkct_S_r3EtMVpC1ARzmBWJnwiYpl83fp-ZstKXzYD4-y3lHARy4lTdcv61cewYe4QdeSGd58MSKYGLWrQy0n5DijmeZoN7zqWZMhuNd1WFN39zMUqbWn5cBkXExUezmC9PjZxpDkNNwPyRl30Is7qCCqP-TRjl9dRElafDzwH3mLwbIlTa6M-Y-fjtz8zOxMcldTwz2etxPpEPe2Xq2zG5WYK_IYnsfppXHjyY");'>
-        </div>
+        <main class="relative z-10 pt-12 md:pt-16 pb-24 container mx-auto px-6">
+            
+            <!-- 1. THE FLYER-WALL (Ruste Juxx Tour) -->
+            <section id="flyer-wall" class="mb-16 relative group">
+                <div class="absolute inset-0 bg-gradient-to-r from-red-600/20 to-orange-500/20 rounded-2xl blur-xl transition-opacity opcode-50 group-hover:opacity-80"></div>
+                <div class="relative bg-black/60 border border-white/10 rounded-2xl p-6 md:p-12 min-h-[400px] flex flex-col items-center justify-center overflow-hidden text-center">
+                    <!-- Dynamic projected content -->
+                    <div id="projector-screen" class="max-w-4xl w-full relative z-10">
+                        <!-- Header -->
+                        <div class="mb-8">
+                            <p class="text-mystic-gold font-mono uppercase tracking-[0.3em] text-xs md:text-sm mb-2">The James Brown of The Underground</p>
+                            <h2 class="text-5xl md:text-8xl font-black text-white italic tracking-tighter transform -skew-x-6 drop-shadow-[0_4px_0_#991b1b]">
+                                RUSTE JUXX
+                            </h2>
+                            <p class="text-white/60 font-bold uppercase tracking-widest mt-2 text-sm md:text-xl">Lisbon Tour 2026</p>
+                            <p class="text-xs text-white/40 font-mono mt-1">(w/ Surprise Guest from U.S)</p>
+                        </div>
 
-        <main class="container mx-auto -mt-[15vh] px-4 sm:px-6 lg:px-8 pb-20">
-            <div class="flex flex-col md:flex-row gap-8 lg:gap-12">
-                <div class="w-full md:w-2/3">
-                    <div class="flex items-end gap-4 mb-8">
-                        <div class="size-24 text-primary bg-background-dark p-2 rounded-md border border-white/10">
-                            <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M44 4H30.6666V17.3334H17.3334V30.6666H4V44H44V4Z" fill="currentColor"></path>
-                            </svg>
+                        <!-- Schedule Grid -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 text-left">
+                            <div class="bg-white/5 border border-white/10 p-4 rounded-xl hover:bg-white/10 transition-colors group/card">
+                                <div class="text-red-500 font-black text-xl mb-1 group-hover/card:text-red-400">APR 14</div>
+                                <div class="text-gray-400 text-xs font-mono mb-2">6pm - 10pm</div>
+                                <div class="text-white font-bold uppercase leading-tight">@Favelalx</div>
+                                <div class="text-xs text-white/50 mt-1">LX CYPHER (Final)</div>
+                                <div class="text-[10px] text-electric uppercase mt-1 px-2 py-0.5 bg-electric/10 rounded w-fit">Judge Mode</div>
+                            </div>
+                             <div class="bg-white/5 border border-white/10 p-4 rounded-xl hover:bg-white/10 transition-colors group/card">
+                                <div class="text-orange-500 font-black text-xl mb-1 group-hover/card:text-orange-400">APR 15</div>
+                                <div class="text-gray-400 text-xs font-mono mb-2">7pm - 10pm</div>
+                                <div class="text-white font-bold uppercase leading-tight">@Ferroviario</div>
+                                <div class="text-xs text-white/50 mt-1">LX CYPHER Showcase</div>
+                                <div class="text-[10px] text-green-400 uppercase mt-1 px-2 py-0.5 bg-green-900/10 rounded w-fit">Live Show</div>
+                            </div>
+                             <div class="bg-white/5 border border-white/10 p-4 rounded-xl hover:bg-white/10 transition-colors group/card">
+                                <div class="text-purple-500 font-black text-xl mb-1 group-hover/card:text-purple-400">APR 17</div>
+                                <div class="text-gray-400 text-xs font-mono mb-2">10pm - 00am</div>
+                                <div class="text-white font-bold uppercase leading-tight">@TokyoLisboa</div>
+                                <div class="text-xs text-white/50 mt-1">Live Concert</div>
+                                <div class="text-[10px] text-pink-400 uppercase mt-1 px-2 py-0.5 bg-pink-900/10 rounded w-fit">Main Event</div>
+                            </div>
                         </div>
-                        <div>
-                            <h1 class="text-3xl md:text-4xl font-bold text-white">Outbreak Tunes</h1>
-                            <p class="text-white/70">Lisbon, Portugal</p>
+
+                        <!-- Details & CTA -->
+                        <div class="flex flex-col md:flex-row items-center justify-between gap-8 border-t border-white/10 pt-8">
+                            <div class="text-left space-y-2">
+                                <p class="text-xs text-white/60"><strong class="text-white">Feat:</strong> Winner of LX CYPHER (1st Ed)</p>
+                                <p class="text-xs text-white/60"><strong class="text-white">Host:</strong> @muleca13 & @tchapo_di_chelas</p>
+                                <p class="text-xs text-white/60"><strong class="text-white">Sound:</strong> Dj Qter @outbreaktunes @cambojaselecta</p>
+                                <div class="flex gap-4 mt-2 opacity-50 text-[10px] text-white/40">
+                                    <span>@youknowmyleust</span>
+                                    <span>@circle.d.flow</span>
+                                    <span>@hempyrootslisboa</span>
+                                </div>
+                            </div>
+
+                            <a href="https://shotgun.live/fr/events/ruste-juxx-show-case-lisbon-2026?utm_source=ig&utm_medium=social&utm_content=link_in_bio&fbclid=PAZXh0bgNhZW0CMTEAc3J0YwZhcHBfaWQMMjU2MjgxMDQwNTU4AAGnGdTHV6Osx88GkESM8EouIDb8wLfYUyLj2k5jQlOtiH-7tHPkkRV-wcMk9cA_aem_7ln1HTwr1ozpKr1rZhF33Q" target="_blank" class="px-8 py-4 bg-white text-black font-black uppercase tracking-widest hover:bg-mystic-gold hover:scale-105 transition-all shadow-[0_0_20px_rgba(255,255,255,0.3)] rounded flex items-center gap-2">
+                                <span class="material-symbols-outlined">confirmation_number</span>
+                                Get Tickets
+                            </a>
                         </div>
                     </div>
-                    <section class="mb-12" id="about">
-                        <div class="bg-background-dark/50 border border-white/10 rounded-xl p-6 backdrop-blur-sm">
-                            <h2 class="text-2xl font-bold text-mystic-gold mb-3">About Outbreak Tunes</h2>
-                            <p class="text-white/80 leading-relaxed">
-                                Outbreak Tunes is more than just a music production studio; it is a sonic sanctuary
-                                within the larger Circle the Flow ecosystem. Our philosophy is based on the belief that
-                                music is a transformative force that can create worlds, channel emotions, and connect
-                                communities. We blend mystical aesthetics with cutting-edge technology to create
-                                soundscapes that are not just heard, but felt. Every composition is a journey, every
-                                sound a brushstroke on the canvas of imagination, reflecting our community's deeper
-                                values of creativity, connection, and exploration.
-                            </p>
-                        </div>
-                    </section>
-                    <section id="discography">
-                        <h2 class="text-2xl font-bold mb-6 text-white">Discography</h2>
-                        <div id="playlist-container"
-                            class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-                            <div class="group relative overflow-hidden rounded-lg">
-                                <img alt="Abstract album art with cyberpunk aesthetics"
-                                    class="w-full h-auto object-cover aspect-square transition-transform duration-300 group-hover:scale-105"
-                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmcD__LgeAUUJW6NZyCkzHA8raFD9iRFJ6hCfnFBwvWuZ0YUMArC9_XHTuu-z1cTp4qYAy955C54SQlfMgN_QCBCrLmHHMxyznWCOJypbbi3O6zW9aMsruBGQKYPWseQhnp3xtKRJbDnNmK7CpEqxnGnI8VyBZ3AD6XzeW74ULF0eNKZSkcD_62IQiFLrxwHojyhRYhO_VX7vS1uxkPSjknSwePkJu0fSCTHPPFbOClFrZ5mZsP5k92HoNQdvoId4eHaFp4YXzT7s" />
-                                <div
-                                    class="absolute inset-0 bg-black/60 flex flex-col items-center justify-center p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-sm">
-                                    <span
-                                        class="material-symbols-outlined text-mystic-gold !text-5xl mb-2">play_circle</span>
-                                    <p class="text-white text-base font-medium leading-normal text-center">Cybernetic
-                                        Dawn</p>
-                                    <p class="text-white/70 text-sm font-normal leading-normal">Synthwave</p>
-                                </div>
-                            </div>
-                            <div class="group relative overflow-hidden rounded-lg">
-                                <img alt="Mystical forest album art"
-                                    class="w-full h-auto object-cover aspect-square transition-transform duration-300 group-hover:scale-105"
-                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJ_M6bMsSaVTWJdDqPSIZW5K5y4Ou5swO8ntQ10BC-0HgZ0OTkQWdpsDaAaaW5gkzytOYJCA0bS_gORyNOi-Eot3NxiHg-3GwvnOwPplZM1N0p9iV689G4JDpZHtvnQeYtjbv0S-6dbf0wncVOB7J65WP7vU6t71sGTVtCnZURS9-7TjE1y8y-YvawYolPfrdefW6IBoXXB3Vemznpk_Vluq3hkPLawPVCQwEvx6HUOmKNMQGv8Zf9CqKtsCUa87XfklBo1Xsedfc" />
-                                <div
-                                    class="absolute inset-0 bg-black/60 flex flex-col items-center justify-center p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-sm">
-                                    <span
-                                        class="material-symbols-outlined text-mystic-gold !text-5xl mb-2">play_circle</span>
-                                    <p class="text-white text-base font-medium leading-normal text-center">Mystic Echoes
-                                    </p>
-                                    <p class="text-white/70 text-sm font-normal leading-normal">Ambient</p>
-                                </div>
-                            </div>
-                            <div class="group relative overflow-hidden rounded-lg">
-                                <img alt="Neon city street at night album art"
-                                    class="w-full h-auto object-cover aspect-square transition-transform duration-300 group-hover:scale-105"
-                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAy4dN8D7AUigLl2w3YIt8p8WOn38i7zMXm-QD0Nw8rqM_ZMEAGixr_L0STNp__gN5V_neDm3CH1YxQ2gKJKOLdNlZ3KcXGBWJmhPbG80vt3RAAjO201zb-S22hurh53AxhxLoUKS9HY2AvVJ6USDiA8vRfU9epMw7-gISLjLsqQX4p5ESkd5os5Ofj3M0oyE4LuU6RKI7ohjt_rhHPhclAPdW8KNu4MkBHYT9TS3O60zhGqYy3IV2kqIjkRZOXf93GR8cLEGP7C-U" />
-                                <div
-                                    class="absolute inset-0 bg-black/60 flex flex-col items-center justify-center p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-sm">
-                                    <span
-                                        class="material-symbols-outlined text-mystic-gold !text-5xl mb-2">play_circle</span>
-                                    <p class="text-white text-base font-medium leading-normal text-center">Neon Velocity
-                                    </p>
-                                    <p class="text-white/70 text-sm font-normal leading-normal">Drum &amp; Bass</p>
-                                </div>
-                            </div>
-                            <div class="group relative overflow-hidden rounded-lg">
-                                <img alt="Cosmic nebula album art"
-                                    class="w-full h-auto object-cover aspect-square transition-transform duration-300 group-hover:scale-105"
-                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHrc6tFlumj8A8V-YvNytztV1QquPddLYietpc_swh23UDAqmP_6srgOHvjEMvAyq1TEJO7GGpMtUmFkmYg6672GbXqS-WdFCO3pItJi963VjCKK83XEd5MDV1EyXNez-uIoSYocpxh3-I4cz2cy3-duYwSjHWdYRZpvIW59wWsPC-9pZsQKuxs3c3L3xqIS5Ohnxg_gYDfc6Ku9jh1QPid2h0JwZZU93R6yzxCdR0UNWRqvRsgUE34qBxzpLcT9W4vSyf-Vyu11I" />
-                                <div
-                                    class="absolute inset-0 bg-black/60 flex flex-col items-center justify-center p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-sm">
-                                    <span
-                                        class="material-symbols-outlined text-mystic-gold !text-5xl mb-2">play_circle</span>
-                                    <p class="text-white text-base font-medium leading-normal text-center">Galactic
-                                        Drift</p>
-                                    <p class="text-white/70 text-sm font-normal leading-normal">Chillstep</p>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
                 </div>
-                <aside class="w-full md:w-1/3 md:sticky md:top-24 h-fit">
-                    <div
-                        class="bg-background-dark/50 border border-white/10 rounded-xl p-6 backdrop-blur-sm flex flex-col gap-6">
-                        <img alt="Portrait of the Outbreak Tunes team" class="w-full h-48 object-cover rounded-lg"
-                            src="https://f4.bcbits.com/img/0017113903_21.jpg" />
-                        <a href="https://outbreaktunesrecords.bandcamp.com/" target="_blank"
-                            class="w-full flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-gradient-to-r from-primary to-purple-500 text-white text-base font-bold leading-normal tracking-[0.015em] hover:from-primary/90 hover:to-purple-500/90 transition-all duration-300 shadow-lg shadow-primary/30">
-                            <span class="truncate">Connect with the Flow</span>
-                        </a>
-                        <button onclick="window.openWhatsApp('Demo Submission: I want to upload a beat')"
-                            class="w-full flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-white/5 border border-white/10 text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-white/10 hover:border-mystic-gold transition-all duration-300 group">
-                            <span
-                                class="material-symbols-outlined text-mystic-gold mr-2 group-hover:scale-110 transition-transform">upload_file</span>
-                            <span class="truncate">Upload Demo / Beat</span>
-                        </button>
-                        <div class="flex flex-col gap-3">
-                            <a class="flex items-center gap-3 text-white/80 hover:text-white transition-colors group"
-                                href="https://outbreaktunesrecords.bandcamp.com/" target="_blank">
-                                <span class="material-symbols-outlined glow-rune text-mystic-gold text-2xl">link</span>
-                                <span class="group-hover:text-mystic-gold transition-colors">Website</span>
-                            </a>
-                            <a class="flex items-center gap-3 text-white/80 hover:text-white transition-colors group"
-                                href="#">
-                                <span class="material-symbols-outlined glow-rune text-mystic-gold text-2xl">group</span>
-                                <span class="group-hover:text-mystic-gold transition-colors">Community</span>
-                            </a>
-                            <a class="flex items-center gap-3 text-white/80 hover:text-white transition-colors group"
-                                href="#">
-                                <span
-                                    class="material-symbols-outlined glow-rune text-mystic-gold text-2xl">alternate_email</span>
-                                <span class="group-hover:text-mystic-gold transition-colors">Contact</span>
-                            </a>
+            </section>
+
+            <!-- 2. THE BUDOKAI ARENA (LiveFromTheUnderground) -->
+            <section id="budokai-arena" class="mb-20">
+                <div class="flex items-center gap-4 mb-8">
+                     <span class="material-symbols-outlined text-electric !text-4xl animate-pulse">flash_on</span>
+                     <div>
+                         <h2 class="text-4xl font-black text-white tracking-widest uppercase italic transform -skew-x-12">
+                             <span class="text-electric">Live</span>FromThe<span class="text-danger">Underground</span>
+                         </h2>
+                         <p class="text-xs text-white/50 tracking-[0.5em] uppercase font-mono mt-1">Project: Outbreak Tunes</p>
+                     </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- The Bracket (Tenkaichi Style) -->
+                    <div class="lg:col-span-2 bg-[#0a0a0F] border-2 border-orange-500/50 rounded-tl-3xl rounded-br-3xl p-6 relative overflow-hidden shadow-[0_0_50px_rgba(255,165,0,0.2)]">
+                        <!-- Manga Speed Lines BG -->
+                        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20"></div>
+                        <!-- Scouter Grid Overlay -->
+                        <div class="absolute inset-0 bg-[linear-gradient(rgba(0,255,0,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(0,255,0,0.05)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none"></div>
+                        
+                        <div class="relative z-10 flex flex-col gap-8">
+                            <!-- Match Display -->
+                            <div class="flex flex-col md:flex-row justify-between items-center gap-8 py-8 relative">
+                                <!-- VS Badge (Dragon Radar Style) -->
+                                <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-0 opacity-20 md:opacity-100">
+                                    <div class="w-40 h-40 rounded-full border-4 border-green-500 bg-black/80 flex items-center justify-center animate-spin-slow shadow-[0_0_30px_#00ff00]">
+                                         <div class="w-32 h-32 border border-green-500/50 rounded-full grid grid-cols-2 grid-rows-2">
+                                             <div class="border-r border-b border-green-500/30"></div>
+                                             <div class="border-b border-green-500/30"></div>
+                                             <div class="border-r border-green-500/30"></div>
+                                             <div></div>
+                                         </div>
+                                    </div>
+                                </div>
+
+                                <!-- Fighter 1 -->
+                                <div class="flex flex-col items-center group cursor-pointer z-10" onclick="voteFor('Hempy')">
+                                    <div class="relative mb-4">
+                                        <div class="w-32 h-32 rounded-full border-4 border-blue-500 p-1 bg-black shadow-[0_0_30px_#3b82f6] group-hover:scale-110 transition-transform overflow-hidden">
+                                            <img src="https://ui-avatars.com/api/?name=Hempy&background=000&color=fff" class="w-full h-full rounded-full object-cover">
+                                        </div>
+                                        <!-- Scouter Monocle Overlay -->
+                                        <div class="absolute top-0 right-0 w-12 h-12 border-t-2 border-r-2 border-green-400 rounded-tr-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                        <div class="text-[10px] text-green-400 font-mono absolute -right-8 top-4 opacity-0 group-hover:opacity-100 bg-black/80 px-1">TARGET LOCKED</div>
+                                    </div>
+                                    
+                                    <h3 class="text-3xl font-black text-white uppercase italic transform -skew-x-12 tracking-tighter">Hempy</h3>
+                                    
+                                    <!-- Power Bar -->
+                                    <div class="mt-2 w-48 h-6 bg-gray-900 border border-white/20 transform skew-x-12 relative overflow-hidden">
+                                        <div id="bar-hempy" class="h-full w-[45%] bg-gradient-to-r from-blue-600 to-cyan-400 shadow-[0_0_20px_#3b82f6] relative overflow-hidden">
+                                            <div class="absolute inset-0 bg-white/20 animate-pulse"></div>
+                                        </div>
+                                    </div>
+                                    <span class="text-cyan-400 text-lg font-black font-mono mt-1 drop-shadow-[0_0_5px_rgba(34,211,238,0.8)]">PWR: <span id="pwr-hempy">8,999</span></span>
+                                </div>
+
+                                <!-- VS Text -->
+                                <div class="text-center z-10 md:hidden">
+                                    <span class="text-4xl font-black text-white/20">VS</span>
+                                </div>
+
+                                <!-- Fighter 2 -->
+                                <div class="flex flex-col items-center group cursor-pointer z-10" onclick="voteFor('Ray')">
+                                    <div class="relative mb-4">
+                                        <div class="w-32 h-32 rounded-full border-4 border-red-500 p-1 bg-black shadow-[0_0_30px_#ef4444] group-hover:scale-110 transition-transform overflow-hidden">
+                                            <img src="https://ui-avatars.com/api/?name=Ray&background=000&color=fff" class="w-full h-full rounded-full object-cover">
+                                        </div>
+                                        <!-- Scouter Monocle Overlay -->
+                                        <div class="absolute top-0 right-0 w-12 h-12 border-t-2 border-r-2 border-green-400 rounded-tr-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                    </div>
+                                    
+                                    <h3 class="text-3xl font-black text-white uppercase italic transform -skew-x-12 tracking-tighter">Ray</h3>
+                                    
+                                    <!-- Power Bar -->
+                                    <div class="mt-2 w-48 h-6 bg-gray-900 border border-white/20 transform skew-x-12 relative overflow-hidden">
+                                        <div id="bar-ray" class="h-full w-[55%] bg-gradient-to-r from-red-600 to-orange-500 shadow-[0_0_20px_#ef4444] relative overflow-hidden">
+                                             <div class="absolute inset-0 bg-white/20 animate-pulse"></div>
+                                        </div>
+                                    </div>
+                                    <span class="text-orange-400 text-lg font-black font-mono mt-1 drop-shadow-[0_0_5px_rgba(251,146,60,0.8)]">PWR: <span id="pwr-ray">9,001</span></span>
+                                </div>
+                            </div>
+                            
+                            <!-- Actions -->
+                            <div class="flex justify-center gap-4">
+                                <button onclick="lendAura()" class="px-10 py-4 bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-400 hover:to-orange-400 text-white font-black text-xl rounded-full uppercase tracking-widest shadow-[0_0_20px_#ea580c] transition-all flex items-center gap-2 transform hover:-translate-y-1 active:scale-95 border-2 border-white/20">
+                                    <span class="material-symbols-outlined animate-pulse">bolt</span> CHARGE KI
+                                </button>
+                                <button class="px-8 py-4 border-2 border-green-500/50 bg-black/50 text-green-400 font-mono font-bold rounded hover:bg-green-900/20 hover:text-white transition-all uppercase tracking-widest">
+                                    Tournament Tree
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </aside>
-            </div>
-            <!-- Battle Arena (Functional) -->
-            <div id="cypher-arena"
-                class="mb-12 bg-red-900/20 border border-red-500/30 p-8 rounded-2xl relative overflow-hidden group">
-                <div class="absolute inset-0 bg-[url('Assets/images/noise.png')] opacity-10 mix-blend-overlay"></div>
-                <div class="relative z-10">
-                    <div class="flex flex-col md:flex-row justify-between items-center gap-6 mb-6">
-                        <div>
-                            <h3 class="text-3xl font-serif font-bold text-white mb-2 ml-4">⚔️ CYPHER DUEL ⚔️</h3>
-                            <p class="text-red-200/70 max-w-lg font-light ml-4">Select an opponent. Drop bars. Earn
-                                Respect.</p>
+
+                    <!-- Live Scouter Log (Green Terminal) -->
+                    <div class="bg-black border-2 border-green-500/50 rounded-xl p-6 font-mono text-xs text-green-500 h-full max-h-[450px] overflow-hidden relative shadow-[0_0_20px_rgba(0,255,0,0.1)]">
+                        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/scanline.png')] opacity-10 pointer-events-none"></div>
+                        <div class="flex items-center justify-between mb-4 border-b border-green-500/30 pb-2">
+                             <span class="font-bold text-green-400 uppercase tracking-widest">SCOUTER_V.2.0</span>
+                             <span class="animate-pulse">● REC</span>
                         </div>
-                        <div class="flex items-center gap-4">
-                            <select id="opponent-select"
-                                class="bg-black/50 border border-red-500/30 text-white rounded-lg px-4 py-2 focus:ring-red-500">
-                                <option value="" disabled selected>Choose Opponent...</option>
-                                <option value="Hempy">Hempy (Level 3)</option>
-                                <option value="Will">Will (Level 6)</option>
-                                <option value="B-Boy Ray">B-Boy Ray (Level 2)</option>
-                            </select>
-                            <button onclick="startCypherDuel()"
-                                class="px-8 py-3 bg-red-600 hover:bg-red-500 text-white font-bold rounded-xl uppercase tracking-widest transition-colors shadow-lg shadow-red-600/20 flex items-center gap-2">
-                                <span class="material-symbols-outlined">swords</span>
-                                CHALLENGE
+                        <ul id="scouter-feed" class="space-y-2 h-full overflow-y-auto custom-scrollbar pb-8">
+                            <li class="opacity-50">[SYSTEM] Power Levels Scanning...</li>
+                            <li><span class="text-white">Hempy</span> power level rising...</li>
+                            <li><span class="text-orange-400">WARNING:</span> Ray exceeded 9000!</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. THE LIVE LAB (Jam Sessions & Registration) -->
+            <section id="live-lab" class="mb-20">
+                 <div class="flex items-center gap-4 mb-8">
+                     <span class="material-symbols-outlined text-purple-500 !text-4xl animate-spin-slow">album</span>
+                     <h2 class="text-4xl font-bold text-white tracking-tight">The Live Lab</h2>
+                     <span class="px-3 py-1 bg-purple-900/50 border border-purple-500/50 text-purple-400 text-xs font-bold uppercase rounded tracking-wider">Jam Active</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Drop FX Board -->
+                    <div class="bg-[#1A1622] border border-white/5 rounded-2xl p-8 relative overflow-hidden">
+                        <div class="absolute -right-12 -top-12 w-48 h-48 bg-purple-600/20 rounded-full blur-3xl p-8"></div>
+                        <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-2 relative z-10">
+                            <span class="material-symbols-outlined text-purple-500">graphic_eq</span> Drop FX
+                        </h3>
+                        <div class="grid grid-cols-3 gap-4 relative z-10">
+                            <button onclick="playSound('horn')" class="aspect-square bg-purple-900/40 hover:bg-purple-600 border border-purple-500/30 hover:border-white rounded-xl flex flex-col items-center justify-center transition-all group active:scale-95">
+                                <span class="material-symbols-outlined text-2xl mb-1 text-purple-300 group-hover:text-white">campaign</span>
+                                <span class="text-[10px] font-bold uppercase text-purple-200">Airhorn</span>
+                            </button>
+                            <button onclick="playSound('clap')" class="aspect-square bg-blue-900/40 hover:bg-blue-600 border border-blue-500/30 hover:border-white rounded-xl flex flex-col items-center justify-center transition-all group active:scale-95">
+                                <span class="material-symbols-outlined text-2xl mb-1 text-blue-300 group-hover:text-white">back_hand</span>
+                                <span class="text-[10px] font-bold uppercase text-blue-200">Clap</span>
+                            </button>
+                            <button onclick="playSound('scratches')" class="aspect-square bg-red-900/40 hover:bg-red-600 border border-red-500/30 hover:border-white rounded-xl flex flex-col items-center justify-center transition-all group active:scale-95">
+                                <span class="material-symbols-outlined text-2xl mb-1 text-red-300 group-hover:text-white">disc_full</span>
+                                <span class="text-[10px] font-bold uppercase text-red-200">Scratch</span>
+                            </button>
+                             <button onclick="playSound('fire')" class="aspect-square bg-orange-900/40 hover:bg-orange-600 border border-orange-500/30 hover:border-white rounded-xl flex flex-col items-center justify-center transition-all group active:scale-95">
+                                <span class="material-symbols-outlined text-2xl mb-1 text-orange-300 group-hover:text-white">local_fire_department</span>
+                                <span class="text-[10px] font-bold uppercase text-orange-200">Fire</span>
+                            </button>
+                             <button onclick="playSound('reload')" class="aspect-square bg-green-900/40 hover:bg-green-600 border border-green-500/30 hover:border-white rounded-xl flex flex-col items-center justify-center transition-all group active:scale-95">
+                                <span class="material-symbols-outlined text-2xl mb-1 text-green-300 group-hover:text-white">replay</span>
+                                <span class="text-[10px] font-bold uppercase text-green-200">Reload</span>
+                            </button>
+                             <div class="aspect-square bg-black/40 border border-dashed border-white/10 rounded-xl flex flex-col items-center justify-center text-white/20">
+                                <span class="text-[10px] uppercase">Slot Empty</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- The Challenger Gate (Registration) -->
+                    <div id="challenger-gate" class="bg-[#1A1622] border border-white/5 rounded-2xl p-8 flex flex-col relative overflow-hidden shadow-[0_0_30px_rgba(255,255,255,0.05)]">
+                        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/diagmonds-light.png')] opacity-5"></div>
+                        
+                        <div class="flex items-center gap-3 mb-6 relative z-10">
+                            <span class="material-symbols-outlined text-4xl text-mystic-gold animate-pulse">swords</span>
+                            <div>
+                                <h3 class="text-xl font-bold text-white uppercase tracking-widest">Challenger Gate</h3>
+                                <p class="text-[10px] text-gray-400 font-mono">Register for the next tournament</p>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4 relative z-10 flex-1">
+                            <div>
+                                <label class="text-xs font-bold text-white/60 uppercase tracking-widest mb-1 block">Z-Fighter Name</label>
+                                <input id="reg-name" type="text" class="w-full bg-black/50 border border-white/10 rounded p-2 text-white focus:border-electric focus:ring-1 focus:ring-electric transition-colors" placeholder="Enter your moniker...">
+                            </div>
+                            
+                            <div>
+                                <label class="text-xs font-bold text-white/60 uppercase tracking-widest mb-1 block">Combat Style</label>
+                                <select id="reg-style" class="w-full bg-black/50 border border-white/10 rounded p-2 text-white focus:border-electric focus:ring-1 focus:ring-electric transition-colors">
+                                    <option>Boombap</option>
+                                    <option>Trap</option>
+                                    <option>Drill</option>
+                                    <option>Lo-Fi</option>
+                                    <option>Experimental</option>
+                                </select>
+                            </div>
+
+                            <div class="border-2 border-dashed border-white/10 rounded-xl p-4 text-center cursor-pointer hover:border-electric/50 hover:bg-electric/10 transition-all group">
+                                <span class="material-symbols-outlined text-3xl text-gray-500 group-hover:text-electric mb-2">cloud_upload</span>
+                                <p class="text-xs text-gray-400">Drop your beat (MP3/WAV)</p>
+                            </div>
+
+                            <button onclick="registerChallenger()" class="w-full py-3 bg-gradient-to-r from-electric to-purple-600 hover:from-purple-500 hover:to-pink-500 text-white font-black uppercase tracking-widest rounded shadow-lg shadow-electric/20 transition-all transform hover:-translate-y-1">
+                                Submit to Council
                             </button>
                         </div>
-                    </div>
 
-                    <!-- Battle Log -->
-                    <div id="battle-log"
-                        class="hidden mt-4 p-4 bg-black/40 rounded-lg border border-white/5 font-mono text-sm"></div>
-                </div>
-            </div>
-
-            <!-- Dream Fuel: Cypher LX -->
-            <div
-                class="mt-12 mb-12 bg-purple-900/20 border border-purple-500/30 p-8 rounded-2xl relative overflow-hidden group">
-                <div
-                    class="absolute top-0 right-0 w-32 h-32 bg-purple-500/20 rounded-full blur-3xl group-hover:bg-purple-500/30 transition-colors">
-                </div>
-                <div class="relative z-10">
-                    <span class="text-xs font-bold text-purple-400 uppercase tracking-widest mb-2 block">Upcoming
-                        Event</span>
-                    <h3 class="text-3xl font-serif font-bold text-white mb-2">Cypher LX: The Underground</h3>
-                    <p class="text-gray-400 mb-6 max-w-lg">Join the battle. 16 MCs. 1 Champion. Winner takes the pot and
-                        earns the "Cypher Champion" Badge.</p>
-
-                    <div class="flex flex-col sm:flex-row gap-4">
-                        <button onclick="window.openWhatsApp('Registration: Cypher LX - Battler')"
-                            class="px-8 py-3 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-xl uppercase tracking-widest transition-colors shadow-lg shadow-purple-600/20">
-                            FREE ENTRY / GRATUITO
-                        </button>
-                        <button onclick="window.openWhatsApp('Registration: Cypher LX - Spectator')"
-                            class="px-8 py-3 bg-white/5 hover:bg-white/10 text-white font-bold rounded-xl uppercase tracking-widest transition-colors border border-white/10">
-                            Guest List (FREE)
-                        </button>
+                        <!-- FLowee Hint -->
+                        <div class="mt-4 pt-4 border-t border-white/5 flex items-center gap-3 opacity-60">
+                            <span class="text-xl">🐦</span>
+                            <p class="text-[10px] text-white/50 italic">"Only those with true Aura will be chosen by the Council..."</p>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </section>
+
+             <!-- 4. ARTIST SANCTUARY (Qter's Personal Page) -->
+            <section id="artist-sanctuary" class="mb-20">
+                 <div class="flex items-center gap-4 mb-8">
+                     <div class="w-12 h-12 rounded-full overflow-hidden border-2 border-mystic-gold">
+                         <!-- Qter Avatar Placeholder -->
+                         <img src="../Assets/images/logo.png" class="w-full h-full object-cover grayscale">
+                     </div>
+                     <h2 class="text-4xl font-bold text-white tracking-tight">Qter's Sanctuary</h2>
+                </div>
+
+                <!-- Legend Timeline -->
+                <div class="relative pl-8 border-l-2 border-white/10 space-y-12">
+                    <!-- Item 1 -->
+                    <div class="relative">
+                         <span class="absolute -left-[41px] top-0 w-6 h-6 rounded-full bg-mystic-gold border-4 border-black box-content"></span>
+                         <span class="text-xs font-mono text-mystic-gold mb-1 block">2023 - THE ORIGIN</span>
+                         <h3 class="text-xl font-bold text-white mb-2">The First Frequency</h3>
+                         <p class="text-white/60 text-sm max-w-lg">Qter discovers the Resonator artifact in the depths of Lisbon's underground. The first Circle D Flow Cypher is established.</p>
+                         <!-- Mock Manga Panel -->
+                         <div class="mt-4 w-48 h-24 bg-white/5 rounded border border-white/10 overflow-hidden">
+                             <div class="w-full h-full bg-[url('https://www.transparenttextures.com/patterns/dot-noise.png')] opacity-50"></div>
+                         </div>
+                    </div>
+                     <!-- Item 2 -->
+                    <div class="relative">
+                         <span class="absolute -left-[41px] top-0 w-6 h-6 rounded-full bg-gray-800 border-4 border-black box-content"></span>
+                         <span class="text-xs font-mono text-white/50 mb-1 block">2024 - THE EXPANSION</span>
+                         <h3 class="text-xl font-bold text-white mb-2">Building the Command</h3>
+                         <p class="text-white/60 text-sm max-w-lg">The Sound-Command dashboard is constructed. Agents Flowee and Sound Engineer are brought online.</p>
+                    </div>
+                </div>
+            </section>
         </main>
 
         <!-- Footer -->
@@ -459,11 +583,51 @@
             }
         });
 
+        // Activate Flowee DJ Mode
+        window.addEventListener('load', () => {
+            if (window.Flowee) {
+                window.Flowee.djMode(true);
+            }
+        });
+
         // Disable custom cursor on touch devices
         if (cursor && (window.matchMedia("(pointer: coarse)").matches)) {
             cursor.style.display = 'none';
         }
     </script>
+    <script src="../js/visuals/aura_visualizer.js"></script>
+    <!-- PHOENIX-EE CORE AGENTS -->
+    <script src='../js/agents/visual_eye.js' defer></script>
+    <script src='../js/agents/helper.js' defer></script>
+    <script src='../js/agents/bridge_pusher.js' defer></script>
+    <script src='../js/agents/device_sync.js' defer></script>
+    <script src='../js/agents/stress_test.js' defer></script>
+    <!-- SOUND CREW AGENTS -->
+    <script src='../js/agents/sound_engineer.js' defer></script>
+    <script src='../js/agents/bass_pusher.js' defer></script>
+    <script src='../js/agents/event_scout.js' defer></script>
+    <script src='../js/agents/hype_ref.js' defer></script>
+    <script src='../js/agents/tour_coordinator.js' defer></script>
+    <script src='../js/agents/archive_sync.js' defer></script>
+    <!-- PAGE LOGIC -->
+    <script>
+        // Soundboard Logic
+        function playSound(type) {
+            if (window.SoundEngineer) {
+                window.SoundEngineer.playSound(type);
+            } else {
+                console.warn("Sound Engineer offline. Loading...");
+            }
+        }
+        
+        // Listen for Tour Coordinator updates
+        window.addEventListener('agent-alert', (e) => {
+            console.log(`[${e.detail.agent}] ${e.detail.message}`);
+        });
+    </script>
+    <div id="flowee-agent" class="fixed bottom-8 left-8 z-50 flex flex-col items-center group cursor-pointer"></div>
 </body>
 
 </html>
+
+

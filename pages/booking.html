@@ -1,7 +1,11 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html class="dark" lang="en">
 
 <head>
+    <meta name="description" content="Book your session with Circle D Flow. Choose from Artist, Brand, or Individual photography packages.">
+    <meta property="og:title" content="Circle D Flow | Booking">
+    <meta property="og:description" content="Book your session with Circle D Flow. Choose from Artist, Brand, or Individual photography packages.">
+    <meta property="og:type" content="website">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
@@ -232,7 +236,7 @@
                     <div class="text-4xl font-black text-white mb-4">FREE</div>
                     <p class="text-white/70 text-sm mb-8 min-h-[60px] leading-relaxed">
                         A spontaneous 30-minute flow. Whether amidst the city's pulse, atop a breathtaking miradouro, or
-                        by the whispering sea—choose your spot and discover the magic we create together. A taste of the
+                        by the whispering seaâ€”choose your spot and discover the magic we create together. A taste of the
                         experience.
                     </p>
                     <button onclick="openBooking('Community Offer')"
@@ -246,7 +250,7 @@
                     class="bg-background-dark/80 backdrop-blur-sm border border-white/10 rounded-xl p-8 hover:border-mystic-gold/30 transition-all group">
                     <h3 class="text-white text-xl font-bold mb-2">Standard Session</h3>
                     <div class="flex items-baseline gap-1 mb-4">
-                        <span class="text-4xl font-black text-primary">40€</span>
+                        <span class="text-4xl font-black text-primary">40â‚¬</span>
                         <span class="text-white/60">/ hour</span>
                     </div>
                     <p class="text-white/70 text-sm mb-8 min-h-[60px] leading-relaxed">
@@ -269,7 +273,7 @@
                     </div>
                     <h3 class="text-white text-xl font-bold mb-2">Full Experience</h3>
                     <div class="flex items-baseline gap-1 mb-4">
-                        <span class="text-4xl font-black text-primary">65€</span>
+                        <span class="text-4xl font-black text-primary">65â‚¬</span>
                         <span class="text-white/60">/ hour</span>
                     </div>
                     <p class="text-white/70 text-sm mb-8 min-h-[60px] leading-relaxed">
@@ -386,7 +390,7 @@
                             class="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between gap-6">
                             <div class="text-center md:text-left">
                                 <div class="text-white/60 text-sm mb-1">Estimated Total</div>
-                                <div class="text-4xl font-black text-mystic-gold" id="total-price">80€</div>
+                                <div class="text-4xl font-black text-mystic-gold" id="total-price">80â‚¬</div>
                                 <div class="text-xs text-white/40 mt-1">*Final price may vary for custom projects</div>
                             </div>
                             <button type="button" onclick="goToPayment()"
@@ -407,7 +411,7 @@
                         </div>
                         <h3 class="text-2xl font-bold text-white">Choose Payment Method</h3>
                         <p class="text-white/60 max-w-md mx-auto">Total: <span id="payment-amount"
-                                class="text-mystic-gold font-bold">80€</span></p>
+                                class="text-mystic-gold font-bold">80â‚¬</span></p>
                     </div>
 
                     <!-- Payment Methods Grid -->
@@ -534,7 +538,7 @@
                     </div>
                 </div>
                 <div class="mt-12 border-t border-primary/20 pt-8 text-center text-sm text-white/50">
-                    <p>© 2024 Circle D Flow. All rights reserved.</p>
+                    <p>Â© 2024 Circle D Flow. All rights reserved.</p>
                 </div>
             </div>
         </footer>
@@ -631,8 +635,8 @@
                     if (paymentAmountDisplay) paymentAmountDisplay.textContent = "Custom";
                 } else {
                     const total = hours * rate;
-                    if (totalPriceDisplay) totalPriceDisplay.textContent = total + '€';
-                    if (paymentAmountDisplay) paymentAmountDisplay.textContent = total + '€';
+                    if (totalPriceDisplay) totalPriceDisplay.textContent = total + 'â‚¬';
+                    if (paymentAmountDisplay) paymentAmountDisplay.textContent = total + 'â‚¬';
                 }
             }
 
@@ -785,7 +789,7 @@
                     email: emailInput ? emailInput.value : 'Unknown',
                     service_type: projectType ? projectType.value : 'standard',
                     duration: slider ? parseInt(slider.value) : 2,
-                    total_price: totalPrice ? parseInt(totalPrice.innerText.replace('€', '') || 0) : 0,
+                    total_price: totalPrice ? parseInt(totalPrice.innerText.replace('â‚¬', '') || 0) : 0,
                     status: 'confirmed'
                 };
 
@@ -819,6 +823,15 @@
         }); // End DOMContentLoaded
     </script>
 
+    <!-- PHOENIX-EE CORE AGENTS -->
+    <script src='../js/agents/visual_eye.js' defer></script>
+    <script src='../js/agents/helper.js' defer></script>
+    <script src='../js/agents/bridge_pusher.js' defer></script>
+    <script src='../js/agents/device_sync.js' defer></script>
+    <script src='../js/agents/stress_test.js' defer></script>
+    <div id="flowee-agent" class="fixed bottom-8 left-8 z-50 flex flex-col items-center group cursor-pointer"></div>
 </body>
 
 </html>
+
+

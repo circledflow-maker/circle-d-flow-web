@@ -1,8 +1,12 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
+    <meta name="description" content="Partner Scanner: Internal tool for verifying partner interactions and rewards.">
+    <meta property="og:title" content="Circle D Flow | Partner Scanner">
+    <meta property="og:description" content="Partner Scanner: Internal tool for verifying partner interactions and rewards.">
+    <meta property="og:type" content="website">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scanner | African Queen Kitchen</title>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -64,15 +68,24 @@
                 const success = window.Gamification.redeemVoucher(id);
 
                 if (success) {
-                    alert('✅ VALID VOUCHER! \n\nMeal/Snack Redeemed Successfully.');
+                    alert('âœ… VALID VOUCHER! \n\nMeal/Snack Redeemed Successfully.');
                     // Notify User
                     if (window.Notifications) window.Notifications.send('success', `Your voucher at African Queen Kitchen was redeemed!`, 'user');
                 } else {
-                    alert('❌ INVALID OR USED.\n\nThis voucher code is not valid.');
+                    alert('âŒ INVALID OR USED.\n\nThis voucher code is not valid.');
                 }
             }
         }
     </script>
+    <!-- PHOENIX-EE CORE AGENTS -->
+    <script src='../js/agents/visual_eye.js' defer></script>
+    <script src='../js/agents/helper.js' defer></script>
+    <script src='../js/agents/bridge_pusher.js' defer></script>
+    <script src='../js/agents/device_sync.js' defer></script>
+    <script src='../js/agents/stress_test.js' defer></script>
+    <div id="flowee-agent" class="fixed bottom-8 left-8 z-50 flex flex-col items-center group cursor-pointer"></div>
 </body>
 
 </html>
+
+

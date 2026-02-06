@@ -4,1405 +4,225 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Circle D Flow - Community Hub</title>
-    <meta name="description" content="Circle D Flow - The central nexus for Lisbon's creators. Visuals, Sound & Taste united in one ecosystem.">
-    <meta property="og:title" content="Circle D Flow - Community Hub">
-    <meta property="og:description" content="Join the Circle. Elevate your Flow. Visuals, Sound, and Taste in Lisbon.">
-    <meta property="og:image" content="Assets/images/logo.png">
-    <meta property="og:type" content="website">
+    <title>Circle D Flow - The Gateway</title>
+    <meta name="description" content="Awaken Your Nen. The central nexus for Lisbon's creators.">
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com" rel="preconnect" />
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&amp;display=swap"
-        rel="stylesheet" />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=material_symbols_outlined&display=swap"
-        rel="stylesheet" />
-    <link rel="stylesheet" href="css/styles.css?v=2.1">
-    <style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24
-        }
-
-        /* Video Background Styles */
-        #video-bg {
-            position: fixed;
-            right: 0;
-            bottom: 0;
-            min-width: 100%;
-            min-height: 100%;
-            z-index: -1;
-            object-fit: cover;
-            opacity: 0.6;
-        }
-
-        .bg-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(13, 13, 15, 0.7);
-            /* midnight with opacity */
-            z-index: -1;
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=material_symbols_outlined&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/styles.css?v=Gateway1.0">
     <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#8A2BE2",
-                        "background-light": "#f7f5f8",
-                        "background-dark": "#191022",
-                        "mystic-gold": "#FFD700"
+                        "primary": "#8A2BE2", // Electric Purple
+                        "obsidian": "#050505", // Deep Black
+                        "void": "#0a0a0c",     // Soft Black
+                        "mystic-gold": "#FFD700",
+                        "electric": "#9d4edd"
                     },
                     fontFamily: {
-                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                        "display": ["Plus Jakarta Sans", "sans-serif"],
+                        "serif": ["Cinzel", "serif"]
                     },
-                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                    animation: {
+                        "pulse-slow": "pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+                        "float": "float 6s ease-in-out infinite",
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
                 },
             },
         }
     </script>
     <style>
-        /* CRITICAL ONBOARDING STYLES */
-        #language-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 99999 !important;
-            background-color: #000;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+        .glass-obsidian {
+            background: rgba(10, 10, 12, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
-
-        #class-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 10000 !important;
-            background-color: #0d0d0f;
-            /* Deep background */
-            display: none;
-            /* JS SETS TO FLEX */
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* Mobile Responsive Fixes */
-        /* MOBILE SCROLL SNAP CAROUSEL */
-        @media (max-width: 768px) {
-            #class-overlay {
-                justify-content: flex-start;
-                padding-top: 20vh;
-            }
-
-            #onboarding-carousel {
-                display: flex;
-                overflow-x: auto;
-                scroll-snap-type: x mandatory;
-                gap: 15px;
-                padding: 20px;
-                width: 100%;
-                /* Smooth iOS scroll */
-                -webkit-overflow-scrolling: touch;
-                /* Remove default scrollbar */
-                scrollbar-width: none;
-            }
-
-            #onboarding-carousel::-webkit-scrollbar {
-                display: none;
-            }
-
-            .class-card {
-                min-width: 85vw !important;
-                /* Mobile: Show 1 card fully */
-                scroll-snap-align: center;
-                flex-shrink: 0;
-                /* Reset margin to ensure snap works */
-                margin: 0;
-            }
-
-            /* Desktop override */
-            @media (min-width: 768px) {
-                .class-card {
-                    min-width: 300px !important;
-                }
-            }
-        }
-
-        /* PROTOCOL ROYAL TYPOGRAPHY */
-        .hero-title {
-            /* 1. Fluid Size: Scales automatically between 2rem (mobile) and 5rem (desktop) */
-            font-size: clamp(1.8rem, 5vw, 4.5rem);
-
-            /* 2. Cinematic Spacing: Wider on desktop, tighter on mobile */
-            letter-spacing: clamp(0.2em, 1.5vw, 0.8em);
-
-            /* 3. Layout & Position */
-            text-align: center;
-            width: 100%;
-            max-width: 90vw;
-            /* Prevent edge touching */
-            margin: 0 auto 40px auto;
-            /* Centered with breathing room bottom */
-
-            /* 4. The Royal Style */
-            font-weight: 800;
-            text-transform: uppercase;
-            color: #ffffff;
-            line-height: 1.3;
-
-            /* 5. The Glow (Gold/White Aura) */
-            text-shadow:
-                0 0 10px rgba(255, 255, 255, 0.3),
-                0 0 20px rgba(255, 215, 0, 0.4),
-                /* Gold tint */
-                0 0 40px rgba(0, 0, 0, 0.8);
-            /* Dark backing for contrast */
-        }
-
-        /* Specific Mobile Adjustment to prevent word-break issues */
-        @media (max-width: 768px) {
-            .hero-title {
-                display: flex;
-                flex-direction: column;
-                /* Stack words if needed on tiny screens */
-                gap: 10px;
-                letter-spacing: 0.3em;
-                /* Slightly less spacing on mobile */
-            }
-        }
-
-        /* Selection States */
-        .lang-btn.selected {
-            border-color: #8A2BE2 !important;
-            background: rgba(138, 43, 226, 0.1);
-            box-shadow: 0 0 20px rgba(138, 43, 226, 0.3);
-        }
-
-        .class-card.selected {
-            border-color: #8A2BE2 !important;
-            background: rgba(255, 255, 255, 0.1);
-            transform: scale(1.02);
-            box-shadow: 0 0 30px rgba(138, 43, 226, 0.2);
-        }
-
-        .hidden {
-            display: none !important;
+        .hero-glow {
+            box-shadow: 0 0 100px rgba(138, 43, 226, 0.15);
         }
     </style>
+    <!-- AUTH WIDGET -->
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 
-<body class="bg-background-light dark:bg-background-dark font-display text-gray-800 dark:text-gray-200">
-    <!-- OVERLAY 1: LANGUAGE SELECTION -->
-    <div id="language-overlay">
-        <div class="relative w-full max-w-md text-center space-y-8 animate-fade-in-up p-6">
-            <h2 data-translate="choose"
-                class="text-3xl font-bold text-white tracking-[0.2em] uppercase drop-shadow-[0_0_15px_rgba(255,255,255,0.5)] mb-8">
-                Select Your<br><span class="text-electric animate-pulse">Frequency</span>
-            </h2>
+<body class="bg-obsidian text-white font-display overflow-x-hidden selection:bg-primary selection:text-white opacity-0 transition-opacity duration-1000">
 
-            <div class="grid gap-4">
-                        <button aria-label="Select English" onclick="selectLang('en')" class="lang-btn group relative w-full flex items-center justify-center p-4 border-2 border-white/20 rounded-xl hover:bg-white/10 transition-all cursor-pointer">
-                            <span class="text-2xl mr-2" aria-hidden="true">🇬🇧</span> <span class="font-bold text-white">ENGLISH</span>
-                        </button>
+    <!-- AGENT: GATEKEEPER (Handles Auth & Visibility) -->
+    <script src="js/agents/gatekeeper.js"></script>
+    <!-- AGENT: THE VISIONARY (Visual Eye) -->
+    <script src="js/agents/visual_eye.js" defer></script>
+    <!-- Bridge Pusher: Flow & Momentum -->
+    <script src="js/agents/bridge_pusher.js" defer></script>
+    <!-- Helper: Visual Integrity -->
+    <script src="js/agents/helper.js" defer></script>
 
-                        <button aria-label="Select Portuguese" onclick="selectLang('pt')" class="lang-btn group relative w-full flex items-center justify-center p-4 border-2 border-white/20 rounded-xl hover:bg-white/10 transition-all cursor-pointer">
-                            <span class="text-2xl mr-2" aria-hidden="true">🇵🇹</span> <span class="font-bold text-white">PORTUGUÊS</span>
-                        </button>
-
-                        <button aria-label="Select German" onclick="selectLang('de')" class="lang-btn group relative w-full flex items-center justify-center p-4 border-2 border-white/20 rounded-xl hover:bg-white/10 transition-all cursor-pointer">
-                            <span class="text-2xl mr-2" aria-hidden="true">🇩🇪</span> <span class="font-bold text-white">DEUTSCH</span>
-                        </button>
-
-                        <button aria-label="Select French" onclick="selectLang('fr')" class="lang-btn group relative w-full flex items-center justify-center p-4 border-2 border-white/20 rounded-xl hover:bg-white/10 transition-all cursor-pointer">
-                            <span class="text-2xl mr-2" aria-hidden="true">🇫🇷</span> <span class="font-bold text-white">FRANÇAIS</span>
-                        </button>
-
-                        <script>
-                            // Immediate self-executing function to check language
-                            (function() {
-                                if (localStorage.getItem('user_lang')) {
-                                    // If lang exists, hide overlay IMMEDIATELY to prevent FCP blocking
-                                    var overlay = document.getElementById('language-overlay');
-                                    if (overlay) overlay.style.display = 'none';
-                                }
-                            })();
-
-                            function selectLang(lang) {
-                                // 1. Save to localStorage
-                                localStorage.setItem('user_lang', lang);
-                                
-                                // 2. Navigate to Dashboard
-                                window.location.href = 'pages/dashboard.html';
-                            }
-                        </script>
-                </div>
+    <!-- BACKGROUND FX (The Void) -->
+    <div class="fixed inset-0 z-0 pointer-events-none">
+        <div class="absolute inset-0 bg-[url('https://pub-24ba376bfccb446996666eaff4dbae12.r2.dev/grid.png')] opacity-[0.03]"></div>
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[50vh] bg-gradient-to-b from-primary/5 to-transparent"></div>
     </div>
 
-    <!-- OVERLAY 2: CLASS SELECTION (The Carousel) -->
-    <div id="class-overlay">
-        <!-- Background Elements -->
-        <div class="absolute inset-0 bg-black/5 pointer-events-none"></div>
-        <div class="absolute top-0 w-full h-32 bg-gradient-to-b from-electric/10 to-transparent pointer-events-none">
+    <!-- GENESIS: GATE OVERLAY (Ying-Yang Split) -->
+    <div class="gate-overlay fixed inset-0 z-[60] flex pointer-events-none hidden transition-opacity duration-1000">
+        <div class="gate-left w-1/2 h-full bg-black border-r border-white/10 transition-transform duration-1500 ease-in-out flex items-center justify-end pr-4">
+            <span class="material-symbols-outlined text-9xl text-white/5">yin_yang</span>
         </div>
-
-        <div class="w-full max-w-6xl mx-auto flex flex-col items-center justify-center h-full p-4 relative z-10">
-            <h2 data-translate="choose"
-                class="text-3xl md:text-5xl font-bold text-white tracking-[0.2em] uppercase mb-4 text-center">
-                Choose Your Path
-            </h2>
-            <p class="text-sm md:text-base text-mist mb-12 text-center max-w-lg">
-                Swipe to select your role in the Kingdom.
-            </p>
-
-            <!-- Horizontal Carousel -->
-            <div class="flex gap-4 overflow-x-auto pb-8 snap-x snap-mandatory scrollbar-hide px-4 w-full justify-start items-center h-[400px]"
-                id="onboarding-carousel">
-
-                <!-- 1. Sonic Architect (Mate Masie - Wisdom) -->
-                <div onclick="selectClass('Sonic Architect', this)"
-                    class="class-card min-w-[260px] md:min-w-[300px] snap-center p-8 rounded-2xl bg-white/5 border border-white/10 hover:border-purple-500 cursor-pointer transition-all flex flex-col items-center gap-6 group hover:bg-white/10">
-                    <div
-                        class="w-24 h-24 rounded-full bg-black/50 flex items-center justify-center border border-white/10 shadow-lg group-hover:shadow-purple-500/50 transition-all">
-                        <!-- Symbol: Mate Masie (4 spots) -->
-                        <svg viewBox="0 0 100 100"
-                            class="w-12 h-12 fill-current text-white group-hover:text-purple-500 transition-colors">
-                            <circle cx="30" cy="30" r="12" />
-                            <circle cx="70" cy="30" r="12" />
-                            <circle cx="30" cy="70" r="12" />
-                            <circle cx="70" cy="70" r="12" />
-                        </svg>
-                    </div>
-                    <div class="text-center">
-                        <h4 class="font-bold text-white text-lg">Sonic Architect</h4>
-                        <p class="text-xs text-purple-400 mt-2 uppercase tracking-wider font-bold">Mate Masie</p>
-                        <p class="text-[10px] text-mist mt-1">Wisdom & Sound</p>
-                    </div>
-                </div>
-
-                <!-- 2. Culinary Alchemist (Bese Saka - Abundance) -->
-                <div onclick="selectClass('Culinary Alchemist', this)"
-                    class="class-card min-w-[260px] md:min-w-[300px] snap-center p-8 rounded-2xl bg-white/5 border border-white/10 hover:border-amber cursor-pointer transition-all flex flex-col items-center gap-6 group hover:bg-white/10">
-                    <div
-                        class="w-24 h-24 rounded-full bg-black/50 flex items-center justify-center border border-white/10 shadow-lg group-hover:shadow-amber/50 transition-all">
-                        <!-- Symbol: Bese Saka (Abstract Sack/Pods) -->
-                        <svg viewBox="0 0 100 100"
-                            class="w-12 h-12 fill-current text-white group-hover:text-amber transition-colors">
-                            <path
-                                d="M50 20 C70 20 80 40 80 60 C80 80 65 90 50 90 C35 90 20 80 20 60 C20 40 30 20 50 20 Z"
-                                opacity="0.5" />
-                            <circle cx="40" cy="50" r="8" />
-                            <circle cx="60" cy="50" r="8" />
-                            <circle cx="50" cy="65" r="8" />
-                        </svg>
-                    </div>
-                    <div class="text-center">
-                        <h4 class="font-bold text-white text-lg">Culinary Alchemist</h4>
-                        <p class="text-xs text-amber mt-2 uppercase tracking-wider font-bold">Bese Saka</p>
-                        <p class="text-[10px] text-mist mt-1">Abundance & Taste</p>
-                    </div>
-                </div>
-
-                <!-- 3. Visual Vanguard (Ananse Ntontan - Creativity) -->
-                <div onclick="selectClass('Visual Vanguard', this)"
-                    class="class-card min-w-[260px] md:min-w-[300px] snap-center p-8 rounded-2xl bg-white/5 border border-white/10 hover:border-pink-500 cursor-pointer transition-all flex flex-col items-center gap-6 group hover:bg-white/10">
-                    <div
-                        class="w-24 h-24 rounded-full bg-black/50 flex items-center justify-center border border-white/10 shadow-lg group-hover:shadow-pink-500/50 transition-all">
-                        <!-- Symbol: Ananse Ntontan (Web) -->
-                        <svg viewBox="0 0 100 100"
-                            class="w-12 h-12 stroke-current text-white group-hover:text-pink-500 transition-colors"
-                            fill="none" stroke-width="4">
-                            <circle cx="50" cy="50" r="40" />
-                            <circle cx="50" cy="50" r="25" />
-                            <circle cx="50" cy="50" r="10" />
-                            <path d="M50 10 L50 90 M10 50 L90 50 M22 22 L78 78 M22 78 L78 22" />
-                        </svg>
-                    </div>
-                    <div class="text-center">
-                        <h4 class="font-bold text-white text-lg">Visual Vanguard</h4>
-                        <p class="text-xs text-pink-500 mt-2 uppercase tracking-wider font-bold">Ananse Ntontan</p>
-                        <p class="text-[10px] text-mist mt-1">Creativity & Vision</p>
-                    </div>
-                </div>
-
-                <!-- 4. Word Smith (Sankofa - Learning) -->
-                <div onclick="selectClass('Word Smith', this)"
-                    class="class-card min-w-[260px] md:min-w-[300px] snap-center p-8 rounded-2xl bg-white/5 border border-white/10 hover:border-blue-400 cursor-pointer transition-all flex flex-col items-center gap-6 group hover:bg-white/10">
-                    <div
-                        class="w-24 h-24 rounded-full bg-black/50 flex items-center justify-center border border-white/10 shadow-lg group-hover:shadow-blue-400/50 transition-all">
-                        <!-- Symbol: Sankofa (Heart shape variant) -->
-                        <svg viewBox="0 0 100 100"
-                            class="w-12 h-12 stroke-current text-white group-hover:text-blue-400 transition-colors"
-                            fill="none" stroke-width="6">
-                            <path
-                                d="M50 85 C20 50 10 40 10 30 A20 20 0 0 1 50 30 A20 20 0 0 1 90 30 C90 40 80 50 50 85 Z" />
-                            <path d="M50 30 L50 60 M30 30 L70 30" stroke-width="4" stroke-linecap="round" />
-                        </svg>
-                    </div>
-                    <div class="text-center">
-                        <h4 class="font-bold text-white text-lg">Word Smith</h4>
-                        <p class="text-xs text-blue-400 mt-2 uppercase tracking-wider font-bold">Sankofa</p>
-                        <p class="text-[10px] text-mist mt-1">Learning & Voice</p>
-                    </div>
-                </div>
-
-                <!-- 5. Street Kinetic (Denkyem - Adaptability) -->
-                <div onclick="selectClass('Street Kinetic', this)"
-                    class="class-card min-w-[260px] md:min-w-[300px] snap-center p-8 rounded-2xl bg-white/5 border border-white/10 hover:border-red-500 cursor-pointer transition-all flex flex-col items-center gap-6 group hover:bg-white/10">
-                    <div
-                        class="w-24 h-24 rounded-full bg-black/50 flex items-center justify-center border border-white/10 shadow-lg group-hover:shadow-red-500/50 transition-all">
-                        <!-- Symbol: Denkyem (Crocodile/Oval) -->
-                        <svg viewBox="0 0 100 100"
-                            class="w-12 h-12 fill-current text-white group-hover:text-red-500 transition-colors">
-                            <ellipse cx="50" cy="50" rx="30" ry="20" />
-                            <circle cx="30" cy="30" r="5" />
-                            <circle cx="70" cy="30" r="5" />
-                            <circle cx="30" cy="70" r="5" />
-                            <circle cx="70" cy="70" r="5" />
-                        </svg>
-                    </div>
-                    <div class="text-center">
-                        <h4 class="font-bold text-white text-lg">Street Kinetic</h4>
-                        <p class="text-xs text-red-500 mt-2 uppercase tracking-wider font-bold">Denkyem</p>
-                        <p class="text-[10px] text-mist mt-1">Adaptability & Move</p>
-                    </div>
-                </div>
-
-                <!-- 6. Grid Walker (Hwemudua - Excellence) -->
-                <div onclick="selectClass('Grid Walker', this)"
-                    class="class-card min-w-[260px] md:min-w-[300px] snap-center p-8 rounded-2xl bg-white/5 border border-white/10 hover:border-cyan-400 cursor-pointer transition-all flex flex-col items-center gap-6 group hover:bg-white/10">
-                    <div
-                        class="w-24 h-24 rounded-full bg-black/50 flex items-center justify-center border border-white/10 shadow-lg group-hover:shadow-cyan-400/50 transition-all">
-                        <!-- Symbol: Hwemudua (Measuring Stick) -->
-                        <svg viewBox="0 0 100 100"
-                            class="w-12 h-12 stroke-current text-white group-hover:text-cyan-400 transition-colors"
-                            fill="none" stroke-width="8" stroke-linecap="round">
-                            <line x1="50" y1="10" x2="50" y2="90" />
-                            <line x1="10" y1="50" x2="90" y2="50" />
-                            <line x1="10" y1="20" x2="10" y2="80" stroke-width="4" />
-                            <line x1="90" y1="20" x2="90" y2="80" stroke-width="4" />
-                        </svg>
-                    </div>
-                    <div class="text-center">
-                        <h4 class="font-bold text-white text-lg">Grid Walker</h4>
-                        <p class="text-xs text-cyan-400 mt-2 uppercase tracking-wider font-bold">Hwemudua</p>
-                        <p class="text-[10px] text-mist mt-1">Excellence & Logic</p>
-                    </div>
-                </div>
-
-                <!-- 7. Spirit Guide (Gye Nyame - Supremacy) -->
-                <div onclick="selectClass('Spirit Guide', this)"
-                    class="class-card min-w-[260px] md:min-w-[300px] snap-center p-8 rounded-2xl bg-white/5 border border-white/10 hover:border-mystic-gold cursor-pointer transition-all flex flex-col items-center gap-6 group hover:bg-white/10">
-                    <div
-                        class="w-24 h-24 rounded-full bg-black/50 flex items-center justify-center border border-white/10 shadow-lg group-hover:shadow-mystic-gold/50 transition-all">
-                        <!-- Symbol: Gye Nyame (Twisted Knot / Infinity approx) -->
-                        <svg viewBox="0 0 100 100"
-                            class="w-12 h-12 stroke-current text-white group-hover:text-mystic-gold transition-colors"
-                            fill="none" stroke-width="6" stroke-linecap="round">
-                            <path d="M30 30 Q 50 10 70 30 T 70 70 T 30 70 T 30 30" />
-                            <line x1="50" y1="10" x2="50" y2="90" stroke-width="4" />
-                            <circle cx="50" cy="50" r="10" />
-                        </svg>
-                    </div>
-                    <div class="text-center">
-                        <h4 class="font-bold text-white text-lg">Spirit Guide</h4>
-                        <p class="text-xs text-mystic-gold mt-2 uppercase tracking-wider font-bold">Gye Nyame</p>
-                        <p class="text-[10px] text-mist mt-1">Supremacy of Spirit</p>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- ENTER BUTTON (Initially Hidden) -->
-            <button id="class-confirm-btn" onclick="enterKingdom()" style="display: none;"
-                class="mt-12 px-12 py-5 bg-electric text-white font-bold rounded-full uppercase tracking-widest hover:bg-white hover:text-black transition-all shadow-[0_0_40px_rgba(98,0,234,0.6)] text-lg animate-bounce-slight">
-                ENTER THE KINGDOM
-            </button>
-            <p class="text-[10px] text-mist mt-4 opacity-50">Identity Will Be Minted</p>
+        <div class="gate-right w-1/2 h-full bg-black border-l border-white/10 transition-transform duration-1500 ease-in-out flex items-center pl-4">
+             <!-- Right half visual if needed -->
         </div>
     </div>
 
-    <!-- Video Background -->
-    <video autoplay loop muted playsinline id="video-bg" aria-hidden="true">
-        <source src="https://pub-24ba376bfccb446996666eaff4dbae12.r2.dev/hero.mp4" type="video/mp4">
-    </video>
-    <div class="bg-overlay"></div>
-
-    <!-- Custom Cursor -->
-    <div id="cursor"
-        class="fixed w-12 h-12 pointer-events-none z-[200] transition-transform duration-100 hidden md:block">
-        <img src="Assets/images/logo.png" class="w-full h-full object-contain drop-shadow-lg" alt="Cursor" width="48" height="48">
-    </div>
-
-    <!-- Mobile Wave Overlay -->
-    <div id="mobile-wave-menu"
-        class="fixed inset-0 bg-background-dark/95 backdrop-blur-xl z-[100] transform translate-y-full opacity-0 pointer-events-none transition-all duration-500 ease-out flex flex-col items-center justify-center space-y-8">
-        <button id="mobile-close-btn" aria-label="Close Mobile Menu" class="absolute top-8 right-8 text-white/50 hover:text-white">
-            <span class="material-symbols-outlined text-4xl">close</span>
-        </button>
-
-        <a href="pages/outbreak_tunes.html"
-            class="text-2xl font-serif font-bold text-white hover:text-purple-400 transition-colors">Sound</a>
-        <a href="pages/african-queen-kitchen.html"
-            class="text-2xl font-serif font-bold text-white hover:text-amber transition-colors">Taste</a>
-        <a href="pages/kiss-your-heart.html"
-            class="text-2xl font-serif font-bold text-white hover:text-electric transition-colors">Visuals</a>
-        <a href="pages/marketplace.html"
-            class="text-2xl font-serif font-bold text-white hover:text-mystic-gold transition-colors">Style</a>
-        <a href="pages/academy.html"
-            class="text-2xl font-serif font-bold text-white hover:text-blue-400 transition-colors">Knowledge</a>
-        <a href="pages/events.html"
-            class="text-2xl font-serif font-bold text-white hover:text-green-400 transition-colors">Space</a>
-        <a href="pages/mindfulness.html"
-            class="text-2xl font-serif font-bold text-white hover:text-indigo-400 transition-colors">Spirit</a>
-
-        <div class="h-px w-24 bg-white/20 my-4"></div>
-
-        <a href="pages/login.html" id="mobile-auth-link"
-            class="text-2xl text-mystic-gold font-bold tracking-widest uppercase">Enter the Circle</a>
-    </div>
-
-    <!-- The Flow Bar (Fixed Navigation) -->
-    <!-- Desktop Navigation (The Compass) -->
-    <nav
-        class="hidden md:flex fixed top-0 w-full z-50 bg-[#0F0A13]/80 backdrop-blur-xl border-b border-white/5 h-20 items-center justify-between px-12 transition-all duration-300">
-        <!-- Left: Core Paths -->
-        <div class="flex items-center gap-8">
-            <a href="pages/dashboard.html"
-                class="text-xs font-bold uppercase tracking-widest text-white hover:text-electric transition-colors"
-                data-i18n="nav_hub">Hub</a>
-            <a href="pages/outbreak_tunes.html"
-                class="text-xs font-bold uppercase tracking-widest text-white hover:text-purple-400 transition-colors"
-                data-i18n="nav_sound">Sound</a>
-            <a href="pages/african-queen-kitchen.html"
-                class="text-xs font-bold uppercase tracking-widest text-white hover:text-amber transition-colors"
-                data-i18n="nav_taste">Taste</a>
-            <a href="pages/kiss-your-heart.html"
-                class="text-xs font-bold uppercase tracking-widest text-white hover:text-pink-400 transition-colors"
-                data-i18n="nav_visuals">Visuals</a>
-        </div>
-
-        <!-- Center: Logo -->
-        <a href="index.html" class="absolute left-1/2 -translate-x-1/2 group">
-            <img src="Assets/images/logo.png" alt="Circle D Flow" width="40" height="40"
-                class="h-10 w-auto group-hover:scale-110 transition-transform duration-300 drop-shadow-[0_0_15px_rgba(98,0,234,0.5)]">
-        </a>
-
-        <!-- Right: Explorer Paths -->
-        <div class="flex items-center gap-8">
-            <a href="pages/marketplace.html"
-                class="text-xs font-bold uppercase tracking-widest text-white hover:text-mystic-gold transition-colors"
-                data-i18n="nav_style">Style</a>
-            <a href="pages/academy.html"
-                class="text-xs font-bold uppercase tracking-widest text-white hover:text-blue-400 transition-colors"
-                data-i18n="nav_knowledge">Knowledge</a>
-            <a href="pages/events.html"
-                class="text-xs font-bold uppercase tracking-widest text-white hover:text-green-400 transition-colors"
-                data-i18n="nav_space">Space</a>
-            <a href="pages/mindfulness.html"
-                class="text-xs font-bold uppercase tracking-widest text-white hover:text-indigo-400 transition-colors"
-                data-i18n="nav_spirit">Spirit</a>
-        </div>
-
-        <!-- Login Button -->
-        <div class="absolute right-6 flex items-center gap-4">
-            <button aria-label="Change Language" onclick="toggleLanguageModal()" class="text-white/50 hover:text-white transition-colors">
-                <span class="material-symbols-outlined text-lg">public</span>
-            </button>
-            <button onclick="openLogin()"
-                class="px-5 py-2 bg-white/5 text-white font-bold rounded-full text-[10px] uppercase tracking-widest hover:bg-white hover:text-black transition-all border border-white/10 hover:shadow-[0_0_15px_rgba(255,255,255,0.3)]"
-                data-i18n="login_btn">
-                Login
-            </button>
-        </div>
-    </nav>
-
-    <!-- Mobile Bottom Navigation (Sticky) -->
-    <nav
-        class="md:hidden fixed bottom-4 left-4 right-4 z-50 bg-[#1A1622]/90 backdrop-blur-xl border border-white/10 rounded-2xl p-4 flex justify-between items-center shadow-2xl safe-area-pb">
-        <a href="pages/dashboard.html"
-            class="flex flex-col items-center gap-1 text-white/50 hover:text-electric transition-colors">
-            <span class="material-symbols-outlined text-xl">dashboard</span>
-            <span class="text-[9px] font-bold uppercase tracking-wider" data-i18n="nav_hub">Hub</span>
-        </a>
-        <a href="pages/outbreak_tunes.html"
-            class="flex flex-col items-center gap-1 text-white/50 hover:text-purple-400 transition-colors">
-            <span class="material-symbols-outlined text-xl">graphic_eq</span>
-            <span class="text-[9px] font-bold uppercase tracking-wider" data-i18n="nav_sound">Sound</span>
-        </a>
-        <a href="index.html" class="relative -top-6">
-            <div
-                class="w-14 h-14 bg-electric rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(98,0,234,0.6)] border-4 border-[#0F0A13]">
-                <img src="Assets/images/logo.png" class="w-7 h-7 object-contain" width="28" height="28" alt="Circle D Flow Logo">
-            </div>
-        </a>
-        <a href="pages/african-queen-kitchen.html"
-            class="flex flex-col items-center gap-1 text-white/50 hover:text-amber transition-colors">
-            <span class="material-symbols-outlined text-xl">restaurant</span>
-            <span class="text-[9px] font-bold uppercase tracking-wider" data-i18n="nav_taste">Taste</span>
-        </a>
-        <button aria-label="Open Menu" onclick="toggleMobileDrawer()"
-            class="flex flex-col items-center gap-1 text-white/50 hover:text-mystic-gold transition-colors">
-            <span class="material-symbols-outlined text-xl">menu</span>
-            <span class="text-[9px] font-bold uppercase tracking-wider">More</span>
-        </button>
-    </nav>
-
-    <!-- Mobile Drawer -->
-    <div id="mobile-drawer"
-        class="fixed inset-0 bg-black/95 backdrop-blur-xl z-40 transform translate-y-full transition-transform duration-300 flex flex-col items-center justify-center space-y-8 md:hidden">
-        <button aria-label="Close Menu" onclick="toggleMobileDrawer()" class="absolute top-8 right-8 text-white/50 hover:text-white">
-            <span class="material-symbols-outlined text-3xl">close</span>
-        </button>
-        <a href="pages/kiss-your-heart.html"
-            class="text-2xl font-bold text-white hover:text-pink-400 tracking-widest">VISUALS</a>
-        <a href="pages/marketplace.html"
-            class="text-2xl font-bold text-white hover:text-mystic-gold tracking-widest">STYLE</a>
-        <a href="pages/academy.html" class="text-2xl font-bold text-white hover:text-blue-400 tracking-widest">KNOWLEDGE</a>
-        <a href="pages/events.html" class="text-2xl font-bold text-white hover:text-green-400 tracking-widest">SPACE</a>
-        <a href="pages/mindfulness.html"
-            class="text-2xl font-bold text-white hover:text-indigo-400 tracking-widest">SPIRIT</a>
-        <div class="h-px w-24 bg-white/10"></div>
-        <button onclick="openLogin()"
-            class="px-8 py-3 bg-electric text-white font-bold rounded-full uppercase tracking-widest mt-8 shadow-lg shadow-electric/20 w-3/4">Login
-            / Join</button>
-    </div>
-    <main class="container mx-auto px-6 py-10 md:py-20">
-        <!-- Hero Section -->
-        <section class="text-center mb-20 md:mb-32">
-            <h1 class="hero-title mb-6">
-                THE TRUE KINGDOM<br>
-                <span class="bg-clip-text text-transparent bg-gradient-to-r from-electric to-neon-blue">IS HERE.</span>
-            </h1>
-            <p class="text-xl text-gray-300 max-w-2xl mx-auto mb-10 font-light tracking-wide leading-relaxed">
-                The central nexus for Lisbon's creators. Visuals, Sound & Taste united in one ecosystem.
-            </p>
-            <div class="flex flex-col md:flex-row gap-6 justify-center items-center">
-                <button onclick="openSignup()"
-                    class="px-10 py-4 bg-electric hover:bg-electric/80 text-white rounded-full font-bold text-lg tracking-widest transition-all transform hover:scale-105 hover:shadow-[0_0_30px_rgba(98,0,234,0.5)] flex items-center gap-3 border border-white/10">
-                    <span class="material-symbols-outlined">rocket_launch</span>
-                    JOIN THE CIRCLE
-                </button>
-                <a href="pages/events.html"
-                    class="px-10 py-4 bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-full font-bold text-lg tracking-widest transition-all backdrop-blur-md flex items-center gap-3">
-                    <span class="material-symbols-outlined">calendar_month</span>
-                    VIEW EVENTS
-                </a>
-            </div>
-        </section>
-
-        <!-- Hero Carousel Section -->
-        <section class="mb-20 md:mb-32 relative group">
-            <div
-                class="relative h-[500px] w-full overflow-hidden rounded-2xl border border-primary/30 shadow-2xl bg-black">
-                <!-- Slide 1: The Sun Wolf -->
-                <div
-                    class="carousel-slide absolute inset-0 transition-opacity duration-1000 opacity-100 pointer-events-auto">
-                    <div class="absolute inset-0 bg-contain bg-no-repeat bg-center"
-                        style="background-image: url('sun_wolf.png');"></div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-background-dark via-transparent to-transparent">
-                    </div>
-                    <div class="absolute bottom-12 left-8 md:left-16 max-w-xl z-20">
-                        <h2
-                            class="text-4xl md:text-6xl font-bold text-mystic-gold mb-4 transform translate-y-0 transition-transform duration-700">
-                            The Sun Wolf</h2>
-                        <p
-                            class="text-white/90 text-lg mb-6 transform translate-y-0 transition-transform duration-700 delay-100">
-                            Ignite your passion. Discover the art of flow.</p>
-                        <a href="pages/kiss-your-heart.html"
-                            class="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white font-bold rounded-full hover:bg-primary/80 transition-colors transform translate-y-0 transition-transform duration-700 delay-200">
-                            Kiss Your Heart <span class="material-symbols-outlined">arrow_forward</span>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Slide 2: The Moon Wolf -->
-                <div
-                    class="carousel-slide absolute inset-0 transition-opacity duration-1000 opacity-0 pointer-events-none">
-                    <div class="absolute inset-0 bg-contain bg-no-repeat bg-center"
-                        style="background-image: url('moon_wolf.png');"></div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-background-dark via-transparent to-transparent">
-                    </div>
-                    <div class="absolute bottom-12 left-8 md:left-16 max-w-xl z-20">
-                        <h2
-                            class="text-4xl md:text-6xl font-bold text-mystic-gold mb-4 transform translate-y-4 transition-transform duration-700">
-                            The Moon Wolf</h2>
-                        <p
-                            class="text-white/90 text-lg mb-6 transform translate-y-4 transition-transform duration-700 delay-100">
-                            Rhythms that move the soul. Experience the sound.</p>
-                        <a href="pages/outbreak_tunes.html"
-                            class="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white font-bold rounded-full hover:bg-primary/80 transition-colors transform translate-y-4 transition-transform duration-700 delay-200">
-                            Outbreak Tunes <span class="material-symbols-outlined">arrow_forward</span>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Slide 3: Yggdrasil -->
-                <div
-                    class="carousel-slide absolute inset-0 transition-opacity duration-1000 opacity-0 pointer-events-none">
-                    <div class="absolute inset-0 bg-contain bg-no-repeat bg-center"
-                        style="background-image: url('yggdrasil.png');"></div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-background-dark via-transparent to-transparent">
-                    </div>
-                    <div class="absolute bottom-12 left-8 md:left-16 max-w-xl z-20">
-                        <h2
-                            class="text-4xl md:text-6xl font-bold text-mystic-gold mb-4 transform translate-y-4 transition-transform duration-700">
-                            Yggdrasil</h2>
-                        <p
-                            class="text-white/90 text-lg mb-6 transform translate-y-4 transition-transform duration-700 delay-100">
-                            Connect with the roots. Join our community.</p>
-                        <a href="pages/services-community.html"
-                            class="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white font-bold rounded-full hover:bg-primary/80 transition-colors transform translate-y-4 transition-transform duration-700 delay-200">
-                            Community <span class="material-symbols-outlined">arrow_forward</span>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Controls -->
-                <button id="prev-slide" aria-label="Previous Slide"
-                    class="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-primary transition-colors z-30">
-                    <span class="material-symbols-outlined">chevron_left</span>
-                </button>
-                <button id="next-slide" aria-label="Next Slide"
-                    class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-primary transition-colors z-30">
-                    <span class="material-symbols-outlined">chevron_right</span>
-                </button>
-
-                <!-- Indicators -->
-                <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-30">
-                    <button aria-label="Go to slide 1" class="indicator w-3 h-3 rounded-full bg-white transition-all" data-index="0"></button>
-                    <button aria-label="Go to slide 2" class="indicator w-3 h-3 rounded-full bg-white/50 hover:bg-white transition-all"
-                        data-index="1"></button>
-                    <button aria-label="Go to slide 3" class="indicator w-3 h-3 rounded-full bg-white/50 hover:bg-white transition-all"
-                        data-index="2"></button>
-                </div>
-            </div>
-
-            <script>
-                document.addEventListener('DOMContentLoaded', () => {
-                    const slides = document.querySelectorAll('.carousel-slide');
-                    const indicators = document.querySelectorAll('.indicator');
-                    const prevBtn = document.getElementById('prev-slide');
-                    const nextBtn = document.getElementById('next-slide');
-                    let currentIndex = 0;
-                    let interval;
-
-                    function showSlide(index) {
-                        slides.forEach((slide, i) => {
-                            if (i === index) {
-                                slide.classList.remove('opacity-0', 'pointer-events-none');
-                                slide.classList.add('opacity-100', 'pointer-events-auto');
-                                // Reset animations
-                                const elements = slide.querySelectorAll('.transform');
-                                elements.forEach(el => {
-                                    el.classList.remove('translate-y-4');
-                                    el.classList.add('translate-y-0');
-                                });
-                            } else {
-                                slide.classList.remove('opacity-100', 'pointer-events-auto');
-                                slide.classList.add('opacity-0', 'pointer-events-none');
-                                const elements = slide.querySelectorAll('.transform');
-                                elements.forEach(el => {
-                                    el.classList.add('translate-y-4');
-                                    el.classList.remove('translate-y-0');
-                                });
-                            }
-                        });
-                        indicators.forEach((ind, i) => {
-                            if (i === index) {
-                                ind.classList.remove('bg-white/50');
-                                ind.classList.add('bg-white', 'scale-125');
-                            } else {
-                                ind.classList.add('bg-white/50');
-                                ind.classList.remove('bg-white', 'scale-125');
-                            }
-                        });
-                        currentIndex = index;
-                    }
-
-                    function nextSlide() {
-                        let nextIndex = (currentIndex + 1) % slides.length;
-                        showSlide(nextIndex);
-                    }
-
-                    function prevSlide() {
-                        let prevIndex = (currentIndex - 1 + slides.length) % slides.length;
-                        showSlide(prevIndex);
-                    }
-
-                    function startAutoPlay() {
-                        interval = setInterval(nextSlide, 5000);
-                    }
-
-                    function stopAutoPlay() {
-                        clearInterval(interval);
-                    }
-
-                    nextBtn.addEventListener('click', () => {
-                        stopAutoPlay();
-                        nextSlide();
-                        startAutoPlay();
-                    });
-
-                    prevBtn.addEventListener('click', () => {
-                        stopAutoPlay();
-                        prevSlide();
-                        startAutoPlay();
-                    });
-
-                    indicators.forEach(ind => {
-                        ind.addEventListener('click', (e) => {
-                            stopAutoPlay();
-                            const index = parseInt(e.target.dataset.index);
-                            showSlide(index);
-                            startAutoPlay();
-                        });
-                    });
-
-                    startAutoPlay();
-                });
-            </script>
-        </section>
-
-        <!-- The Trinity Showcase (Founders) -->
-        <section id="trinity" class="py-24 px-8 bg-midnight/50">
-            <div class="max-w-7xl mx-auto">
-                <div class="text-center mb-16">
-                    <h2 class="text-4xl md:text-6xl font-serif font-bold mb-4">
-                        The <span class="text-electric">Trinity</span>
-                    </h2>
-                    <p class="text-mist max-w-2xl mx-auto">The three pillars of our flow. Visuals, Sound, and Taste.
-                    </p>
-                </div>
-
-                <div class="grid md:grid-cols-3 gap-8">
-                    <!-- Card 1: Visuals -->
-                    <div
-                        class="relative group bg-[#141118] border border-white/10 hover:border-electric transition-all duration-300 rounded-xl overflow-hidden hover:shadow-glow-primary">
-                        <div class="aspect-[4/3] bg-black/50 overflow-hidden relative">
-                            <img src="cameraz50II.jpg" alt="The Eye" width="800" height="600" loading="lazy"
-                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                            <div class="absolute inset-0 bg-gradient-to-t from-[#141118] to-transparent"></div>
-                            <div class="absolute bottom-4 left-4">
-                                <span class="text-xs font-bold px-2 py-1 bg-electric text-white rounded">VISUALS</span>
-                            </div>
-                        </div>
-                        <div class="p-8">
-                            <h3 class="text-2xl font-serif font-bold text-white mb-1">KissYourHeartLX</h3>
-                            <p class="text-electric text-sm font-bold uppercase tracking-widest mb-4">The Eye • Hope
-                            </p>
-                            <p class="text-mist text-sm mb-6 min-h-[60px]">Capturing the true essence. Portrait
-                                Sessions, Flow Talks, and Branding.</p>
-                            <a href="pages/kiss-your-heart.html"
-                                class="inline-flex items-center gap-2 text-white font-bold hover:text-electric transition-colors">
-                                View Portfolio <span class="material-symbols-outlined text-sm">arrow_forward</span>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Card 2: Sound -->
-                    <div
-                        class="relative group bg-[#141118] border border-white/10 hover:border-purple-500 transition-all duration-300 rounded-xl overflow-hidden hover:shadow-[0_0_15px_5px_rgba(168,85,247,0.3)]">
-                        <div class="aspect-[4/3] bg-black/50 overflow-hidden relative">
-                            <video autoplay loop muted playsinline webkit-playsinline
-                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                                <source src="https://pub-24ba376bfccb446996666eaff4dbae12.r2.dev/DJ%20in%20flow.MOV">
-                                <source src="https://pub-24ba376bfccb446996666eaff4dbae12.r2.dev/hero.mp4"
-                                    type="video/mp4">
-                            </video>
-                            <div class="absolute inset-0 bg-gradient-to-t from-[#141118] to-transparent"></div>
-                            <div class="absolute bottom-4 left-4">
-                                <span class="text-xs font-bold px-2 py-1 bg-purple-500 text-white rounded">SOUND</span>
-                            </div>
-                        </div>
-                        <div class="p-8">
-                            <h3 class="text-2xl font-serif font-bold text-white mb-1 leading-tight">
-                                Livefromtheunderground <span class="block text-lg font-normal text-purple-400">aka
-                                    Outbreak Tunes</span></h3>
-                            <p class="text-purple-500 text-sm font-bold uppercase tracking-widest mb-4">The Pulse •
-                                Will Qter</p>
-                            <p class="text-mist text-sm mb-6 min-h-[60px]">The frequency that moves spirits. Event
-                                Management, DJ Booking, Outbreak Tunes Production.</p>
-                            <a href="pages/live-from-the-underground.html"
-                                class="inline-flex items-center gap-2 text-white font-bold hover:text-purple-500 transition-colors">
-                                Listen & Book <span class="material-symbols-outlined text-sm">arrow_forward</span>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Card 3: Taste -->
-                    <div
-                        class="relative group bg-[#141118] border border-white/10 hover:border-amber transition-all duration-300 rounded-xl overflow-hidden hover:shadow-glow-gold">
-                        <div class="aspect-[4/3] bg-black/50 overflow-hidden relative">
-                            <img src="AfricanQueenKitchen/KitKat kitchen.png" alt="The Roots" width="800" height="600" loading="lazy"
-                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                            <div class="absolute inset-0 bg-gradient-to-t from-[#141118] to-transparent"></div>
-                            <div class="absolute bottom-4 left-4">
-                                <span class="text-xs font-bold px-2 py-1 bg-amber text-black rounded">TASTE</span>
-                            </div>
-                        </div>
-                        <div class="p-8">
-                            <h3 class="text-2xl font-serif font-bold text-white mb-1">AfricanQueenKitchen</h3>
-                            <p class="text-amber text-sm font-bold uppercase tracking-widest mb-4">The Roots • Kit
-                                Kat</p>
-                            <p class="text-mist text-sm mb-6 min-h-[60px]">The taste that grounds your soul. Soul
-                                Food, Event Catering, Private Dining.</p>
-                            <a href="pages/african-queen-kitchen.html"
-                                class="inline-flex items-center gap-2 text-white font-bold hover:text-amber transition-colors">
-                                See Menu <span class="material-symbols-outlined text-sm">arrow_forward</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- The Flow Blog -->
-        <section class="mb-20 md:mb-32">
-            <h2 class="text-mystic-gold text-3xl font-bold leading-tight tracking-[-0.015em] mb-8 text-center">The
-                Flow Blog</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Blog Post 1 -->
-                <div
-                    class="group flex flex-col bg-background-dark/50 rounded-xl overflow-hidden border border-primary/30">
-                    <div class="aspect-video overflow-hidden">
-                        <img alt="Artist working on digital art" width="640" height="360"
-                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBoXSrZJEZkupp7U9A-_Y-DcXsPl2sXlQcEDUA8krVFaNsaC3xrj_NZMcyxGwXDQC8qGRj4Gf_uwHfA7kpW6SVcKR5f8iVoPdWHByroI_MQvf_i1shVHqSKQ-6GX3IT3MII-rvXAZhANdCH2_1kjXspOcDc29K3xMypMM9D6QiaLutuq-MQw1l3upFRSRUIjSOZtbhYUNMaHOua6081TQzuRpiKN-m-3C6Zht9fC4_mULHbmAyFFh27nQTKqi3V2XYFBBo5yuBNAYI" loading="lazy" />
-                    </div>
-                    <div class="p-6 flex flex-col flex-1">
-                        <h4 class="text-xl font-bold text-white mb-2">The Art of Digital Alchemy</h4>
-                        <p class="text-white/70 text-sm mb-4 flex-1">How modern tools reignite ancient creativity
-                            techniques.</p>
-                        <a class="text-mystic-gold font-bold text-sm flex items-center gap-2" href="#">Read More
-                            <span class="material-symbols-outlined">arrow_forward</span></a>
-                    </div>
-                </div>
-                <!-- Blog Post 2 -->
-                <div
-                    class="group flex flex-col bg-background-dark/50 rounded-xl overflow-hidden border border-primary/30">
-                    <div class="aspect-video overflow-hidden">
-                        <img alt="Headphones in a music studio" width="640" height="360"
-                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvOEcb-1qvSSjL5ll24YDzHqTo09p_Maz8gEP0xNxI-epYBUoun_U8fJqsAJ_8H2THocf582Is5fpacAk6XRLhtMbZ93A8k7IyN9zBhqciW4kBZ0H1sgW69xUx5NeySKA1pSO5wxLgjJ3Ep0V6DEwU6QOC-UzNjSVDRPbWKp_S71c-gwcRQRsU5Z7tHoGC5oeO3MkirgcAvHNNHWrLacmNxZwnT_2d3Ym7j5VTkMfj09jh3t-zvqrMVfgyZIixwnxk_djYhnHeVOY" loading="lazy" />
-                    </div>
-                    <div class="p-6 flex flex-col flex-1">
-                        <h4 class="text-xl font-bold text-white mb-2">Hip-Hop &amp; Flow State</h4>
-                        <p class="text-white/70 text-sm mb-4 flex-1">An investigation into the connection between
-                            beatmaking and meditative states.</p>
-                        <a class="text-mystic-gold font-bold text-sm flex items-center gap-2" href="#">Read More
-                            <span class="material-symbols-outlined">arrow_forward</span></a>
-                    </div>
-                </div>
-                <!-- Blog Post 3 -->
-                <div
-                    class="group flex flex-col bg-background-dark/50 rounded-xl overflow-hidden border border-primary/30">
-                    <div class="aspect-video overflow-hidden">
-                        <img alt="Friends laughing in Lisbon" width="640" height="360"
-                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDU6VUMPHUEZJgKVj_2sLlM7XfEchW4t63c7VIGkVpBr50BSyED4RqEooNXmNxGikQIcJj1lO284xgnQjwBcuyxJP6cFxzCtZKg9QKZidCzWFxd_41uVzd8eV_jrDFuLIOkPHs8D8DDNw2H3DG20XDhFEjx0w_C8TJF3z_3H5KQx0pS0rq6rhA_IuWO-48vtl8wLtDg79bKlCUy43NxInt21KwCiEQVn6S8yfc7tw_CvGYXUwp-Wxgy0ErEogG4kn9z9_fuJu_E6vo" loading="lazy" />
-                    </div>
-                    <div class="p-6 flex flex-col flex-1">
-                        <h4 class="text-xl font-bold text-white mb-2">The Power of Community</h4>
-                        <p class="text-white/70 text-sm mb-4 flex-1">Why collaboration is the key to true creative
-                            unfolding.</p>
-                        <a class="text-mystic-gold font-bold text-sm flex items-center gap-2" href="#">Read More
-                            <span class="material-symbols-outlined">arrow_forward</span></a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Gateway Sections -->
-        <section class="space-y-8 mb-20 md:mb-32">
-            <!-- Kiss Your Heart -->
-            <div
-                class="grid grid-cols-1 lg:grid-cols-2 items-center gap-8 p-8 rounded-xl bg-gradient-to-br from-primary/20 to-transparent border border-primary/30">
-                <div class="flex flex-col gap-4">
-                    <h3 class="text-3xl font-bold text-white">Kiss Your Heart</h3>
-                    <p class="text-lg text-white/80">Photography &amp; Brand Building with Soul. We reveal the
-                        essence of your brand through a unique manga aesthetic and powerful storytelling.</p>
-                    <a class="flex min-w-[84px] max-w-fit cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-mystic-gold text-background-dark text-base font-bold leading-normal tracking-[0.015em] hover:opacity-90 transition-opacity"
-                        href="pages/kiss-your-heart.html">
-                        <span class="truncate">Discover Portfolios</span>
-                    </a>
-                </div>
-                <div class="relative w-full aspect-video rounded-lg overflow-hidden border-2 border-mystic-gold/50">
-                    <img alt="Manga style portrait" class="w-full h-full object-cover" src="DSC_1811-ANIMATION.gif" width="640" height="360" loading="lazy" />
-                </div>
-            </div>
-            <!-- Outbreak Tunes -->
-            <div
-                class="grid grid-cols-1 lg:grid-cols-2 items-center gap-8 p-8 rounded-xl bg-gradient-to-bl from-primary/20 to-transparent border border-primary/30">
-                <div
-                    class="relative w-full aspect-video rounded-lg overflow-hidden border-2 border-mystic-gold/50 lg:order-last">
-                    <img alt="Music production setup" class="w-full h-full object-cover" width="640" height="360"
-                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSmd6JehGvue7ZFYAqCXXDjL4XHNSL5-cnajRcLftuAsoHpchVTfHhxW-aladIzBDhxp2tESQb0GU3JM2cDaBRUCsrzG1AZtZ-oyv7ALjxSUgxBL1Jzoh7Qn0QWSsGMV-_HMyFfoGyrULyGN_byPmNPSD4fqfF4LqpjP63fvvC0WI35kmZ5JQB5CfHUXeXl9_AskV9Sxf5l4y7FPhthHToAGzq8N02EqXzCeSXYHR7Nuhg4VjyLP8Ln24R5joYaYCB6zirvqLdy04" loading="lazy" />
-                </div>
-                <div class="flex flex-col gap-4">
-                    <h3 class="text-3xl font-bold text-white">Outbreak Tunes</h3>
-                    <p class="text-lg text-white/80">Music production that breaks boundaries. From hip-hop beats to
-                        experimental soundscapes – here is where the soundtrack of your vision is created.</p>
-                    <a class="flex min-w-[84px] max-w-fit cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-mystic-gold text-background-dark text-base font-bold leading-normal tracking-[0.015em] hover:opacity-90 transition-opacity"
-                        href="pages/outbreak_tunes.html">
-                        <span class="truncate">Listen to the Beats</span>
-                    </a>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- Philosophy / About Section -->
-    <section id="about" class="py-24 px-8 bg-midnight relative overflow-hidden">
-        <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-center">
-            <div class="space-y-8">
-                <!-- Story Book Image -->
-
-
-                <h2 class="text-4xl md:text-6xl font-serif font-bold text-white">
-                    We are the <span class="text-electric italic">Trinity of Flow</span>.
-                </h2>
-                <div class="space-y-6 text-mist font-light leading-relaxed">
-                    <p>
-                        Circle D Flow is not just a website; it is a living ecosystem in Lisbon. We are the
-                        intersection where art meets life.
-                    </p>
-                    <p>
-                        We are built on three pillars: <br>
-                        <strong class="text-white">👁️ KissYourHeartLX:</strong> The vision that captures your true
-                        essence. <br>
-                        <strong class="text-white">🎧 Livefromtheunderground:</strong> The frequency that moves your
-                        spirit. <br>
-                        <strong class="text-white">🥘 AfricanQueenKitchen:</strong> The taste that grounds your
-                        soul.
-                    </p>
-                    <p>
-                        We don't just host events; we build the stage for you. Whether you are an artist, a visitor,
-                        or a seeker—this platform is your map to the underground.
-                    </p>
-                    <p class="font-bold text-white">
-                        Join the Circle. Elevate your Flow.
-                    </p>
-                    <div class="mt-6">
-                        <a href="https://pub-24ba376bfccb446996666eaff4dbae12.r2.dev/Multiversos.pdf" target="_blank" rel="noopener noreferrer"
-                            class="text-electric hover:text-white font-bold underline transition-colors flex items-center gap-2">
-                            <span class="material-symbols-outlined">description</span>
-                            Read the Multiversos Manifesto
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <!-- ... existing placeholder ... -->
-            <div class="relative">
-                <!-- Placeholder for Portrait -->
-                <div class="aspect-[3/4] bg-white/5 rounded-lg overflow-hidden relative group">
-                    <div
-                        class="absolute inset-0 bg-gradient-to-t from-midnight via-transparent to-transparent opacity-60">
-                    </div>
-                    <img src="Hope Portrait.JPG" alt="Hope Bruce" width="600" height="800"
-                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Community Marketplace Preview -->
-    <section id="marketplace-preview" class="py-24 px-8 bg-midnight">
-        <div class="max-w-7xl mx-auto">
-            <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
-                <div>
-                    <h2 class="text-4xl md:text-6xl font-serif font-bold text-white mb-4">
-                        Community <span class="text-electric">Marketplace</span>
-                    </h2>
-                    <p class="text-mist max-w-xl">
-                        Discover the skills, products, and services of our Circle members. Connect, collaborate, and
-                        support the underground economy.
-                    </p>
-                </div>
-                <a href="pages/marketplace.html"
-                    class="px-8 py-3 border border-electric text-electric hover:bg-electric hover:text-white transition-all uppercase tracking-widest text-sm font-bold">
-                    Browse All Items
-                </a>
-            </div>
-
-            <!-- Window Shopping Grid -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
-                <!-- Item 1 -->
-                <div
-                    class="group bg-[#141118] border border-white/5 hover:border-white/20 rounded-lg overflow-hidden transition-all">
-                    <div class="aspect-square bg-gray-800 relative">
-                        <img src="https://placehold.co/400x400/222/white?text=Graffiti+Art" alt="Item" width="400" height="400"
-                            class="w-full h-full object-cover">
-                        <div
-                            class="absolute top-2 right-2 bg-black/60 backdrop-blur-sm px-2 py-1 text-[10px] uppercase font-bold text-white rounded">
-                            Art</div>
-                    </div>
-                    <div class="p-4">
-                        <h4 class="text-white font-bold leading-tight mb-1 group-hover:text-electric transition-colors">
-                            Custom Mural Design</h4>
-                        <p class="text-xs text-mist uppercase tracking-wider mb-2">By ShadowOne</p>
-                        <p class="text-white font-bold">Starting at 150€</p>
-                    </div>
-                </div>
-                <!-- Item 2 -->
-                <div
-                    class="group bg-[#141118] border border-white/5 hover:border-white/20 rounded-lg overflow-hidden transition-all">
-                    <div class="aspect-square bg-gray-800 relative">
-                        <img src="https://placehold.co/400x400/222/white?text=Beat+Pack" alt="Item" width="400" height="400"
-                            class="w-full h-full object-cover">
-                        <div
-                            class="absolute top-2 right-2 bg-black/60 backdrop-blur-sm px-2 py-1 text-[10px] uppercase font-bold text-white rounded">
-                            Music</div>
-                    </div>
-                    <div class="p-4">
-                        <h4
-                            class="text-white font-bold leading-tight mb-1 group-hover:text-purple-400 transition-colors">
-                            Lo-Fi Beat Pack Vol. 1</h4>
-                        <p class="text-xs text-mist uppercase tracking-wider mb-2">By ChillWave</p>
-                        <p class="text-white font-bold">25€</p>
-                    </div>
-                </div>
-                <!-- Item 3 -->
-                <div
-                    class="group bg-[#141118] border border-white/5 hover:border-white/20 rounded-lg overflow-hidden transition-all">
-                    <div class="aspect-square bg-gray-800 relative">
-                        <img src="https://placehold.co/400x400/222/white?text=Catering" alt="Item" width="400" height="400"
-                            class="w-full h-full object-cover">
-                        <div
-                            class="absolute top-2 right-2 bg-black/60 backdrop-blur-sm px-2 py-1 text-[10px] uppercase font-bold text-white rounded">
-                            Food</div>
-                    </div>
-                    <div class="p-4">
-                        <h4 class="text-white font-bold leading-tight mb-1 group-hover:text-amber transition-colors">
-                            Private Dinner (4 Pax)</h4>
-                        <p class="text-xs text-mist uppercase tracking-wider mb-2">By AfricanQueen</p>
-                        <p class="text-white font-bold">200€</p>
-                    </div>
-                </div>
-                <!-- Item 4 -->
-                <div
-                    class="group bg-[#141118] border border-white/5 hover:border-white/20 rounded-lg overflow-hidden transition-all">
-                    <div class="aspect-square bg-gray-800 relative">
-                        <img src="https://placehold.co/400x400/222/white?text=Photo+Walk" alt="Item" width="400" height="400"
-                            class="w-full h-full object-cover">
-                        <div
-                            class="absolute top-2 right-2 bg-black/60 backdrop-blur-sm px-2 py-1 text-[10px] uppercase font-bold text-white rounded">
-                            Experience</div>
-                    </div>
-                    <div class="p-4">
-                        <h4 class="text-white font-bold leading-tight mb-1 group-hover:text-electric transition-colors">
-                            Lisbon Night Photo Walk</h4>
-                        <p class="text-xs text-mist uppercase tracking-wider mb-2">By Hope</p>
-                        <p class="text-white font-bold">Free (Members)</p>
-                    </div>
-                </div>
-            </div>
-
-            <div
-                class="bg-gradient-to-r from-electric/10 to-purple-500/10 border border-white/10 rounded-2xl p-8 md:p-12 text-center">
-                <h3 class="text-2xl font-serif font-bold text-white mb-4">Support the Flow</h3>
-                <p class="text-mist max-w-2xl mx-auto mb-8">
-                    Not a member yet? You can still support our community ecosystem. Your contributions help us
-                    maintain safe spaces for artists and organize free events.
-                </p>
-                <button
-                    class="px-8 py-4 bg-white text-midnight hover:bg-gray-200 transition-colors font-bold uppercase tracking-widest rounded-full">
-                    Donate via Stripe/PayPal
-                </button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Live Map & Daily Events -->
-    <section id="live-map" class="py-24 px-8 bg-[#0D0D0F] relative">
-        <div class="max-w-7xl mx-auto">
-            <div class="flex flex-col lg:flex-row gap-0 rounded-2xl overflow-hidden border border-white/10 h-[600px]">
-                <!-- Sidebar: Event Ticker -->
-                <div class="lg:w-1/3 bg-[#191022] p-8 flex flex-col border-b lg:border-b-0 lg:border-r border-white/10">
-                    <div class="flex items-center gap-3 mb-8">
-                        <div class="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
-                        <h3 class="text-xl font-bold text-white tracking-widest uppercase">Live Ticker</h3>
-                    </div>
-
-                    <div class="space-y-6 overflow-y-auto pr-2 custom-scrollbar">
-                        <!-- Event 1 -->
-                        <div class="bg-white/5 p-4 rounded-lg border-l-2 border-electric">
-                            <span class="text-xs font-bold text-electric uppercase mb-1 block">Today • 19:00</span>
-                            <h4 class="text-white font-bold mb-1">Sunset Jam Session</h4>
-                            <p class="text-sm text-mist">@ Casa Mocambo</p>
-                        </div>
-                        <!-- Event 2 -->
-                        <div class="bg-white/5 p-4 rounded-lg border-l-2 border-amber">
-                            <span class="text-xs font-bold text-amber uppercase mb-1 block">Tonight • 22:00</span>
-                            <h4 class="text-white font-bold mb-1">Underground Beats w/ Will Qter</h4>
-                            <p class="text-sm text-mist">@ Secret Location (Member Only)</p>
-                        </div>
-                        <!-- Event 3 -->
-                        <div class="bg-white/5 p-4 rounded-lg border-l-2 border-purple-500">
-                            <span class="text-xs font-bold text-purple-500 uppercase mb-1 block">Tomorrow •
-                                14:00</span>
-                            <h4 class="text-white font-bold mb-1">Flow Photography Workshop</h4>
-                            <p class="text-sm text-mist">@ Alfama Viewpoint</p>
-                        </div>
-                        <!-- Event 4 -->
-                        <div class="bg-white/5 p-4 rounded-lg border-l-2 border-gray-500">
-                            <span class="text-xs font-bold text-gray-400 uppercase mb-1 block">Friday • 20:00</span>
-                            <h4 class="text-white font-bold mb-1">Soul Food Pop-Up</h4>
-                            <p class="text-sm text-mist">@ AfricanQueenKitchen</p>
-                        </div>
-
-                        <!-- Sound Credit -->
-                        <div class="bg-purple-900/10 p-4 rounded-lg border border-purple-500/20">
-                            <span class="text-[10px] font-bold text-purple-400 uppercase mb-1 block">Live
-                                Frequency</span>
-                            <h4 class="text-white font-bold mb-1">Sound by Mario</h4>
-                            <a href="https://www.instagram.com/s0u0mario?igsh=dHJ4dWhtN3ZpN3Rx" target="_blank" rel="noopener noreferrer"
-                                class="text-xs text-mist hover:text-white underline flex items-center gap-1">
-                                <span class="material-symbols-outlined text-[10px]">link</span> Instagram
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="mt-auto pt-8">
-                        <a href="pages/events.html"
-                            class="block w-full text-center py-3 border border-white/20 hover:bg-white/10 text-white text-sm uppercase tracking-widest transition-colors rounded">
-                            View Full Calendar
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Map Area -->
-                <div class="flex-1 bg-[#222] relative group">
-                    <!-- Simulated Map UI -->
-                    <img src="https://placehold.co/1200x800/121212/333?text=Interactive+Flow+Map" alt="Live Map" width="1200" height="800"
-                        class="w-full h-full object-cover opacity-50">
-
-                    <!-- Map Pins (Simulated) -->
-                    <div class="absolute top-1/4 left-1/4 group/pin">
-                        <div
-                            class="w-4 h-4 bg-electric rounded-full shadow-[0_0_15px_rgba(154,77,255,0.8)] animate-pulse cursor-pointer">
-                        </div>
-                        <div
-                            class="absolute bottom-6 left-1/2 -translate-x-1/2 bg-black/80 px-3 py-1 text-xs text-white rounded whitespace-nowrap opacity-0 group-hover/pin:opacity-100 transition-opacity pointer-events-none">
-                            Casa Mocambo
-                        </div>
-                    </div>
-
-                    <div class="absolute top-1/2 right-1/3 group/pin">
-                        <div
-                            class="w-4 h-4 bg-amber rounded-full shadow-[0_0_15px_rgba(255,174,66,0.8)] animate-pulse cursor-pointer">
-                        </div>
-                        <div
-                            class="absolute bottom-6 left-1/2 -translate-x-1/2 bg-black/80 px-3 py-1 text-xs text-white rounded whitespace-nowrap opacity-0 group-hover/pin:opacity-100 transition-opacity pointer-events-none">
-                            Hempy Roots
-                        </div>
-                    </div>
-
-                    <div class="absolute bottom-1/3 right-1/4 group/pin">
-                        <div
-                            class="w-4 h-4 bg-purple-500 rounded-full shadow-[0_0_15px_rgba(168,85,247,0.8)] animate-pulse cursor-pointer">
-                        </div>
-                        <div
-                            class="absolute bottom-6 left-1/2 -translate-x-1/2 bg-black/80 px-3 py-1 text-xs text-white rounded whitespace-nowrap opacity-0 group-hover/pin:opacity-100 transition-opacity pointer-events-none">
-                            Secret Garden
-                        </div>
-                    </div>
-
-                    <div class="absolute inset-0 pointer-events-none flex items-center justify-center">
-                        <p class="text-white/30 text-2xl font-serif italic">Use map to find active Flow Spots</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- News & Highlights -->
-    <section id="news" class="py-20 px-8 bg-midnight border-t border-white/5">
-        <div class="max-w-7xl mx-auto text-center">
-            <h2 class="text-3xl font-serif font-bold text-white mb-12">Latest <span
-                    class="text-electric">Transmissions</span></h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
-                <!-- News 1 -->
-                <div class="group cursor-pointer">
-                    <div
-                        class="aspect-video bg-white/5 rounded-xl mb-4 overflow-hidden border border-white/10 group-hover:border-electric transition-colors">
-                        <img src="https://placehold.co/600x400/222/white?text=New+Gallery" width="600" height="400"
-                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                    </div>
-                    <p class="text-xs text-electric font-bold uppercase mb-1">Visuals</p>
-                    <h3 class="text-white font-bold text-lg group-hover:underline">Manga Gallery Update</h3>
-                    <p class="text-mist text-sm mt-2">New portraits added to the Kiss Your Heart collection.</p>
-                </div>
-                <!-- News 2 -->
-                <div class="group cursor-pointer">
-                    <div
-                        class="aspect-video bg-white/5 rounded-xl mb-4 overflow-hidden border border-white/10 group-hover:border-amber transition-colors">
-                        <img src="https://placehold.co/600x400/222/white?text=Menu+Drop" width="600" height="400"
-                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                    </div>
-                    <p class="text-xs text-amber font-bold uppercase mb-1">Taste</p>
-                    <h3 class="text-white font-bold text-lg group-hover:underline">Monthly Soul Food Special</h3>
-                    <p class="text-mist text-sm mt-2">Check out the new vegan platter available this weekend.</p>
-                </div>
-                <!-- News 3 -->
-                <div class="group cursor-pointer">
-                    <div
-                        class="aspect-video bg-white/5 rounded-xl mb-4 overflow-hidden border border-white/10 group-hover:border-purple-500 transition-colors">
-                        <img src="https://placehold.co/600x400/222/white?text=Event+Recap" width="600" height="400"
-                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                    </div>
-                    <p class="text-xs text-purple-500 font-bold uppercase mb-1">Community</p>
-                    <h3 class="text-white font-bold text-lg group-hover:underline">Flow Gather Recap</h3>
-                    <p class="text-mist text-sm mt-2">Highlights from last Friday's underground session.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="relative z-10 py-8 text-center border-t border-white/5 bg-black/80 backdrop-blur-xl">
-        <div class="flex flex-col gap-2 items-center justify-center">
-            <p class="text-xs text-white/30 uppercase tracking-[0.2em]">Circle D Flow © 2025</p>
-            <p
-                class="text-[10px] text-electric/50 uppercase tracking-widest hover:text-electric transition-colors cursor-pointer">
-                System: v1.0_LIVE
-            </p>
-            <a href="https://www.instagram.com/mariosonicarch/" target="_blank" rel="noopener noreferrer"
-                class="text-[10px] text-mystic-gold/70 hover:text-mystic-gold uppercase tracking-widest transition-all mt-2 flex items-center gap-2">
-                <span class="material-symbols-outlined text-sm">music_note</span>
-                Sonic Architecture by Mario
-            </a>
-        </div>
-    </footer>
-    </div>
-
-    <!-- Audio Player (Right) -->
-    <div class="fixed bottom-8 right-8 z-50">
-        <button id="audio-btn" aria-label="Toggle Sound"
-            class="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:border-electric transition-colors bg-background-dark/50 backdrop-blur-sm">
-            <!-- Treble Clef Icon -->
-            <svg id="audio-icon-on" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 24 24"
-                style="color: white;">
-                <path
-                    d="M11.5 2C11.5 2 11.5 2 11.5 2C10.67 2 10 2.67 10 3.5C10 4.33 10.67 5 11.5 5C12.33 5 13 4.33 13 3.5C13 3.42 12.99 3.34 12.98 3.26C13.6 3.64 14 4.31 14 5.08C14 6.27 12.94 7.21 11.77 7.21C11.68 7.21 11.59 7.2 11.5 7.2C9.57 7.2 8 8.77 8 10.7C8 12.63 9.57 14.2 11.5 14.2C11.5 14.2 11.5 14.2 11.5 14.2C12.33 14.2 13 13.53 13 12.7C13 11.87 12.33 11.2 11.5 11.2C10.67 11.2 10 11.87 10 12.7C10 12.78 10.01 12.86 10.02 12.94C9.4 12.56 9 11.89 9 11.12C9 9.93 10.06 8.99 11.23 8.99C11.32 8.99 11.41 9 11.5 9C13.43 9 15 7.43 15 5.5C15 3.57 13.43 2 11.5 2ZM11.5 15.5C9.57 15.5 8 17.07 8 19C8 20.93 9.57 22.5 11.5 22.5C13.43 22.5 15 20.93 15 19C15 17.07 13.43 15.5 11.5 15.5ZM11.5 20.5C10.67 20.5 10 19.83 10 19C10 18.17 10.67 17.5 11.5 17.5C12.33 17.5 13 18.17 13 19C13 19.83 12.33 20.5 11.5 20.5Z" />
-            </svg>
-            <svg id="audio-icon-off" class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" style="color: white;">
-                <path
-                    d="M11.5 2C11.5 2 11.5 2 11.5 2C10.67 2 10 2.67 10 3.5C10 4.33 10.67 5 11.5 5C12.33 5 13 4.33 13 3.5C13 3.42 12.99 3.34 12.98 3.26C13.6 3.64 14 4.31 14 5.08C14 6.27 12.94 7.21 11.77 7.21C11.68 7.21 11.59 7.2 11.5 7.2C9.57 7.2 8 8.77 8 10.7C8 12.63 9.57 14.2 11.5 14.2C11.5 14.2 11.5 14.2 11.5 14.2C12.33 14.2 13 13.53 13 12.7C13 11.87 12.33 11.2 11.5 11.2C10.67 11.2 10 11.87 10 12.7C10 12.78 10.01 12.86 10.02 12.94C9.4 12.56 9 11.89 9 11.12C9 9.93 10.06 8.99 11.23 8.99C11.32 8.99 11.41 9 11.5 9C13.43 9 15 7.43 15 5.5C15 3.57 13.43 2 11.5 2ZM11.5 15.5C9.57 15.5 8 17.07 8 19C8 20.93 9.57 22.5 11.5 22.5C13.43 22.5 15 20.93 15 19C15 17.07 13.43 15.5 11.5 15.5ZM11.5 20.5C10.67 20.5 10 19.83 10 19C10 18.17 10.67 17.5 11.5 17.5C12.33 17.5 13 18.17 13 19C13 19.83 12.33 20.5 11.5 20.5Z"
-                    opacity="0.3" />
-                <line x1="4" y1="4" x2="20" y2="20" stroke="currentColor" stroke-width="2" />
-            </svg>
-        </button>
-        <audio id="bg-music" loop>
-            <source src="Assets/audio/ambient.mp3" type="audio/mpeg">
-        </audio>
-    </div>
-
-    <script src="js/gamification.js"></script>
-    <script src="js/script.js"></script>
-
-    <script src="js/onboarding.js"></script>
-    <script src="js/ai_assistant.js"></script>
-    
-    <!-- PHOENIX-EE AGENTS -->
-    <script src="js/agents/visual_integrity.js"></script>
-    <script src="js/agents/device_sync.js"></script>
-    <script src="js/agents/stress_test.js"></script>
-
-    <!-- FLOW-EE AI ASSISTANT UI -->
-    <div id="ai-buddy-trigger" onclick="toggleChat()" 
-         class="fixed bottom-24 right-6 z-[60] cursor-pointer animate-bounce transition-all duration-1000 opacity-0 translate-y-10">
-        <div class="bg-gradient-to-tr from-blue-600 to-purple-600 p-3 rounded-full shadow-lg border border-white/20 hover:scale-110 transition-transform">
-            <span class="text-2xl filter drop-shadow-md">🤖</span>
+    <!-- GENESIS: INITIATION MODAL -->
+    <div id="genesis-modal" class="fixed inset-0 z-50 hidden flex-col items-center justify-center bg-black/90 backdrop-blur-xl p-6">
+        <div id="genesis-content" class="w-full max-w-4xl transition-opacity duration-500">
+            <!-- Content Injected by Genesis.js -->
         </div>
     </div>
 
-    <div id="ai-chat-window" 
-         class="fixed bottom-24 right-6 w-80 h-96 bg-[#120f16]/95 border border-white/20 rounded-2xl shadow-2xl z-[60] hidden flex-col overflow-hidden backdrop-blur-xl transition-all duration-300 transform origin-bottom-right">
-        <!-- Header -->
-        <div class="p-3 border-b border-white/10 bg-white/5 flex justify-between items-center">
-            <div class="flex items-center gap-2">
-                <span class="text-lg">🤖</span>
-                <span class="text-xs font-bold tracking-widest text-blue-400">FLOW-EE GUIDE</span>
-            </div>
-            <button onclick="toggleChat()" class="text-gray-400 hover:text-white transition-colors">
-                <span class="material-symbols-outlined text-sm">close</span>
-            </button>
+    <!-- SCRIPT: GENESIS PROTOCOL -->
+    <script src="js/genesis.js"></script>
+
+    <!-- AGENT: FLOWEE (The Guide) -->
+    <!-- Scripts -->
+    <script src="js/agents/flowee.js" defer></script>
+
+    <div id="flowee-agent" class="fixed bottom-8 left-8 z-50 flex flex-col items-center group cursor-pointer">
+        <!-- Visual Container -->
+        <div class="relative w-24 h-24">
+            <!-- Aura -->
+            <div class="absolute inset-0 bg-mystic-gold/20 blur-xl rounded-full animate-pulse-slow"></div>
+            <!-- The Bird (Animated by JS/CSS) -->
+            <img id="flowee-visual" src="flowee_pirate_phoenix.png" alt="Flowee" class="w-full h-full object-contain relative z-10 drop-shadow-[0_0_15px_rgba(255,215,0,0.6)]">
         </div>
         
-        <!-- Messages -->
-        <div id="chat-messages" class="flex-1 p-4 overflow-y-auto text-sm space-y-4 font-light text-gray-300">
-            <div class="bg-blue-900/20 p-2 rounded-lg border border-blue-500/20 mr-4">
-                🤖 "The flow of life is like Yin and Yang. Balance is key. How can I guide you through the network today?"
+        <!-- Speech Bubble -->
+        <div id="flowee-bubble" class="absolute bottom-full mb-2 w-48 bg-black/90 border border-mystic-gold/50 rounded-xl p-3 text-xs text-mystic-gold text-center opacity-0 transform scale-90 transition-all duration-300 pointer-events-none flowee-bubble shadow-lg shadow-primary/20">
+            I am Flowee. Your Guide.
+            <!-- Arrow -->
+            <div class="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-mystic-gold/50"></div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <main class="relative z-10 min-h-screen flex flex-col items-center justify-center p-6">
+
+        <!-- LOGO (Small Top) -->
+        <div class="absolute top-8 left-1/2 -translate-x-1/2 opacity-50">
+            <img src="Assets/images/logo.png" alt="Circle D Flow" class="h-8 w-auto grayscale contrast-150">
+        </div>
+
+        <!-- HERO SECTION (First Contact) -->
+        <section class="max-w-4xl w-full text-center space-y-12 mb-20 relative z-20">
+            
+            <!-- TERMINAL WINDOW -->
+            <div class="bg-black/90 border border-green-500/30 rounded-lg shadow-[0_0_50px_rgba(34,197,94,0.1)] overflow-hidden max-w-2xl mx-auto transform transition-all hover:scale-105 duration-500 group">
+                <!-- Terminal Header -->
+                <div class="bg-green-900/10 border-b border-green-500/20 p-2 flex items-center gap-2">
+                    <div class="flex gap-1.5 ml-2">
+                        <div class="w-2.5 h-2.5 rounded-full bg-red-500/50"></div>
+                        <div class="w-2.5 h-2.5 rounded-full bg-yellow-500/50"></div>
+                        <div class="w-2.5 h-2.5 rounded-full bg-green-500/50"></div>
+                    </div>
+                    <div class="text-[10px] text-green-500/50 font-mono flex-1 text-center">Protocol: FIRST_CONTACT</div>
+                </div>
+                
+                <!-- Terminal Body -->
+                <div class="p-8 font-mono text-left space-y-4 min-h-[200px] flex flex-col justify-center relative">
+                    <div class="absolute inset-0 bg-[url('https://pub-24ba376bfccb446996666eaff4dbae12.r2.dev/grid.png')] opacity-[0.05] pointer-events-none"></div>
+                    
+                    <p class="text-green-500 text-sm md:text-base typing-effect">
+                        <span class="text-green-700">>></span> SYSTEM.SCAN(AURA);<br>
+                        <span class="text-green-700">>></span> FOUND_SIGNAL: <span class="animate-pulse">UNKNOWN_HUNTER</span><br><br>
+                        <span class="text-white text-lg md:text-xl font-bold tracking-widest">Resonance Scanning... Who are you?</span>
+                    </p>
+                    
+                    <div class="h-0.5 w-4 bg-green-500 animate-pulse"></div>
+                    
+                    <!-- Buttons -->
+                    <div class="pt-6 flex flex-col md:flex-row gap-4 justify-center md:justify-start">
+                        <button onclick="Genesis.startInitiation()" class="group px-6 py-2 bg-green-500/10 border border-green-500/50 hover:bg-green-500 hover:text-black transition-all text-xs font-bold uppercase tracking-widest">
+                            [ Start Journey ]
+                        </button>
+                        <button onclick="Gatekeeper.openBazaarPreview()" class="px-6 py-2 text-white/40 hover:text-white border-b border-transparent hover:border-white/20 transition-all text-xs uppercase tracking-widest">
+                            [ Bazaar Preview ]
+                        </button>
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <!-- Input -->
-        <div class="p-3 border-t border-white/10 flex gap-2 bg-black/20">
-            <label for="ai-input" class="sr-only">Message Flow-ee</label>
-            <input id="ai-input" type="text" placeholder="Ask me anything..." 
-                   class="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 transition-colors">
-            <button onclick="askAI()" class="bg-blue-600 hover:bg-blue-500 p-2 rounded-lg text-white transition-colors">
-                <span class="material-symbols-outlined text-sm">send</span>
-            </button>
-        </div>
-    </div>
-    <!-- Welcome Modal -->
-    <div id="welcome-modal"
-        class="fixed inset-0 bg-black/90 backdrop-blur-md z-[200] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-500">
-        <div
-            class="bg-[#191022] border border-electric/30 p-8 md:p-12 rounded-2xl max-w-lg text-center transform scale-95 transition-transform duration-500 relative overflow-hidden shadow-[0_0_50px_rgba(138,43,226,0.3)]">
-            <!-- Decorative Elements -->
-            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-electric via-neon-blue to-primary"></div>
-            <div class="absolute -top-10 -right-10 w-32 h-32 bg-electric/20 rounded-full blur-3xl"></div>
+            <!-- SCROLL INDICATOR (Nen System) -->
+            <div class="absolute -bottom-24 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce opacity-50">
+                <span class="text-[10px] uppercase tracking-[0.2em] text-white/40">Discover The System</span>
+                <span class="material-symbols-outlined text-white/20">keyboard_arrow_down</span>
+            </div>
 
-            <h2 class="text-3xl md:text-5xl font-display font-bold text-white mb-4">Welcome to the Circle.</h2>
-            <p class="text-lg text-mist mb-8">Reconnect with your flow. Choose your path through the 7 Prisms.</p>
+        </section>
 
-            <button id="enter-circle-btn"
-                class="px-8 py-3 bg-white text-midnight font-bold rounded-full hover:bg-mystic-gold hover:scale-105 transition-all uppercase tracking-widest text-sm shadow-xl">
-                Choose Your Path
-            </button>
-        </div>
-    </div>
+        <!-- THE OUTPOST (Visitor Pillars) -->
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl w-full">
+            
+            <!-- COLUMN 1: BAZAAR -->
+            <div class="group relative p-8 glass-obsidian border-t border-white/5 hover:border-primary/30 transition-colors">
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover:via-primary/50 transition-all"></div>
+                <div class="flex flex-col items-center text-center gap-4">
+                    <span class="material-symbols-outlined text-3xl text-white/30 group-hover:text-primary transition-colors">storefront</span>
+                    <h3 class="text-sm font-bold uppercase tracking-widest text-white/70">The Bazaar</h3>
+                    <p class="text-xs text-white/40 leading-relaxed font-mono">
+                        Browse the finest artifacts. Beats, designs, and soul food.<br>
+                        <span class="text-primary/60">[Login to Trade]</span>
+                    </p>
+                </div>
+            </div>
 
-    <script>
-        // Welcome Modal Logic
-        document.addEventListener('DOMContentLoaded', () => {
-            const hasseen = localStorage.getItem('hasSeenWelcome');
-            if (!hasseen) {
-                const modal = document.getElementById('welcome-modal');
-                const btn = document.getElementById('enter-circle-btn');
+            <!-- COLUMN 2: COMMUNITY -->
+            <div class="group relative p-8 glass-obsidian border-t border-white/5 hover:border-green-500/30 transition-colors">
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover:via-green-500/50 transition-all"></div>
+                <div class="flex flex-col items-center text-center gap-4">
+                    <span class="material-symbols-outlined text-3xl text-white/30 group-hover:text-green-400 transition-colors">groups</span>
+                    <h3 class="text-sm font-bold uppercase tracking-widest text-white/70">The Circle</h3>
+                    <p class="text-xs text-white/40 leading-relaxed font-mono">
+                        Join the collective consciousness.<br>
+                        <span class="text-green-500/60 animate-pulse">● 42 Flow Creators Active</span>
+                    </p>
+                </div>
+            </div>
 
-                // Show after delay
-                setTimeout(() => {
-                    modal.classList.remove('opacity-0', 'pointer-events-none');
-                    modal.querySelector('div').classList.remove('scale-95');
-                    modal.querySelector('div').classList.add('scale-100');
-                }, 1000);
+            <!-- COLUMN 3: KNOWLEDGE -->
+            <div class="group relative p-8 glass-obsidian border-t border-white/5 hover:border-blue-500/30 transition-colors">
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover:via-blue-500/50 transition-all"></div>
+                <div class="flex flex-col items-center text-center gap-4">
+                    <span class="material-symbols-outlined text-3xl text-white/30 group-hover:text-blue-400 transition-colors">school</span>
+                    <h3 class="text-sm font-bold uppercase tracking-widest text-white/70">Academy</h3>
+                    <p class="text-xs text-white/40 leading-relaxed font-mono">
+                        Ancient wisdom for modern creators.<br>
+                        <span class="text-blue-500/60">[Restricted Archive]</span>
+                    </p>
+                </div>
+            </div>
 
-                btn.addEventListener('click', () => {
-                    modal.classList.add('opacity-0', 'pointer-events-none');
-                    localStorage.setItem('hasSeenWelcome', 'true');
-                });
-            }
-        });
-    </script>
-    <script>
-        function toggleMobileDrawer() {
-            const drawer = document.getElementById('mobile-drawer');
-            drawer.classList.toggle('translate-y-full');
-        }
+        </section>
 
+        <!-- FOOTER / VERSION -->
+        <footer class="mt-20 text-[10px] text-white/20 font-mono text-center">
+            CIRCLE D FLOW &copy; 2026 • SYSTEM VER. 3.0 • <span class="hover:text-white cursor-pointer">PROTOCOL OBSIDIAN</span>
+        </footer>
 
-    </script>
+    </main>
+
+    <!-- AGENT: SENTINEL (Legacy - Removed) -->
+ 
+
 </body>
-
 </html>

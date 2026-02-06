@@ -1,10 +1,14 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" class="dark">
 
 <head>
     <meta charset="UTF-8">
+    <meta name="description" content="Circle D Flow: Professional photography and creative services in Lisbon. Capture your moment.">
+    <meta property="og:title" content="Circle D Flow | Kitchen Dashboard">
+    <meta property="og:description" content="Circle D Flow: Professional photography and creative services in Lisbon. Capture your moment.">
+    <meta property="og:type" content="website">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kitchen Dashboard | African Queen</title>
+    <title>Royal Command | African Queen</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
         rel="stylesheet">
@@ -36,12 +40,12 @@
     <header
         class="bg-black/50 border-b border-white/10 p-4 flex justify-between items-center sticky top-0 z-50 backdrop-blur-md">
         <div class="flex items-center gap-4">
-            <a href="dashboard.html" class="p-2 hover:bg-white/10 rounded-full transition-colors">
+            <a href="african-queen-kitchen.html" class="p-2 hover:bg-white/10 rounded-full transition-colors">
                 <span class="material-symbols-outlined">arrow_back</span>
             </a>
             <h1 class="text-xl font-bold flex items-center gap-2">
                 <span class="material-symbols-outlined text-amber">skillet</span>
-                Kitchen Dashboard
+                Royal Command
             </h1>
         </div>
         <div class="flex items-center gap-4">
@@ -100,13 +104,41 @@
 
         <!-- Menu Management (Right) -->
         <div class="flex-1 p-6 overflow-y-auto">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold">Menu Management</h2>
-                <div class="relative">
-                    <span
-                        class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-white/30">search</span>
-                    <input type="text" id="menu-search" placeholder="Search item..."
-                        class="bg-white/5 border border-white/10 rounded-full pl-10 pr-4 py-2 text-sm focus:border-amber outline-none w-64 transition-all focus:w-80">
+            
+            <div class="flex flex-col gap-6 mb-6">
+                <!-- Royal Command: Daily Dish -->
+                <div class="bg-gradient-to-r from-amber/10 to-transparent p-6 rounded-xl border border-amber/20">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h2 class="text-xl font-bold text-amber mb-1 flex items-center gap-2">
+                                <span class="material-symbols-outlined">verified</span> Royal Command
+                            </h2>
+                            <p class="text-sm text-white/60 mb-4">Set the "Crown Jewel" (Daily Special) for the main menu.</p>
+                        </div>
+                        <button onclick="saveDailyDish()" class="px-4 py-2 bg-amber text-black font-bold uppercase text-xs rounded-lg hover:bg-white transition-colors">
+                            Update Menu
+                        </button>
+                    </div>
+                    
+                    <div class="flex gap-4 items-center bg-black/30 p-2 rounded-lg max-w-md">
+                        <span class="material-symbols-outlined text-white/30 ml-2">skillet</span>
+                        <select id="daily-dish-select" class="bg-transparent text-white text-sm w-full focus:outline-none p-2 cursor-pointer">
+                            <option value="jollof">Jollof Rice (The Classic)</option>
+                            <option value="tilapia">Grilled Tilapia</option>
+                            <option value="cachupa">Cachupa Royal</option>
+                            <option value="moamba">Moamba de Galinha</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Menu Search -->
+                <div class="flex justify-between items-center">
+                    <h2 class="text-2xl font-bold">Inventory</h2>
+                    <div class="relative">
+                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-white/30">search</span>
+                        <input type="text" id="menu-search" placeholder="Search item..."
+                            class="bg-white/5 border border-white/10 rounded-full pl-10 pr-4 py-2 text-sm focus:border-amber outline-none w-64 transition-all focus:w-80">
+                    </div>
                 </div>
             </div>
 
@@ -204,11 +236,29 @@
             });
         });
 
+        // Save Daily Dish Logic (Simulated)
+        function saveDailyDish() {
+            const dish = document.getElementById('daily-dish-select').value;
+            localStorage.setItem('dailyDish', dish);
+            alert(`Royal Decree: ${dish.toUpperCase()} is now the Daily Special!`);
+            
+            // Trigger Kingdom Pulse (if integrated)
+            // KingdomPulse.add(`The Queen has spoken: ${dish} is today's special!`, 'alert');
+        }
+
         // RBAC Check
         const role = localStorage.getItem('userRole') || 'guest';
         // In real app, redirect if not kitchen/admin
         // if(role !== 'kitchen' && role !== 'admin') window.location.href = 'index.html';
     </script>
+    <!-- PHOENIX-EE CORE AGENTS -->
+    <script src='../js/agents/visual_eye.js' defer></script>
+    <script src='../js/agents/helper.js' defer></script>
+    <script src='../js/agents/bridge_pusher.js' defer></script>
+    <script src='../js/agents/device_sync.js' defer></script>
+    <script src='../js/agents/stress_test.js' defer></script>
+    <script src="../js/agents/sous_chef.js" defer></script>
+    <div id="flowee-agent" class="fixed bottom-8 left-8 z-50 flex flex-col items-center group cursor-pointer"></div>
 </body>
 
 </html>

@@ -1,8 +1,12 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
+    <meta name="description" content="Circle D Flow: Professional photography and creative services in Lisbon. Capture your moment.">
+    <meta property="og:title" content="Circle D Flow | African Queen Kitchen">
+    <meta property="og:description" content="Circle D Flow: Professional photography and creative services in Lisbon. Capture your moment.">
+    <meta property="og:type" content="website">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>African Queen Kitchen | Circle D Flow</title>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -35,94 +39,63 @@
 
 <body class="bg-dark text-white min-h-screen">
     <!-- Custom Cursor -->
+    <!-- Custom Cursor -->
     <div id="cursor"
         class="fixed w-12 h-12 pointer-events-none z-[200] transition-transform duration-100 hidden md:block">
-        <img src="AfricanQueenKitchen/AQK Logo.png" class="w-full h-full object-contain drop-shadow-lg" alt="Cursor">
+        <img src="../AfricanQueenKitchen/AQK Logo.png" class="w-full h-full object-contain drop-shadow-lg" alt="Cursor">
     </div>
 
-    <!-- Desktop Navigation (The Compass) -->
-    <nav
-        class="hidden md:flex fixed top-0 w-full z-50 bg-[#0F0A13]/80 backdrop-blur-xl border-b border-white/5 h-20 items-center justify-between px-12 transition-all duration-300">
-        <div class="flex items-center gap-8">
-            <a href="dashboard.html"
-                class="text-xs font-bold uppercase tracking-widest text-white hover:text-electric transition-colors">Hub</a>
-            <a href="outbreak_tunes.html"
-                class="text-xs font-bold uppercase tracking-widest text-white hover:text-purple-400 transition-colors">Sound</a>
-            <a href="african-queen-kitchen.html"
-                class="text-xs font-bold uppercase tracking-widest text-amber drop-shadow-[0_0_8px_rgba(255,191,0,0.8)]">Taste</a>
-            <a href="kiss-your-heart.html"
-                class="text-xs font-bold uppercase tracking-widest text-white hover:text-pink-400 transition-colors">Visuals</a>
+    <!-- Flowee Agent Container injected -->
+    <div id="flowee-agent" class="fixed top-8 right-8 z-[150] w-32 h-32 pointer-events-none transition-all duration-1000">
+        <div class="relative w-full h-full">
+            <img id="flowee-visual" src="../Assets/images/flowee.png" class="w-full h-full object-contain animate-flowee-fly drop-shadow-2xl">
+            <!-- Speech Bubble -->
+            <div id="flowee-bubble" class="absolute -top-4 -left-32 w-48 bg-white text-black p-4 rounded-t-xl rounded-bl-xl shadow-xl transform scale-0 origin-bottom-right transition-transform duration-300">
+                <p id="flowee-text" class="text-xs font-bold font-sans">Yo! Let's cook up some magic!</p>
+            </div>
         </div>
-        <a href="../Index.html" class="absolute left-1/2 -translate-x-1/2 group">
-            <img src="../Assets/images/logo.png" alt="Circle D Flow"
-                class="h-10 w-auto group-hover:scale-110 transition-transform duration-300 drop-shadow-[0_0_15px_rgba(98,0,234,0.5)]">
+    </div>
+
+    <!-- Top Navigation (Restored & Streamlined) -->
+    <nav class="hidden md:flex fixed top-0 w-full z-[140] bg-[#0F0A13]/80 backdrop-blur-xl border-b border-white/5 h-20 items-center justify-between px-12 transition-all duration-300">
+        <!-- Left: Hub Link (Return Back) -->
+        <a href="dashboard.html" class="flex items-center gap-2 text-white/70 hover:text-white transition-colors group">
+            <span class="material-symbols-outlined text-lg group-hover:-translate-x-1 transition-transform">arrow_back</span>
+            <span class="text-xs font-bold uppercase tracking-widest">Hub</span>
         </a>
-        <div class="flex items-center gap-8">
-            <a href="marketplace.html"
-                class="text-xs font-bold uppercase tracking-widest text-white hover:text-mystic-gold transition-colors">Style</a>
-            <a href="academy.html"
-                class="text-xs font-bold uppercase tracking-widest text-white hover:text-blue-400 transition-colors">Knowledge</a>
-            <a href="events.html"
-                class="text-xs font-bold uppercase tracking-widest text-white hover:text-green-400 transition-colors">Space</a>
-            <a href="mindfulness.html"
-                class="text-xs font-bold uppercase tracking-widest text-white hover:text-indigo-400 transition-colors">Spirit</a>
+
+        <!-- Center: Minimal Links -->
+        <div class="flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
+             <a href="outbreak_tunes.html" class="text-xs font-bold uppercase tracking-widest text-white/50 hover:text-purple-400 transition-colors">Sound</a>
+             <span class="text-white/20">|</span>
+             <a href="african-queen-kitchen.html" class="text-xs font-bold uppercase tracking-widest text-amber drop-shadow-[0_0_8px_rgba(255,191,0,0.8)]">Taste</a>
+             <span class="text-white/20">|</span>
+             <a href="kiss-your-heart.html" class="text-xs font-bold uppercase tracking-widest text-white/50 hover:text-pink-400 transition-colors">Visuals</a>
         </div>
-        <div class="absolute right-6 flex items-center gap-4">
-            <a href="login.html"
-                class="px-5 py-2 bg-white/5 text-white font-bold rounded-full text-[10px] uppercase tracking-widest hover:bg-white hover:text-black transition-all border border-white/10 hover:shadow-[0_0_15px_rgba(255,255,255,0.3)]">Login</a>
+
+        <!-- Right: Login/Profile -->
+        <div class="flex items-center gap-4">
+             <a href="../Index.html" class="text-xs font-bold uppercase tracking-widest text-white/50 hover:text-white transition-colors">Exit</a>
         </div>
     </nav>
 
-    <!-- Mobile Bottom Navigation (Standardized) -->
-    <nav
-        class="fixed bottom-0 left-0 w-full bg-[#0D0D0F]/90 backdrop-blur-md border-t border-purple-900/30 z-[50] md:hidden">
+    <!-- Mobile Bottom Navigation (Restored) -->
+    <nav class="fixed bottom-0 left-0 w-full bg-[#0D0D0F]/90 backdrop-blur-md border-t border-purple-900/30 z-[140] md:hidden">
         <div class="flex justify-around items-center h-16 max-w-md mx-auto">
-            <a href="dashboard.html"
-                class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-electric transition-colors">
-                <span class="material-symbols-outlined text-2xl">grid_view</span>
-                <span class="text-[10px] uppercase tracking-wider mt-1">Dash</span>
+            <a href="dashboard.html" class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-electric transition-colors">
+                <span class="material-symbols-outlined text-2xl">arrow_back</span>
+                <span class="text-[10px] uppercase tracking-wider mt-1">Back</span>
             </a>
-            <a href="marketplace.html"
-                class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-electric transition-colors">
-                <span class="material-symbols-outlined text-2xl">storefront</span>
-                <span class="text-[10px] uppercase tracking-wider mt-1">Market</span>
+            <a href="african-queen-kitchen.html" class="flex flex-col items-center justify-center w-full h-full text-amber hover:text-amber/80 transition-colors">
+                 <span class="material-symbols-outlined text-2xl fill">restaurant</span>
+                <span class="text-[10px] uppercase tracking-wider mt-1">Taste</span>
             </a>
-            <a href="kiss-your-heart.html"
-                class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-electric transition-colors">
-                <span class="material-symbols-outlined text-2xl">palette</span>
-                <span class="text-[10px] uppercase tracking-wider mt-1">Art</span>
-            </a>
-            <a href="outbreak_tunes.html"
-                class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-electric transition-colors">
+             <a href="outbreak_tunes.html" class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-electric transition-colors">
                 <span class="material-symbols-outlined text-2xl">headphones</span>
                 <span class="text-[10px] uppercase tracking-wider mt-1">Sound</span>
             </a>
-            <a href="partners.html"
-                class="flex flex-col items-center justify-center w-full h-full text-gray-400 hover:text-electric transition-colors">
-                <span class="material-symbols-outlined text-2xl">handshake</span>
-                <span class="text-[10px] uppercase tracking-wider mt-1">Tribe</span>
-            </a>
         </div>
     </nav>
-
-    <!-- Mobile Drawer -->
-    <div id="mobile-drawer"
-        class="fixed inset-0 bg-black/95 backdrop-blur-xl z-[60] transform translate-y-full transition-transform duration-300 flex flex-col items-center justify-center space-y-8 md:hidden">
-        <button onclick="toggleMobileDrawer()" class="absolute top-8 right-8 text-white/50 hover:text-white">
-            <span class="material-symbols-outlined text-3xl">close</span>
-        </button>
-        <a href="kiss-your-heart.html"
-            class="text-2xl font-bold text-white hover:text-pink-400 tracking-widest">VISUALS</a>
-        <a href="marketplace.html"
-            class="text-2xl font-bold text-white hover:text-mystic-gold tracking-widest">STYLE</a>
-        <a href="academy.html" class="text-2xl font-bold text-white hover:text-blue-400 tracking-widest">KNOWLEDGE</a>
-        <a href="events.html" class="text-2xl font-bold text-white hover:text-green-400 tracking-widest">SPACE</a>
-        <a href="mindfulness.html"
-            class="text-2xl font-bold text-white hover:text-indigo-400 tracking-widest">SPIRIT</a>
-        <div class="h-px w-24 bg-white/10"></div>
-        <a href="login.html"
-            class="px-8 py-3 bg-electric text-white font-bold rounded-full uppercase tracking-widest mt-8 shadow-lg shadow-electric/20">Login</a>
-    </div>
 
     <!-- Floating Cart Button (Available on Mobile & Desktop) -->
     <button onclick="toggleCart()"
@@ -135,12 +108,12 @@
     <!-- Hero -->
     <header class="relative pt-32 pb-20 px-6 text-center overflow-hidden">
         <div
-            class="absolute inset-0 z-0 opacity-40 bg-[url('AfricanQueenKitchen/KitKat%20kitchen.png')] bg-cover bg-center">
+            class="absolute inset-0 z-0 opacity-40 bg-[url('../AfricanQueenKitchen/KitKat%20kitchen.png')] bg-cover bg-center">
         </div>
         <div class="absolute inset-0 z-0 bg-gradient-to-b from-dark/90 via-dark/70 to-dark"></div>
 
         <div class="relative z-10 max-w-2xl mx-auto">
-            <img src="AfricanQueenKitchen/AQK Logo.png"
+            <img src="../AfricanQueenKitchen/AQK Logo.png"
                 class="w-32 h-32 object-contain mx-auto mb-6 drop-shadow-2xl animate-pulse-slow">
             <span class="text-amber font-bold tracking-widest text-xs uppercase mb-4 block">Taste the Soul</span>
             <h1 class="text-5xl md:text-6xl font-serif font-bold mb-6">African Queen Kitchen</h1>
@@ -156,37 +129,72 @@
         </div>
     </header>
 
-    <!-- Dream Fuel: Food Jam Truck -->
-    <div class="max-w-4xl mx-auto px-6 -mt-8 relative z-20 mb-12">
-        <div
-            class="bg-[#1A1622] border border-amber/30 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center gap-8 shadow-[0_10px_40px_rgba(0,0,0,0.5)]">
-            <div class="w-16 h-16 bg-amber/20 rounded-full flex items-center justify-center flex-shrink-0">
-                <span class="material-symbols-outlined text-3xl text-amber">local_shipping</span>
-            </div>
-            <div class="flex-1 text-center md:text-left">
-                <span class="text-xs font-bold text-amber uppercase tracking-widest mb-1 block">Project: Dream
-                    Fuel</span>
-                <h3 class="text-2xl font-serif font-bold text-white mb-2">The Food Jam Truck</h3>
-                <p class="text-sm text-white/70 mb-4">Help us take the African Queen on the road! Pre-order meals to
-                    fund our mobile kitchen. Every order counts as a vote.</p>
-                <!-- Progress -->
-                <div class="w-full h-3 bg-white/10 rounded-full mb-2">
-                    <div class="h-full bg-gradient-to-r from-amber to-orange-500 rounded-full relative"
-                        style="width: 65%">
-                        <div
-                            class="absolute right-0 -top-1.5 w-6 h-6 bg-white rounded-full shadow-[0_0_15px_rgba(255,191,0,0.8)] border-4 border-[#1A1622]">
+    <!-- The Journey: Steps to the Truck -->
+    <div class="max-w-5xl mx-auto px-6 -mt-8 relative z-20 mb-16">
+        <div class="bg-[#1A1622] border border-amber/30 rounded-2xl p-8 shadow-[0_10px_40px_rgba(0,0,0,0.5)] relative overflow-hidden group">
+            <!-- Background Decoration -->
+            <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5 pointer-events-none"></div>
+            
+            <div class="flex flex-col md:flex-row items-center gap-8 relative z-10">
+                <!-- Icon/Badge -->
+                <div class="text-center md:text-left">
+                    <span class="text-xs font-bold text-amber uppercase tracking-widest mb-2 block">Community Goal</span>
+                    <h2 class="text-3xl font-serif font-bold text-white mb-1">Steps to the Truck</h2>
+                    <p class="text-sm text-white/50 mb-6">Fueling the Royal Kitchen on wheels.</p>
+                    
+                    <button onclick="document.getElementById('menu-grid').scrollIntoView({behavior: 'smooth'})"
+                        class="px-6 py-3 bg-amber text-black font-bold uppercase tracking-widest rounded-xl hover:scale-105 transition-transform shadow-lg shadow-amber/20 flex items-center gap-2">
+                        <span class="material-symbols-outlined">local_fire_department</span>
+                        Fuel the Dream
+                    </button>
+                </div>
+
+                <!-- Roadmap Visualization -->
+                <div class="flex-1 w-full space-y-6">
+                    <!-- Progress Bar -->
+                    <div class="relative w-full h-4 bg-black/50 rounded-full border border-white/10 overflow-hidden">
+                        <div class="absolute top-0 left-0 h-full bg-gradient-to-r from-amber via-orange-500 to-red-500 rounded-full transition-all duration-1000 w-[65%]" id="journey-bar">
+                            <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20"></div>
+                        </div>
+                    </div>
+
+                    <!-- Milestones -->
+                    <div class="grid grid-cols-3 gap-2 text-center relative">
+                        <!-- Step 1 -->
+                        <div class="flex flex-col items-center gap-2 opacity-50 filter grayscale transition-all hover:grayscale-0 hover:opacity-100">
+                            <div class="w-8 h-8 rounded-full bg-white/10 border border-white/20 flex items-center justify-center">
+                                <span class="material-symbols-outlined text-sm">share</span>
+                            </div>
+                            <div class="text-[10px] font-bold uppercase tracking-wider text-white">Social Quests</div>
+                            <span class="text-[10px] text-green-500 font-mono">[COMPLETED]</span>
+                        </div>
+                        
+                        <!-- Step 2 -->
+                        <div class="flex flex-col items-center gap-2">
+                             <div class="w-10 h-10 rounded-full bg-amber border-2 border-white flex items-center justify-center shadow-[0_0_15px_rgba(255,191,0,0.5)] animate-pulse">
+                                <span class="material-symbols-outlined text-black font-bold">storefront</span>
+                            </div>
+                            <div class="text-xs font-bold uppercase tracking-wider text-amber">Pop-up Stand</div>
+                            <span class="text-[10px] text-amber font-mono">CURRENT GOAL</span>
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div class="flex flex-col items-center gap-2 opacity-30">
+                            <div class="w-8 h-8 rounded-full bg-white/10 border border-white/20 flex items-center justify-center">
+                                <span class="material-symbols-outlined text-sm">local_shipping</span>
+                            </div>
+                            <div class="text-[10px] font-bold uppercase tracking-wider text-white">The Food Truck</div>
+                            <span class="text-[10px] text-white/30 font-mono">LOCKED</span>
                         </div>
                     </div>
                 </div>
-                <div class="flex justify-between text-xs font-bold text-white/50">
-                    <span class="text-amber">€3,250 Raised</span>
-                    <span>Goal: €5,000</span>
-                </div>
             </div>
-            <button onclick="document.getElementById('menu-grid').scrollIntoView({behavior: 'smooth'})"
-                class="px-8 py-4 bg-amber text-black font-bold uppercase tracking-widest rounded-xl hover:scale-105 transition-transform shadow-lg shadow-amber/20">
-                Fuel the Dream
-            </button>
+            
+            <!-- Crowd Stats -->
+            <div class="mt-8 pt-6 border-t border-white/5 flex justify-between items-center text-xs font-mono text-white/40">
+                <span>Current Fuel: <b class="text-white">65%</b></span>
+                <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">group</span> 1,240 Contributors</span>
+            </div>
         </div>
     </div>
 
@@ -208,6 +216,65 @@
             <div class="animate-pulse bg-white/5 rounded-xl h-64"></div>
             <div class="animate-pulse bg-white/5 rounded-xl h-64"></div>
         </div>
+        <!-- Find the Queen: Map Section -->
+        <div class="mb-20">
+            <div class="flex items-center justify-between mb-8">
+                <div>
+                    <h3 class="text-3xl font-serif font-bold text-white">Find the Queen</h3>
+                    <p class="text-white/60 text-sm">Locate our partner pickup spots across the kingdom.</p>
+                </div>
+                <button class="px-4 py-2 border border-white/20 rounded-full hover:bg-white/10 text-xs font-bold uppercase tracking-widest transition-colors flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm">my_location</span> Near Me
+                </button>
+            </div>
+            
+            <div class="relative w-full h-96 bg-[#0D0D0F] rounded-2xl border border-white/10 overflow-hidden shadow-2xl group">
+                <!-- Map Placeholder (Simulating Living Map) -->
+                <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cartographer.png')] opacity-20"></div>
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <!-- Central Hub marker -->
+                    <div class="relative">
+                        <div class="w-4 h-4 bg-amber rounded-full animate-ping absolute"></div>
+                        <div class="w-4 h-4 bg-amber rounded-full relative border-2 border-black z-10"></div>
+                        <div class="absolute top-6 left-1/2 -translate-x-1/2 bg-black/80 px-3 py-1 rounded text-[10px] font-bold uppercase tracking-widest whitespace-nowrap border border-amber/30 text-amber">
+                            Favela LX (HQ)
+                        </div>
+                    </div>
+                </div>
+                <!-- Interactive Overlay -->
+                <div class="absolute bottom-4 left-4 bg-black/90 p-4 rounded-xl border border-white/10 backdrop-blur-md max-w-xs">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center">
+                             <img src="../AfricanQueenKitchen/AQK Logo.png" class="w-8 h-8 object-contain">
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-white text-sm">Favela LX</h4>
+                            <p class="text-[10px] text-green-400 flex items-center gap-1"><span class="material-symbols-outlined text-[10px]">fiber_manual_record</span> Open Now</p>
+                        </div>
+                    </div>
+                    <p class="text-xs text-white/50 mb-3">Estrada de Benfica 426, Lisbon</p>
+                    <a href="https://maps.google.com" target="_blank" class="block text-center w-full py-2 bg-white/10 hover:bg-white/20 rounded text-xs font-bold uppercase transition-colors">Get Directions</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Royal Delivery (Locked) -->
+        <div class="relative py-12 px-8 rounded-2xl overflow-hidden border border-white/5 text-center group">
+            <div class="absolute inset-0 bg-[#0F0A13] opacity-90 z-0"></div>
+            <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/diagonal-stripes.png')] opacity-5 z-0"></div>
+            
+            <div class="relative z-10">
+                <div class="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4 border border-white/10 group-hover:border-amber/50 transition-colors">
+                    <span class="material-symbols-outlined text-3xl text-white/30 group-hover:text-amber transition-colors">two_wheeler</span>
+                </div>
+                <h3 class="text-2xl font-serif font-bold text-white mb-2">Royal Delivery</h3>
+                <p class="text-white/40 text-sm max-w-md mx-auto mb-6">Direct delivery to your castle is currently locked. Help us reach the "Food Truck" goal to unlock this service.</p>
+                <button disabled class="px-6 py-2 bg-white/5 text-white/20 font-bold uppercase tracking-widest text-xs rounded-full border border-white/5 cursor-not-allowed">
+                    <span class="material-symbols-outlined text-sm inline-block align-middle mr-1">lock</span> Coming Soon
+                </button>
+            </div>
+        </div> 
+
         <!-- Allergen Legend -->
         <div class="max-w-4xl mx-auto bg-white/5 rounded-2xl p-8 border border-white/10 mt-20 mb-10">
             <h3 class="text-xl font-serif font-bold mb-6 text-center">Allergen Legend</h3>
@@ -276,11 +343,11 @@
             </div>
             <div class="flex justify-between text-white/70 text-sm">
                 <span>Subtotal</span>
-                <span id="cart-total">€0.00</span>
+                <span id="cart-total">â‚¬0.00</span>
             </div>
             <div class="flex justify-between text-amber font-bold text-lg">
                 <span>Total</span>
-                <span id="cart-final">€0.00</span>
+                <span id="cart-final">â‚¬0.00</span>
             </div>
             <div class="bg-electric/20 p-3 rounded-lg flex items-center gap-2 text-xs text-electric">
                 <span class="material-symbols-outlined text-sm">bolt</span>
@@ -333,241 +400,6 @@
 
             <button onclick="closeSuccess()"
                 class="w-full py-3 bg-white/10 hover:bg-white/20 rounded-xl font-bold uppercase text-sm">Close</button>
-        </div>
-    </div>
-
-    <script src="../js/gamification.js"></script>
-    <script src="../js/notifications.js"></script>
-    <script>
-
-
-        // Mobile Drawer
-        function toggleMobileDrawer() {
-            const drawer = document.getElementById('mobile-drawer');
-            if (drawer) drawer.classList.toggle('translate-y-full');
-        }
-
-        // --- End of Navigation and Cursor Logic ---
-        // --- Begin Menu Logic ---
-        const MENU_ITEMS = [
-            // --- Mains (Slices + Alloco) ---
-            { id: 101, category: "slice", name: "O’K-RIB (Single Flow)", price: 7.00, desc: "A spicy and savory fish sandwich slice + Alloco.", allergens: ["A", "C", "D", "N"], image: "AfricanQueenKitchen/DSC_9634.JPG" },
-            { id: 102, category: "slice", name: "AKWABA (Single Flow)", price: 7.00, desc: "A vibrant meat sandwich slice + Alloco.", allergens: ["A", "C", "N"], image: "AfricanQueenKitchen/DSC_9638.JPG" },
-            { id: 103, category: "slice", name: "D. FLOW (Single Flow)", price: 7.00, desc: "Signature vegan/vegetarian slice + Alloco.", allergens: ["A", "C", "N"], image: "AfricanQueenKitchen/DSC_9643.JPG" },
-
-            // --- Combos ---
-            { id: 201, category: "combo", name: "Double Vibe", price: 11.00, desc: "2 Slices of your choice + Alloco (The Standard).", allergens: [], image: "AfricanQueenKitchen/KitKat kitchen.png" },
-            { id: 202, category: "combo", name: "Triple Treat", price: 14.00, desc: "3 Slices of your choice + Alloco (Full Power).", allergens: [], image: "AfricanQueenKitchen/KitKat kitchen.png" },
-
-            // --- Sweets ---
-            { id: 301, category: "sweet", name: "D. ONE PIECE", price: 5.00, desc: "Decadent chocolate cake.", allergens: ["A", "C", "G"], image: "AfricanQueenKitchen/DSC_9634.JPG" }, // Placeholder img
-            { id: 302, category: "sweet", name: "GWADA", price: 5.00, desc: "Tropical blend of Maracuja and Mango.", allergens: ["A", "C", "G"], image: "AfricanQueenKitchen/DSC_9638.JPG" }, // Placeholder img
-
-            // --- Specials ---
-            { id: 401, category: "special", name: "The Lovers Share", price: 20.00, desc: "Triple Treat + 2 Sweet Slices + 2 Hot Cups.", allergens: ["A", "C", "G"], image: "AfricanQueenKitchen/KitKat kitchen.png" }
-        ];
-
-        // Allergen Legend Map
-        const ALLERGENS = {
-            'A': { label: 'Gluten', icon: 'bakery_dining' },
-            'C': { label: 'Eggs', icon: 'egg' },
-            'D': { label: 'Fish', icon: 'set_meal' },
-            'G': { label: 'Milk', icon: 'water_drop' }, // milking/drink
-            'N': { label: 'Sesame', icon: 'grains' },
-            'O': { label: 'Sulphites', icon: 'science' }
-        };
-
-        let cart = [];
-
-        // Init
-        document.addEventListener('DOMContentLoaded', () => {
-            renderMenu();
-            initPickupDetails();
-        });
-
-        function initPickupDetails() {
-            // 1. Set Date to Tomorrow
-            const tomorrow = new Date();
-            tomorrow.setDate(tomorrow.getDate() + 1);
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            document.getElementById('pickup-date').innerText = tomorrow.toLocaleDateString('en-US', options);
-
-            // 2. Populate Partners
-            const select = document.getElementById('pickup-location');
-            if (window.PARTNERS_DATA) {
-                window.PARTNERS_DATA.forEach(p => {
-                    const opt = document.createElement('option');
-                    opt.value = p.name;
-                    opt.innerText = p.name;
-                    select.appendChild(opt);
-                });
-            }
-        }
-
-        function renderMenu() {
-            const isHost = window.checkGuildStatus() === 'host';
-            const grid = document.getElementById('menu-grid');
-            grid.innerHTML = MENU_ITEMS.map(item => `
-<div class="bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:border-amber/50 transition-all group flex flex-col relative">
-    <div class="h-48 bg-black/50 overflow-hidden relative">
-        <img src="${item.image}" alt="${item.name}"
-            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-        <div class="absolute bottom-0 right-0 bg-amber text-black font-bold px-4 py-1 rounded-tl-xl">
-            €${item.price.toFixed(2)}
-        </div>
-        <!-- Host Controls (Overlay) -->
-        ${isHost ? `
-        <div class="absolute top-2 right-2 flex gap-2">
-            <button onclick="updateStock(${item.id}, 1)" class="w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-lg">
-                <span class="material-symbols-outlined text-sm">add</span>
-            </button>
-            <button onclick="updateStock(${item.id}, -1)" class="w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-lg">
-                <span class="material-symbols-outlined text-sm">remove</span>
-            </button>
-        </div>
-        ` : ''}
-    </div>
-    <div class="p-6 flex-1 flex flex-col">
-        <h3 class="text-xl font-bold font-serif mb-2">${item.name}</h3>
-        <p class="text-white/60 text-sm mb-4 line-clamp-2 flex-1">${item.desc}</p>
-
-        <!-- Stock Status (Supporter View) -->
-        <div class="mb-4">
-             <div class="flex items-center gap-2 text-xs font-bold ${isHost ? 'text-amber' : 'text-green-400'}">
-                <span class="w-2 h-2 rounded-full ${isHost ? 'bg-amber' : 'bg-green-400'} animate-pulse"></span>
-                ${isHost ? 'Management Mode Active' : 'In Stock & Fresh'}
-            </div>
-        </div>
-
-        <!-- Allergens -->
-        <div class="flex gap-2 mb-6">
-            ${(item.allergens || []).map(code => `
-            <span class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-[10px] text-white/70"
-                title="${ALLERGENS[code]?.label || code}">
-                ${code}
-            </span>
-            `).join('')}
-        </div>
-
-        <button onclick="addToCart(${item.id})"
-            class="w-full py-3 bg-white/10 hover:bg-amber hover:text-black rounded-xl font-bold uppercase text-xs tracking-widest transition-all flex items-center justify-center gap-2 mt-auto">
-            <span class="material-symbols-outlined text-sm">add_shopping_cart</span>
-            Add to Order
-        </button>
-        
-        <!-- Host: WhatsApp Restock Trigger -->
-        ${isHost ? `
-        <button onclick="window.openWhatsApp('Restock Request: ${item.name} (ID: ${item.id})')" class="mt-2 w-full py-2 border border-white/10 text-white/50 hover:text-white hover:border-white/30 rounded-lg text-[10px] uppercase tracking-widest transition-colors">
-            Request Restock (WhatsApp)
-        </button>
-        ` : ''}
-    </div>
-</div>
-`).join('');
-        }
-
-        // Host Utility
-        function updateStock(id, change) {
-            alert(`Stock Updated for Item ${id}: ${change > 0 ? '+' : ''}${change}`);
-        }
-
-        function addToCart(id) {
-            const item = MENU_ITEMS.find(i => i.id === id);
-            cart.push(item);
-            updateCartUI();
-
-            // open cart slightly just to show
-            const sidebar = document.getElementById('cart-sidebar');
-            if (sidebar.classList.contains('translate-x-full')) toggleCart();
-        }
-
-        function toggleCart() {
-            const sidebar = document.getElementById('cart-sidebar');
-            sidebar.classList.toggle('translate-x-full');
-        }
-
-        function updateCartUI() {
-            const container = document.getElementById('cart-items');
-            const countEl = document.getElementById('cart-count');
-            const totalEl = document.getElementById('cart-total');
-            const finalEl = document.getElementById('cart-final');
-            const xpEl = document.getElementById('xp-preview');
-
-            countEl.innerText = cart.length;
-            countEl.classList.toggle('hidden', cart.length === 0);
-
-            if (cart.length === 0) {
-                container.innerHTML = '<p class="text-white/30 text-center mt-10 italic">Your Cart is empty.</p>';
-            } else {
-                container.innerHTML = cart.map((item, idx) => `
-<div class="flex items-center gap-3 bg-white/5 p-3 rounded-lg border border-white/5">
-    <img src="${item.image}" class="w-12 h-12 rounded object-cover">
-    <div class="flex-1">
-        <p class="font-bold text-sm">${item.name}</p>
-        <p class="text-xs text-amber">€${item.price.toFixed(2)}</p>
-    </div>
-    <button onclick="removeFromCart(${idx})" class="text-white/30 hover:text-red-400">
-        <span class="material-symbols-outlined text-sm">delete</span>
-    </button>
-</div>
-`).join('');
-            }
-
-            const total = cart.reduce((sum, i) => sum + i.price, 0);
-            totalEl.innerText = '€' + total.toFixed(2);
-            finalEl.innerText = '€' + total.toFixed(2);
-            xpEl.innerText = Math.floor(total * 2); // 2 XP per Euro
-        }
-
-        function removeFromCart(index) {
-            cart.splice(index, 1);
-            updateCartUI();
-        }
-
-        function checkout() {
-            if (cart.length === 0) return alert("Cart is empty!");
-
-            const location = document.getElementById('pickup-location').value;
-            if (!location) return alert("Please select a pickup location.");
-
-            const user = (window.Gamification && window.Gamification.state.level > 0) ? "User" : "Guest";
-            const code = 'AQ-' + Math.floor(1000 + Math.random() * 9000); // AQ-1234
-            const dateStr = document.getElementById('pickup-date').innerText;
-
-            // 1. Notify Admin
-            if (window.Notifications) {
-                const orderSummary = cart.map(i => i.name).join(', ');
-                window.Notifications.send('action_required', `Order ${code} [${dateStr} @ ${location}]: ${orderSummary}
-(€${document.getElementById('cart-final').innerText})`, 'admin');
-            }
-
-            // 2. Add XP
-            if (window.Gamification) {
-                window.Gamification.addXP(50, `Food Order (${code})`);
-            }
-
-            // 3. Show Success
-            document.getElementById('order-code').innerText = code;
-            document.getElementById('success-date').innerText = dateStr;
-            document.getElementById('success-location').innerText = location;
-
-            document.getElementById('success-modal').classList.remove('hidden');
-
-            // Clear Cart
-            cart = [];
-            updateCartUI();
-            toggleCart(); // Close sidebar
-        }
-
-        function closeSuccess() {
-            document.getElementById('success-modal').classList.add('hidden');
-        }
-    </script>
-    <script src="../js/notifications.js"></script>
-    <script src="../js/gamification.js"></script>
-    <script src="../js/script.js"></script>
-    <!-- CTA: Find Location -->
-    <div class="fixed bottom-24 right-8 z-40 hidden md:block">
         <a href="events.html"
             class="bg-amber/90 backdrop-blur-md text-black px-6 py-3 rounded-full font-bold uppercase tracking-widest text-xs hover:bg-white hover:scale-105 transition-all shadow-lg shadow-amber/20 flex items-center gap-2 blink-animation">
             <span class="material-symbols-outlined">map</span>
@@ -585,6 +417,20 @@
             animation: blink 2s infinite;
         }
     </style>
+    <!-- PHOENIX-EE CORE AGENTS -->
+    <script src='../js/agents/visual_eye.js' defer></script>
+    <script src='../js/agents/helper.js' defer></script>
+    <script src='../js/agents/bridge_pusher.js' defer></script>
+    <script src='../js/agents/device_sync.js' defer></script>
+    <script src='../js/agents/stress_test.js' defer></script>
+    
+    <!-- THE HEARTH CREW -->
+    <script src="../js/agents/sous_chef.js" defer></script>
+    <script src="../js/agents/aroma_pusher.js" defer></script>
+    <script src="../js/agents/supply_helper.js" defer></script>
+    <script src="../js/agents/scout.js" defer></script>
 </body>
 
 </html>
+
+
