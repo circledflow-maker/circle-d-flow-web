@@ -8,8 +8,8 @@ exports.handler = async (event) => {
       mode: 'payment',
       payment_method_types: ['card'],
       line_items: [{ price: priceId, quantity: 1 }],
-      success_url: `${process.env.URL}/success.html`,
-      cancel_url: `${process.env.URL}/pages/marketplace.html`,
+      success_url: `${process.env.SITE_URL}/success.html`,
+      cancel_url: `${process.env.SITE_URL}/pages/marketplace.html`,
     });
 
     return {
