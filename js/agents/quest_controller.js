@@ -59,13 +59,15 @@ class QuestController {
     }
 
     // --- QUEST MANAGEMENT ---
-    createQuest(title, type, reward) {
+    createQuest(title, type, reward, description = "") {
         const quest = {
             id: 'Q-' + Math.random().toString(36).substr(2, 5).toUpperCase(),
             title: title,
+            description: description,
             type: type, // 'PHOTO', 'VIDEO', 'CODE'
             reward: reward, // XP or Voucher
-            active: true
+            active: true,
+            timestamp: Date.now()
         };
         this.quests.push(quest);
         this.saveQuests();

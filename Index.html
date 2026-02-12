@@ -58,9 +58,114 @@
     </style>
     <!-- AUTH WIDGET -->
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <!-- SUPABASE -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
 <body class="bg-obsidian text-white font-display overflow-x-hidden selection:bg-primary selection:text-white opacity-0 transition-opacity duration-1000">
+
+    <!-- SYSTEM LAUNCH OVERLAY (Matrix Terminal) -->
+    <div id="system-launch-overlay" style="
+        position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+        background: #000; z-index: 99999; display: flex; flex-direction: column;
+        align-items: center; justify-content: center; font-family: 'Courier New', monospace;
+        color: #00f0ff; text-align: center;
+    ">
+        <div style="margin-bottom: 30px; animation: heartbeat 1.5s infinite;">
+            <img src="Assets/images/logo.png" style="width: 100px; filter: drop-shadow(0 0 10px gold);">
+        </div>
+
+        <div id="terminal-text" style="font-size: 1.2em; margin-bottom: 20px; height: 60px;">
+            INITIALIZING...
+        </div>
+
+        <button id="enter-beta-btn" onclick="enterSystem()" style="
+            display: none;
+            background: transparent; border: 2px solid gold; color: gold;
+            padding: 15px 40px; font-size: 1.2em; letter-spacing: 3px;
+            cursor: pointer; box-shadow: 0 0 15px gold;
+            transition: all 0.3s;
+        ">
+            ENTER BETA PROTOCOL
+        </button>
+        
+        <div style="position: absolute; bottom: 20px; color: #444; font-size: 0.8em;">
+            SECURE CONNECTION ESTABLISHED v3.0
+        </div>
+    </div>
+
+    <style>
+    @keyframes heartbeat {
+        0% { transform: scale(1); opacity: 0.8; }
+        50% { transform: scale(1.05); opacity: 1; }
+        100% { transform: scale(1); opacity: 0.8; }
+    }
+    @keyframes glitch-anim {
+        0% { transform: translate(0); }
+        20% { transform: translate(-2px, 2px); }
+        40% { transform: translate(-2px, -2px); }
+        60% { transform: translate(2px, 2px); }
+        80% { transform: translate(2px, -2px); }
+        100% { transform: translate(0); }
+    }
+    </style>
+
+    <script>
+    // DIE BOOT SEQUENZ
+    window.addEventListener('load', () => {
+        // Skip if already launched in session
+        if(sessionStorage.getItem('cdf_launched')) {
+            document.getElementById('system-launch-overlay').style.display = 'none';
+            document.body.classList.remove('opacity-0');
+            return;
+        }
+
+        const texts = [
+            "CONNECTING TO LISBON CORE...",
+            "SYNCING DATABASE (SUPABASE)...",
+            "LOADING QUEST ASSETS...",
+            "ALIGNING STARS...",
+            "SYSTEM ONLINE - ACCESS GRANTED"
+        ];
+        
+        let i = 0;
+        const terminal = document.getElementById('terminal-text');
+        
+        const interval = setInterval(() => {
+            terminal.innerText = texts[i];
+            terminal.style.animation = "glitch-anim 0.2s"; // Glitch Effekt bei neuem Text
+            setTimeout(() => terminal.style.animation = "none", 200);
+            
+            i++;
+            if (i >= texts.length) {
+                clearInterval(interval);
+                // Button zeigen
+                document.getElementById('enter-beta-btn').style.display = 'block';
+            }
+        }, 800); // Geschwindigkeit der Texte
+    });
+
+    function enterSystem() {
+        const overlay = document.getElementById('system-launch-overlay');
+        
+        // Fade Out Effekt
+        overlay.style.transition = "opacity 1s ease";
+        overlay.style.opacity = "0";
+        
+        // Nach Fade entfernen und Flowee starten
+        setTimeout(() => {
+            overlay.remove();
+            sessionStorage.setItem('cdf_launched', 'true');
+            document.body.classList.remove('opacity-0');
+            
+            // Start Tutorial / Auth Check
+            if(localStorage.getItem('cqr_auth_state') !== 'logged_in') {
+                const auth = document.getElementById('auth-container');
+                if(auth) auth.style.display = 'flex';
+            }
+        }, 1000);
+    }
+    </script>
 
     <!-- AUTHENTICATION GATEWAY -->
     <div id="auth-container" style="
@@ -296,15 +401,18 @@
         // Authentication Logic (Simulation)
         function handleRegister() {
             const user = {
-                name: document.getElementById('reg-username').value,
+                username: document.getElementById('reg-username').value, // Standard
+                name: document.getElementById('reg-username').value,     // Legacy Compat
                 email: document.getElementById('reg-email').value,
+                password: document.getElementById('reg-password').value,
                 xp: 0,
                 quest_step: 0, 
                 inventory: [],
-                last_version: "1.0-BETA"
+                last_version: "1.0-BETA",
+                joined: new Date().toISOString()
             };
             
-            if(!user.name || !user.email) return alert("Fill all fields, Navigator.");
+            if(!user.username || !user.email || !user.password) return alert("Fill all fields, Navigator.");
 
             localStorage.setItem('cqr_user', JSON.stringify(user));
             localStorage.setItem('cqr_auth_state', 'logged_in');
@@ -318,12 +426,21 @@
         function handleLogin() {
             const storedUser = JSON.parse(localStorage.getItem('cqr_user'));
             const inputName = document.getElementById('login-username').value;
+            const inputPass = document.getElementById('login-password').value;
             
-            // Simulating "Passphrase" check (any pass works for beta if name matches)
-            if (storedUser && storedUser.name === inputName) {
+            // Allow login with 'username' or 'name' property
+            const storedName = storedUser ? (storedUser.username || storedUser.name) : null;
+
+            if (storedUser && storedName === inputName) {
+                // Check Password if it exists (Legacy users might not have one)
+                if(storedUser.password && storedUser.password !== inputPass) {
+                    alert("Access Denied: Invalid Passphrase.");
+                    return;
+                }
+
                 localStorage.setItem('cqr_auth_state', 'logged_in');
                 
-                // Check where they left off? For now, straight to Dashboard.
+                // Fog Transition
                 if(window.MasterBrain) window.MasterBrain.triggerMysticFog('pages/master_dashboard.html');
                 else window.location.href = 'pages/master_dashboard.html';
 

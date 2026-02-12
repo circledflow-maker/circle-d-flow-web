@@ -36,9 +36,33 @@ const TutorialQuests = [
 
 // Check State on Load
 window.addEventListener('load', () => {
-    // Wait for other agents if necessary
-    setTimeout(checkQuestStatus, 500);
+    // Check if we entered via a "first time" flag (e.g. from registration)
+    const urlParams = new URLSearchParams(window.location.search);
+    if(urlParams.get('first_time') === 'true') {
+        startTutorialSequence();
+    } else {
+        setTimeout(checkQuestStatus, 1000);
+    }
 });
+
+function startTutorialSequence() {
+    // 1. Welcome Message
+    const lang = localStorage.getItem('cqr_lang') || 'en';
+    const t = window.LanguageMatrix ? window.LanguageMatrix.translations[lang] : {};
+    const welcomeMsg = t["tutorial_welcome"] || "Welcome to the Command Center. This Compass is your navigation tool.";
+
+    if(window.Flowee) {
+        // Use Flowee to speak
+        window.Flowee.talk(true, welcomeMsg); 
+    } else {
+        console.log("Flowee Welcome:", welcomeMsg);
+    }
+
+    // 2. Wait 3 Seconds -> Show Mission
+    setTimeout(() => {
+        checkQuestStatus();
+    }, 3000);
+}
 
 function checkQuestStatus() {
     let user = JSON.parse(localStorage.getItem('cqr_user'));
@@ -120,7 +144,12 @@ function triggerQuestSuccess(actionType) {
         const successMsg = t[currentQuest.textAfterActionKey] || "Excellent! Moving on...";
 
         // Flowee Congratulates
-        alert(`Flowee: ${successMsg}`);
+        // Flowee Congratulates
+        if(window.Flowee) {
+             window.Flowee.talk(true, successMsg, "happy");
+        } else {
+             alert(`Flowee: ${successMsg}`);
+        }
         
         // Redirect
         if(currentQuest.targetUrl) {

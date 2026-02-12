@@ -66,8 +66,7 @@ class FloweeAgent {
             // DASHBOARD COMPASS
             "dashboard.html": [
                 { text: "Welcome to the Command Center. This Compass is your navigation tool.", target: ".mandala-core" },
-                { text: "The Trinity Nodes (West) lead to Vision, Taste, and Sound.", target: "#ring-trinity" },
-                { text: "Pull the Golden Needle South to open the Map.", target: "#mandala-needle" }
+                { text: "The Trinity Nodes (West) lead to Vision, Taste, and Sound.", target: "#ring-trinity" }
             ],
             // MARKETPLACE
             "marketplace.html": [

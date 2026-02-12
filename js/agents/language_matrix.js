@@ -50,8 +50,9 @@ class LanguageMatrix {
 
                 // Tutorial Quests
                 quest_initi_title: "Initiation",
-                quest_initi_text: "Welcome, Navigator! I am Flowee. Before we conquer the universe, you must learn how to steer the ship. Your first task: Visit the Bazaar.",
+                quest_initi_text: "Welcome, Navigator! I am Flowee. Your first task: Visit the Bazaar.",
                 quest_initi_btn: "Set Course: Bazaar",
+                tutorial_welcome: "Welcome to the Command Center. This Compass is your navigation tool.",
                 
                 quest_econ_title: "The Economy",
                 quest_econ_text: "This is the Marketplace. Here we trade with Flow-Credits. Click on a TukTuk to test the interface.",
@@ -170,8 +171,9 @@ class LanguageMatrix {
 
                 // Tutorial Quests
                 quest_initi_title: "Iniciação",
-                quest_initi_text: "Bem-vindo, Navegador! Eu sou Flowee. Antes de conquistarmos o universo, você deve aprender a pilotar o navio. Sua primeira tarefa: Visite o Bazar.",
+                quest_initi_text: "Bem-vindo, Navegador! Eu sou Flowee. Sua primeira tarefa: Visite o Bazar.",
                 quest_initi_btn: "Definir Curso: Bazar",
+                tutorial_welcome: "Bem-vindo ao Centro de Comando. Esta Bússola é sua ferramenta de navegação.",
                 
                 quest_econ_title: "A Economia",
                 quest_econ_text: "Este é o Mercado. Aqui negociamos com Flow-Credits. Clique em um TukTuk para testar a interface.",

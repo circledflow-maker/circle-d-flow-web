@@ -132,43 +132,41 @@
         </div>
     </main>
 
-    <script src="../js/gamification.js"></script>
-    <script src="../js/quest-manager.js"></script>
+    <!-- Legacy Scripts Removed -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const G = window.Gamification;
-            const Q = window.QuestManager;
-
-            // Level Check REMOVED for Tutorial Flexibility
-            // const level = G ? G.getLevel() : 0;
+            // Use QuestController for consistency
             
             const form = document.getElementById('create-quest-form');
             form.addEventListener('submit', (e) => {
                 e.preventDefault();
                 const formData = new FormData(form);
+                const title = formData.get('title');
+                const type = formData.get('type');
+                const xp = parseInt(formData.get('xpReward'));
+                const desc = formData.get('description');
 
-                Q.pushQuest(
-                    formData.get('type'),
-                    formData.get('title'),
-                    formData.get('description'),
-                    parseInt(formData.get('xpReward'))
-                );
+                if(window.QuestController) {
+                    window.QuestController.createQuest(title, type, xp);
+                    
+                    // Add description manually if Controller doesn't support it yet (it mostly handles title/xp)
+                    // In a real app, we'd update the controller to accept descriptions.
+                    
+                    // Dispatch Event for Flowee
+                    const event = new CustomEvent('cdf-quest-created', {
+                        detail: { title: title }
+                    });
+                    window.dispatchEvent(event);
 
-                // Award XP to creator for engagement
-                if (G) G.addXP(20, 'Created Quest');
+                    if(window.Pusher) window.Pusher.showToast(`Quest Manifested: ${title}`, 'success');
 
-                // Dispatch Event for Flowee to handle (Congratulation + Redirect)
-                const event = new CustomEvent('cdf-quest-created', {
-                    detail: { title: formData.get('title') }
-                });
-                window.dispatchEvent(event);
-
-                // Fallback safety if Flowee doesn't catch it
-                setTimeout(() => {
-                    if(!window.floweeRedirected) {
-                         window.location.href = 'marketplace.html?tutorial=true';
-                    }
-                }, 6000);
+                    // Redirect logic
+                    setTimeout(() => {
+                        window.location.href = 'master_dashboard.html'; // Return to base
+                    }, 2000);
+                } else {
+                    alert("System Offline. (QuestController missing)");
+                }
             });
         });
     </script>

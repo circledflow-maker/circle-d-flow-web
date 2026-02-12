@@ -322,32 +322,77 @@ class HelperAgent {
         return true;
     }
 
-    performLogout() {
-        // Use i18n for confirm message if available, else default
-        const lang = localStorage.getItem('cqr_lang') || 'en';
-        const msg = window.LanguageMatrix ? 
-            (window.LanguageMatrix.translations[lang].logout_confirm || "Captain, disconnect from the Core?") 
-            : "Captain, disconnect from the Core?";
+    // --- SUPABASE AUTH (BETA) ---
 
-        if(confirm(msg)) {
-            // 1. Clear Auth State
-            localStorage.removeItem('cqr_auth_state');
-            // We keep 'cqr_user' for save states, but 'auth_state' determines active session.
-            
-            // 2. Mystic Fog Transition
-            if(window.MasterBrain) {
-                window.MasterBrain.triggerMysticFog('index.html');
+    async registerUser(email, password, username) {
+        if(window.supabase) {
+            const { data, error } = await window.supabase.auth.signUp({ email, password });
+            if(error) {
+                alert("Registration Error: " + error.message);
+                return false;
             } else {
-                window.location.href = 'index.html';
+                // Create Profile
+                if(data.user) {
+                    await window.supabase.from('profiles').insert([
+                        { id: data.user.id, username: username }
+                    ]);
+                    alert("Welcome, Navigator! Please check your email to verify.");
+                    return true;
+                }
             }
-            
-            // 3. Goodbye
-            setTimeout(() => {
-                const bye = window.LanguageMatrix ? 
-                    (window.LanguageMatrix.translations[lang].logout_bye || "Flowee: 'System Standby. See you in the orbit.'") 
-                    : "Flowee: 'System Standby. See you in the orbit.'";
-                alert(bye);
-            }, 100);
+        } else {
+            // Local Fallback
+            console.warn("Supabase Offline. Using Local Storage.");
+            const user = { username, email, password, joined: new Date().toISOString() };
+            localStorage.setItem('cqr_user', JSON.stringify(user));
+            localStorage.setItem('cqr_auth_state', 'logged_in');
+             if(window.QuestEngine) {
+                 window.QuestEngine.userProfile = user; // Sync Engine
+                 window.QuestEngine.completeQuest('q1_intro'); // Auto-complete Identity Quest
+            }
+            return true;
+        }
+    }
+
+    async loginUser(email, password) {
+        if(window.supabase) {
+            const { data, error } = await window.supabase.auth.signInWithPassword({ email, password });
+            if(error) {
+                alert("Login Failed: " + error.message);
+                return false;
+            } else {
+                // Success
+                return true;
+            }
+        } else {
+             // Local Fallback (Mock)
+             // We check if cqr_user exists and matches (simple check)
+             const stored = JSON.parse(localStorage.getItem('cqr_user'));
+             if(stored && stored.email === email && stored.password === password) {
+                 localStorage.setItem('cqr_auth_state', 'logged_in');
+                 return true;
+             } else {
+                 // For now, allow any login in beta if no user found, just create it
+                 this.registerUser(email, password, email.split('@')[0]);
+                 return true;
+             }
+        }
+    }
+
+    async performLogout() {
+        if(window.supabase) {
+            await window.supabase.auth.signOut();
+        }
+        
+        // Local Clear
+        localStorage.removeItem('cqr_auth_state');
+        localStorage.removeItem('cdf_user_username'); // Clear legacy keys
+        
+        // Mystic Fog Transition
+        if(window.MasterBrain) {
+            window.MasterBrain.triggerMysticFog('index.html');
+        } else {
+            window.location.href = 'index.html';
         }
     }
 

@@ -17,6 +17,8 @@
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/agents/language_matrix.js"></script>
+    <script src="js/agents/master-brain.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -126,6 +128,12 @@
                     <input type="text" id="reg-username" class="w-full bg-black/50 border border-white/20 rounded p-3 text-white focus:border-mystic-gold outline-none tracking-widest font-mono" placeholder="Enter your alias...">
                  </div>
 
+                 <!-- Password (New) -->
+                 <div>
+                    <label class="block text-xs uppercase text-white/50 mb-1">Passphrase</label>
+                    <input type="password" id="reg-password" class="w-full bg-black/50 border border-white/20 rounded p-3 text-white focus:border-mystic-gold outline-none tracking-widest font-mono" placeholder="Create Secret...">
+                 </div>
+
                  <button onclick="Wizard.nextStep('step-test')" class="w-full py-4 bg-mystic-gold/10 border border-mystic-gold/50 text-mystic-gold font-bold uppercase tracking-widest hover:bg-mystic-gold hover:text-black transition-all rounded mt-4">
                     Proceed to Testing
                  </button>
@@ -189,6 +197,7 @@
 
     <!-- PHOENIX-EE CORE AGENTS -->
     <script src="js/agents/bridge_pusher.js"></script>
+    <script src="js/agents/pusher.js"></script>
     <script src="js/agents/helper.js"></script>
     <script src="js/agents/global_ticker.js" defer></script>
     <script src="js/agents/network_hub.js" defer></script>
@@ -251,6 +260,19 @@
                     }
                 }, 500);
 
+                // ENTER KEY LISTENER
+                const inputs = ['reg-username', 'identity-email', 'reg-password'];
+                inputs.forEach(id => {
+                    const el = document.getElementById(id);
+                    if(el) {
+                        el.addEventListener('keypress', (e) => {
+                            if(e.key === 'Enter') {
+                                this.nextStep('step-test');
+                            }
+                        });
+                    }
+                });
+
                 // ... (Auth Listener remains checks) ... 
                 if(window.netlifyIdentity) {
                     netlifyIdentity.on('login', user => {
@@ -266,25 +288,59 @@
             nextStep: function(stepId) {
                 // Modified to handle simple step transitions or specific checks
                  if(stepId === 'step-test') {
-                    const name = document.getElementById('reg-username')?.value || document.getElementById('identity-name')?.value;
-                    const email = document.getElementById('identity-email')?.value;
+                    const name = document.getElementById('reg-username').value;
+                    const email = document.getElementById('identity-email').value;
+                    const pass = document.getElementById('reg-password').value;
                     
-                    if (!name?.trim() || !email?.trim() || !email.includes('@')) {
-                        alert("IDENTITY MATRIX INCOMPLETE.\n\nPlease provide a valid Email and Alias.");
+                    if (!name?.trim() || !email?.trim() || !email.includes('@') || !pass?.trim()) {
+                        alert("IDENTITY MATRIX INCOMPLETE.\n\nPlease provide Valid Email, Handle, and Passphrase.");
                         return;
                     }
                     
                     this.data.username = name;
-                    localStorage.setItem('cdf_user_username', name);
-                    localStorage.setItem('cdf_user_email', email); 
                     
+                    // SAVE TO CQR (Unified User Object)
+                    const newUser = {
+                        username: name,
+                        name: name, // Legacy Compat
+                        email: email,
+                        password: pass, // In a real app, hash this!
+                        xp: 0,
+                        quest_step: 0,
+                        joined: new Date().toISOString()
+                    };
+                    localStorage.setItem('cqr_user', JSON.stringify(newUser));
+                    localStorage.setItem('cqr_auth_state', 'logged_in');
+
+                    // LEGACY SUPPORT (Optional, keeping for safety)
+                    localStorage.setItem('cdf_user_username', name);
+                    
+                     // Visual Feedback
+                    const btn = document.querySelector('#step-identity button');
+                    if(btn) {
+                        btn.innerText = "Processing...";
+                        btn.disabled = true;
+                        btn.classList.add('opacity-50', 'cursor-wait');
+                    }
+
                      // Transition with Delay
-                    if(window.Flowee) window.Flowee.talk(true, `Identity Confirmed: ${name}. Initiating Classification Protocol in 3 seconds...`);
+                    try {
+                        if(window.Flowee) window.Flowee.talk(true, `Identity Confirmed: ${name}. Initiating Classification Protocol in 3 seconds...`);
+                    } catch(e) {
+                         console.warn("Flowee Speech Failed", e);
+                    }
                     
                     setTimeout(() => {
                         document.querySelectorAll('.step-panel').forEach(el => el.classList.add('hidden'));
                         document.getElementById(stepId).classList.remove('hidden');
                         this.renderQuiz(0);
+                        
+                        // Reset Button for back navigation if needed (though we hide panel)
+                        if(btn) {
+                             btn.innerText = "Proceed to Testing";
+                             btn.disabled = false;
+                             btn.classList.remove('opacity-50', 'cursor-wait');
+                        }
                     }, 3000);
                 }
             },
@@ -334,13 +390,20 @@
                 
                 const result = map[type];
                 
-                // Save Data
+                // UPDATE CQR USER
+                let user = JSON.parse(localStorage.getItem('cqr_user')) || {};
+                user.class = result.class;
+                user.nen_type = result.nen;
+                user.adinkra = result.symbol;
+                user.beta_key = `${result.class.substring(0,3).toUpperCase()}-${Math.floor(1000+Math.random()*9000)}`;
+                
+                localStorage.setItem('cqr_user', JSON.stringify(user));
+
+                // LEGACY SUPPORT
                 localStorage.setItem('user_class', result.class);
                 localStorage.setItem('user_nen_type_v2', result.nen);
                 localStorage.setItem('cdf_adinkra_symbol', result.symbol);
-                if(!localStorage.getItem('cdf_beta_key')) {
-                    localStorage.setItem('cdf_beta_key', `${result.class.substring(0,3).toUpperCase()}-${Math.floor(1000+Math.random()*9000)}`);
-                }
+                localStorage.setItem('cdf_beta_key', user.beta_key);
 
                 // Show Result UI
                 document.getElementById('step-test').classList.add('hidden');
@@ -412,12 +475,13 @@
             
             // Artificial Delay for Effect
             setTimeout(() => {
-                console.log("Redirecting to: pages/dashboard.html");
-                try {
-                    window.location.assign("pages/dashboard.html");
-                } catch(e) {
-                    console.error("Redirect Failed", e);
-                    window.location.href = "pages/dashboard.html";
+                const target = "pages/master_dashboard.html?first_time=true";
+                console.log("Redirecting to: " + target);
+                
+                if(window.MasterBrain) {
+                    window.MasterBrain.triggerMysticFog(target);
+                } else {
+                    window.location.assign(target);
                 }
             }, 500);
         }
@@ -425,11 +489,31 @@
         // Initialize Wizard
         Wizard.init();
     </script>
-    <script defer src="js/agents/pusher.js"></script>
+
 
     <!-- AUTOMATED AGENT INJECTION -->
 
     <!-- AUTOMATED AGENT INJECTION -->
     <script src="js/agents/imperial_hud.js" defer></script>
+    <script src="js/agents/quest_engine.js"></script>
+    <script>
+        // ... (Wizard Logic Overlay to Trigger Quest Completion)
+        const originalNextStep = Wizard.nextStep;
+        Wizard.nextStep = function(stepId) {
+            // Call Original
+            originalNextStep.apply(this, arguments);
+            
+            // Hook for Quest Completion (Identity)
+            if(stepId === 'step-test') {
+                 if(window.QuestEngine) {
+                     // We force complete because 'ACCEPT' action usually implies just clicking 'Accept' on parchment,
+                     // but here we used the parchment as a 'Welcome' and the Registration Actions as the Proof.
+                     // Actually q1_intro is 'ACCEPT' type, so manual completion via this hook is fine or redundant if they clicked accept.
+                     // But to be safe if they dismissed parchment but still registered:
+                     window.QuestEngine.completeQuest('q1_intro');
+                 }
+            }
+        };
+    </script>
 </body>
 </html>

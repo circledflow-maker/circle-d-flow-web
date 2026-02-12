@@ -1016,3 +1016,56 @@ body.js-active * {
     0% { transform: translate3d(0, 0, 0); }
     100% { transform: translate3d(-200vw, 0, 0); } 
 }
+
+
+/* --- QUEST ENGINE V2 (BETA FEATURES) --- */
+
+/* 1. QUEST HUD (Permanent Guide) */
+#quest-hud {
+    position: fixed; top: 90px; right: 20px; width: 240px;
+    background: rgba(10, 10, 10, 0.9); 
+    border-left: 4px solid #FFD700; /* Gold */
+    padding: 15px; z-index: 10000;
+    font-family: 'Courier New', monospace;
+    box-shadow: 0 0 20px rgba(0,0,0,0.8);
+    backdrop-filter: blur(5px);
+    transition: all 0.5s ease;
+    border-radius: 0 0 10px 0;
+}
+#quest-hud h4 { color: #FFD700; margin: 0 0 5px 0; font-size: 0.8em; letter-spacing: 1px; }
+#quest-hud p { color: #ddd; margin: 0; font-size: 0.9em; }
+#quest-hud .hint { color: #00f0ff; font-size: 0.75em; margin-top: 5px; font-style: italic; }
+
+/* 2. FLOWEE POINTER (Navigation Highlight) */
+.flowee-target {
+    position: relative;
+    border: 2px solid #FFD700 !important;
+    animation: flowee-pulse 1.5s infinite;
+}
+.flowee-target::after {
+    content: "📍"; /* Zeigt den Weg */
+    position: absolute; right: -25px; top: 50%;
+    transform: translateY(-50%); font-size: 20px;
+}
+@keyframes flowee-pulse {
+    0% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(255, 215, 0, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); }
+}
+
+/* 3. QUIZ OVERLAY */
+.quiz-option-btn {
+    width: 100%; padding: 12px; margin: 5px 0;
+    background: #222; color: white; border: 1px solid #444;
+    cursor: pointer; text-align: left; transition: 0.3s;
+}
+.quiz-option-btn:hover { background: #FFD700; color: black; border-color: #FFD700; }
+
+/* 4. ADMIN OVERSEER PANEL */
+#admin-overseer-panel {
+    background: rgba(0,0,0,0.9); border: 2px solid #FFD700; 
+    padding: 20px; margin: 20px; border-radius: 10px;
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
+    font-family: 'Courier New', monospace; color: white;
+    display: none; /* Activated by JS */
+}

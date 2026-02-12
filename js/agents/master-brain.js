@@ -61,7 +61,7 @@ function triggerMysticFog(targetUrl) {
     if (!document.getElementById('mystic-fog-overlay')) {
         // Text is handled by CSS/HTML injection usually, but we ensure structure here
         const fogHTML = `
-        <div id="mystic-fog-overlay">
+        <div id="mystic-fog-overlay" style="background-color: #000;">
             <div class="fog-layer one"></div>
             <div class="fog-layer two"></div>
             <div id="fog-message" data-i18n="fog_message">THE FLOW IS SHIFTING...</div>

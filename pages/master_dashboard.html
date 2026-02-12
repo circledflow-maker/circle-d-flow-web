@@ -64,6 +64,8 @@
         ::-webkit-scrollbar-thumb { background: #00F0FF; border-radius: 2px; }
         ::-webkit-scrollbar-track { background: #000; }
     </style>
+    <!-- SUPABASE -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body class="h-screen w-screen flex flex-col">
 
@@ -98,7 +100,7 @@
                 <div class="text-[10px] text-white/50 uppercase">Active Agents</div>
                 <div class="font-bold text-animusBlue">24</div>
             </div>
-            <button onclick="window.location.href='../index.html'" class="px-3 py-1 border border-red-500/50 text-red-500 text-xs hover:bg-red-500/10 uppercase tracking-widest">
+            <button onclick="window.Helper.performLogout()" class="px-3 py-1 border border-red-500/50 text-red-500 text-xs hover:bg-red-500/10 uppercase tracking-widest">
                 Exit
             </button>
         </div>
@@ -177,6 +179,32 @@
         <!-- RIGHT: Quest Forge -->
         <section class="panel-right p-4">
             
+            <!-- ADMIN OVERSEER PANEL (Hidden by default) -->
+            <div id="admin-overseer-panel" style="display: none;">
+                <h3 style="color: gold; margin-top: 0; border-bottom: 1px solid #333; padding-bottom: 10px;">
+                    👁️ FLEET OVERVIEW (LIVE)
+                </h3>
+                
+                <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                    <div>
+                        <span style="color: #888;">TOTAL NAVIGATORS:</span>
+                        <span id="stat-total-users" style="font-size: 1.5em; font-weight: bold; color: #fff;">0</span>
+                    </div>
+                    <div>
+                        <span style="color: #888;">LAST ACTIVE (10m):</span>
+                        <span id="stat-active-users" style="font-size: 1.5em; font-weight: bold; color: #00f0ff;">0</span>
+                    </div>
+                </div>
+
+                <div id="quest-breakdown">
+                    <div style="color: #888; font-style: italic;">Scanning Frequencies...</div>
+                </div>
+
+                <button onclick="window.QuestEngine ? window.QuestEngine.updateAdminStats() : alert('Engine Offline')" style="background: transparent; border: 1px solid #444; color: #666; font-size: 0.8em; margin-top: 15px; cursor: pointer;">
+                    ↻ FORCE REFRESH
+                </button>
+            </div>
+
             <!-- Golden Hour Trigger -->
             <div class="mb-8 p-4 bg-yellow-500/5 border border-yellow-500/20 rounded text-center">
                 <h2 class="text-xs text-yellow-500 uppercase tracking-widest mb-2">The Golden Hour</h2>
@@ -188,11 +216,11 @@
 
             <h2 class="text-xs text-white/50 uppercase tracking-[0.2em] mb-4 border-b border-white/10 pb-2">Quest Protocol</h2>
             
-            <!-- Creation Form -->
-            <div class="space-y-3 mb-6">
+            <!-- Creation Form (QUEST 6 TRIGGER) -->
+            <form id="create-quest-form" class="space-y-3 mb-6" onsubmit="return false;">
                 <div>
                     <label class="text-[9px] text-white/50 uppercase">Mission Title</label>
-                    <input type="text" id="q-title" class="w-full bg-black border border-white/20 text-white text-xs p-2 focus:border-animusBlue outline-none" placeholder="e.g. Find the Blue Door">
+                    <input type="text" id="q-title" name="title" class="w-full bg-black border border-white/20 text-white text-xs p-2 focus:border-animusBlue outline-none" placeholder="e.g. Find the Blue Door" required>
                 </div>
                 <div class="grid grid-cols-2 gap-2">
                     <div>
@@ -208,10 +236,10 @@
                         <input type="number" id="q-xp" value="100" class="w-full bg-black border border-white/20 text-white text-xs p-2 outline-none">
                     </div>
                 </div>
-                <button onclick="forgeQuest()" class="w-full py-2 border border-animusBlue text-animusBlue hover:bg-animusBlue hover:text-black font-bold uppercase text-xs transition-colors">
+                <button type="submit" class="w-full py-2 border border-animusBlue text-animusBlue hover:bg-animusBlue hover:text-black font-bold uppercase text-xs transition-colors">
                     Forge Mission
                 </button>
-            </div>
+            </form>
             
             <!-- Review Queue -->
             <h2 class="text-xs text-white/50 uppercase tracking-[0.2em] mb-4 border-b border-white/10 pb-2">Pending Reviews</h2>
@@ -285,11 +313,30 @@
                 document.getElementById('q-title').value = '';
             }
         }
+
+        // --- TUTORIAL TRIGGER (BETA) ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            if(params.get('first_time') === 'true') {
+                console.log("First Time Login Detected. Initiating Tutorial...");
+                
+                // Wait for Agents to Init
+                setTimeout(() => {
+                    if(window.FloweeEngine) {
+                        window.FloweeEngine.startTutorialSequence();
+                    } else {
+                        console.warn("FloweeEngine not found!");
+                        alert("Tutorial Engine Offline. Consult Console.");
+                    }
+                }, 1000);
+            }
+        });
     </script>
     <!-- CORE AGENTS -->
     <script src="../js/agents/language_matrix.js"></script>
     <script src="../js/agents/master-brain.js"></script>
-    <script src="../js/agents/flowee_engine.js"></script>
+    <!-- <script src="../js/agents/flowee_engine.js"></script> REPLACED BY QUEST ENGINE -->
+    <script src="../js/agents/quest_engine.js"></script>
     <script src="../js/agents/pusher.js"></script>
     <script src="../js/agents/helper.js"></script>
 
