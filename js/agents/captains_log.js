@@ -7,13 +7,16 @@ class CaptainsLogAgent {
     constructor() {
         this.name = "CaptainsLog";
         this.activeTab = 'log';
+        // CRITICAL: Expose immediately to beat Onboarding race condition
+        window.CaptainsLog = this;
         this.init();
     }
 
     init() {
         console.log(`[${this.name}] Initializing Dossier Protocol...`);
         this.injectStyles();
-        window.CaptainsLog = this;
+        // Fallback or double-check
+        if(!window.CaptainsLog) window.CaptainsLog = this;
     }
 
     injectStyles() {
@@ -321,10 +324,16 @@ class CaptainsLogAgent {
             const newRank = rankInput.value;
             const newAvatar = img.src;
 
-            // 1. Save to Storage
-            localStorage.setItem('cdf_user_username', newName);
-            localStorage.setItem('cdf_user_rank', newRank);
-            localStorage.setItem('cdf_avatar_src', newAvatar);
+            // 1. Save to Storage (Robust)
+            try {
+                localStorage.setItem('cdf_user_username', newName);
+                localStorage.setItem('cdf_user_rank', newRank);
+                localStorage.setItem('cdf_avatar_src', newAvatar);
+            } catch (e) {
+                console.error("Storage Full. Proceeding in RAM-only mode.");
+                // Attempt clear
+                try { localStorage.removeItem('cdf_glitch_log'); } catch(ex){}
+            }
 
             // 2. Update UI
             this.toggleProfileEdit();
@@ -397,12 +406,14 @@ class CaptainsLogAgent {
                      if(timerEl) timerEl.innerText = timeLeft;
                      if(timeLeft <= 0) {
                          clearInterval(interval);
-                         window.location.href = 'marketplace.html';
+                         console.log("[CaptainsLog] Warping to Marketplace...");
+                         window.location.assign('marketplace.html'); // Force assign
                      }
                  }, 1000);
                  
                  return; // Stop further execution to focus on redirect
              }
+        } // End of saveProfile
 
     renderHammer(container) {
         container.innerHTML = `
@@ -467,6 +478,7 @@ class CaptainsLogAgent {
             </div>
         `;
     }
-}
+    } // End of renderTabContent
+} // End of CaptainsLogAgent
 
 new CaptainsLogAgent();

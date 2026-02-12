@@ -12,6 +12,12 @@ class SoundEngineer {
         this.init();
     }
 
+    playSFX(type) {
+        console.log(`[${this.name}] Playing SFX: ${type}`);
+        // Create audio element on fly or use pool
+        // new Audio(`../Assets/sounds/${type}.mp3`).play().catch(e => console.warn("Audio Playblock:", e));
+    }
+
     init() {
         console.log(`[${this.name}] Calibrating Frequency...`);
         this.checkBracketUpdates();

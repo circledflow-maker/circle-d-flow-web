@@ -75,25 +75,27 @@ class HelperAgent extends Agent {
             type: type,
             details: details,
             context: context,
-            timestamp: new Date().toISOString(),
-            url: window.location.href,
-            agent: navigator.userAgent,
-            storageUsage: JSON.stringify(localStorage).length,
-            screen: `${window.innerWidth}x${window.innerHeight}`
+            timestamp: new Date().toISOString()
         };
 
-        // Save to Local Log (Simulated Backend)
-        const logs = JSON.parse(localStorage.getItem(this.glitchLog) || '[]');
-        logs.push(snapshot);
-        localStorage.setItem(this.glitchLog, JSON.stringify(logs));
+        // Safe Save with Rotation
+        try {
+            let logs = JSON.parse(localStorage.getItem(this.glitchLog) || '[]');
+            // Limit to last 20 logs to prevent overflow
+            if (logs.length > 20) logs = logs.slice(-20);
+            logs.push(snapshot);
+            localStorage.setItem(this.glitchLog, JSON.stringify(logs));
+        } catch (e) {
+            console.warn("[Helper] Storage Quota Exceeded. Clearing old logs...");
+            // Emergency Dump
+            localStorage.removeItem(this.glitchLog);
+        }
 
-        // Reward User + Notify
-        if(window.Resonance) window.Resonance.modKarma(5);
-        if(window.Pusher) {
-            window.Pusher.showToast(`Glitch Captured [${snapshot.id}]. +5 Karma`, 'karma');
-            window.Pusher.broadcast('ADMIN_ALERT', { msg: `New Glitch Report: ${snapshot.id} (${context})` });
-        } else {
-            console.log(`Glitch Captured [${snapshot.id}]`);
+        // Notify (throttled)
+        if(window.Pusher && !this.isSpamming) {
+            this.isSpamming = true;
+            setTimeout(() => this.isSpamming = false, 2000);
+            window.Pusher.consoleLog(`Glitch Captured: ${type}`);
         }
     }
 

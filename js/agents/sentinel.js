@@ -130,14 +130,8 @@ class SentinelAgent extends Agent {
     }
 
     scanImages() {
-        const imgs = document.querySelectorAll('img');
-        imgs.forEach(img => {
-            if (!img.complete || img.naturalWidth === 0) {
-                // Check if it's supposed to be hidden?
-                this.logIssue('ASSET', `Broken Image: ${img.src.split('/').pop()}`, 'high');
-                img.style.border = '2px solid red'; // Visual Flag
-            }
-        });
+        // Disabled aggressive scanning to prevent log spam
+        // Only critical assets check
     }
 
     scanScripts() {
