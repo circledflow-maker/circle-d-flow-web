@@ -161,6 +161,8 @@
                     if(window.Helper.registerAlignment) {
                         window.Helper.registerAlignment();
                     }
+                    // Check Completion
+                    if(window.Helper.checkProfileStatus) window.Helper.checkProfileStatus();
                     
                     if(window.QuestController) window.QuestController.completeQuest('alignment_pact');
                 } else {

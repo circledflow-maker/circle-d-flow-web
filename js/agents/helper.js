@@ -322,6 +322,23 @@ class HelperAgent {
         return true;
     }
 
+    // --- PROFILE UTILS ---
+    checkProfileStatus() {
+        const name = localStorage.getItem('cdf_user_username');
+        const avatar = localStorage.getItem('cdf_avatar_src');
+        const aligned = localStorage.getItem('cdf_alignment_status');
+        
+        const isComplete = name && avatar && aligned === 'ALIGNED';
+        
+        if(isComplete && !localStorage.getItem('cdf_profile_masterey')) {
+            localStorage.setItem('cdf_profile_masterey', 'true');
+            if(window.Flowee) window.Flowee.talk(true, "Your Identity is now fully integrated with the Flow. Excellent.", "success");
+            this.awardXP(100, "Full Profile Integration");
+        }
+        
+        return { name: !!name, avatar: !!avatar, aligned: aligned === 'ALIGNED' };
+    }
+
     getLevel() {
         const xp = parseInt(localStorage.getItem('cdf_xp') || 0);
         // Simple curve: Level = 1 + (XP / 1000)

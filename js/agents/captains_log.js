@@ -213,27 +213,127 @@ class CaptainsLogAgent {
             name: localStorage.getItem('cdf_user_username') || "Drifter",
             rank: localStorage.getItem('cdf_user_rank') || "Voyager",
             xp: localStorage.getItem('cdf_xp') || 0,
-            avatar: "Assets/images/avatars/avatar_1.png"
+            avatar: localStorage.getItem('cdf_avatar_src') || "Assets/images/avatars/avatar_1.png"
         };
         
         container.innerHTML = `
             <div class="vessel-grid">
-                <div class="vessel-avatar-card">
-                    <img src="${user.avatar}" class="vessel-avatar">
-                    <h3 class="text-xl text-white font-cinzel">${user.name}</h3>
-                    <p class="text-sm text-gold">${user.rank}</p>
+                <div class="vessel-avatar-card relative group">
+                    <img src="${user.avatar}" class="vessel-avatar cursor-pointer hover:scale-110 transition-transform" id="profile-avatar-img" onclick="CaptainsLog.cycleAvatar()" title="Click to Change Identity">
+                    <div class="absolute bottom-16 right-16 bg-gold text-black rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                        <span class="material-symbols-outlined text-sm">edit</span>
+                    </div>
+                    
+                    <div id="profile-display-mode">
+                        <h3 class="text-xl text-white font-cinzel">${user.name}</h3>
+                        <p class="text-sm text-gold">${user.rank}</p>
+                    </div>
+                    <div id="profile-edit-mode" class="hidden space-y-2 mt-2">
+                        <input type="text" id="edit-name" value="${user.name}" class="w-full bg-black/50 border border-white/20 text-white text-center p-1 rounded font-cinzel">
+                        <select id="edit-rank" class="w-full bg-black/50 border border-white/20 text-gold text-center p-1 rounded text-xs font-mono">
+                            <option value="Voyager">Voyager</option>
+                            <option value="Pathfinder">Pathfinder</option>
+                            <option value="Architect">Architect</option>
+                        </select>
+                    </div>
                 </div>
+                
                 <div class="vessel-stats">
                     <h4 class="text-lg text-white mb-4 border-b border-white/10 pb-2">Ship Statistics</h4>
                     <div class="vessel-stat-row"><span>Total XP</span> <span>${user.xp}</span></div>
                     <div class="vessel-stat-row"><span>Missions Completed</span> <span>${localStorage.getItem('cdf_quests_completed') || 0}</span></div>
                     <div class="vessel-stat-row"><span>Artifacts Found</span> <span>${localStorage.getItem('cdf_artifacts_found') || 0}</span></div>
-                    <div class="mt-6">
-                        <button onclick="window.location.href='profile.html'" class="w-full bg-white/10 hover:bg-gold hover:text-black py-2 rounded transition font-bold font-mono">EDIT FULL PROFILE</button>
+                    
+                    <div class="mt-6 flex gap-2">
+                        <button id="btn-edit-profile" onclick="CaptainsLog.toggleProfileEdit()" class="flex-1 bg-white/10 hover:bg-gold hover:text-black py-2 rounded transition font-bold font-mono">
+                            EDIT FULL PROFILE
+                        </button>
+                        <button id="btn-save-profile" onclick="CaptainsLog.saveProfile()" class="hidden flex-1 bg-green-600 hover:bg-green-500 text-white py-2 rounded transition font-bold font-mono">
+                            SAVE CHANGES
+                        </button>
                     </div>
                 </div>
             </div>
         `;
+    }
+
+    toggleProfileEdit() {
+        const display = document.getElementById('profile-display-mode');
+        const edit = document.getElementById('profile-edit-mode');
+        const btnEdit = document.getElementById('btn-edit-profile');
+        const btnSave = document.getElementById('btn-save-profile');
+
+        if(display && edit) {
+            display.classList.toggle('hidden');
+            edit.classList.toggle('hidden');
+            btnEdit.classList.toggle('hidden');
+            btnSave.classList.toggle('hidden');
+            
+            // Focus if editing
+            if(!edit.classList.contains('hidden')) {
+                document.getElementById('edit-name').focus();
+            }
+        }
+    }
+
+    cycleAvatar() {
+        // Simple mock cycle through 4 avatars
+        const currentSrc = document.getElementById('profile-avatar-img').src;
+        let nextId = 1;
+        
+        // Extract ID if possible
+        const match = currentSrc.match(/avatar_(\d+)/);
+        if(match) {
+            nextId = (parseInt(match[1]) % 4) + 1; // 1 -> 2 -> 3 -> 4 -> 1
+        }
+        
+        const newSrc = `Assets/images/avatars/avatar_${nextId}.png`;
+        // In a real app we'd verify file existence, but these are placeholders
+        document.getElementById('profile-avatar-img').src = newSrc;
+        
+        // Visual feedback
+        if(window.SoundEngineer) window.SoundEngineer.playSFX('ui_hover');
+    }
+
+    saveProfile() {
+        const nameInput = document.getElementById('edit-name');
+        const rankInput = document.getElementById('edit-rank');
+        const img = document.getElementById('profile-avatar-img');
+
+        if(nameInput && rankInput && img) {
+            const newName = nameInput.value;
+            const newRank = rankInput.value;
+            const newAvatar = img.src;
+
+            // 1. Save to Storage
+            localStorage.setItem('cdf_user_username', newName);
+            localStorage.setItem('cdf_user_rank', newRank);
+            localStorage.setItem('cdf_avatar_src', newAvatar);
+
+            // 2. Update UI
+            this.toggleProfileEdit();
+            this.renderLog(document.getElementById('tab-content-log')); // Re-render
+
+            // 3. Notify System
+            if(window.Pusher) {
+                window.Pusher.showToast('Profile Updated Successfully', 'success');
+                window.Pusher.broadcast('PROFILE_UPDATE', { name: newName, rank: newRank });
+            }
+
+            // 4. Flowee Trigger (Congratulate)
+            if(window.Flowee) {
+                setTimeout(() => {
+                    window.Flowee.talk(true, `Splendid, Captain ${newName}! Your dossier is now current.`, 'success');
+                }, 500);
+            }
+            
+            // 5. Complete Imperial Step 1 or similar if needed
+            // (Assuming user might be doing this as part of initiation)
+             if(!localStorage.getItem('cdf_profile_setup_complete')) {
+                 localStorage.setItem('cdf_profile_setup_complete', 'true');
+                 if(window.Helper) window.Helper.awardXP(50, 'Identity Established');
+             }
+        }
     }
 
     renderHammer(container) {
