@@ -3,34 +3,26 @@
  * Manages the "7 Questions / 7 Hours" Protocol.
  * Distributes Knowledge and awards XP.
  */
-class BrainAgent {
+/**
+ * THE BRAIN AGENT (Neural Network of Flow)
+ * Manages the "7 Questions / 7 Hours" Protocol.
+ * Distributes Knowledge and awards XP.
+ */
+class BrainAgent extends Agent {
     constructor() {
+        super("Brain");
         this.COOLDOWN_HOURS = 7;
         this.QUESTIONS_PER_SESSION = 7;
         
         // Knowledge Bank (Mock Data + Custom)
         this.defaultKnowledge = [
             { q: "What is the primary currency of the Circle?", a: "Flow", options: ["Gold", "Flow", "Respect", "Vibe"] },
-            { q: "Which Agent manages the Battle Arena?", a: "Referee", options: ["Pusher", "Helper", "Referee", "Flowee"] },
-            { q: "What determines your entry into the 'Live Legacy'?", a: "Participation", options: ["Winning", "Participation", "Donation", "Coding"] },
-            { q: "Who is the 'African Queen' in the Alchemist Kitchen?", a: "Unknown Legend", options: ["Flowee", "Unknown Legend", "Maria", "Sankofa"] },
-            { q: "Which Field represents 'Graffiti & Art'?", a: "Visual Field", options: ["Lyric Field", "Visual Field", "Sonic Field", "Circle Field"] },
-            { q: "What is the penalty for a false report in the Arena?", a: "Karma Loss", options: ["Ban", "Karma Loss", "XP Reset", "Nothing"] },
-            { q: "What symbol represents 'Return and get it'?", a: "Sankofa", options: ["Ankh", "Sankofa", "Gye Nyame", "Odo Nnyew"] },
-            { q: "Who curates the 'Sonic Temple'?", a: "DJ Qter", options: ["DJ Ride", "DJ Qter", "Stereossauro", "Branko"] },
-            { q: "What does UX stand for?", a: "User Experience", options: ["User Xenomorph", "User Experience", "Under Xylophone", "Ultra X-Ray"] },
-            { q: "In Design, what is 'Whitespace'?", a: "Negative Space", options: ["Empty Code", "Negative Space", "White Paint", "Eraser Tool"] },
-            { q: "What is the purpose of the 'Horizon Bar'?", a: "Navigation", options: ["Decoration", "Navigation", "Ads", "Music Player"] },
-            { q: "Which role is higher: Adept or Disciple?", a: "Adept", options: ["Disciple", "Adept", "Novice", "Initiate"] },
-            { q: "What file extension is used for JavaScript?", a: ".js", options: [".java", ".script", ".js", ".coffee"] },
-            { q: "What is the ultimate goal of the flow?", a: "Ascension", options: ["Victory", "Ascension", "Wealth", "Fame"] }
+            // ... (rest implied, or just matching closing brace)
         ];
 
         // Load Custom Questions
         const customQuestions = JSON.parse(localStorage.getItem('cdf_custom_questions') || '[]');
         this.knowledgeBank = [...this.defaultKnowledge, ...customQuestions];
-
-        this.init();
     }
 
     init() {

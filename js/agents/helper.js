@@ -3,16 +3,11 @@
  * Purpose: Collects bug reports (Glitches), provides Utility functions, and bridges User Actions.
  */
 
-class HelperAgent {
+class HelperAgent extends Agent {
     constructor() {
+        super("Helper");
         this.name = "Helper";
         this.glitchLog = "cdf_glitch_log";
-        
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => this.init());
-        } else {
-            this.init();
-        }
     }
 
     init() {

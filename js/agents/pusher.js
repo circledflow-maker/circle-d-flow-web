@@ -3,17 +3,12 @@
  * Role: Handles System Notifications (Toasts), Event Broadcasting, and UI updates.
  */
 
-class PusherAgent {
+class PusherAgent extends Agent {
     constructor() {
+        super("Pusher");
         this.name = "Pusher";
         this.queue = [];
         this.isToastActive = false;
-        
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => this.init());
-        } else {
-            this.init();
-        }
     }
 
     init() {

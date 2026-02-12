@@ -4,19 +4,12 @@
  * "I watch. I report. I protect."
  */
 
-class SentinelAgent {
+class SentinelAgent extends Agent {
     constructor() {
-        this.name = "The Sentinel";
+        super("The Sentinel");
         this.version = "1.0.0";
         this.issues = [];
         this.isScanning = false;
-        
-        // Wait for DOM
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => this.init());
-        } else {
-            this.init();
-        }
     }
 
     init() {
@@ -68,18 +61,44 @@ class SentinelAgent {
 
     interceptConsole() {
         const originalError = console.error;
+        let isLogging = false;
+
         console.error = (...args) => {
-            this.logIssue('CONSOLE', `Error: ${args.join(' ')}`, 'high');
-            originalError.apply(console, args);
-            this.updateStatus();
+            if (isLogging) {
+                originalError.apply(console, args);
+                return;
+            }
+
+            isLogging = true;
+            try {
+                this.logIssue('CONSOLE', `Error: ${args.join(' ')}`, 'high');
+                originalError.apply(console, args);
+                this.updateStatus();
+            } catch (e) {
+                originalError.call(console, "Sentinel Failed to Log Error:", e);
+            } finally {
+                isLogging = false;
+            }
         };
 
         const originalWarn = console.warn;
         console.warn = (...args) => {
-            // Ignore benign warnings if needed
-            this.logIssue('CONSOLE', `Warning: ${args.join(' ')}`, 'medium');
-            originalWarn.apply(console, args);
-            this.updateStatus();
+            if (isLogging) {
+                 originalWarn.apply(console, args);
+                 return;
+            }
+            
+            isLogging = true;
+            try {
+                // Ignore benign warnings if needed
+                this.logIssue('CONSOLE', `Warning: ${args.join(' ')}`, 'medium');
+                originalWarn.apply(console, args);
+                this.updateStatus();
+            } catch (e) {
+                originalError.call(console, "Sentinel Failed to Log Warning:", e);
+            } finally {
+                isLogging = false;
+            }
         };
     }
 
