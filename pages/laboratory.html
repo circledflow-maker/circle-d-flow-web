@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hammerhead Lab | Kingdom of Science</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="../css/styles.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'magitek-blue': '#00F0FF',
+                        'mechanic-gray': '#1A1A1D',
+                        'royal-gold': '#D4AF37',
+                        'engine-oil': '#0F0F10',
+                    },
+                    fontFamily: {
+                        tech: ['"Rajdhani"', 'sans-serif'],
+                        royal: ['"Cinzel"', 'serif'],
+                    },
+                    backgroundImage: {
+                        'garage-floor': "linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://www.transparenttextures.com/patterns/carbon-fibre.png')",
+                        'hologram': "linear-gradient(180deg, rgba(0, 240, 255, 0) 0%, rgba(0, 240, 255, 0.1) 50%, rgba(0, 240, 255, 0) 100%)",
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* FF15 UI STYLE */
+        body { background-color: #050505; color: #e0e0e0; }
+
+        .ff-panel {
+            background: rgba(10, 10, 12, 0.85);
+            border-left: 4px solid #00F0FF;
+            box-shadow: 10px 10px 30px rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+            position: relative;
+            transform: skewX(-10deg); /* The FF slant */
+        }
+        
+        .ff-panel-content { transform: skewX(10deg); } /* Correct text */
+
+        .ff-btn {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ff-btn::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.4), transparent);
+            transition: left 0.5s;
+        }
+        
+        .ff-btn:hover { border-color: #00F0FF; text-shadow: 0 0 8px #00F0FF; background: rgba(0, 240, 255, 0.1); }
+        .ff-btn:hover::before { left: 100%; }
+
+        /* Hologram Scan Line */
+        .scan-line {
+            width: 100%; height: 2px; background: #00F0FF; opacity: 0.5;
+            animation: scan 3s linear infinite;
+        }
+        @keyframes scan { 0% { transform: translateY(0); opacity: 0; } 50% { opacity: 0.8; } 100% { transform: translateY(300px); opacity: 0; } }
+
+        .blueprint-holo {
+            background: radial-gradient(circle, rgba(0,240,255,0.1) 0%, rgba(0,0,0,0) 70%);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+        }
+    </style>
+</head>
+<body class="font-tech min-h-screen bg-garage-floor relative overflow-x-hidden selection:bg-magitek-blue selection:text-black">
+
+    <!-- NAV -->
+    <nav class="fixed top-0 w-full z-50 bg-engine-oil/90 border-b border-white/10 h-16 flex items-center justify-between px-8">
+        <a href="dashboard.html" class="font-royal text-white tracking-widest text-lg hover:text-magitek-blue flex items-center gap-2 transition-colors">
+            <span class="material-symbols-outlined text-magitek-blue">handyman</span> HAMMERHEAD LAB
+        </a>
+        <div class="flex gap-8 items-center">
+             <a href="palast_library.html" class="text-white/60 hover:text-white font-tech text-sm tracking-widest flex items-center gap-2 uppercase">
+                <span class="material-symbols-outlined text-sm">auto_stories</span> Archives
+             </a>
+             <div class="flex items-center gap-2 px-4 py-1 bg-black/50 border border-magitek-blue/50 transform -skew-x-12">
+                 <div class="transform skew-x-12 flex items-center gap-2">
+                     <span class="material-symbols-outlined text-magitek-blue text-xs">bolt</span>
+                     <span id="xp-display" class="font-bold text-magitek-blue text-lg">XP: ...</span>
+                 </div>
+             </div>
+        </div>
+    </nav>
+
+    <!-- HEADER: CID'S WORKBENCH -->
+    <section class="relative h-[60vh] flex items-center justify-center overflow-hidden border-b border-white/5">
+        <!-- Mechanical Background FX -->
+        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/diagmonds-light.png')] opacity-10"></div>
+        <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black via-transparent to-black"></div>
+        
+        <!-- Main Title -->
+        <div class="relative z-10 text-center transform hover:scale-105 transition-transform duration-700 cursor-default">
+            <div class="text-magitek-blue font-tech tracking-[1em] text-sm mb-4 animate-pulse">SYSTEM ONLINE</div>
+            <h1 class="text-8xl md:text-9xl font-royal text-white tracking-wider drop-shadow-[0_0_20px_rgba(0,240,255,0.5)]">
+                CREATION
+            </h1>
+            <div class="h-1 w-32 bg-magitek-blue mx-auto my-4 shadow-[0_0_10px_#00F0FF]"></div>
+            <p class="font-tech text-2xl text-stone-400 uppercase tracking-widest">"A Realm Reborn in Code"</p>
+        </div>
+
+        <!-- Floating Particles -->
+        <div class="absolute inset-0 pointer-events-none">
+            <div class="absolute top-[20%] left-[10%] w-2 h-2 bg-magitek-blue rounded-full animate-ping"></div>
+            <div class="absolute bottom-[30%] right-[15%] w-1 h-1 bg-white rounded-full animate-pulse"></div>
+        </div>
+    </section>
+
+    <!-- BLUEPRINT ENGINE (Holographic Table) -->
+    <section class="py-20 px-6 md:px-24 bg-engine-oil relative z-20">
+        <div class="flex justify-between items-end mb-16 border-b border-white/10 pb-6">
+            <div>
+                <span class="font-tech text-magitek-blue text-sm uppercase tracking-widest block mb-2">Schematics</span>
+                <h2 class="font-royal text-4xl text-white">Project Blueprints</h2>
+            </div>
+            <button onclick="KingdomScience.donate(0)" class="hidden md:block ff-btn px-6 py-3 font-bold text-sm">
+                Inject Materials (All)
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12" id="blueprint-grid">
+            <!-- Example Style for Injection -->
+            <!-- 
+            <div class="blueprint-holo p-6 relative group">
+                <div class="absolute top-0 right-0 p-2 text-magitek-blue font-bold text-4xl opacity-20">01</div>
+                <div class="h-40 border border-magitek-blue/20 flex items-center justify-center bg-black/40 mb-4 group-hover:border-magitek-blue transition-colors">
+                    <span class="material-symbols-outlined text-6xl text-white/50 group-hover:text-magitek-blue group-hover:scale-110 transition-all">precision_manufacturing</span>
+                </div>
+                <h3 class="font-royal text-2xl text-white mb-2">Magitek Engine</h3>
+                <div class="w-full bg-gray-900 h-1 mb-4 overflow-hidden">
+                    <div class="bg-magitek-blue h-full w-[45%] shadow-[0_0_10px_#00F0FF]"></div>
+                </div>
+                <button class="ff-btn w-full py-2 text-xs">Synthesize</button>
+            </div> 
+            -->
+        </div>
+    </section>
+
+    <!-- DIAGNOSTIC TERMINAL (Quiz) -->
+    <section id="quiz-section" class="py-24 px-6 md:px-24 relative overflow-hidden">
+        <!-- Background Grid -->
+        <div class="absolute inset-0 bg-[linear-gradient(rgba(0,240,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(0,240,255,0.05)_1px,transparent_1px)] bg-[size:40px_40px]"></div>
+
+        <div class="max-w-5xl mx-auto relative z-10 flex flex-col md:flex-row gap-12">
+            
+            <!-- Left Panel: Status -->
+            <div class="w-full md:w-1/3">
+                <div class="ff-panel p-8 h-full">
+                    <div class="ff-panel-content">
+                        <h2 class="font-royal text-3xl text-white mb-6 border-b border-white/10 pb-4">Diagnostics</h2>
+                        <div class="space-y-6">
+                            <div>
+                                <div class="text-xs text-stone-500 uppercase tracking-widest mb-1">System Status</div>
+                                <div class="text-magitek-blue font-bold text-xl">OPTIMAL</div>
+                            </div>
+                            <div>
+                                <div class="text-xs text-stone-500 uppercase tracking-widest mb-1">Current Task</div>
+                                <div class="text-white font-tech text-lg">Hypothesis Validation</div>
+                            </div>
+                            <div class="mt-12 pt-12 border-t border-white/10">
+                                <h3 class="font-royal text-xl text-white mb-4">Support Modules</h3>
+                                <button onclick="Laboratory.buyPowerUp('hint')" class="w-full text-left mb-2 p-2 hover:bg-magitek-blue/10 border-l-2 border-transparent hover:border-magitek-blue transition-all group">
+                                    <div class="text-white group-hover:text-magitek-blue font-bold">Request Hint</div>
+                                    <div class="text-xs text-stone-500">Cost: 50 XP</div>
+                                </button>
+                                <button onclick="Laboratory.buyPowerUp('skip')" class="w-full text-left mb-2 p-2 hover:bg-magitek-blue/10 border-l-2 border-transparent hover:border-magitek-blue transition-all group">
+                                    <div class="text-white group-hover:text-magitek-blue font-bold">Bypass Protocol</div>
+                                    <div class="text-xs text-stone-500">Cost: 100 XP</div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel: The Quiz -->
+            <div class="w-full md:w-2/3">
+                <div id="quiz-container" class="ff-panel p-10 min-h-[400px] flex items-center justify-center">
+                    <div class="ff-panel-content w-full text-center">
+                        <div class="animate-pulse">
+                            <span class="material-symbols-outlined text-6xl text-magitek-blue mb-4">settings_system_daydream</span>
+                            <div class="text-xl font-royal text-white">INITIALIZING LOGIC CORE...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- AGENTS -->
+    <script src="../js/agents/helper.js"></script>
+    <script src="../js/agents/pusher.js"></script>
+    <script src="../js/agents/flowee.js"></script>
+    <script src="../js/agents/brain.js"></script>
+    <script src="../js/kingdom_science.js"></script>
+
+    <script>
+        // Laboratory Logic (Updated for FF Theme)
+        window.Laboratory = {
+            buyPowerUp: function(type) {
+                if(!window.Helper) return;
+                
+                let cost = 0;
+                let msg = "";
+                
+                if(type === 'hint') { cost = 50; msg = "Cindy's Hint: Check the Flow."; }
+                if(type === 'skip') { cost = 100; msg = "Overdrive Engaged. Skipping..."; }
+                if(type === 'blueprint') { cost = 500; msg = "Regalia Schematics Found."; }
+
+                const success = window.Helper.deductResources(cost);
+                
+                if(success) {
+                    if(window.Pusher) window.Pusher.showToast(`Credits Deducted: ${cost}`, 'success');
+                    if(window.Flowee) window.Flowee.talk(true, msg);
+                    
+                    if(type === 'skip' && window.Brain) {
+                        window.Brain.state.questionsAnswered++;
+                        window.Brain.saveState();
+                        window.Brain.renderQuestion();
+                    }
+                } else {
+                    if(window.Pusher) window.Pusher.showToast("Insufficient Funds.", 'error');
+                }
+            },
+            
+            updateXP: function() {
+                const xp = localStorage.getItem('cdf_xp') || 0;
+                const el = document.getElementById('xp-display');
+                if(el) el.innerText = `XP: ${xp}`;
+            }
+        };
+
+        setInterval(window.Laboratory.updateXP, 2000);
+        
+        document.addEventListener('DOMContentLoaded', () => {
+             setTimeout(() => {
+                 if(window.Brain) window.Brain.startQuiz();
+                 window.Laboratory.updateXP();
+                 // Init styling for Brain.js injected content (via kingdom_science.js usually, but styles might need tweaks)
+             }, 1000);
+        });
+    </script>
+</body>
+</html>

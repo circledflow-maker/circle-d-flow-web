@@ -15,13 +15,56 @@ class SoundEngineer {
     init() {
         console.log(`[${this.name}] Calibrating Frequency...`);
         this.checkBracketUpdates();
+        this.checkGlobalAudio(); // Sync Volume
+        this.checkGlobalTrack(); // Sync Track
         this.broadcastSchedule(); // Broadcast Jam Time
         
-        // Listen for admin commands from Sound-Command
+        // Listen for admin commands from Sound-Command and Global Volume
         window.addEventListener('storage', (e) => {
             if (e.key === 'cypher_update') {
                 this.refreshBracketUI();
             }
+            if (e.key === 'cdf_global_volume') {
+                this.syncVolume(e.newValue);
+            }
+            if (e.key === 'cdf_global_track') {
+                this.syncTrack(e.newValue);
+            }
+        });
+    }
+
+    checkGlobalAudio() {
+        const vol = localStorage.getItem('cdf_global_volume');
+        if(vol) this.syncVolume(vol);
+    }
+    
+    checkGlobalTrack() {
+        const track = localStorage.getItem('cdf_global_track');
+        if(track) console.log(`[${this.name}] Current Vibe: ${track}`);
+        // In a real app, this would start playing the track if autoplay is on
+    }
+
+    syncTrack(trackName) {
+        console.log(`[${this.name}] Global Vibe Shift Detected: ${trackName}`);
+        
+        // 1. Notify User via Pusher if available, else console
+        if(window.Pusher) {
+            window.Pusher.showToast(`🎵 Frequency Shift: ${trackName}`, 'xp');
+        }
+        
+        // 2. Mock Audio Switch
+        // const audio = document.getElementById('bg-music');
+        // if(audio) { audio.src = ...; audio.play(); }
+    }
+
+    syncVolume(val) {
+        // Convert 0-100 to 0.0-1.0
+        const volume = parseFloat(val) / 100;
+        console.log(`[${this.name}] Global Volume Sync: ${val}%`);
+        
+        // Apply to all audio elements
+        document.querySelectorAll('audio, video').forEach(media => {
+            media.volume = volume;
         });
     }
 

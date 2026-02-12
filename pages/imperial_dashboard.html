@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Core | Imperial Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <style>
+        body { background-color: #050505; color: #e0e0e0; font-family: 'Space Mono', monospace; }
+        .neon-gold { text-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
+        .grid-bg { 
+            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+    </style>
+</head>
+<body class="grid-bg min-h-screen">
+
+    <!-- Header -->
+    <header class="border-b border-white/10 bg-black/80 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-amber-500 text-3xl animate-pulse">shield_person</span>
+                <h1 class="text-xl font-bold font-cinzel text-amber-500 tracking-widest">IMPERIAL NEXUS CORE</h1>
+            </div>
+            <div class="flex gap-4 text-xs text-white/50">
+                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span> SYSTEM ONLINE</span>
+                <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">wifi</span> SECURE LINK</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Grid -->
+    <main class="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <!-- Column 1: The Pulse (Visitor Radar) -->
+        <section class="bg-black/40 border border-white/10 rounded-xl p-4 flex flex-col h-[500px]">
+            <h2 class="text-amber-500 font-bold mb-4 flex items-center gap-2">
+                <span class="material-symbols-outlined">radar</span> LIVE RADAR
+            </h2>
+            <div class="flex-1 bg-white/5 rounded-lg relative overflow-hidden flex items-center justify-center border border-white/5 group">
+                <!-- Mock Map -->
+                <div class="absolute inset-0 opacity-30 bg-[url('https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Lisbon_OpenStreetMap.png/640px-Lisbon_OpenStreetMap.png')] bg-cover bg-center grayscale mix-blend-overlay"></div>
+                
+                <!-- Radar Sweep -->
+                <div class="absolute inset-0 bg-gradient-to-r from-transparent via-green-500/10 to-transparent w-full h-full animate-[spin_4s_linear_infinite] origin-bottom-left" style="clip-path: polygon(0 0, 100% 0, 100% 100%);"></div>
+
+                <!-- Dots -->
+                <div class="absolute top-1/2 left-1/2 w-3 h-3 bg-white rounded-full animate-ping"></div>
+                <div class="absolute top-1/3 left-1/4 w-2 h-2 bg-amber-500 rounded-full shadow-[0_0_10px_orange]" title="Initiate"></div>
+                <div class="absolute bottom-1/4 right-1/3 w-2 h-2 bg-gray-500 rounded-full" title="Guest"></div>
+            </div>
+            <div class="mt-4 grid grid-cols-3 gap-2 text-center text-xs">
+                <div class="bg-white/5 p-2 rounded">
+                    <div class="text-gray-400">Guests</div>
+                    <div class="text-lg font-bold">1,024</div>
+                </div>
+                <div class="bg-amber-500/10 p-2 rounded border border-amber-500/30">
+                    <div class="text-amber-400">Initiates</div>
+                    <div class="text-lg font-bold text-amber-500">342</div>
+                </div>
+                <div class="bg-purple-500/10 p-2 rounded border border-purple-500/30">
+                    <div class="text-purple-400">Legends</div>
+                    <div class="text-lg font-bold text-purple-500">12</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Column 2: Financial & Vibe Stream -->
+        <section class="lg:col-span-2 space-y-6">
+            
+            <!-- Command Center -->
+            <div class="bg-black/40 border border-white/10 rounded-xl p-4">
+                <h2 class="text-amber-500 font-bold mb-4 flex items-center gap-2">
+                    <span class="material-symbols-outlined">campaign</span> COMMAND CENTER
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Ticker Control -->
+                    <div class="bg-white/5 p-3 rounded-lg border border-white/5">
+                        <label class="text-[10px] uppercase text-white/50 tracking-wider">Broadcast to Global Ticker</label>
+                        <div class="flex gap-2 mt-2">
+                             <select id="ticker-layer" class="bg-black border border-white/20 text-white text-xs rounded px-2 outline-none">
+                                <option value="CAPTAIN">🦅 Captain</option>
+                                <option value="QUEEN">🍲 Queen</option>
+                                <option value="DJ">🎧 DJ</option>
+                                <option value="SYSTEM">💠 System</option>
+                            </select>
+                            <input type="text" id="ticker-msg" class="flex-1 bg-black border border-white/20 text-white text-xs px-3 rounded outline-none focus:border-amber-500" placeholder="Type message...">
+                            <button onclick="broadcastTicker()" class="bg-amber-600 hover:bg-amber-500 text-white px-4 rounded text-xs font-bold transition-colors">SEND</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Music Override -->
+                    <div class="bg-white/5 p-3 rounded-lg border border-white/5">
+                        <label class="text-[10px] uppercase text-white/50 tracking-wider">DJ Qter Override</label>
+                        <div class="flex gap-2 mt-2">
+                             <input type="text" id="dj-track" class="flex-1 bg-black border border-white/20 text-white text-xs px-3 rounded outline-none focus:border-purple-500" placeholder="Enter Track ID...">
+                            <button onclick="overrideMusic()" class="bg-purple-600 hover:bg-purple-500 text-white px-4 rounded text-xs font-bold transition-colors">DROP</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Financial Stream & Vibe Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 h-64">
+                <!-- Stripe Stream -->
+                <div class="bg-black/40 border border-white/10 rounded-xl p-4 flex flex-col">
+                    <h3 class="text-xs font-bold text-green-400 mb-2 flex justify-between">
+                         <span>STRIPE FEED</span>
+                         <span class="animate-pulse">● LIVE</span>
+                    </h3>
+                    <div class="flex-1 overflow-y-auto space-y-2 text-xs custom-scrollbar">
+                        <div class="flex justify-between border-b border-white/5 pb-1">
+                            <span class="text-white/70">Payment #8821</span>
+                            <span class="text-green-400 font-mono">+€85.00</span>
+                        </div>
+                        <div class="flex justify-between border-b border-white/5 pb-1">
+                            <span class="text-white/70">Payment #8820</span>
+                            <span class="text-green-400 font-mono">+€125.00</span>
+                        </div>
+                         <div class="flex justify-between border-b border-white/5 pb-1 opacity-50">
+                            <span class="text-white/70">Payment #8819</span>
+                            <span class="text-green-400 font-mono">+€45.00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resonance Radar -->
+                 <div class="bg-black/40 border border-white/10 rounded-xl p-4 flex flex-col">
+                    <h3 class="text-xs font-bold text-blue-400 mb-2">VIBE CHECK POLARITY</h3>
+                    <div class="flex-1 flex items-center justify-center gap-8">
+                        <div class="text-center">
+                            <div class="text-3xl font-black text-white">62%</div>
+                            <div class="text-[10px] text-red-400 uppercase tracking-widest mt-1">Energy</div>
+                        </div>
+                        <div class="h-12 w-px bg-white/10"></div>
+                        <div class="text-center">
+                             <div class="text-3xl font-black text-white/50">38%</div>
+                            <div class="text-[10px] text-blue-300 uppercase tracking-widest mt-1">Tao Flow</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </main>
+    
+    <script>
+        // Mock Admin Functions
+        function broadcastTicker() {
+            const layer = document.getElementById('ticker-layer').value;
+            const msg = document.getElementById('ticker-msg').value;
+            if(!msg) return;
+
+            // Dispatch Event to Pusher
+            window.dispatchEvent(new CustomEvent('GLOBAL_UI_EVENT', {
+                detail: { type: 'TICKER', layer: layer, msg: msg }
+            }));
+            
+            // Visual Feedback
+            alert(`Command Sent: [${layer}] ${msg}`);
+            document.getElementById('ticker-msg').value = '';
+        }
+
+        function overrideMusic() {
+             const track = document.getElementById('dj-track').value;
+             // Dispatch
+             window.dispatchEvent(new CustomEvent('GLOBAL_SOUND_EVENT', {
+                 detail: { type: 'OVERRIDE', track: track }
+             }));
+             alert('DJ Override Initiated!');
+        }
+    </script>
+
+<script src="../js/agents/pusher.js" defer></script>
+<script src="../js/agents/helper.js" defer></script>
+<script src="../js/agents/global_ticker.js" defer></script>
+<script src="../js/agents/network_hub.js" defer></script>
+<script src="../js/agents/constructor_bot.js" defer></script>
+<script src="../js/agents/kingdom_science.js" defer></script>
+<script src="../js/agents/resonance_bridge.js" defer></script>
+<script src="../js/agents/vault_space.js" defer></script>
+<script src="../js/agents/orbital_menu.js" defer></script>
+    <script src="../js/agents/tutorial_core.js" defer></script>
+    <script src="../js/agents/quest_controller.js" defer></script>
+    <script src="../js/agents/visual_integrity.js" defer></script>
+    <script src="../js/agents/sound_engineer.js" defer></script>
+    <script src="../js/agents/horizon_bar.js" defer></script>
+    <script src="../js/agents/social_matrix.js" defer></script>
+    <script src="../js/agents/flowee.js" defer></script>
+
+    <!-- AUTOMATED AGENT INJECTION -->
+
+    <!-- AUTOMATED AGENT INJECTION -->
+    <script src="../js/agents/imperial_hud.js" defer></script>
+</body>
+</html>

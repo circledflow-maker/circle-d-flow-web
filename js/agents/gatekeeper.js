@@ -37,7 +37,16 @@ class GatekeeperAgent {
         
         if (user) {
             this.isAuthenticated = true;
-            console.log(`[${this.name}] User Detected: ${user.email}`);
+            
+            // NEW: Beta Protocol Enforcement
+            if (!localStorage.getItem('cdf_beta_key') && !window.location.href.includes('beta-initiation')) {
+                 console.warn(`[${this.name}] Beta Key Missing. Redirecting to Initiation...`);
+                 window.location.href = '../beta-initiation.html';
+                 return;
+            }
+
+            this.userChannel = this.deriveChannel(user); // NEW: Determine Channel
+            console.log(`[${this.name}] User Detected: ${user.email} | Channel: ${this.userChannel}`);
             // Auto-Redirect to Core
             this.enterCore();
         } else {
@@ -45,6 +54,27 @@ class GatekeeperAgent {
             // Ensure Gateway is visible (remove loading states if any)
             document.body.classList.remove('opacity-0');
         }
+    }
+
+    // NEW: Channel Logic
+    deriveChannel(user) {
+        // 1. Admin Override (Local Storage for Dev)
+        if(localStorage.getItem('cdf_dev_admin') === 'true') return 'admin';
+
+        // 2. Netlify Roles
+        const roles = user.app_metadata?.roles || [];
+        if(roles.includes('admin')) return 'admin';
+        if(roles.includes('beta_tester')) return 'beta';
+
+        // 3. Default
+        return 'user';
+    }
+
+    hasPermission(requiredLevel) {
+        const hierarchy = { 'user': 1, 'beta': 2, 'admin': 3 };
+        const currentScore = hierarchy[this.userChannel || 'user'] || 1;
+        const requiredScore = hierarchy[requiredLevel] || 1;
+        return currentScore >= requiredScore;
     }
 
     enterCore() {

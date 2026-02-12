@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matchroom | Imperial Arena</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Zen+Tokyo+Zoo&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/styles.css">
+    <style>
+        /* Arena Specific Styles */
+        body { background: #000; overflow: hidden; }
+        
+        .arena-bg {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, #050510 0%, #1a1a2e 100%);
+            z-index: 0;
+        }
+        
+        .floating-island {
+            position: absolute;
+            top: 60%;
+            left: 50%;
+            transform: translate(-50%, -50%) perspective(1000px) rotateX(60deg);
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle at center, #2a2a3e 0%, #000 70%);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            box-shadow: 0 0 100px rgba(138, 43, 226, 0.2);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(-50%, -50%) perspective(1000px) rotateX(60deg) translateY(0); }
+            50% { transform: translate(-50%, -50%) perspective(1000px) rotateX(60deg) translateY(-20px); }
+        }
+
+        /* Aura Animations */
+        .fighter-slot {
+            transition: transform 0.1s;
+        }
+        .fighter-slot.power-up {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+            filter: brightness(1.5);
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        .hp-bar {
+            background: #333;
+            border: 2px solid #555;
+            height: 24px;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+        .hp-fill {
+            background: linear-gradient(90deg, #ff0000, #ffff00, #00ff00);
+            height: 100%;
+            width: 50%; /* Start even */
+            transition: width 0.3s ease-out;
+        }
+
+        /* Result Overlay */
+        .result-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            display: none; /* Flex on trigger */
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(20px);
+            animation: fadeIn 0.5s forwards;
+        }
+        
+        .victory .text { color: #FFD700; text-shadow: 0 0 20px #FFD700; }
+        .defeat .text { color: #00BFFF; text-shadow: 0 0 20px #00BFFF; }
+
+        .dbz-font { font-family: 'Zen Tokyo Zoo', cursive; }
+    </style>
+</head>
+<body>
+
+    <!-- Environment -->
+    <div class="arena-bg">
+        <div class="floating-island"></div>
+    </div>
+
+    <div id="horizon-bar-root"></div>
+
+    <div id="matchroom-root" class="relative z-10 h-screen flex flex-col pt-20">
+        
+        <!-- HUD HEADER -->
+        <div class="flex justify-between items-center px-8 mb-8">
+            <!-- P1 HUD -->
+            <div class="w-1/3">
+                <div class="flex items-center gap-4 mb-2">
+                    <div class="w-12 h-12 rounded-full border-2 border-white bg-gray-800"></div>
+                    <div>
+                        <div class="text-yellow-400 font-bold font-display">YOU (Challenger)</div>
+                        <div class="text-[10px] text-white/50">LVL 42 • S-Rank</div>
+                    </div>
+                </div>
+                <div class="hp-bar skew-x-[-15deg]">
+                    <div class="hp-fill w-[50%]" style="background: #00ff00;"></div>
+                </div>
+            </div>
+
+            <!-- VS TIMER -->
+            <div class="text-center">
+                <div class="bg-black/80 border-2 border-white/20 rounded-full w-20 h-20 flex items-center justify-center font-display font-black text-3xl text-white shadow-[0_0_30px_rgba(255,255,255,0.2)]" id="combat-timer">
+                    60
+                </div>
+            </div>
+
+            <!-- P2 HUD -->
+            <div class="w-1/3 text-right">
+                <div class="flex items-center gap-4 mb-2 justify-end">
+                    <div>
+                        <div class="text-red-400 font-bold font-display">OPPONENT</div>
+                        <div class="text-[10px] text-white/50">LVL 55 • Commander</div>
+                    </div>
+                    <div class="w-12 h-12 rounded-full border-2 border-red-500 bg-red-900"></div>
+                </div>
+                <div class="hp-bar skew-x-[15deg]">
+                    <div class="hp-fill w-[50%] ml-auto" style="background: #ff0000;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STAGE -->
+        <div class="flex-1 flex items-center justify-center gap-12 px-8">
+            <!-- FIGHTER A -->
+            <div id="fighter-a" class="fighter-slot w-[400px] bg-black/60 border border-white/10 rounded-2xl p-4 backdrop-blur-md relative group">
+                <div class="aspect-video bg-black rounded-lg mb-4 flex items-center justify-center border border-white/5">
+                    <span class="material-symbols-outlined text-4xl text-white/20">equalizer</span>
+                </div>
+                <button onclick="window.ArenaAgent.sendEnergy('left')" class="w-full py-4 bg-yellow-500 hover:bg-yellow-400 text-black font-black uppercase tracking-widest rounded skew-x-[-10deg] transition-all shadow-[0_0_20px_rgba(234,179,8,0.5)] active:scale-95">
+                    Channel Haki
+                </button>
+            </div>
+
+            <!-- FIGHTER B -->
+            <div id="fighter-b" class="fighter-slot w-[400px] bg-black/60 border border-white/10 rounded-2xl p-4 backdrop-blur-md relative group">
+                <div class="aspect-video bg-black rounded-lg mb-4 flex items-center justify-center border border-white/5">
+                    <span class="material-symbols-outlined text-4xl text-white/20">graphic_eq</span>
+                </div>
+                <button onclick="window.ArenaAgent.sendEnergy('right')" class="w-full py-4 bg-red-600 hover:bg-red-500 text-white font-black uppercase tracking-widest rounded skew-x-[-10deg] transition-all shadow-[0_0_20px_rgba(220,38,38,0.5)] active:scale-95">
+                    Channel Haki
+                </button>
+            </div>
+        </div>
+
+        <!-- REFEREE -->
+        <div class="flex justify-center pb-8">
+            <div class="bg-black/80 px-6 py-2 rounded-full border border-white/10 flex items-center gap-2">
+                <span class="material-symbols-outlined text-purple-400 animate-pulse">smart_toy</span>
+                <span class="text-xs font-mono text-white/70">Flowee: "Signatures detected. Resonance stable."</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- PRE-MATCH OVERLAY -->
+    <div id="match-overlay" class="fixed inset-0 bg-black z-50 flex items-center justify-center transition-opacity duration-500">
+        <h1 id="overlay-text" class="text-[150px] font-black text-white dbz-font text-stroke">3</h1>
+    </div>
+
+    <!-- VICTORY SCREEN -->
+    <div id="victory-screen" class="result-overlay victory">
+        <div class="text-center">
+            <h1 class="text-8xl font-black text-yellow-400 dbz-font mb-4 drop-shadow-[0_0_30px_rgba(255,215,0,0.8)]">VICTORY</h1>
+            <div class="bg-black/80 border-2 border-yellow-500 p-8 rounded-2xl max-w-md mx-auto">
+                <div class="text-2xl font-mono text-white mb-2">+500 HAKI</div>
+                <div class="text-xl font-mono text-yellow-400">+100 CP</div>
+                <button onclick="window.location.href='arena.html'" class="mt-8 px-8 py-3 bg-white text-black font-bold uppercase rounded hover:bg-gray-200">Return to Orbit</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- DEFEAT SCREEN -->
+    <div id="defeat-screen" class="result-overlay defeat">
+        <div class="text-center">
+            <h1 class="text-8xl font-black text-blue-500 dbz-font mb-4 drop-shadow-[0_0_30px_rgba(0,191,255,0.8)]">DEFEAT</h1>
+            <div class="bg-black/80 border-2 border-blue-500 p-8 rounded-2xl max-w-md mx-auto">
+                <div class="text-2xl font-mono text-white mb-2">+50 HAKI</div>
+                <div class="text-xl font-mono text-blue-400">CP STAGNANT</div>
+                <p class="text-white/50 text-xs mt-4">"A loss is just a lesson in disguise."</p>
+                <button onclick="window.location.href='arena.html'" class="mt-8 px-8 py-3 bg-white text-black font-bold uppercase rounded hover:bg-gray-200">Train Harder</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/agents/arena_agent.js"></script>
+    <script src="../js/agents/imperial_hud.js"></script>
+</body>
+</html>

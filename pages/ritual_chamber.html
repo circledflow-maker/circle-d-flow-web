@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Ritual Chamber | Circle D Flow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Space+Mono&display=swap" rel="stylesheet">
+    <style>
+        body { background-color: #050505; color: white; font-family: 'Space Mono', monospace; }
+        .font-cinzel { font-family: 'Cinzel', serif; }
+        .fade-in { animation: fadeIn 2s ease-in forwards; opacity: 0; }
+        @keyframes fadeIn { to { opacity: 1; } }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen bg-[url('../Assets/images/ritual_bg.jpg')] bg-cover bg-center">
+    <div class="fixed inset-0 bg-black/80 z-0"></div>
+    
+    <div class="relative z-10 max-w-2xl px-6 text-center space-y-8">
+        <h1 class="text-4xl md:text-6xl font-cinzel text-amber-500 tracking-widest fade-in" style="animation-delay: 0.5s;">The Ritual Chamber</h1>
+        <p class="text-lg text-white/70 leading-relaxed fade-in" style="animation-delay: 1.5s;">
+            Before you enter the Kingdom, we must know your frequency.
+            <br>The Siege is not for the faint of heart.
+        </p>
+        
+        <div class="fade-in" style="animation-delay: 2.5s;">
+            <button onclick="completeRitual()" class="px-8 py-3 bg-transparent border border-amber-500 text-amber-500 hover:bg-amber-500 hover:text-black transition-all font-bold uppercase tracking-widest rounded-full">
+                Begin Vibe Check
+            </button>
+            <p class="mt-4 text-[10px] text-white/30 lowercase">Aligning your Soul Fragment...</p>
+        </div>
+    </div>
+
+    <script>
+        function completeRitual() {
+            // Mock Vibe Check Logic
+            const btn = document.querySelector('button');
+            btn.innerHTML = "Scanning...";
+            btn.classList.add('animate-pulse');
+            
+            setTimeout(() => {
+                sessionStorage.setItem('cdf_beta_session', 'active');
+                window.location.href = 'dashboard.html';
+            }, 2000);
+        }
+    </script>
+<script src="../js/agents/pusher.js" defer></script>
+<script src="../js/agents/helper.js" defer></script>
+<script src="../js/agents/global_ticker.js" defer></script>
+<script src="../js/agents/network_hub.js" defer></script>
+<script src="../js/agents/constructor_bot.js" defer></script>
+<script src="../js/agents/kingdom_science.js" defer></script>
+<script src="../js/agents/resonance_bridge.js" defer></script>
+<script src="../js/agents/vault_space.js" defer></script>
+<script src="../js/agents/orbital_menu.js" defer></script>
+    <script src="../js/agents/tutorial_core.js" defer></script>
+    <script src="../js/agents/quest_controller.js" defer></script>
+    <script src="../js/agents/visual_integrity.js" defer></script>
+    <script src="../js/agents/sound_engineer.js" defer></script>
+    <script src="../js/agents/horizon_bar.js" defer></script>
+    <script src="../js/agents/social_matrix.js" defer></script>
+    <script src="../js/agents/flowee.js" defer></script>
+
+    <!-- AUTOMATED AGENT INJECTION -->
+
+    <!-- AUTOMATED AGENT INJECTION -->
+    <script src="../js/agents/imperial_hud.js" defer></script>
+</body>
+</html>

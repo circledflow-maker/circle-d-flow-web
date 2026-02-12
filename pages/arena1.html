@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imperial Arena | Circle D Flow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Cinzel:wght@400;700&family=Space+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/styles.css">
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#8A2BE2",
+                        "haki-gold": "#D4AF37",
+                        "imperial-red": "#D62828",
+                    },
+                    fontFamily: {
+                        "display": ["Cinzel", "serif"],
+                        "body": ["Plus Jakarta Sans", "sans-serif"],
+                        "mono": ["Space Mono", "monospace"]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { opacity: 0; animation: fadeIn 0.8s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .pillar-card.selected {
+            border-color: #D4AF37;
+            box-shadow: 0 0 20px #D4AF37;
+            background: rgba(212, 175, 55, 0.1);
+        }
+        
+        .bg-grid-arena {
+            background-image: linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+    </style>
+</head>
+<body class="bg-[#050406] text-white min-h-screen font-body relative overflow-x-hidden">
+
+    <!-- BG Grid -->
+    <div class="fixed inset-0 bg-grid-arena opacity-20 pointer-events-none"></div>
+
+    <!-- HORIZON BAR -->
+    <div id="horizon-bar-root"></div>
+
+    <!-- PILLAR SELECTION OVERLAY (Shown if no pillars selected) -->
+    <div id="pillar-selection-overlay" class="fixed inset-0 bg-black/90 backdrop-blur-xl z-50 flex items-center justify-center p-4">
+        <div class="bg-[#0F0A13] border-2 border-[#D4AF37] p-8 rounded-2xl max-w-4xl w-full text-center relative overflow-hidden">
+            <!-- Decorative Glow -->
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-1 bg-[#D4AF37] shadow-[0_0_50px_#D4AF37]"></div>
+            
+            <h2 class="text-4xl md:text-5xl font-display font-bold text-[#D4AF37] mb-2 drop-shadow-md">Choose Your 2 Pillars</h2>
+            <p class="text-white/50 font-mono text-sm mb-8">Select your masteries for this moon cycle. Flowee is watching.</p>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 text-left">
+                <!-- Audio -->
+                <div class="pillar-card bg-[#1A1622] border border-white/10 p-4 rounded-xl cursor-pointer hover:-translate-y-1 transition-all" onclick="window.ArenaAgent.togglePillar(this, 'MCing')">
+                    <span class="text-3xl mb-2 block">🎤</span>
+                    <span class="font-display font-bold text-[#D4AF37]">Audio</span>
+                    <p class="text-[10px] text-white/40 mt-1">MCing, Beatbox, Production</p>
+                </div>
+                <!-- Visual -->
+                <div class="pillar-card bg-[#1A1622] border border-white/10 p-4 rounded-xl cursor-pointer hover:-translate-y-1 transition-all" onclick="window.ArenaAgent.togglePillar(this, 'Arts')">
+                    <span class="text-3xl mb-2 block">🎨</span>
+                    <span class="font-display font-bold text-[#D4AF37]">Visual</span>
+                    <p class="text-[10px] text-white/40 mt-1">Graffiti, Fashion, Design</p>
+                </div>
+                <!-- Movement -->
+                <div class="pillar-card bg-[#1A1622] border border-white/10 p-4 rounded-xl cursor-pointer hover:-translate-y-1 transition-all" onclick="window.ArenaAgent.togglePillar(this, 'Action')">
+                    <span class="text-3xl mb-2 block">🛹</span>
+                    <span class="font-display font-bold text-[#D4AF37]">Movement</span>
+                    <p class="text-[10px] text-white/40 mt-1">Breaking, Skate, Parkour</p>
+                </div>
+                <!-- Taste -->
+                <div class="pillar-card bg-[#1A1622] border border-white/10 p-4 rounded-xl cursor-pointer hover:-translate-y-1 transition-all" onclick="window.ArenaAgent.togglePillar(this, 'Taste')">
+                    <span class="text-3xl mb-2 block">🍳</span>
+                    <span class="font-display font-bold text-[#D4AF37]">Culinary</span>
+                    <p class="text-[10px] text-white/40 mt-1">Taste, Mixology</p>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center border-t border-white/10 pt-6">
+                <div id="selection-counter" class="font-mono text-[#D4AF37]">Selected: 0 / 2</div>
+                <button id="confirm-selection" disabled onclick="window.ArenaAgent.confirmPillars()" 
+                    class="px-8 py-3 bg-[#D4AF37] text-black font-bold uppercase tracking-widest rounded shadow-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#F4CF57] transition-colors relative z-50">
+                    Lock In Haki
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN ARENA CONTENT -->
+    <main class="relative z-10 pt-24 px-4 max-w-7xl mx-auto" id="arena-lobby">
+        
+        <!-- Header -->
+        <div class="text-center mb-16">
+            <h1 class="text-5xl md:text-7xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-b from-[#D4AF37] to-[#8B5A2B] mb-4 drop-shadow-[0_4px_0_rgba(0,0,0,0.5)]">
+                IMPERIAL ARENA
+            </h1>
+            <div class="flex items-center justify-center gap-4 text-[#D4AF37]/60 font-mono text-xs uppercase tracking-widest">
+                <span>Ranked Battles</span>
+                <span>•</span>
+                <span>Wager CP</span>
+                <span>•</span>
+                <span>Prove Your Flow</span>
+            </div>
+        </div>
+
+        <!-- Filters & Stats -->
+        <div class="flex flex-col md:flex-row justify-between items-end mb-8 gap-4">
+            <div class="flex gap-2">
+                <button class="px-4 py-2 bg-[#D4AF37]/20 border border-[#D4AF37] text-[#D4AF37] rounded font-bold uppercase text-xs">Live Clash</button>
+                <button class="px-4 py-2 bg-white/5 border border-white/10 text-white/50 hover:text-white rounded font-bold uppercase text-xs transition-colors">Tournament</button>
+            </div>
+            <div class="text-right">
+                <div class="text-[10px] text-white/40 uppercase font-mono mb-1">Your Combat Points</div>
+                <div class="text-2xl font-display font-bold text-[#D4AF37]">1,250 CP</div>
+            </div>
+        </div>
+
+        <!-- OPPONENT GRID -->
+        <div id="lobby-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-20">
+            <!-- Injected by Agent -->
+            <div class="col-span-full py-20 text-center animate-pulse text-white/20 font-mono">
+                Scanning for worthy opponents...
+            </div>
+        </div>
+
+    </main>
+    
+    <!-- Scripts -->
+    <script src="../js/agents/imperial_hud.js"></script>
+    <script src="../js/agents/pusher.js"></script>
+    <script src="../js/agents/helper.js"></script>
+    <script src="../js/agents/arena_agent.js"></script>
+    
+    <script>
+        // Check if pillars are already selected to hide overlay initally (prevents flash)
+        if(localStorage.getItem('cdf_pillars')) {
+            document.getElementById('pillar-selection-overlay').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

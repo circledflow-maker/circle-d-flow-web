@@ -1,14 +1,27 @@
 /**
- * Agent: The Pusher (BridgePusher)
- * Purpose: Momentum & Flow Management.
- * "I ensure no one gets stuck at the Gates. If the path is blocked, I forge a new one."
+ * Agent: Bridge Pusher (The Verteiler)
+ * Purpose: Global Event Bus & WebSocket Simulation.
+ *          Distributes "admin pushes" and cross-tab events.
  */
 
 class BridgePusherAgent {
     constructor() {
         this.name = "Bridge Pusher";
-        this.stagnationTimer = null;
-        this.STAGNATION_LIMIT = 10000; // 10s of inaction triggers a nudge
+        this.CHANNEL = "cdf_bridge_channel";
+        
+        // Listen for storage events (Cross-Tab Communication)
+        window.addEventListener('storage', (e) => {
+            if (e.key === this.CHANNEL && e.newValue) {
+                try {
+                    const packet = JSON.parse(e.newValue);
+                    if (packet.timestamp > Date.now() - 1000) { // Only recent events
+                        this.handleBroadcast(packet.type, packet.payload);
+                    }
+                } catch (err) {
+                    console.error("Bridge Signal Corrupted:", err);
+                }
+            }
+        });
 
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => this.init());
@@ -18,130 +31,99 @@ class BridgePusherAgent {
     }
 
     init() {
-        console.log(`[${this.name}] Monitoring Flow Momentum...`);
-        this.startStagnationCheck();
-        
-        // Listen for User Interaction to reset timer
-        ['mousemove', 'click', 'keydown'].forEach(evt => 
-            document.addEventListener(evt, () => this.resetStagnation())
-        );
-
-        // Intercept Gatekeeper's Bypass if possible (by overriding the method or listening to an event)
-        // Since Gatekeeper is a global, we can wrap its method once it exists.
-        this.interceptGatekeeper();
+        console.log(`[${this.name}] Global Verteiler Online (v2.0). Listening on frequency: ${this.CHANNEL}`);
+        window.BridgePusher = this; 
     }
 
-    startStagnationCheck() {
-        this.stagnationTimer = setTimeout(() => {
-            this.nudgeUser();
-        }, this.STAGNATION_LIMIT);
+    /**
+     * Broadcast a message to ALL open tabs (including self via logic, strictly self via direct call usually)
+     * @param {string} type - Event Type (e.g., 'ADMIN_ALERT', 'QUEST_DROP')
+     * @param {object} payload - Data
+     */
+    broadcast(type, payload) {
+        const packet = {
+            type: type,
+            payload: payload,
+            timestamp: Date.now(),
+            id: Math.random().toString(36).substr(2, 9)
+        };
+
+        // 1. Save to Storage (Triggers 'storage' event in OTHER tabs)
+        localStorage.setItem(this.CHANNEL, JSON.stringify(packet));
+
+        // 2. Handle locally immediately (since storage event doesn't fire on same tab)
+        this.handleBroadcast(type, payload);
     }
 
-    resetStagnation() {
-        clearTimeout(this.stagnationTimer);
-        this.startStagnationCheck();
-    }
+    handleBroadcast(type, payload) {
+        console.log(`[${this.name}] Signal Received: ${type}`, payload);
 
-    nudgeUser() {
-        // MESH CHECK: Don't nudge if the Visual Reality is unstable
-        if (window.VisualEye && window.VisualEye.status === "critical") {
-            console.warn(`[${this.name}] Nudge Aborted. Visual Integrity Critical.`);
-            return;
-        }
+        // Dispatch DOM Event for local agents to pick up
+        const event = new CustomEvent('bridge-signal', {
+            detail: { type, payload }
+        });
+        window.dispatchEvent(event);
 
-        console.log(`[${this.name}] User Stagnating. Applying Nudge.`);
-        // 1. Pulse the CTA
-        const cta = document.querySelector('button[onclick*="openExam"]');
-        if (cta) {
-            cta.classList.add('animate-bounce');
-            setTimeout(() => cta.classList.remove('animate-bounce'), 2000);
-        }
-
-        // 2. If Flowee exists, make him talk
-        if (window.Flowee && !window.Flowee.isTalking) {
-            window.Flowee.talk(true, "Don't be shy! The Kingdom awaits! ⚔️");
+        // Specific Handlers
+        if (type === 'ADMIN_ALERT') {
+             if (window.Flowee && typeof window.Flowee.talk === 'function') {
+                 window.Flowee.talk(true, `⚡ ADMIN SIGNAL: ${payload.msg}`);
+             } else {
+                 alert(`⚡ ADMIN SIGNAL: ${payload.msg}`);
+             }
         }
     }
 
-    interceptGatekeeper() {
-        const checkInterval = setInterval(() => {
-            if (window.Gatekeeper) {
-                clearInterval(checkInterval);
-                this.enhanceGatekeeper();
+    // --- NEURAL LINK (Cross-Device Sync) ---
+    generateSyncCode() {
+        const data = {};
+        for(let i=0; i<localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if(key.startsWith('cdf_') || key.startsWith('user')) {
+                data[key] = localStorage.getItem(key);
             }
-        }, 100);
+        }
+        // Simple Base64 encode for "security" (obfuscation)
+        const json = JSON.stringify(data);
+        const code = btoa(unescape(encodeURIComponent(json)));
+        
+        console.log(`[${this.name}] Neural Link Generated. Length: ${code.length}`);
+        return code;
     }
 
-    enhanceGatekeeper() {
-        const originalOpenExam = window.Gatekeeper.openExam.bind(window.Gatekeeper);
-        
-        // Override openExam to use Pusher's Custom Bypass UI
-        window.Gatekeeper.openExam = () => {
-            if (window.netlifyIdentity) {
-                // Try Normal Open
-                window.netlifyIdentity.open();
-                
-                // Watch for potential CORS failure (hacky, but effective for local)
-                setTimeout(() => {
-                    // If modal didn't open or we are local, and user clicked...
-                    if (!document.querySelector('iframe[id*="netlify-identity"]')) {
-                        this.handleFailure();
-                    }
-                }, 1000);
-
-            } else {
-                this.handleFailure();
-            }
-        };
-    }
-
-    handleFailure() {
-        console.warn(`[${this.name}] Auth Protocol Stalled. Initiating Override.`);
-        
-        // Check environment
-        const isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
-        
-        if (isLocal) {
-            this.showBypassModal();
-        } else {
-            // Production Error
-            alert("Connection to The Circle is unstable. Please refresh.");
+    redeemSyncCode(code) {
+        try {
+            const json = decodeURIComponent(escape(atob(code)));
+            const data = JSON.parse(json);
+            
+            let count = 0;
+            Object.keys(data).forEach(key => {
+                localStorage.setItem(key, data[key]);
+                count++;
+            });
+            
+            console.log(`[${this.name}] Neural Link Established. Synced ${count} Memory Fragments.`);
+            alert("SYNC COMPLETE. REBOOTING SYSTEM...");
+            window.location.reload();
+            return true;
+        } catch(e) {
+            console.error("Sync Failed:", e);
+            alert("ERROR: Invalid Neural Link Code.");
+            return false;
         }
     }
-
-    showBypassModal() {
-        // Create a custom styled modal instead of 'confirm'
-        const modal = document.createElement('div');
-        modal.className = 'fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm animate-fade-in';
-        modal.innerHTML = `
-            <div class="bg-[#191022] border border-red-500/50 p-8 rounded-2xl max-w-md w-full text-center shadow-[0_0_50px_rgba(239,68,68,0.2)]">
-                <div class="mb-4">
-                    <span class="material-symbols-outlined text-5xl text-red-500 animate-pulse">lock_open_right</span>
-                </div>
-                <h3 class="text-2xl font-bold text-white mb-2">DEV PROTOCOL DETECTED</h3>
-                <p class="text-white/60 mb-6 text-sm">Netlify Identity is not active in this local environment. <br>The Pusher can force the gates open.</p>
-                
-                <div class="flex gap-4">
-                    <button id="pusher-bypass" class="flex-1 py-3 bg-red-600 hover:bg-red-500 text-white font-bold rounded-lg uppercase tracking-wider transition-all">
-                        Force Entry
-                    </button>
-                    <button id="pusher-cancel" class="px-4 py-3 border border-white/10 hover:bg-white/5 text-white/50 rounded-lg uppercase tracking-wider transition-all">
-                        Wait
-                    </button>
-                </div>
-            </div>
-        `;
-        document.body.appendChild(modal);
-
-        document.getElementById('pusher-bypass').onclick = () => {
-            modal.remove();
-            window.Gatekeeper.enterCore();
-        };
-
-        document.getElementById('pusher-cancel').onclick = () => {
-            modal.remove();
-        };
+    // --- DEV TOOLS (Auth Bypass) ---
+    bypassGenesis() {
+        console.log(`[${this.name}] 🔓 executing GENESIS BYPASSS...`);
+        localStorage.setItem('cdf_user_username', 'Neo-Tester');
+        localStorage.setItem('cdf_user_email', 'neo@matrix.com');
+        localStorage.setItem('user_class', 'Operator');
+        localStorage.setItem('user_nen_type_v2', 'Specialization (System)');
+        localStorage.setItem('cdf_adinkra_symbol', 'Dame-Dame');
+        localStorage.setItem('cdf_beta_key', 'DEV-BYPASS-001');
+        
+        window.location.href = '../pages/dashboard.html';
     }
 }
 
-window.BridgePusher = new BridgePusherAgent();
+new BridgePusherAgent();

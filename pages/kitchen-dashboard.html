@@ -35,10 +35,29 @@
 </head>
 
 <body class="bg-background-dark text-white font-display min-h-screen">
+    
+    <!-- TRINITY RESONANCE BAR (Shared Admin Visual) -->
+    <div id="trinity-resonance-wrap" style="width: 100%; height: 5px; background: #111; position: fixed; top: 0; left: 0; z-index: 12000;">
+        <div id="sync-bar-vision" style="width: 33.3%; height: 100%; background: gold; float: left; box-shadow: 0 0 10px gold; transition: 1s;"></div>
+        <div id="sync-bar-sound" style="width: 33.3%; height: 100%; background: #00f0ff; float: left; box-shadow: 0 0 10px #00f0ff; transition: 1s;"></div>
+        <div id="sync-bar-kitchen" style="width: 33.4%; height: 100%; background: #ff8c00; float: left; box-shadow: 0 0 10px #ff8c00; transition: 1s;"></div>
+    </div>
+    <script>
+        function updateTrinitySync(v, s, k) {
+            document.getElementById('sync-bar-vision').style.opacity = v / 100;
+            document.getElementById('sync-bar-sound').style.opacity = s / 100;
+            document.getElementById('sync-bar-kitchen').style.opacity = k / 100;
+            
+            if(v > 80 && s > 80 && k > 80) {
+                document.getElementById('trinity-resonance-wrap').style.animation = "pulse-white 2s infinite";
+            }
+        }
+        // Auto-Run Demo
+        setTimeout(() => updateTrinitySync(70, 70, 70), 500);
+    </script>
 
     <!-- Top Bar -->
-    <header
-        class="bg-black/50 border-b border-white/10 p-4 flex justify-between items-center sticky top-0 z-50 backdrop-blur-md">
+    <header class="bg-black/50 border-b border-white/10 p-4 flex justify-between items-center sticky top-0 z-50 backdrop-blur-md">
         <div class="flex items-center gap-4">
             <a href="african-queen-kitchen.html" class="p-2 hover:bg-white/10 rounded-full transition-colors">
                 <span class="material-symbols-outlined">arrow_back</span>
@@ -49,10 +68,11 @@
             </h1>
         </div>
         <div class="flex items-center gap-4">
-            <div
-                class="px-3 py-1 bg-green-500/20 text-green-500 border border-green-500/50 rounded-full text-xs font-bold uppercase animate-pulse">
-                Live Service
-            </div>
+            <!-- Kitchen Toggle -->
+            <button id="kitchen-toggle" onclick="toggleKitchen()" class="flex items-center gap-2 px-3 py-1 bg-green-500/20 text-green-500 border border-green-500/50 rounded-full text-xs font-bold uppercase transition-all hover:bg-green-500 hover:text-white">
+                <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse" id="status-dot"></span>
+                <span id="status-text">Kitchen Open</span>
+            </button>
             <span class="text-xs text-white/50" id="clock">12:00</span>
         </div>
     </header>
@@ -103,11 +123,11 @@
         </div>
 
         <!-- Menu Management (Right) -->
-        <div class="flex-1 p-6 overflow-y-auto">
+        <div class="flex-1 p-6 flex flex-col h-full overflow-hidden">
             
             <div class="flex flex-col gap-6 mb-6">
                 <!-- Royal Command: Daily Dish -->
-                <div class="bg-gradient-to-r from-amber/10 to-transparent p-6 rounded-xl border border-amber/20">
+                <div class="bg-gradient-to-r from-amber/10 to-transparent p-6 rounded-xl border border-amber/20 shrink-0">
                     <div class="flex justify-between items-start">
                         <div>
                             <h2 class="text-xl font-bold text-amber mb-1 flex items-center gap-2">
@@ -115,7 +135,7 @@
                             </h2>
                             <p class="text-sm text-white/60 mb-4">Set the "Crown Jewel" (Daily Special) for the main menu.</p>
                         </div>
-                        <button onclick="saveDailyDish()" class="px-4 py-2 bg-amber text-black font-bold uppercase text-xs rounded-lg hover:bg-white transition-colors">
+                        <button onclick="menuManager.saveDailyDish()" class="px-4 py-2 bg-amber text-black font-bold uppercase text-xs rounded-lg hover:bg-white transition-colors">
                             Update Menu
                         </button>
                     </div>
@@ -123,133 +143,310 @@
                     <div class="flex gap-4 items-center bg-black/30 p-2 rounded-lg max-w-md">
                         <span class="material-symbols-outlined text-white/30 ml-2">skillet</span>
                         <select id="daily-dish-select" class="bg-transparent text-white text-sm w-full focus:outline-none p-2 cursor-pointer">
-                            <option value="jollof">Jollof Rice (The Classic)</option>
-                            <option value="tilapia">Grilled Tilapia</option>
-                            <option value="cachupa">Cachupa Royal</option>
-                            <option value="moamba">Moamba de Galinha</option>
+                            <!-- Populated by JS -->
                         </select>
                     </div>
                 </div>
 
-                <!-- Menu Search -->
-                <div class="flex justify-between items-center">
+                <!-- Menu Search & Actions -->
+                <div class="flex justify-between items-center shrink-0">
                     <h2 class="text-2xl font-bold">Inventory</h2>
-                    <div class="relative">
-                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-white/30">search</span>
-                        <input type="text" id="menu-search" placeholder="Search item..."
-                            class="bg-white/5 border border-white/10 rounded-full pl-10 pr-4 py-2 text-sm focus:border-amber outline-none w-64 transition-all focus:w-80">
+                    <div class="flex gap-4">
+                        <div class="relative">
+                            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-white/30">search</span>
+                            <input type="text" id="menu-search" placeholder="Search item..."
+                                class="bg-white/5 border border-white/10 rounded-full pl-10 pr-4 py-2 text-sm focus:border-amber outline-none w-64 transition-all focus:w-80">
+                        </div>
+                        <button onclick="menuManager.openModal()" class="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-500 rounded-full font-bold text-xs uppercase transition-colors">
+                            <span class="material-symbols-outlined text-sm">add</span> New Dish
+                        </button>
                     </div>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="menu-grid">
-                <!-- Menu Item -->
-                <div
-                    class="menu-item bg-white/5 border border-white/10 p-4 rounded-xl flex items-center justify-between group hover:border-white/30 transition-all">
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-lg bg-gray-800 overflow-hidden">
-                            <img src="https://placehold.co/100x100/333/white?text=Rice"
-                                class="w-full h-full object-cover">
-                        </div>
-                        <div>
-                            <h3 class="font-bold">Jollof Rice</h3>
-                            <p class="text-xs text-white/50">Main Dish</p>
-                        </div>
-                    </div>
-                    <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" checked class="sr-only peer">
-                        <div
-                            class="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500">
-                        </div>
-                        <span class="ml-2 text-xs font-bold text-white/50 peer-checked:text-green-400">In Stock</span>
-                    </label>
-                </div>
-
-                <!-- Menu Item -->
-                <div
-                    class="menu-item bg-white/5 border border-white/10 p-4 rounded-xl flex items-center justify-between group hover:border-white/30 transition-all">
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-lg bg-gray-800 overflow-hidden">
-                            <img src="https://placehold.co/100x100/333/white?text=Fish"
-                                class="w-full h-full object-cover">
-                        </div>
-                        <div>
-                            <h3 class="font-bold">Grilled Tilapia</h3>
-                            <p class="text-xs text-white/50">Main Dish</p>
-                        </div>
-                    </div>
-                    <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" checked class="sr-only peer">
-                        <div
-                            class="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500">
-                        </div>
-                        <span class="ml-2 text-xs font-bold text-white/50 peer-checked:text-green-400">In Stock</span>
-                    </label>
-                </div>
-
-                <!-- Menu Item -->
-                <div
-                    class="menu-item bg-white/5 border border-white/10 p-4 rounded-xl flex items-center justify-between group hover:border-white/30 transition-all">
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-lg bg-gray-800 overflow-hidden">
-                            <img src="https://placehold.co/100x100/333/white?text=Plantain"
-                                class="w-full h-full object-cover">
-                        </div>
-                        <div>
-                            <h3 class="font-bold">Fried Plantain</h3>
-                            <p class="text-xs text-white/50">Side</p>
-                        </div>
-                    </div>
-                    <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" checked class="sr-only peer">
-                        <div
-                            class="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500">
-                        </div>
-                        <span class="ml-2 text-xs font-bold text-white/50 peer-checked:text-green-400">In Stock</span>
-                    </label>
-                </div>
+            <!-- Dynamic Menu Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 overflow-y-auto pb-20" id="menu-grid">
+                <!-- Injected by JS -->
             </div>
 
-            <div class="mt-8 p-4 bg-amber/10 border border-amber/30 rounded-lg">
-                <h3 class="text-amber font-bold mb-2 flex items-center gap-2"><span
-                        class="material-symbols-outlined">warning</span> Kitchen Note</h3>
-                <p class="text-sm text-amber/80">Remember to mark items as "Out of Stock" immediately when inventory is
-                    low to prevent bad user experience.</p>
+            <!-- Trinity Chat (Fixed at bottom) -->
+            <div class="mt-auto border-t border-white/10 pt-4 shrink-0">
+                <h3 class="text-sm font-bold uppercase tracking-widest text-white/50 mb-2">Trinity Comms</h3>
+                <div class="bg-black/30 rounded-lg border border-white/5 h-32 flex flex-col">
+                    <div id="chat-log" class="flex-1 p-2 overflow-y-auto space-y-1 text-xs">
+                        <div class="text-white/40"><b class="text-purple-400">Vision:</b> Sessions running late, keep kitchen open +30m.</div>
+                    </div>
+                    <div class="p-2 border-t border-white/5 flex gap-2">
+                        <input type="text" id="chat-input" placeholder="Message Trinity..." class="flex-1 bg-transparent text-xs text-white p-2 outline-none">
+                        <button onclick="sendChat()" class="text-amber font-bold text-xs uppercase hover:text-white">Send</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Clock Script & Search -->
+    <!-- Edit/Create Modal -->
+    <div id="dish-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-black/80 backdrop-blur-sm">
+        <div class="bg-[#1A1622] p-8 rounded-2xl border border-amber/20 w-full max-w-md shadow-2xl relative">
+            <h2 id="modal-title" class="text-2xl font-bold mb-6 text-amber">Add New Dish</h2>
+            <form id="dish-form" onsubmit="event.preventDefault(); menuManager.saveDish();">
+                <input type="hidden" id="dish-id">
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-xs uppercase text-white/50 font-bold">Dish Name</label>
+                        <input type="text" id="dish-name" required class="w-full bg-black/50 border border-white/10 rounded p-3 text-white focus:border-amber outline-none">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-xs uppercase text-white/50 font-bold">Price (€)</label>
+                            <input type="number" id="dish-price" required step="0.5" class="w-full bg-black/50 border border-white/10 rounded p-3 text-white focus:border-amber outline-none">
+                        </div>
+                        <div>
+                            <label class="text-xs uppercase text-white/50 font-bold">Category</label>
+                            <select id="dish-cat" class="w-full bg-black/50 border border-white/10 rounded p-3 text-white focus:border-amber outline-none">
+                                <option value="Main Dish">Main Dish</option>
+                                <option value="Side">Side</option>
+                                <option value="Drink">Drink</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                         <label class="text-xs uppercase text-white/50 font-bold">Image URL (Optional)</label>
+                         <input type="text" id="dish-img" placeholder="https://..." class="w-full bg-black/50 border border-white/10 rounded p-3 text-white focus:border-amber outline-none">
+                    </div>
+                </div>
+                <div class="flex gap-4 mt-8">
+                    <button type="button" onclick="menuManager.closeModal()" class="flex-1 py-3 bg-white/10 hover:bg-white/20 rounded-xl font-bold uppercase text-xs">Cancel</button>
+                    <button type="submit" class="flex-1 py-3 bg-amber text-black hover:bg-white rounded-xl font-bold uppercase text-xs">Save Dish</button>
+                </div>
+            </form>
+            <button onclick="menuManager.deleteDish()" id="btn-delete" class="absolute top-8 right-8 text-red-500 hover:text-red-400 hidden">
+                <span class="material-symbols-outlined">delete</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Logic Script -->
     <script>
-        // Clock
+        // --- MENU MANAGER SYSTEM ---
+        const menuManager = {
+            items: [],
+            
+            init() {
+                // Load from storage or set defaults
+                const stored = localStorage.getItem('aq_menu_items');
+                if(stored) {
+                    this.items = JSON.parse(stored);
+                } else {
+                    this.items = [
+                        { id: 1, name: 'Jollof Rice', price: 12, cat: 'Main Dish', stock: true, img: 'https://placehold.co/100x100/333/white?text=Jollof' },
+                        { id: 2, name: 'Grilled Tilapia', price: 15, cat: 'Main Dish', stock: true, img: 'https://placehold.co/100x100/333/white?text=Fish' },
+                        { id: 3, name: 'Fried Plantain', price: 5, cat: 'Side', stock: true, img: 'https://placehold.co/100x100/333/white?text=Plantain' }
+                    ];
+                    this.save();
+                }
+                this.render();
+                this.updateDailySelect();
+            },
+
+            save() {
+                localStorage.setItem('aq_menu_items', JSON.stringify(this.items));
+                this.render();
+                this.updateDailySelect();
+                // Broadcast update for other tabs
+                window.dispatchEvent(new Event('storage'));
+            },
+
+            render() {
+                const grid = document.getElementById('menu-grid');
+                grid.innerHTML = '';
+                const term = document.getElementById('menu-search').value.toLowerCase();
+
+                this.items.forEach(item => {
+                    if(item.name.toLowerCase().includes(term)) {
+                        const card = document.createElement('div');
+                        card.className = `menu-item bg-white/5 border ${item.stock ? 'border-white/10' : 'border-red-500/30'} p-4 rounded-xl flex items-center justify-between group hover:border-amber/50 transition-all`;
+                        card.innerHTML = `
+                            <div class="flex items-center gap-4 cursor-pointer" onclick="menuManager.editDish(${item.id})">
+                                <div class="w-12 h-12 rounded-lg bg-gray-800 overflow-hidden relative">
+                                    <img src="${item.img || 'https://placehold.co/100x100/333/white?text=Food'}" class="w-full h-full object-cover">
+                                    ${!item.stock ? '<div class="absolute inset-0 bg-red-900/80 flex items-center justify-center text-[10px] font-bold">OUT</div>' : ''}
+                                </div>
+                                <div>
+                                    <h3 class="font-bold group-hover:text-amber transition-colors">${item.name}</h3>
+                                    <p class="text-xs text-white/50">${item.cat} • ${item.price}€</p>
+                                </div>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" ${item.stock ? 'checked' : ''} onchange="menuManager.toggleStock(${item.id})" class="sr-only peer">
+                                <div class="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
+                            </label>
+                        `;
+                        grid.appendChild(card);
+                    }
+                });
+            },
+
+            toggleStock(id) {
+                const item = this.items.find(i => i.id === id);
+                if(item) {
+                    item.stock = !item.stock;
+                    this.save();
+                }
+            },
+
+            openModal(editItem = null) {
+                const modal = document.getElementById('dish-modal');
+                const title = document.getElementById('modal-title');
+                const form = document.getElementById('dish-form');
+                const btnDel = document.getElementById('btn-delete');
+
+                modal.classList.remove('hidden');
+                
+                if(editItem) {
+                    title.innerText = "Edit Dish";
+                    document.getElementById('dish-id').value = editItem.id;
+                    document.getElementById('dish-name').value = editItem.name;
+                    document.getElementById('dish-price').value = editItem.price;
+                    document.getElementById('dish-cat').value = editItem.cat;
+                    document.getElementById('dish-img').value = editItem.img || '';
+                    btnDel.classList.remove('hidden');
+                } else {
+                    title.innerText = "New Dish";
+                    form.reset();
+                    document.getElementById('dish-id').value = '';
+                    btnDel.classList.add('hidden');
+                }
+            },
+
+            closeModal() {
+                document.getElementById('dish-modal').classList.add('hidden');
+            },
+
+            saveDish() {
+                const id = document.getElementById('dish-id').value;
+                const name = document.getElementById('dish-name').value;
+                const price = document.getElementById('dish-price').value;
+                const cat = document.getElementById('dish-cat').value;
+                const img = document.getElementById('dish-img').value;
+
+                if(id) {
+                    // Update
+                    const index = this.items.findIndex(i => i.id == id);
+                    if(index !== -1) {
+                        this.items[index] = { ...this.items[index], name, price, cat, img };
+                    }
+                } else {
+                    // Create
+                    const newId = Date.now();
+                    this.items.push({ id: newId, name, price, cat, stock: true, img });
+                }
+                this.save();
+                this.closeModal();
+            },
+
+            editDish(id) {
+                const item = this.items.find(i => i.id === id);
+                if(item) this.openModal(item);
+            },
+
+            deleteDish() {
+                const id = document.getElementById('dish-id').value;
+                if(confirm("Permanently delete this dish?")) {
+                    this.items = this.items.filter(i => i.id != id);
+                    this.save();
+                    this.closeModal();
+                }
+            },
+
+            updateDailySelect() {
+                const sel = document.getElementById('daily-dish-select');
+                sel.innerHTML = '';
+                this.items.forEach(i => {
+                    const opt = document.createElement('option');
+                    opt.value = i.name;
+                    opt.innerText = i.name;
+                    sel.appendChild(opt);
+                });
+                // Restore selection
+                const saved = localStorage.getItem('dailyDish');
+                if(saved) sel.value = saved;
+            }
+        };
+
+        // Initialize Menu System
+        menuManager.init();
+
+        // Search Listener
+        document.getElementById('menu-search').addEventListener('input', () => menuManager.render());
+
+        // --- GLOBAL LOGIC ---
+        
         setInterval(() => {
             const now = new Date();
             document.getElementById('clock').textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         }, 1000);
 
-        // Search
-        document.getElementById('menu-search').addEventListener('input', (e) => {
-            const term = e.target.value.toLowerCase();
-            document.querySelectorAll('.menu-item').forEach(item => {
-                const name = item.querySelector('h3').textContent.toLowerCase();
-                item.style.display = name.includes(term) ? 'flex' : 'none';
-            });
-        });
-
-        // Save Daily Dish Logic (Simulated)
-        function saveDailyDish() {
-            const dish = document.getElementById('daily-dish-select').value;
-            localStorage.setItem('dailyDish', dish);
-            alert(`Royal Decree: ${dish.toUpperCase()} is now the Daily Special!`);
+        // Kitchen Toggle Logic with Persistence
+        function toggleKitchen() {
+            const btn = document.getElementById('kitchen-toggle');
+            const dot = document.getElementById('status-dot');
+            const txt = document.getElementById('status-text');
             
-            // Trigger Kingdom Pulse (if integrated)
-            // KingdomPulse.add(`The Queen has spoken: ${dish} is today's special!`, 'alert');
+            // Check current status from UI for toggle
+            let isOpen = dot.classList.contains('bg-green-500');
+            isOpen = !isOpen; // Toggle
+
+            // Update UI
+            updateToggleUI(isOpen);
+            
+            // Save State
+            localStorage.setItem('aq_kitchen_open', isOpen);
+            
+            // Notify Trinity
+            if(window.Pusher) {
+                window.Pusher.broadcast('KITCHEN_STATUS', { open: isOpen });
+            }
         }
+
+        function updateToggleUI(isOpen) {
+            const btn = document.getElementById('kitchen-toggle');
+            const dot = document.getElementById('status-dot');
+            const txt = document.getElementById('status-text');
+
+            if(isOpen) {
+                btn.className = "flex items-center gap-2 px-3 py-1 bg-green-500/20 text-green-500 border border-green-500/50 rounded-full text-xs font-bold uppercase transition-all hover:bg-green-500 hover:text-white";
+                dot.className = "w-2 h-2 rounded-full bg-green-500 animate-pulse";
+                txt.innerText = "Kitchen Open";
+            } else {
+                btn.className = "flex items-center gap-2 px-3 py-1 bg-red-500/20 text-red-500 border border-red-500/50 rounded-full text-xs font-bold uppercase transition-all hover:bg-red-500 hover:text-white";
+                dot.className = "w-2 h-2 rounded-full bg-red-500";
+                txt.innerText = "Kitchen Closed";
+            }
+        }
+
+        // Init Toggle on Load
+        const storedStatus = localStorage.getItem('aq_kitchen_open');
+        updateToggleUI(storedStatus !== 'false'); // Default to true if not set
+
+        function sendChat() {
+            const input = document.getElementById('chat-input');
+            const msg = input.value;
+            if(!msg) return;
+
+            const log = document.getElementById('chat-log');
+            const entry = document.createElement('div');
+            entry.className = "text-white";
+            entry.innerHTML = `<b class="text-amber">Kitchen:</b> ${msg}`;
+            log.appendChild(entry);
+            log.scrollTop = log.scrollHeight;
+            input.value = '';
+        }
+    </script>
 
         // RBAC Check
         const role = localStorage.getItem('userRole') || 'guest';
-        // In real app, redirect if not kitchen/admin
-        // if(role !== 'kitchen' && role !== 'admin') window.location.href = 'index.html';
+        // in real app...
     </script>
     <!-- PHOENIX-EE CORE AGENTS -->
     <script src='../js/agents/visual_eye.js' defer></script>
@@ -259,6 +456,27 @@
     <script src='../js/agents/stress_test.js' defer></script>
     <script src="../js/agents/sous_chef.js" defer></script>
     <div id="flowee-agent" class="fixed bottom-8 left-8 z-50 flex flex-col items-center group cursor-pointer"></div>
+    <script defer src="../js/agents/pusher.js"></script>
+<script src="../js/agents/global_ticker.js" defer></script>
+<script src="../js/agents/network_hub.js" defer></script>
+<script src="../js/agents/constructor_bot.js" defer></script>
+<script src="../js/agents/kingdom_science.js" defer></script>
+<script src="../js/agents/resonance_bridge.js" defer></script>
+<script src="../js/agents/vault_space.js" defer></script>
+<script src="../js/agents/orbital_menu.js" defer></script>
+    <script src="../js/agents/tutorial_core.js" defer></script>
+    <script src="../js/agents/quest_controller.js" defer></script>
+    <script src="../js/agents/visual_integrity.js" defer></script>
+    <script src="../js/agents/sound_engineer.js" defer></script>
+    <script src="../js/agents/horizon_bar.js" defer></script>
+    <script src="../js/agents/social_matrix.js" defer></script>
+    <script src="../js/agents/flowee.js" defer></script>
+
+    <!-- AUTOMATED AGENT INJECTION -->
+
+    <!-- AUTOMATED AGENT INJECTION -->
+    <script src="../js/agents/imperial_hud.js" defer></script>
+    <script src="../js/agents/beta_log_overlay.js"></script>
 </body>
 
 </html>

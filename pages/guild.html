@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Inner Circle | Circle D Flow</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Space+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/styles.css">
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#8A2BE2",
+                        "org-black": "#050505",
+                        "org-silver": "#C0C0C0",
+                        "nobody-blue": "#E0FFFF",
+                    },
+                    fontFamily: {
+                        "display": ["Cinzel", "serif"],
+                        "mono": ["Space Mono", "monospace"]
+                    },
+                    backgroundImage: {
+                        'hex-pattern': "url('https://www.transparenttextures.com/patterns/cubes.png')",
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* SCROLLBAR HIDE */
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* ORG XIII AESTHETIC */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .nobody-glow {
+            text-shadow: 0 0 10px rgba(224, 255, 255, 0.5);
+        }
+        
+        .chain-border {
+            border-image: linear-gradient(to right, transparent, #C0C0C0, transparent) 1;
+        }
+
+        /* QUEST CARD */
+        .quest-card {
+            transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .quest-card:hover {
+            box-shadow: 0 0 30px rgba(224, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+            z-index: 10;
+        }
+    </style>
+</head>
+<body class="bg-[#020202] text-gray-200 min-h-screen font-display overflow-x-hidden selection:bg-white selection:text-black">
+
+    <!-- HORIZON BAR -->
+    <div id="horizon-bar-root"></div>
+
+    <!-- BACKGROUND ATMOSPHERE (The World That Never Was) -->
+    <div class="fixed inset-0 z-0 pointer-events-none opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+    <div class="fixed inset-0 z-0 pointer-events-none bg-gradient-to-t from-black via-transparent to-[#1a1a1a]"></div>
+    
+    <!-- NAVIGATION -->
+    <!-- NAVIGATION -->
+    <nav class="fixed top-0 w-full z-50 p-6 flex justify-between items-center bg-gradient-to-b from-black to-transparent">
+        <a href="fivedoors.html" class="flex items-center gap-3 text-white/30 hover:text-white transition-colors group">
+            <span class="material-symbols-outlined group-hover:-translate-x-1 transition-transform">arrow_back</span>
+            <span class="uppercase tracking-[0.2em] text-[10px] font-mono">Return to The Hub</span>
+        </a>
+        <div id="guild-level-display"></div> <!-- Populated by Agent -->
+        <div class="w-10"></div> <!-- Spacer -->
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="relative z-10 container mx-auto px-4 pt-24 pb-12 grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+        <!-- LEFT COLUMN: THE MISSION BOARD (8 Cols) -->
+        <div class="lg:col-span-8 space-y-8">
+            
+            <!-- HEADER -->
+            <div class="relative p-12 glass-panel rounded-sm text-center overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/50 to-transparent"></div>
+                <h1 class="text-5xl md:text-7xl font-black text-white nobody-glow mb-2 tracking-tighter">THE WILL OF D.</h1>
+                <p class="font-mono text-gray-400 text-xs uppercase tracking-[0.5em]">The Circle D Flow • Lisbon HQ</p>
+                <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/50 to-transparent"></div>
+            </div>
+
+            <!-- MISSION BOARD AREA -->
+            <div class="glass-panel rounded-sm p-8 relative min-h-[600px]">
+                <!-- Chains Decoration -->
+                <div class="absolute top-0 left-8 w-[1px] h-20 bg-gradient-to-b from-white/30 to-transparent"></div>
+                <div class="absolute top-0 right-8 w-[1px] h-20 bg-gradient-to-b from-white/30 to-transparent"></div>
+                
+                <h2 class="text-2xl text-gray-300 font-bold mb-8 flex items-center justify-center gap-4">
+                    <span class="h-[1px] w-12 bg-gray-600"></span>
+                    <span class="material-symbols-outlined text-white animate-spin-slow">public</span>
+                    <span class="uppercase tracking-[0.2em]">Global Missions</span>
+                    <span class="h-[1px] w-12 bg-gray-600"></span>
+                </h2>
+                
+                <div id="quest-board-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Dynamic Quests via Agent -->
+                    <div class="animate-pulse bg-white/5 h-64 rounded-sm"></div>
+                </div>
+            </div>
+
+            <!-- THE GREY AREA (Flowee Chat) -->
+            <div class="glass-panel rounded-sm p-6 flex items-center gap-6">
+                <div class="w-16 h-16 rounded-full bg-black flex items-center justify-center border border-white/20 relative cursor-pointer hover:scale-110 transition-transform shadow-[0_0_20px_rgba(255,255,255,0.2)]" onclick="Flowee ? Flowee.talk(true, 'The Will of D is strong in Lisbon.') : alert('Flowee is meditating')">
+                    <img src="../Assets/images/flowee_pirate_phoenix.png" class="w-12 h-12 object-contain grayscale hover:grayscale-0 transition-all">
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-white uppercase tracking-widest">The Connection</h3>
+                    <p class="text-gray-500 text-xs font-mono">Flowee of the Atlantic.</p>
+                </div>
+                <button class="ml-auto px-6 py-2 border border-white/20 hover:bg-white/10 text-white font-mono text-xs uppercase tracking-widest transition-colors" onclick="Flowee ? Flowee.celebrate() : null">
+                    Signal Fleet
+                </button>
+            </div>
+
+        </div>
+
+        <!-- RIGHT COLUMN: ROSTER & VAULT (4 Cols) -->
+        <div class="lg:col-span-4 space-y-8">
+
+            <!-- THE VAULT (Hearts) -->
+            <div class="glass-panel rounded-sm p-8 relative overflow-hidden group hover:border-white/30 transition-all">
+                <div class="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                
+                <div class="relative z-10 text-center mb-8">
+                    <!-- Earth/Africa Connection Symbol -->
+                    <span class="material-symbols-outlined text-5xl text-gray-300 mb-4">terrain</span> 
+                    <h2 class="text-xl font-black text-white uppercase tracking-[0.3em]">Kingdom of Hearts</h2>
+                    <p class="text-[9px] text-gray-500 uppercase tracking-widest mt-2">Will of the Earth</p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 relative z-10 mb-8">
+                    <div class="bg-black/40 p-4 rounded-sm text-center border border-white/5">
+                        <div id="treasury-credits" class="text-2xl font-light text-white font-mono">0</div>
+                        <div class="text-[9px] text-gray-500 uppercase tracking-widest mt-1">Essence</div>
+                    </div>
+                    <div class="bg-black/40 p-4 rounded-sm text-center border border-white/5">
+                        <div id="treasury-manillas" class="text-2xl font-light text-gray-400 font-mono">0</div>
+                        <div class="text-[9px] text-gray-600 uppercase tracking-widest mt-1">Munny</div>
+                    </div>
+                </div>
+
+                <button onclick="document.getElementById('stripe-modal').classList.remove('hidden')" class="w-full py-3 bg-white text-black font-bold uppercase tracking-[0.2em] hover:bg-gray-200 transition-all mb-3 relative z-10 text-xs">
+                    Gather Hearts
+                </button>
+                <button onclick="GuildMaster.donateCredits()" class="w-full py-2 bg-transparent border border-white/10 hover:border-white/50 text-gray-500 hover:text-white text-[10px] font-bold uppercase tracking-[0.2em] transition-all relative z-10">
+                    Sacrifice to Kingdom
+                </button>
+            </div>
+
+            <!-- THE ROUND ROOM (Roster) -->
+            <div class="glass-panel rounded-sm p-6 max-h-[500px] flex flex-col">
+                <h3 class="text-xs font-bold text-gray-500 uppercase tracking-[0.2em] mb-6 text-center">Thirteen Seats</h3>
+                <div id="guild-roster-list" class="space-y-3 overflow-y-auto pr-2 flex-grow scrollbar-hide">
+                    <!-- Dynamic Roster -->
+                </div>
+                <button class="w-full mt-6 py-2 text-center text-[10px] text-gray-600 hover:text-white uppercase tracking-[0.2em] transition-colors border-t border-white/5 pt-4">
+                    + Recruit Nobody
+                </button>
+            </div>
+
+            <!-- DATA LOG (Chat) -->
+            <div class="glass-panel rounded-sm p-4 h-48 flex flex-col relative">
+                 <div class="absolute top-2 right-2 w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <div class="flex-grow overflow-y-auto text-[10px] text-gray-400 space-y-2 mb-2 font-mono scrollbar-hide">
+                    <div class="text-white opacity-50">System: Connection established.</div>
+                    <div><span class="text-gray-300">Xemnas:</span> The moon shines bright...</div>
+                </div>
+                <input type="text" placeholder="Access Data Stream..." class="w-full bg-black/50 border-none text-white text-xs font-mono focus:outline-none focus:ring-1 focus:ring-white/20 p-2">
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- STRIPE MODAL (STORE) -->
+    <div id="stripe-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center">
+        <div class="absolute inset-0 bg-black/95 backdrop-blur-xl" onclick="document.getElementById('stripe-modal').classList.add('hidden')"></div>
+        <div class="relative glass-panel p-12 rounded-sm max-w-4xl w-full border border-white/20">
+            <h2 class="text-4xl font-black text-white text-center mb-12 uppercase tracking-[0.2em] nobody-glow">Acquire Essence</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <!-- Package 1: Data Shard -->
+                <div class="bg-black/60 p-6 border border-white/10 hover:border-white cursor-pointer text-center group transition-all duration-300" onclick="GuildMaster.purchasePackage('shard')">
+                    <span class="material-symbols-outlined text-4xl text-gray-600 group-hover:text-white mb-4 transition-colors">memory</span>
+                    <h3 class="font-bold text-white text-xs uppercase tracking-widest">Data Shard</h3>
+                    <p class="text-gray-500 font-mono text-[10px] my-4">500 Hearts</p>
+                    <div class="bg-white/5 py-2 text-gray-300 text-xs font-bold group-hover:bg-white group-hover:text-black transition-colors">5,00 €</div>
+                </div>
+                <!-- Package 2: Heartless Essence -->
+                <div class="bg-black/60 p-6 border border-white/10 hover:border-purple-400 cursor-pointer text-center group transition-all duration-300" onclick="GuildMaster.purchasePackage('essence')">
+                    <span class="material-symbols-outlined text-4xl text-purple-900 group-hover:text-purple-400 mb-4 transition-colors">favorite_border</span>
+                    <h3 class="font-bold text-white text-xs uppercase tracking-widest">Heartless Essence</h3>
+                    <p class="text-purple-400 font-mono text-[10px] my-4">1,200 Hearts</p>
+                    <div class="bg-white/5 py-2 text-gray-300 text-xs font-bold group-hover:bg-purple-500 group-hover:text-white transition-colors">10,00 €</div>
+                </div>
+                <!-- Package 3: Nobody Sigil -->
+                <div class="bg-black/60 p-6 border border-white/10 hover:border-blue-400 cursor-pointer text-center group transition-all duration-300" onclick="GuildMaster.purchasePackage('sigil')">
+                    <span class="material-symbols-outlined text-4xl text-blue-900 group-hover:text-blue-400 mb-4 transition-colors">change_history</span>
+                    <h3 class="font-bold text-white text-xs uppercase tracking-widest">Nobody Sigil</h3>
+                    <p class="text-blue-400 font-mono text-[10px] my-4">3,000 Hearts</p>
+                    <div class="bg-white/5 py-2 text-gray-300 text-xs font-bold group-hover:bg-blue-500 group-hover:text-white transition-colors">25,00 €</div>
+                </div>
+                <!-- Package 4: Kingdom Key -->
+                <div class="bg-black/60 p-6 border border-white/10 hover:border-yellow-400 cursor-pointer text-center group transition-all duration-300" onclick="GuildMaster.purchasePackage('keyblade')">
+                    <span class="material-symbols-outlined text-4xl text-yellow-900 group-hover:text-yellow-400 mb-4 transition-colors">vpn_key</span>
+                    <h3 class="font-bold text-white text-xs uppercase tracking-widest">Kingdom Key</h3>
+                    <p class="text-yellow-400 font-mono text-[10px] my-4">7,500 Hearts</p>
+                    <div class="bg-white/5 py-2 text-gray-300 text-xs font-bold group-hover:bg-yellow-500 group-hover:text-black transition-colors">50,00 €</div>
+                </div>
+            </div>
+
+            <p class="text-center text-gray-600 text-[10px] uppercase tracking-[0.3em]">Transaction Secured by System Sector</p>
+        </div>
+    </div>
+
+    <!-- AGENTS -->
+    <!-- PHOENIX-EE CORE AGENTS -->
+    <script src='../js/agents/pusher.js' defer></script>
+    <script src='../js/agents/visual_eye.js' defer></script>
+    <script src='../js/agents/helper.js' defer></script>
+    <script src="../js/agents/global_ticker.js" defer></script>
+    <script src="../js/agents/network_hub.js" defer></script>
+    <script src="../js/agents/constructor_bot.js" defer></script>
+    <script src="../js/agents/kingdom_science.js" defer></script>
+    <script src="../js/agents/resonance_bridge.js" defer></script>
+    <script src="../js/agents/vault_space.js" defer></script>
+    <script src="../js/agents/orbital_menu.js" defer></script>
+    <script src="../js/agents/tutorial_core.js" defer></script>
+    <script src="../js/agents/quest_controller.js" defer></script>
+    <script src="../js/agents/visual_integrity.js" defer></script>
+    <script src="../js/agents/sound_engineer.js" defer></script>
+    <script src="../js/agents/horizon_bar.js" defer></script>
+    <script src="../js/agents/social_matrix.js" defer></script>
+    <script src='../js/agents/flowee.js' defer></script>
+    <script src='../js/agents/bridge_pusher.js' defer></script>
+    <script src='../js/agents/device_sync.js' defer></script>
+    <script src='../js/agents/stress_test.js' defer></script>
+    <script src="../js/agents/guild_agent.js" defer></script> <!-- ORGANISATION LOGIC -->
+    
+    <div id="flowee-agent" class="fixed bottom-8 left-8 z-50 flex flex-col items-center group cursor-pointer"></div>
+
+    <!-- AUTOMATED AGENT INJECTION -->
+    <script src="../js/agents/imperial_hud.js" defer></script>
+</body>
+</html>

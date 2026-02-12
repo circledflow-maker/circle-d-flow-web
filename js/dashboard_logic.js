@@ -72,7 +72,11 @@ function toggleJamSession() {
 // --- 4. KINGDOM VIBE ---
 function setVibe(vibeName) {
     console.log(`[Audio Override] Setting Kingdom Frequency to: ${vibeName}`);
-    // Visual feedback
+    
+    // 1. Save to Global State
+    localStorage.setItem('cdf_global_track', vibeName);
+    
+    // 2. Visual feedback
     const toasts = document.createElement('div');
     toasts.className = "fixed bottom-8 right-8 bg-electric text-white px-6 py-3 rounded-xl shadow-lg z-50 animate-bounce";
     toasts.innerText = `🔊 VIBE SHIFT: ${vibeName}`;

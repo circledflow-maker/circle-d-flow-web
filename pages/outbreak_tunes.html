@@ -115,6 +115,33 @@
 </head>
 
 <body class="bg-background-light dark:bg-background-dark font-display text-gray-800 dark:text-gray-200">
+    
+    <!-- TRINITY RESONANCE BAR (Shared Admin Visual) -->
+    <div id="trinity-resonance-wrap" style="width: 100%; height: 5px; background: #111; position: fixed; top: 0; left: 0; z-index: 12000; display: none;">
+        <div id="sync-bar-vision" style="width: 33.3%; height: 100%; background: gold; float: left; box-shadow: 0 0 10px gold; transition: 1s;"></div>
+        <div id="sync-bar-sound" style="width: 33.3%; height: 100%; background: #00f0ff; float: left; box-shadow: 0 0 10px #00f0ff; transition: 1s;"></div>
+        <div id="sync-bar-kitchen" style="width: 33.4%; height: 100%; background: #ff8c00; float: left; box-shadow: 0 0 10px #ff8c00; transition: 1s;"></div>
+    </div>
+    <script>
+        function updateTrinitySync(v, s, k) {
+            const bar = document.getElementById('trinity-resonance-wrap');
+            if(bar) bar.style.display = 'block'; // Show if active
+            
+            document.getElementById('sync-bar-vision').style.opacity = v / 100;
+            document.getElementById('sync-bar-sound').style.opacity = s / 100;
+            document.getElementById('sync-bar-kitchen').style.opacity = k / 100;
+            
+            if(v > 80 && s > 80 && k > 80) {
+                bar.style.animation = "pulse-white 2s infinite";
+            }
+        }
+        // Check Role for Visibility
+        if(localStorage.getItem('userRole') === 'admin' || localStorage.getItem('cdf_beta_access')) {
+             document.getElementById('trinity-resonance-wrap').style.display = 'block';
+             // Init
+             setTimeout(() => updateTrinitySync(60, 60, 60), 1000);
+        }
+    </script>
 
     <!-- Video Background -->
     <video autoplay loop muted playsinline id="video-bg">
@@ -126,12 +153,38 @@
         <!-- Top Navigation Bar -->
         <!-- Top Navigation Bar -->
         <!-- Custom Cursor -->
+        <!-- Custom Cursor -->
         <div id="cursor"
             class="fixed w-12 h-12 pointer-events-none z-[200] transition-transform duration-100 hidden md:block">
             <img src="../Assets/images/logo.png" class="w-full h-full object-contain drop-shadow-lg" alt="Cursor">
         </div>
 
-        <!-- Desktop Navigation REMOVED via User Request -->
+        <!-- Top Navigation (Trinity Standard) -->
+        <nav class="hidden md:flex fixed top-0 w-full z-[140] bg-[#0D0D0F]/80 backdrop-blur-xl border-b border-white/5 h-20 items-center justify-between px-12 transition-all duration-300">
+            <!-- Left: Hub Link (Return Back) -->
+            <a href="dashboard.html" class="flex items-center gap-2 text-white/70 hover:text-white transition-colors group">
+                <span class="material-symbols-outlined text-lg group-hover:-translate-x-1 transition-transform">arrow_back</span>
+                <span class="text-xs font-bold uppercase tracking-widest">Hub</span>
+            </a>
+
+            <!-- Center: Minimal Links -->
+            <div class="flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
+                <a href="outbreak_tunes.html" class="text-xs font-bold uppercase tracking-widest text-electric drop-shadow-[0_0_8px_rgba(154,77,255,0.8)]">Sound</a>
+                <span class="text-white/20">|</span>
+                <a href="african-queen-kitchen.html" class="text-xs font-bold uppercase tracking-widest text-white/50 hover:text-amber transition-colors">Taste</a>
+                <span class="text-white/20">|</span>
+                <a href="gallery.html" class="text-xs font-bold uppercase tracking-widest text-white/50 hover:text-pink-400 transition-colors">Visuals</a>
+            </div>
+
+            <!-- Right: Login/Profile -->
+            <div class="flex items-center gap-4">
+                <a href="arena.html?source=sonic" class="px-4 py-1 bg-red-600/20 border border-red-600/50 hover:bg-red-600 hover:text-white text-red-500 text-[10px] font-bold uppercase tracking-widest rounded transition-all shadow-[0_0_10px_rgba(220,38,38,0.2)] flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm animate-pulse">swords</span>
+                    Live Battle
+                </a>
+                <a href="../Index.html" class="text-xs font-bold uppercase tracking-widest text-white/50 hover:text-white transition-colors">Exit</a>
+            </div>
+        </nav>
         
         <!-- Mobile Bottom Navigation (Standardized) -->
         <nav
@@ -362,128 +415,7 @@
                 </div>
             </section>
 
-            <!-- 3. THE LIVE LAB (Jam Sessions & Registration) -->
-            <section id="live-lab" class="mb-20">
-                 <div class="flex items-center gap-4 mb-8">
-                     <span class="material-symbols-outlined text-purple-500 !text-4xl animate-spin-slow">album</span>
-                     <h2 class="text-4xl font-bold text-white tracking-tight">The Live Lab</h2>
-                     <span class="px-3 py-1 bg-purple-900/50 border border-purple-500/50 text-purple-400 text-xs font-bold uppercase rounded tracking-wider">Jam Active</span>
-                </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <!-- Drop FX Board -->
-                    <div class="bg-[#1A1622] border border-white/5 rounded-2xl p-8 relative overflow-hidden">
-                        <div class="absolute -right-12 -top-12 w-48 h-48 bg-purple-600/20 rounded-full blur-3xl p-8"></div>
-                        <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-2 relative z-10">
-                            <span class="material-symbols-outlined text-purple-500">graphic_eq</span> Drop FX
-                        </h3>
-                        <div class="grid grid-cols-3 gap-4 relative z-10">
-                            <button onclick="playSound('horn')" class="aspect-square bg-purple-900/40 hover:bg-purple-600 border border-purple-500/30 hover:border-white rounded-xl flex flex-col items-center justify-center transition-all group active:scale-95">
-                                <span class="material-symbols-outlined text-2xl mb-1 text-purple-300 group-hover:text-white">campaign</span>
-                                <span class="text-[10px] font-bold uppercase text-purple-200">Airhorn</span>
-                            </button>
-                            <button onclick="playSound('clap')" class="aspect-square bg-blue-900/40 hover:bg-blue-600 border border-blue-500/30 hover:border-white rounded-xl flex flex-col items-center justify-center transition-all group active:scale-95">
-                                <span class="material-symbols-outlined text-2xl mb-1 text-blue-300 group-hover:text-white">back_hand</span>
-                                <span class="text-[10px] font-bold uppercase text-blue-200">Clap</span>
-                            </button>
-                            <button onclick="playSound('scratches')" class="aspect-square bg-red-900/40 hover:bg-red-600 border border-red-500/30 hover:border-white rounded-xl flex flex-col items-center justify-center transition-all group active:scale-95">
-                                <span class="material-symbols-outlined text-2xl mb-1 text-red-300 group-hover:text-white">disc_full</span>
-                                <span class="text-[10px] font-bold uppercase text-red-200">Scratch</span>
-                            </button>
-                             <button onclick="playSound('fire')" class="aspect-square bg-orange-900/40 hover:bg-orange-600 border border-orange-500/30 hover:border-white rounded-xl flex flex-col items-center justify-center transition-all group active:scale-95">
-                                <span class="material-symbols-outlined text-2xl mb-1 text-orange-300 group-hover:text-white">local_fire_department</span>
-                                <span class="text-[10px] font-bold uppercase text-orange-200">Fire</span>
-                            </button>
-                             <button onclick="playSound('reload')" class="aspect-square bg-green-900/40 hover:bg-green-600 border border-green-500/30 hover:border-white rounded-xl flex flex-col items-center justify-center transition-all group active:scale-95">
-                                <span class="material-symbols-outlined text-2xl mb-1 text-green-300 group-hover:text-white">replay</span>
-                                <span class="text-[10px] font-bold uppercase text-green-200">Reload</span>
-                            </button>
-                             <div class="aspect-square bg-black/40 border border-dashed border-white/10 rounded-xl flex flex-col items-center justify-center text-white/20">
-                                <span class="text-[10px] uppercase">Slot Empty</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- The Challenger Gate (Registration) -->
-                    <div id="challenger-gate" class="bg-[#1A1622] border border-white/5 rounded-2xl p-8 flex flex-col relative overflow-hidden shadow-[0_0_30px_rgba(255,255,255,0.05)]">
-                        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/diagmonds-light.png')] opacity-5"></div>
-                        
-                        <div class="flex items-center gap-3 mb-6 relative z-10">
-                            <span class="material-symbols-outlined text-4xl text-mystic-gold animate-pulse">swords</span>
-                            <div>
-                                <h3 class="text-xl font-bold text-white uppercase tracking-widest">Challenger Gate</h3>
-                                <p class="text-[10px] text-gray-400 font-mono">Register for the next tournament</p>
-                            </div>
-                        </div>
-
-                        <div class="space-y-4 relative z-10 flex-1">
-                            <div>
-                                <label class="text-xs font-bold text-white/60 uppercase tracking-widest mb-1 block">Z-Fighter Name</label>
-                                <input id="reg-name" type="text" class="w-full bg-black/50 border border-white/10 rounded p-2 text-white focus:border-electric focus:ring-1 focus:ring-electric transition-colors" placeholder="Enter your moniker...">
-                            </div>
-                            
-                            <div>
-                                <label class="text-xs font-bold text-white/60 uppercase tracking-widest mb-1 block">Combat Style</label>
-                                <select id="reg-style" class="w-full bg-black/50 border border-white/10 rounded p-2 text-white focus:border-electric focus:ring-1 focus:ring-electric transition-colors">
-                                    <option>Boombap</option>
-                                    <option>Trap</option>
-                                    <option>Drill</option>
-                                    <option>Lo-Fi</option>
-                                    <option>Experimental</option>
-                                </select>
-                            </div>
-
-                            <div class="border-2 border-dashed border-white/10 rounded-xl p-4 text-center cursor-pointer hover:border-electric/50 hover:bg-electric/10 transition-all group">
-                                <span class="material-symbols-outlined text-3xl text-gray-500 group-hover:text-electric mb-2">cloud_upload</span>
-                                <p class="text-xs text-gray-400">Drop your beat (MP3/WAV)</p>
-                            </div>
-
-                            <button onclick="registerChallenger()" class="w-full py-3 bg-gradient-to-r from-electric to-purple-600 hover:from-purple-500 hover:to-pink-500 text-white font-black uppercase tracking-widest rounded shadow-lg shadow-electric/20 transition-all transform hover:-translate-y-1">
-                                Submit to Council
-                            </button>
-                        </div>
-
-                        <!-- FLowee Hint -->
-                        <div class="mt-4 pt-4 border-t border-white/5 flex items-center gap-3 opacity-60">
-                            <span class="text-xl">🐦</span>
-                            <p class="text-[10px] text-white/50 italic">"Only those with true Aura will be chosen by the Council..."</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-             <!-- 4. ARTIST SANCTUARY (Qter's Personal Page) -->
-            <section id="artist-sanctuary" class="mb-20">
-                 <div class="flex items-center gap-4 mb-8">
-                     <div class="w-12 h-12 rounded-full overflow-hidden border-2 border-mystic-gold">
-                         <!-- Qter Avatar Placeholder -->
-                         <img src="../Assets/images/logo.png" class="w-full h-full object-cover grayscale">
-                     </div>
-                     <h2 class="text-4xl font-bold text-white tracking-tight">Qter's Sanctuary</h2>
-                </div>
-
-                <!-- Legend Timeline -->
-                <div class="relative pl-8 border-l-2 border-white/10 space-y-12">
-                    <!-- Item 1 -->
-                    <div class="relative">
-                         <span class="absolute -left-[41px] top-0 w-6 h-6 rounded-full bg-mystic-gold border-4 border-black box-content"></span>
-                         <span class="text-xs font-mono text-mystic-gold mb-1 block">2023 - THE ORIGIN</span>
-                         <h3 class="text-xl font-bold text-white mb-2">The First Frequency</h3>
-                         <p class="text-white/60 text-sm max-w-lg">Qter discovers the Resonator artifact in the depths of Lisbon's underground. The first Circle D Flow Cypher is established.</p>
-                         <!-- Mock Manga Panel -->
-                         <div class="mt-4 w-48 h-24 bg-white/5 rounded border border-white/10 overflow-hidden">
-                             <div class="w-full h-full bg-[url('https://www.transparenttextures.com/patterns/dot-noise.png')] opacity-50"></div>
-                         </div>
-                    </div>
-                     <!-- Item 2 -->
-                    <div class="relative">
-                         <span class="absolute -left-[41px] top-0 w-6 h-6 rounded-full bg-gray-800 border-4 border-black box-content"></span>
-                         <span class="text-xs font-mono text-white/50 mb-1 block">2024 - THE EXPANSION</span>
-                         <h3 class="text-xl font-bold text-white mb-2">Building the Command</h3>
-                         <p class="text-white/60 text-sm max-w-lg">The Sound-Command dashboard is constructed. Agents Flowee and Sound Engineer are brought online.</p>
-                    </div>
-                </div>
-            </section>
         </main>
 
         <!-- Footer -->
@@ -597,6 +529,7 @@
     </script>
     <script src="../js/visuals/aura_visualizer.js"></script>
     <!-- PHOENIX-EE CORE AGENTS -->
+    <script src='../js/agents/pusher.js' defer></script>
     <script src='../js/agents/visual_eye.js' defer></script>
     <script src='../js/agents/helper.js' defer></script>
     <script src='../js/agents/bridge_pusher.js' defer></script>
@@ -626,8 +559,357 @@
         });
     </script>
     <div id="flowee-agent" class="fixed bottom-8 left-8 z-50 flex flex-col items-center group cursor-pointer"></div>
-</body>
+    <!-- DJ AGENT Integration -->
+    <script src="../js/agents/dj_agent.js" defer></script>
+        // 4. Tournament Registration
+        function registerChallenger() {
+            const name = document.getElementById('reg-name').value;
+            const style = document.getElementById('reg-style').value;
+            
+            if(!name) {
+                alert("Please enter a Fighter Name!");
+                return;
+            }
 
+            // LEVEL GATE CHECK (Level 3 Required)
+            const level = window.Gamification ? window.Gamification.getLevel() : 0;
+            
+            if(level < 3) {
+                // Deny Access
+                alert(`⛔ ACCESS DENIED\n\nLevel 3 Required to enter the Tournament.\nCurrent Level: ${level}\n\nGo to the Battlefield to train!`);
+                return;
+            }
+
+            // Success Logic
+            console.log(`[Tournament] Registered: ${name} (${style})`);
+            
+            // Visual Feedback
+            const btn = document.querySelector('button[onclick="registerChallenger()"]');
+            const originalText = btn.innerText;
+            
+            btn.innerText = "⏳ TRANSMITTING TO COUNCIL...";
+            btn.classList.add('animate-pulse');
+            
+            setTimeout(() => {
+                btn.innerText = "✅ REGISTRATION CONFIRMED";
+                btn.classList.remove('bg-gradient-to-r', 'from-electric', 'to-purple-600');
+                btn.classList.add('bg-green-600');
+                
+                // Trigger Ticker
+                if(window.DJQter) {
+                     // Simulate updated ticker
+                     const event = new CustomEvent('cdf-ticker-update', { detail: { message: `⚔️ NEW CHALLENGER: ${name} has entered the Bracket!` } });
+                     window.dispatchEvent(event);
+                }
+                
+                alert(`Welcome to the Bracket, ${name}!\n\nPrepare your tracks. DJ Qter will summon you soon.`);
+            }, 2000);
+        }
+    </script>
+    <script>
+        // Outbreak Tunes Player bindings
+        window.renderOutbreakPlayer = (state) => {
+             const btn = document.getElementById('audio-btn');
+             const iconOn = document.getElementById('audio-icon-on');
+             const iconOff = document.getElementById('audio-icon-off');
+             
+             if(state.isPlaying) {
+                 btn.classList.add('border-electric', 'animate-pulse');
+                 iconOn.classList.remove('hidden');
+                 iconOff.classList.add('hidden');
+             } else {
+                 btn.classList.remove('border-electric', 'animate-pulse');
+                 iconOn.classList.add('hidden');
+                 iconOff.classList.remove('hidden');
+             }
+        };
+
+        // Attach click listener to existing button
+        document.addEventListener('DOMContentLoaded', () => {
+             const btn = document.getElementById('audio-btn');
+             if(btn) {
+                 btn.onclick = () => window.DjAgent.toggle();
+             }
+        });
+    </script>
+<script src="../js/agents/global_ticker.js" defer></script>
+<!-- DJ Qter Command Deck (Hidden Overlay) -->
+    <div id="dj-command-deck" class="fixed inset-0 z-[150] bg-black/95 backdrop-blur-xl hidden flex-col items-center justify-center p-8 overflow-y-auto w-full h-full">
+
+        <!-- WISDOM RUNE (Imperial Step 3) -->
+        <div id="wisdom-rune" class="hidden absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[200] cursor-pointer animate-pulse" onclick="claimWisdomRune()">
+             <div class="text-6xl glow-rune">🕉️</div>
+             <p class="text-mystic-gold text-xs uppercase tracking-widest bg-black/50 px-2 rounded mt-2">Wisdom of the Frequency</p>
+        </div>
+        <script>
+            // Step 3 Logic
+            setTimeout(() => {
+                const step = parseInt(localStorage.getItem('cdf_imperial_step') || 1);
+                if(step === 3 && !localStorage.getItem('cdf_initiation_rune_found')) {
+                     const rune = document.getElementById('wisdom-rune');
+                     rune.classList.remove('hidden');
+                     
+                     // Flowee Hint
+                     if(window.Flowee) window.Flowee.talk(true, "The Rune has manifested. Seize it!", "guide");
+                }
+            }, 30000); // 30 seconds
+
+            function claimWisdomRune() {
+                const rune = document.getElementById('wisdom-rune');
+                rune.classList.add('hidden');
+                
+                // Event for Flowee
+                window.dispatchEvent(new Event('cdf-wisdom-rune-found'));
+                localStorage.setItem('cdf_initiation_rune_found', 'true');
+                
+                alert("WISDOM ACQUIRED. The Codex Opens.");
+            }
+        </script>
+        <!-- Close Button -->
+        <button onclick="toggleDJDeck()" class="absolute top-8 right-8 text-white/50 hover:text-white material-symbols-outlined text-4xl">close_fullscreen</button>
+        
+        <div class="max-w-4xl w-full space-y-12">
+            <!-- Header -->
+            <div class="text-center">
+                 <h1 class="text-6xl font-black text-white tracking-tighter uppercase italic transform -skew-x-12">
+                     <span class="text-electric">Sound</span>Command<span class="text-mystic-gold">Deck</span>
+                 </h1>
+                 <p class="text-xs text-white/40 font-mono mt-2 tracking-[0.5em] uppercase">Authorized Personnel Only: DJ Qter</p>
+            </div>
+
+            <!-- 1. The Global Ticker Control -->
+            <div class="bg-[#1A1622] border border-mystic-gold/20 p-6 rounded-2xl shadow-[0_0_30px_rgba(255,215,0,0.1)]">
+                 <h3 class="text-xl font-bold text-mystic-gold mb-4 flex items-center gap-2"><span class="material-symbols-outlined">campaign</span> Global Announcement Ticker</h3>
+                 <div class="flex flex-col md:flex-row gap-4">
+                     <input type="text" id="ticker-input" class="flex-1 bg-black/50 border border-white/10 rounded px-4 py-3 text-white focus:border-mystic-gold focus:outline-none font-mono" placeholder="Type message to the Kingdom..." maxlength="150">
+                     <button onclick="broadcastTicker()" class="px-8 py-3 bg-mystic-gold text-black font-bold uppercase tracking-widest rounded hover:bg-white transition-colors shadow-lg shadow-mystic-gold/20">Broadcast</button>
+                 </div>
+            </div>
+
+            <!-- 2. The Master Cross-Fader -->
+            <div class="bg-[#1A1622] border border-electric/20 p-6 rounded-2xl shadow-[0_0_30px_rgba(154,77,255,0.1)]">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-bold text-electric flex items-center gap-2"><span class="material-symbols-outlined">graphic_eq</span> Master Frequency Control</h3>
+                    <div class="text-[10px] text-white/40 font-mono uppercase border border-white/10 px-2 py-1 rounded">Live Sync Active</div>
+                </div>
+                
+                <div class="relative w-full h-16 bg-black/50 rounded-xl border border-white/10 flex items-center px-4 mb-2">
+                    <div class="absolute inset-x-4 top-1/2 h-2 bg-gray-800 rounded-full overflow-hidden">
+                        <div class="w-full h-full bg-gradient-to-r from-blue-500 via-purple-500 to-red-500 opacity-50"></div>
+                    </div>
+                    <input type="range" id="master-crossfader" min="0" max="100" value="0" class="relative z-10 w-full h-8 opacity-0 cursor-pointer">
+                    <!-- Custom Thumb Visual (JS Positioned) -->
+                    <div id="fader-thumb" class="absolute top-1/2 -translate-y-1/2 w-8 h-12 bg-white border-2 border-electric rounded shadow-[0_0_15px_white] pointer-events-none transition-all duration-75"></div>
+                </div>
+
+                <div class="flex justify-between text-xs text-white/50 font-mono uppercase tracking-widest mt-2">
+                    <button onclick="triggerHype('deck_a')" class="hover:text-white group relative">
+                        Deck A: Ambience
+                        <span class="absolute -top-1 -right-1 w-2 h-2 bg-electric rounded-full animate-pulse"></span>
+                    </button>
+                    <script>
+                        function triggerHype(type) {
+                            // Default Fader Logic
+                            setFader(0);
+
+                            // Sound
+                            if(window.SoundEngineer) window.SoundEngineer.playSound(type);
+                            
+                            // BETA OBJECTIVE C: The Signal Check
+                            if(window.Helper && !localStorage.getItem('cdf_beta_obj_c')) {
+                                window.Helper.grantReward(25, 25, 'Sound Check');
+                                localStorage.setItem('cdf_beta_obj_c', 'true');
+                                if(window.Pusher) {
+                                    window.Pusher.showToast('MISSION OBJ C: COMPLETED', 'success');
+                                    window.Pusher.broadcast('SOUND_SIGNAL_SENT', { user: 'Captain' });
+                                }
+                            }
+                        }
+                    </script>
+                    <button onclick="setFader(100)" class="hover:text-electric">Deck B: Battle</button>
+                </div>
+            </div>
+            
+            <!-- 3. Hype Triggers -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <button onclick="triggerHype('airhorn')" class="aspect-video bg-red-900/30 border border-red-500/30 hover:bg-red-600 hover:text-white text-red-400 font-bold uppercase rounded-xl flex flex-col items-center justify-center gap-2 transition-all active:scale-95 group">
+                    <span class="material-symbols-outlined text-3xl group-hover:animate-bounce">campaign</span> Hype Horn
+                </button>
+                <button onclick="triggerHype('bass')" class="aspect-video bg-blue-900/30 border border-blue-500/30 hover:bg-blue-600 hover:text-white text-blue-400 font-bold uppercase rounded-xl flex flex-col items-center justify-center gap-2 transition-all active:scale-95 group">
+                    <span class="material-symbols-outlined text-3xl group-hover:animate-bounce">speaker</span> Bass Drop
+                </button>
+                 <button onclick="triggerHype('triumph')" class="aspect-video bg-mystic-gold/10 border border-mystic-gold/30 hover:bg-mystic-gold hover:text-black text-mystic-gold font-bold uppercase rounded-xl flex flex-col items-center justify-center gap-2 transition-all active:scale-95 group">
+                    <span class="material-symbols-outlined text-3xl group-hover:animate-bounce">emoji_events</span> Victory Stinger
+                </button>
+                 <button onclick="toggleTournamentMode()" class="aspect-video bg-purple-900/30 border border-purple-500/30 hover:bg-purple-600 hover:text-white text-purple-400 font-bold uppercase rounded-xl flex flex-col items-center justify-center gap-2 transition-all active:scale-95 group">
+                    <span class="material-symbols-outlined text-3xl group-hover:animate-bounce">swords</span> Open Tournament
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- DJ DECK SCRIPT -->
+    <script>
+        // DJ Command Deck Logic
+        function toggleDJDeck() {
+            const deck = document.getElementById('dj-command-deck');
+            deck.classList.toggle('hidden');
+            deck.classList.toggle('flex');
+            
+            // Visual Flair
+            if(!deck.classList.contains('hidden')) {
+                // Focus input
+                setTimeout(() => document.getElementById('ticker-input').focus(), 100);
+            }
+        }
+
+        // Secret Key Combo (Ctrl + Shift + D) or Triple Click Logo
+        document.addEventListener('keydown', (e) => {
+            if(e.ctrlKey && e.shiftKey && e.key === 'D') {
+                toggleDJDeck();
+            }
+        });
+        
+        // Expose to Console
+        window.DJQter = {
+            init: toggleDJDeck
+        };
+
+        // 1. Ticker
+        function broadcastTicker() {
+            const msg = document.getElementById('ticker-input').value;
+            if(!msg) return;
+            
+            // Dispatch Local Event (Simulating Bridge)
+            const event = new CustomEvent('cdf-ticker-update', { detail: { message: msg } });
+            window.dispatchEvent(event);
+            
+            // Visual Feedback
+            alert("📣 Broadcast Sent to Kingdom!");
+            document.getElementById('ticker-input').value = '';
+        }
+
+        // 2. Crossfader (Global Volume)
+        const faderInput = document.getElementById('master-crossfader');
+        const faderThumb = document.getElementById('fader-thumb');
+        
+        if(faderInput) {
+            // Init from storage
+            const savedVol = localStorage.getItem('cdf_global_volume') || 50;
+            setFader(savedVol);
+
+            faderInput.addEventListener('input', (e) => {
+                const val = e.target.value;
+                updateThumb(val);
+                
+                // GLOBAL SYNC: Save to storage to trigger event in other tabs
+                localStorage.setItem('cdf_global_volume', val);
+                
+                // Local Apply
+                if(window.SoundEngineer) window.SoundEngineer.syncVolume(val);
+            });
+        }
+        
+        function updateThumb(val) {
+            if(faderThumb) {
+                const percent = val / 100;
+                faderThumb.style.left = `calc(${val}% - 16px)`; 
+            }
+        }
+        
+        function setFader(val) {
+            if(faderInput) {
+                faderInput.value = val;
+                updateThumb(val);
+            }
+        }
+
+        // 3. Hype
+        function triggerHype(type) {
+            console.log(`[DJ Deck] Triggering: ${type}`);
+             window.dispatchEvent(new CustomEvent('cdf-hype-trigger', { detail: { type: type } }));
+             if(window.SoundEngineer) window.SoundEngineer.playSound(type === 'triumph' ? 'fanfare' : type);
+        }
+        
+        function toggleTournamentMode() {
+            alert("⚔️ Tournament Registration is now OPEN in the Live Lab!");
+            document.getElementById('ticker-input').value = "🏆 THE GRAND TOURNAMENT IS OPEN! REGISTER NOW IN THE SOUND HALL!";
+            broadcastTicker();
+        }
+
+        // 4. Tournament Registration (Smart)
+        function registerChallenger() {
+            // CHECK MEMBERSHIP
+            const memberData = JSON.parse(localStorage.getItem('cdf_player') || 'null');
+            let name, style;
+
+            if (memberData && memberData.level > 0) {
+                // AUTO-FILL for Members
+                name = localStorage.getItem('userName') || `Agent_${Math.floor(Math.random()*999)}`;
+                style = "Member Style"; // Could be fetched from profile
+                
+                if(confirm(`Identify as Member: ${name}?`)) {
+                    console.log("[Tournament] Member Auto-Registered.");
+                } else {
+                    return; // Cancelled
+                }
+            } else {
+                 // GUEST FLOW
+                 name = document.getElementById('reg-name').value;
+                 style = document.getElementById('reg-style').value;
+                 if(!name) {
+                    alert("Guest, please enter a Fighter Name!");
+                    return;
+                }
+            }
+
+            // LEVEL GATE CHECK (Level 3 Required) - Applies to everyone for now, or just Members? User said "Guest needs form".
+            // Let's assume Guests can register if the form is open, but Members skip check? 
+            // Actually user said "register now button should lead to regiserform if guest. If member should by clicking register automaticaly"
+            
+            // Visual Feedback
+            const btn = document.querySelector('button[onclick="registerChallenger()"]');
+            btn.innerText = "⏳ TRANSMITTING TO COUNCIL...";
+            btn.classList.add('animate-pulse');
+            
+            setTimeout(() => {
+                btn.innerText = "✅ REGISTRATION CONFIRMED";
+                btn.classList.remove('bg-gradient-to-r', 'from-electric', 'to-purple-600');
+                btn.classList.add('bg-green-600');
+                
+                // Trigger Ticker
+                if(window.DJQter) {
+                     const event = new CustomEvent('cdf-ticker-update', { detail: { message: `⚔️ NEW CHALLENGER: ${name} (${memberData ? 'Member' : 'Guest'}) has entered the Bracket!` } });
+                     window.dispatchEvent(event);
+                }
+                
+                // Add to DJ Qter Dashboard List (Mock)
+                let participants = JSON.parse(localStorage.getItem('cdf_tournament_participants') || '[]');
+                participants.push({ name, style, type: memberData ? 'Member' : 'Guest', date: new Date().toISOString() });
+                localStorage.setItem('cdf_tournament_participants', JSON.stringify(participants));
+
+                alert(`Welcome to the Bracket, ${name}!\n\nDJ Qter has received your data.`);
+            }, 1000);
+        }
+    </script>
+<script src="../js/agents/network_hub.js" defer></script>
+<script src="../js/agents/constructor_bot.js" defer></script>
+<script src="../js/agents/kingdom_science.js" defer></script>
+<script src="../js/agents/resonance_bridge.js" defer></script>
+<script src="../js/agents/vault_space.js" defer></script>
+<script src="../js/agents/orbital_menu.js" defer></script>
+    <script src="../js/agents/tutorial_core.js" defer></script>
+    <script src="../js/agents/quest_controller.js" defer></script>
+    <script src="../js/agents/visual_integrity.js" defer></script>
+    <script src="../js/agents/horizon_bar.js" defer></script>
+    <script src="../js/agents/social_matrix.js" defer></script>
+    <script src="../js/agents/flowee.js" defer></script>
+
+    <!-- AUTOMATED AGENT INJECTION -->
+
+    <!-- AUTOMATED AGENT INJECTION -->
+    <script src="../js/agents/imperial_hud.js" defer></script>
+</body>
 </html>
 
 

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Shutdown | Circle D Flow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        body { background-color: #000; color: #00ff00; font-family: 'Space Mono', monospace; overflow: hidden; }
+        .cursor { display: inline-block; width: 10px; height: 18px; background: #00ff00; animation: blink 1s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        .scanline {
+            width: 100%;
+            height: 100px;
+            z-index: 10;
+            background: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(0, 255, 0, 0.1) 50%, rgba(0,0,0,0) 100%);
+            opacity: 0.1;
+            position: absolute;
+            bottom: 100%;
+            animation: scanline 10s linear infinite;
+            pointer-events: none;
+        }
+        @keyframes scanline {
+            0% { bottom: 100%; }
+            100% { bottom: -100px; }
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen relative">
+    
+    <div class="scanline"></div>
+    
+    <div class="w-full max-w-2xl p-8 z-20">
+        <div id="terminal" class="space-y-2 text-sm md:text-base">
+            <div>> INITIATING SYSTEM SHUTDOWN SEQUENCE...</div>
+        </div>
+    </div>
+
+    <script>
+        const logs = [
+            { msg: "> DISCONNECTING NEURAL LINK...", delay: 800 },
+            { msg: "> SAVING SOUL FRAGMENTS...", delay: 1500 },
+            { msg: "> CLEARING CACHE...", delay: 2200 },
+            { msg: "> CLOSING GATEWAY [NYAME-PORT-8080]...", delay: 3000 },
+            { msg: "> SYSTEM OFFLINE. GOODBYE, HUNTER.", delay: 4000 }
+        ];
+
+        const terminal = document.getElementById('terminal');
+
+        function typeLine(text, doneCallback) {
+            const line = document.createElement('div');
+            terminal.appendChild(line);
+            let i = 0;
+            const interval = setInterval(() => {
+                line.textContent += text[i];
+                i++;
+                if (i >= text.length) {
+                    clearInterval(interval);
+                    if (doneCallback) doneCallback();
+                }
+            }, 20); // Typing speed
+        }
+
+        function runSequence() {
+            let totalDelay = 0;
+
+            logs.forEach((log, index) => {
+                setTimeout(() => {
+                    typeLine(log.msg, () => {
+                        window.scrollTo(0, document.body.scrollHeight);
+                    });
+                    
+                    // Logic: Clear Session at appropriate steps
+                    if(index === 2) { // Clearing Cache
+                        clearSession();
+                    }
+                }, log.delay);
+                totalDelay = Math.max(totalDelay, log.delay + (log.msg.length * 20) + 500);
+            });
+
+            // Redirect
+            setTimeout(() => {
+                document.body.classList.add('opacity-0', 'transition-opacity', 'duration-1000');
+                setTimeout(() => {
+                    window.location.href = '../index.html';
+                }, 1000);
+            }, totalDelay);
+        }
+
+        function clearSession() {
+            console.log("Wiping Session Data...");
+            // Keep some non-sensitive settings if needed, but for now wipe user identity
+            const keysToRemove = [
+                'cdf_user_username', 'cdf_user_email', 'user_class', 
+                'user_nen_type_v2', 'cdf_adinkra_symbol', 'cdf_beta_key',
+                'cdf_beta_session'
+            ];
+            
+            keysToRemove.forEach(k => localStorage.removeItem(k));
+            sessionStorage.clear();
+        }
+
+        // Start
+        setTimeout(runSequence, 500);
+
+    </script>
+
+    <!-- AUTOMATED AGENT INJECTION -->
+    <script src="../js/agents/global_ticker.js" defer></script>
+    <script src="../js/agents/helper.js" defer></script>
+    <script src="../js/agents/pusher.js" defer></script>
+    <script src="../js/agents/horizon_bar.js" defer></script>
+
+    <!-- AUTOMATED AGENT INJECTION -->
+
+    <!-- AUTOMATED AGENT INJECTION -->
+    <script src="../js/agents/imperial_hud.js" defer></script>
+</body>
+</html>

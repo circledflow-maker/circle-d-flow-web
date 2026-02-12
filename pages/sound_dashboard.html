@@ -29,7 +29,21 @@
     <script src='../js/agents/sound_engineer.js' defer></script>
     <script src='../js/agents/bass_pusher.js' defer></script>
     <script src='../js/agents/tour_coordinator.js' defer></script>
+    <script src='../js/agents/sound_mission_control.js' defer></script>
     <script src='../js/dashboard_logic.js' defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+             // Init Dashboard
+             if(window.SoundMissionControl) {
+                 window.SoundMissionControl.renderMissionTable('mission-list-body');
+             } else {
+                 // Retry if race condition
+                 setTimeout(() => {
+                     if(window.SoundMissionControl) window.SoundMissionControl.renderMissionTable('mission-list-body');
+                 }, 500);
+             }
+        });
+    </script>
 </head>
 <body class="bg-dark text-white min-h-screen flex flex-col font-sans">
 
@@ -183,36 +197,60 @@
                 </div>
             </div>
 
-            <!-- 5. SCOUTING REPORT (Challenger Review) -->
-            <div class="md:col-span-2 bg-panel border border-white/5 rounded-2xl p-6 relative group hover:border-mystic-gold/30 transition-colors">
+    <!-- 5. MISSION CONTROL (AI BRAIN) -->
+            <div class="bg-panel border border-white/5 rounded-2xl p-6 relative group hover:border-mystic-gold/30 transition-colors">
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-lg font-bold flex items-center gap-2">
-                        <span class="material-symbols-outlined text-mystic-gold">visibility</span>
-                        Scouting Report
+                        <span class="material-symbols-outlined text-mystic-gold">psychology</span>
+                        Mission Control & Rewards
                     </h2>
-                    <span class="text-[10px] bg-mystic-gold/20 text-mystic-gold px-2 py-1 rounded font-bold">PENDING APPROVAL</span>
+                    <span class="text-[10px] bg-mystic-gold/20 text-mystic-gold px-2 py-1 rounded font-bold">AI ACTIVE</span>
                 </div>
 
-                <div class="overflow-x-auto">
+                <div class="overflow-x-auto mb-6">
+                    <h3 class="text-xs uppercase text-white/40 mb-2 font-bold tracking-widest">Active Sound Quests (English)</h3>
                     <table class="w-full text-left border-collapse">
                         <thead>
                             <tr class="text-xs text-white/40 uppercase tracking-widest border-b border-white/10">
-                                <th class="py-3 px-4">Timestamp</th>
-                                <th class="py-3 px-4">Z-Fighter</th>
-                                <th class="py-3 px-4">Style</th>
-                                <th class="py-3 px-4 text-right">Actions</th>
+                                <th class="py-3 px-4">Mission</th>
+                                <th class="py-3 px-4">Objective</th>
+                                <th class="py-3 px-4">Reward</th>
+                                <th class="py-3 px-4 text-right">Status</th>
                             </tr>
                         </thead>
-                        <tbody id="scouting-list" class="text-sm font-mono">
-                            <!-- Populated by JS -->
-                            <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
-                                <td class="py-3 px-4 text-white/50">--:--</td>
-                                <td class="py-3 px-4 font-bold text-white">No Pending Challengers</td>
-                                <td class="py-3 px-4 text-white/50">-</td>
-                                <td class="py-3 px-4 text-right"></td>
-                            </tr>
+                        <tbody id="mission-list-body" class="text-sm font-mono">
+                            <!-- Populated by SoundMissionControl -->
+                            <tr><td colspan="4" class="py-4 text-center text-white/30">Loading Intelligence...</td></tr>
                         </tbody>
                     </table>
+                </div>
+
+                <!-- Manual Trigger -->
+                <div class="flex gap-4">
+                    <button onclick="window.SoundMissionControl.seedMissions(); window.SoundMissionControl.renderMissionTable('mission-list-body');" class="px-4 py-2 bg-white/5 hover:bg-white/10 rounded text-xs uppercase font-bold text-white/70 hover:text-white transition-all flex items-center gap-2">
+                        <span class="material-symbols-outlined text-sm">refresh</span> Regenerate AI Seeds
+                    </button>
+                    <button class="px-4 py-2 bg-white/5 hover:bg-white/10 rounded text-xs uppercase font-bold text-white/70 hover:text-white transition-all flex items-center gap-2">
+                        <span class="material-symbols-outlined text-sm">add</span> Custom Quest
+                    </button>
+                </div>
+            </div>
+
+            <!-- 6. TRINITY VOUCHER LOG -->
+            <div class="bg-panel border border-white/5 rounded-2xl p-6 relative group hover:border-gold/30 transition-colors">
+                 <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-lg font-bold flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[#d4af37]">stars</span>
+                        Trinity Rewards Log
+                    </h2>
+                    <div class="text-right">
+                         <div class="text-[9px] text-white/30 uppercase">Redeemable</div>
+                         <div class="text-[#d4af37] font-bold text-lg">0 ACTIVE</div>
+                    </div>
+                </div>
+                
+                <div class="h-48 flex items-center justify-center border border-dashed border-white/10 rounded-xl bg-black/20 text-white/30 text-xs uppercase tracking-widest">
+                    No Vouchers Claimed Yet
                 </div>
             </div>
         </main>
@@ -305,9 +343,27 @@
         function logout() { location.reload(); }
         window.onload = () => document.getElementById('access-code').focus();
     </script>
+    <script src="../js/agents/global_ticker.js" defer></script>
+    <script src="../js/agents/network_hub.js" defer></script>
+    <script src="../js/agents/constructor_bot.js" defer></script>
+    <script src="../js/agents/kingdom_science.js" defer></script>
+    <script src="../js/agents/resonance_bridge.js" defer></script>
+    <script src="../js/agents/vault_space.js" defer></script>
+    <script src="../js/agents/orbital_menu.js" defer></script>
+    <script src="../js/agents/tutorial_core.js" defer></script>
+    <script src="../js/agents/quest_controller.js" defer></script>
+    <script src="../js/agents/visual_integrity.js" defer></script>
+    <script src="../js/agents/horizon_bar.js" defer></script>
+    <script src="../js/agents/social_matrix.js" defer></script>
     <script src="../js/agents/flowee.js" defer></script>
+    <script src="../js/agents/pusher.js" defer></script>
     <script src="../js/agents/bridge_pusher.js" defer></script>
     <div id="flowee-agent" class="fixed bottom-8 left-8 z-50 flex flex-col items-center group cursor-pointer"></div>
     <script src="../js/agents/helper.js" defer></script>
+
+    <!-- AUTOMATED AGENT INJECTION -->
+
+    <!-- AUTOMATED AGENT INJECTION -->
+    <script src="../js/agents/imperial_hud.js" defer></script>
 </body>
 </html>

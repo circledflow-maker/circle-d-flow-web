@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Purpose | Circle D Flow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Space+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <style>
+        body { background: #050505; color: white; font-family: 'Space Mono', monospace; overflow-x: hidden; }
+        .font-cinzel { font-family: 'Cinzel', serif; }
+        .text-gold { color: #d4af37; }
+        
+        /* SCROLL ANIMATIONS */
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 1s ease; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* HERO */
+        .hero-section {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #000 70%);
+            position: relative;
+        }
+        .hero-title {
+            font-size: 4rem;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+            letter-spacing: 0.2em;
+            text-align: center;
+        }
+        
+        /* CONTENT */
+        .content-block {
+            padding: 80px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .quote {
+            font-size: 1.5rem;
+            border-left: 3px solid #d4af37;
+            padding-left: 20px;
+            margin: 40px 0;
+            color: #aaa;
+            font-style: italic;
+        }
+
+        /* BACK BUTTON */
+        .back-btn {
+            position: fixed;
+            top: 20px; left: 20px;
+            z-index: 100;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid #d4af37;
+            color: #d4af37;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: 0.3s;
+            backdrop-filter: blur(5px);
+        }
+        .back-btn:hover { background: #d4af37; color: black; }
+    </style>
+</head>
+<body>
+
+    <button class="back-btn" onclick="window.location.href='../index.html'">RETURN TO ORBIT</button>
+
+    <!-- HERO -->
+    <section class="hero-section">
+        <div class="reveal active">
+            <h1 class="hero-title font-cinzel text-gold">THE PURPOSE</h1>
+            <p class="mt-4 text-center text-gray-400 text-lg">WHY WE BUILD. WHY WE FLOW.</p>
+        </div>
+    </section>
+
+    <!-- BLOCK 1: THE ORIGIN -->
+    <section class="content-block reveal">
+        <h2 class="text-3xl font-cinzel text-white mb-6">THE ORIGIN</h2>
+        <p class="text-gray-300 leading-relaxed">
+            Circle D Flow was born from a simple yet radical idea: <strong class="text-gold">Art is Utility.</strong> 
+            In a world of noise, we sought to build a signal—a sanctuary where creators, warriors, and explorers could unite under a single banner.
+            This is not just a platform; it is a living organism, powered by the collective "Haki" of its members.
+        </p>
+    </section>
+
+    <!-- BLOCK 2: THE TRINITY -->
+    <section class="content-block reveal">
+        <div class="quote">
+            "To connect the disconnect. To merge the digital soul with the physical heartbeat."
+        </div>
+        <h2 class="text-3xl font-cinzel text-white mb-6">THE TRINITY</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+            <div class="p-6 border border-white/10 rounded hover:border-gold transition">
+                <span class="material-symbols-outlined text-4xl text-gold mb-4">visibility</span>
+                <h3 class="text-xl font-bold mb-2">VISION</h3>
+                <p class="text-sm text-gray-500">To see beyond the veil. Visual arts, galleries, and the preservation of beauty.</p>
+            </div>
+            <div class="p-6 border border-white/10 rounded hover:border-gold transition">
+                <span class="material-symbols-outlined text-4xl text-gold mb-4">graphic_eq</span>
+                <h3 class="text-xl font-bold mb-2">SOUND</h3>
+                <p class="text-sm text-gray-500">To hear the rhythm of the world. Music, vibes, and the frequency of connection.</p>
+            </div>
+            <div class="p-6 border border-white/10 rounded hover:border-gold transition">
+                <span class="material-symbols-outlined text-4xl text-gold mb-4">diversity_3</span>
+                <h3 class="text-xl font-bold mb-2">COMMUNITY</h3>
+                <p class="text-sm text-gray-500">To build the tribe. Events, gatherings, and the shared journey.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ALIGNMENT BUTTON -->
+    <div class="flex justify-center pb-20">
+        <button id="align-btn" onclick="alignWithPurpose()" class="px-8 py-3 bg-transparent border border-gold text-gold hover:bg-gold hover:text-black transition-all font-cinzel text-xl">
+            I ALIGN WITH THIS PURPOSE
+        </button>
+    </div>
+
+    <script src="../js/agents/helper.js"></script>
+    <script src="../js/agents/pusher.js"></script>
+    <script src="../js/agents/quest_controller.js"></script> <!-- THE THIRD AGENT -->
+
+    <script>
+        // Scroll Reveal Logic
+        function checkReveal() {
+            document.querySelectorAll('.reveal').forEach(el => {
+                const windowHeight = window.innerHeight;
+                const elementTop = el.getBoundingClientRect().top;
+                if (elementTop < windowHeight - 50) el.classList.add('active'); // Reduced offset for better mobile trigger
+            });
+        }
+
+        window.addEventListener('scroll', checkReveal);
+        window.addEventListener('load', () => {
+            checkReveal();
+            checkAlignmentStatus();
+        });
+
+        function checkAlignmentStatus() {
+            const status = localStorage.getItem('cdf_alignment_status');
+            const date = localStorage.getItem('cdf_alignment_date');
+            
+            if(status === 'ALIGNED') {
+                const btn = document.getElementById('align-btn');
+                if(btn) {
+                    btn.disabled = true;
+                    btn.innerHTML = `ALIGNED • ${new Date(date).toLocaleDateString()}`;
+                    btn.classList.add('opacity-50', 'cursor-not-allowed');
+                }
+            }
+        }
+
+        function alignWithPurpose() {
+            const btn = document.getElementById('align-btn');
+            if(btn) btn.innerHTML = "ALIGNING...";
+
+            setTimeout(() => {
+                if(window.Helper) {
+                    if(window.Helper.registerAlignment) {
+                        window.Helper.registerAlignment();
+                    }
+                    
+                    if(window.QuestController) window.QuestController.completeQuest('alignment_pact');
+                } else {
+                    alert("Alignment recorded locally.");
+                    localStorage.setItem('cdf_alignment_status', 'ALIGNED');
+                }
+                
+                checkAlignmentStatus(); // Update UI
+            }, 1000); // Dramatic delay
+        }
+    </script>
+</body>
+</html>

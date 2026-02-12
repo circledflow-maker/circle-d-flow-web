@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flavor Quest - African Queen Kitchen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+
+    <style>
+        body {
+            background-color: #050505;
+            color: #fff;
+            font-family: 'Space Mono', monospace;
+            background-image: radial-gradient(#1a1a1a 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .marker { font-family: 'Permanent Marker', cursive; }
+        .neon-green { text-shadow: 0 0 10px #00ff00; color: #00ff00; }
+        .neon-orange { text-shadow: 0 0 10px #ff6600; color: #ff6600; }
+        
+        .quest-card {
+            background: rgba(20, 20, 20, 0.9);
+            border: 2px dashed #333;
+            transition: all 0.3s;
+        }
+        .quest-card:hover {
+            border-color: #00ff00;
+            transform: scale(1.02);
+        }
+        .quest-card.completed {
+            border-style: solid;
+            border-color: #00ff00;
+            background: rgba(0, 255, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="min-h-screen p-6 md:p-12">
+
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-12">
+        <a href="african-queen-kitchen.html" class="flex items-center gap-2 hover:text-[#00ff00] transition-colors">
+            <span class="material-symbols-outlined">arrow_back</span>
+            <span class="uppercase font-bold">Back to Kitchen</span>
+        </a>
+        <div class="text-right">
+            <div class="marker text-3xl neon-orange">Flavor Quest</div>
+            <div class="text-xs text-white/50" id="user-xp">XP: 0 / Level 1</div>
+        </div>
+    </div>
+
+    <!-- Active Quests -->
+    <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
+        <span class="material-symbols-outlined text-[#00ff00]">flag</span> Active Missions
+    </h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12" id="quest-grid">
+        <!-- Quests Injected JS -->
+    </div>
+
+    <!-- Rewards Shop -->
+    <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
+        <span class="material-symbols-outlined text-[#ff6600]">storefront</span> Loot Shop
+    </h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="p-4 border border-white/10 rounded-lg text-center opacity-50 cursor-not-allowed">
+            <div class="material-symbols-outlined text-4xl mb-2">local_cafe</div>
+            <h3 class="font-bold">Free Drink</h3>
+            <p class="text-xs text-white/50">Cost: 500 XP</p>
+        </div>
+        <div class="p-4 border border-white/10 rounded-lg text-center opacity-50 cursor-not-allowed">
+            <div class="material-symbols-outlined text-4xl mb-2">restaurant</div>
+            <h3 class="font-bold">Secret Menu</h3>
+            <p class="text-xs text-white/50">Cost: 1000 XP</p>
+        </div>
+    </div>
+
+    <!-- Scripting -->
+    <script src="../js/agents/helper.js"></script>
+    <script src="../js/agents/pusher.js"></script>
+    <script>
+        const quests = [
+            { id: 1, title: "The First Bite", desc: "Order any main dish from the Kitchen.", xp: 100, status: 'claimable' },
+            { id: 2, title: "Social Butterfly", desc: "Share a photo of your meal on Instagram.", xp: 200, status: 'locked' },
+            { id: 3, title: "Critic's Choice", desc: "Leave a review in the Flavor Log.", xp: 150, status: 'active' },
+            { id: 4, title: "The Regular", desc: "Order 3 times in one week.", xp: 500, status: 'locked' }
+        ];
+
+        function renderQuests() {
+            const grid = document.getElementById('quest-grid');
+            grid.innerHTML = '';
+            
+            quests.forEach(q => {
+                let actionBtn = '';
+                if(q.status === 'claimable') {
+                    actionBtn = `<button onclick="claimReward(${q.id}, ${q.xp})" class="mt-4 w-full py-2 bg-[#00ff00] text-black font-bold uppercase text-xs hover:bg-white transition-colors">Claim ${q.xp} XP</button>`;
+                } else if (q.status === 'active') {
+                    actionBtn = `<div class="mt-4 w-full py-2 border border-white/20 text-center text-xs text-white/50 uppercase">In Progress</div>`;
+                } else {
+                    actionBtn = `<div class="mt-4 w-full py-2 text-center text-xs text-white/20 uppercase"><span class="material-symbols-outlined text-sm align-middle">lock</span> Locked</div>`;
+                }
+
+                const card = document.createElement('div');
+                card.className = `quest-card p-6 rounded-lg ${q.status === 'completed' ? 'completed' : ''}`;
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-bold text-lg">${q.title}</h3>
+                        <span class="text-[#00ff00] font-mono text-sm">+${q.xp} XP</span>
+                    </div>
+                    <p class="text-sm text-white/70">${q.desc}</p>
+                    ${actionBtn}
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function claimReward(id, xp) {
+            // Update local state (simulated)
+            const q = quests.find(i => i.id === id);
+            q.status = 'completed';
+            q.title += ' (DONE)';
+            
+            // Notify
+            if(window.Pusher) {
+                window.Pusher.showToast(`Quest Completed! +${xp} XP`, 'xp');
+                window.Pusher.broadcast('XP_GAIN', { amount: xp });
+            }
+            
+            renderQuests();
+        }
+
+        // Init
+        renderQuests();
+
+        // Check for User Alignment (Integration)
+        const isAligned = localStorage.getItem('cdf_alignment_status') === 'ALIGNED';
+        if(isAligned) {
+            document.getElementById('user-xp').innerText += ' | ALIGNED';
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vessel Comms | Circle D Flow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Cinzel:wght@400;700&family=Space+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/styles.css">
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#8A2BE2",
+                        "hologram": "#00FFFF",
+                        "parchment": "#1A1622",
+                    },
+                    fontFamily: {
+                        "display": ["Cinzel", "serif"],
+                        "body": ["Plus Jakarta Sans", "sans-serif"],
+                        "mono": ["Space Mono", "monospace"]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .chat-scroller::-webkit-scrollbar { width: 6px; }
+        .chat-scroller::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); }
+        .chat-scroller::-webkit-scrollbar-thumb { background: rgba(139, 92, 246, 0.3); border-radius: 3px; }
+        .chat-scroller::-webkit-scrollbar-thumb:hover { background: rgba(139, 92, 246, 0.6); }
+        
+        /* Page Transition */
+        body { opacity: 0; animation: fadeIn 0.8s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-[#050406] text-white min-h-screen font-body overflow-hidden">
+
+    <!-- HORIZON BAR -->
+    <div id="horizon-bar-root"></div>
+
+    <!-- BEAM MENU (Dropdown) -->
+    <div id="beam-menu" class="hidden absolute top-20 right-4 z-50 bg-[#0F0A13] border border-white/10 rounded-xl shadow-2xl p-2 w-48 backdrop-blur-xl animate-fade-in-up">
+        <div class="text-[10px] text-white/30 uppercase tracking-widest px-2 py-1 mb-1 font-mono">Beam To</div>
+        <a href="vault_space.html" class="block px-3 py-2 rounded hover:bg-white/5 text-sm text-white/80 hover:text-white transition-colors flex items-center gap-2"><span class="material-symbols-outlined text-xs">hub</span> Vault Space</a>
+        <a href="coop.html" class="block px-3 py-2 rounded hover:bg-white/5 text-sm text-white/80 hover:text-white transition-colors flex items-center gap-2"><span class="material-symbols-outlined text-xs">handshake</span> Co-Op</a>
+        <a href="dashboard.html" class="block px-3 py-2 rounded hover:bg-white/5 text-sm text-white/80 hover:text-white transition-colors flex items-center gap-2"><span class="material-symbols-outlined text-xs">dashboard</span> Dashboard</a>
+        <div class="h-px bg-white/5 my-1"></div>
+        <button onclick="window.history.back()" class="w-full text-left px-3 py-2 rounded hover:bg-white/5 text-sm text-white/50 hover:text-white transition-colors flex items-center gap-2"><span class="material-symbols-outlined text-xs">arrow_back</span> Return</button>
+    </div>
+
+    <!-- MAIN GRID -->
+    <main class="relative z-10 pt-24 h-screen flex flex-col md:flex-row overflow-hidden">
+        
+        <!-- SIDEBAR (Channels & Users) -->
+        <aside class="w-full md:w-64 bg-[#0F0A13] border-r border-white/10 flex flex-col hidden md:flex">
+            <!-- Header -->
+            <div class="p-6 border-b border-white/5 border-l-4 border-l-purple-500 flex justify-between items-center">
+                <div>
+                    <h2 class="font-display font-bold text-lg text-white/90">Circle D Flow Signal</h2>
+                    <div class="flex items-center gap-2 mt-2">
+                        <div class="w-2 h-2 rounded-full bg-purple-400 animate-pulse shadow-[0_0_10px_#A855F7]"></div>
+                        <span class="text-xs font-mono text-purple-300">Resonance: HIGH</span>
+                    </div>
+                </div>
+                <!-- Beam Menu Trigger -->
+                <button class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-white/50 hover:text-white transition-colors" title="Beam to Sector" onclick="document.getElementById('beam-menu').classList.toggle('hidden')">
+                    <span class="material-symbols-outlined text-sm">grid_view</span>
+                </button>
+            </div>
+
+            <!-- Channels -->
+            <div class="flex-1 overflow-y-auto p-4 space-y-6">
+                
+                <!-- Quick Actions -->
+                <div class="mb-4">
+                    <button class="w-full py-3 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-lg shadow-lg shadow-purple-900/20 transition-all flex items-center justify-center gap-2 mb-4" onclick="window.ChatAgent.startNewChat()">
+                        <span class="material-symbols-outlined">edit_square</span>
+                        New Transmission
+                    </button>
+                    
+                    <div class="relative">
+                        <input type="text" id="user-search" placeholder="Search Frequency..." 
+                            class="w-full bg-white/5 border border-white/10 rounded-lg pl-9 pr-3 py-2 text-sm text-white placeholder-white/30 focus:outline-none focus:border-purple-500/50 transition-colors"
+                            onkeyup="window.ChatAgent.searchUsers(this.value)">
+                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-white/30 text-xs">search</span>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="flex justify-between items-center px-2 mb-2">
+                        <h3 class="text-xs font-mono text-white/30 uppercase tracking-widest">Frequencies</h3>
+                        <button class="text-[10px] text-purple-500 hover:text-white uppercase font-bold tracking-wider" onclick="alert('Only Masters can forge Circles')">+ Circle</button>
+                    </div>
+                    <ul class="space-y-1">
+                        <li>
+                            <button onclick="window.ChatAgent.switchChannel('global')" class="w-full text-left px-3 py-2 rounded-lg bg-purple-500/10 border border-purple-500/30 text-purple-300 text-sm font-medium flex items-center gap-2 transition-all hover:bg-purple-500/20">
+                                <span class="material-symbols-outlined text-sm">public</span>
+                                The Source (Global)
+                            </button>
+                        </li>
+                        <li>
+                            <button onclick="window.ChatAgent.switchChannel('guild')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-white/5 text-white/50 hover:text-white text-sm font-medium flex items-center gap-2 transition-colors">
+                                <span class="material-symbols-outlined text-sm">radio_button_checked</span>
+                                My Circle (Guild)
+                            </button>
+                        </li>
+                        <li>
+                            <button onclick="window.ChatAgent.switchChannel('market')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-white/5 text-white/50 hover:text-white text-sm font-medium flex items-center gap-2 transition-colors">
+                                <span class="material-symbols-outlined text-sm">storefront</span>
+                                The Bazaar (Trade)
+                            </button>
+                        </li>
+                        <li>
+                            <button onclick="window.ChatAgent.switchChannel('trinity')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-gold/10 text-gold/50 hover:text-gold text-sm font-medium flex items-center gap-2 transition-colors border border-transparent hover:border-gold/30">
+                                <span class="material-symbols-outlined text-sm text-gold">lock</span>
+                                Trinity Core (Encrypted)
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Active Users (Mock) -->
+                <div>
+                    <h3 class="text-xs font-mono text-white/30 uppercase tracking-widest px-2 mb-2">In Flow (<span id="user-count">4</span>)</h3>
+                    <ul class="space-y-2" id="user-list">
+                        <!-- Injected by Agent -->
+                    </ul>
+                </div>
+            </div>
+        </aside>
+
+        <!-- CHAT AREA -->
+        <section class="flex-1 flex flex-col relative bg-black/40">
+            <!-- BG FX -->
+            <div class="absolute inset-0 bg-[url('https://pub-24ba376bfccb446996666eaff4dbae12.r2.dev/grid_overlay.png')] opacity-10 pointer-events-none"></div>
+
+            <!-- Mobile Channel Header -->
+            <div class="md:hidden p-4 border-b border-white/10 flex items-center justify-between bg-[#0F0A13]">
+                <h2 class="font-display font-bold text-white">Global Frequency</h2>
+                <button class="text-white/50"><span class="material-symbols-outlined">group</span></button>
+            </div>
+
+            <!-- MESSAGES FEED -->
+            <div id="chat-feed" class="flex-1 overflow-y-auto chat-scroller p-4 md:p-8 space-y-4">
+                <!-- Messages go here -->
+                <div class="text-center py-12 opacity-30">
+                    <p class="font-mono text-xs"> Establishing Link to Imperial Core...</p>
+                </div>
+            </div>
+
+            <!-- INPUT AREA -->
+            <div class="p-4 md:p-6 bg-[#0F0A13] border-t border-white/10">
+                <form id="chat-form" onsubmit="ChatAgent.sendMessage(event)" class="relative max-w-4xl mx-auto">
+                    <input type="text" name="message" id="message-input" autocomplete="off"
+                        class="w-full bg-black/50 border border-white/10 rounded-xl pl-4 pr-12 py-4 text-white placeholder-white/20 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none transition-all font-mono text-sm"
+                        placeholder="Transmit message...">
+                    
+                    <button type="submit" class="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-purple-600 hover:bg-purple-500 rounded-lg flex items-center justify-center text-white transition-colors">
+                        <span class="material-symbols-outlined text-sm">send</span>
+                    </button>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- AGENTS -->
+    <script src="../js/agents/imperial_hud.js"></script>
+    <script src="../js/agents/pusher.js"></script>
+    <script src="../js/agents/helper.js"></script>
+    <script src="../js/agents/network_hub.js"></script>
+    <script src="../js/agents/global_ticker.js"></script>
+    
+    <!-- CHAT AGENT -->
+    <script src="../js/agents/chat_agent.js"></script>
+
+</body>
+</html>

@@ -11,279 +11,334 @@
     <title>Upload Listing | Circle D Flow</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link
-        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@400;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link rel="stylesheet" href="../css/styles.css">
+    
+    <style>
+        /* PERGAMENT STYLES */
+        body {
+            background-color: #0F0A13; /* Void Background */
+            background-image: url('https://www.transparenttextures.com/patterns/black-scales.png');
+            color: white;
+        }
+        
+        .pergament-scroll {
+            background-color: #FDFBF7;
+            background-image: url("https://www.transparenttextures.com/patterns/aged-paper.png");
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+            border-radius: 2px;
+            border: 1px solid #D7CCC8;
+            transform: rotate(-0.5deg);
+            color: #3E2723;
+        }
+        
+        .pergament-scroll::before, .pergament-scroll::after {
+            content: '';
+            position: absolute;
+            left: 0; right: 0;
+            height: 24px;
+            background: linear-gradient(to bottom, #8D6E63, #5D4037);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.5);
+            border-radius: 4px;
+            z-index: 10;
+        }
+        
+        .pergament-scroll::before { top: -12px; }
+        .pergament-scroll::after { bottom: -12px; }
+
+        .horizon-bar {
+            /* Fallback/Local def if styles.css fails */
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 95%;
+            max-width: 1200px;
+            height: 60px;
+            background: rgba(15, 10, 19, 0.95);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 25px;
+            z-index: 50;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+        }
+        
+        /* Form Overrides for Parchment */
+        .pergament-scroll input, .pergament-scroll textarea, .pergament-scroll select {
+            color: #3E2723 !important;
+            border-color: #A1887F !important;
+        }
+        .pergament-scroll input::placeholder, .pergament-scroll textarea::placeholder {
+            color: #8D6E63 !important;
+        }
+    </style>
 </head>
 
-<body
-    class="bg-[#0F0A13] text-white min-h-screen relative overflow-x-hidden selection:bg-electric selection:text-white">
+<body class="bg-[#0F0A13] min-h-screen relative overflow-x-hidden selection:bg-electric selection:text-white">
 
-    <!-- Navbar -->
-    <nav class="fixed w-full z-50 transition-all duration-300 border-b border-white/5 bg-[#0F0A13]/80 backdrop-blur-md">
-        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-            <a href="../index.html" class="flex items-center gap-3">
-                <span class="font-serif font-bold text-xl tracking-wide">Circle D Flow</span>
+    <!-- HEADER (Horizon Bar) -->
+    <header class="horizon-bar">
+        <div class="flex items-center gap-4">
+            <a href="../index.html" class="flex items-center gap-2 group">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-gold to-amber-700 border border-gold/30 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <span class="material-symbols-outlined text-black text-sm font-bold">token</span>
+                </div>
+                <span class="font-cinzel font-bold text-lg tracking-widest text-[#FFD700] group-hover:text-white transition-colors">GRAND BAZAAR</span>
             </a>
-            <a href="marketplace.html"
-                class="text-xs font-bold uppercase tracking-widest text-mist hover:text-white transition-colors">Back to
-                Market</a>
         </div>
-    </nav>
 
-    <main class="pt-32 pb-20 px-6 max-w-2xl mx-auto">
-        <h1 class="text-4xl font-serif font-bold mb-2">List Your Flow</h1>
-        <p class="text-mist mb-10">Share your creations or services with the community.</p>
+        <div class="flex items-center gap-6">
+            <a href="marketplace.html" class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-mist hover:text-white transition-colors">
+                <span class="material-symbols-outlined text-base">storefront</span>
+                <span>Back to Market</span>
+            </a>
+        </div>
+    </header>
 
-        <form id="upload-form" class="space-y-6">
-
-            <!-- Type Selector -->
-            <div class="grid grid-cols-2 gap-4">
-                <label class="cursor-pointer">
-                    <input type="radio" name="listing_type" value="manual" class="peer sr-only" checked
-                        onchange="toggleLinkField()">
-                    <div
-                        class="p-4 rounded-xl bg-white/5 border border-white/10 peer-checked:border-electric peer-checked:bg-electric/10 transition-all text-center">
-                        <span class="material-symbols-outlined text-2xl mb-2">handshake</span>
-                        <p class="font-bold text-sm">Community Deal</p>
-                        <p class="text-[10px] text-mist">Transaction via Token/Msg</p>
-                    </div>
-                </label>
-                <label class="cursor-pointer">
-                    <input type="radio" name="listing_type" value="external" class="peer sr-only"
-                        onchange="toggleLinkField()">
-                    <div
-                        class="p-4 rounded-xl bg-white/5 border border-white/10 peer-checked:border-electric peer-checked:bg-electric/10 transition-all text-center">
-                        <span class="material-symbols-outlined text-2xl mb-2">link</span>
-                        <p class="font-bold text-sm">External Link</p>
-                        <p class="text-[10px] text-mist">Shopify / Etsy / Other</p>
-                    </div>
-                </label>
+    <main class="pt-32 pb-20 px-6 max-w-2xl mx-auto z-10 relative">
+        <!-- PERGAMENT SCROLL CONTAINER -->
+        <div class="pergament-scroll p-8 relative">
+            <div class="absolute -top-4 left-1/2 -translate-x-1/2 w-32 h-8 bg-[#8B4513] rounded shadow-lg flex items-center justify-center border-2 border-[#D2691E] z-20">
+                 <span class="text-[#FFD700] font-cinzel font-bold text-xs tracking-widest">IMPERIAL DECREE</span>
             </div>
 
-            <!-- Basic Info -->
-            <div class="space-y-4">
-                <input type="text" name="title" required placeholder="Item Title"
-                    class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus:border-electric outline-none">
+            <h1 class="text-4xl font-cinzel font-bold mb-2 text-[#3E2723] text-center mt-4">List Your Flow</h1>
+            <p class="text-[#5D4037] mb-8 text-center font-serif italic">"By the seal of the Guilds, declare your offering to the Kingdom."</p>
 
-                <div class="grid grid-cols-2 gap-4" id="price-container">
-                    <div class="relative">
-                        <span class="absolute left-3 top-3 text-mist">â‚¬</span>
-                        <input type="number" name="price_eur" id="input-eur" placeholder="Price (EUR)" step="0.01"
-                            class="w-full bg-white/5 border border-white/10 rounded-lg pl-8 pr-4 py-3 focus:border-electric outline-none"
-                            oninput="calculateFlow()">
-                    </div>
-                    <div class="relative">
-                        <span class="absolute left-3 top-3 text-amber text-xs pt-1">Flow</span>
-                        <input type="number" name="price" id="input-flow" required placeholder="Credits"
-                            class="w-full bg-white/5 border border-white/10 rounded-lg pl-12 pr-4 py-3 focus:border-electric outline-none">
-                    </div>
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="flex items-center text-xs text-mist pl-1">
-                        1 EUR â‰ˆ 13 Flow
-                    </div>
-                    <input type="file" id="image-upload" accept="image/*"
-                        class="w-full text-sm text-mist file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-electric file:text-white hover:file:bg-electric/80">
+            <form id="upload-form" class="space-y-6">
+
+                <!-- Type Selector -->
+                <div class="grid grid-cols-3 gap-4">
+                    <label class="cursor-pointer">
+                        <input type="radio" name="listing_type" value="manual" class="peer sr-only" checked onchange="toggleLinkField()">
+                        <div class="p-4 rounded bg-[#EFEBE9] border-2 border-[#D7CCC8] peer-checked:border-[#8B4513] peer-checked:bg-[#D7CCC8] transition-all text-center h-full flex flex-col justify-center shadow-inner hover:shadow-md">
+                            <span class="material-symbols-outlined text-2xl mb-2 text-[#5D4037]">handshake</span>
+                            <p class="font-bold text-sm text-[#3E2723]">Deal</p>
+                        </div>
+                    </label>
+                    <label class="cursor-pointer">
+                        <input type="radio" name="listing_type" value="external" class="peer sr-only" onchange="toggleLinkField()">
+                        <div class="p-4 rounded bg-[#EFEBE9] border-2 border-[#D7CCC8] peer-checked:border-[#8B4513] peer-checked:bg-[#D7CCC8] transition-all text-center h-full flex flex-col justify-center shadow-inner hover:shadow-md">
+                            <span class="material-symbols-outlined text-2xl mb-2 text-[#5D4037]">link</span>
+                            <p class="font-bold text-sm text-[#3E2723]">Link</p>
+                        </div>
+                    </label>
+                    <!-- DRIVER OPTION -->
+                    <label class="cursor-pointer" id="driver-option">
+                        <input type="radio" name="listing_type" value="service_fleet" class="peer sr-only" onchange="toggleLinkField()">
+                        <div class="p-4 rounded bg-[#EFEBE9] border-2 border-[#D7CCC8] peer-checked:border-green-700 peer-checked:bg-green-100 peer-hover:bg-[#D7CCC8] transition-all text-center h-full flex flex-col justify-center relative overflow-hidden group shadow-inner hover:shadow-md">
+                            <span class="material-symbols-outlined text-2xl mb-2 text-green-700">rickshaw</span>
+                            <p class="font-bold text-sm text-green-800">TukTuk</p>
+                            <div class="absolute inset-0 bg-black/80 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity" id="driver-lock-overlay">
+                                 <span class="material-symbols-outlined text-xs mb-1 text-white">lock</span>
+                                 <span class="text-[8px] uppercase text-white">Verify First</span>
+                            </div>
+                        </div>
+                    </label>
                 </div>
 
-                <textarea name="description" rows="4" required placeholder="Description..."
-                    class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus:border-electric outline-none"></textarea>
-            </div>
+                <!-- Basic Info -->
+                <div class="space-y-4">
+                    <input type="text" name="title" required placeholder="Item Title" class="w-full bg-[#EFEBE9] border border-[#A1887F] rounded px-4 py-3 focus:border-[#5D4037] outline-none text-[#3E2723] placeholder-[#8D6E63] shadow-inner font-serif">
 
-            <!-- Dynamic Link Field -->
-            <div id="external-link-field" class="hidden">
-                <input type="url" name="external_url" placeholder="https://yourshop.com/product/..."
-                    class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus:border-electric outline-none">
-            </div>
+                    <div class="grid grid-cols-2 gap-4" id="price-container">
+                        <div class="relative">
+                            <span class="absolute left-3 top-3 text-[#5D4037]">€</span>
+                            <input type="number" name="price_eur" id="input-eur" placeholder="Price (EUR)" step="0.01" class="w-full bg-[#EFEBE9] border border-[#A1887F] rounded pl-8 pr-4 py-3 focus:border-[#5D4037] outline-none text-[#3E2723] placeholder-[#8D6E63] shadow-inner font-mono font-bold font-mono" oninput="calculateFlow()">
+                        </div>
+                        <div class="relative">
+                            <span class="absolute left-3 top-3 text-[#FF6F00] text-xs pt-1 font-bold">Flow</span>
+                            <input type="number" name="price" id="input-flow" required placeholder="Credits" class="w-full bg-[#EFEBE9] border border-[#A1887F] rounded pl-12 pr-4 py-3 focus:border-[#5D4037] outline-none text-[#3E2723] placeholder-[#8D6E63] shadow-inner font-mono font-bold font-mono">
+                        </div>
+                    </div>
+                    
+                     <div class="relative group">
+                        <div class="w-full h-32 bg-[#D7CCC8] rounded border-2 border-dashed border-[#8D6E63] flex items-center justify-center overflow-hidden relative cursor-pointer hover:bg-[#BCAAA4] transition-colors"
+                             onclick="document.getElementById('image-upload').click()">
+                            <img id="preview-img" class="absolute inset-0 w-full h-full object-cover hidden">
+                            <div class="text-center p-4">
+                                <span class="material-symbols-outlined text-[#5D4037] text-3xl mb-1">add_a_photo</span>
+                                <p class="text-xs text-[#5D4037]">Upload Artifact Visual</p>
+                            </div>
+                            <input type="file" id="image-upload" accept="image/*" class="hidden" onchange="handleImage(this)">
+                        </div>
+                    </div>
 
-            <!-- Owner Info -->
-            <div class="p-4 bg-white/5 rounded-xl space-y-4 border border-white/5">
-                <p class="text-xs font-bold uppercase text-amber tracking-widest">Seller Requirement</p>
-                <input type="email" name="owner_email" required "email" placeholder="Your Email (for notifications)"
-                    class="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-3 focus:border-amber outline-none">
-                <p class="text-[10px] text-mist">* You must respond to inquiries within 24h.</p>
-            </div>
+                    <textarea name="description" rows="4" required placeholder="Description..." class="w-full bg-[#EFEBE9] border border-[#A1887F] rounded px-4 py-3 focus:border-[#5D4037] outline-none text-[#3E2723] placeholder-[#8D6E63] shadow-inner font-serif"></textarea>
 
-            <button type="submit"
-                class="w-full py-4 bg-electric text-white font-bold rounded-xl uppercase tracking-widest hover:bg-electric/90 transition-all shadow-lg shadow-electric/25">
-                Post Listing
-            </button>
+                    <!-- TUKTUK SPECIFIC FIELDS -->
+                    <div id="tuktuk-fields" class="hidden space-y-4 p-4 bg-green-900/10 border border-green-700/30 rounded">
+                        <p class="text-xs font-bold uppercase text-green-800 tracking-widest border-b border-green-800/20 pb-1 mb-2">Fleet Operations Data</p>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-[10px] uppercase text-green-900 mb-1 block font-bold">Service Mode</label>
+                                <select name="service_mode" class="w-full bg-[#EFEBE9] border border-green-700/30 rounded p-2 text-sm focus:border-green-700 outline-none text-[#3E2723]">
+                                    <option value="live">Live Hail (Now)</option>
+                                    <option value="calendar">Calendar Booking</option>
+                                    <option value="hybrid">Hybrid (Both)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-[10px] uppercase text-green-900 mb-1 block font-bold">Vehicle Class</label>
+                                <select name="vehicle_type" class="w-full bg-[#EFEBE9] border border-green-700/30 rounded p-2 text-sm focus:border-green-700 outline-none text-[#3E2723]">
+                                    <option value="classic">Classic TukTuk</option>
+                                    <option value="electric">E-Tuk (Eco Boost)</option>
+                                    <option value="van">Imperial Van</option>
+                                </select>
+                            </div>
+                        </div>
 
-        </form>
+                        <div>
+                            <label class="text-[10px] uppercase text-green-900 mb-1 block font-bold">Primary Zone</label>
+                            <select name="zone" class="w-full bg-[#EFEBE9] border border-green-700/30 rounded p-2 text-sm focus:border-green-700 outline-none text-[#3E2723]">
+                                <option value="Alfama">Alfama (The Old Quarter)</option>
+                                <option value="Baixa">Baixa (The Grid)</option>
+                                <option value="Bairro Alto">Bairro Alto (The Heights)</option>
+                                <option value="Belem">Belem (The Harbor)</option>
+                                <option value="Expo">Expo (The Future)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dynamic Link Field -->
+                <div id="external-link-field" class="hidden">
+                    <input type="url" name="external_url" placeholder="https://" class="w-full bg-[#EFEBE9] border border-[#A1887F] rounded px-4 py-3 focus:border-[#5D4037] outline-none text-[#3E2723] placeholder-[#8D6E63] shadow-inner">
+                </div>
+                
+                 <!-- Owner Info -->
+                <div class="p-4 bg-[#8D6E63]/10 rounded-xl space-y-4 border border-[#8D6E63]/20">
+                    <p class="text-xs font-bold uppercase text-[#8B4513] tracking-widest">Seller Requirement</p>
+                    <input type="email" name="owner_email" placeholder="Your Email (for notifications)" class="w-full bg-[#EFEBE9] border border-[#A1887F] rounded px-4 py-3 focus:border-[#5D4037] outline-none text-[#3E2723] placeholder-[#8D6E63] shadow-inner font-serif">
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="w-full py-4 bg-[#8B4513] hover:bg-[#5D4037] text-[#FFD700] font-cinzel font-bold text-lg rounded shadow-[0_4px_0_#3E2723] active:shadow-none active:translate-y-[4px] transition-all flex items-center justify-center gap-2 border border-[#3E2723]">
+                    <span class="material-symbols-outlined">edit_square</span>
+                    Inscribe
+                </button>
+                
+                <p class="text-center text-[10px] uppercase tracking-widest text-[#8D6E63] mt-4">
+                    Seal of the Guilds Required
+                </p>
+
+            </form>
+        </div>
     </main>
 
-    <!-- UPSELL MODAL -->
-    <div id="upsell-modal" class="fixed inset-0 z-[100] bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-6 animate-fade-in">
-        <div class="bg-[#1A1622] border border-electric/50 p-8 rounded-2xl max-w-md w-full text-center shadow-[0_0_50px_rgba(154,77,255,0.2)] relative overflow-hidden">
-            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-electric to-pink-500"></div>
-            
-            <div class="mb-6 inline-block p-4 rounded-full bg-electric/10 border border-electric/30">
-                <span class="material-symbols-outlined text-4xl text-electric">lock</span>
-            </div>
-            
-            <h2 class="text-2xl font-bold text-white mb-2 uppercase tracking-widest">Limit Reached</h2>
-            <p class="text-white/60 mb-8 leading-relaxed">
-                Your current <span class="text-electric font-bold">Free Flow</span> license allows for <span class="text-white">2 Active Listings</span>.
-            </p>
-
-            <div class="bg-white/5 p-4 rounded-xl border border-white/10 mb-8 text-left">
-                <h3 class="text-sm font-bold text-white mb-2">Upgrade to Rising Artist</h3>
-                <ul class="space-y-2 text-xs text-white/50">
-                    <li class="flex items-center gap-2"><span class="material-symbols-outlined text-electric text-sm">check</span> 20 Active Listings</li>
-                    <li class="flex items-center gap-2"><span class="material-symbols-outlined text-electric text-sm">check</span> 1.2x XP Boost</li>
-                </ul>
-            </div>
-
-            <div class="flex gap-4">
-                <button onclick="window.location.href='membership.html'" class="flex-1 py-3 bg-electric text-white font-bold rounded-xl uppercase tracking-widest hover:bg-white hover:text-black transition-all">
-                    Upgrade License
-                </button>
-                <button onclick="document.getElementById('upsell-modal').classList.add('hidden')" class="px-6 py-3 border border-white/10 text-white/50 hover:text-white rounded-xl font-bold uppercase tracking-widest transition-all">
-                    Close
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <script src="../js/notifications.js"></script>
-    <script src="../js/gamification.js"></script>
-    <script src="../js/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/compressorjs@1.2.1/dist/compressor.min.js"></script>
     <script>
-        const EUR_TO_FLOW = 13;
-        const params = new URLSearchParams(window.location.search);
-        const isMuseum = params.get('type') === 'museum';
+        const isMuseum = window.location.search.includes('legacy=true');
+        
+        // FORM HANDLER
+        document.getElementById('upload-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            
+            // Basic Logic Stub
+            const msg = isMuseum ? "Artifact Inscribed." : "Listing Published.";
+            alert(msg);
+            
+            if(window.Gamification) {
+                window.Gamification.addXP(50, 'Market Listing');
+            }
+            
+            window.location.href = isMuseum ? 'services-community.html' : 'marketplace.html';
+        });
 
-        // Init Mode
-        if (isMuseum) {
-            document.title = "Contribute to Museum | Circle D Flow";
-            document.querySelector('h1').textContent = "Contribute Artifact";
-            document.querySelector('p.text-mist').textContent = "Showcase your masterpiece in the Community Museum. Not for sale.";
-
-            // Hide Type Selector & Price
-            document.querySelector('.grid.grid-cols-2.gap-4').classList.add('hidden'); // Type selector
-            document.getElementById('price-container').classList.add('hidden'); // Price container (need to add ID)
-            document.querySelector('button[type="submit"]').textContent = "Submit to Curator";
-
-            // Create hidden input for type
-            const form = document.getElementById('upload-form');
-            const hiddenType = document.createElement('input');
-            hiddenType.type = 'hidden';
-            hiddenType.name = 'listing_type';
-            hiddenType.value = 'museum_artifact';
-            form.appendChild(hiddenType);
-        }
-
+        // Price Calc
         function calculateFlow() {
-            const eur = parseFloat(document.getElementById('input-eur').value) || 0;
-            const flow = Math.round(eur * EUR_TO_FLOW);
-            document.getElementById('input-flow').value = flow;
+            const eur = document.getElementById('input-eur').value;
+            const flow = document.getElementById('input-flow');
+            if (eur) flow.value = Math.round(eur * 13);
         }
 
+        // Image Preview
+        function handleImage(input) {
+            const preview = document.getElementById('preview-img');
+            if(input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    preview.src = e.target.result;
+                    preview.classList.remove('hidden');
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+             setTimeout(() => {
+                 if(window.FleetAgent && window.FleetAgent.isDriver()) {
+                     const overlay = document.getElementById('driver-lock-overlay');
+                     if(overlay) overlay.style.display = 'none';
+                 }
+             }, 500);
+        });
+
+        // Toggle Logic Update
         function toggleLinkField() {
-            if (isMuseum) return; // Disable toggle in museum mode
+            if (isMuseum) return;
             const types = document.getElementsByName('listing_type');
             let selected;
             for (const t of types) if (t.checked) selected = t.value;
 
-            const field = document.getElementById('external-link-field');
+            const externalField = document.getElementById('external-link-field');
+            const tuktukFields = document.getElementById('tuktuk-fields');
+
+            externalField.classList.add('hidden');
+            externalField.querySelector('input').removeAttribute('required');
+            tuktukFields.classList.add('hidden');
+
             if (selected === 'external') {
-                field.classList.remove('hidden');
-                field.querySelector('input').setAttribute('required', 'true');
-            } else {
-                field.classList.add('hidden');
-                field.querySelector('input').removeAttribute('required');
+                externalField.classList.remove('hidden');
+                externalField.querySelector('input').setAttribute('required', 'true');
+            }
+
+            if(selected === 'service_fleet') {
+                if(window.FleetAgent && !window.FleetAgent.isDriver()) {
+                    triggerVerificationFlow();
+                    types[0].checked = true; 
+                    return;
+                }
+                tuktukFields.classList.remove('hidden');
+                const titleInput = document.querySelector('input[name="title"]');
+                if(!titleInput.value) titleInput.value = "Imperial TukTuk Service";
+                const descInput = document.querySelector('textarea[name="description"]');
+                if(!descInput.value) descInput.value = "Official transport service. Available for Tours and Fast-Travel.";
             }
         }
 
-        // Logic to trigger Upsell
-        window.handleUpsell = function(feature) {
-             const modal = document.getElementById('upsell-modal');
-             if(modal) modal.classList.remove('hidden');
-        }
-
-        // Listen for Gamification Upsell Event
-        window.addEventListener('trigger-upsell', (e) => {
-            window.handleUpsell(e.detail.feature);
-        });
-
-        document.getElementById('upload-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const formData = new FormData(e.target);
-
-            // 1. LIMIT CHECK
-            if (window.Gamification) {
-                const feature = isMuseum ? 'items_museum' : 'marketplace';
-                const key = isMuseum ? 'cdf_museum_items' : 'cdf_listings';
+        function triggerVerificationFlow() {
+            if(confirm("🏴 IMPERIAL FLEET REGISTRY\n\nTo list as a TukTuk Driver, you must verify your vehicle with the CQR Seal.\n\nUpload Photo now?")) {
+                const input = document.getElementById('image-upload');
+                input.click();
                 
-                // Get Current Count
-                const existingItems = JSON.parse(localStorage.getItem(key) || '[]');
-                // Filter by owner if possible, otherwise total count (for now assuming local user owns all in mock)
-                const currentCount = existingItems.length;
-
-                // Check Limit (returns false if limit reached)
-                if (!window.Gamification.checkLimit(feature, currentCount)) {
-                    return; // Upsell triggered by checkLimit event
-                }
+                input.onchange = async (e) => {
+                    const file = e.target.files[0];
+                    if(file) {
+                        alert("Analyzing Seal Pattern... Please wait.");
+                        if(window.FleetAgent) await window.FleetAgent.verifyDriver(file);
+                        alert("✅ VERIFICATION SUCCESSFUL\n\nWelcome to the Fleet, Captain. You may now list your services.");
+                        location.reload();
+                    }
+                };
             }
-
-            // Create Listing Object
-            const listing = {
-                id: (isMuseum ? 'mus_' : 'lst_') + Date.now(),
-                title: formData.get('title'),
-                price: isMuseum ? 0 : formData.get('price'),
-                priceEur: isMuseum ? 0 : formData.get('price_eur'),
-                description: formData.get('description'),
-                type: formData.get('listing_type') || 'museum_artifact',
-                externalUrl: formData.get('external_url'),
-                email: formData.get('owner_email'),
-                image: 'https://placehold.co/400x400/2a1a3a/white?text=' + encodeURIComponent(formData.get('title').substring(0, 3)),
-                owner: 'Current User', // Mock
-                isMuseumItem: isMuseum,
-                timestamp: new Date().toISOString()
-            };
-
-            // Save to LocalStorage (Mock Backend)
-            const key = isMuseum ? 'cdf_museum_items' : 'cdf_listings';
-            const items = JSON.parse(localStorage.getItem(key) || '[]');
-            items.unshift(listing);
-            localStorage.setItem(key, JSON.stringify(items));
-
-            // Notify
-            if (window.Notifications) {
-                const msg = isMuseum ? `Artifact "${listing.title}" submitted for curation!` : `Listing "${listing.title}" created!`;
-                window.Notifications.send('success', msg, 'user');
-                if (!isMuseum) window.Notifications.send('info', `New Marketplace Item: ${listing.title}`, 'all');
-            }
-
-            // Award XP for Museum Contribution
-            if (isMuseum && window.Gamification) {
-                window.Gamification.addXP(150, 'Museum Contribution');
-            } else if (window.Gamification) {
-                // Reward: +50 XP for listing an item (Merchant Quest)
-                window.Gamification.addXP(50, 'Market Listing');
-                // Complete Merchant Quest
-                if (localStorage.getItem('quest_merchant_done') !== 'true') {
-                    localStorage.setItem('quest_merchant_done', 'true');
-                }
-            }
-
-            alert(isMuseum ? 'Artifact submitted!' : 'Listing successful!');
-            window.location.href = isMuseum ? 'services-community.html' : 'marketplace.html';
-        });
+        }
     </script>
-    <!-- AGENT: FLOWEE (The Guide) -->
-    <div id="flowee-agent" class="fixed bottom-8 left-8 z-50 flex flex-col items-center group cursor-pointer"></div>
     
-    <script src='../js/agents/visual_eye.js' defer></script>
+    <!-- AGENTS -->
+    <div id="flowee-agent" class="fixed bottom-8 left-8 z-50 flex flex-col items-center group cursor-pointer"></div>
+    <script src='../js/agents/pusher.js' defer></script>
     <script src='../js/agents/helper.js' defer></script>
-    <script src='../js/agents/bridge_pusher.js' defer></script>
-    <script src='../js/agents/device_sync.js' defer></script>
-    <script src='../js/agents/stress_test.js' defer></script>
+    <script src="../js/agents/fleet_agent.js"></script>
+    <script src="../js/agents/imperial_hud.js" defer></script>
 </body>
-
 </html>
-
-

@@ -1,0 +1,120 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The High Palast | Circle D Flow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <style>
+        :root {
+            --haki-gold: #d4af37;
+            --benin-bronze: #cd7f32;
+            --obsidian: #0a0a0a;
+        }
+        body {
+            background-color: var(--obsidian);
+            color: #e0e0e0;
+            font-family: 'Space Mono', monospace;
+            background-image: url('../assets/images/map_texture_dark.png');
+            background-blend-mode: overlay;
+            overflow: hidden; /* Prevent scroll on Hub */
+        }
+        .font-cinzel { font-family: 'Cinzel', serif; }
+
+        /* PORTAL CARDS */
+        .portal-card {
+            transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            cursor: pointer;
+            filter: grayscale(100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .portal-card:hover {
+            filter: grayscale(0%);
+            transform: scale(1.05);
+            z-index: 10;
+            box-shadow: 0 0 50px rgba(212, 175, 55, 0.3);
+        }
+        .portal-card::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: linear-gradient(to top, black, transparent);
+            opacity: 0.8; transition: opacity 0.5s;
+        }
+        .portal-card:hover::before { opacity: 0.4; }
+
+        /* Portal Specifics */
+        .portal-museum { background: url('https://images.unsplash.com/photo-1564399580075-5dfe19c205f9?q=80&w=2670&auto=format&fit=crop') center/cover; }
+        .portal-library { background: url('https://images.unsplash.com/photo-1507842217343-583bb7260b66?q=80&w=2790&auto=format&fit=crop') center/cover; }
+        .portal-treasury { background: url('https://images.unsplash.com/photo-1627932688435-098586071060?q=80&w=2574&auto=format&fit=crop') center/cover; }
+
+        /* Center Orb */
+        .master-core {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 150px; height: 150px;
+            background: radial-gradient(circle, var(--haki-gold), transparent 70%);
+            border-radius: 50%;
+            display: flex; items-center; justify-content: center;
+            z-index: 20;
+            animation: corePulse 4s infinite;
+        }
+        @keyframes corePulse {
+            0%, 100% { box-shadow: 0 0 20px var(--haki-gold); opacity: 0.8; }
+            50% { box-shadow: 0 0 80px var(--haki-gold); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="h-screen flex items-center justify-center">
+
+    <!-- THE HIGH PALAST HUB -->
+    <main class="relative w-full h-full grid grid-cols-1 md:grid-cols-3 gap-0">
+        
+        <!-- 1. MUSEUM (Left) -->
+        <div class="portal-card portal-museum flex items-center justify-center group" onclick="PalastAgent.beamToRoom('museum')">
+            <div class="relative z-10 text-center transform group-hover:-translate-y-4 transition-transform">
+                <span class="material-symbols-outlined text-6xl text-white mb-4 group-hover:text-gold shadow-black drop-shadow-lg">temple_hindu</span>
+                <h2 class="text-4xl font-cinzel font-bold text-white tracking-widest group-hover:text-gold transition-colors">The Museum</h2>
+                <p class="text-xs text-white/60 mt-2 font-mono opacity-0 group-hover:opacity-100 transition-opacity">Sanctuary of Artifacts</p>
+            </div>
+        </div>
+
+        <!-- 2. LIBRARY (Middle - Hidden behind core visually but accessible) -->
+        <div class="portal-card portal-library flex items-center justify-center group border-x border-white/10" onclick="PalastAgent.beamToRoom('library')">
+            <div class="relative z-10 text-center transform group-hover:-translate-y-4 transition-transform mt-32 md:mt-0">
+                <span class="material-symbols-outlined text-6xl text-white mb-4 group-hover:text-purple-400 drop-shadow-lg">auto_stories</span>
+                <h2 class="text-4xl font-cinzel font-bold text-white tracking-widest group-hover:text-purple-400 transition-colors">The Library</h2>
+                <p class="text-xs text-white/60 mt-2 font-mono opacity-0 group-hover:opacity-100 transition-opacity">Archive of Wisdom</p>
+            </div>
+        </div>
+
+        <!-- 3. TREASURY (Right) -->
+        <div class="portal-card portal-treasury flex items-center justify-center group" onclick="PalastAgent.beamToRoom('treasury')">
+            <div class="relative z-10 text-center transform group-hover:-translate-y-4 transition-transform">
+                <span class="material-symbols-outlined text-6xl text-white mb-4 group-hover:text-red-500 drop-shadow-lg">account_balance</span>
+                <h2 class="text-4xl font-cinzel font-bold text-white tracking-widest group-hover:text-red-500 transition-colors">The Treasury</h2>
+                <p class="text-xs text-white/60 mt-2 font-mono opacity-0 group-hover:opacity-100 transition-opacity">Forge of Wealth</p>
+            </div>
+        </div>
+
+        <!-- MASTER CORE (Center Overlay) -->
+        <div class="master-core pointer-events-none">
+            <img src="../Assets/images/logo.png" class="w-20 h-20 opacity-80 animate-spin-slow" style="animation-duration: 20s;">
+        </div>
+
+        <!-- FLOWEE (Guide) -->
+        <div id="flowee-agent" class="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center group cursor-pointer" onclick="window.Flowee.talk(true, 'Welcome home, Sovereign. Where shall we warp?')"></div>
+
+    </main>
+
+    <!-- AGENTS -->
+    <script src="../js/agents/palast_agent.js"></script>
+    <script src="../js/agents/flowee.js"></script>
+    <script src="../js/agents/helper.js"></script>
+    <script src="../js/agents/pusher.js"></script>
+    <script src="../js/agents/imperial_hud.js"></script>
+
+</body>
+</html>

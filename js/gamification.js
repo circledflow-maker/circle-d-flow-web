@@ -32,16 +32,24 @@ class GamificationEngine {
 
         // Configuration
         this.LEVEL_THRESHOLDS = {
-            2: 100,
-            3: 300,
-            4: 600,
-            5: 1000,
-            6: 1500,
-            7: 2200,
-            8: 3000
+            2: 500,    // Path of Initiate Step 2
+            3: 1220,   // Tournament Ready
+            4: 2500,
+            5: 5000,
+            6: 10000,
+            7: 25000,
+            8: 50000
         };
 
         this.XP_SOURCES = {
+            // Path of the Initiate Rewards
+            TUTORIAL_IDENTITY: 300,
+            TUTORIAL_QUEST: 250,
+            TUTORIAL_MARKET: 200,
+            TUTORIAL_KNOWLEDGE: 350,
+            TUTORIAL_BATTLE: 150,
+            
+            // Existing Sources
             SETUP_PROFILE: 100,
             TICKET_BUY: 50,
             MARKET_BUY: 30,

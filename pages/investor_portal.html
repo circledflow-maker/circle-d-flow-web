@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invest in Taste - African Queen Kitchen</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+
+    <style>
+        :root {
+            --aq-gold: #D4AF37;
+            --aq-black: #1A1A1A;
+            --aq-ivory: #F5F5F5;
+        }
+        body {
+            background-color: var(--aq-black);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--aq-ivory);
+            background-image: url('https://www.transparenttextures.com/patterns/cubes.png');
+        }
+        .font-serif { font-family: 'Playfair Display', serif; }
+        .gold-grad {
+            background: linear-gradient(135deg, #FFD700, #D4AF37);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Nav -->
+    <nav class="p-6 flex justify-between items-center border-b border-white/10 bg-black/50 backdrop-blur">
+        <a href="african-queen-kitchen.html" class="flex items-center gap-2 text-white/70 hover:text-white transition-colors">
+            <span class="material-symbols-outlined">arrow_back</span>
+            <span class="text-xs uppercase tracking-widest font-bold">Return to Kitchen</span>
+        </a>
+        <div class="text-xl font-serif font-bold text-[#D4AF37]">AQK <span class="text-white/50 text-xs font-sans tracking-wide">INVESTOR RELATIONS</span></div>
+    </nav>
+
+    <!-- Hero -->
+    <header class="py-20 text-center px-6">
+        <h1 class="text-5xl md:text-7xl font-serif font-bold mb-6"><span class="gold-grad">Fuel the Flavor.</span><br>Own the Legend.</h1>
+        <p class="text-white/60 max-w-2xl mx-auto text-lg mb-10">
+            African Queen Kitchen is expanding. From a pop-up sensation to a culinary empire. 
+            Join us as a partner and share in the growth of the Ivory-Boondock taste.
+        </p>
+        <div class="flex gap-4 justify-center">
+            <button onclick="scrollToTiers()" class="px-8 py-3 bg-[#D4AF37] text-black font-bold rounded-full hover:bg-white transition-colors">
+                View Opportunities
+            </button>
+        </div>
+    </header>
+
+    <!-- Metrics -->
+    <section class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 px-6 mb-20">
+        <div class="bg-white/5 border border-white/10 p-8 rounded-2xl text-center">
+            <div class="text-4xl font-bold text-[#D4AF37] mb-2">+1,200%</div>
+            <div class="text-xs uppercase tracking-widest text-white/50">Community Growth (Q4)</div>
+        </div>
+        <div class="bg-white/5 border border-white/10 p-8 rounded-2xl text-center">
+            <div class="text-4xl font-bold text-[#D4AF37] mb-2">4.9/5</div>
+            <div class="text-xs uppercase tracking-widest text-white/50">Taste Rating</div>
+        </div>
+        <div class="bg-white/5 border border-white/10 p-8 rounded-2xl text-center">
+            <div class="text-4xl font-bold text-[#D4AF37] mb-2">Sold Out</div>
+            <div class="text-xs uppercase tracking-widest text-white/50">Every Event</div>
+        </div>
+    </section>
+
+    <!-- Tiers -->
+    <section id="tiers" class="max-w-6xl mx-auto px-6 mb-20">
+        <h2 class="text-3xl font-serif font-bold text-center mb-12">Partnership Tiers</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Seed -->
+            <div class="bg-[#1A1A1A] border border-white/10 p-8 rounded-2xl relative overflow-hidden card-hover transition-all group">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gray-500"></div>
+                <h3 class="text-2xl font-bold mb-2">The Seed</h3>
+                <div class="text-3xl font-serif text-gray-400 mb-6">500€</div>
+                <ul class="space-y-3 text-sm text-white/70 mb-8">
+                    <li class="flex gap-2"><span class="material-symbols-outlined text-green-500 text-sm">check</span> Exclusive Updates</li>
+                    <li class="flex gap-2"><span class="material-symbols-outlined text-green-500 text-sm">check</span> Name on 'Founders Wall'</li>
+                    <li class="flex gap-2"><span class="material-symbols-outlined text-green-500 text-sm">check</span> 5% Discount for Life</li>
+                </ul>
+                <button onclick="contactInvest('Seed')" class="w-full py-3 border border-white/20 hover:bg-white hover:text-black transition-colors rounded-lg font-bold uppercase text-xs">Inquire</button>
+            </div>
+
+            <!-- Growth (Featured) -->
+            <div class="bg-[#222] border border-[#D4AF37] p-8 rounded-2xl relative overflow-hidden transform md:-translate-y-4 shadow-2xl shadow-amber-900/20 card-hover transition-all">
+                <div class="absolute top-0 left-0 w-full h-1 bg-[#D4AF37]"></div>
+                <div class="absolute top-4 right-4 text-[10px] font-bold bg-[#D4AF37] text-black px-2 py-1 rounded">POPULAR</div>
+                <h3 class="text-2xl font-bold mb-2 text-[#D4AF37]">The Root</h3>
+                <div class="text-3xl font-serif text-white mb-6">2,500€</div>
+                <ul class="space-y-3 text-sm text-white/80 mb-8">
+                    <li class="flex gap-2"><span class="material-symbols-outlined text-[#D4AF37] text-sm">verified</span> All Seed Benefits</li>
+                    <li class="flex gap-2"><span class="material-symbols-outlined text-[#D4AF37] text-sm">verified</span> Private Tasting Event</li>
+                    <li class="flex gap-2"><span class="material-symbols-outlined text-[#D4AF37] text-sm">verified</span> 10% Profit Share (Pop-up)</li>
+                </ul>
+                <button onclick="contactInvest('Root')" class="w-full py-3 bg-[#D4AF37] text-black hover:bg-white transition-colors rounded-lg font-bold uppercase text-xs">Secure Spot</button>
+            </div>
+
+            <!-- Harvest -->
+            <div class="bg-[#1A1A1A] border border-white/10 p-8 rounded-2xl relative overflow-hidden card-hover transition-all">
+                <div class="absolute top-0 left-0 w-full h-1 bg-white"></div>
+                <h3 class="text-2xl font-bold mb-2">The Harvest</h3>
+                <div class="text-3xl font-serif text-white mb-6">10,000€+</div>
+                <ul class="space-y-3 text-sm text-white/70 mb-8">
+                    <li class="flex gap-2"><span class="material-symbols-outlined text-green-500 text-sm">check</span> Equity Partner Status</li>
+                    <li class="flex gap-2"><span class="material-symbols-outlined text-green-500 text-sm">check</span> Strategic Board Seat</li>
+                    <li class="flex gap-2"><span class="material-symbols-outlined text-green-500 text-sm">check</span> Franchise Rights First Refusal</li>
+                </ul>
+                <button onclick="contactInvest('Harvest')" class="w-full py-3 border border-white/20 hover:bg-white hover:text-black transition-colors rounded-lg font-bold uppercase text-xs">Talk to Founder</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="mt-auto border-t border-white/10 py-12 text-center text-white/30 text-xs">
+        <p>&copy; 2026 African Queen Kitchen. Vision Empire.</p>
+    </footer>
+
+    <!-- Agents -->
+    <script src="../js/agents/helper.js"></script>
+    <script src="../js/agents/pusher.js"></script>
+    <script>
+        function scrollToTiers() {
+            document.getElementById('tiers').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function contactInvest(tier) {
+            // Simulate contact
+            if(window.Pusher) {
+                window.Pusher.showToast(`Interest registered for ${tier} Tier.`, 'success');
+                window.Pusher.broadcast('INVESTOR_INTEREST', { tier: tier });
+            } else {
+                alert(`Thank you for your interest in the ${tier} Tier. We will contact you shortly.`);
+            }
+        }
+    </script>
+</body>
+</html>

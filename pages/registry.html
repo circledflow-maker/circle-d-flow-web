@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Universal Registry | Circle D Flow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="../css/styles.css">
+    <style>
+        body {
+            background-color: #050505;
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(205, 127, 50, 0.1), transparent 70%),
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 40px 40px, 40px 40px;
+            color: white;
+            min-height: 100vh;
+        }
+        
+        .registry-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            transition: all 0.4s ease;
+        }
+
+        .registry-card:hover {
+            border-color: #CD7F32;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px -10px rgba(205,127,50,0.3);
+        }
+
+        .gold-glow {
+            text-shadow: 0 0 15px rgba(205, 127, 50, 0.5);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAV -->
+    <nav class="fixed top-0 w-full z-50 bg-black/80 backdrop-blur-md border-b border-white/5 h-16 flex items-center justify-between px-6">
+        <a href="dashboard.html" class="flex items-center gap-2 text-white/70 hover:text-white transition-colors">
+            <span class="material-symbols-outlined">arrow_back</span>
+            <span class="text-xs font-bold uppercase tracking-widest">Dashboard</span>
+        </a>
+        <div class="flex flex-col items-center">
+            <h1 class="font-serif font-bold text-xl tracking-widest text-[#CD7F32] gold-glow">THE REGISTRY</h1>
+            <span class="text-[9px] uppercase tracking-[0.3em] text-white/30">Vault of Creations</span>
+        </div>
+        <div class="flex items-center gap-4">
+             <div class="text-right hidden md:block">
+                <div class="text-[9px] text-white/50 uppercase tracking-widest">Portfolio Value</div>
+                <div class="text-[#CD7F32] font-mono" id="portfolio-value">0 FC</div>
+            </div>
+             <a href="marketplace.html" class="flex items-center gap-2 px-3 py-1 bg-[#CD7F32]/10 border border-[#CD7F32] text-[#CD7F32] text-[10px] font-bold uppercase rounded hover:bg-[#CD7F32] hover:text-black transition-all">
+                <span class="material-symbols-outlined text-sm">hammer</span>
+                <span>Forge New</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- MAIN GRID -->
+    <main class="pt-24 pb-20 px-6 max-w-7xl mx-auto">
+        
+        <!-- EMPTY STATE -->
+        <div id="empty-state" class="hidden flex flex-col items-center justify-center py-20 opacity-50">
+            <span class="material-symbols-outlined text-6xl text-white/20 mb-4">history_edu</span>
+            <h2 class="text-xl font-serif text-white/50">The Books are Empty</h2>
+            <p class="text-sm text-white/30 mt-2">Visit the Grand Bazaar to forge your first legacy.</p>
+        </div>
+
+        <!-- GRID -->
+        <div id="registry-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- CARDS INJECTED HERE -->
+        </div>
+
+    </main>
+
+    <!-- SCRIPTS -->
+    <script src="../js/agents/registry_agent.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const grid = document.getElementById('registry-grid');
+            const emptyState = document.getElementById('empty-state');
+            const valueDisplay = document.getElementById('portfolio-value');
+
+            if(window.RegistryAgent) {
+                const artifacts = window.RegistryAgent.getArtifacts();
+                const totalValue = window.RegistryAgent.getPortfolioValue();
+
+                // Update Value
+                valueDisplay.innerText = `${totalValue.toLocaleString()} FC`;
+
+                if(artifacts.length === 0) {
+                    emptyState.classList.remove('hidden');
+                } else {
+                    // Render Reverse (Newest First)
+                    artifacts.slice().reverse().forEach((item, index) => {
+                        const card = document.createElement('div');
+                        card.className = "registry-card rounded-xl overflow-hidden group opacity-0 translate-y-4";
+                        card.style.animation = `fadeInUp 0.6s ease forwards ${index * 100}ms`;
+
+                        const date = new Date(item.timestamp).toLocaleDateString();
+                        
+                        card.innerHTML = `
+                            <div class="h-48 bg-black/50 relative overflow-hidden">
+                                <img src="${item.visual}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-80 group-hover:opacity-100">
+                                <div class="absolute top-2 right-2 bg-black/60 backdrop-blur px-2 py-1 rounded text-[10px] text-[#CD7F32] border border-[#CD7F32]/30">
+                                    ${item.guild}
+                                </div>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="font-serif font-bold text-lg text-white mb-1 group-hover:text-[#CD7F32] transition-colors">${item.name}</h3>
+                                <div class="flex justify-between items-center text-xs text-white/40 mb-4 border-b border-white/5 pb-2">
+                                    <span>${date}</span>
+                                    <span>${item.id}</span>
+                                </div>
+                                
+                                <div class="flex items-center gap-4 mb-4">
+                                     <div class="flex-1">
+                                        <div class="text-[9px] uppercase tracking-widest text-[#CD7F32]">Valuation</div>
+                                        <div class="font-mono text-sm">${item.price.flow} FC</div>
+                                     </div>
+                                     <div class="h-8 w-[1px] bg-white/10"></div>
+                                     <div class="flex-1">
+                                        <div class="text-[9px] uppercase tracking-widest text-blue-400">Market</div>
+                                        <div class="font-mono text-sm">€${item.price.euro}</div>
+                                     </div>
+                                </div>
+
+                                <div class="bg-white/5 rounded p-2 flex items-center justify-between">
+                                    <div class="flex items-center gap-2 text-xs text-white/50">
+                                        <span class="material-symbols-outlined text-sm">graphic_eq</span>
+                                        <span>${item.voiceMemo === 'Attached (WAV)' ? 'Voice Seal Active' : 'No Audio'}</span>
+                                    </div>
+                                    ${item.voiceMemo === 'Attached (WAV)' ? '<button class="text-[#CD7F32] hover:text-white material-symbols-outlined text-sm" onclick="alert(\'Playing Audio Seal...\')">play_circle</button>' : ''}
+                                </div>
+                            </div>
+                        `;
+                        grid.appendChild(card);
+                    });
+                }
+            }
+
+            // Simple Fade Animation
+            const style = document.createElement('style');
+            style.innerHTML = `
+                @keyframes fadeInUp {
+                    to { opacity: 1; transform: translateY(0); }
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+
+    <!-- AUTOMATED AGENT INJECTION -->
+    <script src="../js/agents/global_ticker.js" defer></script>
+    <script src="../js/agents/helper.js" defer></script>
+    <script src="../js/agents/pusher.js" defer></script>
+    <script src="../js/agents/horizon_bar.js" defer></script>
+
+    <!-- AUTOMATED AGENT INJECTION -->
+
+    <!-- AUTOMATED AGENT INJECTION -->
+    <script src="../js/agents/imperial_hud.js" defer></script>
+</body>
+</html>

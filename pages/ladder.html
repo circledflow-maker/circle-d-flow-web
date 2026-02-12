@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Tower of Sovereigns | Circle D Flow</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Space+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/styles.css">
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#8A2BE2",
+                        "haki-gold": "#D4AF37",
+                        "bleach-white": "#F8F8F8",
+                        "bleach-black": "#050505",
+                        "shinsu-blue": "#00d4ff",
+                    },
+                    fontFamily: {
+                        "display": ["Cinzel", "serif"],
+                        "mono": ["Space Mono", "monospace"]
+                    },
+                    animation: {
+                        "shimmer": "shimmer 2s infinite linear",
+                        "pulse-slow": "pulse 3s infinite",
+                        "float": "float 6s ease-in-out infinite",
+                    },
+                    keyframes: {
+                        shimmer: {
+                            "0%": { backgroundPosition: "-1000px 0" },
+                            "100%": { backgroundPosition: "1000px 0" }
+                        },
+                        float: {
+                            "0%, 100%": { transform: "translateY(0)" },
+                            "50%": { transform: "translateY(-20px)" }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* SCROLLBAR HIDE */
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* REIATSU AURA */
+        .reiatsu-aura {
+            position: absolute;
+            inset: -2px;
+            border-radius: inherit;
+            background: linear-gradient(45deg, gold, transparent, gold);
+            z-index: -1;
+            filter: blur(10px);
+            opacity: 0.5;
+            animation: pulse 2s infinite;
+        }
+
+        /* SHINSU FLOW BACKGROUND */
+        .shinsu-bg {
+            background-image: radial-gradient(circle, rgba(0,212,255,0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        /* BLEACH STYLE TEXT */
+        .bleach-title {
+            text-shadow: 2px 2px 0px #000, -1px -1px 0 #fff;
+        }
+        
+        /* TIER STYLES */
+        .tier-god {
+            background: linear-gradient(to bottom, #eaeaea, #ffffff);
+            color: black;
+            border-left: 4px solid #D4AF37;
+        }
+        .tier-commander {
+            background: rgba(20, 20, 20, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        .tier-voyager {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px dashed rgba(255, 255, 255, 0.1);
+            color: gray;
+        }
+
+        /* ASCENSION OVERLAY (Hidden by default) */
+        #ascension-overlay {
+            display: none;
+            backdrop-filter: blur(20px);
+        }
+    </style>
+</head>
+<body class="bg-bleach-black text-white min-h-screen font-display overflow-x-hidden selection:bg-haki-gold selection:text-black">
+
+    <!-- HORIZON BAR -->
+    <div id="horizon-bar-root"></div>
+
+    <!-- BACKGROUND ATMOSPHERE -->
+    <div class="fixed inset-0 z-0 pointer-events-none shinsu-bg opacity-20"></div>
+    <div class="fixed inset-0 z-0 pointer-events-none bg-gradient-to-t from-black via-transparent to-black/80"></div>
+
+    <!-- NAVIGATION -->
+    <nav class="fixed top-24 w-full z-40 px-6 flex justify-between items-center pointer-events-none">
+        <a href="fivedoors.html" class="pointer-events-auto flex items-center gap-3 text-white/50 hover:text-haki-gold transition-colors group bg-black/50 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 hover:border-haki-gold">
+            <span class="material-symbols-outlined group-hover:-translate-x-1 transition-transform">arrow_upward</span>
+            <span class="uppercase tracking-[0.2em] text-[10px] font-mono">Exit The Tower</span>
+        </a>
+        <div class="font-mono text-xs text-haki-gold/50 uppercase tracking-widest bg-black/50 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">Floor: <span id="current-floor" class="text-white font-bold">0</span></div>
+    </nav>
+
+    <!-- ASCENSION OVERLAY -->
+    <div id="ascension-overlay" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 text-white">
+        <div class="text-center">
+            <h1 class="text-9xl font-black mb-4 animate-ping text-shinsu-blue">ASCENSION</h1>
+            <p class="text-2xl font-mono tracking-[0.5em] text-white/70">NEW FLOOR REACHED</p>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <main class="relative z-10 container mx-auto px-4 pt-40 pb-24 max-w-5xl">
+
+        <!-- HEADER -->
+        <header class="text-center mb-16 relative">
+            <h1 class="text-6xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-b from-haki-gold to-yellow-800 mb-4 bleach-title tracking-tighter drop-shadow-[0_2px_10px_rgba(212,175,55,0.5)]">
+                THE LADDER
+            </h1>
+            <p class="font-mono text-white/60 text-xs uppercase tracking-[0.4em]">The Tower of Sovereigns</p>
+            
+            <!-- REWARDS TIMER -->
+            <div class="mt-6 flex justify-center items-center gap-4 animate-pulse-slow">
+                <span class="text-haki-gold text-[10px] uppercase tracking-widest border border-haki-gold/30 px-3 py-1 rounded bg-haki-gold/5">Weekly Rewards: 2D 14H 33M</span>
+            </div>
+
+            <!-- PROTOCOL 50 -->
+            <div class="mt-8 max-w-2xl mx-auto border-l-2 border-haki-gold pl-6 text-left bg-gradient-to-r from-white/5 to-transparent p-4 rounded-r-lg">
+                <p class="text-[10px] font-mono text-haki-gold uppercase tracking-widest mb-2">Protocol 50: Vessel Capacity</p>
+                <p class="text-gray-400 text-sm italic">"We do not climb to conquer. We climb to expand. The higher the floor, the greater the pressure. Can your vessel hold the weight of the crown?"</p>
+            </div>
+
+            <!-- FILTERS -->
+            <div class="mt-8 flex justify-center gap-2 flex-wrap">
+                <button class="px-4 py-1 text-xs border border-haki-gold bg-haki-gold text-black font-bold uppercase tracking-widest rounded hover:scale-105 transition-transform">All</button>
+                <button class="px-4 py-1 text-xs border border-white/20 text-white/50 font-bold uppercase tracking-widest rounded hover:border-gold-500 hover:text-gold-500 transition-colors">Visionary</button>
+                <button class="px-4 py-1 text-xs border border-white/20 text-white/50 font-bold uppercase tracking-widest rounded hover:border-purple-500 hover:text-purple-500 transition-colors">Sound-Smith</button>
+                <button class="px-4 py-1 text-xs border border-white/20 text-white/50 font-bold uppercase tracking-widest rounded hover:border-red-500 hover:text-red-500 transition-colors">Alchemist</button>
+                <button class="px-4 py-1 text-xs border border-white/20 text-white/50 font-bold uppercase tracking-widest rounded hover:border-emerald-500 hover:text-emerald-500 transition-colors">Weaver</button>
+            </div>
+
+            <!-- Flowee Commentary -->
+            <div class="absolute right-0 top-1/2 transform -translate-y-1/2 hidden lg:flex items-center gap-4 bg-black/40 p-4 rounded-full border border-white/10 backdrop-blur-md hover:scale-105 transition-transform cursor-pointer group" onclick="Flowee ? Flowee.talk(true, 'The higher you climb, the harder it is to breathe.') : null">
+                <div class="text-right">
+                    <div class="text-[10px] font-mono text-gray-400 group-hover:text-haki-gold transition-colors">Guardian Protocol</div>
+                    <div class="text-xs font-bold text-white">Observing</div>
+                </div>
+                <img src="../Assets/images/flowee_pirate_phoenix.png" class="w-10 h-10 object-contain animate-float">
+            </div>
+        </header>
+
+        <!-- TOP 3 SOVEREIGNS (The Gotei 13 Style) -->
+        <div id="ladder-top-three" class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-24 items-end">
+            <!-- Populated by JS -->
+            <div class="animate-pulse bg-white/5 h-96 w-full rounded-xl border border-white/10 mx-auto"></div>
+        </div>
+
+        <!-- THE TOWER FLOORS (Main List) -->
+        <div class="relative">
+            <!-- Vertical Line -->
+            <div class="absolute left-8 top-0 bottom-0 w-[1px] bg-gradient-to-b from-haki-gold via-white/20 to-transparent hidden md:block"></div>
+
+            <div id="ladder-list" class="space-y-4 md:pl-16">
+                <!-- Dynamic List Items -->
+                <div class="h-20 bg-white/5 w-full rounded-sm animate-pulse"></div>
+                <div class="h-20 bg-white/5 w-full rounded-sm animate-pulse"></div>
+                <div class="h-20 bg-white/5 w-full rounded-sm animate-pulse"></div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- FOOTER TICKS -->
+    <div class="fixed bottom-0 left-0 w-full h-1 bg-gradient-to-r from-shinsu-blue via-transparent to-shinsu-blue opacity-50"></div>
+
+    <!-- Scripts -->
+    <script src="../js/agents/horizon_bar.js"></script>
+    <script src="../js/agents/imperial_hud.js"></script>
+    <script src="../js/agents/flowee.js"></script>
+    <script src="../js/agents/pusher.js"></script>
+    <script src="../js/agents/helper.js"></script>
+    <script src="../js/agents/ladder_agent.js"></script>
+
+</body>
+</html>

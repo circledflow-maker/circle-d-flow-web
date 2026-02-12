@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Five Doors | Circle D Flow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Space+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/styles.css">
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#8A2BE2",
+                        "haki-gold": "#D4AF37",
+                        "imperial-red": "#D62828",
+                    },
+                    fontFamily: {
+                        "display": ["Cinzel", "serif"],
+                        "mono": ["Space Mono", "monospace"]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-[#050406] text-white min-h-screen font-display overflow-hidden">
+
+    <!-- HORIZON BAR -->
+    <div id="horizon-bar-root"></div>
+
+    <!-- MAIN HUB -->
+    <main class="relative z-10 w-full h-screen flex flex-col items-center justify-center p-4">
+        
+        <h1 class="text-6xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-600 via-orange-500 to-yellow-500 mb-12 drop-shadow-[0_0_30px_rgba(220,38,38,0.5)]">
+            BATTLEGROUND
+        </h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-6xl">
+            <!-- Door 1: The Arena (Ranked) -->
+            <a href="arena1.html" class="group relative aspect-[3/4] bg-black/40 border border-white/10 rounded-2xl overflow-hidden flex flex-col items-center justify-center hover:border-[#D4AF37] transition-all">
+                <div class="absolute inset-0 bg-[url('https://pub-24ba376bfccb446996666eaff4dbae12.r2.dev/arena_bg.jpg')] bg-cover bg-center opacity-30 group-hover:scale-110 group-hover:opacity-50 transition-all duration-700"></div>
+                <div class="relative z-10 text-center">
+                    <span class="material-symbols-outlined text-6xl text-[#D4AF37] mb-4 group-hover:animate-pulse">swords</span>
+                    <h2 class="text-3xl font-bold">THE ARENA</h2>
+                    <p class="text-xs font-mono text-white/50 mt-2">Ranked 1v1 Combat</p>
+                </div>
+            </a>
+
+            <!-- Door 2: The Guild (Ladder/Tournaments) -->
+            <a href="ladder.html" class="group relative aspect-[3/4] bg-black/40 border border-white/10 rounded-2xl overflow-hidden flex flex-col items-center justify-center hover:border-purple-500 transition-all">
+                <div class="absolute inset-0 bg-gradient-to-br from-purple-900/40 to-black opacity-50"></div>
+                <div class="relative z-10 text-center">
+                    <span class="material-symbols-outlined text-6xl text-purple-500 mb-4">trophy</span>
+                    <h2 class="text-3xl font-bold">LADDER</h2>
+                    <p class="text-xs font-mono text-white/50 mt-2">Global Rankings & Guilds</p>
+                </div>
+            </a>
+
+            <!-- Door 3: Training (Quick Play) -->
+            <a href="matchroom.html?mode=training" class="group relative aspect-[3/4] bg-black/40 border border-white/10 rounded-2xl overflow-hidden flex flex-col items-center justify-center hover:border-blue-500 transition-all">
+                <div class="absolute inset-0 bg-gradient-to-br from-blue-900/40 to-black opacity-50"></div>
+                <div class="relative z-10 text-center">
+                    <span class="material-symbols-outlined text-6xl text-blue-500 mb-4">fitness_center</span>
+                    <h2 class="text-3xl font-bold">DOJO</h2>
+                    <p class="text-xs font-mono text-white/50 mt-2">Free Sparring</p>
+                </div>
+            </a>
+        </div>
+
+    </main>
+
+    <!-- AGENTS -->
+    <script src="../js/agents/imperial_hud.js"></script>
+    <script src="../js/agents/pusher.js"></script>
+    <script src="../js/agents/helper.js"></script>
+
+</body>
+</html>

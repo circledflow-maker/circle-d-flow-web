@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CDF Admin Nexus | God Mode</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <style>
+        body { font-family: 'Space Mono', monospace; background-color: #050505; color: #00FF9D; }
+        .cyber-border { border: 1px solid #00FF9D; box-shadow: 0 0 10px rgba(0, 255, 157, 0.2); }
+        .cyber-btn { 
+            background: transparent; border: 1px solid #00FF9D; color: #00FF9D; 
+            transition: all 0.3s; text-transform: uppercase; letter-spacing: 2px;
+        }
+        .cyber-btn:hover { background: #00FF9D; color: #000; box-shadow: 0 0 20px #00FF9D; }
+        .glitch-text:hover { text-shadow: 2px 0 #FF00FF, -2px 0 #00FFFF; }
+    </style>
+    <!-- AGENT MESH -->
+    <script src="../js/agents/pusher.js" defer></script>
+    <script src="../js/agents/helper.js" defer></script>
+    <script src="../js/agents/bridge_pusher.js" defer></script>
+    <script src="../js/agents/admin_root.js" defer></script>
+</head>
+<body class="p-8 max-w-7xl mx-auto">
+    
+    <!-- HEADER -->
+    <header class="flex justify-between items-center mb-12 border-b border-[#00FF9D]/30 pb-4">
+        <div>
+            <h1 class="text-4xl font-bold glitch-text">ADMIN NEXUS</h1>
+            <p class="text-xs text-[#00FF9D]/70 mt-2">SYSTEM.ROOT.ACCESS // LEVEL 5 SECURITY</p>
+        </div>
+        <div class="text-right">
+            <div id="clock" class="text-xl font-bold">00:00:00</div>
+            <div class="flex gap-2 mt-2">
+                <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                <span class="text-xs">BRIDGE: ONLINE</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- GRID -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        
+        <!-- CARD 1: BROADCAST TOWER -->
+        <div class="cyber-border p-6 bg-black/50">
+            <div class="flex items-center gap-2 mb-4">
+                <span class="material-symbols-outlined">campaign</span>
+                <h2 class="text-xl font-bold">BROADCAST SIGNAL</h2>
+            </div>
+            <textarea id="broadcast-msg" class="w-full bg-black border border-[#00FF9D]/50 p-2 text-sm text-white mb-4 focus:outline-none focus:border-[#00FF9D]" rows="3" placeholder="Enter global message..."></textarea>
+            <div class="flex gap-2">
+                <button onclick="sendBroadcast('INFO')" class="cyber-btn px-4 py-2 text-xs flex-1">INFO</button>
+                <button onclick="sendBroadcast('ALERT')" class="cyber-btn px-4 py-2 text-xs flex-1 border-red-500 text-red-500 hover:bg-red-500">ALERT</button>
+            </div>
+        </div>
+
+        <!-- CARD 2: KARMA DISPENSER -->
+        <div class="cyber-border p-6 bg-black/50">
+            <div class="flex items-center gap-2 mb-4">
+                <span class="material-symbols-outlined">diamond</span>
+                <h2 class="text-xl font-bold">KARMA INJECTION</h2>
+            </div>
+            <div class="space-y-4">
+                <input type="text" id="target-user" value="Current User" disabled class="w-full bg-black/50 border border-[#00FF9D]/30 p-2 text-sm text-white/50 cursor-not-allowed">
+                <div class="flex gap-2">
+                    <button onclick="grantKarma(100)" class="cyber-btn px-4 py-2 text-xs flex-1">+100</button>
+                    <button onclick="grantKarma(1000)" class="cyber-btn px-4 py-2 text-xs flex-1">+1000</button>
+                </div>
+                <button onclick="resetUser()" class="w-full border border-red-500 text-red-500 hover:bg-red-500 hover:text-white px-4 py-2 text-xs uppercase tracking-widest transition-all">
+                    ⚠️ WIPE USER DATA
+                </button>
+            </div>
+        </div>
+
+        <!-- CARD 3: GLITCH LOGS (Helper Agent) -->
+        <div class="cyber-border p-6 bg-black/50 md:col-span-2 lg:col-span-1">
+            <div class="flex justify-between items-center mb-4">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined">bug_report</span>
+                    <h2 class="text-xl font-bold">GLITCH LOGS</h2>
+                </div>
+                <button onclick="refreshLogs()" class="text-xs hover:text-white underline">REFRESH</button>
+            </div>
+            <div id="log-monitor" class="h-48 overflow-y-auto bg-black border border-[#00FF9D]/20 p-2 text-[10px] font-mono whitespace-pre-wrap text-[#00FF9D]/80">
+                Scanning for anomalies...
+            </div>
+        </div>
+
+        <!-- CARD 4: TOURNAMENT C&C (Arena Logic) -->
+        <div class="cyber-border p-6 bg-black/50 border-red-500/50 shadow-[0_0_10px_rgba(239,68,68,0.2)]">
+            <div class="flex items-center gap-2 mb-4 text-red-500">
+                <span class="material-symbols-outlined">trophy</span>
+                <h2 class="text-xl font-bold">ARENA C&C</h2>
+            </div>
+            
+            <div class="space-y-4">
+                <div class="flex justify-between text-xs text-white/50 uppercase">
+                    <span>Current Season:</span>
+                    <span id="admin-season" class="text-white font-bold">LOADING...</span>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="setTournamentStage('Qualifiers')" class="cyber-btn border-red-500 text-red-500 hover:bg-red-500 hover:text-white px-2 py-1 text-[10px]">Qualifiers</button>
+                    <button onclick="setTournamentStage('Top 32')" class="cyber-btn border-red-500 text-red-500 hover:bg-red-500 hover:text-white px-2 py-1 text-[10px]">Top 32</button>
+                    <button onclick="setTournamentStage('Finals')" class="cyber-btn border-red-500 text-red-500 hover:bg-red-500 hover:text-white px-2 py-1 text-[10px]">Finals</button>
+                    <button onclick="toggleTournamentStatus()" id="btn-tourney-status" class="cyber-btn border-white text-white hover:bg-white hover:text-black px-2 py-1 text-[10px]">GO OFFLINE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPT LOGIC -->
+    <script>
+        // Clock
+        setInterval(() => document.getElementById('clock').innerText = new Date().toLocaleTimeString(), 1000);
+
+        // Broadcast Logic (Uses BridgePusher)
+        function sendBroadcast(type) {
+            const msg = document.getElementById('broadcast-msg').value;
+            if(!msg) return;
+            
+            if(window.BridgePusher) {
+                window.BridgePusher.broadcast('ADMIN_' + type, { msg: msg });
+                alert(`SIGNAL SENT: [${type}] ${msg}`);
+            } else {
+                alert("ERROR: Bridge Offline");
+            }
+        }
+
+        // Grant Logic
+        function grantKarma(amount) {
+            let current = parseInt(localStorage.getItem('cdf_karma') || '0');
+            localStorage.setItem('cdf_karma', current + amount);
+            // Bridge update to self
+            window.dispatchEvent(new Event('storage')); 
+            alert(`Granted ${amount} Karma. New Total: ${current + amount}`);
+        }
+
+        // Reset
+        function resetUser() {
+            if(confirm("DANGER: This will wipe all 'cdf_' keys. Proceed?")) {
+                Object.keys(localStorage).forEach(key => {
+                    if(key.startsWith('cdf_')) localStorage.removeItem(key);
+                });
+                alert("WIPE COMPLETE. REBOOTING...");
+                window.location.href = 'dashboard.html';
+            }
+        }
+
+        // Load Logs
+        function refreshLogs() {
+            const logs = JSON.parse(localStorage.getItem('cdf_glitch_log') || '[]');
+            const monitor = document.getElementById('log-monitor');
+            if(logs.length === 0) {
+                monitor.innerText = "No anomalies detected in the sector.";
+            } else {
+                monitor.innerText = logs.map(l => `[${l.timestamp}] ${l.id} - ${l.url}`).join('\n');
+            }
+        }
+
+        // Init
+        refreshLogs();
+        initArenaControl();
+
+        // --- ARENA LOGIC ---
+        function initArenaControl() {
+            const t = JSON.parse(localStorage.getItem('cdf_tournament') || '{}');
+            if(t.season) {
+                document.getElementById('admin-season').innerText = t.season;
+                const btn = document.getElementById('btn-tourney-status');
+                if(t.status === 'LIVE') {
+                    btn.innerText = "END SEASON";
+                    btn.classList.add('bg-red-500', 'text-black');
+                } else {
+                    btn.innerText = "GO LIVE";
+                    btn.classList.remove('bg-red-500', 'text-black');
+                }
+            }
+        }
+
+        function setTournamentStage(stage) {
+            const t = JSON.parse(localStorage.getItem('cdf_tournament') || '{}');
+            if(!t.season) return alert("No Season Data!");
+            
+            t.stage = stage;
+            // Auto-adjust entrants for flavor
+            if(stage === 'Qualifiers') t.entrants = 64;
+            if(stage === 'Top 32') t.entrants = 32;
+            if(stage === 'Top 8') t.entrants = 8;
+            if(stage === 'Finals') t.entrants = 2;
+
+            localStorage.setItem('cdf_tournament', JSON.stringify(t));
+            window.BridgePusher.broadcast('ARENA_UPDATE', { stage: stage }); // Mock broadcast
+            alert(`STAGE SET: ${stage}`);
+        }
+
+        function toggleTournamentStatus() {
+            const t = JSON.parse(localStorage.getItem('cdf_tournament') || '{}');
+            if(!t.season) return;
+
+            if(t.status === 'LIVE') {
+                t.status = 'CONCLUDED';
+            } else {
+                t.status = 'LIVE';
+            }
+            localStorage.setItem('cdf_tournament', JSON.stringify(t));
+            initArenaControl(); // Refresh UI
+            alert(`STATUS: ${t.status}`);
+        }
+    </script>
+<script src="../js/agents/global_ticker.js" defer></script>
+<script src="../js/agents/network_hub.js" defer></script>
+<script src="../js/agents/constructor_bot.js" defer></script>
+<script src="../js/agents/kingdom_science.js" defer></script>
+<script src="../js/agents/resonance_bridge.js" defer></script>
+<script src="../js/agents/vault_space.js" defer></script>
+<script src="../js/agents/orbital_menu.js" defer></script>
+    <script src="../js/agents/tutorial_core.js" defer></script>
+    <script src="../js/agents/quest_controller.js" defer></script>
+    <script src="../js/agents/visual_integrity.js" defer></script>
+    <script src="../js/agents/sound_engineer.js" defer></script>
+    <script src="../js/agents/horizon_bar.js" defer></script>
+    <script src="../js/agents/social_matrix.js" defer></script>
+    <script src="../js/agents/flowee.js" defer></script>
+
+    <!-- AUTOMATED AGENT INJECTION -->
+
+    <!-- AUTOMATED AGENT INJECTION -->
+    <script src="../js/agents/imperial_hud.js" defer></script>
+</body>
+</html>

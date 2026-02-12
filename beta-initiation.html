@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circle D Flow | The Gateway</title>
+    <meta name="description" content="Begin your journey. The Gateway of Nyame awaits to test your resonance and assign your Class.">
+    <meta property="og:title" content="Circle D Flow - Initiation Protocol">
+    <meta property="og:description" content="Begin your journey. The Gateway of Nyame awaits to test your resonance and assign your Class.">
+    <meta property="og:type" content="website">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;500;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        midnight: '#0D0D0F',
+                        electric: '#9A4DFF',
+                        amber: '#FFAE42',
+                        mist: '#A8A8B3',
+                        'mystic-gold': '#D4AF37',
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Inter"', 'sans-serif'],
+                        mono: ['"Space Mono"', 'monospace'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #050505; color: white; overflow: hidden; }
+        #particle-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
+        .glass-terminal {
+            background: rgba(13, 13, 15, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 50px rgba(154, 77, 255, 0.1);
+        }
+        .prisma-card {
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+        }
+        .prisma-card:hover {
+            transform: translateY(-10px) rotateX(10deg);
+        }
+        /* Scanline effect */
+        .scanline {
+            width: 100%;
+            height: 100px;
+            z-index: 10;
+            background: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(154, 77, 255, 0.1) 50%, rgba(0,0,0,0) 100%);
+            opacity: 0.1;
+            position: absolute;
+            bottom: 100%;
+            animation: scanline 10s linear infinite;
+            pointer-events: none;
+        }
+        @keyframes scanline {
+            0% { bottom: 100%; }
+            100% { bottom: -100px; }
+        }
+    </style>
+</head>
+<body class="h-screen w-screen flex items-center justify-center relative overflow-hidden bg-black text-white">
+    
+    <!-- I. The Particle Abyss -->
+    <canvas id="particle-canvas" class="absolute inset-0 z-0"></canvas>
+    
+    <!-- II. The Wizard Container -->
+    <main class="relative z-20 w-full max-w-4xl px-4 transition-all duration-500" id="wizard-container">
+        
+        <!-- Header -->
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-serif font-bold text-transparent bg-clip-text bg-gradient-to-r from-mystic-gold to-white tracking-tighter mb-2">The Gateway of Nyame</h1>
+            <p class="text-xs font-mono text-white/40 uppercase tracking-[0.3em]">Protocol: Initiation</p>
+        </header>
+
+        <!-- WIZARD STEPS -->
+        
+        <!-- STEP 1: IDENTITY (Email/Name) -->
+        <div id="step-identity" class="step-panel bg-black/80 border border-white/10 rounded-2xl p-8 backdrop-blur-xl md:w-2/3 mx-auto shadow-[0_0_50px_rgba(255,255,255,0.05)]">
+            <div class="flex items-center gap-4 mb-6 border-b border-white/10 pb-4">
+                <div class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center font-bold text-white">1</div>
+                <h2 class="text-xl font-bold uppercase tracking-widest text-white">Identity Matrix</h2>
+            </div>
+            
+            <div class="space-y-6">
+                 <!-- Netlify Identity Trigger -->
+                 <div class="text-center p-4 bg-white/5 rounded-lg border border-white/5">
+                    <p class="text-xs text-white/60 mb-3">Link your digital soul (Email/Google)</p>
+                    <button onclick="netlifyIdentity.open()" class="px-6 py-2 bg-white text-black font-bold uppercase tracking-widest rounded hover:bg-gray-200 transition-colors text-xs">
+                        Connect Account
+                    </button>
+                    <div id="auth-status" class="mt-2 text-[10px] text-green-400 font-mono hidden">● LINK ESTABLISHED</div>
+                 </div>
+
+                 <!-- Email Address -->
+                 <div>
+                    <label class="block text-xs uppercase text-white/50 mb-1">Soul Link (Email)</label>
+                    <input type="email" id="identity-email" class="w-full bg-black/50 border border-white/20 rounded p-3 text-white focus:border-mystic-gold outline-none tracking-widest font-mono" placeholder="Enter your email...">
+                 </div>
+
+                 <!-- Hunter Handle -->
+                 <div>
+                    <label class="block text-xs uppercase text-white/50 mb-1">Hunter Handle</label>
+                    <input type="text" id="reg-username" class="w-full bg-black/50 border border-white/20 rounded p-3 text-white focus:border-mystic-gold outline-none tracking-widest font-mono" placeholder="Enter your alias...">
+                 </div>
+
+                 <button onclick="Wizard.nextStep('step-test')" class="w-full py-4 bg-mystic-gold/10 border border-mystic-gold/50 text-mystic-gold font-bold uppercase tracking-widest hover:bg-mystic-gold hover:text-black transition-all rounded mt-4">
+                    Proceed to Testing
+                 </button>
+            </div>
+        </div>
+
+        <!-- STEP 2: CLASSIFICATION TEST (Quiz) -->
+        <div id="step-test" class="step-panel hidden bg-black/80 border border-white/10 rounded-2xl p-8 backdrop-blur-xl md:w-2/3 mx-auto shadow-[0_0_50px_rgba(255,255,255,0.05)]">
+            <div class="flex items-center gap-4 mb-6 border-b border-white/10 pb-4">
+                <div class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center font-bold text-white">2</div>
+                <h2 class="text-xl font-bold uppercase tracking-widest text-white">Resonance Test</h2>
+            </div>
+            
+            <div id="quiz-container" class="space-y-6">
+                <!-- Dynamic Question -->
+                <h3 id="quiz-question" class="text-lg font-serif italic text-white/90 text-center"></h3>
+                <div id="quiz-options" class="grid grid-cols-1 gap-3"></div>
+            </div>
+        </div>
+
+        <!-- STEP 3: RESULT & REGISTRY -->
+        <div id="step-result" class="step-panel hidden text-center">
+            <div class="bg-black/80 border-2 border-mystic-gold rounded-2xl p-12 backdrop-blur-xl relative overflow-hidden group max-w-xl mx-auto">
+                <div class="absolute inset-0 bg-mystic-gold/5 animate-pulse-slow"></div>
+                
+                <span class="material-symbols-outlined text-6xl text-mystic-gold mb-4 animate-float">verified</span>
+                <h2 class="text-3xl font-serif font-bold text-white mb-2">INITIATION COMPLETE</h2>
+                <div class="h-px w-24 bg-mystic-gold/50 mx-auto mb-6"></div>
+                
+                <div class="space-y-2 mb-8">
+                    <p class="text-sm text-white/60">CLASS ASSIGNED</p>
+                    <h3 id="result-class" class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-mystic-gold to-white uppercase tracking-widest">...</h3>
+                    <p id="result-nen" class="text-xs font-mono text-mystic-gold uppercase mt-2">...</p>
+                </div>
+
+                <div class="bg-white/5 p-4 rounded border border-white/10 mb-8">
+                    <p class="text-[10px] text-white/40 uppercase">Adinkra Symbol</p>
+                    <p id="result-symbol" class="text-lg font-bold text-white">...</p>
+                </div>
+
+                <button onclick="enterDashboard()" class="px-8 py-3 bg-mystic-gold text-black font-bold uppercase tracking-widest hover:scale-105 transition-transform shadow-[0_0_20px_rgba(212,175,55,0.4)]">
+                    Enter Apex Dashboard
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Flowee Agent (Guide) -->
+    <div id="flowee-agent" class="fixed bottom-8 right-8 z-50 pointer-events-none transition-transform duration-500 scale-0 origin-bottom-right">
+         <div class="relative w-32 h-32">
+            <img src="Assets/images/flowee_pirate_phoenix.png" class="w-full h-full object-contain animate-float drop-shadow-[0_0_20px_rgba(147,51,234,0.5)]">
+            <div id="flowee-speech" class="absolute bottom-full right-0 w-48 bg-white text-black p-3 rounded-xl rounded-br-none text-xs font-medium mb-2 shadow-lg">
+                Greetings, Initiate. Let's build your profile.
+            </div>
+        </div>
+    </div>
+
+    <!-- Auth Script -->
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
+    <!-- PHOENIX-EE CORE AGENTS -->
+    <script src="js/agents/bridge_pusher.js"></script>
+    <script src="js/agents/helper.js"></script>
+    <script src="js/agents/global_ticker.js" defer></script>
+    <script src="js/agents/network_hub.js" defer></script>
+    <script src="js/agents/constructor_bot.js" defer></script>
+    <script src="js/agents/kingdom_science.js" defer></script>
+    <script src="js/agents/resonance_bridge.js" defer></script>
+    <script src="js/agents/vault_space.js" defer></script>
+    <script src="js/agents/orbital_menu.js" defer></script>
+    <script src="js/agents/tutorial_core.js" defer></script>
+    <script src="js/agents/quest_controller.js" defer></script>
+    <script src="js/agents/visual_integrity.js" defer></script>
+    <script src="js/agents/sound_engineer.js" defer></script>
+    <script src="js/agents/horizon_bar.js" defer></script>
+    <script src="js/agents/social_matrix.js" defer></script>
+    <script src="js/agents/flowee.js"></script>
+
+    <script>
+        // --- WIZARD LOGIC ---
+        const Wizard = {
+            data: {
+                username: '',
+                score: { visual: 0, sound: 0, taste: 0, motion: 0, nature: 0, tech: 0, spirit: 0 }
+            },
+            
+            questions: [
+                {
+                    q: "In the chaos of the city, what calls to your soul first?",
+                    options: [
+                        { text: "The vibrant graffiti on the walls.", type: 'visual' },
+                        { text: "The rhythm of the street music.", type: 'sound' },
+                        { text: "The scent of exotic street food.", type: 'taste' },
+                        { text: "The movement of the crowds.", type: 'motion' },
+                        { text: "The hidden parks and trees.", type: 'nature' },
+                        { text: "The neon signs and tech.", type: 'tech' },
+                        { text: "The unseen energy of the people.", type: 'spirit' }
+                    ]
+                },
+                {
+                    q: "How do you shape the world?",
+                    options: [
+                        { text: "With Color & Vision.", type: 'visual' },
+                        { text: "With Audio & Frequency.", type: 'sound' },
+                        { text: "With Flavour & Experience.", type: 'taste' },
+                        { text: "With Dance & Action.", type: 'motion' },
+                        { text: "With Growth & Care.", type: 'nature' },
+                        { text: "With Code & Logic.", type: 'tech' },
+                        { text: "With Wisdom & Empathy.", type: 'spirit' }
+                    ]
+                }
+            ],
+            
+            init: function() {
+                // Initialize Flowee
+                setTimeout(() => {
+                    const f = document.getElementById('flowee-agent');
+                    // Ensure element exists before accessing classList
+                    if(f) {
+                        f.classList.remove('scale-0');
+                        f.classList.add('scale-100');
+                    }
+                }, 500);
+
+                // ... (Auth Listener remains checks) ... 
+                if(window.netlifyIdentity) {
+                    netlifyIdentity.on('login', user => {
+                        document.getElementById('auth-status').classList.remove('hidden');
+                        this.data.username = user.user_metadata?.full_name || user.email.split('@')[0];
+                        document.getElementById('reg-username').value = this.data.username;
+                    });
+                }
+                
+                this.initParticles();
+            },
+
+            nextStep: function(stepId) {
+                // Modified to handle simple step transitions or specific checks
+                 if(stepId === 'step-test') {
+                    const name = document.getElementById('reg-username')?.value || document.getElementById('identity-name')?.value;
+                    const email = document.getElementById('identity-email')?.value;
+                    
+                    if (!name?.trim() || !email?.trim() || !email.includes('@')) {
+                        alert("IDENTITY MATRIX INCOMPLETE.\n\nPlease provide a valid Email and Alias.");
+                        return;
+                    }
+                    
+                    this.data.username = name;
+                    localStorage.setItem('cdf_user_username', name);
+                    localStorage.setItem('cdf_user_email', email); 
+                    
+                     // Transition with Delay
+                    if(window.Flowee) window.Flowee.talk(true, `Identity Confirmed: ${name}. Initiating Classification Protocol in 3 seconds...`);
+                    
+                    setTimeout(() => {
+                        document.querySelectorAll('.step-panel').forEach(el => el.classList.add('hidden'));
+                        document.getElementById(stepId).classList.remove('hidden');
+                        this.renderQuiz(0);
+                    }, 3000);
+                }
+            },
+
+            renderQuiz: function(index) {
+                if(index >= this.questions.length) {
+                    this.finishTest();
+                    return;
+                }
+
+                const q = this.questions[index];
+                document.getElementById('quiz-question').innerText = q.q;
+                
+                const opts = document.getElementById('quiz-options');
+                opts.innerHTML = '';
+                
+                // Grid layout for 7 options
+                opts.className = "grid grid-cols-1 md:grid-cols-2 gap-2 w-full max-w-2xl text-left";
+
+                q.options.forEach(opt => {
+                    const btn = document.createElement('button');
+                    btn.className = "text-left p-3 bg-white/5 border border-white/10 rounded hover:bg-white/10 hover:border-mystic-gold/50 transition-all text-xs text-white/80 animate-fade-in";
+                    btn.innerText = `> ${opt.text}`;
+                    btn.onclick = () => {
+                        this.data.score[opt.type]++;
+                        this.renderQuiz(index + 1);
+                    };
+                    opts.appendChild(btn);
+                });
+            },
+
+            finishTest: function() {
+                // Calculate Result (Max Score)
+                const s = this.data.score;
+                let type = Object.keys(s).reduce((a, b) => s[a] > s[b] ? a : b);
+
+                // Map to Lore (7 Classes)
+                const map = {
+                    'visual': { class: 'Weaver', nen: 'Emission (Visual)', symbol: 'Gye Nyame' },
+                    'sound': { class: 'Sound-Smith', nen: 'Transmutation (Sound)', symbol: 'Anansi' },
+                    'taste': { class: 'Architect', nen: 'Enhancement (Taste)', symbol: 'Duafe' },
+                    'motion': { class: 'Navigator', nen: 'Manipulation (Flow)', symbol: 'Nkonson' },
+                    'nature': { class: 'Botanist', nen: 'Conjuration (Life)', symbol: 'Nyame Nti' },
+                    'tech':   { class: 'Operator', nen: 'Specialization (Data)', symbol: 'Dame-Dame' },
+                    'spirit': { class: 'Oracle', nen: 'Emission (Spirit)', symbol: 'Hwe Mu' }
+                };
+                
+                const result = map[type];
+                
+                // Save Data
+                localStorage.setItem('user_class', result.class);
+                localStorage.setItem('user_nen_type_v2', result.nen);
+                localStorage.setItem('cdf_adinkra_symbol', result.symbol);
+                if(!localStorage.getItem('cdf_beta_key')) {
+                    localStorage.setItem('cdf_beta_key', `${result.class.substring(0,3).toUpperCase()}-${Math.floor(1000+Math.random()*9000)}`);
+                }
+
+                // Show Result UI
+                document.getElementById('step-test').classList.add('hidden');
+                document.getElementById('step-result').classList.remove('hidden');
+                
+                document.getElementById('result-class').innerText = result.class;
+                document.getElementById('result-nen').innerText = result.nen;
+                document.getElementById('result-symbol').innerText = result.symbol;
+                
+                if(window.Flowee) window.Flowee.talk(true, `Analysis Complete. You are a ${result.class}. Welcome to the Fold.`);
+
+                // AUTO REDIRECT (7 Seconds)
+                let countdown = 7;
+                const btn = document.querySelector('#step-result button');
+                const interval = setInterval(() => {
+                    countdown--;
+                    btn.innerText = `Enter Apex Dashboard (${countdown}s)`;
+                    if(countdown <= 0) {
+                        clearInterval(interval);
+                        enterDashboard();
+                    }
+                }, 1000);
+            },
+            
+            initParticles: function() {
+                const canvas = document.getElementById('particle-canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                
+                const particles = [];
+                for(let i=0; i<50; i++) {
+                    particles.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        vx: (Math.random() - 0.5) * 0.5,
+                        vy: (Math.random() - 0.5) * 0.5,
+                        size: Math.random() * 2
+                    });
+                }
+                
+                function animate() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+                    particles.forEach(p => {
+                        p.x += p.vx; p.y += p.vy;
+                        if(p.x < 0) p.x = canvas.width;
+                        if(p.x > canvas.width) p.x = 0;
+                        if(p.y < 0) p.y = canvas.height;
+                        if(p.y > canvas.height) p.y = 0;
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                        ctx.fill();
+                    });
+                    requestAnimationFrame(animate);
+                }
+                animate();
+            }
+        };
+
+        // --- 4. REDIRECT LOGIC ---
+        function enterDashboard() {
+            console.log("Entering Dashboard...");
+            const btn = document.querySelector('#step-result button');
+            if(btn) btn.innerText = "ACCESSING...";
+            
+            // Set Session
+            sessionStorage.setItem('cdf_beta_session', 'active');
+            
+            // Artificial Delay for Effect
+            setTimeout(() => {
+                console.log("Redirecting to: pages/dashboard.html");
+                try {
+                    window.location.assign("pages/dashboard.html");
+                } catch(e) {
+                    console.error("Redirect Failed", e);
+                    window.location.href = "pages/dashboard.html";
+                }
+            }, 500);
+        }
+
+        // Initialize Wizard
+        Wizard.init();
+    </script>
+    <script defer src="js/agents/pusher.js"></script>
+
+    <!-- AUTOMATED AGENT INJECTION -->
+
+    <!-- AUTOMATED AGENT INJECTION -->
+    <script src="js/agents/imperial_hud.js" defer></script>
+</body>
+</html>

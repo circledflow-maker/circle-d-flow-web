@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Treasury | The High Palast</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <style>
+        .env-forge { 
+            background: #0a0505; 
+            color: #cd7f32; 
+            font-family: 'Space Mono', monospace;
+            background-image: radial-gradient(circle at 50% -20%, #3a0000, #0a0505 60%);
+        }
+        .font-cinzel { font-family: 'Cinzel', serif; }
+        
+        /* Mechanical Text */
+        .mechanical-counter {
+            font-size: 4rem;
+            font-family: 'Cinzel', serif;
+            color: #fff;
+            text-shadow: 0 0 10px #ff4500;
+            position: relative;
+        }
+        .mechanical-counter::after {
+            content: ' FLOW CREDITS';
+            font-size: 1rem;
+            display: block;
+            color: #cd7f32;
+            letter-spacing: 0.5em;
+            text-align: center;
+        }
+
+        /* Vault Card */
+        .vault-card {
+            background: #151010;
+            border: 2px solid #332020;
+            padding: 30px;
+            position: relative;
+            transition: all 0.3s;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+        }
+        .vault-card:hover {
+            border-color: #ff4500;
+            box-shadow: 0 0 30px rgba(255, 69, 0, 0.2);
+            transform: translateY(-5px);
+        }
+        .bg-lava { background: linear-gradient(135deg, #ff4500, #8b0000); color: white; border: none; }
+        
+        /* Piping */
+        .pipe-system {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 10h80v80h-80z' fill='none' stroke='%23332020' stroke-width='1'/%3E%3C/svg%3E");
+            opacity: 0.2; pointer-events: none; z-index: -1;
+        }
+    </style>
+</head>
+<body class="env-forge min-h-screen">
+
+    <div class="pipe-system"></div>
+
+    <!-- HUB NAV -->
+    <nav class="fixed top-0 w-full z-50 p-6 flex justify-between items-center border-b border-[#332020] bg-black/50 backdrop-blur">
+        <a href="dashboard.html" class="flex items-center gap-2 text-[#cd7f32] hover:text-white transition-colors">
+            <span class="material-symbols-outlined">account_balance</span>
+            <span class="text-xs font-bold uppercase tracking-widest">Return to Palast</span>
+        </a>
+        <div class="text-xs font-bold uppercase tracking-widest opacity-50">Forge of Wealth</div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto px-6 py-32">
+        
+        <!-- COUNTER -->
+        <div class="text-center mb-24">
+            <div class="mechanical-counter" id="credit-display">1,250</div>
+            
+            <div class="mt-8 flex justify-center gap-4">
+                <button class="px-8 py-3 bg-[#cd7f32] text-black font-bold uppercase tracking-widest hover:bg-white transition-colors clip-path-polygon">
+                    <span class="material-symbols-outlined align-middle mr-2">add_circle</span> Deposit
+                </button>
+                <button class="px-8 py-3 border border-[#cd7f32] text-[#cd7f32] font-bold uppercase tracking-widest hover:bg-[#cd7f32] hover:text-black transition-colors clip-path-polygon">
+                    <span class="material-symbols-outlined align-middle mr-2">currency_exchange</span> Exchange
+                </button>
+            </div>
+        </div>
+
+        <!-- VAULTS (Pricing) -->
+        <div class="grid md:grid-cols-3 gap-8 mb-16">
+            
+            <!-- Vault 1 -->
+            <div class="vault-card opacity-50">
+                <h3 class="text-xl font-cinzel text-white mb-2">Iron Vault</h3>
+                <div class="text-3xl font-bold text-[#cd7f32] mb-4">Free</div>
+                <ul class="text-xs space-y-2 opacity-70 mb-8">
+                    <li>• Basic Storage</li>
+                    <li>• Access to Arena</li>
+                </ul>
+                <div class="text-xs uppercase tracking-widest text-center border p-2 border-[#332020]">Current Status</div>
+            </div>
+
+            <!-- Vault 2 -->
+            <div class="vault-card bg-lava transform scale-105 z-10">
+                <div class="absolute top-0 right-0 bg-black text-white px-2 py-1 text-[10px] font-bold uppercase">Popular</div>
+                <h3 class="text-xl font-cinzel mb-2">Gold Vault</h3>
+                <div class="text-4xl font-bold mb-4">9€ <span class="text-sm opacity-50">/mo</span></div>
+                <ul class="text-xs space-y-2 mb-8">
+                    <li>• Marketplace Access</li>
+                    <li>• 1.2x Haki Gain</li>
+                    <li>• Palast Expansion</li>
+                </ul>
+                <button class="w-full py-3 bg-black text-white font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-colors">Upgrade</button>
+            </div>
+
+            <!-- Vault 3 -->
+            <div class="vault-card">
+                <h3 class="text-xl font-cinzel text-white mb-2">Obsidian Vault</h3>
+                <div class="text-3xl font-bold text-[#cd7f32] mb-4">29€ <span class="text-sm opacity-50">/mo</span></div>
+                <ul class="text-xs space-y-2 opacity-70 mb-8">
+                    <li>• Unlimited Storage</li>
+                    <li>• Real-Life Studio Access</li>
+                    <li>• Guild Leadership</li>
+                </ul>
+                <button class="w-full py-3 border border-[#cd7f32] text-[#cd7f32] font-bold uppercase tracking-widest hover:bg-[#cd7f32] hover:text-black transition-colors">Upgrade</button>
+            </div>
+
+        </div>
+
+        <!-- SHARE RUNE (Marketing) -->
+        <div class="max-w-md mx-auto text-center border-t border-[#332020] pt-12">
+            <h4 class="text-sm uppercase tracking-widest text-[#cd7f32] mb-4">Share the Wealth</h4>
+            <div class="bg-black p-4 border border-[#332020] flex items-center justify-between gap-4">
+                <span class="font-mono text-white" id="shared-rune">RUNE-PENDING</span>
+                <button onclick="copyRune()" class="text-[#cd7f32] hover:text-white uppercase text-xs font-bold">Copy Holy Rune</button>
+            </div>
+            <p class="text-[10px] opacity-40 mt-2">Share this with allies for free Museum entry.</p>
+        </div>
+
+    </main>
+
+    <!-- AGENTS -->
+    <script src="../js/agents/palast_agent.js"></script>
+    <script src="../js/agents/flowee.js"></script>
+    <script src="../js/agents/helper.js"></script>
+    <script src="../js/agents/pusher.js"></script>
+    <script src="../js/agents/imperial_hud.js"></script>
+
+    <script>
+        // Sync Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            // Get Rune
+            document.getElementById('shared-rune').innerText = window.PalastAgent.dailyRune;
+            
+            // Animate Counter
+            const el = document.getElementById('credit-display');
+            let current = 0;
+            const target = 1250;
+            const animate = () => {
+                if(current < target) {
+                    current += 10;
+                    el.innerText = current.toLocaleString();
+                    requestAnimationFrame(animate);
+                }
+            };
+            animate();
+            
+            if(window.Flowee) window.Flowee.talk(true, "The Forge is hot. Your assets are secure.");
+        });
+
+        function copyRune() {
+            navigator.clipboard.writeText(window.PalastAgent.dailyRune);
+            alert("Holy Rune copied to clipboard!");
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Forge | Circle D Flow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Rock+Salt&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <style>
+        /* BLUEPRINT AESTHETIC */
+        body { 
+            background-color: #0d1b2a; /* Blueprint Blue/Dark */
+            color: #e0e1dd; 
+            font-family: 'Space Mono', monospace;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .font-stone { font-family: 'Rock Salt', cursive; }
+        
+        .blueprint-input {
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+            font-family: 'Space Mono', monospace;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .blueprint-input:focus {
+            outline: none;
+            border-bottom-color: #10b981;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col relative selection:bg-white selection:text-blue-900">
+
+    <!-- HUD -->
+    <div class="relative z-50 p-6 flex justify-between items-center border-b border-white/10 bg-[#0d1b2a]/90 backdrop-blur">
+        <a href="quiz.html" class="flex items-center gap-2 text-white/50 hover:text-white transition-colors">
+            <span class="material-symbols-outlined">arrow_back</span>
+            <span class="text-xs uppercase tracking-widest font-bold">Discard Plans</span>
+        </a>
+        <h1 class="text-xl font-stone text-white tracking-widest">Question Schematic</h1>
+        <div class="w-20"></div>
+    </div>
+
+    <!-- MAIN FORM -->
+    <main class="flex-1 flex flex-col items-center justify-center p-6 pt-24">
+        
+        <div class="w-full max-w-2xl bg-white/5 border border-white/10 p-8 rounded-lg relative">
+            <!-- Blueprint Decor -->
+            <div class="absolute top-0 left-0 w-full h-full pointer-events-none opacity-20" 
+                style="background-image: radial-gradient(circle, white 1px, transparent 1px); background-size: 10px 10px;">
+            </div>
+
+            <form id="forge-form" onsubmit="event.preventDefault(); Brain.forgeQuestion();" class="relative z-10 space-y-8">
+                
+                <!-- Question -->
+                <div class="space-y-2">
+                    <label class="text-[10px] uppercase tracking-widest text-emerald-400">Step 1: The Hypothesis (Question)</label>
+                    <textarea id="q-input" rows="2" maxlength="150" required
+                        class="w-full blueprint-input text-xl resize-none placeholder-white/20"
+                        placeholder="e.g. What is the formula for gunpowder?"></textarea>
+                </div>
+
+                <!-- Answer -->
+                 <div class="space-y-2">
+                    <label class="text-[10px] uppercase tracking-widest text-emerald-400">Step 2: The Solution (Correct Answer)</label>
+                    <input type="text" id="a-input" required
+                        class="w-full blueprint-input text-lg placeholder-white/20"
+                        placeholder="e.g. Sulfur + Charcoal + Saltpeter">
+                </div>
+
+                <!-- Options -->
+                 <div class="space-y-2">
+                    <label class="text-[10px] uppercase tracking-widest text-emerald-400">Step 3: False Variables (Distractors)</label>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <input type="text" class="opt-input w-full blueprint-input text-sm placeholder-white/20" placeholder="Option 1" required>
+                        <input type="text" class="opt-input w-full blueprint-input text-sm placeholder-white/20" placeholder="Option 2" required>
+                        <input type="text" class="opt-input w-full blueprint-input text-sm placeholder-white/20" placeholder="Option 3" required>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="pt-8 flex justify-end gap-4 border-t border-white/10 mt-8">
+                     <button type="submit" class="flex items-center gap-2 px-8 py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold uppercase tracking-widest rounded shadow-[0_0_20px_rgba(16,185,129,0.4)] transition-all">
+                        <span class="material-symbols-outlined">construction</span>
+                        Fabricate
+                    </button>
+                </div>
+            </form>
+
+        </div>
+
+    </main>
+
+    <!-- AGENTS -->
+    <script src="../js/agents/network_hub.js"></script>
+    <script src="../js/agents/pusher.js"></script>
+    <script src="../js/agents/helper.js"></script>
+    <script src="../js/agents/brain.js"></script>
+    
+    <!-- Horizon Bar -->
+    <script src="../js/agents/global_ticker.js" defer></script>
+    <script src="../js/agents/horizon_bar.js" defer></script>
+
+    <!-- AUTOMATED AGENT INJECTION -->
+    <script src="../js/agents/imperial_hud.js" defer></script>
+</body>
+</html>

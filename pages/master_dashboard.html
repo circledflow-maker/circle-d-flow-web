@@ -3,225 +3,293 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Architect's Command Core | Circle D Flow</title>
+    <title>The Quest Forge | Circle D Flow</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-    <link rel="stylesheet" href="../css/styles.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        midnight: '#050505',
-                        glass: 'rgba(20, 20, 30, 0.6)',
-                        neonBlue: '#00F0FF',
-                        neonPink: '#FF0055',
-                        gold: '#FFD700',
-                    },
-                    fontFamily: {
-                        palace: ['"Cinzel"', 'serif'],
-                        tech: ['"Orbitron"', 'sans-serif'],
-                    },
-                    backgroundImage: {
-                        'lisbon-skyline': "url('../Assets/images/lisbon_skyline_manga.jpg')", // Placeholder
-                    }
-                }
-            }
-        }
-    </script>
     <style>
-        /* Palace Aesthetics */
         body {
-            background-color: #000;
-            overflow-x: hidden;
+            background-color: #050508;
+            background-image: 
+                linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            color: #E0E0E0;
+            overflow: hidden;
+            font-family: 'Rajdhani', sans-serif;
         }
-
-        /* Stained Glass Floor Effect */
-        #stained-glass-floor {
-            position: fixed;
-            bottom: -50%;
-            left: 50%;
-            transform: translateX(-50%) rotateX(60deg);
-            width: 200vw;
-            height: 200vw;
-            background: radial-gradient(circle, rgba(0,240,255,0.1) 0%, rgba(0,0,0,0.8) 70%),
-                        repeating-conic-gradient(#00F0FF 0deg 10deg, transparent 10deg 20deg);
-            opacity: 0.3;
-            pointer-events: none;
-            z-index: 0;
-            animation: rotateFloor 120s linear infinite;
-        }
-
-        @keyframes rotateFloor {
-            from { transform: translateX(-50%) rotateX(60deg) rotateZ(0deg); }
-            to { transform: translateX(-50%) rotateX(60deg) rotateZ(360deg); }
-        }
-
-        /* Dark Glass UI */
-        .glass-panel {
-            background: rgba(10, 10, 15, 0.75);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 0 30px rgba(0, 240, 255, 0.1);
-        }
-
-        /* Falling Light Particles */
-        .light-mote {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            filter: blur(2px);
-            animation: fall linear infinite;
-        }
-
-        @keyframes fall {
-            to { transform: translateY(100vh); opacity: 0; }
+        .font-tech { font-family: 'Orbitron', sans-serif; }
+        .text-animusBlue { color: #00F0FF; }
+        
+        /* Layout Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 20% 60% 20%;
+            height: calc(100vh - 64px);
         }
         
-        /* Map Customization */
-        .leaflet-container {
-            background: rgba(0,0,0,0.5);
-            font-family: 'Orbitron', sans-serif;
-        }
-        .leaflet-tile {
-            filter: invert(100%) hue-rotate(180deg) brightness(0.3) contrast(1.5);
+        /* Panels */
+        .panel-left, .panel-right {
+            background: rgba(10, 15, 20, 0.9);
+            border-right: 1px solid rgba(0, 240, 255, 0.1);
+            border-left: 1px solid rgba(0, 240, 255, 0.1);
+            overflow-y: auto;
+            backdrop-filter: blur(10px);
         }
 
+        /* Map */
+        .map-section {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Quest Card */
+        .quest-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            transition: all 0.2s;
+        }
+        .quest-card:hover {
+            border-color: #00F0FF;
+            background: rgba(0, 240, 255, 0.05);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: #00F0FF; border-radius: 2px; }
+        ::-webkit-scrollbar-track { background: #000; }
     </style>
 </head>
-<body class="text-white min-h-screen relative">
+<body class="h-screen w-screen flex flex-col">
 
-    <!-- Background Layer -->
-    <div class="fixed inset-0 bg-lisbon-skyline bg-cover bg-center opacity-30 z-[-1]"></div>
-    <div id="stained-glass-floor"></div>
-    <div id="particle-container" class="fixed inset-0 pointer-events-none z-0"></div>
+    <!-- TRINITY RESONANCE BAR (Shared Admin Visual) -->
+    <div id="trinity-resonance-wrap" style="width: 100%; height: 5px; background: #111; position: fixed; top: 0; left: 0; z-index: 12000;">
+        <div id="sync-bar-vision" style="width: 33.3%; height: 100%; background: gold; float: left; box-shadow: 0 0 10px gold; transition: 1s;"></div>
+        <div id="sync-bar-sound" style="width: 33.3%; height: 100%; background: #00f0ff; float: left; box-shadow: 0 0 10px #00f0ff; transition: 1s;"></div>
+        <div id="sync-bar-kitchen" style="width: 33.4%; height: 100%; background: #ff8c00; float: left; box-shadow: 0 0 10px #ff8c00; transition: 1s;"></div>
+    </div>
+    <script>
+        function updateTrinitySync(v, s, k) {
+            document.getElementById('sync-bar-vision').style.opacity = v / 100;
+            document.getElementById('sync-bar-sound').style.opacity = s / 100;
+            document.getElementById('sync-bar-kitchen').style.opacity = k / 100;
+            
+            if(v > 80 && s > 80 && k > 80) {
+                document.getElementById('trinity-resonance-wrap').style.animation = "pulse-white 2s infinite";
+            }
+        }
+        // Auto-Run Demo
+        setTimeout(() => updateTrinitySync(70, 70, 70), 500);
+    </script>
 
-    <!-- Header / HUD -->
-    <nav class="fixed top-0 w-full z-50 p-6 flex justify-between items-center bg-gradient-to-b from-black/80 to-transparent">
+    <!-- Top HUD -->
+    <header class="h-16 flex items-center justify-between px-6 bg-black/90 border-b border-white/10 z-50">
         <div class="flex items-center gap-4">
-            <div class="w-12 h-12 rounded-full border-2 border-gold p-1">
-                <img src="../Assets/images/logo.png" class="w-full h-full object-contain">
-            </div>
-            <div>
-                <h1 class="font-palace text-2xl font-bold text-gold tracking-widest drop-shadow-[0_0_10px_rgba(255,215,0,0.5)]">Architect's Palace</h1>
-                <p class="font-tech text-[10px] text-neonBlue tracking-[0.3em]">COMMAND CORE ONLINE</p>
-            </div>
+            <span class="material-symbols-outlined text-animusBlue">handyman</span>
+            <h1 class="font-tech text-lg text-white uppercase tracking-widest">The Quest Forge</h1>
         </div>
-        
-        <div class="flex gap-6">
-            <button onclick="GrandArchitect.toggleView('clean')" class="flex items-center gap-2 px-4 py-2 border border-neonBlue/30 hover:border-neonBlue rounded bg-black/50 text-xs font-tech uppercase tracking-widest transition-all hover:shadow-[0_0_15px_rgba(0,240,255,0.4)]">
-                <span class="material-symbols-outlined text-sm">monitor_heart</span> Investor Mirror
+        <div class="flex gap-4 items-center">
+            <div class="text-right">
+                <div class="text-[10px] text-white/50 uppercase">Active Agents</div>
+                <div class="font-bold text-animusBlue">24</div>
+            </div>
+            <button onclick="window.location.href='../index.html'" class="px-3 py-1 border border-red-500/50 text-red-500 text-xs hover:bg-red-500/10 uppercase tracking-widest">
+                Exit
             </button>
-            <a href="sanctum.html" class="flex items-center gap-2 px-4 py-2 border border-neonPink/30 hover:border-neonPink rounded bg-black/50 text-xs font-tech uppercase tracking-widest transition-all hover:shadow-[0_0_15px_rgba(255,0,85,0.4)]">
-                <span class="material-symbols-outlined text-sm">sensor_door</span> Exit Palace
-            </a>
         </div>
-    </nav>
+    </header>
 
-    <!-- Main Command Grid -->
-    <main class="relative z-10 pt-32 px-12 pb-12 w-full h-screen flex gap-8">
+    <!-- Main Grid -->
+    <div class="dashboard-grid">
         
-        <!-- Left: Resonance Map (World View) -->
-        <section class="glass-panel w-2/3 rounded-3xl overflow-hidden relative group flex flex-col">
-            <div class="p-6 border-b border-white/5 flex justify-between items-center bg-black/20">
-                <h2 class="font-palace text-xl text-white tracking-widest"><span class="material-symbols-outlined align-middle mr-2 text-neonBlue">public</span> Resonance Web</h2>
-                <div class="flex gap-2">
-                     <span class="flex h-2 w-2 rounded-full bg-neonBlue animate-pulse"></span>
-                     <span class="text-[10px] font-tech text-white/50">LIVE SIGNAL</span>
+        <!-- LEFT: Go Live / Sessions -->
+        <section class="panel-left p-4">
+            <h2 class="text-xs text-white/50 uppercase tracking-[0.2em] mb-4 border-b border-white/10 pb-2">Active Sessions</h2>
+            
+            <!-- Summoning Status -->
+            <div class="bg-purple-900/10 border border-purple-500/30 p-3 rounded mb-6">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-purple-400 font-bold text-xs uppercase">Summoning Circle</span>
+                    <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
                 </div>
+                <div class="text-[10px] text-white/60 mb-2">Gate Open: 3 Slots Rem.</div>
+                <button class="w-full py-1 bg-purple-500/20 text-purple-300 text-[10px] uppercase hover:bg-purple-500 hover:text-white transition-colors">Manage Gate</button>
             </div>
-            
-            <div id="resonance-map" class="flex-1 w-full h-full z-0"></div>
-            
-            <!-- Map Overlay Controls -->
-            <div class="absolute bottom-6 left-6 right-6 flex justify-between pointer-events-none">
-                <div class="pointer-events-auto bg-black/80 backdrop-blur rounded-xl p-4 border border-white/10">
-                    <h3 class="text-xs font-bold text-neonBlue mb-2">Active Nodes</h3>
-                    <ul id="active-nodes-list" class="space-y-1 text-[10px] text-white/70">
-                        <!-- Populated by JS -->
-                    </ul>
+
+            <!-- Flow Sync Override (Trinity Step) -->
+            <div class="mb-6 p-4 border border-white/10 rounded-xl bg-black/40">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs font-bold text-white uppercase tracking-widest">Flow Sync</span>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="flow-sync-toggle" class="sr-only peer" onchange="toggleFlowSync()">
+                        <div class="w-9 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-animusBlue"></div>
+                    </label>
                 </div>
-                <div class="pointer-events-auto">
-                     <button onclick="GrandArchitect.pulse()" class="px-6 py-4 bg-neonBlue/10 hover:bg-neonBlue/20 border border-neonBlue text-neonBlue font-tech font-bold uppercase rounded-xl tracking-widest transition-all hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(0,240,255,0.2)]">
-                        <span class="material-symbols-outlined text-xl mb-1 block">wifi_tethering</span>
-                        Pulse Kingdom
-                    </button>
+                <p class="text-[9px] text-white/40">Pauses system updates for maintenance.</p>
+            </div>
+            <script>
+                function toggleFlowSync() {
+                    const active = document.getElementById('flow-sync-toggle').checked;
+                    if(active) {
+                        alert("FLOW SYNC ACTIVE. System Paused.");
+                        // Trigger Tutorial Completion if applicable
+                        if(window.Flowee) window.Flowee.completeImperialStep(7, 500, "Compass of the First Hour Unlocked. You are the Architect.");
+                    } else {
+                        console.log("Flow Sync Deactivated");
+                    }
+                }
+            </script>
+
+            <!-- Live Sessions List -->
+            <div class="space-y-3">
+                <div class="flex items-center gap-3 p-2 hover:bg-white/5 rounded cursor-pointer">
+                    <div class="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center text-xs">📸</div>
+                    <div>
+                        <div class="text-sm font-bold text-white">Shoot: LX Factory</div>
+                        <div class="text-[10px] text-animusBlue">In Progress • 14m</div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 p-2 hover:bg-white/5 rounded cursor-pointer">
+                    <div class="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center text-xs">🏎️</div>
+                    <div>
+                        <div class="text-sm font-bold text-white">TukTour: Alfama</div>
+                        <div class="text-[10px] text-green-400">Starting Soon</div>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- Right: Service Altar & Analytics -->
-        <section class="flex-1 flex flex-col gap-6">
+        <!-- CENTER: Imperial Map -->
+        <section class="map-section bg-black relative">
+            <div id="forge-map" class="h-full w-full opacity-60"></div>
             
-            <!-- Service Altar -->
-            <div class="glass-panel flex-1 rounded-3xl p-6 relative overflow-hidden">
-                <div class="absolute top-0 right-0 p-4 opacity-20">
-                    <span class="material-symbols-outlined text-9xl text-gold">auto_awesome</span>
-                </div>
-                <h2 class="font-palace text-xl text-gold tracking-widest mb-6 relative z-10"><span class="material-symbols-outlined align-middle mr-2">diamond</span> Service Altar</h2>
-                
-                <div class="grid grid-cols-1 gap-4 relative z-10">
-                    <button onclick="GrandArchitect.summonArtist()" class="p-6 bg-gradient-to-br from-purple-900/40 to-black border border-purple-500/30 hover:border-purple-500 rounded-2xl text-left group transition-all">
-                        <span class="material-symbols-outlined text-4xl text-purple-400 mb-2 group-hover:scale-110 transition-transform">person_add</span>
-                        <h3 class="font-palace font-bold text-white text-lg">Cast Summon</h3>
-                        <p class="text-[10px] text-white/50 font-tech mt-1">Invoke a Creator for a KYH Session</p>
-                    </button>
-                    
-                    <button onclick="GrandArchitect.reforgeBrand()" class="p-6 bg-gradient-to-br from-neonPink/20 to-black border border-neonPink/30 hover:border-neonPink rounded-2xl text-left group transition-all">
-                        <span class="material-symbols-outlined text-4xl text-neonPink mb-2 group-hover:scale-110 transition-transform">style</span>
-                        <h3 class="font-palace font-bold text-white text-lg">Reforge Brand</h3>
-                        <p class="text-[10px] text-white/50 font-tech mt-1">Upgrade a Partner's Visual Legacy</p>
-                    </button>
-                </div>
+            <!-- Overlay Info -->
+            <div class="absolute bottom-6 left-6 pointer-events-none">
+                <div class="text-4xl font-tech text-white/10 select-none">LISBON SECTOR</div>
+            </div>
+        </section>
+
+        <!-- RIGHT: Quest Forge -->
+        <section class="panel-right p-4">
+            
+            <!-- Golden Hour Trigger -->
+            <div class="mb-8 p-4 bg-yellow-500/5 border border-yellow-500/20 rounded text-center">
+                <h2 class="text-xs text-yellow-500 uppercase tracking-widest mb-2">The Golden Hour</h2>
+                <button onclick="triggerGoldenHour()" class="w-full py-2 bg-yellow-500 text-black font-bold font-tech uppercase hover:scale-105 transition-transform">
+                    Activate Signal
+                </button>
+                <div class="text-[9px] text-white/30 mt-2">Broadcasts to all active Scouts</div>
             </div>
 
-            <!-- Synergy Radar -->
-            <div class="glass-panel h-1/3 rounded-3xl p-6 flex flex-col">
-                <h2 class="font-tech text-xs text-neonBlue tracking-widest mb-4">SYNERGY SCANNER</h2>
-                <div class="flex-1 flex items-center justify-center relative">
-                    <!-- Radar Animation -->
-                    <div class="absolute inset-0 border border-green-500/20 rounded-full animate-[spin_4s_linear_infinite]"></div>
-                    <div class="absolute inset-2 border border-green-500/10 rounded-full animate-[spin_3s_linear_infinite_reverse]"></div>
-                    <div class="flex flex-col items-center">
-                         <span class="text-2xl font-bold text-white">98%</span>
-                         <span class="text-[10px] text-green-400 uppercase">Flow Efficiency</span>
+            <h2 class="text-xs text-white/50 uppercase tracking-[0.2em] mb-4 border-b border-white/10 pb-2">Quest Protocol</h2>
+            
+            <!-- Creation Form -->
+            <div class="space-y-3 mb-6">
+                <div>
+                    <label class="text-[9px] text-white/50 uppercase">Mission Title</label>
+                    <input type="text" id="q-title" class="w-full bg-black border border-white/20 text-white text-xs p-2 focus:border-animusBlue outline-none" placeholder="e.g. Find the Blue Door">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="text-[9px] text-white/50 uppercase">Type</label>
+                        <select id="q-type" class="w-full bg-black border border-white/20 text-white text-xs p-2 outline-none">
+                            <option value="PHOTO">Photo</option>
+                            <option value="VIDEO">Video</option>
+                            <option value="CODE">Secret Code</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-[9px] text-white/50 uppercase">Reward (XP)</label>
+                        <input type="number" id="q-xp" value="100" class="w-full bg-black border border-white/20 text-white text-xs p-2 outline-none">
+                    </div>
+                </div>
+                <button onclick="forgeQuest()" class="w-full py-2 border border-animusBlue text-animusBlue hover:bg-animusBlue hover:text-black font-bold uppercase text-xs transition-colors">
+                    Forge Mission
+                </button>
+            </div>
+            
+            <!-- Review Queue -->
+            <h2 class="text-xs text-white/50 uppercase tracking-[0.2em] mb-4 border-b border-white/10 pb-2">Pending Reviews</h2>
+            <div class="space-y-2">
+                <div class="quest-card flex justify-between items-center group">
+                    <div>
+                        <div class="text-xs font-bold text-white">User: Kaito_99</div>
+                        <div class="text-[9px] text-white/50">Photo Submission</div>
+                    </div>
+                    <div class="flex gap-1 opacity-50 group-hover:opacity-100 transition-opacity">
+                        <button class="p-1 hover:text-green-400" title="Approve"><span class="material-symbols-outlined text-sm">check</span></button>
+                        <button class="p-1 hover:text-red-400" title="Reject"><span class="material-symbols-outlined text-sm">close</span></button>
                     </div>
                 </div>
             </div>
 
         </section>
 
-    </main>
-
-    <!-- Flowee Overlay (The Royal Advisor) -->
-    <div id="flowee-royal" class="fixed bottom-8 right-8 z-50 pointer-events-none">
-        <!-- Rendered by flowee.js interactively -->
     </div>
 
-    <!-- Scripts -->
-    <script src="../js/master_dashboard.js"></script>
-    <script src="../js/agents/visual_eye.js"></script>
-    <script src="../js/agents/helper.js"></script>
-    <script src="../js/agents/bridge_pusher.js"></script>
-    <script src="../js/agents/flowee.js"></script>
+    <!-- SCRIPTS -->
     <script>
-        // Particle Init
-        const container = document.getElementById('particle-container');
-        for(let i=0; i<50; i++) {
-            const p = document.createElement('div');
-            p.className = 'light-mote';
-            p.style.left = Math.random() * 100 + 'vw';
-            p.style.top = -10 + 'px';
-            p.style.width = Math.random() * 3 + 'px';
-            p.style.height = p.style.width;
-            p.style.animationDuration = (Math.random() * 5 + 5) + 's';
-            p.style.animationDelay = Math.random() * 5 + 's';
-            container.appendChild(p);
+        // --- MAP INIT ---
+        const map = L.map('forge-map', {
+            zoomControl: false,
+            attributionControl: false
+        }).setView([38.7223, -9.1393], 13);
+
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            maxZoom: 19
+        }).addTo(map);
+
+        // Scout Markers (Simulated)
+        const scouts = [
+            {lat: 38.7100, lng: -9.1400},
+            {lat: 38.7300, lng: -9.1500},
+            {lat: 38.7200, lng: -9.1350}
+        ];
+        scouts.forEach(s => {
+            L.circleMarker([s.lat, s.lng], {
+                radius: 4,
+                fillColor: "#00F0FF",
+                color: "#000",
+                weight: 1,
+                opacity: 1,
+                fillOpacity: 0.8
+            }).addTo(map);
+        });
+
+        // --- QUEST LOGIC ---
+        function triggerGoldenHour() {
+            if(window.QuestController) {
+                const msg = window.QuestController.triggerGoldenHour();
+                alert(msg); // Feedback
+            } else {
+                alert("QuestController Offline. Check connection.");
+            }
+        }
+
+        function forgeQuest() {
+            const title = document.getElementById('q-title').value;
+            const type = document.getElementById('q-type').value;
+            const xp = document.getElementById('q-xp').value;
+
+            if(!title) return alert("Mission Title Required");
+
+            if(window.QuestController) {
+                window.QuestController.createQuest(title, type, xp);
+                if(window.Pusher) window.Pusher.showToast(`Quest '${title}' Forged!`, 'success');
+                // Clear
+                document.getElementById('q-title').value = '';
+            }
         }
     </script>
-    <div id="flowee-agent" class="fixed bottom-8 left-8 z-50 flex flex-col items-center group cursor-pointer"></div>
+    <script src="../js/agents/pusher.js"></script>
+    <script src="../js/agents/quest_controller.js"></script>
+    <!-- BETA TOOLS -->
+    <script src="../js/agents/beta_observer.js"></script>
+    <script src="../js/agents/beta_log_overlay.js"></script>
 </body>
 </html>

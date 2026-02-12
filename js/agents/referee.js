@@ -18,13 +18,24 @@ class RefereeAgent {
             { q: "Who governs the frequencies of the Sonic Field?", a: "DJ Qter", options: ["DJ Ride", "DJ Qter", "Sam the Kid"] }
         ];
 
-        this.leaderboardData = [
-            { name: "Sage_Nova", rank: "Master", xp: 15400, icon: "auto_awesome" },
-            { name: "Killa_Beat", rank: "Adept", xp: 12350, icon: "graphic_eq" },
-            { name: "Graf_X", rank: "Adept", xp: 9800, icon: "brush" },
-            { name: "Flow_Rider", rank: "Disciple", xp: 5600, icon: "water_drop" },
-            { name: "Zen_Monk", rank: "Disciple", xp: 4200, icon: "self_improvement" }
-        ];
+        // Initialize Leaderboard (Persistent)
+        const savedLeaderboard = JSON.parse(localStorage.getItem('cdf_leaderboard') || 'null');
+        if (savedLeaderboard) {
+            this.leaderboardData = savedLeaderboard;
+        } else {
+            this.leaderboardData = [
+                { name: "Sage_Nova", rank: "Master", xp: 15400, icon: "auto_awesome" },
+                { name: "Killa_Beat", rank: "Adept", xp: 12350, icon: "graphic_eq" },
+                { name: "Graf_X", rank: "Adept", xp: 9800, icon: "brush" },
+                { name: "Flow_Rider", rank: "Disciple", xp: 5600, icon: "water_drop" },
+                { name: "Zen_Monk", rank: "Disciple", xp: 4200, icon: "self_improvement" }
+            ];
+            if(window.Helper) {
+                window.Helper.saveData('cdf_leaderboard', JSON.stringify(this.leaderboardData));
+            } else {
+                localStorage.setItem('cdf_leaderboard', JSON.stringify(this.leaderboardData));
+            }
+        }
 
         this.init();
     }
@@ -35,6 +46,66 @@ class RefereeAgent {
         this.renderLeaderboard();
         this.renderLiveFeed();
         // this.updateTicker(); // Handled by CSS for now
+        this.syncTournament();
+    }
+
+    syncTournament() {
+        const tournament = window.TournamentManifest || JSON.parse(localStorage.getItem('cdf_tournament') || 'null');
+        if (!tournament) return;
+
+        // 1. Update Ticker
+        const ticker = document.getElementById('colosseum-ticker');
+        if (ticker && tournament.status === 'LIVE') {
+            ticker.innerText = `+++ ${tournament.season.toUpperCase()} IS LIVE +++ STAGE: ${tournament.stage.toUpperCase()} +++ ${tournament.entrants} CHALLENGERS REMAINING +++`;
+            ticker.classList.add('text-red-500'); // Make it alarming
+        }
+
+        // 2. Inject Tournament Bracket Portal (Optional: Prepend to pillars)
+        if (tournament.status === 'LIVE') {
+            const container = document.getElementById('battle-fields');
+            const tournamentPortal = `
+                <div onclick="window.BracketAgent ? window.BracketAgent.open() : alert('Bracket System Loading...')" 
+                    class="portal-card flex-shrink-0 w-64 md:w-72 h-96 bg-red-900/20 border-2 border-red-500 rounded-3xl relative overflow-hidden cursor-pointer snap-center group animate-pulse">
+                    <div class="absolute inset-0 bg-gradient-to-b from-transparent via-red-900/50 to-black opacity-90"></div>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center p-6 z-10 transition-transform duration-500 group-hover:-translate-y-4">
+                        <div class="w-24 h-24 rounded-full border-2 border-red-500 flex items-center justify-center mb-6 bg-black shadow-[0_0_30px_rgba(239,68,68,0.5)]">
+                            <span class="material-symbols-outlined text-5xl text-red-500">trophy</span>
+                        </div>
+                        <h3 class="text-2xl font-serif font-bold text-red-500 uppercase tracking-widest mb-2 text-center">TOURNAMENT</h3>
+                        <div class="h-px w-8 bg-red-500/50 mb-2"></div>
+                        <span class="text-[10px] text-white/50 uppercase tracking-[0.2em] text-center">${tournament.stage}</span>
+                    </div>
+                </div>
+            `;
+            // Check if already injected to avoid dupes (simple check)
+            if (container && !container.innerHTML.includes('TOURNAMENT')) {
+                 container.insertAdjacentHTML('afterbegin', tournamentPortal);
+            }
+        }
+    }
+
+    enterField(fieldId) {
+        console.log(`[Referee] Entering Field: ${fieldId}`);
+        const routes = {
+            'lyric': 'blog.html',           // The Lyric Colosseum
+            'circle': 'services-community.html', // Community/Circle
+            'visual': 'kiss-your-heart.html',    // Visual Arts
+            'sonic': 'outbreak_tunes.html',      // Sound/DJ
+            'knowledge': 'library.html'          // Knowledge/Academy
+        };
+
+        const target = routes[fieldId];
+        if (target) {
+            if(window.SoundEngineer) window.SoundEngineer.playSFX('warp_engaged');
+            // Add a small delay for effect
+             if(window.Pusher) window.Pusher.showToast(`Warping to ${fieldId.toUpperCase()} Sector...`, 'info');
+            setTimeout(() => {
+                window.location.href = target;
+            }, 800);
+        } else {
+            console.warn(`[Referee] Unknown Field: ${fieldId}`);
+            alert("This Sector is currently under construction.");
+        }
     }
 
     renderPillars() {
@@ -117,243 +188,344 @@ class RefereeAgent {
         if(container.children.length > 10) container.lastElementChild.remove();
     }
 
-    enterField(fieldId) {
-        const field = this.pillars.find(p => p.id === fieldId);
-        
-        // 1. Flowee Intro
-        this.triggerFloweeIntro(field);
+    // --- COMBAT ENGINE CORE ---
 
-        // 2. Open Duel Overlay (Hologram)
-        const overlay = document.getElementById('duel-overlay');
-        const content = document.getElementById('duel-content');
-        
-        if (!overlay || !content) return;
+    /**
+     * Matchmaking Logic: Finds a suitable opponent based on Nen Type and Level.
+     * @param {string} nenType - The user's Nen type (optional filter)
+     * @param {number} level - Used to find opponents within range (+/- 2 levels)
+     */
+    findOpponent(nenType = null, level = 1) {
+        console.log(`[Referee] Scanning for opponents... Type: ${nenType}, Level: ${level}`);
+        // Mock Database of Opponents
+        const opponents = [
+            { id: 'cpu1', name: 'Neon_Viper', type: 'Enhancer', level: 1, winRate: 0.4 },
+            { id: 'cpu2', name: 'Shadow_Weaver', type: 'Transmuter', level: 2, winRate: 0.6 },
+            { id: 'cpu3', name: 'Iron_Golem', type: 'Emitter', level: 3, winRate: 0.8 },
+            { id: 'cpu4', name: 'Psycho_Mantis', type: 'Manipulator', level: 4, winRate: 0.9 },
+            { id: 'cpu5', name: 'Chrollo_Lucilfer', type: 'Specialist', level: 5, winRate: 0.99 }
+        ];
 
-        // Reset Content
-        content.innerHTML = this.getDuelTemplate(field);
-        
-        overlay.classList.remove('hidden');
-    }
-
-    triggerFloweeIntro(field) {
-        const msg = `Creator! You enter the **${field.name}**. Knowledge is the root of your Nen. Prove your worth!`;
-        
-        // Direct integration if Flowee is present
-        if (window.Flowee && window.Flowee.talk) {
-             window.Flowee.talk(true, msg);
-             // Optional: Make Flowee fly to the portal (if we had coordinates, simplifying for now)
-        } else if (window.Notifications) {
-            window.Notifications.send('flowee', msg, 'high');
-        }
-    }
-
-    getDuelTemplate(field) {
-        if (field.id === 'knowledge') {
-            return this.getQuizTemplate();
+        // Filter Logic
+        let candidates = opponents.filter(op => Math.abs(op.level - level) <= 2);
+        if (nenType) {
+            // 30% chance to prioritize same type, else random
+            if (Math.random() < 0.3) candidates = candidates.filter(op => op.type === nenType);
         }
 
-        const user = window.Gamification?.state || { level: 1, class: 'Initiate' };
-        
-        // Hologram UI
-        return `
-            <!-- LEFT: YOU -->
-            <div class="flex flex-col items-center justify-center animate-fade-in-up" style="animation-delay: 0.1s">
-                <div class="w-32 h-32 rounded-full border-2 border-cyan-400 p-1 mb-4 shadow-[0_0_20px_rgba(34,211,238,0.3)]">
-                    <div class="w-full h-full bg-gray-800 rounded-full flex items-center justify-center overflow-hidden">
-                        <span class="material-symbols-outlined text-6xl text-white/20">person</span>
-                    </div>
-                </div>
-                <h3 class="text-xl font-bold font-serif text-cyan-400 tracking-widest">YOU</h3>
-                <p class="text-xs text-white/50 uppercase tracking-widest mt-1">Lvl ${user.level} ${user.class}</p>
-            </div>
-
-            <!-- CENTER: ACTION -->
-            <div class="flex flex-col items-center justify-center animate-fade-in-up space-y-8 relative" style="animation-delay: 0.2s">
-                <div class="absolute inset-0 bg-transparent flex items-center justify-center pointer-events-none">
-                     <div class="w-64 h-64 border border-white/5 rounded-full animate-pulse-slow"></div>
-                </div>
-
-                <div class="text-center">
-                    <span class="material-symbols-outlined text-4xl ${field.color} mb-2">${field.icon}</span>
-                    <h2 class="text-sm uppercase tracking-[0.3em] text-white/50">${field.name}</h2>
-                </div>
-
-                <button onclick="Referee.startClash('${field.name}')" class="group relative px-12 py-6 bg-transparent border-2 border-white/20 hover:border-white text-white font-bold font-serif text-2xl uppercase tracking-widest transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_0_30px_rgba(255,255,255,0.1)] hover:shadow-[0_0_50px_rgba(255,255,255,0.3)] rounded-sm">
-                    <span class="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity"></span>
-                    RELEASE THE FLOW
-                </button>
-                
-                <p class="text-[10px] text-white/30 uppercase tracking-widest mt-4">Simulation Mode Active</p>
-            </div>
-
-            <!-- RIGHT: OPPONENT -->
-            <div class="flex flex-col items-center justify-center animate-fade-in-up" style="animation-delay: 0.3s">
-                <div class="w-32 h-32 rounded-full border-2 border-red-500 p-1 mb-4 shadow-[0_0_20px_rgba(239,68,68,0.3)]">
-                    <div class="w-full h-full bg-gray-800 rounded-full flex items-center justify-center overflow-hidden">
-                        <span class="material-symbols-outlined text-6xl text-white/20">robot</span>
-                    </div>
-                </div>
-                <h3 class="text-xl font-bold font-serif text-red-500 tracking-widest">CYPHER_BOT</h3>
-                <p class="text-xs text-white/50 uppercase tracking-widest mt-1">Lvl ${Math.max(1, user.level + 1)} Challenger</p>
-            </div>
-        `;
+        return candidates.length > 0 ? candidates[Math.floor(Math.random() * candidates.length)] : opponents[0];
     }
 
-    getQuizTemplate() {
-        // Random Question
-        const q = this.quizQuestions[Math.floor(Math.random() * this.quizQuestions.length)];
-        this.currentQuizAnswer = q.a;
-
-        return `
-            <div class="col-span-1 md:col-span-3 flex flex-col items-center justify-center animate-fade-in-up">
-                <div class="w-24 h-24 rounded-full border-2 border-emerald-400 flex items-center justify-center bg-white/5 mb-8 shadow-[0_0_30px_rgba(52,211,153,0.3)]">
-                    <span class="material-symbols-outlined text-5xl text-emerald-400">school</span>
-                </div>
-                
-                <h2 class="text-2xl font-bold font-serif uppercase tracking-widest text-white mb-2">Knowledge Check</h2>
-                <div class="h-px w-12 bg-emerald-400/50 mb-8"></div>
-                
-                <p class="text-2xl md:text-3xl font-bold text-white max-w-2xl mx-auto py-8 text-center leading-relaxed">"${q.q}"</p>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 w-full max-w-3xl mt-8">
-                    ${q.options.map(opt => `
-                        <button onclick="Referee.checkAnswer('${opt}', '${q.a}')" 
-                            class="py-6 px-4 bg-white/5 border border-white/10 hover:border-emerald-400 hover:bg-emerald-400/10 hover:text-emerald-400 text-white rounded-xl text-lg transition-all transform hover:scale-105">
-                            ${opt}
-                        </button>
-                    `).join('')}
-                </div>
-            </div>
-        `;
-    }
-
-    checkAnswer(selected, correct) {
-        if (selected === correct) {
-            this.setVerdict('won', 'The Knowledge Field');
+    /**
+     * Validates if the user has enough EP (Energy Points) for the stake.
+     * @param {number} stake - The required entry fee.
+     * @returns {boolean}
+     */
+    validateEntryFee(stake) {
+        const userXP = parseInt(localStorage.getItem('cdf_xp') || '0'); 
+        // Assuming EP ~ XP for this simulation, or fetch strict EP if separate.
+        // Let's assume 1 XP = 1 EP for simplicity in this phase.
+        if (userXP >= stake) {
+            return true;
         } else {
-             // Shake / Error UI
-             if (window.Notifications) window.Notifications.send('error', 'Incorrect. Study the Roots.', 'user');
-             this.setVerdict('lost', 'The Knowledge Field');
+            this.triggerAccessDenied(stake);
+            return false;
         }
     }
 
-    startClash(fieldName) {
-        // Transition to Verdict Screen
-        const content = document.getElementById('duel-content');
-        content.innerHTML = `
-            <div class="col-span-1 md:col-span-3 flex flex-col items-center justify-center min-h-[400px] animate-fade-in">
-                <h2 class="text-4xl font-serif font-bold text-white mb-12 tracking-widest text-shadow-neon">THE VERDICT</h2>
-                
-                <div class="flex gap-8 w-full max-w-2xl px-4">
-                    <button onclick="Referee.setVerdict('won', '${fieldName}')" 
-                        class="flex-1 py-12 bg-black/50 border border-amber-400/50 hover:bg-amber-400 hover:text-black text-amber-400 font-bold text-2xl md:text-3xl font-serif uppercase tracking-widest transition-all duration-300 hover:scale-105 shadow-[0_0_30px_rgba(251,191,36,0.2)] rounded-xl">
-                        I WON
-                    </button>
+    triggerAccessDenied(needed) {
+        console.warn(`[Referee] Access Denied. Needed: ${needed} EP`);
+        if (window.Pusher) {
+            window.Pusher.showToast(`Insufficient Energy. Need ${needed} EP.`, 'error');
+        } else {
+            alert(`Insufficient Energy. Need ${needed} EP.`);
+        }
+    }
+
+    // --- WEEKLY CORONATION ---
+    checkWeeklyCoronation() {
+        const lastCheck = localStorage.getItem('cdf_last_coronation');
+        const now = new Date();
+        const isMonday = now.getDay() === 1;
+
+        if (isMonday && lastCheck !== now.toDateString()) {
+            console.log("👑 [Referee] Initiating Weekly Coronation...");
+            // Simulate Awarding Crowns
+            this.leaderboardData.forEach((user, index) => {
+                if (index < 3) {
+                    user.crowns = (user.crowns || 0) + 1;
+                    console.log(`Awarded Crown to ${user.name}`);
+                }
+            });
+            
+            if(window.Helper) {
+                window.Helper.saveData('cdf_leaderboard', JSON.stringify(this.leaderboardData));
+                window.Helper.saveData('cdf_last_coronation', now.toDateString());
+            } else {
+                localStorage.setItem('cdf_leaderboard', JSON.stringify(this.leaderboardData));
+                localStorage.setItem('cdf_last_coronation', now.toDateString());
+            }
+            
+            if (window.Pusher) window.Pusher.showToast("Weekly Crowns Awarded!", 'success');
+        }
+    }
+
+    /**
+     * Helper for Non-Combat Victories (e.g. Quizzes, Donations)
+     */
+    recordVictory(amount, source) {
+        let currentXP = parseInt(localStorage.getItem('cdf_xp') || '0');
+        let wins = parseInt(localStorage.getItem('cdf_wins') || '0');
+        let streak = parseInt(localStorage.getItem('cdf_streak') || '0');
+        
+        const oldLevel = Math.floor(currentXP / 1000) + 1;
+
+        currentXP += amount;
+        wins++;
+        streak++;
+        
+        const newLevel = Math.floor(currentXP / 1000) + 1;
+        if(newLevel > oldLevel && window.Pusher) {
+            setTimeout(() => {
+                window.Pusher.showToast(`LEVEL UP! You are now Rank ${newLevel} 🌟`, 'xp');
+            }, 500); 
+        }
+
+        if(window.Helper) {
+            window.Helper.saveData('cdf_xp', currentXP.toString());
+            window.Helper.saveData('cdf_wins', wins.toString());
+            window.Helper.saveData('cdf_streak', streak.toString());
+        } else {
+            localStorage.setItem('cdf_xp', currentXP.toString());
+            localStorage.setItem('cdf_wins', wins.toString());
+            localStorage.setItem('cdf_streak', streak.toString());
+        }
+
+        if(window.Pusher) window.Pusher.showToast(`${source}: +${amount} XP | Streak: ${streak} 🔥`, 'success');
+    }
+
+    /**
+     * Combat Engine: Calculates Rewards based on the Fitable Point System
+     * Formula: (Base + (Diff * Multiplier)) * StreakBonus
+     */
+    resolveBattle(fieldId) {
+        // 1. Get User State
+        let currentXP = parseInt(localStorage.getItem('cdf_xp') || '0');
+        let wins = parseInt(localStorage.getItem('cdf_wins') || '0');
+        let streak = parseInt(localStorage.getItem('cdf_streak') || '0');
+        
+        const oldLevel = Math.floor(currentXP / 1000) + 1;
+
+        // 2. Determine Outcome
+        // Win rate decreases slightly as you level up (Simulated difficulty)
+        const difficulty = 0.5; 
+        const outcome = Math.random() > difficulty ? 'win' : 'loss';
+
+        let xpChange = 0;
+        let karmaChange = 0;
+
+        // 3. Calculate Rewards
+        if (outcome === 'win') {
+            const baseXP = 100;
+            const streakBonus = Math.min(streak * 10, 50); // Cap streak bonus at 50
+            const randomFlux = Math.floor(Math.random() * 20); // +/- 10 variation
+            
+            xpChange = baseXP + streakBonus + randomFlux;
+            
+            // Allow Critical Success chance (5%)
+            if (Math.random() < 0.05) {
+                xpChange *= 2; 
+                console.log("CRITICAL FLOW!");
+            }
+
+            // Update State
+            wins++;
+            streak++;
+            currentXP += xpChange;
+
+        } else {
+            // Loss Logic
+            const baseLoss = 10;
+            karmaChange = baseLoss;
+            streak = 0; // Reset streak
+            
+            // Consolation XP (Learning from failure)
+            xpChange = 25; 
+            currentXP += xpChange;
+        }
+
+        // 4. Level Up Check
+        const newLevel = Math.floor(currentXP / 1000) + 1;
+        if(newLevel > oldLevel && window.Pusher) {
+            setTimeout(() => {
+                window.Pusher.showToast(`LEVEL UP! You are now Rank ${newLevel} 🌟`, 'xp');
+            }, 500); // Slight delay after result
+        }
+
+        // 5. Save State
+        if(window.Helper) {
+            window.Helper.saveData('cdf_xp', currentXP.toString());
+            window.Helper.saveData('cdf_wins', wins.toString());
+            window.Helper.saveData('cdf_streak', streak.toString());
+        } else {
+            localStorage.setItem('cdf_xp', currentXP.toString());
+            localStorage.setItem('cdf_wins', wins.toString());
+            localStorage.setItem('cdf_streak', streak.toString());
+        }
+
+        console.log(`[Battle] Result: ${outcome.toUpperCase()} | XP: +${xpChange} | Streak: ${streak}`);
+
+        return { outcome, xp: xpChange, loss: karmaChange, streak: streak };
+    }
+
+    renderVerdict(win, data) {
+        const modal = document.getElementById('fates-verdict');
+        if(!modal) return;
+
+        // Persist Stats (Phase 15)
+        const stats = JSON.parse(localStorage.getItem('cdf_battle_records') || '{"wins":0, "losses":0, "streak":0}');
+        if(win) {
+            stats.wins++;
+            stats.streak++;
+        } else {
+            stats.losses++;
+            stats.streak = 0; // Reset streak on loss
+        }
+        
+        if(window.Helper) {
+            window.Helper.saveData('cdf_battle_records', JSON.stringify(stats));
+        } else {
+            localStorage.setItem('cdf_battle_records', JSON.stringify(stats));
+        }
+
+        modal.classList.remove('hidden');
+        
+        if(win) {
+            // Victory
+             if (window.Gamification) window.Gamification.addXP(data.stake, `Defeated ${data.opponent}`);
+             
+             modal.innerHTML = `
+                <div class="text-center animate-fade-in-up">
+                    <div class="inline-block p-8 rounded-full border-4 border-amber-400 bg-black shadow-[0_0_80px_rgba(251,191,36,0.6)] mb-8">
+                         <span class="material-symbols-outlined text-7xl text-amber-400">emoji_events</span>
+                    </div>
+                    <h2 class="text-6xl font-black font-serif text-white mb-2 tracking-widest text-shadow-neon">VICTORY</h2>
+                    <p class="text-amber-400 text-sm tracking-[0.5em] uppercase mb-8">Legend Arisen</p>
                     
-                    <button onclick="Referee.setVerdict('lost', '${fieldName}')" 
-                        class="flex-1 py-12 bg-black/50 border border-gray-500/50 hover:bg-gray-500 hover:text-black text-gray-500 font-bold text-2xl md:text-3xl font-serif uppercase tracking-widest transition-all duration-300 hover:scale-105 rounded-xl">
-                        I LOST
-                    </button>
+                    <div class="ep-gain mb-12">+${data.stake} EP</div>
+                    
+                    <div class="flex gap-4 justify-center">
+                        <button onclick="document.getElementById('fates-verdict').classList.add('hidden')" class="px-8 py-3 border border-white/20 hover:bg-white hover:text-black text-white uppercase tracking-widest rounded-lg transition-all">
+                            Return
+                        </button>
+                        <button onclick="Referee.shareGlory('${data.opponent}', ${data.stake})" class="px-8 py-3 bg-amber-400 text-black font-bold uppercase tracking-widest rounded-lg shadow-[0_0_30px_rgba(251,191,36,0.4)] hover:scale-105 transition-all">
+                            Share Glory
+                        </button>
+                    </div>
                 </div>
+             `;
+        } else {
+            // Defeat
+            modal.innerHTML = `
+                <div class="text-center animate-fade-in-up">
+                    <div class="inline-block p-8 rounded-full border-4 border-red-600 bg-black shadow-[0_0_80px_rgba(220,38,38,0.4)] mb-8">
+                         <span class="material-symbols-outlined text-7xl text-red-600">heart_broken</span>
+                    </div>
+                    <h2 class="text-6xl font-black font-serif text-gray-500 mb-2 tracking-widest">DEFEAT</h2>
+                    <p class="text-red-500 text-sm tracking-[0.5em] uppercase mb-8">Haki Crushed</p>
+                    
+                    <div class="text-4xl font-bold text-red-600 mb-12 ep-loss">-${data.stake} EP</div>
+                    
+                    <div class="flex gap-4 justify-center">
+                        <button onclick="document.getElementById('fates-verdict').classList.add('hidden')" class="px-8 py-3 border border-white/20 hover:bg-white hover:text-black text-white uppercase tracking-widest rounded-lg transition-all">
+                            Retreat
+                        </button>
+                        <button onclick="Referee.triggerRevenge('${data.opponent}')" class="px-8 py-3 bg-red-600 text-white font-bold uppercase tracking-widest rounded-lg shadow-[0_0_30px_rgba(220,38,38,0.4)] hover:scale-105 transition-all">
+                            Double or Nothing
+                        </button>
+                    </div>
+                </div>
+             `;
+        }
+    }
+
+    // 3. Manual Reporting
+    confirmResult(outcome) { // 'win' or 'loss'
+        clearInterval(this.battleTimerInterval);
+        
+        let xpChange, title, msg, icon;
+
+        if(outcome === 'win') {
+            xpChange = 150; // Manual fights give good XP
+            title = "VICTORY CONFIRMED";
+            msg = "Glory to the victor.";
+            icon = "emoji_events";
+            this.recordVictory(xpChange, `Live Battle vs ${this.currentOpponent.name}`);
+        } else {
+            xpChange = 25; // Participation
+            title = "DEFEAT ACKNOWLEDGED";
+            msg = "Honor in effective failure.";
+            icon = "handshake"; // Respect
+             // Log loss but give small XP
+            let currentXP = parseInt(localStorage.getItem('cdf_xp') || '0');
+            currentXP += xpChange;
+            
+            if(window.Helper) {
+                window.Helper.saveData('cdf_xp', currentXP.toString());
+            } else {
+                localStorage.setItem('cdf_xp', currentXP.toString());
+            }
+            
+            if(window.Pusher) window.Pusher.showToast(`Defeat Logged. +${xpChange} XP for consistency.`, 'info');
+        }
+
+        // Show Verdict UI
+        const arenaInterface = document.getElementById('live-arena-interface');
+        arenaInterface.innerHTML = `
+             <div class="text-center animate-fade-in-up">
+                <div class="inline-block p-6 rounded-full border-4 border-${outcome === 'win' ? 'amber-400' : 'gray-500'} bg-black mb-6">
+                     <span class="material-symbols-outlined text-6xl text-${outcome === 'win' ? 'amber-400' : 'gray-500'}">${icon}</span>
+                </div>
+                <h2 class="text-4xl font-black font-serif text-white mb-2 uppercase tracking-widest">${title}</h2>
+                <p class="text-white/50 uppercase tracking-widest mb-8">${msg}</p>
+                <a href="../Index.html" class="px-8 py-3 bg-white/10 hover:bg-white hover:text-black text-white font-bold uppercase tracking-widest rounded transition-all">
+                    Return to Hub
+                </a>
             </div>
         `;
     }
 
-    setVerdict(result, fieldName) {
-        const content = document.getElementById('duel-content');
-        const userName = localStorage.getItem('userName') || 'Initiate';
+    shareGlory(opponent, amount) {
+        if(window.Pusher) window.Pusher.pushTicker(`ARENA-NEWS: YOU HAVE DEFEATED ${opponent} // +${amount} EP CLAIMED`, 'success');
+        document.getElementById('fates-verdict').classList.add('hidden');
+    }
+
+    triggerRevenge(opponentName) {
+        document.getElementById('fates-verdict').classList.add('hidden');
+        this.openChallengeCard({ name: opponentName, rank: "Rival" });
+        // Auto-set stake to double?
+        if(window.Pusher) window.Pusher.showToast("Revenge Match Initiated!", 'warning');
+    }
+
+    crownWeeklyKings() {
+        const fields = ['Tournament', 'Lyric', 'Circle', 'Soul', 'Taste'];
+        const randomKing = "Navigator_X"; // Placeholder
         
-        if (result === 'won') {
-            // Reward
-            if (window.Gamification) window.Gamification.addXP(100, `Victory in ${fieldName}`);
-            
-            // Legacy Quest UI
-            content.innerHTML = `
-                <div class="col-span-1 md:col-span-3 text-center space-y-8 animate-fade-in pb-12">
-                    <div class="inline-block p-6 rounded-full border-4 border-amber-400 shadow-[0_0_50px_rgba(251,191,36,0.6)] bg-black">
-                        <span class="material-symbols-outlined text-6xl text-amber-400">emoji_events</span>
-                    </div>
-                    
-                    <div>
-                        <h2 class="text-5xl font-bold font-serif text-amber-400 uppercase tracking-widest mb-2 gold-glow">GLORY</h2>
-                        <p class="text-white/60 text-lg tracking-widest uppercase">Your aura expands.</p>
-                    </div>
-                    
-                    <!-- XP BAR SWOOSH -->
-                    <div class="w-full max-w-md mx-auto h-4 bg-white/10 rounded-full overflow-hidden relative">
-                         <div class="absolute inset-y-0 left-0 bg-gradient-to-r from-amber-400 to-orange-500 w-0 animate-[fillBar_1.5s_ease-out_forwards]"></div>
-                    </div>
-                    <style> @keyframes fillBar { to { width: 100%; } } </style>
+        if(window.Pusher) window.Pusher.pushTicker(`🏆 CORONATION: ${randomKing} IS THE NEW KING OF ${fields[0].toUpperCase()} FIELD!`, 'success');
+    }
 
-                    <div class="max-w-md mx-auto mt-8 p-6 border border-white/10 bg-white/5 rounded-xl">
-                        <h3 class="text-cyan-400 font-bold text-sm uppercase tracking-widest mb-4">Legacy Quest Available</h3>
-                        <button onclick="Referee.uploadLegacy('${fieldName}')" class="w-full py-4 bg-cyan-400 text-black font-bold uppercase tracking-[0.2em] hover:bg-white transition-colors shadow-[0_0_20px_rgba(34,211,238,0.4)]">
-                            Upload Proof to Ticker
-                        </button>
-                    </div>
-                </div>
-            `;
-            
-            if (window.Flowee && window.Flowee.talk) {
-                 window.Flowee.talk(true, "A true King! Upload that legacy! 👑");
-            }
-        } else {
-            // Loss
-            if (window.Gamification) window.Gamification.addXP(10, `Training in ${fieldName}`);
-
-            content.innerHTML = `
-                <div class="col-span-1 md:col-span-3 text-center space-y-8 animate-fade-in pb-12">
-                     <div class="inline-block p-6 rounded-full border-4 border-gray-600 bg-black">
-                        <span class="material-symbols-outlined text-6xl text-gray-500">sentiment_dissatisfied</span>
-                    </div>
-                    <div>
-                        <h2 class="text-4xl font-bold font-serif text-gray-400 uppercase tracking-widest mb-2">DEFEAT</h2>
-                        <p class="text-white/60 text-lg tracking-widest uppercase">A lesson learned.</p>
-                    </div>
-                    <button onclick="Referee.closeDuel()" class="px-8 py-3 bg-white/10 hover:bg-white hover:text-black rounded-lg uppercase tracking-widest transition-all">
-                        Return to Hub
-                    </button>
-                </div>
-            `;
-            if (window.Flowee && window.Flowee.talk) {
-                 window.Flowee.talk(true, "Keep grinding. The process is the prize.");
-            }
+    // --- LEGACY METHODS (Kept for compatibility) ---
+    startCasualDuel() { this.enterTheFlow(); } // Redirect casual clicking to new flow
+    enterTournament() {
+        const level = window.Gamification ? window.Gamification.getLevel() : 0;
+        if (level < 3) {
+            alert(`⛔ ACCESS DENIED\n\nLevel 3 Required.\nCurrent Level: ${level}\n\nTrain in the Casual Grounds first!`);
+            return;
         }
+        if (window.BracketAgent) window.BracketAgent.open();
     }
-
-    uploadLegacy(fieldName) {
-        // Mock Upload Delay
-        const btn = document.querySelector('button.bg-cyan-400');
-        if(btn) btn.innerHTML = "<span class='material-symbols-outlined animate-spin'>sync</span> Uploading...";
-
-        setTimeout(() => {
-            const userName = localStorage.getItem('userName') || 'A Creator';
-            
-            // 1. Update Feed Sidebar
-            this.addFeedItem(userName, "Conquered", fieldName);
-
-            // 2. Ticker Update
-            const msg = `++ [BATTLE] ${userName} dominated ${fieldName} with pure style! ++`;
-            const ticker = document.getElementById('colosseum-ticker');
-            if(ticker) ticker.innerText = msg + " " + ticker.innerText;
-
-            // 3. Extra XP
-            if (window.Gamification) window.Gamification.addXP(50, 'Legacy Upload');
-
-            // 4. Close
-            this.closeDuel();
-            if (window.Notifications) window.Notifications.send('success', 'Legacy Recorded. Ticker Updated.', 'user');
-            
-            if (window.Flowee && window.Flowee.talk) {
-                 window.Flowee.talk(true, "We live forever through the stories we leave behind!");
-            }
-
-        }, 1500);
-    }
-
-    closeDuel() {
-        document.getElementById('duel-overlay').classList.add('hidden');
-    }
+    closeDuel() { document.getElementById('duel-overlay')?.classList.add('hidden'); }
 }
 
+// Auto-Init
 window.Referee = new RefereeAgent();

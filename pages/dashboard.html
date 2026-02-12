@@ -1,362 +1,53 @@
 ﻿<!DOCTYPE html>
-<html class="dark" lang="en">
-
+<html lang="en">
 <head>
-    <meta name="description" content="Your Circle D Flow Dashboard. Manage your bookings, view your gallery, and track your gamification progress.">
-    <meta property="og:title" content="Circle D Flow | Apex Dashboard">
-    <meta property="og:description" content="Access the Apex-Dashboard for full control over your Hunter Journey.">
-    <meta property="og:type" content="website">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta charset="utf-8" />
-    <title>Dashboard - Circle D Flow</title>
+    <title>Captain's Quarters | Circle D Flow</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com" rel="preconnect" />
-    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&amp;display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
-    <link rel="stylesheet" href="../css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <style>
-        .material-symbols-outlined { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-        
-        /* Apex Animations */
-        @keyframes fade-in-down {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+        :root {
+            --haki-gold: #d4af37;
+            --benin-bronze: #cd7f32;
+            --obsidian: #0a0a0a;
         }
-        .animate-fade-in-down { animation: fade-in-down 0.8s ease-out forwards; }
-        
-        .apex-sector { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-        .apex-sector:hover { transform: translateY(-5px); box-shadow: 0 10px 30px -10px rgba(138, 43, 226, 0.3); }
-        
-        /* Scrollbar */
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #8A2BE2; border-radius: 4px; }
-
-        /* Mobile Swipe Snap */
-        @media (max-width: 768px) {
-            #prisma-grid {
-                display: flex;
-                overflow-x: auto;
-                scroll-snap-type: x mandatory;
-                gap: 1rem;
-                padding-bottom: 2rem;
-            }
-            .apex-sector {
-                min-width: 85vw;
-                scroll-snap-align: center;
-            }
+        body {
+            background-color: var(--obsidian);
+            color: #e0e0e0;
+            font-family: 'Space Mono', monospace;
+            background-image: url('../assets/images/map_texture_dark.png');
+            background-blend-mode: overlay;
         }
+        .font-cinzel { font-family: 'Cinzel', serif; }
     </style>
-    <script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        "primary": "#8A2BE2",
-                        "primary-400": "#A855F7",
-                        "primary-500": "#8B5CF6",
-                        "primary-600": "#7C3AED",
-                        "primary-900": "#4C1D95",
-                        "electric": "#9A4DFF",
-                        "mystic-gold": "#FFD700",
-                        "orange-400": "#FB923C",
-                        "orange-500": "#F97316",
-                        "orange-900": "#7C2D12",
-                        "green-400": "#4ADE80",
-                        "green-500": "#22C55E",
-                        "green-900": "#14532D",
-                        "red-400": "#F87171",
-                        "red-500": "#EF4444",
-                        "red-900": "#7F1D1D",
-                        "blue-400": "#60A5FA",
-                        "blue-500": "#3B82F6"
-                    },
-                    fontFamily: { "display": ["Plus Jakarta Sans", "sans-serif"] }
-                }
-            }
-        }
-    </script>
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-    
+</head>
+<body class="pt-24 min-h-screen overflow-x-hidden">
+
+    <main class="relative z-10 w-full flex flex-col items-center">
+        
+        <!-- SECTION 1: THE FLOW COMPASS (Mandala Navigation) -->
+        <section class="w-full min-h-[80vh] py-12 flex items-center justify-center relative perspective-1000 overflow-visible">
+            
+            <div class="mandala-container">
+                <!-- AGENT INJECTS ORRERY HERE -->
+            </div>
+
+        </section>
+
+    </main>
+
     <!-- AGENT MESH -->
     <script src="../js/agents/visual_eye.js" defer></script>
-    <script src="../js/agents/bridge_pusher.js" defer></script>
     <script src="../js/agents/helper.js" defer></script>
+    <script src="../js/agents/bridge_pusher.js" defer></script>
+    <script src="../js/agents/global_ticker.js" defer></script>
+    <script src="../js/agents/network_hub.js" defer></script>
+    <script src="../js/agents/flow_compass.js" defer></script> <!-- CRITICAL: Injects Planets -->
+    <script src="../js/agents/imperial_hud.js" defer></script>
     <script src="../js/agents/flowee.js" defer></script>
-    
-    <!-- MOBILE WAVE MENU -->
-    <div id="mobile-wave-menu" class="mobile-wave-menu flex-col items-center justify-center gap-8">
-        <a href="dashboard.html" class="nav-item">Home</a>
-        <a href="marketplace.html" class="nav-item">Bazaar</a>
-        <button onclick="ApexNexus.renderNetworkModal(); ApexNexus.toggleMenu()" class="nav-item text-xl font-bold text-white bg-transparent border-none">Network</button>
-        <a href="museum.html" class="nav-item">Museum</a>
-        <button onclick="ApexNexus.openUpgrade(); ApexNexus.toggleMenu()" class="nav-item text-xl font-bold text-electric bg-transparent border-none animate-pulse">Elevate</button>
-    </div>
-
-    <!-- LOGIC -->
-    <script src="../js/dashboard_nexus.js" defer></script>
-</head>
-
-<body class="bg-[#0F0A13] font-display text-white overflow-x-hidden selection:bg-primary-500 selection:text-white">
-
-    <!-- NAVIGATION MATRIX (The Flow Bar) -->
-    <nav class="flow-bar flex justify-between items-center animate-fade-in-down z-50">
-        <div class="flex items-center gap-2">
-            <img src="../Assets/images/logo.png" class="w-8 h-8 opacity-80 hover:opacity-100 transition-opacity">
-            <span class="text-xs font-bold tracking-widest text-white/50 hidden md:block group-hover:text-white transition-colors">CIRCLE D FLOW</span>
-        </div>
-        
-        <!-- Desktop Matrix -->
-        <div class="hidden md:flex items-center gap-8 text-xs font-bold tracking-widest uppercase">
-            <a href="dashboard.html" class="nav-link text-white">Home</a>
-            <a href="marketplace.html" class="nav-link text-white/50 hover:text-white">Bazaar</a>
-            <button onclick="ApexNexus.renderNetworkModal()" class="nav-link text-white/50 hover:text-white">Network</button>
-            <a href="museum.html" class="nav-link text-white/50 hover:text-white">Museum</a>
-            <button onclick="ApexNexus.openUpgrade()" class="nav-link text-electric animate-pulse hover:text-white transition-colors">Elevate</button>
-        </div>
-
-        <!-- Mobile Toggle (Hamburger) -->
-        <button id="menu-btn" class="md:hidden hamburger flex flex-col gap-1.5 z-50 p-2" onclick="ApexNexus.toggleMenu()">
-            <span class="w-6 h-0.5 bg-white transition-all origin-center"></span>
-            <span class="w-6 h-0.5 bg-white transition-all origin-center"></span>
-        </button>
-    </nav>
-
-    <!-- AUTH CHECK -->
-    <script>
-        if (window.netlifyIdentity) {
-            window.netlifyIdentity.on("init", user => {
-                if (!user && !localStorage.getItem('isLoggedIn')) {
-                    // window.location.href = "../index.html"; // Commented for Dev Flow
-                }
-            });
-        }
-    </script>
-
-    <!-- ZEN BACKGROUND (The Void) -->
-    <div class="fixed inset-0 z-0 bg-[url('https://pub-24ba376bfccb446996666eaff4dbae12.r2.dev/lisbon_neon_skyline.jpg')] bg-cover bg-center opacity-10 pointer-events-none mix-blend-overlay"></div>
-    <div class="fixed inset-0 z-0 bg-gradient-to-b from-[#0F0A13] via-[#0F0A13]/90 to-[#1A1622] pointer-events-none"></div>
-
-    <!-- APEX DASHBOARD WRAPPER -->
-    <div id="apex-dashboard" class="relative z-10 w-full min-h-screen flex flex-col p-6 md:p-12 max-w-7xl mx-auto">
-
-        <!-- LAYER 1: HEADS-UP DISPLAY (The Aura) -->
-        <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-8 animate-fade-in-down">
-            
-            <!-- Avatar & Class -->
-            <div class="flex items-center gap-6 group cursor-pointer" onclick="ApexNexus.openProfile()">
-                <div class="relative">
-                    <div class="w-16 h-16 md:w-20 md:h-20 rounded-full border-2 border-primary-500 overflow-hidden shadow-[0_0_20px_#A855F7] group-hover:scale-105 transition-transform duration-300">
-                        <img src="../Assets/images/logo.png" alt="Hunter Avatar" class="w-full h-full object-cover">
-                    </div>
-                    <!-- Nen Type Symbol (Example: Enhancer) -->
-                    <div class="absolute -bottom-2 -right-2 w-8 h-8 bg-black rounded-full border border-orange-500 flex items-center justify-center shadow-lg z-10" title="Nen Type: Enhancer">
-                        <span class="text-orange-400 font-bold text-xs">E</span>
-                    </div>
-                </div>
-                <div class="flex flex-col">
-                    <h2 class="text-2xl md:text-3xl font-black text-white tracking-widest uppercase mb-1">Hunter <span id="user-name" class="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">Guest</span></h2>
-                    <div class="flex items-center gap-3 text-xs md:text-sm text-primary-400 font-mono tracking-wider">
-                        <span class="px-2 py-0.5 bg-primary-900/30 rounded border border-primary-500/30">CLASS: DRIFTER</span>
-                        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span> ONLINE</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- XP / Resonance Bar (Center) -->
-            <div class="w-full md:w-1/3 flex flex-col gap-2">
-                <div class="flex justify-between text-[10px] md:text-xs text-white/50 font-mono tracking-wider uppercase">
-                    <span>LVL <span id="user-level" class="text-white">1</span></span>
-                    <span>NEXT: <span id="xp-next" class="text-white">100</span> XP</span>
-                </div>
-                <div class="w-full h-3 bg-black/50 rounded-full overflow-hidden border border-white/10 relative">
-                    <!-- Progress -->
-                    <div id="xp-bar" class="h-full bg-gradient-to-r from-primary-600 via-purple-500 to-orange-500 w-[10%] relative overflow-hidden transition-all duration-1000" style="box-shadow: 0 0 15px #A855F7;">
-                         <div class="absolute inset-0 bg-white/20 animate-pulse"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Global Search (The Third Eye) -->
-            <div class="relative group hidden md:block">
-                <div class="flex items-center bg-black/40 border border-white/10 rounded-full px-3 py-2 focus-within:border-primary-500 focus-within:bg-black/80 transition-all w-48 focus-within:w-64">
-                    <span class="material-symbols-outlined text-white/50 text-sm">visibility</span>
-                    <input type="text" id="global-search" placeholder="Seek Knowledge..." 
-                        class="bg-transparent border-none text-xs text-white placeholder-white/30 focus:ring-0 ml-2 w-full font-mono tracking-wide"
-                        onkeydown="if(event.key === 'Enter') ApexNexus.performGlobalSearch(this.value)">
-                </div>
-                <!-- Search Results Dropdown (Hidden by default) -->
-                <div id="search-results" class="absolute top-12 left-0 w-full bg-black/90 border border-primary-500/30 rounded-xl shadow-2xl backdrop-blur-md hidden z-50 overflow-hidden">
-                    <div class="p-2 text-[10px] text-white/30 uppercase tracking-widest text-center border-b border-white/5">The Third Eye</div>
-                    <div id="search-content" class="max-h-64 overflow-y-auto custom-scrollbar p-2 space-y-1"></div>
-                </div>
-            </div>
-            
-            <!-- Mobile Search Icon (Visible only on small screens) -->
-             <button class="md:hidden w-10 h-10 rounded-full bg-white/5 flex items-center justify-center border border-white/10" onclick="ApexNexus.toggleMobileSearch()">
-                <span class="material-symbols-outlined text-white/70">visibility</span>
-            </button>
-
-            <!-- Karma & Companion -->
-            <div class="flex items-center gap-6">
-                <!-- Karma -->
-                <div class="flex flex-col items-end" title="Karma Score">
-                    <div class="flex items-center gap-2">
-                        <span id="karma-score" class="text-2xl font-bold text-white tracking-tighter">0</span>
-                        <span class="material-symbols-outlined text-mystic-gold animate-bounce">diamond</span>
-                    </div>
-                    <span class="text-[9px] text-white/30 uppercase tracking-[0.2em]">Trust Level</span>
-                </div>
-                
-                <!-- Flowee Status -->
-                <div id="flowee-status-icon" class="relative w-12 h-12 cursor-pointer group" onclick="if(window.Flowee) window.Flowee.talk(true, 'Systems optimal, Captain. Ready to flow?');">
-                    <div class="absolute inset-0 bg-primary-500/20 rounded-full blur-md group-hover:bg-primary-500/40 transition-all"></div>
-                    <img src="../Assets/images/flowee_pirate_phoenix.png" class="w-full h-full object-contain relative z-10 drop-shadow-[0_0_5px_#A855F7] group-hover:scale-110 transition-transform">
-                    <div class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-ping hidden" id="flowee-alert-dot"></div>
-                </div>
-            </div>
-        </header>
-
-        <!-- LAYER 2: THE CORE (Prisma Grid) -->
-        <main id="prisma-grid" class="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 pb-24 md:pb-0 items-stretch">
-            
-            <!-- SECTOR 1: ARCHIVE -->
-            <div class="apex-sector group relative bg-black/40 border border-primary-500/20 rounded-2xl p-6 md:p-8 hover:bg-black/60 hover:border-primary-500/50 backdrop-blur-sm cursor-pointer overflow-hidden flex flex-col justify-between h-[300px] md:h-auto" onclick="window.location.href='codex.html'">
-                <!-- Background Glow -->
-                <div class="absolute top-0 right-0 w-32 h-32 bg-primary-500/10 blur-[50px] rounded-full pointer-events-none group-hover:bg-primary-500/20 transition-all"></div>
-                
-                <div>
-                    <div class="flex justify-between items-start mb-6">
-                        <span class="material-symbols-outlined text-4xl text-primary-500 group-hover:scale-110 transition-transform">auto_stories</span>
-                        <span class="text-[10px] font-bold text-white/20 border border-white/10 px-2 py-1 rounded">01</span>
-                    </div>
-                    <h3 class="text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-primary-400 mb-2">ARCHIVE</h3>
-                    <p class="text-sm text-white/60 leading-relaxed max-w-[80%]">Ancient Knowledge & Personal Vault.</p>
-                </div>
-                
-                <div class="mt-8 pt-4 border-t border-white/5 opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-4 group-hover:translate-y-0">
-                    <div class="flex gap-2">
-                        <span class="text-xs text-primary-400 uppercase tracking-widest font-bold">Access Terminal</span>
-                        <span class="material-symbols-outlined text-xs text-primary-400">arrow_forward</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- SECTOR 2: ARSENAL (Locked Lvl 2) -->
-            <div id="sector-arsenal" class="apex-sector group relative bg-black/40 border border-orange-500/20 rounded-2xl p-6 md:p-8 hover:bg-black/60 hover:border-orange-500/50 backdrop-blur-sm cursor-pointer overflow-hidden flex flex-col justify-between h-[300px] md:h-auto opacity-60 grayscale hover:grayscale-0 transition-all" data-req-level="2" onclick="window.location.href='marketplace.html'">
-                <div class="absolute top-0 right-0 w-32 h-32 bg-orange-500/10 blur-[50px] rounded-full pointer-events-none group-hover:bg-orange-500/20 transition-all"></div>
-                <!-- Lock Icon -->
-                <div class="absolute top-4 right-4 w-8 h-8 bg-black/80 border border-white/10 rounded-full flex items-center justify-center z-20 lock-icon md:hidden">
-                    <span class="material-symbols-outlined text-xs text-white/50">lock</span>
-                </div>
-
-                <div>
-                    <div class="flex justify-between items-start mb-6">
-                        <span class="material-symbols-outlined text-4xl text-orange-500 group-hover:scale-110 transition-transform">inventory_2</span>
-                       <span class="text-[10px] font-bold text-white/20 border border-white/10 px-2 py-1 rounded">02</span>
-                    </div>
-                    <h3 class="text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-orange-400 mb-2">ARSENAL</h3>
-                    <p class="text-sm text-white/60 leading-relaxed max-w-[80%]">Bazaar, Skills, and Active Sales.</p>
-                </div>
-                
-                <div class="mt-8 pt-4 border-t border-white/5 opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-4 group-hover:translate-y-0">
-                     <div class="flex gap-2">
-                        <span class="text-xs text-orange-400 uppercase tracking-widest font-bold">Manage Inventory</span>
-                        <span class="material-symbols-outlined text-xs text-orange-400">arrow_forward</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- SECTOR 3: NETWORK (Locked Lvl 3) -->
-            <div id="sector-network" class="apex-sector group relative bg-black/40 border border-green-500/20 rounded-2xl p-6 md:p-8 hover:bg-black/60 hover:border-green-500/50 backdrop-blur-sm cursor-pointer overflow-hidden flex flex-col justify-between h-[300px] md:h-auto opacity-60 grayscale hover:grayscale-0 transition-all" data-req-level="3" onclick="ApexNexus.openModal('network')">
-                <div class="absolute top-0 right-0 w-32 h-32 bg-green-500/10 blur-[50px] rounded-full pointer-events-none group-hover:bg-green-500/20 transition-all"></div>
-                
-                <div>
-                     <div class="flex justify-between items-start mb-6">
-                        <span class="material-symbols-outlined text-4xl text-green-500 group-hover:scale-110 transition-transform">hub</span>
-                        <span class="text-[10px] font-bold text-white/20 border border-white/10 px-2 py-1 rounded">03</span>
-                    </div>
-                    <h3 class="text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-green-400 mb-2">NETWORK</h3>
-                    <p class="text-sm text-white/60 leading-relaxed max-w-[80%]">Connections, Synergy, and Chat.</p>
-                </div>
-
-                <div class="mt-8 pt-4 border-t border-white/5 opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-4 group-hover:translate-y-0">
-                     <div class="flex gap-2">
-                        <span class="text-xs text-green-400 uppercase tracking-widest font-bold">Sync Signal</span>
-                        <span class="material-symbols-outlined text-xs text-green-400">arrow_forward</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- SECTOR 4: ARENA -->
-            <div class="apex-sector group relative bg-black/40 border border-red-500/20 rounded-2xl p-6 md:p-8 hover:bg-black/60 hover:border-red-500/50 backdrop-blur-sm cursor-pointer overflow-hidden flex flex-col justify-between h-[300px] md:h-auto" onclick="window.location.href='battle.html'">
-                <div class="absolute top-0 right-0 w-32 h-32 bg-red-500/10 blur-[50px] rounded-full pointer-events-none group-hover:bg-red-500/20 transition-all"></div>
-                
-                <div>
-                    <div class="flex justify-between items-start mb-6">
-                        <span class="material-symbols-outlined text-4xl text-red-500 group-hover:scale-110 transition-transform">swords</span>
-                        <span class="text-[10px] font-bold text-white/20 border border-white/10 px-2 py-1 rounded">04</span>
-                    </div>
-                    <h3 class="text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-red-400 mb-2">ARENA</h3>
-                    <p class="text-sm text-white/60 leading-relaxed max-w-[80%]">Tournaments & Daily Quests.</p>
-                </div>
-
-                <div class="mt-8 pt-4 border-t border-white/5 opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-4 group-hover:translate-y-0">
-                     <div class="flex gap-2">
-                        <span class="text-xs text-red-500 uppercase tracking-widest font-bold">Enter Colosseum</span>
-                        <span class="material-symbols-outlined text-xs text-red-500">arrow_forward</span>
-                    </div>
-                </div>
-            </div>
-        </main>
-
-        <!-- LAYER 3: TOOLS (Footer) -->
-        <footer class="mt-8 flex justify-between items-end border-t border-white/10 pt-6">
-            <!-- Toggle Mode -->
-            <button onclick="ApexNexus.toggleLighthouse()" class="flex items-center gap-3 text-white/50 hover:text-white transition-colors group">
-                <span class="material-symbols-outlined text-lg group-hover:text-mystic-gold">wb_iridescent</span>
-                <span class="hidden md:inline text-xs font-bold tracking-widest uppercase">Visual Mode</span>
-            </button>
-
-            <!-- QUICK LOOT TRAY (Desktop) -->
-            <div class="hidden md:flex gap-2 p-2 bg-black/40 border border-white/10 rounded-full backdrop-blur-md">
-                 <button class="w-10 h-10 rounded-full bg-white/5 hover:bg-primary-500/20 border border-transparent hover:border-primary-500/50 flex items-center justify-center transition-all" title="Quest Board">
-                    <span class="material-symbols-outlined text-sm text-white/70">assignment</span>
-                 </button>
-                 <button class="w-10 h-10 rounded-full bg-white/5 hover:bg-orange-500/20 border border-transparent hover:border-orange-500/50 flex items-center justify-center transition-all" title="Messages">
-                    <span class="material-symbols-outlined text-sm text-white/70">mail</span>
-                 </button>
-                 <button class="w-10 h-10 rounded-full bg-white/5 hover:bg-green-500/20 border border-transparent hover:border-green-500/50 flex items-center justify-center transition-all" title="Wallet">
-                    <span class="material-symbols-outlined text-sm text-white/70">account_balance_wallet</span>
-                 </button>
-            </div>
-
-            <!-- SYSTEM PULSE (The Logs) -->
-            <div id="system-pulse" class="absolute bottom-4 left-1/2 -translate-x-1/2 w-1/3 overflow-hidden h-6 bg-black/40 border border-white/5 rounded-full flex items-center px-4 hidden lg:flex">
-                <span class="w-2 h-2 rounded-full bg-primary-500 animate-pulse mr-2"></span>
-                <div class="flex-1 overflow-hidden relative h-full">
-                     <div id="pulse-text" class="absolute top-1/2 -translate-y-1/2 whitespace-nowrap text-[10px] font-mono text-primary-400 animate-slide-left w-full text-center">
-                        SYSTEM ONLINE. WAITING FOR SIGNAL...
-                    </div>
-                </div>
-            </div>
-
-            <!-- Emergency Reset -->
-            <button onclick="ApexNexus.emergencyReset()" class="w-10 h-10 rounded-full bg-white/5 border border-white/10 hover:bg-white/20 flex items-center justify-center transition-all hover:rotate-180 group" title="Emergency Reset (Yin-Yang)">
-                <span class="material-symbols-outlined text-white/50 group-hover:text-white">yin_yang</span>
-            </button>
-        </footer>
-
-    </div>
-
-    <!-- FLOWEE AGENT (Floating) -->
-    <div id="flowee-agent" class="fixed bottom-6 right-6 z-50 md:hidden">
-        <button class="w-14 h-14 rounded-full bg-black border-2 border-primary-500 flex items-center justify-center shadow-[0_0_20px_#A855F7] hover:scale-110 transition-transform">
-             <img src="../Assets/images/flowee_pirate_phoenix.png" class="w-10 h-10 object-contain">
-        </button>
-    </div>
+    <script src="../js/agents/pusher.js" defer></script>
 
 </body>
 </html>

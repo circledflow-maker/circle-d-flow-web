@@ -35,6 +35,77 @@
     </script>
 
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <style>
+        /* African Queen Kitchen - Visual Identity (Ivory-Boondock) */
+        :root {
+            --aq-orange: #FF8C00; /* Deep Sunset Orange */
+            --aq-green: #2E8B57;  /* Forest Green */
+            --aq-white: #F5F5F5;  /* Clean Ivory White */
+            --aq-black: #1A1A1A;  /* Boondock Charcoal */
+            --aq-gold: #D4AF37;   /* Royal Accents */
+            --boondock-texture: url('https://www.transparenttextures.com/patterns/asphalt-dark.png');
+        }
+
+        body {
+            background-color: var(--aq-black);
+            background-image: var(--boondock-texture);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        /* The Jamtruck Progress Slider */
+        .jamtruck-progress-bar {
+            width: 100%; height: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px; overflow: hidden;
+            border: 2px solid var(--aq-orange);
+            position: relative;
+            box-shadow: 0 0 15px var(--aq-orange);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--aq-green), var(--aq-orange));
+            transition: width 0.5s ease-in-out;
+            width: 65%; /* Current State */
+        }
+
+        /* Private Catering Form Styling */
+        .catering-form {
+            background: rgba(26, 26, 26, 0.95);
+            border: 1px solid var(--aq-green);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 8px 8px 0px var(--aq-green); /* Boondock Shadow Style */
+            position: relative;
+            overflow: hidden;
+        }
+        .catering-form::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0;
+            background: linear-gradient(90deg, var(--aq-orange), var(--aq-white), var(--aq-green));
+            height: 4px;
+        }
+
+        .catering-input {
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid var(--aq-white);
+            color: var(--aq-white);
+            width: 100%;
+            margin-bottom: 20px;
+            padding: 10px 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .catering-input:focus { border-bottom-color: var(--aq-orange); }
+        
+        .taste-haki-badge {
+            background: var(--aq-orange); color: black;
+            font-weight: bold; padding: 2px 8px; border-radius: 4px;
+            font-size: 10px; text-transform: uppercase;
+            box-shadow: 2px 2px 0px black;
+        }
+    </style>
 </head>
 
 <body class="bg-dark text-white min-h-screen">
@@ -68,7 +139,9 @@
         <div class="flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
              <a href="outbreak_tunes.html" class="text-xs font-bold uppercase tracking-widest text-white/50 hover:text-purple-400 transition-colors">Sound</a>
              <span class="text-white/20">|</span>
-             <a href="african-queen-kitchen.html" class="text-xs font-bold uppercase tracking-widest text-amber drop-shadow-[0_0_8px_rgba(255,191,0,0.8)]">Taste</a>
+             <a href="flavor_quest.html" class="text-xs font-bold uppercase tracking-widest text-[#00ff00] hover:text-white transition-colors" title="Gamification">Quest</a>
+             <span class="text-white/20">|</span>
+             <a href="investor_portal.html" class="text-xs font-bold uppercase tracking-widest text-[#D4AF37] hover:text-white transition-colors" title="Invest">Partner</a>
              <span class="text-white/20">|</span>
              <a href="kiss-your-heart.html" class="text-xs font-bold uppercase tracking-widest text-white/50 hover:text-pink-400 transition-colors">Visuals</a>
         </div>
@@ -142,49 +215,69 @@
                     <h2 class="text-3xl font-serif font-bold text-white mb-1">Steps to the Truck</h2>
                     <p class="text-sm text-white/50 mb-6">Fueling the Royal Kitchen on wheels.</p>
                     
-                    <button onclick="document.getElementById('menu-grid').scrollIntoView({behavior: 'smooth'})"
+                    <button onclick="fuelJamtruck()"
                         class="px-6 py-3 bg-amber text-black font-bold uppercase tracking-widest rounded-xl hover:scale-105 transition-transform shadow-lg shadow-amber/20 flex items-center gap-2">
                         <span class="material-symbols-outlined">local_fire_department</span>
                         Fuel the Dream
                     </button>
+                    
+                    <script>
+                        function fuelJamtruck() {
+                            // Visuals
+                            const bar = document.querySelector('.progress-fill');
+                            const currentWidth = parseFloat(bar.style.width) || 20;
+                            bar.style.width = (currentWidth + 5) + '%';
+                            
+                            // BETA OBJECTIVE B: Queen's Blessing
+                            if(window.Helper) {
+                                window.Helper.grantReward(20, 50, 'Jamtruck Fuel'); // High Karma
+                                localStorage.setItem('cdf_beta_obj_b', 'true');
+                                if(window.Pusher) window.Pusher.showToast('MISSION OBJ B: COMPLETED', 'success');
+                            }
+                            
+                            alert("Thank you, Patron! The Truck roars with gratitude. (+Karma)");
+                        }
+                    </script>
                 </div>
 
-                <!-- Roadmap Visualization -->
+                <!-- Roadmap Visualization (Jamtruck Ignition) -->
                 <div class="flex-1 w-full space-y-6">
                     <!-- Progress Bar -->
-                    <div class="relative w-full h-4 bg-black/50 rounded-full border border-white/10 overflow-hidden">
-                        <div class="absolute top-0 left-0 h-full bg-gradient-to-r from-amber via-orange-500 to-red-500 rounded-full transition-all duration-1000 w-[65%]" id="journey-bar">
-                            <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20"></div>
+                    <div class="jamtruck-progress-bar">
+                        <div class="progress-fill" style="width: 20%;"></div> <!-- 700 / 3500 ~ 20% -->
+                        <div class="absolute inset-0 flex items-center justify-between px-4 text-[10px] font-bold text-black/50 uppercase">
+                            <span>Start</span>
+                            <span>Goal: 3500€</span>
                         </div>
                     </div>
 
                     <!-- Milestones -->
                     <div class="grid grid-cols-3 gap-2 text-center relative">
-                        <!-- Step 1 -->
-                        <div class="flex flex-col items-center gap-2 opacity-50 filter grayscale transition-all hover:grayscale-0 hover:opacity-100">
-                            <div class="w-8 h-8 rounded-full bg-white/10 border border-white/20 flex items-center justify-center">
-                                <span class="material-symbols-outlined text-sm">share</span>
+                        <!-- Step 1: 700 -->
+                        <div class="flex flex-col items-center gap-2">
+                             <div class="w-10 h-10 rounded-full bg-aq-green border-2 border-white flex items-center justify-center shadow-[0_0_15px_rgba(46,139,87,0.5)] animate-pulse">
+                                <span class="material-symbols-outlined text-white font-bold">foundation</span>
                             </div>
-                            <div class="text-[10px] font-bold uppercase tracking-wider text-white">Social Quests</div>
-                            <span class="text-[10px] text-green-500 font-mono">[COMPLETED]</span>
+                            <div class="text-xs font-bold uppercase tracking-wider text-white">The Foundation</div>
+                            <span class="text-[10px] text-green-400 font-mono">700€ - SECURED</span>
                         </div>
                         
-                        <!-- Step 2 -->
-                        <div class="flex flex-col items-center gap-2">
-                             <div class="w-10 h-10 rounded-full bg-amber border-2 border-white flex items-center justify-center shadow-[0_0_15px_rgba(255,191,0,0.5)] animate-pulse">
-                                <span class="material-symbols-outlined text-black font-bold">storefront</span>
+                        <!-- Step 2: 2000 -->
+                        <div class="flex flex-col items-center gap-2 opacity-60">
+                            <div class="w-10 h-10 rounded-full bg-gray-800 border border-white/20 flex items-center justify-center">
+                                <span class="material-symbols-outlined text-white/50">speaker</span>
                             </div>
-                            <div class="text-xs font-bold uppercase tracking-wider text-amber">Pop-up Stand</div>
-                            <span class="text-[10px] text-amber font-mono">CURRENT GOAL</span>
+                            <div class="text-xs font-bold uppercase tracking-wider text-white/50">The Pulse</div>
+                            <span class="text-[10px] text-white/30 font-mono">2000€</span>
                         </div>
 
-                        <!-- Step 3 -->
-                        <div class="flex flex-col items-center gap-2 opacity-30">
-                            <div class="w-8 h-8 rounded-full bg-white/10 border border-white/20 flex items-center justify-center">
-                                <span class="material-symbols-outlined text-sm">local_shipping</span>
+                        <!-- Step 3: 3500 -->
+                        <div class="flex flex-col items-center gap-2 opacity-40">
+                            <div class="w-10 h-10 rounded-full bg-gray-800 border border-white/20 flex items-center justify-center">
+                                <span class="material-symbols-outlined text-white/50">local_shipping</span>
                             </div>
-                            <div class="text-[10px] font-bold uppercase tracking-wider text-white">The Food Truck</div>
-                            <span class="text-[10px] text-white/30 font-mono">LOCKED</span>
+                            <div class="text-xs font-bold uppercase tracking-wider text-white/50">The Ignition</div>
+                            <span class="text-[10px] text-white/30 font-mono">3500€</span>
                         </div>
                     </div>
                 </div>
@@ -192,9 +285,28 @@
             
             <!-- Crowd Stats -->
             <div class="mt-8 pt-6 border-t border-white/5 flex justify-between items-center text-xs font-mono text-white/40">
-                <span>Current Fuel: <b class="text-white">65%</b></span>
-                <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">group</span> 1,240 Contributors</span>
+                <span>Current Fuel: <b class="text-white">700€</b> (Foundation Set)</span>
+                <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">group</span> 4 Contributors</span>
             </div>
+        </div>
+        
+        <!-- PRIVATE CATERING FORM (The Booking Ritual) -->
+        <div class="catering-form max-w-2xl mx-auto mt-12">
+            <h2 class="text-2xl font-serif font-bold text-white mb-6 text-center text-amber">Request the Queen's Flavor</h2>
+            <form onsubmit="event.preventDefault(); submitCateringRequest();">
+                <input type="text" id="cat-name" class="catering-input" placeholder="Full Name / Title (e.g. Commander X)" required>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="date" id="cat-date" class="catering-input" required>
+                    <input type="time" id="cat-time" class="catering-input" required>
+                </div>
+                <input type="text" id="cat-location" class="catering-input" placeholder="Location Coordinates / Address" required>
+                <input type="number" id="cat-pax" class="catering-input" placeholder="The Tribe Size (PAX)" required>
+                <textarea id="cat-msg" class="catering-input" rows="2" placeholder="Special Request / Message to the Queen"></textarea>
+                
+                <button type="submit" class="w-full py-4 bg-amber text-black font-bold uppercase tracking-widest hover:bg-white transition-colors flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined">send</span> Send Summons
+                </button>
+            </form>
         </div>
     </div>
 
@@ -210,12 +322,80 @@
         </div>
 
         <!-- Menu Grid -->
-        <div id="menu-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- Items injected by JS -->
-            <div class="animate-pulse bg-white/5 rounded-xl h-64"></div>
-            <div class="animate-pulse bg-white/5 rounded-xl h-64"></div>
-            <div class="animate-pulse bg-white/5 rounded-xl h-64"></div>
+        <div id="kitchen-status-overlay" class="hidden mb-8 bg-red-900/50 border border-red-500 p-6 rounded-xl text-center">
+             <h2 class="text-2xl font-bold text-red-400 mb-2">Kitchen Currently Closed</h2>
+             <p class="text-white/60 text-sm">The Queen is resting. Orders will be queued for tomorrow.</p>
         </div>
+
+        <!-- Menu Grid -->
+        <div id="menu-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Dynamic Content -->
+        </div>
+
+        <script>
+            function renderMenu() {
+                const grid = document.getElementById('menu-grid');
+                grid.innerHTML = '';
+                
+                const stored = localStorage.getItem('aq_menu_items');
+                if(!stored) {
+                    grid.innerHTML = '<p class="text-white/50 text-center col-span-3">Menu data syncing from command center...</p>';
+                    return;
+                }
+
+                const items = JSON.parse(stored);
+                items.forEach(item => {
+                    // Only show In Stock items unless user is viewing all
+                    if(item.stock) {
+                        const el = document.createElement('div');
+                        el.className = "bg-white/5 border border-white/10 p-4 rounded-xl flex flex-col gap-4 group hover:border-amber/50 transition-all";
+                        el.innerHTML = `
+                            <div class="h-48 rounded-lg bg-gray-900 overflow-hidden relative">
+                                <img src="${item.img || 'https://placehold.co/300x200/333/white?text=Yummy'}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                <div class="absolute top-2 right-2 bg-black/70 px-2 py-1 rounded text-xs font-bold text-amber border border-amber/30">${item.price}€</div>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg mb-1">${item.name}</h3>
+                                <p class="text-xs text-white/50 mb-4">${item.cat}</p>
+                                <button onclick="addToCart('${item.name}', ${item.price})" class="w-full py-2 bg-white/10 hover:bg-amber hover:text-black rounded-lg font-bold text-xs uppercase transition-colors flex items-center justify-center gap-2">
+                                    <span class="material-symbols-outlined text-sm">add_shopping_cart</span> Add to Tray
+                                </button>
+                            </div>
+                        `;
+                        grid.appendChild(el);
+                    }
+                });
+            }
+
+            function checkStatus() {
+                const isOpen = localStorage.getItem('aq_kitchen_open') !== 'false';
+                const overlay = document.getElementById('kitchen-status-overlay');
+                if(!isOpen) {
+                    overlay.classList.remove('hidden');
+                    // Disable buttons
+                    document.querySelectorAll('button').forEach(b => {
+                        if(b.innerText.includes('Add to Tray') || b.innerText.includes('Summons')) {
+                            b.disabled = true;
+                            b.classList.add('opacity-50', 'cursor-not-allowed');
+                        }
+                    });
+                } else {
+                    overlay.classList.add('hidden');
+                }
+            }
+
+            // Init
+            window.addEventListener('load', () => {
+                renderMenu();
+                checkStatus();
+            });
+            
+            // Listen for updates from dashboard in same browser
+            window.addEventListener('storage', () => {
+                renderMenu();
+                checkStatus();
+            });
+        </script>
         <!-- Find the Queen: Map Section -->
         <div class="mb-20">
             <div class="flex items-center justify-between mb-8">
@@ -311,6 +491,26 @@
                 </div>
             </div>
         </div>
+        <!-- Flavor Log (Tutorial Task) -->
+        <section id="flavor-log" class="mb-20 pt-10 border-t border-white/10">
+            <h3 class="text-3xl font-serif font-bold text-white mb-6 text-center">The Flavor Log</h3>
+            <div class="max-w-2xl mx-auto bg-white/5 rounded-2xl p-6 border border-white/5">
+                <p class="text-xs text-white/50 mb-4 text-center">Leave a message for our partners (Favela LX) to earn respect.</p>
+                <div class="flex gap-4">
+                    <input type="text" id="flavor-comment" placeholder="Write your review..." class="flex-1 bg-black/50 border border-white/10 rounded-xl p-4 text-white focus:outline-none focus:border-amber transition-colors">
+                    <button onclick="ApexNexus.submitFlavorLog()" class="bg-amber text-black font-bold px-6 rounded-xl hover:scale-105 transition-transform">
+                        <span class="material-symbols-outlined">send</span>
+                    </button>
+                </div>
+                <!-- Mock Feed -->
+                <div class="mt-6 space-y-3" id="flavor-feed">
+                    <div class="flex items-center gap-3 opacity-50">
+                        <div class="w-8 h-8 rounded-full bg-electric/20 flex items-center justify-center text-xs">ðŸ‘«</div>
+                        <p class="text-xs text-white/40">"Best Cachupa in town!" - @GhostDog</p>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
     <!-- Cart Sidebar -->
@@ -338,6 +538,9 @@
                     <select id="pickup-location"
                         class="w-full bg-black/50 border border-white/10 rounded p-2 text-sm text-white focus:outline-none focus:border-amber">
                         <option value="" disabled selected>Select a Partner...</option>
+                        <option value="Favela LX">Favela LX (HQ)</option>
+                        <option value="Secret Garden">Secret Garden</option>
+                        <option value="Comunid'Arte">Comunid'Arte</option>
                     </select>
                 </div>
             </div>
@@ -420,6 +623,7 @@
     <!-- PHOENIX-EE CORE AGENTS -->
     <script src='../js/agents/visual_eye.js' defer></script>
     <script src='../js/agents/helper.js' defer></script>
+    <script src='../js/agents/pusher.js' defer></script>
     <script src='../js/agents/bridge_pusher.js' defer></script>
     <script src='../js/agents/device_sync.js' defer></script>
     <script src='../js/agents/stress_test.js' defer></script>
@@ -429,6 +633,128 @@
     <script src="../js/agents/aroma_pusher.js" defer></script>
     <script src="../js/agents/supply_helper.js" defer></script>
     <script src="../js/agents/scout.js" defer></script>
+<script src="../js/agents/global_ticker.js" defer></script>
+<script src="../js/agents/network_hub.js" defer></script>
+<script src="../js/agents/constructor_bot.js" defer></script>
+<script src="../js/agents/kingdom_science.js" defer></script>
+<script src="../js/agents/resonance_bridge.js" defer></script>
+<script src="../js/agents/vault_space.js" defer></script>
+<script src="../js/agents/orbital_menu.js" defer></script>
+    <script src="../js/agents/tutorial_core.js" defer></script>
+    <script src="../js/agents/quest_controller.js" defer></script>
+    <script src="../js/agents/visual_integrity.js" defer></script>
+    <script src="../js/agents/sound_engineer.js" defer></script>
+    <script src="../js/agents/horizon_bar.js" defer></script>
+    <script src="../js/agents/social_matrix.js" defer></script>
+    <script src="../js/agents/flowee.js" defer></script>
+
+    <!-- AUTOMATED AGENT INJECTION -->
+
+    <!-- AUTOMATED AGENT INJECTION -->
+    <script src="../js/agents/imperial_hud.js" defer></script>
+    <script>
+        // --- PREVIOUSLY MISSING CART LOGIC ---
+        let cart = [];
+        let isCartOpen = false;
+
+        function toggleCart() {
+            const el = document.getElementById('cart-sidebar');
+            isCartOpen = !isCartOpen;
+            if (isCartOpen) {
+                el.classList.remove('translate-x-full');
+            } else {
+                el.classList.add('translate-x-full');
+            }
+        }
+
+        function addToCart(name, price) {
+            cart.push({ name, price });
+            updateCartUI();
+            if (!isCartOpen) toggleCart();
+            
+            if(window.Pusher) window.Pusher.showToast(`Added ${name} to Tray`, 'success');
+        }
+
+        function updateCartUI() {
+            const container = document.getElementById('cart-items');
+            const totalEl = document.getElementById('cart-total');
+            const finalEl = document.getElementById('cart-final');
+            const xpEl = document.getElementById('xp-preview');
+
+            if (cart.length === 0) {
+                container.innerHTML = '<p class="text-white/30 text-center mt-10 italic">Your cart is empty.</p>';
+                totalEl.innerText = '€0.00';
+                finalEl.innerText = '€0.00';
+                xpEl.innerText = '0';
+                return;
+            }
+
+            container.innerHTML = cart.map((item, index) => `
+                <div class="flex justify-between items-center bg-white/5 p-3 rounded mb-2">
+                    <span class="font-bold text-sm text-white">${item.name}</span>
+                    <div class="flex items-center gap-3">
+                        <span class="text-amber text-xs">€${item.price}</span>
+                        <button onclick="removeFromCart(${index})" class="text-red-500 hover:text-red-400">
+                            <span class="material-symbols-outlined text-sm">delete</span>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            totalEl.innerText = `€${total.toFixed(2)}`;
+            finalEl.innerText = `€${total.toFixed(2)}`;
+            xpEl.innerText = Math.floor(total * 10); // 10 XP per Euro
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        function checkout() {
+            if (cart.length === 0) return;
+
+            // Generate Order Info
+            const code = '#' + Math.random().toString(36).substr(2, 4).toUpperCase();
+            document.getElementById('order-code').innerText = code;
+            document.getElementById('success-date').innerText = new Date().toLocaleDateString();
+            document.getElementById('success-location').innerText = "Favela LX (HQ)";
+            
+            // Show Success
+            document.getElementById('success-modal').classList.remove('hidden');
+            
+            // Notify System
+            if(window.Pusher) {
+                window.Pusher.broadcast('NEW_ORDER', { code, items: cart, total: document.getElementById('cart-final').innerText });
+                window.Pusher.showToast('Order Sent to Kitchen!', 'success');
+            }
+
+            // Clear
+            cart = [];
+            updateCartUI();
+            toggleCart();
+        }
+
+        function closeSuccess() {
+            document.getElementById('success-modal').classList.add('hidden');
+        }
+
+        function submitCateringRequest() {
+            const name = document.getElementById('cat-name').value;
+            const pax = document.getElementById('cat-pax').value;
+            
+            if(window.Pusher) {
+                window.Pusher.showToast(`Summons Sent! The Queen hears you, ${name}.`, 'success');
+                window.Pusher.broadcast('CATERING_REQUEST', { name, pax });
+            } else {
+                alert(`Summons Sent for ${pax} guests!`);
+            }
+            
+            // Visual Reset
+            document.querySelector('.catering-form form').reset();
+        }
+    </script>
 </body>
 
 </html>

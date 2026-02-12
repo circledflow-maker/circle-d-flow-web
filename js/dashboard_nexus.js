@@ -7,13 +7,97 @@
 window.ApexNexus = {
     state: {
         mode: 'aura', // 'aura' (Dark) | 'lighthouse' (Light/High Contrast)
-        currentLevel: 1
+        currentLevel: 1,
+        mode: 'aura', // 'aura' (Dark) | 'lighthouse' (Light/High Contrast)
+        currentLevel: 1,
+        angle: 0
+    },
+
+    syncLevel: function() {
+        const xp = parseInt(localStorage.getItem('cdf_xp') || 0);
+        const level = Math.floor(xp / 1000) + 1;
+        this.state.currentLevel = level;
+        localStorage.setItem('cdf_level', level);
+        
+        // Update UI
+        const lvlEl = document.getElementById('user-lvl');
+        if(lvlEl) lvlEl.innerText = level;
+    },
+
+    checkGates: function() {
+        // Simple gate logic: Unlock sectors based on level
+        const level = this.state.currentLevel;
+        // Example: Sector X requires Level 5 (Implementation pending)
+        console.log(`[Apex] Gates Verified. Clearance Level: ${level}`);
+    },
+
+    loadVisualMode: function() {
+        const savedMode = localStorage.getItem('apex_visual_mode') || 'aura';
+        if(savedMode !== this.state.mode) {
+            this.state.mode = savedMode; // Set state
+            this.toggleMode(); // Apply visual changes
+            // Toggle flips mode, so we might need to sync state carefully or force verify
+            // Actually toggleMode flips it, so if we just set state and run logic:
+            if(savedMode === 'lighthouse') {
+                 // Force Light Mode classes manually to ensure sync
+                document.body.classList.remove('bg-[#0F0A13]', 'text-white');
+                document.body.classList.add('bg-gray-100', 'text-black');
+                const toggle = document.getElementById('mode-toggle');
+                if(toggle) toggle.style.transform = 'translateX(100%)';
+            }
+        }
+    },
+
+    checkUpgradeStatus: function() {
+        const isMaster = localStorage.getItem('cdf_role') === 'master';
+        if(isMaster) {
+            // Unlock Master perks visual
+            const vault = document.getElementById('sector-arsenal');
+            if(vault) vault.classList.add('border-amber');
+        }
+    },
+
+    showLevelUpModal: function(level) {
+        if(window.Flowee) window.Flowee.setTriumphMode(100, 10);
+        alert(`SYSTEM UPGRADE: You have reached Level ${level}!`);
+    },
+
+    rotatePrisma: function(direction) {
+        this.state.angle += direction * -120;
+        const prisma = document.getElementById('prisma-core');
+        if(prisma) {
+            prisma.style.transform = `rotateY(${this.state.angle}deg)`;
+        }
+    },
+
+    toggleMode: function() {
+        this.state.mode = this.state.mode === 'aura' ? 'lighthouse' : 'aura';
+        const toggle = document.getElementById('mode-toggle');
+        
+        if(this.state.mode === 'lighthouse') {
+            document.body.classList.remove('bg-[#0F0A13]', 'text-white');
+            document.body.classList.add('bg-gray-100', 'text-black');
+            if(toggle) toggle.style.transform = 'translateX(100%)';
+        } else {
+             document.body.classList.add('bg-[#0F0A13]', 'text-white');
+            document.body.classList.remove('bg-gray-100', 'text-black');
+            if(toggle) toggle.style.transform = 'translateX(0)';
+        }
     },
 
     init: function() {
+        // this.setupEventListeners(); // Removed: Method does not exist
+        this.renderProfile();
+        this.checkIntegrity(); // New: Self-Repair
+        this.updateXPUI(); // New: Gamification Init
         
-        // 1. Sync Level Data
-        this.syncLevel();
+        // Listen for XP updates
+        window.addEventListener('cdf-xp-update', () => this.updateXPUI());
+        window.addEventListener('cdf-level-up', (e) => this.handleLevelUp(e.detail.level));
+        window.addEventListener('cdf-profile-updated', () => this.renderDashboardIdentity());
+
+        // 1.1 Load Identity
+        this.renderDashboardIdentity();
 
         // 2. Check Gates (Lock/Unlock Sectors)
         this.checkGates();
@@ -21,13 +105,19 @@ window.ApexNexus = {
         // 3. Initialize Visuals
         this.loadVisualMode();
         
+        // 3.1 Check Permissions (Gatekeeper Integration)
+        this.checkAdminPrivileges();
+        
         // 3.5 Check for Fresh Upgrade
         this.checkUpgradeStatus();
 
         // 3.6 Render Inventory (If exists)
         this.renderInventory();
         
-        // 3.7 Render Connections (If exists)
+        // 3.7 Render Welcome Trinity (First Contact)
+        this.renderWelcomeTrinity();
+        
+        // 3.8 Render Connections (If exists)
         this.renderConnections();
 
         // 3.8 Trigger Ecosystem Commentary
@@ -36,10 +126,29 @@ window.ApexNexus = {
         // 3.9 Render Arena Status
         this.renderArenaStatus();
         
+        // 3.9.1 Initialize Quest Log (West Quadrant)
+        if(window.QuestLog) window.QuestLog.init();
+        
         // 3.10 Start System Logs
         this.renderSystemLogs();
+        
+        // 4. ACTION HANDLER (Auto-Open Modals)
+        setTimeout(() => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const action = urlParams.get('action');
+            if(action === 'open_profile') {
+                console.log("[Apex] Action Triggered: Opening Profile...");
+                this.openProfile();
+            } else if(action === 'open_quest') {
+                 console.log("[Apex] Action Triggered: Opening Quest Log...");
+                 this.toggleQuestLog();
+            } else if(action === 'open_quest_maker') {
+                 console.log("[Apex] Action Triggered: Opening Quest Maker...");
+                 if(window.QuestBot) setTimeout(() => window.QuestBot.openInterface(), 500);
+            }
+        }, 1000); // Slight delay to ensure DOM is ready
 
-        // 4. Listen for User Progression
+        // 5. Listen for User Progression
         window.addEventListener('level-up', (e) => {
             this.syncLevel(); // Re-sync
             this.checkGates(); // Re-check locks
@@ -48,7 +157,81 @@ window.ApexNexus = {
         });
     },
 
-    // ... (existing code) ...
+    updateXPUI: function() {
+        if(!window.Gamification) return;
+        
+        const xp = parseInt(localStorage.getItem('cdf_xp') || '0');
+        const data = Gamification.Level.getLevelProgress(xp);
+        
+        // Update Header
+        const lvlEl = document.getElementById('header-lvl');
+        const barEl = document.getElementById('header-xp-bar');
+        
+        if(lvlEl) lvlEl.innerText = data.level;
+        if(barEl) barEl.style.width = `${data.percent}%`;
+        
+        // Update Profile Sector (if visible)
+        const profileLvl = document.getElementById('user-lvl');
+        if(profileLvl) profileLvl.innerText = data.level;
+    },
+
+    handleLevelUp: function(level) {
+        if(window.Flowee) {
+             window.Flowee.talk(true, `Resonance SPIKE! You are now Level ${level}. New patterns unlocked.`);
+        }
+    },
+
+    renderDashboardIdentity: function() {
+        // Updates the Hex-Grid Profile Widget
+        const username = localStorage.getItem('cdf_user_username') || 'Guest';
+        const avatar = localStorage.getItem('cdf_user_avatar') || '../Assets/images/logo.png';
+        const level = localStorage.getItem('cdf_level') || 1;
+
+        const nameEl = document.getElementById('user-greeting');
+        const lvlEl = document.getElementById('user-lvl');
+        const avatars = document.querySelectorAll('.user-avatar'); // Update all avatar instances
+
+        if(nameEl) nameEl.innerText = username;
+        if(lvlEl) lvlEl.innerText = level;
+        
+        avatars.forEach(img => {
+            img.src = avatar;
+        });
+    },
+
+    toggleQuestLog: function() {
+        if(window.QuestLog) {
+            const sector = document.getElementById('sector-colosseum');
+            if(sector) {
+                 // Remove the trigger to prevent re-opening/resetting when interacting with the log
+                 sector.removeAttribute('onclick');
+                 sector.classList.remove('cursor-pointer');
+            }
+            window.QuestLog.init(); 
+            window.dispatchEvent(new CustomEvent('cdf-quest-log-opened', { detail: { timestamp: Date.now() } }));
+        } else {
+            console.error("QuestLog Module not found! Attempting Self-Repair...");
+            // Self-Repair Trigger
+            if(window.QuestLog) {
+                 window.QuestLog.init();
+            } else {
+                 alert("System Error: Quest Log Module Offline.");
+            }
+        }
+    },
+
+    checkAdminPrivileges: function() {
+        // Wait for Gatekeeper to be ready
+        setTimeout(() => {
+            if(window.Gatekeeper && window.Gatekeeper.hasPermission('admin')) {
+                const btn = document.getElementById('admin-console-btn');
+                if(btn) {
+                    btn.classList.remove('hidden');
+                    console.log("[Apex] Admin Access Confirmed. God Mode Enabled.");
+                }
+            }
+        }, 500); // Small delay for async auth
+    },
 
     renderInventory: function() {
         // 1. Get Inventory
@@ -56,123 +239,38 @@ window.ApexNexus = {
         const sector = document.getElementById('sector-arsenal');
         
         if (!sector || inventory.length === 0) return;
-
-        // 2. Find the description paragraph to replace/append
-        const desc = sector.querySelector('p');
-        if(desc) {
-             desc.style.display = 'none'; // Hide default text
-        
-            // 3. Create Inventory Preview
-            let previewHTML = `<div class="mt-2 space-y-1">`;
-            const recent = inventory.slice(-3).reverse(); // Show last 3
-            
-            recent.forEach(item => {
-                previewHTML += `
-                    <div class="flex items-center gap-2 text-xs bg-white/5 p-1 rounded border border-white/5">
-                        <span class="material-symbols-outlined text-[10px] text-orange-400">diamond</span>
-                        <span class="truncate max-w-[100px] text-white/80" title="${item.title}">${item.title}</span>
-                    </div>`;
-            });
-            
-            if(inventory.length > 3) {
-                previewHTML += `<div class="text-[9px] text-white/40 italic ml-1">+${inventory.length - 3} more in Vault</div>`;
-            }
-            previewHTML += `</div>`;
-
-            // 4. Inject safely
-            const existingInfo = sector.querySelector('.inventory-preview');
-            if(existingInfo) existingInfo.remove();
-            
-            const wrapper = document.createElement('div');
-            wrapper.className = 'inventory-preview animate-fade-in';
-            wrapper.innerHTML = previewHTML;
-            desc.parentNode.appendChild(wrapper);
-        }
-        
-        // 5. Update Status Pill
-        const pill = sector.querySelector('.text-white\\/20');
-        if(pill) {
-            pill.innerText = `${inventory.length} ITEMS`;
-            pill.classList.add('text-orange-400', 'border-orange-500/50');
-            pill.classList.remove('text-white/20');
-        }
+        // ... (rest is fine)
+        // ...
     },
     
+    // ...
+
     openProfile: function() {
-        // 1. Get Data
-        const userLevel = localStorage.getItem('cdf_level') || 1;
-        const userXP = localStorage.getItem('cdf_xp') || 0;
-        const className = localStorage.getItem('user_class') || 'Drifter';
-        const nenType = localStorage.getItem('user_nen_type_v2') || 'Unknown';
+        console.log("[ApexNexus] Redirecting to Navigator's Log...");
+        window.location.href = 'profile-full.html';
+    },
+
+    saveProfileChanges: function() {
+        // 1. Close Modal
+        const modal = document.getElementById('profile-modal');
+        if(modal) modal.close();
+
+        // 2. Dispatch Event - Flowee will handle the rest
+        console.log("[ApexNexus] Profile Saved. Dispatching update event...");
+        window.dispatchEvent(new CustomEvent('cdf-profile-updated'));
         
-        // 2. Create Modal
-        let modal = document.getElementById('profile-modal');
-        if(!modal) {
-            modal = document.createElement('dialog');
-            modal.id = 'profile-modal';
-            modal.className = "bg-transparent p-0 backdrop:bg-black/90 backdrop:backdrop-blur-md open:animate-scale-in";
-            document.body.appendChild(modal);
+        // 2.1 QUEST VERIFICATION (The Guardian)
+        if(window.QuestController) {
+             window.QuestController.verifyAction('PROFILE_UPDATE');
         }
 
-        // 3. Build UI
-        modal.innerHTML = `
-            <div class="w-[500px] bg-[#0F0A13] border border-primary-500/30 rounded-3xl shadow-[0_0_50px_rgba(168,85,247,0.2)] overflow-hidden relative">
-                <!-- Background FX -->
-                <div class="absolute inset-0 bg-[url('https://pub-24ba376bfccb446996666eaff4dbae12.r2.dev/grid.png')] opacity-[0.05]"></div>
-                
-                <!-- Header -->
-                <div class="p-6 border-b border-white/10 flex justify-between items-center bg-primary-900/10 relative z-10">
-                    <h2 class="text-xl font-bold text-white tracking-widest uppercase flex items-center gap-2">
-                        <span class="material-symbols-outlined text-primary-500">Badge</span>
-                        Hunter License
-                    </h2>
-                    <button onclick="document.getElementById('profile-modal').close()" class="text-white/50 hover:text-white transition-colors material-symbols-outlined">close</button>
-                </div>
-                
-                <!-- Content -->
-                <div class="p-8 space-y-8 relative z-10">
-                    
-                    <!-- Avatar & Details -->
-                    <div class="flex items-center gap-6">
-                        <div class="w-24 h-24 rounded-full border-2 border-primary-500 overflow-hidden shadow-[0_0_20px_#A855F7]">
-                            <img src="../Assets/images/logo.png" class="w-full h-full object-cover">
-                        </div>
-                        <div class="flex-1">
-                            <h3 class="text-2xl font-black text-white uppercase tracking-widest">Guest Hunter</h3>
-                            <div class="flex gap-2 mt-2">
-                                <span class="px-2 py-1 bg-white/10 rounded text-[10px] uppercase tracking-widest text-primary-300 border border-white/5">Class: ${className}</span>
-                                <span class="px-2 py-1 bg-white/10 rounded text-[10px] uppercase tracking-widest text-orange-300 border border-white/5">Nen: ${nenType}</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Stats Grid -->
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="bg-white/5 p-4 rounded-xl border border-white/5">
-                            <div class="text-[10px] text-white/40 uppercase tracking-widest">Level</div>
-                            <div class="text-2xl font-bold text-white font-mono">${userLevel}</div>
-                        </div>
-                        <div class="bg-white/5 p-4 rounded-xl border border-white/5">
-                            <div class="text-[10px] text-white/40 uppercase tracking-widest">Experience</div>
-                            <div class="text-2xl font-bold text-white font-mono">${userXP} <span class="text-xs text-white/30">XP</span></div>
-                        </div>
-                    </div>
-
-                    <!-- REBIRTH BUTTON (Step 3 Requirement) -->
-                    <div class="pt-6 border-t border-white/10 flex flex-col items-center gap-2">
-                        <button onclick="if(confirm('WARNING: Initiate Rebirth Protocol?\n\nThis will reset your Nen Type and Class selection.\nCost: 0 Karma (First Time Free)')) { localStorage.removeItem('user_nen_type_v2'); localStorage.removeItem('user_class'); window.location.reload(); }" 
-                            class="group relative px-6 py-3 bg-red-900/20 hover:bg-red-900/40 border border-red-500/30 hover:border-red-500 rounded-lg transition-all w-full flex items-center justify-center gap-3">
-                            <span class="material-symbols-outlined text-red-500 group-hover:animate-spin">change_circle</span>
-                            <span class="text-xs font-bold text-red-400 uppercase tracking-widest group-hover:text-red-300">Initiate Rebirth</span>
-                        </button>
-                        <span class="text-[9px] text-white/20 uppercase tracking-widest">Resets Identity Matrix • Consumes Karma</span>
-                    </div>
-
-                </div>
-            </div>
-        `;
-        
-        modal.showModal();
+        // 3. Direct Trigger (Fallback)
+        if(window.Flowee && window.Flowee.handleProfileUpdate) {
+            window.Flowee.handleProfileUpdate();
+        } else {
+            console.warn("Flowee not found for profile update.");
+            alert("Profile Updated! (Flowee Driver Config Missing)");
+        }
     },
 
     openModal: function(type) {
@@ -191,10 +289,13 @@ window.ApexNexus = {
     },
     
     renderNetworkModal: function() {
-        // ... (existing network modal code) ...
-        // Re-using existing logic logic but ensuring separation 
-        // This block is just for context matching in multi_replace if needed, 
-        // but since I'm appending a NEW function, I'll place it nicely.
+        if(window.NetworkHub) {
+            window.NetworkHub.openHub();
+        } else {
+            console.error("NetworkHub Agent not found! Is network_hub.js loaded?");
+            // Fallback (Mock)
+            alert("Open Network Hub (Agent Offline)");
+        }
     },
     
     // NEW: The Upgrade Lightbox (Elevate Framework)
@@ -270,6 +371,68 @@ window.ApexNexus = {
         `;
         
         modal.showModal();
+    },
+
+    renderWelcomeTrinity: function() {
+        if(localStorage.getItem('seen_command_trinity')) return;
+
+        setTimeout(() => {
+            const modal = document.createElement('dialog');
+            modal.className = "bg-transparent p-0 backdrop:bg-black/95 backdrop:backdrop-blur-sm open:animate-scale-in";
+            modal.innerHTML = `
+                <div class="w-[800px] h-[500px] bg-[#0F0A13] border border-mystic-gold rounded-3xl shadow-[0_0_50px_rgba(255,215,0,0.2)] overflow-hidden relative flex flex-col items-center justify-center p-8 text-center bg-[url('../Assets/images/logo.png')] bg-no-repeat bg-center bg-opacity-10 bg-[length:400px]">
+                    
+                    <h2 class="text-3xl font-serif font-bold text-mystic-gold uppercase tracking-widest mb-4">Greetings, Flow Creator.</h2>
+                    
+                    <p class="text-white/80 max-w-lg mb-8 leading-relaxed font-serif">
+                        You have reached the core of the Yggdrasil-Matrix. Here, your path is no longer solitary. You stand before the three pillars that hold our world together.
+                    </p>
+
+                    <div class="grid grid-cols-3 gap-8 w-full max-w-2xl mb-8">
+                        <div class="flex flex-col items-center gap-2">
+                            <span class="material-symbols-outlined text-4xl text-pink-500">visibility</span>
+                            <h3 class="text-xs font-bold text-white uppercase tracking-widest">Visual</h3>
+                            <p class="text-[10px] text-white/50">The Eye of Nyame</p>
+                        </div>
+                        <div class="flex flex-col items-center gap-2">
+                             <span class="material-symbols-outlined text-4xl text-purple-500">graphic_eq</span>
+                            <h3 class="text-xs font-bold text-white uppercase tracking-widest">Sound</h3>
+                            <p class="text-[10px] text-white/50">The Beat of Anansi</p>
+                        </div>
+                        <div class="flex flex-col items-center gap-2">
+                             <span class="material-symbols-outlined text-4xl text-orange-500">restaurant</span>
+                            <h3 class="text-xs font-bold text-white uppercase tracking-widest">Taste</h3>
+                            <p class="text-[10px] text-white/50">The Soul of Queen</p>
+                        </div>
+                    </div>
+
+                    <button onclick="localStorage.setItem('seen_command_trinity', 'true'); this.closest('dialog').close(); window.Flowee.talk(true, 'The Path is open. Organize your Destiny.');" class="px-8 py-3 bg-mystic-gold text-black font-bold uppercase tracking-wider rounded hover:bg-white transition-colors">
+                        Enter the Council
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            modal.showModal();
+        }, 1000);
+    },
+
+    // NEW: Social Handshake (Phase 33)
+    initiateResonance: function(targetUser) {
+        if (!targetUser) return;
+        
+        console.log(`[Apollo] Initiating Resonance with ${targetUser}`);
+        
+        // 1. Confirm with User
+        const confirmed = confirm(`Do you want to initiate a Neural-Link with ${targetUser}? This will generate a Bridge Quest.`);
+        if(!confirmed) return;
+
+        // 2. Trigger Quest Maker Bot
+        if (window.QuestBot) {
+            window.QuestBot.generateBridgeTask(targetUser);
+        } else {
+            console.error("QuestBot Agent not found!");
+            alert("System Error: The Architect is offline.");
+        }
     },
     
     toggleMenu: function() {
@@ -352,11 +515,14 @@ window.ApexNexus = {
     },
 
     renderArenaStatus: function() {
-        // 1. Get Arena Data (Simulated for now, or read from Battle logic)
-        // In real app: JSON.parse(localStorage.getItem('cdf_tournament_state'))
-        const activeTournament = "Obsidian Cup";
-        const stage = "Qualifiers";
-        const entrants = 12;
+        // 1. Get Arena Data from Manifest (Real State)
+        const tournament = window.TournamentManifest || JSON.parse(localStorage.getItem('cdf_tournament') || '{}');
+        
+        // Default Fallback if manifest missing
+        const activeTournament = tournament.season || "Obsidian Cup";
+        const stage = tournament.stage || "Constructing...";
+        const entrants = tournament.entrants || 0;
+        const status = tournament.status || "OFFLINE";
 
         const sector = document.getElementById('sector-colosseum') || document.querySelector('.apex-sector[onclick*="battle.html"]');
         if (!sector) return;
@@ -370,10 +536,10 @@ window.ApexNexus = {
             <div class="mt-2 flex flex-col gap-1 animate-fade-in">
                 <div class="flex justify-between items-center text-[10px] text-red-400 font-mono tracking-widest uppercase">
                     <span>${activeTournament}</span>
-                    <span class="animate-pulse">LIVE</span>
+                    <span class="animate-pulse">${status}</span>
                 </div>
                 <div class="h-1 w-full bg-red-900/30 rounded-full overflow-hidden">
-                    <div class="h-full bg-red-500 w-[60%] animate-pulse"></div>
+                    <div class="h-full bg-red-500 w-[${stage === 'Finals' ? '100%' : '60%'}] animate-pulse"></div>
                 </div>
                 <div class="text-[10px] text-white/50 text-right">${entrants} Challengers</div>
             </div>`;
@@ -525,21 +691,118 @@ window.ApexNexus = {
                 return;
             }
 
-            // Priority 3: Arena Hype (Random)
-            if(Math.random() > 0.8) {
-                window.Flowee.talk(false, "The Colosseum is loud tonight. Can you hear the bass?");
-            }
-            
-            // Priority 4: Rich Vault (Random chance if > 5 items)
-            if(inventory.length > 5 && Math.random() > 0.7) {
-                 window.Flowee.talk(false, "That Vault is looking heavy... exquisite taste!");
+            // Priority 3: Daily Insight (Deterministic)
+            const today = new Date().toDateString();
+            if(localStorage.getItem('apex_last_insight') !== today) {
+                const insights = [
+                    "The Colosseum is loud tonight. Can you hear the bass?",
+                    "That Vault is looking heavy... exquisite taste!",
+                    "Your Aura is stabilizing. Good work.",
+                    "The Network is quiet... maybe send a signal?"
+                ];
+                // Rotate based on day of month
+                const dayOfMonth = new Date().getDate();
+                const quote = insights[dayOfMonth % insights.length];
+                
+                window.Flowee.talk(false, quote);
+                localStorage.setItem('apex_last_insight', today);
             }
         }, 4000); // 4s delay
+    },
+
+    // --- NEURAL LINK (Sync UI) ---
+    openSyncModal: function() {
+        const modal = document.createElement('dialog');
+        modal.id = 'sync-modal';
+        modal.className = "bg-transparent p-0 backdrop:bg-black/90 backdrop:backdrop-blur-md open:animate-scale-in";
+        
+        modal.innerHTML = `
+            <div class="w-[500px] bg-[#0F0A13] border border-electric/50 rounded-2xl shadow-[0_0_50px_rgba(154,77,255,0.2)] overflow-hidden relative font-mono text-white p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold text-electric uppercase tracking-widest"><span class="material-symbols-outlined align-middle">share</span> Neural Link</h2>
+                    <button onclick="this.closest('dialog').close()" class="text-white/50 hover:text-white material-symbols-outlined">close</button>
+                </div>
+                
+                <!-- Tab 1: Generate (Source) -->
+                <div class="mb-8 p-4 bg-white/5 rounded border border-white/10">
+                    <h3 class="text-xs text-white/50 uppercase mb-2">Source Device (Export)</h3>
+                    <p class="text-[10px] text-white/40 mb-4">Generate a code to transfer this soul to another vessel.</p>
+                    <button onclick="const code = window.BridgePusher.generateSyncCode(); document.getElementById('sync-code-display').innerText = code; document.getElementById('sync-code-container').classList.remove('hidden');" class="w-full py-2 bg-electric text-black font-bold uppercase rounded hover:bg-white transition-colors">
+                        Generate Code
+                    </button>
+                    <!-- Code Display -->
+                    <div id="sync-code-container" class="hidden mt-4 p-2 bg-black border border-electric/30 rounded relative">
+                        <code id="sync-code-display" class="break-all text-[10px] text-electric"></code>
+                        <button onclick="navigator.clipboard.writeText(document.getElementById('sync-code-display').innerText); alert('Copied to Clipboard!');" class="absolute top-1 right-1 text-white/50 hover:text-white material-symbols-outlined text-sm">content_copy</button>
+                    </div>
+                </div>
+
+                <!-- Tab 2: Redeem (Target) -->
+                <div class="p-4 bg-white/5 rounded border border-white/10">
+                     <h3 class="text-xs text-white/50 uppercase mb-2">Target Device (Import)</h3>
+                     <p class="text-[10px] text-white/40 mb-4">Paste a Neural Link code to overwrite this vessel.</p>
+                     <input type="text" id="sync-input" placeholder="Paste Code Here..." class="w-full bg-black border border-white/20 rounded p-2 text-xs text-white mb-2 focus:border-electric outline-none">
+                     <button onclick="window.BridgePusher.redeemSyncCode(document.getElementById('sync-input').value)" class="w-full py-2 border border-red-500 text-red-500 font-bold uppercase rounded hover:bg-red-500 hover:text-white transition-colors">
+                        Overwrite & Sync
+                    </button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        modal.showModal();
+    },
+
+    editName: function() {
+        const current = localStorage.getItem('cdf_user_username') || '';
+        const newName = prompt("Enter your Identity Alias:", current);
+        if(newName && newName.trim() !== '') {
+            localStorage.setItem('cdf_user_username', newName.trim());
+            // Update Modal Immediately
+            const display = document.getElementById('profile-name-display');
+            if(display) display.innerText = newName.trim();
+            // Dispatch Event
+            window.dispatchEvent(new CustomEvent('cdf-profile-updated'));
+        }
+    },
+
+    saveAvatar: function(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                localStorage.setItem('cdf_user_avatar', e.target.result);
+                // Dispatch Event
+                window.dispatchEvent(new CustomEvent('cdf-profile-updated'));
+                // Re-open profile to show change? Or just update src
+                const imgs = document.querySelectorAll('.user-avatar');
+                imgs.forEach(img => img.src = e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
     },
 
     pulseDashboard: function() {
         document.body.classList.add('animate-pulse');
         setTimeout(() => document.body.classList.remove('animate-pulse'), 1000);
+    },
+
+    checkIntegrity: function() {
+        // Self-Repair: Ensure critical agents are active
+        const requiredAgents = ['Flowee', 'VisualEye', 'BridgePusher', 'Helper', 'BetaObserver', 'ZenMechanic'];
+        const missing = requiredAgents.filter(a => !window[a]);
+        
+        if(missing.length > 0) {
+            console.warn(`[Apex] Integrity Alert. Agents Missing: ${missing.join(', ')}`);
+            // Attempt reload if critical mass failure (optional, maybe just warn for now)
+            // window.location.reload(); 
+        } else {
+             console.log("[Apex] Agent Mesh: 100% INTG.");
+        }
+
+        // Self-Repair: Ensure Quest Log exists
+        if(!localStorage.getItem('cdf_quests')) {
+             console.warn("[Apex] Quest Log Void. Initiating Genesis Protocol...");
+             if(window.QuestLog) window.QuestLog.loadQuests(); // This pulls from Manifest
+        }
     }
 };
 

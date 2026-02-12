@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Library | The High Palast</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700&family=Playfair+Display:ital,wght@1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <style>
+        .env-library {
+            background-color: #0f0a13;
+            color: #d4af37;
+            background-image: 
+                linear-gradient(rgba(15, 10, 19, 0.9), rgba(15, 10, 19, 0.9)),
+                url('https://www.transparenttextures.com/patterns/cubes.png');
+        }
+        /* Floating Runes */
+        .rune {
+            position: absolute;
+            color: rgba(154, 77, 255, 0.2);
+            font-size: 20px;
+            animation: floatRune 10s infinite linear;
+            pointer-events: none;
+        }
+        @keyframes floatRune {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+
+        /* Codex Container (Mini) */
+        .codex-card {
+            background: #1a1622;
+            border: 1px solid rgba(154, 77, 255, 0.2);
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.5s;
+        }
+        .codex-card:hover {
+            border-color: #9A4DFF;
+            box-shadow: 0 0 30px rgba(154, 77, 255, 0.1);
+            transform: scale(1.02);
+        }
+
+        /* Rune Generator */
+        .rune-gen {
+            background: linear-gradient(45deg, #000, #1a1622);
+            border: 2px solid #d4af37;
+            padding: 30px;
+            margin-top: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .rune-gen::before {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.2), transparent);
+            animation: shine 3s infinite;
+        }
+        @keyframes shine { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
+    </style>
+</head>
+<body class="env-library min-h-screen overflow-hidden">
+
+    <!-- RUNES BG -->
+    <div id="runes-container"></div>
+
+    <!-- HUB NAV -->
+    <nav class="fixed top-0 w-full z-50 p-6 flex justify-between items-center bg-black/50 backdrop-blur border-b border-white/10">
+        <a href="dashboard.html" class="flex items-center gap-2 text-[#9A4DFF] hover:text-white transition-colors">
+            <span class="material-symbols-outlined">auto_stories</span>
+            <span class="text-xs font-bold uppercase tracking-widest">Return to Palast</span>
+        </a>
+        <div class="text-xs font-bold uppercase tracking-widest opacity-50 text-white">The Living Archive</div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto px-6 py-32 flex flex-col items-center">
+        
+        <h1 class="text-5xl font-serif text-white mb-12">The Library</h1>
+
+        <div class="grid md:grid-cols-2 gap-8 w-full">
+            
+            <!-- LABORATORY ACCESS (Replaces Codex) -->
+            <div class="codex-card" onclick="window.location.href='laboratory.html'">
+                <span class="material-symbols-outlined text-6xl text-[#9A4DFF] mb-4">science</span>
+                <h2 class="text-2xl font-bold text-white mb-2">Enter The Lab</h2>
+                <p class="text-sm opacity-60">Experiments, Quizzes, and Future Science.</p>
+            </div>
+
+            <!-- D BIBLIOTHEC ACCESS -->
+            <div class="codex-card" onclick="window.location.href='library.html'">
+                <span class="material-symbols-outlined text-6xl text-cyan-400 mb-4">auto_stories</span>
+                <h2 class="text-2xl font-bold text-white mb-2">D Bibliothec</h2>
+                <p class="text-sm opacity-60">Enter the Hogwarts of Data. Find the Truth.</p>
+            </div>
+
+        </div>
+
+        <!-- RUNE GENERATOR -->
+        <div class="rune-gen w-full max-w-lg rounded-xl">
+            <h3 class="text-gold uppercase tracking-widest text-xs mb-4">Daily Holy Rune</h3>
+            <div class="text-4xl font-mono text-white mb-6 tracking-widest" id="daily-rune-display">LOADING...</div>
+            <button onclick="window.PalastAgent.generateDailyRune(); updateRune();" class="px-6 py-2 border border-gold text-gold hover:bg-gold hover:text-black transition-colors uppercase text-xs font-bold">
+                Regenerate Rune
+            </button>
+            <p class="text-[10px] text-white/30 mt-4">Valid for 24 Hours. Grants free access to your Museum.</p>
+        </div>
+
+    </main>
+
+    <!-- AGENTS -->
+    <script src="../js/agents/palast_agent.js"></script>
+    <script src="../js/agents/flowee.js"></script>
+    <script src="../js/agents/helper.js"></script>
+    <script src="../js/agents/pusher.js"></script>
+    <script src="../js/agents/imperial_hud.js"></script>
+
+    <script>
+        function updateRune() {
+            document.getElementById('daily-rune-display').innerText = window.PalastAgent.dailyRune;
+            if(window.Flowee) window.Flowee.talk(true, "A new Rune is forged.");
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateRune();
+            
+            // Spawn Runes
+            const container = document.getElementById('runes-container');
+            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            for(let i=0; i<20; i++) {
+                const el = document.createElement('div');
+                el.className = 'rune';
+                el.innerText = chars[Math.floor(Math.random() * chars.length)];
+                el.style.left = Math.random() * 100 + '%';
+                el.style.animationDuration = (8 + Math.random() * 10) + 's';
+                el.style.animationDelay = Math.random() * 5 + 's';
+                container.appendChild(el);
+            }
+
+            if(window.Flowee) window.Flowee.talk(true, "Knowledge is the ultimate Haki.");
+        });
+    </script>
+</body>
+</html>

@@ -107,12 +107,12 @@
 
     <!-- THE BOOK CONTAINER -->
     <div class="relative w-full h-screen flex items-center justify-center perspective-2000">
-        <div id="scriptorium-book" class="relative w-[90vh] aspect-[3/2] transform-style-3d transition-transform duration-1000">
+        <div id="scriptorium-book" class="relative w-[45vh] aspect-[3/4] transform-style-3d transition-transform duration-1000 shadow-2xl">
             
             <!-- Page 0: Cover -->
-            <div class="book-page absolute inset-0 w-full h-full z-50" id="page-0">
+            <div class="book-page absolute inset-0 w-full h-full z-50 text-white" id="page-0">
                 <!-- Cover Front -->
-                <div class="absolute inset-0 bg-[#1A1622] rounded-r-lg border-l-4 border-black shadow-2xl flex items-center justify-center overflow-hidden backface-hidden">
+                <div class="absolute inset-0 bg-[#1A1622] rounded-r border-l-4 border-black shadow-2xl flex items-center justify-center overflow-hidden backface-hidden">
                     <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/aged-paper.png')] opacity-10"></div>
                     <div class="text-center relative z-10 p-12 border-4 border-amber-500/20 m-8 rounded">
                         <span class="material-symbols-outlined text-8xl text-amber-500 mb-8 drop-shadow-[0_0_25px_rgba(255,174,66,0.3)]">auto_stories</span>
@@ -132,51 +132,20 @@
                 </div>
             </div>
 
-            <!-- Page 1: Origins -->
+            <!-- Page 1: The Community Artbook -->
             <div class="book-page absolute inset-0 w-full h-full z-40" id="page-1">
                 <!-- Front (Content) -->
                 <div class="absolute inset-0 bg-paper rounded-r-lg border-l border-[#C9B48C] shadow-xl p-8 flex backface-hidden">
                     <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/manga.png')] opacity-5 pointer-events-none"></div>
                     
-                    <!-- Manga Layout -->
-                    <div class="grid grid-cols-2 grid-rows-3 gap-4 w-full h-full relative z-10">
+                    <!-- Dynamic Content Container -->
+                    <div class="w-full h-full flex flex-col relative z-10">
+                        <h2 class="font-cinzel text-3xl text-black border-b-2 border-black/10 pb-2 mb-4">Community Chronicles</h2>
                         
-                        <!-- Header Panel (WITH FIXED IMAGE) -->
-                        <div class="col-span-2 row-span-1 bg-white manga-panel relative overflow-hidden group cursor-pointer">
-                            <img src="C:/Users/Utilizador/.gemini/antigravity/brain/bcd64e71-5145-4943-85ad-7c25c6b869d7/legend_of_the_one_1770345781705.png" class="absolute inset-0 w-full h-full object-cover grayscale contrast-125 group-hover:grayscale-0 transition-all duration-700">
-                            <div class="absolute top-4 left-4 bg-black text-white px-3 py-1 text-xs font-bold uppercase tracking-widest z-10">Chapter 01</div>
-                            <div class="absolute bottom-4 right-4 bg-white border-2 border-black p-4 max-w-sm shadow-[4px_4px_0_black]">
-                                <p class="text-black text-sm font-serif font-bold leading-relaxed">
-                                    It started not as a place, but as a <span class="text-cipher">frequency</span>.
-                                </p>
-                            </div>
+                        <!-- ART GRID (Dynamic) -->
+                        <div id="artbook-grid" class="grid grid-cols-2 gap-4 overflow-y-auto h-full pr-2 custom-scrollbar">
+                            <!-- Injected via JS -->
                         </div>
-
-                        <!-- Detail Panel -->
-                        <div class="col-span-1 row-span-2 bg-[#F0F0F0] manga-panel flex items-center justify-center relative">
-                            <span class="material-symbols-outlined text-8xl text-black opacity-80">radio</span>
-                            <div class="absolute bottom-2 left-2 text-[10px] font-mono text-black/40">FIG A. THE SIGNAL</div>
-                        </div>
-
-                        <!-- Text Panel -->
-                        <div class="col-span-1 row-span-2 bg-transparent p-4 flex flex-col justify-between">
-                            <div class="prose prose-sm text-ink font-serif">
-                                <h3 class="font-bold text-xl mb-4 border-b-2 border-black/10 pb-2">The Spark</h3>
-                                <p>Amidst the noise of the old city, the founders heard a call. A rhythm hidden in the static. They called it <strong>The Flow</strong>.</p>
-                                <p class="mt-4 text-xs italic opacity-70">"To listen is to begin."</p>
-                            </div>
-                            
-                            <!-- Interaction Buttons -->
-                            <div class="flex flex-col gap-2 mt-4">
-                                <button class="w-full py-2 bg-black text-white text-[10px] font-bold uppercase tracking-widest hover:bg-cipher hover:scale-[1.02] transition-all flex items-center justify-center gap-2">
-                                    <span class="material-symbols-outlined text-xs">lock</span> Break Seal (Lvl 2)
-                                </button>
-                                <button class="w-full py-2 border border-black text-black text-[10px] font-bold uppercase tracking-widest hover:bg-black/5 transition-all flex items-center justify-center gap-2">
-                                    <span class="material-symbols-outlined text-xs">edit</span> Annotate
-                                </button>
-                            </div>
-                        </div>
-
                     </div>
                     
                     <!-- Page Number -->
@@ -184,8 +153,12 @@
                 </div>
                 
                 <!-- Back -->
-                <div class="absolute inset-0 bg-paper rounded-l-lg border-r border-[#C9B48C] shadow-lg backface-hidden text-black flex items-center justify-center" style="transform: rotateY(180deg);">
-                    <p class="uppercase tracking-widest text-sm opacity-30">End of Record</p>
+                <div class="absolute inset-0 bg-paper rounded-l-lg border-r border-[#C9B48C] shadow-lg backface-hidden text-black flex items-center justify-center p-12" style="transform: rotateY(180deg);">
+                    <div class="text-center">
+                         <span class="material-symbols-outlined text-4xl opacity-20 mb-4">history_edu</span>
+                         <p class="uppercase tracking-widest text-sm opacity-50">To be continued...</p>
+                         <p class="text-xs italic mt-2 opacity-40">"Every action in the Circle is recorded."</p>
+                    </div>
                 </div>
             </div>
 
@@ -237,16 +210,13 @@
             }
         }
         
-        // Initial Flowee Position
+        // Initial Flowee Position & Artbook Loading
         window.addEventListener('DOMContentLoaded', () => {
-             // Center Flowee initially
+             // Center Flowee
              setTimeout(() => {
                  const book = document.getElementById('scriptorium-book');
                  if(window.Flowee && book) {
-                     // Manually override Flowee to sit on top-right of book. 
-                     // We access the container directly if possible, or via the global agent
                      const bookRect = book.getBoundingClientRect();
-                     // Default safe position relative to book
                      const targetLeft = bookRect.right - 100;
                      const targetTop = bookRect.top - 80;
 
@@ -259,7 +229,37 @@
                      window.Flowee.talk(true, "I am the Eye of Truth. Ask me anything.");
                  }
              }, 1000);
+
+             // LOAD ARTBOOK DATA
+             loadArtbook();
         });
+
+        function loadArtbook() {
+            const grid = document.getElementById('artbook-grid');
+            if(!grid) return;
+
+            // Mock Data + LocalStorage
+            const localData = JSON.parse(localStorage.getItem('cdf_ledger') || '[]');
+            const mockData = [
+                { title: "The First Signal", type: "Lore", date: "2024-01-01", img: "https://placehold.co/150x150/111/gold?text=Signal" },
+                { title: "Flowee's Awakening", type: "Event", date: "2024-02-14", img: "https://placehold.co/150x150/111/purple?text=Flowee" },
+                { title: "Guild Formation", type: "Milestone", date: "2024-03-10", img: "https://placehold.co/150x150/111/red?text=Guild" }
+            ];
+            
+            // Merge
+            const feed = [...mockData, ...localData]; // Simple merge
+
+            grid.innerHTML = feed.map(item => `
+                <div class="bg-black/5 p-2 rounded border border-black/10 hover:bg-black/10 transition-colors cursor-pointer group">
+                    <div class="aspect-square bg-gray-200 mb-2 overflow-hidden rounded relative">
+                        <img src="${item.img || 'https://placehold.co/150x150/ccc/333?text=Log'}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute bottom-0 left-0 bg-black text-white text-[8px] px-1 uppercase font-bold">${item.type || 'Data'}</div>
+                    </div>
+                    <h4 class="font-bold text-xs leading-tight mb-1 text-black">${item.title || item.item || 'Unknown Entry'}</h4>
+                    <p class="text-[8px] font-mono opacity-50 text-black">${item.date || 'Unknown Date'}</p>
+                </div>
+            `).join('');
+        }
         
         window.toggleBlueprints = function() {
             // Simple Alert/Modal for Blueprints
@@ -289,6 +289,19 @@
     </script>
     
     <!-- Agent Crew -->
+    <script src="../js/agents/global_ticker.js" defer></script>
+    <script src="../js/agents/network_hub.js" defer></script>
+    <script src="../js/agents/constructor_bot.js" defer></script>
+    <script src="../js/agents/kingdom_science.js" defer></script>
+    <script src="../js/agents/resonance_bridge.js" defer></script>
+    <script src="../js/agents/vault_space.js" defer></script>
+    <script src="../js/agents/orbital_menu.js" defer></script>
+    <script src="../js/agents/tutorial_core.js" defer></script>
+    <script src="../js/agents/quest_controller.js" defer></script>
+    <script src="../js/agents/visual_integrity.js" defer></script>
+    <script src="../js/agents/sound_engineer.js" defer></script>
+    <script src="../js/agents/horizon_bar.js" defer></script>
+    <script src="../js/agents/social_matrix.js" defer></script>
     <script src="../js/agents/flowee.js"></script>
     <script src="../js/agents/chronicler.js" defer></script>
     <script src="../js/agents/map_scanner.js" defer></script>
@@ -297,6 +310,12 @@
     <script src="../js/agents/cipher_helper.js" defer></script>
 
     <div id="flowee-agent" class="fixed bottom-8 left-8 z-50 flex flex-col items-center group cursor-pointer"></div>
+    <script src="../js/agents/pusher.js" defer></script>
     <script src="../js/agents/helper.js" defer></script>
+
+    <!-- AUTOMATED AGENT INJECTION -->
+
+    <!-- AUTOMATED AGENT INJECTION -->
+    <script src="../js/agents/imperial_hud.js" defer></script>
 </body>
 </html>

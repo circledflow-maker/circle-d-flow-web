@@ -58,6 +58,10 @@
 
         <!-- Desktop Menu -->
         <div class="hidden md:flex items-center gap-8">
+            <a href="arena.html?source=circle" class="px-4 py-1 bg-red-600/20 border border-red-600/50 hover:bg-red-600 hover:text-white text-red-500 text-[10px] font-bold uppercase tracking-widest rounded transition-all shadow-[0_0_10px_rgba(220,38,38,0.2)] flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm animate-pulse">swords</span>
+                Live Battle
+            </a>
             <a href="impressum.html"
                 class="text-sm uppercase tracking-widest hover:text-electric transition-colors">Impressum</a>
             <a href="../Index.html#contact"
@@ -191,13 +195,77 @@
 
     <script src="../js/gamification.js"></script>
     <script src="../js/script.js"></script>
+    <script>
+        // COMMUNITY PULSE TICKER
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                if (window.Pusher) {
+                    window.Pusher.showToast("COMMUNITY PULSE: New Member Joined 'The Inner Circle'", "karma");
+                } else if (window.PusherAgent) {
+                    const pusher = new PusherAgent();
+                    pusher.showToast("COMMUNITY PULSE: New Member Joined 'The Inner Circle'", "karma"); // corrected type
+                }
+            }, 2000);
+        });
+    </script>
     <!-- PHOENIX-EE CORE AGENTS -->
+    <script src='../js/agents/pusher.js' defer></script>
     <script src='../js/agents/visual_eye.js' defer></script>
     <script src='../js/agents/helper.js' defer></script>
+    <script src="../js/agents/global_ticker.js" defer></script>
+    <script src="../js/agents/network_hub.js" defer></script>
+    <script src="../js/agents/constructor_bot.js" defer></script>
+    <script src="../js/agents/kingdom_science.js" defer></script>
+    <script src="../js/agents/resonance_bridge.js" defer></script>
+    <script src="../js/agents/vault_space.js" defer></script>
+    <script src="../js/agents/orbital_menu.js" defer></script>
+    <script src="../js/agents/tutorial_core.js" defer></script>
+    <script src="../js/agents/quest_controller.js" defer></script>
+    <script src="../js/agents/visual_integrity.js" defer></script>
+    <script src="../js/agents/sound_engineer.js" defer></script>
+    <script src="../js/agents/horizon_bar.js" defer></script>
+    <script src="../js/agents/social_matrix.js" defer></script>
+    <script src='../js/agents/flowee.js' defer></script>
     <script src='../js/agents/bridge_pusher.js' defer></script>
     <script src='../js/agents/device_sync.js' defer></script>
     <script src='../js/agents/stress_test.js' defer></script>
     <div id="flowee-agent" class="fixed bottom-8 left-8 z-50 flex flex-col items-center group cursor-pointer"></div>
+
+    <!-- AUTOMATED AGENT INJECTION -->
+    <script src="../js/agents/imperial_hud.js" defer></script>
+    <!-- AGENTS LOADED ABOVE -->
+    <script>
+        function joinCommunity() {
+            if(window.Pusher) {
+                window.Pusher.showToast('Community Request Sent. The Circle expands.', 'success');
+            } else {
+                alert("Request Sent!");
+            }
+        }
+
+        // Check Alignment & Trust Badge
+        document.addEventListener('DOMContentLoaded', () => {
+            const isAligned = localStorage.getItem('cdf_alignment_status') === 'ALIGNED';
+            if(isAligned) {
+                // Inject Trust Badge into Nav
+                const nav = document.querySelector('nav div.hidden');
+                if(nav) {
+                    const badge = document.createElement('div');
+                    badge.className = "flex items-center gap-2 px-3 py-1 bg-amber/10 border border-amber/50 rounded-full";
+                    badge.innerHTML = `
+                        <span class="material-symbols-outlined text-amber text-sm">verified_user</span>
+                        <span class="text-[10px] font-bold text-amber uppercase tracking-widest">Trust Badge</span>
+                    `;
+                    nav.insertBefore(badge, nav.firstChild);
+                }
+                
+                // Welcome Toast
+                setTimeout(() => {
+                    if(window.Pusher) window.Pusher.showToast("Welcome back, Aligned One.", "karma");
+                }, 1000);
+            }
+        });
+    </script>
 </body>
 
 </html>
