@@ -751,21 +751,47 @@ class FlowCompassAgent {
         this.resetFocus();
         this.activePlanet = planetId;
         
-        // SPECIAL CASE: CORE (CAPTAIN'S LOG)
+        // SPECIAL CASE: CORE (CAPTAIN'S LOG / MASTER DASHBOARD)
         if (planetId === 'Core') {
-            document.body.classList.add('blur-mode');
-            document.querySelector('.orrery-container').classList.add('master-active');
+            // --- SECRET TRIGGER: MASTER DASHBOARD (3 Clicks) ---
+            this.coreClickCount = (this.coreClickCount || 0) + 1;
+            console.log(`[Core] Clicks: ${this.coreClickCount}`);
             
-            // NEW: Launch Captain's Log
-            if(window.CaptainsLog) {
-                window.CaptainsLog.open();
-                this.updateFlowee('Core');
-            } else {
-                console.warn("[Orrery] Captains Log Agent missing! Attempting lazy load...");
-                const script = document.createElement('script');
-                script.src = '../js/agents/captains_log.js';
-                script.onload = () => { window.CaptainsLog.open(); this.updateFlowee('Core'); };
-                document.body.appendChild(script);
+            clearTimeout(this.coreClickTimer);
+            this.coreClickTimer = setTimeout(() => { 
+                // Reset count if too slow
+                this.coreClickCount = 0; 
+                
+                // If single click (and not triggered master), open Log
+                if (window.CaptainsLog) {
+                    document.body.classList.add('blur-mode');
+                    document.querySelector('.orrery-container').classList.add('master-active');
+                    window.CaptainsLog.open();
+                    this.updateFlowee('Core');
+                } else {
+                    // Lazy Load
+                     console.warn("[Orrery] Captains Log Agent missing! Attempting lazy load...");
+                    const script = document.createElement('script');
+                    script.src = '../js/agents/captains_log.js';
+                    script.onload = () => { window.CaptainsLog.open(); this.updateFlowee('Core'); };
+                    document.body.appendChild(script);
+                }
+            }, 500); // 500ms window for multi-click
+
+            if (this.coreClickCount >= 3) {
+                 clearTimeout(this.coreClickTimer); // Stop the single click logic
+                 console.log("[Core] MASTER ACCESS GRANTED");
+                 
+                 // Visual Effect
+                 document.body.classList.add('glitch-effect');
+                 if(window.SoundEngineer) window.SoundEngineer.playSFX('warp_speed');
+                 
+                 setTimeout(() => {
+                     window.location.href = 'master_dashboard.html';
+                 }, 1000);
+                 
+                 this.coreClickCount = 0;
+                 return;
             }
             return;
         }

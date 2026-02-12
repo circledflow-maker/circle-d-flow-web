@@ -27,5 +27,10 @@ create table if not exists user_quests (
   created_at timestamp with time zone default now()
 );
 
--- 4. Ensure profiles have quest tracking.
--- alter table profiles add column if not exists current_quest_id text default 'q1_intro';
+-- 4. Ensure profiles have quest tracking and Genesis data.
+alter table profiles add column if not exists current_quest_id text default 'q1_intro';
+alter table profiles add column if not exists class text default 'Explorer';
+alter table profiles add column if not exists xp bigint default 0;
+alter table profiles add column if not exists credits bigint default 0;
+alter table profiles add column if not exists metadata jsonb default '{}'::jsonb;
+alter table profiles add column if not exists updated_at timestamp with time zone default now();

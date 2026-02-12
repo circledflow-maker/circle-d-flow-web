@@ -216,7 +216,23 @@ class CaptainsLogAgent {
             avatar: localStorage.getItem('cdf_avatar_src') || "Assets/images/avatars/avatar_1.png"
         };
         
+        // Check Mission Status
+        const isMissionPending = !localStorage.getItem('cdf_mission_identity_complete');
+        const missionBanner = isMissionPending ? `
+            <div class="mb-6 p-3 bg-yellow-900/40 border border-[#d4af37] rounded flex items-center justify-between animate-pulse">
+                <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-[#d4af37]">assignment_late</span>
+                    <div>
+                        <h4 class="text-[#d4af37] font-bold text-sm">MISSION ACTIVE: IDENTITY SYNC</h4>
+                        <p class="text-xs text-white/70">Update your profile signature to proceed.</p>
+                    </div>
+                </div>
+                <span class="text-xs font-mono text-[#d4af37] border border-[#d4af37] px-2 py-1 rounded">REWARD: 100 XP</span>
+            </div>
+        ` : '';
+
         container.innerHTML = `
+            ${missionBanner}
             <div class="vessel-grid">
                 <div class="vessel-avatar-card relative group">
                     <img src="${user.avatar}" class="vessel-avatar cursor-pointer hover:scale-110 transition-transform" id="profile-avatar-img" onclick="CaptainsLog.cycleAvatar()" title="Click to Change Identity">
@@ -245,8 +261,8 @@ class CaptainsLogAgent {
                     <div class="vessel-stat-row"><span>Artifacts Found</span> <span>${localStorage.getItem('cdf_artifacts_found') || 0}</span></div>
                     
                     <div class="mt-6 flex gap-2">
-                        <button id="btn-edit-profile" onclick="CaptainsLog.toggleProfileEdit()" class="flex-1 bg-white/10 hover:bg-gold hover:text-black py-2 rounded transition font-bold font-mono">
-                            EDIT FULL PROFILE
+                        <button id="btn-edit-profile" onclick="CaptainsLog.toggleProfileEdit()" class="flex-1 bg-white/10 hover:bg-gold hover:text-black py-2 rounded transition font-bold font-mono ${isMissionPending ? 'border border-[#d4af37] shadow-[0_0_15px_rgba(212,175,55,0.3)]' : ''}">
+                            ${isMissionPending ? 'EDIT PROFILE (REQUIRED)' : 'EDIT FULL PROFILE'}
                         </button>
                         <button id="btn-save-profile" onclick="CaptainsLog.saveProfile()" class="hidden flex-1 bg-green-600 hover:bg-green-500 text-white py-2 rounded transition font-bold font-mono">
                             SAVE CHANGES
@@ -319,6 +335,25 @@ class CaptainsLogAgent {
                 window.Pusher.showToast('Profile Updated Successfully', 'success');
                 window.Pusher.broadcast('PROFILE_UPDATE', { name: newName, rank: newRank });
             }
+            
+            // 3b. SYNC TO SUPABASE (Direct)
+            if(window.supabaseClient) {
+                const user = window.supabaseClient.auth.user();
+                if(user) {
+                    window.supabaseClient
+                        .from('profiles')
+                        .upsert({ 
+                            id: user.id, 
+                            username: newName, 
+                            avatar_url: newAvatar,
+                            updated_at: new Date()
+                        })
+                        .then(({ error }) => {
+                            if(error) console.error("Supabase Sync Failed:", error);
+                            else console.log("Supabase Profile Synced.");
+                        });
+                }
+            }
 
             // 4. Flowee Trigger (Congratulate)
             if(window.Flowee) {
@@ -327,14 +362,47 @@ class CaptainsLogAgent {
                 }, 500);
             }
             
-            // 5. Complete Imperial Step 1 or similar if needed
-            // (Assuming user might be doing this as part of initiation)
-             if(!localStorage.getItem('cdf_profile_setup_complete')) {
-                 localStorage.setItem('cdf_profile_setup_complete', 'true');
-                 if(window.Helper) window.Helper.awardXP(50, 'Identity Established');
+            // 5. Complete Imperial Step 1 (Identity Sync)
+             if(!localStorage.getItem('cdf_mission_identity_complete')) {
+                 localStorage.setItem('cdf_mission_identity_complete', 'true');
+                 
+                 // MISSION COMPLETE SEQUENCE
+                 if(window.SoundEngineer) window.SoundEngineer.playSFX('mission_complete'); // hypothetically
+                 
+                 // Show Completion Modal
+                 const overlay = document.createElement('div');
+                 overlay.className = 'fixed inset-0 z-[10001] flex items-center justify-center bg-black/95';
+                 overlay.innerHTML = `
+                    <div class="text-center animate-bounce-in">
+                        <span class="material-symbols-outlined text-6xl text-green-500 mb-4">check_circle</span>
+                        <h2 class="text-4xl text-white font-cinzel mb-2">PROTOCOL COMPLETE</h2>
+                        <p class="text-[#d4af37] font-mono tracking-widest text-sm">Identity Synced. Reward: +100 XP</p>
+                        
+                        <div class="mt-8 p-4 border border-white/10 rounded bg-white/5">
+                            <p class="text-xs text-gray-400 uppercase">Next Objective</p>
+                            <h3 class="text-xl text-white font-bold mt-1">THE ARTIFACT BAZAAR</h3>
+                            <p class="text-xs text-gray-500 mt-2">Warping in <span id="mission-timer">7</span>s...</p>
+                        </div>
+                    </div>
+                 `;
+                 document.body.appendChild(overlay);
+                 
+                 if(window.Helper) window.Helper.awardXP(100, 'Identity Established');
+                 
+                 // Timer
+                 let timeLeft = 7;
+                 const timerEl = document.getElementById('mission-timer');
+                 const interval = setInterval(() => {
+                     timeLeft--;
+                     if(timerEl) timerEl.innerText = timeLeft;
+                     if(timeLeft <= 0) {
+                         clearInterval(interval);
+                         window.location.href = 'marketplace.html';
+                     }
+                 }, 1000);
+                 
+                 return; // Stop further execution to focus on redirect
              }
-        }
-    }
 
     renderHammer(container) {
         container.innerHTML = `

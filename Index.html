@@ -60,6 +60,7 @@
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
     <!-- SUPABASE -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase_config.js"></script>
 </head>
 
 <body class="bg-obsidian text-white font-display overflow-x-hidden selection:bg-primary selection:text-white opacity-0 transition-opacity duration-1000">
@@ -167,48 +168,69 @@
     }
     </script>
 
-    <!-- AUTHENTICATION GATEWAY -->
+    <!-- AUTHENTICATION GATEWAY (PIRATE MAP STYLE) -->
     <div id="auth-container" style="
         position: fixed; top: 0; left: 0; width: 100%; height: 100vh; 
         background: radial-gradient(circle, #0F0A13 0%, #000 100%); 
         z-index: 10000; display: flex; align-items: center; justify-content: center;
         transition: transform 1.2s cubic-bezier(0.85, 0, 0.15, 1);
     ">
-        <div class="absolute inset-0 bg-[url('https://pub-24ba376bfccb446996666eaff4dbae12.r2.dev/grid.png')] opacity-[0.05]"></div>
+        <div class="absolute inset-0 bg-[url('https://pub-24ba376bfccb446996666eaff4dbae12.r2.dev/grid.png')] opacity-[0.05] pointer-events-none"></div>
         
-        <!-- LOGIN PANEL -->
-        <div id="login-panel" style="width: 40%; max-width: 400px; padding: 40px; border-right: 1px solid rgba(255, 215, 0, 0.2); text-align: center;">
-            <h2 class="text-2xl font-serif text-[#FFD700] mb-2 tracking-widest" data-i18n="auth_login_title">RETURNING CAPTAIN</h2>
-            <p class="text-white/60 mb-6 font-mono text-xs">Resume your journey on the Grand Line.</p>
-            <input type="text" id="login-username" data-i18n="login_username_placeholder" placeholder="Hunter Handle" class="w-full bg-black/50 border border-white/10 rounded p-3 text-white mb-3 focus:border-[#FFD700] outline-none transition-colors">
-            <input type="password" id="login-password" data-i18n="login_password_placeholder" placeholder="Passphrase" class="w-full bg-black/50 border border-white/10 rounded p-3 text-white mb-6 focus:border-[#FFD700] outline-none transition-colors">
-            <button onclick="handleLogin()" class="px-8 py-3 bg-transparent border border-[#FFD700] text-[#FFD700] font-bold uppercase tracking-widest hover:bg-[#FFD700] hover:text-black transition-all" data-i18n="login_btn">ENTER SYSTEM</button>
-        </div>
+        <!-- PARCHMENT MAP CONTAINER -->
+        <div id="pirate-map-card" class="relative map-texture p-10 rounded-sm shadow-[0_0_80px_rgba(0,0,0,1)] max-w-4xl w-full flex flex-col md:flex-row gap-8 transform scale-0 animate-unroll" style="pointer-events: auto; animation-delay: 1.5s;">
+            
+            <!-- DECORATIVE COMPASS (Absolute) -->
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 opacity-[0.05] pointer-events-none bg-[url('https://cdn-icons-png.flaticon.com/512/1034/1034176.png')] bg-contain bg-no-repeat bg-center"></div>
 
-        <!-- MOBILE OPTIMIZATION -->
-        <style>@media(max-width:768px){#auth-container{flex-direction:column;} #login-panel{border-right:none; border-bottom:1px solid rgba(255,215,0,0.2); width:90%; padding-bottom:20px; margin-bottom:20px;} #register-panel{width:90%;}}</style>
+            <!-- LOGIN PANEL (Left) -->
+            <div id="login-panel" class="flex-1 text-center border-b md:border-b-0 md:border-r border-[#5c4033]/30 pb-6 md:pb-0 md:pr-6 z-10">
+                <h2 class="text-3xl ink-text mb-2 tracking-widest">🏴‍☠️ CAPTAIN'S LOG</h2>
+                <p class="text-[#5c4033] mb-6 font-serif italic text-sm">"The sea remembers."</p>
+                
+                <input type="text" id="login-username" placeholder="Hunter Handle" class="w-full input-parchment rounded p-3 mb-4 outline-none transition-colors">
+                <input type="password" id="login-password" placeholder="Passphrase" class="w-full input-parchment rounded p-3 mb-6 outline-none transition-colors">
+                
+                <button onclick="handleLogin()" class="w-full px-8 py-3 bg-[#3e2723] text-[#d4c5a3] font-serif font-bold uppercase tracking-widest hover:bg-[#2a1a10] hover:text-white transition-all shadow-lg border border-[#5c4033]">
+                    ENTER DASHBOARD
+                </button>
+            </div>
 
-        <!-- REGISTER PANEL -->
-        <div id="register-panel" style="width: 40%; max-width: 400px; padding: 40px; text-align: center;">
-            <h2 class="text-2xl font-serif text-[#00f0ff] mb-2 tracking-widest" data-i18n="auth_register_title">NEW NAVIGATOR</h2>
-            <p class="text-white/60 mb-6 font-mono text-xs">Initialize your Spirit Vessel.</p>
-            <input type="email" id="reg-email" data-i18n="reg_email_placeholder" placeholder="Digital Soul (Email)" class="w-full bg-black/50 border border-white/10 rounded p-3 text-white mb-3 focus:border-[#00f0ff] outline-none transition-colors">
-            <input type="text" id="reg-username" data-i18n="reg_username_placeholder" placeholder="Choose your Moniker" class="w-full bg-black/50 border border-white/10 rounded p-3 text-white mb-3 focus:border-[#00f0ff] outline-none transition-colors">
-            <input type="password" id="reg-password" data-i18n="reg_password_placeholder" placeholder="Create Passphrase" class="w-full bg-black/50 border border-white/10 rounded p-3 text-white mb-6 focus:border-[#00f0ff] outline-none transition-colors">
-            <button onclick="handleRegister()" class="px-8 py-3 bg-[#00f0ff] border border-[#00f0ff] text-black font-bold uppercase tracking-widest hover:bg-white hover:border-white transition-all transform hover:scale-105" data-i18n="reg_btn">INITIALIZE BETA</button>
+            <!-- REGISTER PANEL (Right) -->
+            <div id="register-panel" class="flex-1 text-center pt-6 md:pt-0 md:pl-6 z-10">
+                <h2 class="text-3xl ink-text mb-2 tracking-widest" style="color: #8b0000;">⚓ MANIFESTO</h2>
+                <p class="text-[#8b0000]/80 mb-6 font-serif italic text-sm">"Sign your soul to the crew."</p>
+                
+                <input type="email" id="reg-email" placeholder="Digital Soul (Email)" class="w-full input-parchment rounded p-3 mb-3 outline-none transition-colors">
+                <input type="text" id="reg-username" placeholder="Choose Moniker" class="w-full input-parchment rounded p-3 mb-3 outline-none transition-colors">
+                <input type="password" id="reg-password" placeholder="Create Passphrase" class="w-full input-parchment rounded p-3 mb-6 outline-none transition-colors">
+                
+                <button onclick="handleRegister()" class="w-full px-8 py-3 wax-seal-btn font-serif font-bold uppercase tracking-widest rounded-sm transform hover:scale-105">
+                    INITIATE TEST
+                </button>
+            </div>
+            
+            <!-- Burn Marks (Visual) -->
+            <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-black/20 to-transparent pointer-events-none rounded-bl-3xl filter blur-xl"></div>
+            <div class="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-black/20 to-transparent pointer-events-none rounded-tr-3xl filter blur-xl"></div>
         </div>
         
         <!-- Guest Access -->
-        <div onclick="dismissGateway()" class="absolute bottom-10 text-white/30 text-[10px] uppercase tracking-widest cursor-pointer hover:text-white" data-i18n="dismiss">
-            Dismiss Protocol (Guest Mode)
+        <div onclick="dismissGateway()" class="absolute bottom-10 text-white/30 text-[10px] uppercase tracking-widest cursor-pointer hover:text-white z-50">
+            [ Dismiss Protocol (Guest Mode) ]
         </div>
     </div>
 
-    <!-- AGENT: LANGUAGE MATRIX -->
+    <!-- AGENT: REFERENCE LIBRARY -->
     <script src="js/agents/language_matrix.js"></script>
 
     <!-- AGENT: MASTER BRAIN (Cortex) -->
     <script src="js/agents/master-brain.js"></script>
+
+    <!-- AGENT: CORE UTILITIES (Helper & Pusher) -->
+    <script src="js/agents/helper.js"></script>
+    <script src="js/agents/pusher.js"></script>
+
     <!-- AGENT: FLOWEE ENGINE (Tutorials) -->
     <script src="js/agents/flowee_engine.js"></script>
 
@@ -399,10 +421,11 @@
     <!-- AUTH & AUTO-REDIRECT -->
     <script>
         // Authentication Logic (Simulation)
+        // Authentication Logic
         function handleRegister() {
             const user = {
-                username: document.getElementById('reg-username').value, // Standard
-                name: document.getElementById('reg-username').value,     // Legacy Compat
+                username: document.getElementById('reg-username').value, 
+                name: document.getElementById('reg-username').value,     
                 email: document.getElementById('reg-email').value,
                 password: document.getElementById('reg-password').value,
                 xp: 0,
@@ -414,35 +437,48 @@
             
             if(!user.username || !user.email || !user.password) return alert("Fill all fields, Navigator.");
 
-            localStorage.setItem('cqr_user', JSON.stringify(user));
-            localStorage.setItem('cqr_auth_state', 'logged_in');
-            
-            // Fog Transition to Dashboard
-            const target = 'pages/master_dashboard.html?first_time=true';
-            if(window.MasterBrain) window.MasterBrain.triggerMysticFog(target);
-            else window.location.href = target;
+            // Use Supabase if active (via Helper)
+            if(window.Helper && window.supabase) {
+                window.Helper.registerUser(user.email, user.password, user.username).then(success => {
+                    if(success) window.location.href = 'pages/beta-initiation.html'; // Redirect to TEST
+                });
+            } else {
+                // Local Logic
+                localStorage.setItem('cqr_user', JSON.stringify(user));
+                localStorage.setItem('cqr_auth_state', 'logged_in');
+                window.location.href = 'pages/beta-initiation.html'; // Redirect to TEST
+            }
         }
 
-        function handleLogin() {
-            const storedUser = JSON.parse(localStorage.getItem('cqr_user'));
+        async function handleLogin() {
             const inputName = document.getElementById('login-username').value;
             const inputPass = document.getElementById('login-password').value;
-            
-            // Allow login with 'username' or 'name' property
+
+            // Try Supabase Auth via Helper
+            if(window.Helper && window.supabase) {
+                // Assuming username is email for now in simplified login, or handle username lookup
+                // Use Name as Email for simplicity if it contains @
+                const email = inputName.includes('@') ? inputName : `${inputName}@circledflow.com`; 
+                const success = await window.Helper.loginUser(email, inputPass);
+                
+                if(success) {
+                     localStorage.setItem('cqr_auth_state', 'logged_in');
+                     window.location.href = 'pages/master_dashboard.html';
+                }
+                return;
+            }
+
+            // Local Fallback
+            const storedUser = JSON.parse(localStorage.getItem('cqr_user'));
             const storedName = storedUser ? (storedUser.username || storedUser.name) : null;
 
-            if (storedUser && storedName === inputName) {
-                // Check Password if it exists (Legacy users might not have one)
+            if (storedUser && (storedName === inputName || storedUser.email === inputName)) {
                 if(storedUser.password && storedUser.password !== inputPass) {
                     alert("Access Denied: Invalid Passphrase.");
                     return;
                 }
-
                 localStorage.setItem('cqr_auth_state', 'logged_in');
-                
-                // Fog Transition
-                if(window.MasterBrain) window.MasterBrain.triggerMysticFog('pages/master_dashboard.html');
-                else window.location.href = 'pages/master_dashboard.html';
+                window.location.href = 'pages/master_dashboard.html';
 
             } else {
                 alert("Unknown Spirit. Please register first.");
@@ -482,7 +518,7 @@
             }, 1200);
         }
     </script>
-
+    <script>
         function attemptAction(type, isSound = false) {
             // Guest Lock
             if(sessionStorage.getItem('cdf_beta_session') !== 'active') {
@@ -544,5 +580,6 @@
         }
     </script>
     <script src="js/agents/imperial_hud.js" defer></script>
+    <script src="js/beta_patch.js" defer></script>
 </body>
 </html>

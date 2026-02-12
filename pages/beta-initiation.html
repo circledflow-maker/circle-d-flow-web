@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protocol Genesis | Circle D Flow</title>
+    
+    <!-- TAILWIND & FONTS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&family=Cinzel:wght@400;700;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    
+    <link rel="stylesheet" href="../css/styles.css">
+
+    <!-- TAILWIND CONFIG -->
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#8A2BE2",
+                        "obsidian": "#050505",
+                        "mystic-gold": "#FFD700"
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"],
+                        "serif": ["Cinzel", "serif"]
+                    },
+                    animation: {
+                        "fade-in-up": "fadeInUp 0.8s ease-out forwards",
+                        "pulse-slow": "pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite"
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- SUPABASE -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase_config.js"></script>
+</head>
+
+<body class="bg-obsidian text-white font-display overflow-hidden min-h-screen flex flex-col items-center justify-center">
+
+    <!-- BACKGROUND FX -->
+    <div class="fixed inset-0 z-0 pointer-events-none">
+        <div class="absolute inset-0 bg-[url('https://pub-24ba376bfccb446996666eaff4dbae12.r2.dev/grid.png')] opacity-[0.03]"></div>
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[50vh] bg-gradient-to-b from-primary/10 to-transparent"></div>
+    </div>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main id="genesis-content" class="relative z-10 w-full max-w-4xl p-8 flex flex-col items-center justify-center min-h-[60vh]">
+        
+        <!-- INITIAL STATE (Loading / Welcome) -->
+        <div class="text-center space-y-6 animate-fade-in-up" id="welcome-state">
+            <span class="material-symbols-outlined text-6xl text-primary animate-pulse-slow">fingerprint</span>
+            <h1 class="text-4xl md:text-6xl font-serif text-white mb-4">PROTOCOL GENESIS</h1>
+            <p class="text-white/60 text-lg max-w-xl mx-auto leading-relaxed">
+                The Gateway has accepted your signal. <br>
+                Now we must calibrate your spirit frequency.
+            </p>
+            
+            <button onclick="Genesis.startInitiation()" class="mt-8 px-10 py-4 border border-primary/50 text-white font-bold uppercase tracking-[0.2em] hover:bg-primary hover:text-black transition-all rounded-full">
+                Begin Calibration
+            </button>
+        </div>
+
+    </main>
+
+    <!-- GENESIS: INITIATION MODAL WRAPPER (Visual only, logic in genesis.js uses this ID) -->
+    <div id="genesis-modal" class="hidden"></div> 
+
+    <!-- GATE OVERLAY (For the transition) -->
+    <div class="gate-overlay fixed inset-0 z-[60] flex pointer-events-none hidden transition-opacity duration-1000">
+        <div class="gate-left w-1/2 h-full bg-black border-r border-white/10 transition-transform duration-1500 ease-in-out flex items-center justify-end pr-4">
+            <span class="material-symbols-outlined text-9xl text-white/5">yin_yang</span>
+        </div>
+        <div class="gate-right w-1/2 h-full bg-black border-l border-white/10 transition-transform duration-1500 ease-in-out flex items-center pl-4"></div>
+    </div>
+
+    <!-- LOGIC -->
+    <script src="../js/genesis.js"></script>
+    
+    <!-- AGENTS: CORE MESH -->
+    <script src="../js/agents/language_matrix.js"></script>
+    <script src="../js/agents/master-brain.js"></script>
+    <script src="../js/agents/brain.js"></script> <!-- Added Brain -->
+    <script src="../js/agents/helper.js"></script>
+    <script src="../js/agents/pusher.js"></script>
+    <script src="../js/agents/sentinel.js"></script> <!-- Added Sentinel for Safety -->
+
+    <!-- BOOTSTRAP -->
+    <script>
+        // Auto-Check Session
+        window.addEventListener('load', () => {
+             // If simulated session, good. If Supabase user, good.
+             // If neither, maybe warn or redirect back. For now, allow flow.
+             console.log("[BetaInitiation] Ready.");
+        });
+    </script>
+</body>
+</html>

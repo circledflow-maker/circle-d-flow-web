@@ -21,6 +21,19 @@
             background-blend-mode: overlay;
         }
         .font-cinzel { font-family: 'Cinzel', serif; }
+        
+        /* Custom Scrollbar */
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--haki-gold); border-radius: 3px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #b08d2b; }
+
+        @keyframes bounce-in {
+            0% { opacity: 0; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .animate-bounce-in { animation: bounce-in 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
     </style>
 </head>
 <body class="pt-24 min-h-screen overflow-x-hidden">
@@ -39,6 +52,8 @@
     </main>
 
     <!-- AGENT MESH -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/agents/supabase_client.js" defer></script>
     <script src="../js/agents/visual_eye.js" defer></script>
     <script src="../js/agents/helper.js" defer></script>
     <script src="../js/agents/bridge_pusher.js" defer></script>
@@ -48,6 +63,13 @@
     <script src="../js/agents/imperial_hud.js" defer></script>
     <script src="../js/agents/flowee.js" defer></script>
     <script src="../js/agents/pusher.js" defer></script>
+    
+    <!-- NEW AGENTS -->
+    <script src="../js/agents/brain.js" defer></script>
+    <script src="../js/agents/master-brain.js" defer></script>
+    <script src="../js/agents/sentinel.js" defer></script>
+    <script src="../js/agents/captains_log.js" defer></script>
+    <script src="../js/agents/onboarding.js" defer></script>
 
 </body>
 </html>

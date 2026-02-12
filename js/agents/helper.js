@@ -324,18 +324,32 @@ class HelperAgent {
 
     // --- SUPABASE AUTH (BETA) ---
 
+    // --- SUPABASE AUTH (BETA) ---
+
     async registerUser(email, password, username) {
-        if(window.supabase) {
-            const { data, error } = await window.supabase.auth.signUp({ email, password });
+        // Robust Client Detection: Use Initialized Client OR QuestEngine's
+        const client = window.supabaseClient || (window.QuestEngine ? window.QuestEngine.supabase : null);
+        
+        if(client) {
+            console.log(`[Helper] Attempting Supabase Registration for ${username}...`);
+            const { data, error } = await client.auth.signUp({ email, password });
+            
             if(error) {
+                console.error("[Helper] Registration Error:", error);
                 alert("Registration Error: " + error.message);
                 return false;
             } else {
                 // Create Profile
                 if(data.user) {
-                    await window.supabase.from('profiles').insert([
-                        { id: data.user.id, username: username }
+                    const { error: profileError } = await client.from('profiles').insert([
+                        { id: data.user.id, username: username, updated_at: new Date() }
                     ]);
+                    
+                    if(profileError) {
+                         console.error("[Helper] Profile Creation Failed:", profileError);
+                         // Continue anyway, profile can be created later or via trigger
+                    }
+
                     alert("Welcome, Navigator! Please check your email to verify.");
                     return true;
                 }
@@ -355,13 +369,18 @@ class HelperAgent {
     }
 
     async loginUser(email, password) {
-        if(window.supabase) {
-            const { data, error } = await window.supabase.auth.signInWithPassword({ email, password });
+        const client = window.supabaseClient || (window.QuestEngine ? window.QuestEngine.supabase : null);
+
+        if(client) {
+            console.log(`[Helper] Attempting Supabase Login for ${email}...`);
+            const { data, error } = await client.auth.signInWithPassword({ email, password });
+            
             if(error) {
+                console.error("[Helper] Login Error:", error);
                 alert("Login Failed: " + error.message);
                 return false;
             } else {
-                // Success
+                console.log("[Helper] Login Success:", data);
                 return true;
             }
         } else {

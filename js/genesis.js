@@ -115,81 +115,127 @@ const Genesis = {
     },
 
     handleAnswer(className) {
-        // 1. Score
-        this.state.scores[className]++;
-        
-        // 2. Visual Feedback (Click Sound/Flash handled by CSS/global listeners if any)
-        
-        // 3. Next Question
-        this.renderQuestion(this.state.step + 1);
+        try {
+            console.log(`[Genesis] Answered: ${className}`);
+            // 1. Score
+            this.state.scores[className]++;
+            
+            // 2. Next Question
+            this.renderQuestion(this.state.step + 1);
+        } catch (err) {
+            console.error("[Genesis] Error in handleAnswer:", err);
+            // Attempt recovery
+            this.finalizeInitiation();
+        }
     },
 
     finalizeInitiation() {
-        // 1. Calculate Winner
-        const scores = this.state.scores;
-        let winner = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
-        
-        // Capitalize for display
-        const displayClass = winner.charAt(0).toUpperCase() + winner.slice(1);
-        this.state.selectedClass = displayClass;
+        console.log("[Genesis] Finalizing Initiation...");
+        try {
+            // 1. Calculate Winner
+            const scores = this.state.scores;
+            let winner = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+            
+            // Capitalize for display
+            const displayClass = winner.charAt(0).toUpperCase() + winner.slice(1);
+            this.state.selectedClass = displayClass;
 
-        console.log("💎 [Genesis] Class Assigned:", displayClass);
+            console.log("💎 [Genesis] Class Assigned:", displayClass);
 
-        // 2. Persist to LocalStorage (User Profile)
-        const userState = {
-            level: 1,
-            xp: 0,
-            class: displayClass,
-            initiated: true,
-            timestamp: new Date().toISOString()
-        };
-        localStorage.setItem('user_gamification_state', JSON.stringify(userState));
-        localStorage.setItem('userClass', displayClass); // Legacy/Quick Access
+            // 2. Persist to LocalStorage (Safe Mode)
+            try {
+                const userState = {
+                    level: 1,
+                    xp: 100,
+                    class: displayClass,
+                    initiated: true,
+                    timestamp: new Date().toISOString()
+                };
+                localStorage.setItem('user_gamification_state', JSON.stringify(userState));
+                localStorage.setItem('userClass', displayClass); 
+                localStorage.setItem('cqr_auth_state', 'logged_in'); 
+            } catch (e) {
+                console.warn("[Genesis] LocalStorage Access Denied:", e);
+            }
 
-        // 3. Show Result Card
-        const container = document.getElementById('genesis-content');
-        container.innerHTML = `
-            <div class="text-center space-y-8 animate-float">
-                <span class="material-symbols-outlined text-6xl text-mystic-gold mb-4 animate-pulse-slow">verified</span>
-                <h2 class="text-5xl font-bold text-white">GENESIS COMPLETE</h2>
-                <p class="text-xl text-white/60">Your resonance has been detected.</p>
-                
-                <div class="p-8 border-2 border-primary/50 bg-black/50 rounded-2xl max-w-md mx-auto relative overflow-hidden group">
-                    <div class="absolute inset-0 bg-gradient-to-b from-primary/20 to-transparent opacity-50"></div>
-                    <h3 class="text-3xl font-bold text-white uppercase tracking-widest relative z-10">THE ${displayClass.toUpperCase()}</h3>
-                    <p class="text-xs text-primary mt-2 font-mono relative z-10">CLASS ASSIGNED</p>
+            // 3. SHOW RESULT CARD (Immediate Visual Feedback)
+            const container = document.getElementById('genesis-content');
+            if (!container) throw new Error("Genesis Content Container not found");
+
+            container.innerHTML = `
+                <div class="text-center space-y-8 animate-float">
+                    <span class="material-symbols-outlined text-6xl text-mystic-gold mb-4 animate-pulse-slow">verified</span>
+                    <h2 class="text-5xl font-bold text-white">GENESIS COMPLETE</h2>
+                    <p class="text-xl text-white/60">Your resonance has been detected.</p>
+                    
+                    <div class="p-8 border-2 border-primary/50 bg-black/50 rounded-2xl max-w-md mx-auto relative overflow-hidden group">
+                        <div class="absolute inset-0 bg-gradient-to-b from-primary/20 to-transparent opacity-50"></div>
+                        <h3 class="text-3xl font-bold text-white uppercase tracking-widest relative z-10">THE ${displayClass.toUpperCase()}</h3>
+                        <p class="text-xs text-primary mt-2 font-mono relative z-10">CLASS ASSIGNED</p>
+                    </div>
+
+                    <div class="mt-8">
+                         <button onclick="Genesis.openGate()" 
+                            class="px-12 py-4 bg-primary text-white font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all rounded-full shadow-[0_0_30px_rgba(138,43,226,0.5)]">
+                            Enter The True Kingdom
+                        </button>
+                        <p class="text-xs text-white/30 mt-4 font-mono">Auto-jump in <span id="jump-timer">10</span>s...</p>
+                    </div>
                 </div>
+            `;
 
-                <div class="mt-8">
-                     <button onclick="Genesis.openGate()" 
-                        class="px-12 py-4 bg-primary text-white font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-black transition-all rounded-full shadow-[0_0_30px_rgba(138,43,226,0.5)]">
-                        Enter The True Kingdom
-                    </button>
-                </div>
-            </div>
-        `;
+            // 4. SYNC TO SUPABASE (Background Process)
+            this.syncToSupabase(displayClass, scores);
+
+            // 5. Auto-Redirect Timer
+            let timeLeft = 10;
+            const timerEl = document.getElementById('jump-timer');
+            const interval = setInterval(() => {
+                timeLeft--;
+                if(timerEl) timerEl.innerText = timeLeft;
+                if(timeLeft <= 0) {
+                    clearInterval(interval);
+                    this.openGate();
+                }
+            }, 1000);
+
+        } catch (err) {
+            console.error("[Genesis] Critical Error in Finalization:", err);
+            alert("Initiation Complete. Press OK to enter.");
+            this.openGate(); // Force entry
+        }
     },
 
     openGate() {
-        // 1. Trigger Animation
-        const overlay = document.querySelector('.gate-overlay');
-        const leftGate = document.querySelector('.gate-left');
-        const rightGate = document.querySelector('.gate-right');
-        
-        // Show Gate structure if hidden
-        overlay.classList.remove('hidden');
-        
-        // 2. Split Animation
-        setTimeout(() => {
-            leftGate.style.transform = "translateX(-100%)";
-            rightGate.style.transform = "translateX(100%)";
-            overlay.style.opacity = '0'; // Fade out the container as gates open
-        }, 500);
+        console.log("🌀 [Genesis] Opening The Gate...");
+        try {
+            // 1. Trigger Animation
+            const overlay = document.querySelector('.gate-overlay');
+            if(overlay) {
+                overlay.classList.remove('hidden');
+                const leftGate = document.querySelector('.gate-left');
+                const rightGate = document.querySelector('.gate-right');
+                
+                // Allow layout to settle before animating
+                requestAnimationFrame(() => {
+                    if(leftGate) leftGate.style.transform = "translateX(0)";
+                    if(rightGate) rightGate.style.transform = "translateX(0)";
+                    setTimeout(() => {
+                        if(leftGate) leftGate.style.transform = "translateX(-100%)";
+                        if(rightGate) rightGate.style.transform = "translateX(100%)";
+                        overlay.style.opacity = '0'; 
+                    }, 100);
+                });
+            }
+        } catch (e) {
+            console.warn("Animation failed, skipping...", e);
+        }
 
-        // 3. Redirect to Dashboard (The Core)
+        // 2. Redirect to Dashboard (The Standard Hub)
         setTimeout(() => {
-            window.location.href = 'pages/dashboard.html';
-        }, 2000); // Wait for animation
+            console.log("🚀 [Genesis] Jumping to Dashboard.");
+            window.location.href = 'dashboard.html';
+        }, 2000); 
     }
 };
 
