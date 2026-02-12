@@ -904,3 +904,115 @@ body.js-active * {
     0% { filter: hue-rotate(0deg); }
     100% { filter: hue-rotate(45deg); }
 }
+
+/* --- QUEST LIGHTBOX (Ancient Parchment) --- */
+#quest-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+    background: rgba(0,0,0,0.85); z-index: 9999;
+    display: flex; align-items: center; justify-content: center;
+    backdrop-filter: blur(5px);
+}
+
+.parchment-scroll {
+    background-image: url('https://www.transparenttextures.com/patterns/aged-paper.png');
+    background-color: #d4c5a3; /* Parchment Color */
+    width: 90%;
+    max-width: 500px;
+    padding: 40px;
+    border: 5px solid #5c4033; /* Dark Wood/Leather */
+    border-radius: 10px;
+    box-shadow: 0 0 50px #000, inset 0 0 20px rgba(0,0,0,0.2);
+    text-align: center;
+    position: relative;
+    font-family: 'Georgia', serif;
+    color: #3e2723;
+    animation: unroll 0.8s ease-out;
+}
+
+.flowee-avatar-quest {
+    width: 80px; height: 80px;
+    position: absolute; top: -40px; right: -40px;
+    border: 3px solid gold; border-radius: 50%;
+    background: black;
+}
+
+@keyframes unroll {
+    0% { height: 0; opacity: 0; transform: scaleY(0.1); }
+    100% { height: auto; opacity: 1; transform: scaleY(1); }
+}
+
+.quest-btn {
+    background: #8b0000; color: #d4c5a3;
+    border: 2px solid #5c4033;
+    padding: 10px 25px; font-weight: bold;
+    cursor: pointer; margin-top: 20px;
+    font-family: 'Courier New', monospace;
+    transition: all 0.2s;
+}
+.quest-btn:hover { background: #a52a2a; transform: scale(1.05); }
+
+/* --- THE MYSTIC FOG CONTAINER --- */
+#mystic-fog-overlay {
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100vh;
+    background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
+    z-index: 99999;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 2s ease-in-out;
+    overflow: hidden;
+}
+
+/* --- FOG ANIMATION LAYERS --- */
+.fog-layer {
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+    height: 100vh; 
+    width: 300vw;
+    background-size: cover;
+    background-repeat: repeat-x;
+    opacity: 0.5;
+    /* Golden Sepia Effect */
+    filter: sepia(100%) hue-rotate(5deg) saturate(200%) brightness(0.8); 
+}
+
+/* Layer 1: Dense Fog */
+.fog-layer.one {
+    background-image: url('https://raw.githubusercontent.com/danielstuart14/CSS_FOG_ANIMATION/master/fog1.png');
+    animation: fog-drift 60s linear infinite;
+}
+
+/* Layer 2: Light Wisps */
+.fog-layer.two {
+    background-image: url('https://raw.githubusercontent.com/danielstuart14/CSS_FOG_ANIMATION/master/fog1.png'); /* Placeholder */
+    animation: fog-drift 40s linear infinite reverse;
+    opacity: 0.3;
+}
+
+/* --- TEXT MESSAGE IN FOG --- */
+#fog-message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #ffd700; /* CQR Gold */
+    font-family: 'Georgia', serif;
+    font-size: 2em;
+    letter-spacing: 8px;
+    text-shadow: 0 0 30px #ff8c00;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    z-index: 100000;
+    text-align: center;
+    width: 100%;
+}
+
+/* --- ANIMATION KEYFRAMES --- */
+@keyframes fog-drift {
+    0% { transform: translate3d(0, 0, 0); }
+    100% { transform: translate3d(-200vw, 0, 0); } 
+}

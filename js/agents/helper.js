@@ -322,7 +322,36 @@ class HelperAgent {
         return true;
     }
 
-    // --- PROFILE UTILS ---
+    performLogout() {
+        // Use i18n for confirm message if available, else default
+        const lang = localStorage.getItem('cqr_lang') || 'en';
+        const msg = window.LanguageMatrix ? 
+            (window.LanguageMatrix.translations[lang].logout_confirm || "Captain, disconnect from the Core?") 
+            : "Captain, disconnect from the Core?";
+
+        if(confirm(msg)) {
+            // 1. Clear Auth State
+            localStorage.removeItem('cqr_auth_state');
+            // We keep 'cqr_user' for save states, but 'auth_state' determines active session.
+            
+            // 2. Mystic Fog Transition
+            if(window.MasterBrain) {
+                window.MasterBrain.triggerMysticFog('index.html');
+            } else {
+                window.location.href = 'index.html';
+            }
+            
+            // 3. Goodbye
+            setTimeout(() => {
+                const bye = window.LanguageMatrix ? 
+                    (window.LanguageMatrix.translations[lang].logout_bye || "Flowee: 'System Standby. See you in the orbit.'") 
+                    : "Flowee: 'System Standby. See you in the orbit.'";
+                alert(bye);
+            }, 100);
+        }
+    }
+
+    /* --- PROFILE UTILS --- */
     checkProfileStatus() {
         const name = localStorage.getItem('cdf_user_username');
         const avatar = localStorage.getItem('cdf_avatar_src');

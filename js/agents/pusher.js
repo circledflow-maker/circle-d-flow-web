@@ -252,7 +252,19 @@ PusherAgent.prototype.init = function() {
         this.handleVivreResonance(e.detail.user, e.detail.cost);
     });
 
+    // NEW: Quest Handler
+    window.addEventListener('QUEST_COMPLETE', (e) => {
+        this.handleQuestComplete(e.detail.title, e.detail.xp);
+    });
 
 };
+
+PusherAgent.prototype.handleQuestComplete = function(title, xp) {
+    this.showToast(`QUEST COMPLETE: ${title}`, 'success');
+    this.showToast(`+${xp} XP Gained`, 'xp');
+    // Trigger Konfetti or Sound if available
+    if(window.Flowee) window.Flowee.celebrate();
+};
+
 
 new PusherAgent();
