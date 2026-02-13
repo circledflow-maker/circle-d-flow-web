@@ -217,6 +217,11 @@ class BrainAgent extends Agent {
             // Correct - "Breaking Styles" to be handled by CSS class triggers ideally
             if(window.Pusher) window.Pusher.showToast("Hypothesis Confirmed. +50 XP", "success");
             
+            // TRIGGER QUEST: Quiz Master
+            if(window.QuestEngine) {
+                window.QuestEngine.grantReward('Q-KNO-102', 100, 'PROTOCOL: QUIZ MASTER');
+            }
+
             // Award XP
             if(window.Helper) {
                 window.Helper.awardXP(50, "Hypothesis Confirmed");

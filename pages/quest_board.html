@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CQR | THE CODEX</title>
     <link rel="stylesheet" href="../css/styles.css"> 
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/agents/agent.js?v=3.2"></script>
     <script src="../js/agents/helper.js?v=3.2"></script>
@@ -55,7 +56,7 @@
             <div id="quest-detail-page" style="display:flex; width:100%; height:100%;">
                 
                 <!-- LIST COLUMN -->
-                <div style="width: 40%; border-right: 1px solid #222; overflow-y: auto; padding: 20px;">
+                <div style="width: 40%; border-right: 1px solid #222; overflow-y: auto; padding: 20px; padding-bottom: 100px;">
                     <h3 style="color:#aaa; border-bottom:1px solid #333; padding-bottom:10px; margin-bottom:15px; font-size:0.9em;">AVAILABLE SEQUENCES</h3>
                     
                     <div class="search-container" style="display:flex; margin-bottom:20px; border:1px solid #333; padding:5px;">
@@ -74,7 +75,7 @@
                      <!-- Actual Content wrapped for animation -->
                      <div id="detail-card" style="height:100%; display:flex; flex-direction:column;">
                         <div style="border-bottom: 2px solid gold; padding-bottom: 10px; margin-bottom: 20px;">
-                            <h1 id="detail-title" class="glitch-text" data-text="SELECT SEQUENCE" style="font-size:2.5em; color:white; font-family:'Cinzel', serif;">SELECT SEQUENCE</h1>
+                            <h1 id="detail-title" style="font-size:2.5em; color:white; font-family:'Cinzel', serif; line-height: 1.2;">SELECT SEQUENCE</h1>
                             <p id="detail-subtitle" style="color:gold; font-family:'Courier New';">MEMORY FRAGMENT</p>
                         </div>
 
