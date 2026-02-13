@@ -556,7 +556,7 @@ class FlowCompassAgent {
             <div id="flowee-guide-msg"></div>
             <div id="master-board" class="master-command-board">
                 <div class="board-header">
-                    <img src="../Assets/images/avatars/avatar_1.png" class="board-avatar" onerror="this.src='https://via.placeholder.com/48'">
+                    <img src="../assets/images/flowee.png" class="board-avatar" onerror="this.src='../assets/images/logo.png'">
                     <div class="board-user">
                         <h3>Navigator</h3>
                         <p>Voyager Rank</p>
@@ -619,7 +619,7 @@ class FlowCompassAgent {
                 {l:'Partner', u:'investor_portal.html'}
             ]},
             { id: 'Connection', icon: 'hub', angle: 216, label: 'Connection', color: '#ec4899', options: [{l:'Hub', u:'vault_space.html'}, {l:'Chat', u:'chat.html'}, {l:'Co-Op', u:'coop.html'}] },
-            { id: 'Quest', icon: 'explore', angle: 288, label: 'Quest Log', color: '#94a3b8', options: [{l:'Log', u:'quest_board.html?v=3.2'}, {l:'Map', u:'quest_map.html?v=3.2'}] }
+            { id: 'Quest', icon: 'explore', angle: 288, label: 'Quest Log', color: '#94a3b8', options: [{l:'Log', u:'quest_board.html?v=3.2'}, {l:'Map', u:'quest_map.html?v=3.2'}, {l:'Legends', u:'hall_of_legends.html?v=3.2'}] }
         ];
 
         this.renderOrbit(container, innerOrbit, 'inner');

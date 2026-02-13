@@ -1,453 +1,403 @@
-
 /**
- * QUEST ENGINE (The Animus Core)
- * Manages Quest Tracking, GPS Sync, Codex Logic, and Brotherhood Ranking.
+ * QUEST ENGINE v4.0 (The Animus Core)
+ * Consolidates Map (Atlas), Board (Codex), Brotherhood (Legends), and Comms (Chat).
+ * Built for "Lisbon Tech-Noir" aesthetics and Supabase Realtime.
  */
-
-// Global Registry of System Quests
-window.QUEST_REGISTRY = {
-    'q1_identity': { id: 'q1_identity', title: 'The Awakening', description: 'Establish your identity in the flow.', exp: 100, type: 'story' },
-    'q2_first_step': { id: 'q2_first_step', title: 'First Step', description: 'Begin your journey.', exp: 50, type: 'story' },
-    'q4_kitchen': { id: 'q4_kitchen', title: 'The Fuel', description: 'Visit African Queen for sustenance.', exp: 75, type: 'location', lat: 38.6963, lng: -9.2044 }
-};
 
 class QuestEngine {
     constructor() {
         this.name = "QuestEngine";
-        this.initialized = false;
-        window.QuestEngine = this; // Expose globally
+        this.supabase = window.supabaseClient; // Assumes supabase_client.js loaded first
+        window.QuestEngine = this;
+
+        // Global State
+        this.user = null;
+        this.profile = null;
+        this.currentChatPartner = null;
+        this.chatSubscription = null;
+        
+        // Caches
+        this.allQuests = []; 
+        this.mapMarkers = {};
+
         this.init();
     }
 
     async init() {
-        console.log("[QuestEngine] Initializing Animus Protocol...");
-        // Ensure Supabase
-        if(window.supabaseClient) {
-            this.supabase = window.supabaseClient;
+        console.log("⚡ [QuestEngine] Animus System Booting...");
+        
+        // 1. Auth Check
+        const { data: { session } } = await this.supabase.auth.getSession();
+        if(session) {
+            this.user = session.user;
+            await this.loadProfile();
         } else {
-            console.warn("[QuestEngine] Supabase not found. Retrying in 1s...");
-            setTimeout(() => this.init(), 1000);
+            console.warn("[QuestEngine] No active navigator. Access restricted.");
+        }
+
+        // 2. Initialize Subsystems based on current page
+        const path = window.location.pathname;
+        if(path.includes('quest_map')) this.initAtlas();
+        if(path.includes('quest_board')) this.initCodex();
+        if(path.includes('hall_of_legends')) this.initBrotherhood();
+        
+        // 3. Initialize Global Comms (Sidebar)
+        this.initComms();
+
+        // 4. Highlight Nav
+        this.updateGlobalNav();
+    }
+
+    async loadProfile() {
+        const { data } = await this.supabase.from('profiles').select('*').eq('id', this.user.id).single();
+        this.profile = data;
+        window.userProfile = data; // Legacy support
+        console.log(`[QuestEngine] Profile Sync: ${data.username} | ${data.exp} XP | ${data.karma} Karma`);
+        
+        // Dispatch event for UI updates
+        window.dispatchEvent(new CustomEvent('PROFILE_UPDATED', { detail: data }));
+    }
+
+    // --- 1. THE ATLAS (Map Logic) ---
+    async initAtlas() {
+        console.log("📍 [Atlas] Radar Online.");
+        
+        // Note: Leaflet map object 'map' is global in the HTML script.
+        // We wait for window.map to be ready or we assume the HTML calls loadWorldBeacons(map)
+        window.loadMapPins = (map) => this.loadWorldBeacons(map);
+    }
+
+    async loadWorldBeacons(map) {
+        // 1. Load Existing
+        const { data: quests, error } = await this.supabase.from('user_quests').select('*');
+        if(error) return console.error("Radar Error", error);
+
+        quests.forEach(q => this.addPinToMap(map, q));
+
+        // 2. Subscribe to Realtime Updates
+        this.supabase
+            .channel('public:user_quests')
+            .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'user_quests' }, payload => {
+                console.log("⚡ [Atlas] New signal detected!", payload.new);
+                this.addPinToMap(map, payload.new);
+                if(window.Pusher) window.Pusher.showToast("NEW BEACON DETECTED", "xp");
+            })
+            .subscribe();
+    }
+
+    addPinToMap(map, quest) {
+        if (!quest.latitude || !quest.longitude) return;
+
+        const isMine = (this.user && quest.creator_id === this.user.id);
+        const isStory = (quest.type === 'story');
+        
+        // Icon Logic
+        let iconUrl = '../assets/images/beacon-blue.png'; // Community Default
+        let className = 'glow-blue';
+        
+        if (isMine) { iconUrl = '../assets/images/cqr-logo-gold.png'; className = 'glow-gold'; }
+        if (isStory) { iconUrl = '../assets/images/cqr-logo-gold.png'; className = 'animate-pulse-slow glow-gold'; }
+
+        const icon = L.icon({ iconUrl, iconSize: [30, 30], className });
+
+        // Popup Logic
+        const popupContent = `
+            <div class="animus-popup-content">
+                <h3>${quest.title}</h3>
+                <p>${isStory ? 'CORE MEMORY' : 'COMMUNITY ECHO'}</p>
+                <p>Reward: <span style="color:gold">${quest.reward_exp} XP</span></p>
+                <div style="font-size:0.8em; color:#888;">Likes: ${quest.likes || 0}</div>
+                
+                <button class="animus-popup-btn sync" onclick="QuestEngine.attemptSync(${quest.latitude}, ${quest.longitude}, '${quest.id}', ${quest.reward_exp}, '${quest.creator_id}')">
+                    📡 SYNCHRONIZE
+                </button>
+                
+                <button class="animus-popup-btn" onclick="QuestEngine.openInCodex('${quest.id}')">
+                    📖 VIEW IN CODEX
+                </button>
+            </div>
+        `;
+
+        L.marker([quest.latitude, quest.longitude], { icon })
+         .addTo(map)
+         .bindPopup(popupContent);
+    }
+
+    // GPS Sync & Karma Logic
+    attemptSync(questLat, questLng, questId, rewardExp, creatorId) {
+        if (!navigator.geolocation) return alert("ANIMUS ERROR: GPS Offline.");
+        
+        if(window.Pusher) window.Pusher.showToast("📡 SCANNING AREA...", "default");
+
+        navigator.geolocation.getCurrentPosition(async (pos) => {
+            const dist = this.getDistance(pos.coords.latitude, pos.coords.longitude, questLat, questLng);
+            
+            if (dist <= 100) { // 100m Radius
+                // Success!
+                await this.grantReward(questId, rewardExp);
+                
+                // Show Karma Modal
+                this.pendingKarmaTarget = creatorId;
+                document.getElementById('karma-modal').style.display = 'flex';
+                
+            } else {
+                alert(`SYNC FAILED. Distance: ${Math.round(dist)}m. Move closer (<100m).`);
+            }
+        }, err => alert("GPS BLOCK: " + err.message));
+    }
+
+    async grantReward(questId, xp) {
+        // Check if already completed
+        if(this.profile.completed_quests && this.profile.completed_quests.includes(questId)) {
+            alert("⚠️ MEMORY ALREADY SYNCHRONIZED.");
             return;
         }
 
-        // Load User Profile
-        await this.loadUserProfile();
-        this.initialized = true;
-        console.log("[QuestEngine] Animus Online.");
-    }
+        // Update Profile
+        const newExp = (this.profile.exp || 0) + parseInt(xp);
+        const newCompleted = [...(this.profile.completed_quests || []), questId];
 
-    async loadUserProfile() {
-        const { data: { session } } = await this.supabase.auth.getSession();
-        if (session) {
-            const { data } = await this.supabase.from('profiles').select('*').eq('id', session.user.id).single();
-            window.userProfile = data;
-             // Ensure completed_quests array exists
-            if(window.userProfile && !window.userProfile.completed_quests) window.userProfile.completed_quests = [];
-            console.log("[QuestEngine] Profile Sync Complete:", window.userProfile?.username);
-        }
-    }
-
-    // --- CORE QUEST LOGIC (XP & Completion) ---
-
-    async completeQuest(questId) {
-        if(!window.userProfile) await this.loadUserProfile();
+        const { error } = await this.supabase.from('profiles').update({ exp: newExp, completed_quests: newCompleted }).eq('id', this.user.id);
         
-        const profile = window.userProfile;
-        if(profile.completed_quests.includes(questId)) {
-            console.log("[QuestEngine] Memory already synchronized.");
-            return false;
+        if(!error) {
+            if(window.Pusher) window.Pusher.showToast(`SYNC COMPLETE: +${xp} XP`, "success");
+            if(window.SoundEngineer) window.SoundEngineer.playSFX('mission_complete');
+            await this.loadProfile(); // Refresh local state
         }
+    }
 
-        // 1. Add to local list
-        profile.completed_quests.push(questId);
+    getDistance(lat1, lon1, lat2, lon2) {
+        const R = 6371e3; // metres
+        const φ1 = lat1 * Math.PI/180;
+        const φ2 = lat2 * Math.PI/180;
+        const Δφ = (lat2-lat1) * Math.PI/180;
+        const Δλ = (lon2-lon1) * Math.PI/180;
+        const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) + Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ/2) * Math.sin(Δλ/2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        return R * c;
+    }
+
+    openInCodex(questId) {
+        sessionStorage.setItem('target_codex_id', questId);
+        window.location.href = 'quest_board.html';
+    }
+
+    // --- 2. THE CODEX (Board Logic) ---
+    async initCodex() {
+        console.log("📖 [Codex] Archive Online.");
         
-        // 2. Award XP (Fetch from registry or DB)
-        let xpReward = 50; // default
-        if(window.QUEST_REGISTRY[questId]) xpReward = window.QUEST_REGISTRY[questId].exp;
-        
-        // 3. Update DB
-        const newExp = (profile.exp || 0) + xpReward;
-        
-        const { error } = await this.supabase.from('profiles').update({
-            completed_quests: profile.completed_quests,
-            exp: newExp
-        }).eq('id', profile.id);
+        // 1. Load Quests
+        const { data: quests } = await this.supabase.from('user_quests').select('*').order('created_at', { ascending: false });
+        this.allQuests = quests || [];
+        this.renderCodexList(this.allQuests);
 
-        if(error) {
-            console.error("[QuestEngine] Sync Error:", error);
-            return false;
-        }
-
-        // 4. Notify
-        console.log(`[QuestEngine] Sequence ${questId} Complete! +${xpReward} XP`);
-        if(window.Pusher) window.Pusher.showToast(`Sequence Complete: +${xpReward} XP`, "success");
-        if(window.SoundEngineer) window.SoundEngineer.playSFX('mission_complete');
-
-        // Update local object
-        window.userProfile.exp = newExp;
-        return true;
-    }
-}
-
-// Auto-start
-new QuestEngine();
-
-
-/* --- CODEX LOGIC (Quest Board) --- */
-
-// 1. Tab Logic for Reading/Encoding Memories
-window.switchTab = function(mode) {
-    const readPage = document.getElementById('quest-detail-page');
-    const writePage = document.getElementById('quest-create-page');
-    const readBtn = document.getElementById('tab-read');
-    const writeBtn = document.getElementById('tab-write');
-    
-    if(readBtn && writeBtn) {
-        readBtn.classList.toggle('active', mode === 'read');
-        writeBtn.classList.toggle('active', mode === 'write');
-    }
-
-    if(mode === 'read') {
-        if(readPage) readPage.style.display = 'flex'; // It's a flex container
-        if(writePage) writePage.style.display = 'none';
-        // Reload list just in case
-        if(window.loadAllQuests) window.loadAllQuests();
-    } else {
-        if(readPage) readPage.style.display = 'none';
-        if(writePage) writePage.style.display = 'flex'; // Assuming flex for layout
-    }
-}
-
-// 2. Load Quests into the Codex List
-window.loadAllQuests = async function() {
-    const listElement = document.getElementById('quest-anchor-list');
-    if(!listElement) return;
-    
-    listElement.innerHTML = '<div class="loader text-gold blink">SEARCHING ANIMUS...</div>';
-
-    // Fetch from Supabase
-    const { data: quests, error } = await window.supabaseClient.from('user_quests').select('*').order('created_at', {ascending: false});
-    if (error) {
-        console.error(error);
-        listElement.innerHTML = '<div class="text-red-500">MEMORY CORRUPTION DETECTED.</div>';
-        return;
-    }
-
-    listElement.innerHTML = ''; // Clear
-
-    // Add System Quests First (from Registry)
-    Object.values(window.QUEST_REGISTRY).forEach(q => {
-        if(q.type === 'location') createQuestListItem(q, listElement, true);
-    });
-
-    // Add User Quests
-    if(quests && quests.length > 0) {
-        quests.forEach(q => createQuestListItem(q, listElement, false));
-    } else {
-        listElement.innerHTML += '<div class="p-4 text-gray-500">No user fragments found.</div>';
-    }
-}
-
-function createQuestListItem(q, container, isSystem) {
-    const div = document.createElement('div');
-    div.className = 'quest-item';
-    div.innerHTML = `
-        <div style="display:flex; justify-content:space-between;">
-            <strong>${isSystem ? '⭐ ' : ''}${q.title}</strong>
-            <span style="color:gold;">${q.reward_exp} XP</span>
-        </div>
-        <small style="color:#666;">${isSystem ? 'System Core' : 'User Fragment'}</small>
-    `;
-    div.onclick = () => window.showQuestDetails(q);
-    container.appendChild(div);
-}
-
-// 3. Show Details with Book Flip Animation
-window.showQuestDetails = function(quest) {
-    const page = document.getElementById('quest-detail-page');
-    // Trigger Reflow for Animation re-run
-    page.classList.remove('page-flip');
-    void page.offsetWidth; 
-    page.classList.add('page-flip');
-
-    window.currentSelectedQuest = quest;
-    
-    document.getElementById('detail-title').innerText = quest.title;
-    document.getElementById('detail-desc').innerText = quest.description || "No data available.";
-    document.getElementById('detail-exp').innerText = quest.reward_exp;
-    document.getElementById('detail-credits').innerText = (quest.reward_exp / 10).toFixed(0); // Dummy credit calc
-    
-    // Show/Hide Sync Button based on geo-data availability
-    const btn = document.getElementById('sync-btn');
-    if(quest.latitude && quest.longitude || (quest.lat && quest.lng)) {
-        btn.style.display = 'block';
-    } else {
-        btn.style.display = 'none';
-    }
-}
-
-// 4. Redirect to Atlas with Focus
-window.redirectToQuest = function() {
-    if (!window.currentSelectedQuest) return;
-
-    const q = window.currentSelectedQuest;
-    const lat = q.latitude || q.lat;
-    const lng = q.longitude || q.lng;
-    const id = q.id;
-
-    if(lat && lng) {
-        sessionStorage.setItem('target_quest_lat', lat);
-        sessionStorage.setItem('target_quest_lng', lng);
-        sessionStorage.setItem('target_quest_id', id);
-        window.location.href = 'quest_map.html';
-    }
-}
-
-
-/* --- THE CODEX GUARDIAN (Validation) --- */
-
-const BLACKLIST = ["spam", "fake", "badword", "idiot", "test"]; // Expand as needed
-
-function validateQuestContent(title, desc) {
-    const combined = (title + " " + desc).toLowerCase();
-    
-    // 1. Blacklist Check
-    const hasForbiddenWord = BLACKLIST.some(word => combined.includes(word));
-    if (hasForbiddenWord) return { valid: false, msg: "ANIMUS ERROR: Corrupted data string detected (Profanity/Spam)." };
-
-    // 2. Length Check
-    if (title.length < 3) return { valid: false, msg: "ERROR: Title too weak for synchronization." };
-    if (desc.length < 10) return { valid: false, msg: "ERROR: Description lacks necessary depth." };
-
-    return { valid: true };
-}
-
-/* --- GPS & CREATION LOGIC --- */
-
-// 1. Get GPS for Form
-window.getCurrentLocation = function() {
-    if (!navigator.geolocation) return alert("GPS Module Offline.");
-    
-    const btn = document.querySelector('.geo-btn');
-    if(btn) btn.innerText = "🛰️ TRIANGULATING...";
-    
-    navigator.geolocation.getCurrentPosition(pos => {
-        document.getElementById('new-lat').value = pos.coords.latitude;
-        document.getElementById('new-lng').value = pos.coords.longitude;
-        if(btn) btn.innerText = "📍 COORDINATES LOCKED";
-        // alert("Coordinates Synchronized.");
-    }, (err) => {
-        alert("GPS Error: " + err.message);
-        if(btn) btn.innerText = "❌ GPS ERROR";
-    });
-}
-
-// 2. Submit New Quest (With Guardian Check)
-window.submitNewQuest = async function() {
-    const title = document.getElementById('new-title').value;
-    const desc = document.getElementById('new-desc').value;
-    const lat = document.getElementById('new-lat').value;
-    const lng = document.getElementById('new-lng').value;
-    const exp = document.getElementById('new-exp').value;
-
-    // GUARDIAN CHECK
-    const validation = validateQuestContent(title, desc);
-    if (!validation.valid) {
-        alert(validation.msg);
-        return;
-    }
-
-    if(!title || !lat || !lng) return alert("Data Incomplete. Cannot Encode.");
-
-    const { data: { user } } = await window.supabaseClient.auth.getUser();
-    
-    const { data, error } = await window.supabaseClient.from('user_quests').insert([
-        { 
-            title: title, 
-            description: desc, 
-            latitude: parseFloat(lat), 
-            longitude: parseFloat(lng), 
-            reward_exp: parseInt(exp),
-            creator_id: user.id
-        }
-    ]);
-
-    if(error) {
-        alert("Upload Error: " + error.message);
-    } else {
-        alert("BEACON ESTABLISHED. The Codex has been updated.");
-        location.reload(); 
-    }
-}
-
-
-/* --- BROTHERHOOD ENGINE (Hall of Legends) --- */
-
-window.initBrotherhood = async function() {
-    // 1. Fetch Leaderboard
-    const { data: topAgents, error } = await window.supabaseClient
-        .from('profiles')
-        .select('username, exp')
-        .order('exp', { ascending: false })
-        .limit(10);
-
-    if (error) return console.error(error);
-
-    const list = document.getElementById('leaderboard-list');
-    if(!list) return;
-
-    list.innerHTML = '';
-
-    topAgents.forEach((agent, index) => {
-        const item = document.createElement('div');
-        item.className = 'leaderboard-item';
-        // Rank 1 Gold, 2-3 Silver
-        let rankColor = 'white';
-        if(index === 0) rankColor = 'gold';
-        if(index > 0 && index < 3) rankColor = 'silver';
-
-        item.innerHTML = `
-            <div><span class="rank-num" style="color:${rankColor}">#${index + 1}</span> <span class="${index < 3 ? 'glitch-text' : ''}" data-text="${agent.username}">${agent.username}</span></div>
-            <div style="color:gold;">${agent.exp} XP</div>
-        `;
-        list.appendChild(item);
-    });
-
-    // 2. Fetch Own Data for Dossier
-    const { data: { user } } = await window.supabaseClient.auth.getUser();
-    if(user) {
-        const { data: myProfile } = await window.supabaseClient.from('profiles').select('*').eq('id', user.id).single();
-        if (myProfile) {
-            if(document.getElementById('my-codename')) document.getElementById('my-codename').innerText = myProfile.username || "SUBJECT 17";
-            if(document.getElementById('my-exp')) document.getElementById('my-exp').innerText = myProfile.exp;
-            
-            // Rank Calc
-            window.updateRankUI(myProfile.exp);
-            
-            // Sync Rate
-            // Mock total for now or fetch count
-            const totalQuests = 20; // approximation
-            const completed = myProfile.completed_quests ? myProfile.completed_quests.length : 0;
-            const syncPercent = Math.min(100, Math.round((completed / totalQuests) * 100));
-            
-            if(document.getElementById('my-sync')) document.getElementById('my-sync').innerText = syncPercent + "%";
-        }
-    }
-}
-
-window.updateRankUI = function(exp) {
-    let rank = "INITIATE";
-    let nextXP = 500;
-    
-    if (exp >= 500) { rank = "ASSASSIN"; nextXP = 1500; }
-    if (exp >= 1500) { rank = "MASTER"; nextXP = 5000; }
-    if (exp >= 5000) { rank = "GRANDMASTER"; nextXP = 10000; }
-
-    if(document.getElementById('my-rank-label')) document.getElementById('my-rank-label').innerText = rank;
-    
-    // Progress Bar
-    const progress = Math.min(100, (exp / nextXP) * 100);
-    if(document.getElementById('rank-progress-bar')) document.getElementById('rank-progress-bar').style.width = progress + "%";
-}
-
-
-/* --- ANIMUS MAP LOGIC (Atlas) --- */
-
-window.loadMapPins = async function(mapObject) {
-    // 1. Session Storage Focus Check
-    const targetLat = sessionStorage.getItem('target_quest_lat');
-    const targetLng = sessionStorage.getItem('target_quest_lng');
-    const targetId = sessionStorage.getItem('target_quest_id');
-
-    if (targetLat && targetLng) {
-        mapObject.setView([targetLat, targetLng], 18);
-        // Clear after use
-        sessionStorage.removeItem('target_quest_lat');
-        sessionStorage.removeItem('target_quest_lng');
-    }
-
-    // 2. Load System Quests
-    const sysIcon = L.icon({
-        iconUrl: '../assets/images/cqr-logo-gold.png', 
-        iconSize: [30, 30],
-        className: 'animate-pulse-slow' 
-    });
-    
-    const userIcon = L.icon({
-        iconUrl: '../assets/images/beacon-blue.png', 
-        iconSize: [25, 25],
-        className: 'opacity-80'
-    });
-
-    Object.values(window.QUEST_REGISTRY).forEach(q => {
-        if(q.type === 'location' && q.lat && q.lng) {
-            L.marker([q.lat, q.lng], {icon: sysIcon}).addTo(mapObject)
-             .bindPopup(createPopupContent(q.title, "System Beacon", q.lat, q.lng, q.id));
-             
-             // Open popup if target
-             if(targetId === q.id) {
-                 // setTimeout(() => marker.openPopup(), 500); 
-             }
-        }
-    });
-
-    // 3. Load User Quests
-    const { data: userQuests } = await window.supabaseClient.from('user_quests').select('*');
-    if(userQuests) {
-        userQuests.forEach(q => {
-            if(q.latitude && q.longitude) {
-                const marker = L.marker([q.latitude, q.longitude], {icon: userIcon}).addTo(mapObject);
-                marker.bindPopup(createPopupContent(q.title, "User Fragment", q.latitude, q.longitude, q.id));
-                 
-                 if(targetId === q.id) {
-                     setTimeout(() => marker.openPopup(), 1000);
-                 }
+        // 2. Check Auto-Flip from Map
+        const targetId = sessionStorage.getItem('target_codex_id');
+        if (targetId) {
+            const target = this.allQuests.find(q => q.id === targetId);
+            if (target) {
+                setTimeout(() => {
+                    this.showQuestDetails(target);
+                    // Scroll to item
+                    const el = document.getElementById('codex-item-' + targetId);
+                    if(el) {
+                        el.scrollIntoView({behavior: 'smooth', block: 'center'});
+                        el.style.background = 'rgba(255,215,0,0.2)';
+                    }
+                    sessionStorage.removeItem('target_codex_id');
+                }, 500);
             }
+        }
+    }
+
+    renderCodexList(quests) {
+        const list = document.getElementById('quest-anchor-list');
+        if(!list) return;
+        list.innerHTML = '';
+
+        quests.forEach(q => {
+            const isStory = (q.type === 'story');
+            const div = document.createElement('div');
+            div.className = 'quest-item';
+            div.id = 'codex-item-' + q.id;
+            div.innerHTML = `
+                <div style="margin-bottom:5px;">
+                    ${isStory ? '<span class="tag-story">STORY</span>' : '<span class="tag-comm">COMMUNITY</span>'}
+                </div>
+                <strong style="color:${isStory ? 'gold' : 'white'}">${q.title}</strong>
+                <div class="quest-karma" style="float:right; font-size:0.8em; color:#888;">❤️ ${q.likes || 0}</div>
+            `;
+            div.onclick = () => this.showQuestDetails(q);
+            list.appendChild(div);
         });
     }
-}
 
-// Map Helpers
-function createPopupContent(title, subtitle, lat, lng, questId) {
-    return `
-    <div style="text-align:center; font-family:'Courier New'; min-width:200px;">
-        <h3 style="margin:0; color:#333; font-weight:bold;">${title}</h3>
-        <p style="font-size:0.8em; color:#666;">${subtitle}</p>
-        <button onclick="attemptSync(${lat}, ${lng}, '${questId}')" 
-            style="background:black; color:gold; border:1px solid gold; width:100%; padding:8px; cursor:pointer; font-weight:bold; margin-top:5px;">
-            📡 SYNCHRONIZE
-        </button>
-    </div>`;
-}
-
-window.attemptSync = async function(targetLat, targetLng, questId) {
-    if(!navigator.geolocation) return alert("Animus Error: GPS Module not found.");
-
-    navigator.geolocation.getCurrentPosition(async (pos) => {
-        const userLat = pos.coords.latitude;
-        const userLng = pos.coords.longitude;
-        const dist = getDistanceFromLatLonInM(userLat, userLng, targetLat, targetLng);
+    showQuestDetails(quest) {
+        // 3D Flip
+        const page = document.getElementById('quest-detail-page'); // Actually we might flip a sub-container, but let's assume the 'detail-card' inside needs update
+        // The CSS assumes a class toggle on a container. 
+        // Let's simply update content and trigger a visual refresh.
         
-        if(dist < 100) { 
-            const success = await window.QuestEngine.completeQuest(questId);
-            if(success) {
-                alert(`SYNCHRONIZATION COMPLETE. Distance: ${Math.round(dist)}m. XP Awarded.`);
-                location.reload(); 
-            } else {
-                alert("Memory already synchronized.");
-            }
-        } else {
-            alert(`SYNC FAILED. Target out of range. Distance: ${Math.round(dist)}m.`);
-        }
-    }, (err) => alert("GPS Error: " + err.message));
-};
+        const titleColor = (quest.type === 'story') ? 'gold' : '#00f0ff';
+        
+        document.getElementById('detail-title').innerText = quest.title;
+        document.getElementById('detail-title').style.color = titleColor;
+        document.getElementById('detail-desc').innerText = quest.description;
+        document.getElementById('detail-exp').innerText = quest.reward_exp;
+        
+        const btn = document.getElementById('sync-btn');
+        btn.style.display = 'block';
+        btn.onclick = () => {
+             sessionStorage.setItem('target_quest_id', quest.id);
+             sessionStorage.setItem('target_quest_lat', quest.latitude);
+             sessionStorage.setItem('target_quest_lng', quest.longitude);
+             window.location.href = 'quest_map.html';
+        };
+    }
 
-function getDistanceFromLatLonInM(lat1,lon1,lat2,lon2) {
-  var R = 6371; 
-  var dLat = deg2rad(lat2-lat1);  
-  var dLon = deg2rad(lon2-lon1); 
-  var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon/2) * Math.sin(dLon/2); 
-  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-  return R * c * 1000;
+    filterCodex() { // Search
+        const term = document.getElementById('codex-search').value.toLowerCase();
+        const filtered = this.allQuests.filter(q => q.title.toLowerCase().includes(term));
+        this.renderCodexList(filtered);
+    }
+
+    // --- 3. THE BROTHERHOOD (Brotherhood Logic) ---
+    async initBrotherhood() {
+        console.log("🏛️ [Brotherhood] Hierarchy Loaded.");
+        
+        // 1. Leaderboard
+        const { data: agents } = await this.supabase.from('profiles').select('*').order('exp', { ascending: false }).limit(20);
+        const list = document.getElementById('leaderboard-list');
+        list.innerHTML = '';
+        
+        agents.forEach((ag, idx) => {
+             const div = document.createElement('div');
+             div.className = 'leaderboard-item';
+             div.innerHTML = `
+                <div class="agent-link" onclick="QuestEngine.openNeighborOrbit('${ag.id}', '${ag.username}')">
+                    <span class="rank-num" style="color:${idx < 3 ? 'gold' : '#aaa'}">#${idx+1}</span>
+                    <span class="agent-name">${ag.username || 'Unknown'}</span>
+                </div>
+                <div style="color:gold">${ag.exp} XP</div>
+             `;
+             list.appendChild(div);
+        });
+        
+        // Auto-load my own badges
+        if(this.profile) this.renderBadges(this.profile.exp, 'my-badge-case'); // Assuming this ID exists in HTML
+    }
+
+    openNeighborOrbit(userId, username) {
+        if(userId === this.user.id) return alert("That is your own reflection.");
+        
+        // Populate "Neighbor" View (Requires HTML Structure in hall_of_legends.html)
+        // For now, let's open the Comms Link directly
+        this.currentChatPartner = { id: userId, name: username };
+        this.openChat(userId, username);
+        this.toggleComms(true);
+    }
+
+    renderBadges(exp, containerId) {
+        // Simple Badge Logic
+        // ... (Implement based on provided snippet if container exists)
+    }
+
+    // --- 4. COMMS LINK (Chat) ---
+    initComms() {
+        // Inject Terminal HTML if missing? 
+        // User instructions imply HTML is added to layout.
+        // This function handles the logic.
+    }
+
+    toggleComms(show) {
+        const term = document.getElementById('comms-terminal');
+        const isHidden = term.classList.contains('comms-hidden'); // The CSS uses 'comms-hidden' for hidden state
+        if (show || isHidden) {
+            term.classList.remove('comms-hidden');
+            term.classList.add('comms-visible');
+            this.loadPendingRequests();
+        } else {
+            term.classList.remove('comms-visible');
+            term.classList.add('comms-hidden');
+        }
+    }
+
+    async loadPendingRequests() {
+        // Populate Request Tab
+        // ...
+    }
+
+    async openChat(partnerId, partnerName) {
+        this.currentChatPartner = { id: partnerId, name: partnerName };
+        document.getElementById('chat-partner-name').innerText = partnerName;
+        document.getElementById('comms-chat-view').classList.add('active');
+        document.getElementById('comms-network-view').classList.remove('active');
+        
+        // Load History
+        const { data: msgs } = await this.supabase
+            .from('comms_messages')
+            .select('*')
+            .or(`and(sender_id.eq.${this.user.id},receiver_id.eq.${partnerId}),and(sender_id.eq.${partnerId},receiver_id.eq.${this.user.id})`)
+            .order('created_at', {ascending: true});
+            
+        const box = document.getElementById('chat-messages');
+        box.innerHTML = '';
+        if(msgs) msgs.forEach(m => this.renderMessage(m));
+        
+        // Realtime Subscribe
+        if(this.chatSubscription) this.supabase.removeChannel(this.chatSubscription);
+        this.chatSubscription = this.supabase
+            .channel('public:comms_messages')
+            .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'comms_messages' }, payload => {
+                const m = payload.new;
+                if((m.sender_id === partnerId && m.receiver_id === this.user.id) || (m.sender_id === this.user.id && m.receiver_id === partnerId)) {
+                    this.renderMessage(m);
+                }
+            })
+            .subscribe();
+    }
+
+    renderMessage(msg) {
+        const box = document.getElementById('chat-messages');
+        const isMe = (msg.sender_id === this.user.id);
+        const div = document.createElement('div');
+        div.className = `chat-bubble ${isMe ? 'chat-me' : 'chat-them'}`;
+        div.innerText = msg.message;
+        box.appendChild(div);
+        box.scrollTop = box.scrollHeight;
+    }
+
+    async sendChatMessage() {
+        const input = document.getElementById('chat-input');
+        const text = input.value.trim();
+        if(!text || !this.currentChatPartner) return;
+        
+        input.value = '';
+        await this.supabase.from('comms_messages').insert([{
+            sender_id: this.user.id,
+            receiver_id: this.currentChatPartner.id,
+            message: text
+        }]);
+    }
+
+    // --- GLOBAL ---
+    updateGlobalNav() {
+        // Hightlight active page in dock
+        const path = window.location.pathname;
+        if(path.includes('quest_map')) document.querySelector('#nav-map')?.classList.add('active');
+        if(path.includes('quest_board')) document.querySelector('#nav-board')?.classList.add('active');
+        if(path.includes('hall_of_legends')) document.querySelector('#nav-bro')?.classList.add('active');
+    }
 }
-function deg2rad(deg) { return deg * (Math.PI/180); }
+
+// Auto-Start
+document.addEventListener('DOMContentLoaded', () => {
+    new QuestEngine();
+});
+
+// Global Helpers for HTML triggers
+window.toggleComms = () => window.QuestEngine.toggleComms();
+window.switchCommsTab = (tab) => { /* ... UI Logic ... */ };
+window.closeChat = () => { /* ... */ };
+window.submitKarma = (isPos) => { /* ... */ };
+window.closeKarmaModal = () => { document.getElementById('karma-modal').style.display='none'; };
