@@ -1,359 +1,453 @@
+
 /**
- * Agent: Universal Quest Engine (The Navigator's Awakening)
- * Purpose: Manages the "Grand Line" tutorial storyline, cross-device sync (Supabase), and persistent user progress.
- * Version: 2.0 (Grand Line Edition)
+ * QUEST ENGINE (The Animus Core)
+ * Manages Quest Tracking, GPS Sync, Codex Logic, and Brotherhood Ranking.
  */
 
-/* --- 1. CONFIGURATION --- */
-const SUPABASE_URL = 'https://agkmbaephgsnunlarntm.supabase.co'; 
-const SUPABASE_KEY = 'sb_publishable_VwT4qFpNCgNizSXMILBcKQ_aevHvWvM'; // User Provided Key
-
-// Fallback Mode (if no keys provided or placeholder detected)
-const USE_LOCAL_STORAGE_ONLY = (SUPABASE_URL.includes('YOUR_SUPABASE'));
-let supabase = null;
-
-if (!USE_LOCAL_STORAGE_ONLY && window.supabase) {
-    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-}
-
-// --- EXTENDED QUEST REGISTRY (The Grand Line) ---
-const QUEST_REGISTRY = {
-    // --- PHASE 1: BASICS ---
-    'q1_intro': {
-        next: 'q2_library',
-        location: 'master_dashboard.html', 
-        title: "The Awakening",
-        text: "Welcome, Navigator! Before you conquer the Grand Line, you must master your tools.",
-        action: 'ACCEPT', 
-        reward: { exp: 50, credits: 10 }
-    },
-
-    // --- PHASE 2: WISDOM & COLLECTION ---
-    'q2_library': {
-        next: 'q3_connect',
-        location: 'library.html',
-        title: "The Keeper of Knowledge",
-        text: "A true Captain never stops learning. Add an item (Song or Text) to your personal library.",
-        action: 'CLICK_ELEMENT',
-        selector: '.add-to-library-btn', // Button ID on the page
-        hint: "Search for the 'Bookmark' icon on an article.",
-        reward: { exp: 75, credits: 0 }
-    },
-
-    // --- PHASE 3: SOCIAL & CONNECTIONS ---
-    'q3_connect': {
-        next: 'q4_wisdom',
-        location: 'guild.html',
-        title: "The Alliance",
-        text: "Alone you are strong, together we are a fleet. Send a friend request to another Navigator.",
-        action: 'CLICK_ELEMENT',
-        selector: '.add-friend-btn',
-        hint: "Click the '+' next to a User Name.",
-        reward: { exp: 100, credits: 20 }
-    },
-
-    // --- PHASE 4: THE QUIZ (WISDOM CHECK) ---
-    'q4_wisdom': {
-        next: 'q5_arena',
-        location: 'library.html', // Or sanctuary
-        title: "The Oracle's Test",
-        text: "Prove your knowledge of the Flow.",
-        action: 'QUIZ', 
-        quizData: {
-            question: "What is the currency of Circle-D-Flow?",
-            options: ["Gold Coins", "Flow Credits", "Bitcoins", "Haki Points"],
-            correct: 1 // Index (Flow Credits)
-        },
-        reward: { exp: 150, credits: 50 }
-    },
-
-    // --- PHASE 5: BATTLE GROUND ---
-    'q5_arena': {
-        next: 'q6_create',
-        location: 'arena.html',
-        title: "The Proving Ground",
-        text: "Enter the Arena. Legends are forged here. Click 'Enter Battle' to register for a match.",
-        action: 'CLICK_ELEMENT',
-        selector: '#enter-battle-btn',
-        reward: { exp: 200, credits: 100 }
-    },
-
-    // --- PHASE 6: CREATION (USER GENERATED CONTENT) ---
-    'q6_create': {
-        next: 'q7_highpalace',
-        location: 'master_dashboard.html',
-        title: "The Architect",
-        text: "A Captain doesn't just follow orders, they give them. Create your own Mini-Quest for your crew.",
-        action: 'SUBMIT_FORM', 
-        selector: '#create-quest-form',
-        hint: "Use the 'Quest Creator' in the Dashboard.",
-        reward: { exp: 300, credits: 150 }
-    },
-
-    // --- PHASE 7: ENDGAME ---
-    'q7_highpalace': {
-        next: null, // END
-        location: 'high_palace.html', 
-        title: "The High Palace",
-        text: "You have passed all trials. You have access to the High Palace. Enjoy the view, Elite Navigator.",
-        action: 'VISIT',
-        reward: { exp: 1000, credits: 500, rank: "Admiral" }
-    }
+// Global Registry of System Quests
+window.QUEST_REGISTRY = {
+    'q1_identity': { id: 'q1_identity', title: 'The Awakening', description: 'Establish your identity in the flow.', exp: 100, type: 'story' },
+    'q2_first_step': { id: 'q2_first_step', title: 'First Step', description: 'Begin your journey.', exp: 50, type: 'story' },
+    'q4_kitchen': { id: 'q4_kitchen', title: 'The Fuel', description: 'Visit African Queen for sustenance.', exp: 75, type: 'location', lat: 38.6963, lng: -9.2044 }
 };
 
-/* --- 2. ENGINE LOGIC --- */
-class QuestEngineAgent {
+class QuestEngine {
     constructor() {
         this.name = "QuestEngine";
-        this.userProfile = null;
+        this.initialized = false;
+        window.QuestEngine = this; // Expose globally
         this.init();
     }
 
     async init() {
-        console.log(`[${this.name}] Initializing Grand Line Logic...`);
-        
-        if (USE_LOCAL_STORAGE_ONLY) {
-            console.warn(`[${this.name}] Running in LocalStorage Fallback Mode.`);
-            this.loadProfileLocal();
+        console.log("[QuestEngine] Initializing Animus Protocol...");
+        // Ensure Supabase
+        if(window.supabaseClient) {
+            this.supabase = window.supabaseClient;
         } else {
-            await this.loadProfileSupabase();
+            console.warn("[QuestEngine] Supabase not found. Retrying in 1s...");
+            setTimeout(() => this.init(), 1000);
+            return;
         }
 
-        // Start Loop
-        this.checkActiveQuest();
-        
-        // Expose
-        window.QuestEngine = this;
+        // Load User Profile
+        await this.loadUserProfile();
+        this.initialized = true;
+        console.log("[QuestEngine] Animus Online.");
     }
 
-    // --- PROFILE MANAGEMENT ---
-    loadProfileLocal() {
-        let profile = JSON.parse(localStorage.getItem('cqr_user'));
-        if (!profile) return; 
-
-        if (!profile.current_quest_id) profile.current_quest_id = 'q1_intro';
-        this.userProfile = profile;
-    }
-
-    async loadProfileSupabase() {
-        if (!supabase) return;
-        const { data: { session } } = await supabase.auth.getSession();
+    async loadUserProfile() {
+        const { data: { session } } = await this.supabase.auth.getSession();
         if (session) {
-            const { data } = await supabase.from('profiles').select('*').eq('id', session.user.id).single();
-            if (data) {
-                this.userProfile = data;
-                localStorage.setItem('cqr_user', JSON.stringify(data));
-            }
+            const { data } = await this.supabase.from('profiles').select('*').eq('id', session.user.id).single();
+            window.userProfile = data;
+             // Ensure completed_quests array exists
+            if(window.userProfile && !window.userProfile.completed_quests) window.userProfile.completed_quests = [];
+            console.log("[QuestEngine] Profile Sync Complete:", window.userProfile?.username);
         }
     }
 
-    // --- MAIN LOOP ---
-    checkActiveQuest() {
-        if (!this.userProfile || !this.userProfile.current_quest_id) return;
+    // --- CORE QUEST LOGIC (XP & Completion) ---
+
+    async completeQuest(questId) {
+        if(!window.userProfile) await this.loadUserProfile();
         
-        const questId = this.userProfile.current_quest_id;
-        const quest = QUEST_REGISTRY[questId];
-        if (!quest) return; 
+        const profile = window.userProfile;
+        if(profile.completed_quests.includes(questId)) {
+            console.log("[QuestEngine] Memory already synchronized.");
+            return false;
+        }
 
-        // 1. HUD ALWAYS ON
-        this.renderQuestHUD(quest);
+        // 1. Add to local list
+        profile.completed_quests.push(questId);
+        
+        // 2. Award XP (Fetch from registry or DB)
+        let xpReward = 50; // default
+        if(window.QUEST_REGISTRY[questId]) xpReward = window.QUEST_REGISTRY[questId].exp;
+        
+        // 3. Update DB
+        const newExp = (profile.exp || 0) + xpReward;
+        
+        const { error } = await this.supabase.from('profiles').update({
+            completed_quests: profile.completed_quests,
+            exp: newExp
+        }).eq('id', profile.id);
 
-        // 2. LOCATION CHECK
-        if (window.location.href.includes(quest.location)) {
-            // Correct Location -> Execute Action Logic
-            if (quest.action === 'ACCEPT') setTimeout(() => this.renderParchment(quest), 1000);
-            if (quest.action === 'QUIZ') this.renderQuiz(quest, questId);
-            if (quest.action === 'CLICK_ELEMENT') this.setupClickTrigger(quest, questId);
-            if (quest.action === 'SUBMIT_FORM') this.setupFormTrigger(quest, questId);
-            if (quest.action === 'VISIT') setTimeout(() => this.completeQuest(questId), 2000);
-        } else {
-            // Wrong Location -> Guide User
-            this.highlightNavigation(quest.location);
+        if(error) {
+            console.error("[QuestEngine] Sync Error:", error);
+            return false;
+        }
+
+        // 4. Notify
+        console.log(`[QuestEngine] Sequence ${questId} Complete! +${xpReward} XP`);
+        if(window.Pusher) window.Pusher.showToast(`Sequence Complete: +${xpReward} XP`, "success");
+        if(window.SoundEngineer) window.SoundEngineer.playSFX('mission_complete');
+
+        // Update local object
+        window.userProfile.exp = newExp;
+        return true;
+    }
+}
+
+// Auto-start
+new QuestEngine();
+
+
+/* --- CODEX LOGIC (Quest Board) --- */
+
+// 1. Tab Logic for Reading/Encoding Memories
+window.switchTab = function(mode) {
+    const readPage = document.getElementById('quest-detail-page');
+    const writePage = document.getElementById('quest-create-page');
+    const readBtn = document.getElementById('tab-read');
+    const writeBtn = document.getElementById('tab-write');
+    
+    if(readBtn && writeBtn) {
+        readBtn.classList.toggle('active', mode === 'read');
+        writeBtn.classList.toggle('active', mode === 'write');
+    }
+
+    if(mode === 'read') {
+        if(readPage) readPage.style.display = 'flex'; // It's a flex container
+        if(writePage) writePage.style.display = 'none';
+        // Reload list just in case
+        if(window.loadAllQuests) window.loadAllQuests();
+    } else {
+        if(readPage) readPage.style.display = 'none';
+        if(writePage) writePage.style.display = 'flex'; // Assuming flex for layout
+    }
+}
+
+// 2. Load Quests into the Codex List
+window.loadAllQuests = async function() {
+    const listElement = document.getElementById('quest-anchor-list');
+    if(!listElement) return;
+    
+    listElement.innerHTML = '<div class="loader text-gold blink">SEARCHING ANIMUS...</div>';
+
+    // Fetch from Supabase
+    const { data: quests, error } = await window.supabaseClient.from('user_quests').select('*').order('created_at', {ascending: false});
+    if (error) {
+        console.error(error);
+        listElement.innerHTML = '<div class="text-red-500">MEMORY CORRUPTION DETECTED.</div>';
+        return;
+    }
+
+    listElement.innerHTML = ''; // Clear
+
+    // Add System Quests First (from Registry)
+    Object.values(window.QUEST_REGISTRY).forEach(q => {
+        if(q.type === 'location') createQuestListItem(q, listElement, true);
+    });
+
+    // Add User Quests
+    if(quests && quests.length > 0) {
+        quests.forEach(q => createQuestListItem(q, listElement, false));
+    } else {
+        listElement.innerHTML += '<div class="p-4 text-gray-500">No user fragments found.</div>';
+    }
+}
+
+function createQuestListItem(q, container, isSystem) {
+    const div = document.createElement('div');
+    div.className = 'quest-item';
+    div.innerHTML = `
+        <div style="display:flex; justify-content:space-between;">
+            <strong>${isSystem ? '⭐ ' : ''}${q.title}</strong>
+            <span style="color:gold;">${q.reward_exp} XP</span>
+        </div>
+        <small style="color:#666;">${isSystem ? 'System Core' : 'User Fragment'}</small>
+    `;
+    div.onclick = () => window.showQuestDetails(q);
+    container.appendChild(div);
+}
+
+// 3. Show Details with Book Flip Animation
+window.showQuestDetails = function(quest) {
+    const page = document.getElementById('quest-detail-page');
+    // Trigger Reflow for Animation re-run
+    page.classList.remove('page-flip');
+    void page.offsetWidth; 
+    page.classList.add('page-flip');
+
+    window.currentSelectedQuest = quest;
+    
+    document.getElementById('detail-title').innerText = quest.title;
+    document.getElementById('detail-desc').innerText = quest.description || "No data available.";
+    document.getElementById('detail-exp').innerText = quest.reward_exp;
+    document.getElementById('detail-credits').innerText = (quest.reward_exp / 10).toFixed(0); // Dummy credit calc
+    
+    // Show/Hide Sync Button based on geo-data availability
+    const btn = document.getElementById('sync-btn');
+    if(quest.latitude && quest.longitude || (quest.lat && quest.lng)) {
+        btn.style.display = 'block';
+    } else {
+        btn.style.display = 'none';
+    }
+}
+
+// 4. Redirect to Atlas with Focus
+window.redirectToQuest = function() {
+    if (!window.currentSelectedQuest) return;
+
+    const q = window.currentSelectedQuest;
+    const lat = q.latitude || q.lat;
+    const lng = q.longitude || q.lng;
+    const id = q.id;
+
+    if(lat && lng) {
+        sessionStorage.setItem('target_quest_lat', lat);
+        sessionStorage.setItem('target_quest_lng', lng);
+        sessionStorage.setItem('target_quest_id', id);
+        window.location.href = 'quest_map.html';
+    }
+}
+
+
+/* --- THE CODEX GUARDIAN (Validation) --- */
+
+const BLACKLIST = ["spam", "fake", "badword", "idiot", "test"]; // Expand as needed
+
+function validateQuestContent(title, desc) {
+    const combined = (title + " " + desc).toLowerCase();
+    
+    // 1. Blacklist Check
+    const hasForbiddenWord = BLACKLIST.some(word => combined.includes(word));
+    if (hasForbiddenWord) return { valid: false, msg: "ANIMUS ERROR: Corrupted data string detected (Profanity/Spam)." };
+
+    // 2. Length Check
+    if (title.length < 3) return { valid: false, msg: "ERROR: Title too weak for synchronization." };
+    if (desc.length < 10) return { valid: false, msg: "ERROR: Description lacks necessary depth." };
+
+    return { valid: true };
+}
+
+/* --- GPS & CREATION LOGIC --- */
+
+// 1. Get GPS for Form
+window.getCurrentLocation = function() {
+    if (!navigator.geolocation) return alert("GPS Module Offline.");
+    
+    const btn = document.querySelector('.geo-btn');
+    if(btn) btn.innerText = "🛰️ TRIANGULATING...";
+    
+    navigator.geolocation.getCurrentPosition(pos => {
+        document.getElementById('new-lat').value = pos.coords.latitude;
+        document.getElementById('new-lng').value = pos.coords.longitude;
+        if(btn) btn.innerText = "📍 COORDINATES LOCKED";
+        // alert("Coordinates Synchronized.");
+    }, (err) => {
+        alert("GPS Error: " + err.message);
+        if(btn) btn.innerText = "❌ GPS ERROR";
+    });
+}
+
+// 2. Submit New Quest (With Guardian Check)
+window.submitNewQuest = async function() {
+    const title = document.getElementById('new-title').value;
+    const desc = document.getElementById('new-desc').value;
+    const lat = document.getElementById('new-lat').value;
+    const lng = document.getElementById('new-lng').value;
+    const exp = document.getElementById('new-exp').value;
+
+    // GUARDIAN CHECK
+    const validation = validateQuestContent(title, desc);
+    if (!validation.valid) {
+        alert(validation.msg);
+        return;
+    }
+
+    if(!title || !lat || !lng) return alert("Data Incomplete. Cannot Encode.");
+
+    const { data: { user } } = await window.supabaseClient.auth.getUser();
+    
+    const { data, error } = await window.supabaseClient.from('user_quests').insert([
+        { 
+            title: title, 
+            description: desc, 
+            latitude: parseFloat(lat), 
+            longitude: parseFloat(lng), 
+            reward_exp: parseInt(exp),
+            creator_id: user.id
+        }
+    ]);
+
+    if(error) {
+        alert("Upload Error: " + error.message);
+    } else {
+        alert("BEACON ESTABLISHED. The Codex has been updated.");
+        location.reload(); 
+    }
+}
+
+
+/* --- BROTHERHOOD ENGINE (Hall of Legends) --- */
+
+window.initBrotherhood = async function() {
+    // 1. Fetch Leaderboard
+    const { data: topAgents, error } = await window.supabaseClient
+        .from('profiles')
+        .select('username, exp')
+        .order('exp', { ascending: false })
+        .limit(10);
+
+    if (error) return console.error(error);
+
+    const list = document.getElementById('leaderboard-list');
+    if(!list) return;
+
+    list.innerHTML = '';
+
+    topAgents.forEach((agent, index) => {
+        const item = document.createElement('div');
+        item.className = 'leaderboard-item';
+        // Rank 1 Gold, 2-3 Silver
+        let rankColor = 'white';
+        if(index === 0) rankColor = 'gold';
+        if(index > 0 && index < 3) rankColor = 'silver';
+
+        item.innerHTML = `
+            <div><span class="rank-num" style="color:${rankColor}">#${index + 1}</span> <span class="${index < 3 ? 'glitch-text' : ''}" data-text="${agent.username}">${agent.username}</span></div>
+            <div style="color:gold;">${agent.exp} XP</div>
+        `;
+        list.appendChild(item);
+    });
+
+    // 2. Fetch Own Data for Dossier
+    const { data: { user } } = await window.supabaseClient.auth.getUser();
+    if(user) {
+        const { data: myProfile } = await window.supabaseClient.from('profiles').select('*').eq('id', user.id).single();
+        if (myProfile) {
+            if(document.getElementById('my-codename')) document.getElementById('my-codename').innerText = myProfile.username || "SUBJECT 17";
+            if(document.getElementById('my-exp')) document.getElementById('my-exp').innerText = myProfile.exp;
+            
+            // Rank Calc
+            window.updateRankUI(myProfile.exp);
+            
+            // Sync Rate
+            // Mock total for now or fetch count
+            const totalQuests = 20; // approximation
+            const completed = myProfile.completed_quests ? myProfile.completed_quests.length : 0;
+            const syncPercent = Math.min(100, Math.round((completed / totalQuests) * 100));
+            
+            if(document.getElementById('my-sync')) document.getElementById('my-sync').innerText = syncPercent + "%";
         }
     }
+}
 
-    // --- UI RENDERERS ---
-    renderQuestHUD(quest) {
-        const old = document.getElementById('quest-hud'); if(old) old.remove();
-        const html = `
-        <div id="quest-hud">
-            <h4>🎯 CURRENT OBJECTIVE</h4>
-            <p>${quest.title}</p>
-            <div class="hint">${quest.hint || "Follow the Flow..."}</div>
-            <div style="margin-top:5px; font-size:0.7em; color:#00f0ff;">Reward: ${quest.reward.exp} EXP</div>
-        </div>`;
-        document.body.insertAdjacentHTML('beforeend', html);
+window.updateRankUI = function(exp) {
+    let rank = "INITIATE";
+    let nextXP = 500;
+    
+    if (exp >= 500) { rank = "ASSASSIN"; nextXP = 1500; }
+    if (exp >= 1500) { rank = "MASTER"; nextXP = 5000; }
+    if (exp >= 5000) { rank = "GRANDMASTER"; nextXP = 10000; }
+
+    if(document.getElementById('my-rank-label')) document.getElementById('my-rank-label').innerText = rank;
+    
+    // Progress Bar
+    const progress = Math.min(100, (exp / nextXP) * 100);
+    if(document.getElementById('rank-progress-bar')) document.getElementById('rank-progress-bar').style.width = progress + "%";
+}
+
+
+/* --- ANIMUS MAP LOGIC (Atlas) --- */
+
+window.loadMapPins = async function(mapObject) {
+    // 1. Session Storage Focus Check
+    const targetLat = sessionStorage.getItem('target_quest_lat');
+    const targetLng = sessionStorage.getItem('target_quest_lng');
+    const targetId = sessionStorage.getItem('target_quest_id');
+
+    if (targetLat && targetLng) {
+        mapObject.setView([targetLat, targetLng], 18);
+        // Clear after use
+        sessionStorage.removeItem('target_quest_lat');
+        sessionStorage.removeItem('target_quest_lng');
     }
 
-    renderQuiz(quest, questId) {
-        if (document.getElementById('quest-overlay')) return;
-        const quiz = quest.quizData;
-        const html = `
-        <div id="quest-overlay" class="fixed inset-0 bg-black/90 z-[20000] flex items-center justify-center p-4">
-            <div class="parchment-scroll bg-[#d4c5a3] w-full max-w-md p-8 text-center" style="border: 5px solid #5c4033; border-radius: 10px;">
-                <h2 style="color:#8b0000; font-family: serif; font-size: 2rem; margin-bottom: 1rem;">${quest.title}</h2>
-                <p style="font-weight:bold; font-size:1.2em; color:#333; margin-bottom: 2rem;">${quiz.question}</p>
-                <div class="flex flex-col gap-3">
-                    ${quiz.options.map((opt, i) => 
-                        `<button class="quiz-option-btn p-3 bg-white border border-[#5c4033] hover:bg-gold transition-colors" onclick="window.QuestEngine.solveQuiz(${i}, ${quiz.correct}, '${questId}')">${opt}</button>`
-                    ).join('')}
-                </div>
-            </div>
-        </div>`;
-        document.body.insertAdjacentHTML('beforeend', html);
-    }
+    // 2. Load System Quests
+    const sysIcon = L.icon({
+        iconUrl: '../assets/images/cqr-logo-gold.png', 
+        iconSize: [30, 30],
+        className: 'animate-pulse-slow' 
+    });
+    
+    const userIcon = L.icon({
+        iconUrl: '../assets/images/beacon-blue.png', 
+        iconSize: [25, 25],
+        className: 'opacity-80'
+    });
 
-    renderParchment(quest) {
-        if (document.getElementById('quest-overlay')) return;
-        const html = `
-        <div id="quest-overlay" class="fixed inset-0 bg-black/80 z-[9999] flex items-center justify-center p-6">
-            <div class="bg-[#d4c5a3] w-full max-w-lg p-8 rounded shadow-[0_0_50px_rgba(218,165,32,0.5)] text-center relative">
-                 <h2 class="text-3xl font-serif font-bold text-[#3e2723] mb-4">${quest.title}</h2>
-                 <p class="text-[#5c4033] text-lg mb-6">${quest.text}</p>
-                 <button onclick="window.QuestEngine.completeQuest('${this.userProfile.current_quest_id}')" class="px-6 py-2 bg-[#8b0000] text-white font-bold rounded hover:scale-105 transition">ACCEPT QUEST</button>
-            </div>
-        </div>`;
-        document.body.insertAdjacentHTML('beforeend', html);
-    }
+    Object.values(window.QUEST_REGISTRY).forEach(q => {
+        if(q.type === 'location' && q.lat && q.lng) {
+            L.marker([q.lat, q.lng], {icon: sysIcon}).addTo(mapObject)
+             .bindPopup(createPopupContent(q.title, "System Beacon", q.lat, q.lng, q.id));
+             
+             // Open popup if target
+             if(targetId === q.id) {
+                 // setTimeout(() => marker.openPopup(), 500); 
+             }
+        }
+    });
 
-    highlightNavigation(targetUrl) {
-        const links = document.querySelectorAll('a');
-        links.forEach(link => {
-            if(link.href.includes(targetUrl)) {
-                link.classList.add('flowee-target');
+    // 3. Load User Quests
+    const { data: userQuests } = await window.supabaseClient.from('user_quests').select('*');
+    if(userQuests) {
+        userQuests.forEach(q => {
+            if(q.latitude && q.longitude) {
+                const marker = L.marker([q.latitude, q.longitude], {icon: userIcon}).addTo(mapObject);
+                marker.bindPopup(createPopupContent(q.title, "User Fragment", q.latitude, q.longitude, q.id));
+                 
+                 if(targetId === q.id) {
+                     setTimeout(() => marker.openPopup(), 1000);
+                 }
             }
         });
     }
-
-    // --- ACTIONS ---
-    async solveQuiz(selected, correct, questId) {
-        if (selected === correct) {
-            document.getElementById('quest-overlay').remove();
-            alert("Correct! Wisdom assimilated.");
-            await this.completeQuest(questId);
-        } else {
-            alert("Incorrect. The Flow is disrupted.");
-        }
-    }
-
-    setupClickTrigger(quest, questId) {
-        const el = document.querySelector(quest.selector);
-        if (el) {
-            el.addEventListener('click', async (e) => {
-                // DB Interactions
-                if(quest.selector.includes('library')) await this.addToLibraryDB('item_01');
-                if(quest.selector.includes('friend')) await this.addFriendDB('target_user_dummy');
-                
-                await this.completeQuest(questId);
-            }, { once: true });
-        }
-    }
-
-    setupFormTrigger(quest, questId) {
-        const form = document.querySelector(quest.selector);
-        if(form) {
-            form.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                await this.createQuestDB(form);
-                await this.completeQuest(questId);
-            }, { once: true });
-        }
-    }
-
-    // --- DB HELPERS ---
-    async addToLibraryDB(itemId) {
-        if(supabase) await supabase.from('library').insert([{ user_id: this.userProfile.id, item_id: itemId }]);
-    }
-    async addFriendDB(friendId) {
-        if(supabase) await supabase.from('connections').insert([{ user_id: this.userProfile.id, friend_id: friendId || this.userProfile.id }]); // Self-friend for beta
-    }
-    async createQuestDB(form) {
-        const title = form.querySelector('input').value;
-        if(supabase) await supabase.from('user_quests').insert([{ creator_id: this.userProfile.id, title: title }]);
-    }
-
-    // --- COMPLETION ---
-    async completeQuest(questId) {
-        const quest = QUEST_REGISTRY[questId];
-        
-        // 1. Update State
-        this.userProfile.exp = (this.userProfile.exp || 0) + quest.reward.exp;
-        this.userProfile.credits = (this.userProfile.credits || 0) + quest.reward.credits;
-        this.userProfile.current_quest_id = quest.next;
-
-        // 2. Persist
-        if (USE_LOCAL_STORAGE_ONLY) {
-             localStorage.setItem('cqr_user', JSON.stringify(this.userProfile));
-        } else if (supabase) {
-             await supabase.from('profiles').update({
-                 exp: this.userProfile.exp,
-                 credits: this.userProfile.credits,
-                 current_quest_id: this.userProfile.current_quest_id
-             }).eq('id', this.userProfile.id);
-        }
-
-        // 3. Feedback & Transition
-        if(document.getElementById('quest-overlay')) document.getElementById('quest-overlay').remove();
-        
-        if(window.Pusher) window.Pusher.showToast(`QUEST COMPLETE! +${quest.reward.exp} XP`, 'success');
-        else alert(`QUEST COMPLETE! +${quest.reward.exp} XP`);
-
-        if (quest.next) {
-            setTimeout(() => {
-                 location.reload(); // Reload to trigger next quest logic (HUD update etc)
-            }, 1000);
-        } else {
-             if(window.Pusher) window.Pusher.showToast("GRAND LINE CONQUERED. WELCOME ADMIRAL.", 'success');
-        }
-    }
-    // --- ADMIN OVERSEER (BETA) ---
-    async updateAdminStats() {
-        const panel = document.getElementById('admin-overseer-panel');
-        if(panel) panel.style.display = 'block';
-
-        console.log(`[${this.name}] Scanning Fleet...`);
-
-        // 1. Mock Data (Visual Feedback immediately)
-        document.getElementById('stat-total-users').innerText = "Scanning...";
-        
-        let total = 0;
-        let active = 0;
-
-        if (supabase) {
-            // Real Data
-            const { count: totalCount } = await supabase.from('profiles').select('*', { count: 'exact', head: true });
-            total = totalCount || 0;
-            
-            // Active in last 10 mins
-            const tenMinsAgo = new Date(Date.now() - 10 * 60 * 1000).toISOString();
-            const { count: activeCount } = await supabase.from('profiles').select('*', { count: 'exact', head: true }).gt('updated_at', tenMinsAgo);
-            active = activeCount || 0;
-        } else {
-            // Simulation Mode
-            total = Math.floor(Math.random() * 50) + 10;
-            active = Math.floor(Math.random() * total);
-        }
-
-        // Update UI
-        document.getElementById('stat-total-users').innerText = total;
-        document.getElementById('stat-active-users').innerText = active;
-        
-        // Quest Breakdown (Simulated for Visual)
-        const breakdownHTML = `
-            <div style="margin-top:10px; font-size: 0.8em; color: #aaa;">
-                <div>Phase 1 (Awakening): <span style="color:white">${Math.floor(total * 0.2)}</span></div>
-                <div>Phase 2 (Library): <span style="color:white">${Math.floor(total * 0.3)}</span></div>
-                <div>Phase 3 (Connections): <span style="color:white">${Math.floor(total * 0.1)}</span></div>
-                <div>Phase 7 (High Palace): <span style="color:gold">${Math.floor(total * 0.05)}</span></div>
-            </div>
-        `;
-        document.getElementById('quest-breakdown').innerHTML = breakdownHTML;
-    }
 }
 
-// Auto-Init
-if(document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => new QuestEngineAgent());
-} else {
-    new QuestEngineAgent();
+// Map Helpers
+function createPopupContent(title, subtitle, lat, lng, questId) {
+    return `
+    <div style="text-align:center; font-family:'Courier New'; min-width:200px;">
+        <h3 style="margin:0; color:#333; font-weight:bold;">${title}</h3>
+        <p style="font-size:0.8em; color:#666;">${subtitle}</p>
+        <button onclick="attemptSync(${lat}, ${lng}, '${questId}')" 
+            style="background:black; color:gold; border:1px solid gold; width:100%; padding:8px; cursor:pointer; font-weight:bold; margin-top:5px;">
+            📡 SYNCHRONIZE
+        </button>
+    </div>`;
 }
+
+window.attemptSync = async function(targetLat, targetLng, questId) {
+    if(!navigator.geolocation) return alert("Animus Error: GPS Module not found.");
+
+    navigator.geolocation.getCurrentPosition(async (pos) => {
+        const userLat = pos.coords.latitude;
+        const userLng = pos.coords.longitude;
+        const dist = getDistanceFromLatLonInM(userLat, userLng, targetLat, targetLng);
+        
+        if(dist < 100) { 
+            const success = await window.QuestEngine.completeQuest(questId);
+            if(success) {
+                alert(`SYNCHRONIZATION COMPLETE. Distance: ${Math.round(dist)}m. XP Awarded.`);
+                location.reload(); 
+            } else {
+                alert("Memory already synchronized.");
+            }
+        } else {
+            alert(`SYNC FAILED. Target out of range. Distance: ${Math.round(dist)}m.`);
+        }
+    }, (err) => alert("GPS Error: " + err.message));
+};
+
+function getDistanceFromLatLonInM(lat1,lon1,lat2,lon2) {
+  var R = 6371; 
+  var dLat = deg2rad(lat2-lat1);  
+  var dLon = deg2rad(lon2-lon1); 
+  var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon/2) * Math.sin(dLon/2); 
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+  return R * c * 1000;
+}
+function deg2rad(deg) { return deg * (Math.PI/180); }

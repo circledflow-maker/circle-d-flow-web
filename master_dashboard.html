@@ -69,6 +69,42 @@
 </head>
 <body class="h-screen w-screen flex flex-col">
 
+    <!-- MAINTENANCE MODE OVERLAY -->
+    <div id="maintenance-mode" style="
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+        background: #000; z-index: 99999; 
+        display: flex; flex-direction: column; justify-content: center; align-items: center; 
+        text-align: center; font-family: 'Cinzel', serif;">
+
+        <div style="position: absolute; width: 100%; height: 100%; background: radial-gradient(circle, #1a1a1a 0%, #000 100%); z-index: -1;"></div>
+
+        <img src="assets/branding/cqr-logo-gold.png" style="width: 120px; margin-bottom: 40px; filter: drop-shadow(0 0 20px gold); animation: pulse 4s infinite;">
+
+        <h1 style="color: #d4af37; font-size: 3em; letter-spacing: 10px; margin: 0;">SYSTEM PAUSED</h1>
+        <h2 style="color: #fff; font-family: 'Montserrat', sans-serif; font-weight: 300; letter-spacing: 5px; margin-top: 10px;">
+            „Der Flow kehrt zurück“
+        </h2>
+
+        <div style="margin-top: 50px; color: #444; font-family: 'Courier New', monospace; font-size: 0.9em; text-transform: uppercase;">
+            <p>Hintergrund-Synchronisation läuft...</p>
+            <div style="width: 200px; height: 1px; background: #333; margin: 20px auto; position: relative; overflow: hidden;">
+                <div style="position: absolute; width: 50px; height: 100%; background: gold; animation: move 3s infinite linear;"></div>
+            </div>
+            <p id="update-timer">Sequenz wird neu kodiert</p>
+        </div>
+    </div>
+
+    <style>
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.05); opacity: 1; }
+        }
+        @keyframes move {
+            0% { left: -50px; }
+            100% { left: 200px; }
+        }
+    </style>
+
     <!-- TRINITY RESONANCE BAR (Shared Admin Visual) -->
     <div id="trinity-resonance-wrap" style="width: 100%; height: 5px; background: #111; position: fixed; top: 0; left: 0; z-index: 12000;">
         <div id="sync-bar-vision" style="width: 33.3%; height: 100%; background: gold; float: left; box-shadow: 0 0 10px gold; transition: 1s;"></div>
@@ -111,6 +147,35 @@
         
         <!-- LEFT: Go Live / Sessions -->
         <section class="panel-left p-4">
+            
+            <!-- NAVIGATION DECK (Planetary Systems) -->
+            <div class="mb-6">
+                <h2 class="text-xs text-white/50 uppercase tracking-[0.2em] mb-4 border-b border-white/10 pb-2">Planetary Systems</h2>
+                <div class="grid grid-cols-1 gap-2">
+                    <a href="pages/quest_map.html" class="flex items-center gap-3 p-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-animusBlue rounded transition-all group">
+                        <span class="material-symbols-outlined text-animusBlue group-hover:scale-110 transition-transform">public</span>
+                        <div>
+                            <div class="text-xs font-bold text-white uppercase">The Atlas</div>
+                            <div class="text-[9px] text-white/50">Global Quest Map</div>
+                        </div>
+                    </a>
+                    <a href="pages/quest_board.html" class="flex items-center gap-3 p-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-gold rounded transition-all group">
+                        <span class="material-symbols-outlined text-yellow-500 group-hover:scale-110 transition-transform">auto_stories</span>
+                        <div>
+                            <div class="text-xs font-bold text-white uppercase">The Codex</div>
+                            <div class="text-[9px] text-white/50">Quest Board & Archives</div>
+                        </div>
+                    </a>
+                    <a href="pages/hall_of_legends.html" class="flex items-center gap-3 p-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-purple-500 rounded transition-all group">
+                        <span class="material-symbols-outlined text-purple-500 group-hover:scale-110 transition-transform">diversity_3</span>
+                        <div>
+                            <div class="text-xs font-bold text-white uppercase">Brotherhood</div>
+                            <div class="text-[9px] text-white/50">Hall of Legends</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
             <h2 class="text-xs text-white/50 uppercase tracking-[0.2em] mb-4 border-b border-white/10 pb-2">Active Sessions</h2>
             
             <!-- Summoning Status -->
@@ -333,17 +398,22 @@
         });
     </script>
     <!-- CORE AGENTS -->
-    <script src="../js/agents/language_matrix.js"></script>
-    <script src="../js/agents/master-brain.js"></script>
-    <!-- <script src="../js/agents/flowee_engine.js"></script> REPLACED BY QUEST ENGINE -->
-    <script src="../js/agents/quest_engine.js"></script>
-    <script src="../js/agents/pusher.js"></script>
-    <script src="../js/agents/helper.js"></script>
+    <script src="js/agents/language_matrix.js"></script>
+    <script src="js/agents/master-brain.js"></script>
+    <script src="js/agents/quest_engine.js"></script>
+    <script src="js/agents/pusher.js"></script>
+    <script src="js/agents/helper.js"></script>
+    <script src="js/auth-handler.js"></script>
 
     <!-- DASHBOARD SPECIFIC -->
-    <script src="../js/agents/quest_controller.js"></script>
+    <script src="js/agents/quest_controller.js"></script>
     <!-- BETA TOOLS -->
-    <script src="../js/agents/beta_observer.js"></script>
-    <script src="../js/agents/beta_log_overlay.js"></script>
-</body>
-</html>
+    <script src="js/agents/beta_observer.js"></script>
+    <script src="js/agents/beta_log_overlay.js"></script>
+    
+    <script>
+        // AUTH CHECK
+        window.onload = () => {
+            if(typeof checkUserSession !== 'undefined') checkUserSession();
+        };
+    </script>

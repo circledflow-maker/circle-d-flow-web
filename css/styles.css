@@ -1150,3 +1150,233 @@ body.js-active * {
     font-family: 'Courier New', monospace; color: white;
     display: none; /* Activated by JS */
 }
+
+/* --- ANIMUS CORE STYLE --- */
+:root {
+    --animus-bg: #0f0f0f;
+    --animus-white: #e0e0e0;
+    --animus-gold: #ffd700;
+    --animus-red: #ff3333;
+    --glass-panel: rgba(20, 20, 20, 0.85);
+}
+
+.animus-ui {
+    background-color: var(--animus-bg);
+    background-image: 
+        linear-gradient(rgba(255, 215, 0, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 215, 0, 0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+    color: var(--animus-white);
+    font-family: 'Courier New', sans-serif;
+}
+
+.animus-title {
+    font-family: 'Courier New', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    border-bottom: 2px solid var(--animus-gold);
+    display: inline-block;
+    padding-bottom: 5px;
+    text-shadow: 2px 0 var(--animus-red);
+}
+
+.memory-block {
+    background: var(--glass-panel);
+    border-left: 4px solid var(--animus-gold);
+    padding: 20px;
+    margin-bottom: 15px;
+    backdrop-filter: blur(5px);
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+.memory-block:hover {
+    transform: translateX(10px);
+    box-shadow: -5px 0 20px rgba(255, 215, 0, 0.2);
+}
+
+.sync-container {
+    width: 100%; height: 4px; background: #333; margin-top: 10px;
+}
+.sync-bar {
+    height: 100%; background: var(--animus-gold); width: 0%;
+    box-shadow: 0 0 10px var(--animus-gold);
+    transition: width 1s ease-out;
+}
+
+/* --- 1. GLOBAL GAME ATMOSPHERE --- */
+body {
+    background-color: #050505;
+    background-image: 
+        radial-gradient(circle at 50% 50%, #1a1a1a 0%, #000 100%),
+        linear-gradient(0deg, rgba(255, 215, 0, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 215, 0, 0.03) 1px, transparent 1px);
+    background-size: 100% 100%, 40px 40px, 40px 40px; /* Grid */
+    color: #e0e0e0;
+    font-family: 'Courier New', monospace;
+    overflow-x: hidden;
+    height: 100vh;
+}
+
+/* --- 2. CRT SCANLINE OVERLAY (The 'Monitor-Look') --- */
+.scanline-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.2));
+    background-size: 100% 4px;
+    pointer-events: none; /* Clicks go through */
+    z-index: 99999;
+    animation: scanlineMove 10s linear infinite;
+    opacity: 0.6;
+}
+
+@keyframes scanlineMove {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 100%; }
+}
+
+/* --- 3. GLITCH TEXT EFFECT (For Titles) --- */
+.glitch-text {
+    position: relative;
+    color: gold;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+}
+.glitch-text::before, .glitch-text::after {
+    content: attr(data-text);
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+}
+.glitch-text::before {
+    left: 2px; text-shadow: -1px 0 red; clip: rect(24px, 550px, 90px, 0);
+    animation: glitch-anim-2 3s infinite linear alternate-reverse;
+}
+.glitch-text::after {
+    left: -2px; text-shadow: -1px 0 cyan; clip: rect(85px, 550px, 140px, 0);
+    animation: glitch-anim 2.5s infinite linear alternate-reverse;
+}
+
+/* --- 4. HOLOGRAPHIC CARDS (Glassmorphism) --- */
+.holo-card {
+    background: rgba(20, 20, 20, 0.6);
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    border-left: 4px solid gold;
+    backdrop-filter: blur(10px); /* Frosted Glass */
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    transition: all 0.3s ease;
+    transform: perspective(1000px) rotateY(0deg);
+}
+
+.holo-card:hover {
+    background: rgba(40, 40, 40, 0.8);
+    border-color: gold;
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.4);
+    transform: perspective(1000px) translateZ(20px); /* 3D Pop-out */
+}
+
+/* --- 5. ENTRY ANIMATION (Data Stream Load) --- */
+.slide-in-entry {
+    opacity: 0;
+    animation: slideInLeft 0.5s forwards;
+}
+@keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-50px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+/* Staggered Delay */
+.slide-in-entry:nth-child(1) { animation-delay: 0.1s; }
+.slide-in-entry:nth-child(2) { animation-delay: 0.2s; }
+.slide-in-entry:nth-child(3) { animation-delay: 0.3s; }
+.slide-in-entry:nth-child(4) { animation-delay: 0.4s; }
+
+/* --- AZULEJO GATES (The Entry) --- */
+.gates-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    margin-top: 50px;
+}
+
+.azulejo-gate {
+    width: 300px;
+    height: 400px;
+    position: relative;
+    border: 2px solid var(--lisbon-gold);
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.5s ease;
+    background: #0a0a0a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+.azulejo-gate:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 0 40px rgba(212, 175, 55, 0.4);
+    height: 500px; /* Open more to see description - User Request */
+}
+
+.gate-door {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 50%;
+    background-image: url('../assets/textures/azulejo_pattern.png'); 
+    background-size: cover;
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 2;
+    background-color: #1a1a1a;
+    border-bottom: 2px solid var(--lisbon-gold);
+}
+
+.gate-left {
+    left: 0;
+    border-right: 1px solid var(--lisbon-gold);
+}
+
+.gate-right {
+    right: 0;
+    border-left: 1px solid var(--lisbon-gold);
+}
+
+.azulejo-gate:hover .gate-left {
+    transform: translateX(-95%);
+}
+
+.azulejo-gate:hover .gate-right {
+    transform: translateX(95%);
+}
+
+.gate-content {
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.5s ease 0.3s;
+    text-align: center;
+    z-index: 1;
+    padding: 20px;
+}
+
+.azulejo-gate:hover .gate-content {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.gate-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1.5em;
+    color: var(--lisbon-gold);
+    margin-bottom: 10px;
+}
+
+.gate-desc {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.8em;
+    color: #888;
+    line-height: 1.4;
+    transition: color 0.3s;
+}
+
+.azulejo-gate:hover .gate-desc {
+    color: white;
+}

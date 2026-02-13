@@ -238,9 +238,11 @@ class CaptainsLogAgent {
             ${missionBanner}
             <div class="vessel-grid">
                 <div class="vessel-avatar-card relative group">
-                    <img src="${user.avatar}" class="vessel-avatar cursor-pointer hover:scale-110 transition-transform" id="profile-avatar-img" onclick="CaptainsLog.cycleAvatar()" title="Click to Change Identity">
+                    <img src="${user.avatar}" class="vessel-avatar cursor-pointer hover:scale-110 transition-transform" id="profile-avatar-img" onclick="CaptainsLog.triggerAvatarUpload()" title="Click to Upload Identity">
+                    <input type="file" id="cms-avatar-upload" accept="image/*" style="display:none" onchange="CaptainsLog.handleAvatarUpload(this)">
+                    
                     <div class="absolute bottom-16 right-16 bg-gold text-black rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                        <span class="material-symbols-outlined text-sm">edit</span>
+                        <span class="material-symbols-outlined text-sm">upload</span>
                     </div>
                     
                     <div id="profile-display-mode">
@@ -295,26 +297,31 @@ class CaptainsLogAgent {
         }
     }
 
-    cycleAvatar() {
-        // Simple mock cycle through 4 avatars
-        const currentSrc = document.getElementById('profile-avatar-img').src;
-        let nextId = 1;
-        
-        // Extract ID if possible
-        const match = currentSrc.match(/avatar_(\d+)/);
-        if(match) {
-            nextId = (parseInt(match[1]) % 4) + 1; // 1 -> 2 -> 3 -> 4 -> 1
+    triggerAvatarUpload() {
+        const input = document.getElementById('cms-avatar-upload');
+        if(input) input.click();
+    }
+
+    handleAvatarUpload(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.getElementById('profile-avatar-img');
+                if(img) {
+                    img.src = e.target.result;
+                    // Auto-open edit mode if not open, to encourage saving
+                    const edit = document.getElementById('profile-edit-mode');
+                    if(edit && edit.classList.contains('hidden')) {
+                        CaptainsLog.toggleProfileEdit();
+                    }
+                }
+            }
+            reader.readAsDataURL(input.files[0]);
         }
-        
-        const newSrc = `Assets/images/avatars/avatar_${nextId}.png`;
-        // In a real app we'd verify file existence, but these are placeholders
-        document.getElementById('profile-avatar-img').src = newSrc;
-        
-        // Visual feedback
-        if(window.SoundEngineer) window.SoundEngineer.playSFX('ui_hover');
     }
 
     saveProfile() {
+        console.log("[CaptainsLog] saveProfile triggered."); // DEBUG
         const nameInput = document.getElementById('edit-name');
         const rankInput = document.getElementById('edit-rank');
         const img = document.getElementById('profile-avatar-img');
@@ -322,7 +329,9 @@ class CaptainsLogAgent {
         if(nameInput && rankInput && img) {
             const newName = nameInput.value;
             const newRank = rankInput.value;
-            const newAvatar = img.src;
+            const newAvatar = img.src; // DataURL from FileReader
+
+            console.log("[CaptainsLog] Saving:", { newName, newRank, avatarLength: newAvatar.length });
 
             // 1. Save to Storage (Robust)
             try {
@@ -331,13 +340,12 @@ class CaptainsLogAgent {
                 localStorage.setItem('cdf_avatar_src', newAvatar);
             } catch (e) {
                 console.error("Storage Full. Proceeding in RAM-only mode.");
-                // Attempt clear
                 try { localStorage.removeItem('cdf_glitch_log'); } catch(ex){}
             }
 
-            // 2. Update UI
+            // 2. Update UI (Toggle + Re-render)
             this.toggleProfileEdit();
-            this.renderLog(document.getElementById('tab-content-log')); // Re-render
+            this.renderLog(document.getElementById('tab-content-log')); 
 
             // 3. Notify System
             if(window.Pusher) {
@@ -345,7 +353,7 @@ class CaptainsLogAgent {
                 window.Pusher.broadcast('PROFILE_UPDATE', { name: newName, rank: newRank });
             }
             
-            // 3b. SYNC TO SUPABASE (Direct)
+            // 3b. SYNC TO SUPABASE (Defensive)
             if(window.supabaseClient) {
                 const user = window.supabaseClient.auth.user();
                 if(user) {
@@ -354,7 +362,7 @@ class CaptainsLogAgent {
                         .upsert({ 
                             id: user.id, 
                             username: newName, 
-                            avatar_url: newAvatar,
+                            avatar_url: newAvatar, 
                             updated_at: new Date()
                         })
                         .then(({ error }) => {
@@ -366,64 +374,93 @@ class CaptainsLogAgent {
 
             // 4. Flowee Trigger (Congratulate)
             if(window.Flowee) {
-                setTimeout(() => {
-                    window.Flowee.talk(true, `Splendid, Captain ${newName}! Your dossier is now current.`, 'success');
-                }, 500);
+                setTimeout(() => window.Flowee.talk(true, `Splendid, Captain ${newName}!`, 'success'), 500);
             }
             
-            // 5. Complete Imperial Step 1 (Identity Sync)
-             if(!localStorage.getItem('cdf_mission_identity_complete')) {
-                 localStorage.setItem('cdf_mission_identity_complete', 'true');
-                 
-                 // MISSION COMPLETE SEQUENCE
-                 if(window.SoundEngineer) window.SoundEngineer.playSFX('mission_complete'); // hypothetically
-                 
-                 // Show Completion Modal
-                 const overlay = document.createElement('div');
-                 overlay.className = 'fixed inset-0 z-[10001] flex items-center justify-center bg-black/95';
-                 overlay.innerHTML = `
-                    <div class="text-center animate-bounce-in">
-                        <span class="material-symbols-outlined text-6xl text-green-500 mb-4">check_circle</span>
-                        <h2 class="text-4xl text-white font-cinzel mb-2">PROTOCOL COMPLETE</h2>
-                        <p class="text-[#d4af37] font-mono tracking-widest text-sm">Identity Synced. Reward: +100 XP</p>
-                        
-                        <div class="mt-8 p-4 border border-white/10 rounded bg-white/5">
-                            <p class="text-xs text-gray-400 uppercase">Next Objective</p>
-                            <h3 class="text-xl text-white font-bold mt-1">THE ARTIFACT BAZAAR</h3>
-                            <p class="text-xs text-gray-500 mt-2">Warping in <span id="mission-timer">7</span>s...</p>
+            // 5. CRITICAL: Complete Mission & Redirect
+            // Force this regardless of localStorage state to be safe if user reset but cache lingers
+            // OR simply check if we are on the initial quest page logic.
+            // For now, allow re-triggering if the flag is missing OR user just wants to see it to ensure redirect works.
+            
+            console.log("[CaptainsLog] Checking Mission Status...");
+            
+            // Always run completion logic if quest not marked complete, or for debugging purposes if specifically asked
+            const isComplete = localStorage.getItem('cdf_mission_identity_complete');
+            
+            if(!isComplete) {
+                console.log("[CaptainsLog] Completing Mission: Identity Sync");
+                localStorage.setItem('cdf_mission_identity_complete', 'true');
+                
+                try {
+                    // Sound (Safe)
+                    if(window.SoundEngineer && window.SoundEngineer.playSFX) {
+                        try { window.SoundEngineer.playSFX('mission_complete'); } catch(e) {}
+                    }
+                    
+                    // Award XP (Safe)
+                    if(window.Helper && window.Helper.awardXP) {
+                        try { window.Helper.awardXP(100, 'Identity Established'); } catch(e) {}
+                    }
+
+                    // Show Completion Modal (Direct DOM Manipulation)
+                    const overlay = document.createElement('div');
+                    overlay.style.cssText = 'position:fixed; inset:0; z-index:99999; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.95);';
+                    overlay.innerHTML = `
+                        <div style="text-align:center; animation: fadeIn 0.5s ease-out;">
+                            <div style="font-size: 4rem; color: #22c55e; margin-bottom: 1rem;">check_circle</div>
+                            <h2 style="font-size: 2.5rem; color: white; font-family: 'Cinzel', serif; margin-bottom: 0.5rem;">PROTOCOL COMPLETE</h2>
+                            <p style="color: #d4af37; font-family: monospace; letter-spacing: 2px;">Identity Synced. Reward: +100 XP</p>
+                            
+                            <div style="margin-top: 2rem; padding: 1rem; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); border-radius: 8px;">
+                                <p style="font-size: 0.75rem; color: #9ca3af; text-transform: uppercase;">Next Objective</p>
+                                <h3 style="font-size: 1.25rem; color: white; font-weight: bold; margin-top: 0.25rem;">THE ARTIFACT BAZAAR</h3>
+                                <p style="font-size: 0.75rem; color: #6b7280; margin-top: 0.5rem;">Warping in <span id="mission-timer" style="color: #d4af37; font-weight: bold;">5</span>s...</p>
+                                <button onclick="const t = window.location.pathname.includes('/pages/') ? 'marketplace.html' : 'pages/marketplace.html'; window.location.href=t" style="margin-top: 1rem; padding: 0.5rem 1rem; background: #d4af37; color: black; border: none; font-weight: bold; cursor: pointer; border-radius: 4px;">WARP NOW</button>
+                            </div>
                         </div>
-                    </div>
-                 `;
-                 document.body.appendChild(overlay);
-                 
-                 if(window.Helper) window.Helper.awardXP(100, 'Identity Established');
-                 
-                 // Timer
-                 let timeLeft = 7;
-                 const timerEl = document.getElementById('mission-timer');
-                 const interval = setInterval(() => {
-                     timeLeft--;
-                     if(timerEl) timerEl.innerText = timeLeft;
-                     if(timeLeft <= 0) {
-                         clearInterval(interval);
-                         console.log("[CaptainsLog] Warping to Marketplace...");
-                         window.location.assign('marketplace.html'); // Force assign
-                     }
-                 }, 1000);
-                 
-                 return; // Stop further execution to focus on redirect
-             }
-        } // End of saveProfile
+                    `;
+                    document.body.appendChild(overlay);
+                    
+                    // Timer & Redirect
+                    let timeLeft = 5;
+                    const timerEl = overlay.querySelector('#mission-timer');
+                    const interval = setInterval(() => {
+                        timeLeft--;
+                        if(timerEl) timerEl.innerText = timeLeft;
+                        if(timeLeft <= 0) {
+                            clearInterval(interval);
+                            console.log("[CaptainsLog] Auto-Warping to Marketplace...");
+                            const target = window.location.pathname.includes('/pages/') ? 'marketplace.html' : 'pages/marketplace.html';
+                            window.location.href = target; 
+                        }
+                    }, 1000);
+                    
+                } catch (err) {
+                    console.error("[CaptainsLog] CRITICAL ERROR IN MISSION COMPLETION:", err);
+                    // Fallback Alert & Redirect
+                    alert("IDENTITY SYNCED. Redirecting to Marketplace...");
+                    const target = window.location.pathname.includes('/pages/') ? 'marketplace.html' : 'pages/marketplace.html';
+                    window.location.href = target;
+                }
+                
+                return; 
+            } else {
+                 console.log("[CaptainsLog] Mission already complete. Update saved.");
+            }
+        } else {
+            console.error("[CaptainsLog] Save Failed: Missing Input Elements");
+        }
+    }
 
     renderHammer(container) {
         container.innerHTML = `
             <div class="hammer-grid">
-                <div class="hammer-card" onclick="window.location.href='marketplace-upload.html'">
+                <div class="hammer-card" onclick="const t = window.location.pathname.includes('/pages/') ? 'marketplace-upload.html' : 'pages/marketplace-upload.html'; window.location.href=t">
                     <span class="material-symbols-outlined hammer-icon">gavel</span>
                     <h3 class="text-white font-bold">Offer Artifact</h3>
                     <p class="text-xs text-gray-400 mt-2">Upload items to the Bazaar.</p>
                 </div>
-                <div class="hammer-card" onclick="window.location.href='quest-create.html'">
+                <div class="hammer-card" onclick="const t = window.location.pathname.includes('/pages/') ? 'quest-create.html' : 'pages/quest-create.html'; window.location.href=t">
                     <span class="material-symbols-outlined hammer-icon">map</span>
                     <h3 class="text-white font-bold">Chart Quest</h3>
                     <p class="text-xs text-gray-400 mt-2">Create new missions for others.</p>
@@ -478,7 +515,6 @@ class CaptainsLogAgent {
             </div>
         `;
     }
-    } // End of renderTabContent
 } // End of CaptainsLogAgent
 
 new CaptainsLogAgent();

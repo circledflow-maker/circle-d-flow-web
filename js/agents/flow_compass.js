@@ -598,7 +598,7 @@ class FlowCompassAgent {
                 { l: 'Shop', u: 'marketplace.html' }, { l: 'My Stall', u: 'marketplace-upload.html' }, { l: 'Index', u: 'marketplace.html#index' }
             ]},
             { id: 'Battle', icon: 'swords', angle: 150, label: 'Battleground', color: '#ef4444', options: [
-                { l: 'Arena', u: 'fivedoors.html' }, { l: 'Guild', u: 'guild.html' }, { l: 'Lyric Coloseum', u: 'blog.html' }
+                { l: 'Arena', u: 'arena.html' }, { l: 'Guild', u: 'hall_of_legends.html' }, { l: 'Lyric Coloseum', u: 'blog.html' }
             ]}
         ];
 
@@ -619,7 +619,7 @@ class FlowCompassAgent {
                 {l:'Partner', u:'investor_portal.html'}
             ]},
             { id: 'Connection', icon: 'hub', angle: 216, label: 'Connection', color: '#ec4899', options: [{l:'Hub', u:'vault_space.html'}, {l:'Chat', u:'chat.html'}, {l:'Co-Op', u:'coop.html'}] },
-            { id: 'Quest', icon: 'explore', angle: 288, label: 'Quest Log', color: '#94a3b8', options: [{l:'Log', u:'events.html#log'}, {l:'Map', u:'events.html'}] }
+            { id: 'Quest', icon: 'explore', angle: 288, label: 'Quest Log', color: '#94a3b8', options: [{l:'Log', u:'quest_board.html?v=3.2'}, {l:'Map', u:'quest_map.html?v=3.2'}] }
         ];
 
         this.renderOrbit(container, innerOrbit, 'inner');

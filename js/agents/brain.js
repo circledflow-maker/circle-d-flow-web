@@ -67,6 +67,13 @@ class BrainAgent extends Agent {
         }
     }
 
+    // Helper for Path Resolution
+    _resolvePath(filename) {
+        // Assumes target files are in 'pages/' directory
+        const inPages = window.location.pathname.includes('/pages/');
+        return inPages ? filename : `pages/${filename}`;
+    }
+
     // --- CREATION LOGIC ---
     attemptCreation() {
         // Privilege Check
@@ -83,13 +90,15 @@ class BrainAgent extends Agent {
             
             // Trigger Styling
             const overlay = document.getElementById('stone-overlay');
+            const targetPage = this._resolvePath('quiz_creation.html');
+
             if(overlay) {
                 overlay.classList.remove('hidden');
                 setTimeout(() => {
-                    window.location.href = 'quiz_creation.html';
+                    window.location.href = targetPage;
                 }, 2000); // Wait for anim
             } else {
-                 window.location.href = 'quiz_creation.html';
+                 window.location.href = targetPage;
             }
         } else {
             if(window.Pusher) window.Pusher.showToast("Clearance Denied. Level 5 Required.", "error");
@@ -117,7 +126,7 @@ class BrainAgent extends Agent {
         if(window.Pusher) window.Pusher.showToast("Blueprint Synthesized Successfully.", "success");
         
         setTimeout(() => {
-            window.location.href = 'quiz.html';
+            window.location.href = this._resolvePath('quiz.html');
         }, 1500);
     }
 
@@ -130,6 +139,7 @@ class BrainAgent extends Agent {
 
         const hours = Math.floor(minutes / 60);
         const mins = minutes % 60;
+        const libPath = this._resolvePath('library.html');
 
         container.innerHTML = `
             <div class="text-center animate-pulse box-science p-8 rounded-xl max-w-md mx-auto">
@@ -143,7 +153,7 @@ class BrainAgent extends Agent {
                     ${hours}h ${mins}m
                 </div>
 
-                <a href="library.html" class="px-8 py-3 border border-emerald-500/30 hover:bg-emerald-500 hover:text-black text-emerald-400 uppercase tracking-widest rounded transition-all font-bold">
+                <a href="${libPath}" class="px-8 py-3 border border-emerald-500/30 hover:bg-emerald-500 hover:text-black text-emerald-400 uppercase tracking-widest rounded transition-all font-bold">
                     Explore Map
                 </a>
             </div>
@@ -246,6 +256,8 @@ class BrainAgent extends Agent {
         const container = document.getElementById('quiz-container');
         if(!container) return;
 
+        const libPath = this._resolvePath('library.html');
+
         container.innerHTML = `
             <div class="text-center animate-scale-in box-science p-10 rounded-xl">
                 <div class="inline-block p-6 rounded-full border-4 border-emerald-500 bg-black/50 shadow-[0_0_80px_rgba(16,185,129,0.4)] mb-8">
@@ -259,7 +271,7 @@ class BrainAgent extends Agent {
                     <br><br>Co-Efficient: 100 Billion Percent.
                 </p>
 
-                <a href="library.html" class="px-8 py-3 bg-emerald-600 text-white hover:bg-emerald-500 font-bold uppercase tracking-widest rounded shadow-[0_0_30px_rgba(16,185,129,0.4)] transition-all">
+                <a href="${libPath}" class="px-8 py-3 bg-emerald-600 text-white hover:bg-emerald-500 font-bold uppercase tracking-widest rounded shadow-[0_0_30px_rgba(16,185,129,0.4)] transition-all">
                     Return to Map
                 </a>
             </div>

@@ -147,7 +147,7 @@ class OrbitalMenuAgent {
         container.className = 'orbital-menu-container';
         container.innerHTML = `
             <!-- SATELLITES -->
-            <div class="orbital-node node-north" style="--node-bg: #4B5563" onclick="window.location.href='settings.html'">
+            <div class="orbital-node node-north" style="--node-bg: #4B5563" onclick="window.location.href='dashboard.html?view=settings'">
                 <span class="material-symbols-outlined text-[18px]">settings</span>
                 <div class="orbital-tooltip" style="bottom: 100%; margin-bottom: 5px;">Settings</div>
             </div>

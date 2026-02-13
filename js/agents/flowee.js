@@ -794,6 +794,38 @@ class FloweeAgent {
         }
 
         // 2. SEMANTIC NAVIGATION (Fuzzy Logic)
+        
+        // REDIRECTION MATRIX
+        const redirectionMatrix = [
+            // WORLD PROJECTION (The Atlas)
+            { keys: ["map", "atlas", "gps", "world", "location", "where"], url: "pages/quest_map.html", msg: "Accessing Satellite Feed... Loading The Atlas." },
+            
+            // MEMORY SEQUENCES (The Board)
+            { keys: ["quest", "mission", "task", "board", "job", "todo", "log"], url: "pages/quest_board.html", msg: "Decrypting Memory Blocks... Opening Bounty Board." },
+            
+            // BROTHERHOOD (The Hall)
+            { keys: ["rank", "leaderboard", "hall", "legend", "score", "top", "xp", "level"], url: "pages/hall_of_legends.html", msg: "Connecting to Animus Network... Accessing Hall of Legends." },
+            
+            // PROFILE / IDENTITY
+            { keys: ["profile", "me", "avatar", "class", "stats"], url: "pages/dashboard.html", msg: "Retinal Scan Initiated... Loading Profile." },
+            
+            // MARKET / BAZAAR
+            { keys: ["shop", "buy", "sell", "market", "bazaar", "trade"], url: "pages/marketplace.html", msg: "Entering Economic Zone... Opening Bazaar." },
+            
+            // ARENA / BATTLE
+            { keys: ["fight", "battle", "arena", "pvp", "duel"], url: "pages/arena.html", msg: "Weapons Check... Entering The Arena." }
+        ];
+
+        // Check Redirections
+        for(const entry of redirectionMatrix) {
+            if(entry.keys.some(k => q.includes(k))) {
+                return { 
+                    text: entry.msg, 
+                    link: entry.url // Triggers startCountdownAndNavigate
+                };
+            }
+        }
+
         const intentMap = [
             // NEW: MANUAL OVERRIDES (User Request) - TOP PRIORITY
             { triggers: ["next mission", "start mission 2", "start quest", "skip", "next", "continue", "proceed", "go on"], text: "Advancing to the next cycle...", action: () => {

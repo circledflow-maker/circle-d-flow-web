@@ -1,585 +1,330 @@
 <!DOCTYPE html>
-<html class="dark" lang="en">
-
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta charset="utf-8" />
-    <title>Circle D Flow - The Gateway</title>
-    <meta name="description" content="Awaken Your Nen. The central nexus for Lisbon's creators.">
-    <meta property="og:title" content="Circle D Flow - The Gateway">
-    <meta property="og:description" content="Awaken Your Nen. The central nexus for Lisbon's creators. Join the Circle.">
-    <meta property="og:type" content="website">
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com" rel="preconnect" />
-    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&amp;display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=material_symbols_outlined&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="css/styles.css?v=Gateway1.0">
-    <script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        "primary": "#8A2BE2", // Electric Purple
-                        "obsidian": "#050505", // Deep Black
-                        "void": "#0a0a0c",     // Soft Black
-                        "mystic-gold": "#FFD700",
-                        "electric": "#9d4edd"
-                    },
-                    fontFamily: {
-                        "display": ["Plus Jakarta Sans", "sans-serif"],
-                        "serif": ["Cinzel", "serif"]
-                    },
-                    animation: {
-                        "pulse-slow": "pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-                        "float": "float 6s ease-in-out infinite",
-                    },
-                    keyframes: {
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-20px)' },
-                        }
-                    }
-                },
-            },
-        }
-    </script>
+    <title>Circle D Flow | Lisbon's Digital Kingdom</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/main-style.css">
     <style>
-        .glass-obsidian {
-            background: rgba(10, 10, 12, 0.6);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+        /* --- LISBON TECH-NOIR CSS --- */
+        :root {
+            --lisbon-gold: #d4af37;
+            --lisbon-deep-blue: #002366; /* Azulejo Blau */
+            --tech-glow: rgba(212, 175, 55, 0.5);
+            --bg-dark: #0a0a0a;
         }
-        .hero-glow {
-            box-shadow: 0 0 100px rgba(138, 43, 226, 0.15);
+
+        body {
+            margin: 0; padding: 0; overflow-x: hidden;
+            background-color: var(--bg-dark);
+            color: #fff; font-family: 'Montserrat', sans-serif;
+            /* Der digitale Calçada Boden - Ein leuchtendes Kopfsteinpflaster-Netzwerk */
+            background-image: 
+                radial-gradient(circle at 50% 50%, transparent 0%, var(--bg-dark) 80%),
+                linear-gradient(45deg, #111 25%, transparent 25%, transparent 75%, #111 75%, #111),
+                linear-gradient(45deg, #111 25%, transparent 25%, transparent 75%, #111 75%, #111);
+            background-size: 100% 100%, 60px 60px, 60px 60px;
+            background-position: 0 0, 0 0, 30px 30px;
         }
+
+        /* --- THE STAGE ELEMENTS --- */
+        .stage-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; justify-content: center; align-items: center;
+            z-index: -1; perspective: 1000px;
+        }
+
+        /* Das Herzstück: Die Armillarsphäre (statt dem einfachen Kreis) */
+        .armillary-sphere {
+            width: 80vmin; height: 80vmin;
+            /* Platzhalter-Bild, falls du noch keins hast, wird es ein goldener Ring */
+            background-image: url('assets/textures/armillary-sphere.png'); 
+            background-size: contain; background-repeat: no-repeat; background-position: center;
+            border-radius: 50%;
+            box-shadow: 0 0 50px var(--tech-glow), inset 0 0 20px var(--tech-glow);
+            animation: rotateSphere 120s linear infinite;
+            opacity: 0.8; filter: sepia(100%) hue-rotate(5deg) saturate(200%);
+        }
+        /* Fallback, wenn kein Bild da ist */
+        .armillary-sphere:not([src]) { border: 2px solid var(--lisbon-gold); }
+
+        /* Die 7 Hügel (Leuchtende Knotenpunkte) */
+        .seven-hills-node {
+            position: absolute; width: 15px; height: 15px;
+            background: var(--lisbon-gold); border-radius: 50%;
+            box-shadow: 0 0 25px var(--lisbon-gold);
+            animation: pulseNode 4s infinite ease-in-out;
+        }
+
+        /* --- SCROLL SECTIONS --- */
+        .scroll-section {
+            min-height: 100vh; display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            text-align: center; padding: 40px 20px;
+            opacity: 0; transform: translateY(50px); transition: all 1s ease-out;
+        }
+        .scroll-section.visible { opacity: 1; transform: translateY(0); }
+
+        h1.cinzel { font-family: 'Cinzel', serif; font-size: 3.5em; color: var(--lisbon-gold); text-shadow: 0 0 20px var(--tech-glow); margin: 0; }
+        h2.subtitle { font-family: 'Montserrat', sans-serif; letter-spacing: 8px; text-transform: uppercase; font-size: 1.2em; margin-top: 10px; color: #ccc; }
+        p.lead { max-width: 700px; font-size: 1.1em; line-height: 1.6; color: #ddd; margin-top: 30px; }
+        .highlight { color: var(--lisbon-gold); font-weight: 600; }
+
+        /* --- THE AZULEJO GATES --- */
+        .gates-wrapper { display: flex; gap: 40px; margin-top: 60px; flex-wrap: wrap; justify-content: center; }
+        .azulejo-gate {
+            width: 280px; height: 380px; position: relative; cursor: pointer;
+            border: 3px solid var(--lisbon-gold); overflow: hidden;
+            transition: all 0.5s ease; background: #000;
+        }
+        .azulejo-gate:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(212, 175, 55, 0.3); }
+        
+        .gate-door {
+            position: absolute; top: 0; width: 50%; height: 100%;
+            /* Azulejo Muster hier einfügen */
+            background-image: url('assets/textures/azulejo-pattern.jpg'), linear-gradient(45deg, var(--lisbon-deep-blue), #000);
+            background-blend-mode: overlay; background-size: cover;
+            transition: transform 0.8s ease-in-out; border-right: 1px solid var(--lisbon-gold);
+            z-index: 1;
+        }
+        .gate-left { left: 0; transform-origin: left; }
+        .gate-right { right: 0; transform-origin: right; border-left: 1px solid var(--lisbon-gold); border-right: none; }
+        
+        .azulejo-gate:hover .gate-left { transform: perspective(1000px) rotateY(-60deg); }
+        .azulejo-gate:hover .gate-right { transform: perspective(1000px) rotateY(60deg); }
+
+        .gate-content {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            z-index: 0; text-align: center; width: 100%; opacity: 0.5; transition: opacity 0.8s;
+        }
+        .azulejo-gate:hover .gate-content { opacity: 1; }
+
+        .gate-title { font-family: 'Cinzel', serif; color: var(--lisbon-gold); font-size: 1.5em; margin-bottom: 5px; }
+        .gate-desc { font-family: 'Montserrat', sans-serif; font-size: 0.8em; color: #fff; text-transform: uppercase; letter-spacing: 2px; }
+
+        /* --- ANIMATIONS --- */
+        @keyframes rotateSphere { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes pulseNode { 0%, 100% { opacity: 0.6; transform: scale(1); } 50% { opacity: 1; transform: scale(1.2); } }
+        .scroll-indicator { animation: bounce 2s infinite; margin-top: 50px; color: var(--lisbon-gold); font-size: 2em; }
+        @keyframes bounce { 0%, 20%, 50%, 80%, 100% {transform: translateY(0);} 40% {transform: translateY(-20px);} 60% {transform: translateY(-10px);} }
     </style>
-    <!-- AUTH WIDGET -->
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-    <!-- SUPABASE -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="js/supabase_config.js"></script>
 </head>
+<body>
 
-<body class="bg-obsidian text-white font-display overflow-x-hidden selection:bg-primary selection:text-white opacity-0 transition-opacity duration-1000">
+    <div class="stage-container">
+        <div class="armillary-sphere"></div>
+        <div class="seven-hills-node" style="top: 20%; left: 50%;"></div>
+        <div class="seven-hills-node" style="top: 35%; left: 30%;"></div>
+        <div class="seven-hills-node" style="top: 35%; left: 70%;"></div>
+        <div class="seven-hills-node" style="top: 60%; left: 20%;"></div>
+        <div class="seven-hills-node" style="top: 60%; left: 80%;"></div>
+        <div class="seven-hills-node" style="top: 80%; left: 40%;"></div>
+        <div class="seven-hills-node" style="top: 80%; left: 60%;"></div>
+    </div>
 
-    <!-- SYSTEM LAUNCH OVERLAY (Matrix Terminal) -->
-    <div id="system-launch-overlay" style="
-        position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-        background: #000; z-index: 99999; display: flex; flex-direction: column;
-        align-items: center; justify-content: center; font-family: 'Courier New', monospace;
-        color: #00f0ff; text-align: center;
-    ">
-        <div style="margin-bottom: 30px; animation: heartbeat 1.5s infinite;">
-            <img src="Assets/images/logo.png" style="width: 100px; filter: drop-shadow(0 0 10px gold);">
+    <section class="scroll-section visible">
+        <img src="assets/branding/cqr-logo-gold.png" style="width: 120px; margin-bottom: 30px; filter: drop-shadow(0 0 15px var(--lisbon-gold));">
+        <h1 class="cinzel">CIRCLE D FLOW</h1>
+        <h2 class="subtitle">KINGDOM OF HEARTS</h2>
+        <p class="lead" style="border-top: 1px solid var(--lisbon-gold); border-bottom: 1px solid var(--lisbon-gold); padding: 20px 0;">
+            FROM THE 7 HILLS INTO THE DIGITAL WORLD.<br>
+            <span class="highlight">LISBON'S NEW AGE OF DISCOVERY.</span>
+        </p>
+        <div class="scroll-indicator">⬇</div>
+    </section>
+
+    <section class="scroll-section">
+        <h1 class="cinzel" style="font-size: 2.5em;">THE NAVIGATOR NETWORK</h1>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 50px; max-width: 900px; margin-top: 50px; text-align: left;">
+            <div>
+                <h3 style="color: var(--lisbon-gold); margin-bottom: 10px;">FOR THE CITY & INVESTORS</h3>
+                <p style="color: #ccc; line-height: 1.5;">
+                    We are transforming Lisbon's culture into a digital economy. 
+                    <span class="highlight">Real Places</span> like the 'African Queen' become nodes. 
+                    Every interaction strengthens local business and generates valuable data flows. 
+                    Not a toy, but a living ecosystem.
+                </p>
+            </div>
+            <div>
+                <h3 style="color: #00f0ff; margin-bottom: 10px;">FOR THE COMMUNITY</h3>
+                <p style="color: #ccc; line-height: 1.5;">
+                    Your city is the playground. Follow the footsteps of ancient explorers, 
+                    solve quests at real locations, and rise in the <span class="highlight">Brotherhood</span>. 
+                    Connect, trade, and leave your traces in the digital Calçada network.
+                </p>
+            </div>
         </div>
+    </section>
 
-        <div id="terminal-text" style="font-size: 1.2em; margin-bottom: 20px; height: 60px;">
-            INITIALIZING...
+    <section class="scroll-section">
+        <h1 class="cinzel" style="margin-bottom: 10px;">THE GATES ARE OPENING</h1>
+        <p class="subtitle">CHOOSE YOUR PATH INTO THE FLOW</p>
+
+        <div class="gates-wrapper">
+            <div class="azulejo-gate" onclick="enterSystem('login')">
+                <div class="gate-door gate-left"></div>
+                <div class="gate-door gate-right"></div>
+                <div class="gate-content">
+                    <div style="font-size: 3em; color: var(--lisbon-gold); margin-bottom: 20px;">⚜️</div>
+                    <div class="gate-title">NAVIGATOR</div>
+                    <div class="gate-desc">LOGIN / REGISTER<br>FULL SYNCHRONIZATION</div>
+                </div>
+            </div>
+
+            <div class="azulejo-gate" onclick="enterSystem('guest')" style="border-color: #00f0ff;">
+                <div class="gate-door gate-left" style="filter: hue-rotate(180deg);"></div>
+                <div class="gate-door gate-right" style="filter: hue-rotate(180deg);"></div>
+                <div class="gate-content">
+                    <div style="font-size: 3em; color: #00f0ff; margin-bottom: 20px;">👁️</div>
+                    <div class="gate-title" style="color: #00f0ff;">VISITOR</div>
+                    <div class="gate-desc">GUEST ACCESS<br>OBSERVE ONLY</div>
+                </div>
+            </div>
         </div>
+    </section>
 
-        <button id="enter-beta-btn" onclick="enterSystem()" style="
-            display: none;
-            background: transparent; border: 2px solid gold; color: gold;
-            padding: 15px 40px; font-size: 1.2em; letter-spacing: 3px;
-            cursor: pointer; box-shadow: 0 0 15px gold;
-            transition: all 0.3s;
-        ">
-            ENTER BETA PROTOCOL
-        </button>
-        
-        <div style="position: absolute; bottom: 20px; color: #444; font-size: 0.8em;">
-            SECURE CONNECTION ESTABLISHED v3.0
+    <!-- MULTILINGUAL AUTH & LANG SELECTOR -->
+    <div class="lang-selector" style="position: fixed; top: 20px; right: 20px; z-index: 2000; display: flex; gap: 15px; background: rgba(0,0,0,0.5); padding: 10px; border-radius: 5px; border: 1px solid rgba(212, 175, 55, 0.3);">
+        <span onclick="setLanguage('pt')" style="cursor:pointer; font-size: 1.5em;" title="Português">🇵🇹</span>
+        <span onclick="setLanguage('en')" style="cursor:pointer; font-size: 1.5em;" title="English">🇬🇧</span>
+        <span onclick="setLanguage('de')" style="cursor:pointer; font-size: 1.5em;" title="Deutsch">🇩🇪</span>
+        <span onclick="setLanguage('fr')" style="cursor:pointer; font-size: 1.5em;" title="Français">🇫🇷</span>
+    </div>
+
+    <div id="auth-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 3000; justify-content: center; align-items: center; backdrop-filter: blur(15px);">
+        <div style="background: #0a0a0a; border: 1px solid var(--lisbon-gold); width: 800px; max-width: 95%; display: flex; flex-wrap: wrap; position: relative;">
+            
+            <button onclick="closeAuth()" style="position: absolute; top: -45px; right: 0; background: transparent; color: white; border: none; font-size: 2.5em; cursor: pointer;">&times;</button>
+
+            <div style="flex: 1; min-width: 300px; padding: 40px; border-right: 1px solid #222;">
+                <h2 class="cinzel" data-i18n="login_title" style="color: var(--lisbon-gold);">NAVIGATOR</h2>
+                <p style="font-size: 0.7em; color: #666; letter-spacing: 2px;" data-i18n="login_sub">IDENTIFIKATION</p>
+                
+                <input type="email" id="login-email" placeholder="EMAIL" style="width:100%; padding:12px; margin: 20px 0 10px; background:#111; border:1px solid #333; color:white;">
+                <input type="password" id="login-password" placeholder="PASSWORD" style="width:100%; padding:12px; margin-bottom: 25px; background:#111; border:1px solid #333; color:white;">
+                
+                <button onclick="handleLogin()" style="width:100%; padding:15px; background:var(--lisbon-gold); color:black; font-weight:bold; border:none; cursor:pointer;" data-i18n="btn_login">INITIATE LOGIN</button>
+            </div>
+
+            <div style="flex: 1; min-width: 300px; padding: 40px; background: rgba(212, 175, 55, 0.03);">
+                <h2 class="cinzel" data-i18n="reg_title" style="color: #fff;">NEW AGENT</h2>
+                <p style="font-size: 0.7em; color: #666; letter-spacing: 2px;" data-i18n="reg_sub">REKRUTIERUNG</p>
+                
+                <input type="text" id="reg-username" placeholder="CODENAME" style="width:100%; padding:12px; margin: 20px 0 10px; background:#111; border:1px solid #444; color:white;">
+                <input type="email" id="reg-email" placeholder="EMAIL" style="width:100%; padding:12px; margin-bottom: 10px; background:#111; border:1px solid #444; color:white;">
+                <input type="password" id="reg-password" placeholder="PASSWORD" style="width:100%; padding:12px; margin-bottom: 25px; background:#111; border:1px solid #444; color:white;">
+                
+                <button onclick="handleRegister()" style="width:100%; padding:15px; background:transparent; color:white; border:1px solid white; cursor:pointer;" data-i18n="btn_reg">ENCODE AGENT</button>
+            </div>
+            
+            <p id="auth-status" style="width: 100%; text-align: center; margin: 0; padding: 10px; color: var(--lisbon-gold);"></p>
         </div>
     </div>
 
-    <style>
-    @keyframes heartbeat {
-        0% { transform: scale(1); opacity: 0.8; }
-        50% { transform: scale(1.05); opacity: 1; }
-        100% { transform: scale(1); opacity: 0.8; }
-    }
-    @keyframes glitch-anim {
-        0% { transform: translate(0); }
-        20% { transform: translate(-2px, 2px); }
-        40% { transform: translate(-2px, -2px); }
-        60% { transform: translate(2px, 2px); }
-        80% { transform: translate(2px, -2px); }
-        100% { transform: translate(0); }
-    }
-    </style>
+    <!-- AGENT MESH -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/agents/supabase_client.js?v=3.2"></script>
+    <script src="js/agents/agent.js?v=3.2"></script>
+    <script src="js/agents/brain.js?v=3.2"></script>
+    <script src="js/agents/helper.js?v=3.2"></script>
+    <script src="js/agents/pusher.js?v=3.2"></script>
+    <script src="js/agents/captains_log.js?v=3.2"></script>
+    <script src="js/auth-handler.js"></script>
 
     <script>
-    // DIE BOOT SEQUENZ
-    window.addEventListener('load', () => {
-        // Skip if already launched in session
-        if(sessionStorage.getItem('cdf_launched')) {
-            document.getElementById('system-launch-overlay').style.display = 'none';
-            document.body.classList.remove('opacity-0');
-            return;
+        // Scroll Observer für Fade-In Effekte
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
+            });
+        }, { threshold: 0.2 });
+        document.querySelectorAll('.scroll-section').forEach(sec => observer.observe(sec));
+
+        // 1. ÜBERSETZUNGS-DATENBANK
+        const i18n = {
+            pt: {
+                welcome: "BEM-VINDO AO FLOW",
+                pitch: "A nova era de descoberta de Lisboa.",
+                investor_title: "PARA INVESTIDORES",
+                community_title: "PARA A COMUNIDADE",
+                login_title: "NAVEGADOR",
+                login_sub: "IDENTIFICAÇÃO",
+                reg_title: "NOVO AGENTE",
+                reg_sub: "RECRUTAMENTO",
+                btn_login: "INICIAR LOGIN",
+                btn_reg: "CRIAR CONTA"
+            },
+            en: {
+                welcome: "WELCOME TO THE FLOW",
+                pitch: "Lisbon's new age of discovery.",
+                investor_title: "FOR INVESTORS",
+                community_title: "FOR COMMUNITY",
+                login_title: "NAVIGATOR",
+                login_sub: "IDENTIFICATION",
+                reg_title: "NEW AGENT",
+                reg_sub: "RECRUITMENT",
+                btn_login: "INITIATE LOGIN",
+                btn_reg: "ENCODE AGENT"
+            },
+            de: {
+                welcome: "WILLKOMMEN IM FLOW",
+                pitch: "Lissabons neues Zeitalter der Entdeckung.",
+                investor_title: "FÜR INVESTOREN",
+                community_title: "FÜR DIE COMMUNITY",
+                login_title: "NAVIGATOR",
+                login_sub: "IDENTIFIKATION",
+                reg_title: "NEUER AGENT",
+                reg_sub: "REKRUTIERUNG",
+                btn_login: "LOGIN STARTEN",
+                btn_reg: "AGENT ERSTELLEN"
+            },
+            fr: {
+                welcome: "BIENVENUE DANS LE FLOW",
+                pitch: "La nouvelle ère de découverte de Lisbonne.",
+                investor_title: "POUR LES INVESTISSEURS",
+                community_title: "POUR LA COMMUNAUTÉ",
+                login_title: "NAVIGATEUR",
+                login_sub: "IDENTIFICATION",
+                reg_title: "NOVEL AGENT",
+                reg_sub: "RECRUTEMENT",
+                btn_login: "INITIALISER LE LOGIN",
+                btn_reg: "CRÉER UN AGENT"
+            }
+        };
+
+        // 2. FUNKTION: SPRACHE WECHSELN
+        function setLanguage(lang) {
+            localStorage.setItem('cqr_lang', lang);
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (i18n[lang][key]) el.innerText = i18n[lang][key];
+            });
         }
 
-        const texts = [
-            "CONNECTING TO LISBON CORE...",
-            "SYNCING DATABASE (SUPABASE)...",
-            "LOADING QUEST ASSETS...",
-            "ALIGNING STARS...",
-            "SYSTEM ONLINE - ACCESS GRANTED"
-        ];
-        
-        let i = 0;
-        const terminal = document.getElementById('terminal-text');
-        
-        const interval = setInterval(() => {
-            terminal.innerText = texts[i];
-            terminal.style.animation = "glitch-anim 0.2s"; // Glitch Effekt bei neuem Text
-            setTimeout(() => terminal.style.animation = "none", 200);
-            
-            i++;
-            if (i >= texts.length) {
-                clearInterval(interval);
-                // Button zeigen
-                document.getElementById('enter-beta-btn').style.display = 'block';
-            }
-        }, 800); // Geschwindigkeit der Texte
-    });
-
-    function enterSystem() {
-        const overlay = document.getElementById('system-launch-overlay');
-        
-        // Fade Out Effekt
-        overlay.style.transition = "opacity 1s ease";
-        overlay.style.opacity = "0";
-        
-        // Nach Fade entfernen und Flowee starten
-        setTimeout(() => {
-            overlay.remove();
-            sessionStorage.setItem('cdf_launched', 'true');
-            document.body.classList.remove('opacity-0');
-            
-            // Start Tutorial / Auth Check
-            if(localStorage.getItem('cqr_auth_state') !== 'logged_in') {
-                const auth = document.getElementById('auth-container');
-                if(auth) auth.style.display = 'flex';
-            }
-        }, 1000);
-    }
-    </script>
-
-    <!-- AUTHENTICATION GATEWAY (PIRATE MAP STYLE) -->
-    <div id="auth-container" style="
-        position: fixed; top: 0; left: 0; width: 100%; height: 100vh; 
-        background: radial-gradient(circle, #0F0A13 0%, #000 100%); 
-        z-index: 10000; display: flex; align-items: center; justify-content: center;
-        transition: transform 1.2s cubic-bezier(0.85, 0, 0.15, 1);
-    ">
-        <div class="absolute inset-0 bg-[url('https://pub-24ba376bfccb446996666eaff4dbae12.r2.dev/grid.png')] opacity-[0.05] pointer-events-none"></div>
-        
-        <!-- PARCHMENT MAP CONTAINER -->
-        <div id="pirate-map-card" class="relative map-texture p-10 rounded-sm shadow-[0_0_80px_rgba(0,0,0,1)] max-w-4xl w-full flex flex-col md:flex-row gap-8 transform scale-0 animate-unroll" style="pointer-events: auto; animation-delay: 1.5s;">
-            
-            <!-- DECORATIVE COMPASS (Absolute) -->
-            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 opacity-[0.05] pointer-events-none bg-[url('https://cdn-icons-png.flaticon.com/512/1034/1034176.png')] bg-contain bg-no-repeat bg-center"></div>
-
-            <!-- LOGIN PANEL (Left) -->
-            <div id="login-panel" class="flex-1 text-center border-b md:border-b-0 md:border-r border-[#5c4033]/30 pb-6 md:pb-0 md:pr-6 z-10">
-                <h2 class="text-3xl ink-text mb-2 tracking-widest">🏴‍☠️ CAPTAIN'S LOG</h2>
-                <p class="text-[#5c4033] mb-6 font-serif italic text-sm">"The sea remembers."</p>
-                
-                <input type="text" id="login-username" placeholder="Hunter Handle" class="w-full input-parchment rounded p-3 mb-4 outline-none transition-colors">
-                <input type="password" id="login-password" placeholder="Passphrase" class="w-full input-parchment rounded p-3 mb-6 outline-none transition-colors">
-                
-                <button onclick="handleLogin()" class="w-full px-8 py-3 bg-[#3e2723] text-[#d4c5a3] font-serif font-bold uppercase tracking-widest hover:bg-[#2a1a10] hover:text-white transition-all shadow-lg border border-[#5c4033]">
-                    ENTER DASHBOARD
-                </button>
-            </div>
-
-            <!-- REGISTER PANEL (Right) -->
-            <div id="register-panel" class="flex-1 text-center pt-6 md:pt-0 md:pl-6 z-10">
-                <h2 class="text-3xl ink-text mb-2 tracking-widest" style="color: #8b0000;">⚓ MANIFESTO</h2>
-                <p class="text-[#8b0000]/80 mb-6 font-serif italic text-sm">"Sign your soul to the crew."</p>
-                
-                <input type="email" id="reg-email" placeholder="Digital Soul (Email)" class="w-full input-parchment rounded p-3 mb-3 outline-none transition-colors">
-                <input type="text" id="reg-username" placeholder="Choose Moniker" class="w-full input-parchment rounded p-3 mb-3 outline-none transition-colors">
-                <input type="password" id="reg-password" placeholder="Create Passphrase" class="w-full input-parchment rounded p-3 mb-6 outline-none transition-colors">
-                
-                <button onclick="handleRegister()" class="w-full px-8 py-3 wax-seal-btn font-serif font-bold uppercase tracking-widest rounded-sm transform hover:scale-105">
-                    INITIATE TEST
-                </button>
-            </div>
-            
-            <!-- Burn Marks (Visual) -->
-            <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-black/20 to-transparent pointer-events-none rounded-bl-3xl filter blur-xl"></div>
-            <div class="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-black/20 to-transparent pointer-events-none rounded-tr-3xl filter blur-xl"></div>
-        </div>
-        
-        <!-- Guest Access -->
-        <div onclick="dismissGateway()" class="absolute bottom-10 text-white/30 text-[10px] uppercase tracking-widest cursor-pointer hover:text-white z-50">
-            [ Dismiss Protocol (Guest Mode) ]
-        </div>
-    </div>
-
-    <!-- AGENT: REFERENCE LIBRARY -->
-    <script src="js/agents/language_matrix.js"></script>
-
-    <!-- AGENT: MASTER BRAIN (Cortex) -->
-    <script src="js/agents/master-brain.js"></script>
-
-    <!-- AGENT: CORE UTILITIES (Helper & Pusher) -->
-    <script src="js/agents/helper.js"></script>
-    <script src="js/agents/pusher.js"></script>
-
-    <!-- AGENT: FLOWEE ENGINE (Tutorials) -->
-    <script src="js/agents/flowee_engine.js"></script>
-
-    <!-- AGENT: GATEKEEPER (Handles Auth & Visibility) -->
-    <script src="js/agents/gatekeeper.js"></script>
-    <!-- AGENT: THE VISIONARY (Visual Eye) -->
-    <script src="js/agents/visual_eye.js" defer></script>
-    <!-- Bridge Pusher: Flow & Momentum -->
-    <script src="js/agents/bridge_pusher.js" defer></script>
-
-    <!-- BACKGROUND FX (The Void) -->
-    <div class="fixed inset-0 z-0 pointer-events-none">
-        <div class="absolute inset-0 bg-[url('https://pub-24ba376bfccb446996666eaff4dbae12.r2.dev/grid.png')] opacity-[0.03]"></div>
-        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[50vh] bg-gradient-to-b from-primary/5 to-transparent"></div>
-    </div>
-
-    <!-- GENESIS: GATE OVERLAY (Ying-Yang Split) -->
-    <div class="gate-overlay fixed inset-0 z-[60] flex pointer-events-none hidden transition-opacity duration-1000">
-        <div class="gate-left w-1/2 h-full bg-black border-r border-white/10 transition-transform duration-1500 ease-in-out flex items-center justify-end pr-4">
-            <span class="material-symbols-outlined text-9xl text-white/5">yin_yang</span>
-        </div>
-        <div class="gate-right w-1/2 h-full bg-black border-l border-white/10 transition-transform duration-1500 ease-in-out flex items-center pl-4">
-             <!-- Right half visual if needed -->
-        </div>
-    </div>
-
-    <!-- GENESIS: INITIATION MODAL -->
-    <div id="genesis-modal" class="fixed inset-0 z-50 hidden flex-col items-center justify-center bg-black/90 backdrop-blur-xl p-6">
-        <div id="genesis-content" class="w-full max-w-4xl transition-opacity duration-500">
-            <!-- Content Injected by Genesis.js -->
-        </div>
-    </div>
-
-    <!-- SCRIPT: GENESIS PROTOCOL -->
-    <script src="js/genesis.js"></script>
-
-    <!-- AGENT: FLOWEE (The Guide) -->
-    <!-- Scripts -->
-    <script src="js/agents/network_hub.js" defer></script>
-    <script src="js/agents/constructor_bot.js" defer></script>
-    <script src="js/agents/kingdom_science.js" defer></script>
-    <script src="js/agents/vault_space.js" defer></script>
-    <script src="js/agents/orbital_menu.js" defer></script>
-    <script src="js/agents/tutorial_core.js" defer></script>
-    <script src="js/agents/quest_controller.js" defer></script>
-    <script src="js/agents/visual_integrity.js" defer></script>
-    <script src="js/agents/sound_engineer.js" defer></script>
-    <script src="js/agents/flowee.js" defer></script>
-
-
-
-    <!-- MAIN CONTENT -->
-    <main class="relative z-10 min-h-screen flex flex-col items-center justify-center p-6">
-
-        <!-- LOGO (Small Top) -->
-        <div class="absolute top-8 left-1/2 -translate-x-1/2 opacity-50">
-            <img src="./Assets/images/logo.png" alt="Circle D Flow" width="32" height="32" class="h-8 w-auto grayscale contrast-150">
-        </div>
-
-        <!-- HERO SECTION: THE SPLIT REALITY -->
-        <section class="max-w-7xl w-full mb-20 relative z-20">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch min-h-[500px]">
-                
-                <!-- LEFT: VISION (Curated Perfection) -->
-                <div class="group relative rounded-2xl overflow-hidden border border-white/10 hover:border-[#FFD700]/50 transition-all duration-500">
-                    <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1542206395-9feb3edaa68d?q=80&w=2667&auto=format&fit=crop')] bg-cover bg-center transition-transform duration-700 group-hover:scale-110 opacity-60 group-hover:opacity-40"></div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
-                    
-                    <div class="absolute bottom-0 left-0 p-8">
-                        <span class="text-[#FFD700] font-bold tracking-widest text-xs uppercase mb-2 block animate-pulse" data-i18n="vision_brand">Vision Empire</span>
-                        <h2 class="text-4xl md:text-5xl font-serif text-white mb-4" data-i18n="vision_title">Curated Perfection</h2>
-                        <p class="text-white/60 text-sm mb-6 max-w-md">Capture the soul of the moment. Join the circle of visual alchemists.</p>
-                        <button onclick="attemptAction('vision')" class="px-6 py-2 border border-white/30 hover:bg-white hover:text-black transition-colors rounded-full uppercase text-xs font-bold tracking-widest flex items-center gap-2">
-                            <span class="material-symbols-outlined text-sm">camera_enhance</span> Enter Gallery
-                        </button>
-                    </div>
-                </div>
-
-                <!-- RIGHT: TASTE (African Queen Kitchen) -->
-                <div class="group relative rounded-2xl overflow-hidden border border-white/10 hover:border-amber-500/50 transition-all duration-500">
-                    <div class="absolute inset-0 bg-black/50"></div> <!-- Darker bg for logo -->
-                    <div class="absolute inset-0 flex items-center justify-center p-8">
-                        <img src="./Assets/images/aqk_logo.png" alt="African Queen Logo" class="w-full h-full object-contain opacity-80 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-105" onerror="this.src='https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2670&auto=format&fit=crop'">
-                    </div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
-                    
-                    <div class="absolute top-4 right-4 bg-amber-600 text-white px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest shadow-lg animate-bounce" data-i18n="jamtruck">
-                        Jamtruck Fueling: 20%
-                    </div>
-
-                    <div class="absolute bottom-0 left-0 p-8">
-                         <span class="text-amber-500 font-bold tracking-widest text-xs uppercase mb-2 block" data-i18n="taste_brand">Taste Empire</span>
-                        <h2 class="text-4xl md:text-5xl font-serif text-white mb-4" data-i18n="taste_title">African Queen</h2>
-                        <p class="text-white/60 text-sm mb-6 max-w-md">Authentic flavors, crafted with soul. Fuel the dream of the Royal Kitchen.</p>
-                        <button onclick="attemptAction('taste')" class="px-6 py-2 border border-white/30 hover:bg-amber-500 hover:text-black transition-colors rounded-full uppercase text-xs font-bold tracking-widest flex items-center gap-2">
-                             <span class="material-symbols-outlined text-sm">restaurant</span> View Menu
-                        </button>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- SOUND TEASER (DJ Qter) -->
-            <div class="mt-8 bg-black/60 border border-white/10 rounded-xl p-4 flex items-center gap-4 backdrop-blur-md max-w-lg mx-auto transform hover:scale-105 transition-transform duration-300">
-                 <div class="w-12 h-12 rounded-full bg-electric flex items-center justify-center animate-spin-slow">
-                     <span class="material-symbols-outlined text-black">graphic_eq</span>
-                 </div>
-                 <div class="flex-1">
-                     <div class="text-[10px] text-electric uppercase tracking-widest font-bold">Now Playing</div>
-                     <div class="text-sm font-bold text-white">Kingdom Vibe (Lisbon Flow)</div>
-                 </div>
-                 <button onclick="attemptAction('sound', true)" class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:text-black transition-all">
-                     <span class="material-symbols-outlined">play_arrow</span>
-                 </button>
-            </div>
-            
-        </section>
-
-        <!-- THE OUTPOST (Visitor Pillars) -->
-        <section class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl w-full">
-            
-            <!-- COLUMN 1: BAZAAR -->
-            <div class="group relative p-8 glass-obsidian border-t border-white/5 hover:border-primary/30 transition-colors">
-                <div class="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover:via-primary/50 transition-all"></div>
-                <div class="flex flex-col items-center text-center gap-4">
-                    <span class="material-symbols-outlined text-3xl text-white/30 group-hover:text-primary transition-colors">storefront</span>
-                    <h3 class="text-sm font-bold uppercase tracking-widest text-white/70" data-i18n="bazaar_title">The Bazaar</h3>
-                    <p class="text-xs text-white/40 leading-relaxed font-mono">
-                        Browse the finest artifacts. Beats, designs, and soul food.<br>
-                        <span class="text-primary/60">[Login to Trade]</span>
-                    </p>
-                </div>
-            </div>
-
-            <!-- COLUMN 2: COMMUNITY -->
-            <div class="group relative p-8 glass-obsidian border-t border-white/5 hover:border-green-500/30 transition-colors">
-                <div class="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover:via-green-500/50 transition-all"></div>
-                <div class="flex flex-col items-center text-center gap-4">
-                    <span class="material-symbols-outlined text-3xl text-white/30 group-hover:text-green-400 transition-colors">groups</span>
-                    <h3 class="text-sm font-bold uppercase tracking-widest text-white/70" data-i18n="circle_title">The Circle</h3>
-                    <p class="text-xs text-white/40 leading-relaxed font-mono">
-                        Join the collective consciousness.<br>
-                        <span class="text-green-500/60 animate-pulse">● 42 Flow Creators Active</span>
-                    </p>
-                </div>
-            </div>
-
-            <!-- COLUMN 3: KNOWLEDGE -->
-            <div class="group relative p-8 glass-obsidian border-t border-white/5 hover:border-blue-500/30 transition-colors">
-                <div class="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover:via-blue-500/50 transition-all"></div>
-                <div class="flex flex-col items-center text-center gap-4">
-                    <span class="material-symbols-outlined text-3xl text-white/30 group-hover:text-blue-400 transition-colors">school</span>
-                    <h3 class="text-sm font-bold uppercase tracking-widest text-white/70" data-i18n="academy_title">Academy</h3>
-                    <p class="text-xs text-white/40 leading-relaxed font-mono">
-                        Ancient wisdom for modern creators.<br>
-                        <span class="text-blue-500/60">[Restricted Archive]</span>
-                    </p>
-                </div>
-            </div>
-
-        </section>
-
-        <!-- PERMANENT FOOTER BANNER -->
-        <div id="join-banner" class="fixed bottom-0 left-0 w-full bg-primary/90 backdrop-blur-md border-t border-[#FFD700] p-4 z-[10000] transform translate-y-full transition-transform duration-500 flex justify-between items-center px-8">
-            <div class="flex items-center gap-4">
-                <div class="w-10 h-10 bg-black rounded-full flex items-center justify-center border border-[#FFD700]">
-                    <span class="material-symbols-outlined text-[#FFD700]">diamond</span>
-                </div>
-                <div>
-                     <div class="text-[#FFD700] font-bold text-xs uppercase tracking-widest" data-i18n="join_circle">Join the Circle</div>
-                     <div class="text-white text-[10px]" data-i18n="unlock_full">Unlock the full experience.</div>
-                </div>
-            </div>
-            <button onclick="window.location.href='beta-initiation.html'" class="px-6 py-2 bg-white text-black font-bold uppercase tracking-widest text-xs rounded-full hover:bg-[#FFD700] transition-colors shadow-[0_0_15px_rgba(255,255,255,0.5)]" data-i18n="register">
-                Register Now
-            </button>
-        </div>
-
-        <!-- FOOTER / VERSION -->
-        <footer class="mt-40 mb-20 text-[10px] text-white/20 font-mono text-center">
-            CIRCLE D FLOW &copy; 2026 • SYSTEM VER. 3.0 • <span class="hover:text-white cursor-pointer">PROTOCOL OBSIDIAN</span>
-        </footer>
-
-    </main>
-
-    <!-- AGENT: SENTINEL (Legacy - Removed) -->
- 
-    <!-- AUTH & AUTO-REDIRECT -->
-    <script>
-        // Authentication Logic (Simulation)
-        // Authentication Logic
-        function handleRegister() {
-            const user = {
-                username: document.getElementById('reg-username').value, 
-                name: document.getElementById('reg-username').value,     
-                email: document.getElementById('reg-email').value,
-                password: document.getElementById('reg-password').value,
-                xp: 0,
-                quest_step: 0, 
-                inventory: [],
-                last_version: "1.0-BETA",
-                joined: new Date().toISOString()
-            };
-            
-            if(!user.username || !user.email || !user.password) return alert("Fill all fields, Navigator.");
-
-            // Use Supabase if active (via Helper)
-            if(window.Helper && window.supabase) {
-                window.Helper.registerUser(user.email, user.password, user.username).then(success => {
-                    if(success) window.location.href = 'pages/beta-initiation.html'; // Redirect to TEST
-                });
-            } else {
-                // Local Logic
-                localStorage.setItem('cqr_user', JSON.stringify(user));
-                localStorage.setItem('cqr_auth_state', 'logged_in');
-                window.location.href = 'pages/beta-initiation.html'; // Redirect to TEST
-            }
-        }
-
-        async function handleLogin() {
-            const inputName = document.getElementById('login-username').value;
-            const inputPass = document.getElementById('login-password').value;
-
-            // Try Supabase Auth via Helper
-            if(window.Helper && window.supabase) {
-                // Assuming username is email for now in simplified login, or handle username lookup
-                // Use Name as Email for simplicity if it contains @
-                const email = inputName.includes('@') ? inputName : `${inputName}@circledflow.com`; 
-                const success = await window.Helper.loginUser(email, inputPass);
-                
-                if(success) {
-                     localStorage.setItem('cqr_auth_state', 'logged_in');
-                     window.location.href = 'pages/master_dashboard.html';
-                }
-                return;
-            }
-
-            // Local Fallback
-            const storedUser = JSON.parse(localStorage.getItem('cqr_user'));
-            const storedName = storedUser ? (storedUser.username || storedUser.name) : null;
-
-            if (storedUser && (storedName === inputName || storedUser.email === inputName)) {
-                if(storedUser.password && storedUser.password !== inputPass) {
-                    alert("Access Denied: Invalid Passphrase.");
-                    return;
-                }
-                localStorage.setItem('cqr_auth_state', 'logged_in');
-                window.location.href = 'pages/master_dashboard.html';
-
-            } else {
-                alert("Unknown Spirit. Please register first.");
-            }
-        }
-
-        /* --- STATE CHECK --- */
-        // If logged in, hide auth container (Navigator has returned)
-        window.addEventListener('load', () => {
-            if(localStorage.getItem('cqr_auth_state') === 'logged_in') {
-                const auth = document.getElementById('auth-container');
-                if(auth) auth.style.display = 'none';
-            } else {
-                // Show Entry Animation
-                 setTimeout(() => {
-                     document.body.classList.remove('opacity-0');
-                 }, 100);
-            }
+        // 3. INITIALISIERUNG BEIM START
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedLang = localStorage.getItem('cqr_lang') || 'pt';
+            setLanguage(savedLang);
         });
 
-        /* --- GUEST MODE LOGIC --- */
-        function dismissGateway() {
-            const overlay = document.getElementById('auth-container');
-            overlay.style.transform = 'translateY(100%)';
-            sessionStorage.setItem('cqr_status', 'guest');
-            
-            // Show Banner after delay
-            setTimeout(() => {
-                const banner = document.getElementById('join-banner');
-                if(banner) banner.classList.remove('translate-y-full');
-            }, 3000);
-            
-            // Cleanup DOM
-            setTimeout(() => {
-                overlay.style.display = 'none';
-                if(window.Flowee) window.Flowee.talk(true, "Welcome, Voyager. RESTRICTED ACCESS active. Observe, but do not touch.", "guide");
-            }, 1200);
-        }
-    </script>
-    <script>
-        function attemptAction(type, isSound = false) {
-            // Guest Lock
-            if(sessionStorage.getItem('cdf_beta_session') !== 'active') {
-                
-                // Visual Shake on Target
-                const btn = document.activeElement;
-                btn.classList.add('bg-red-500', 'animate-pulse');
-                setTimeout(() => btn.classList.remove('bg-red-500', 'animate-pulse'), 500);
-
-                // Alert / Flowee Block
-                if(window.Flowee) window.Flowee.talk(true, `⛔ ACCESS DENIED. The ${type.toUpperCase()} Archive is for Members only.`, "alert");
-                else alert(`🔒 RESTRICTED ACCESS\n\nIdentify as Navigator to enter the ${type.toUpperCase()}.`);
-                
-                return;
-            }
-
-            // Allowed
-            if(isSound) {
-                 alert("Playing Preview: Kingdom Vibe...");
+        // Gate Logic
+        function enterSystem(type) {
+            if(type === 'login') {
+                document.getElementById('auth-modal').style.display = 'flex';
             } else {
-                 if(type === 'vision') window.location.href = 'pages/kiss-your-heart.html';
-                 if(type === 'taste') window.location.href = 'pages/african-queen-kitchen.html';
+                // Gast betritt das System direkt
+                document.body.style.transition = "opacity 1s ease-in-out";
+                document.body.style.opacity = "0";
+                setTimeout(() => {
+                    window.location.href = 'master_dashboard.html?mode=guest';
+                }, 1000);
             }
         }
 
-        /* --- AURA RESONANCE TIMER (5 Mins) --- */
-        let guestTimeLimit = 5 * 60 * 1000; 
-
-        function startGuestTimer() {
-            console.log("[System] Aura Timer Started...");
-            setTimeout(() => {
-                triggerSpecialOffer();
-            }, guestTimeLimit);
-        }
-
-        function triggerSpecialOffer() {
-            const offerHTML = `
-                <div id="special-offer-popup" class="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 w-80 bg-black/90 border border-[#FFD700] p-6 rounded-2xl text-center shadow-[0_0_50px_rgba(255,215,0,0.3)] backdrop-blur-xl transform translate-y-20 opacity-0 transition-all duration-500">
-                    <div class="absolute -top-8 left-1/2 -translate-x-1/2 w-16 h-16 bg-black rounded-full border border-[#FFD700] p-1 flex items-center justify-center">
-                         <img src="Assets/images/logo.png" class="w-10 h-10 animate-pulse">
-                    </div>
-                    <h3 class="text-[#FFD700] font-serif text-xl mt-4 mb-2">The Flow Calls You</h3>
-                    <p class="text-white/70 text-xs mb-6 leading-relaxed">You've been in our orbit for 5 minutes. Your Spirit Resonance is high.</p>
-                    <button onclick="window.location.href='pages/beta-initiation.html'" class="w-full py-3 bg-[#FFD700] text-black font-bold uppercase tracking-widest text-xs hover:bg-white transition-colors mb-3">
-                        Claim Your Haki
-                    </button>
-                     <p onclick="document.getElementById('special-offer-popup').remove()" class="text-white/30 text-[9px] uppercase tracking-widest cursor-pointer hover:text-white">Ignore Signal</p>
-                </div>
-            `;
-            document.body.insertAdjacentHTML('beforeend', offerHTML);
-            
-            // Animate In
-            setTimeout(() => {
-                const el = document.getElementById('special-offer-popup');
-                el.classList.remove('translate-y-20', 'opacity-0');
-            }, 100);
-            
-            if(window.Flowee) window.Flowee.talk(true, "Captain! I detect a strong signal. You should register now!", "alert");
+        function closeAuth() {
+            document.getElementById('auth-modal').style.display = 'none';
         }
     </script>
-    <script src="js/agents/imperial_hud.js" defer></script>
-    <script src="js/beta_patch.js" defer></script>
 </body>
 </html>

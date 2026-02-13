@@ -251,7 +251,41 @@ class SoundEngineer {
 const soundEngineer = new SoundEngineer();
 window.SoundEngineer = soundEngineer;
 
-// Global Wrapper for HTML Onclick
+// --- UI SOUND ENGINE (The Juice) ---
+window.enableUIBeeps = () => {
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    
+    function playBeep(freq = 600, type = 'square') {
+        if(audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.1);
+    }
+
+    // Attach to all buttons
+    document.body.addEventListener('mouseover', (e) => {
+        if(e.target.tagName === 'BUTTON' || e.target.classList.contains('animus-tab') || e.target.tagName === 'A') {
+            playBeep(400, 'sine'); // Hover: Quiet Hum
+        }
+    });
+
+    document.body.addEventListener('click', (e) => {
+        if(e.target.tagName === 'BUTTON' || e.target.classList.contains('animus-tab') || e.target.tagName === 'A') {
+            playBeep(800, 'square'); // Click: High-Tech Beep
+        }
+    });
+};
+
+// Auto-Enable on Load
+window.addEventListener('load', () => { setTimeout(window.enableUIBeeps, 1000); });
+
 window.registerChallenger = () => {
     if (window.SoundEngineer) {
         window.SoundEngineer.registerChallenger();

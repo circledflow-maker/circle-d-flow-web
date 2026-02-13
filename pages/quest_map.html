@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CQR | THE ATLAS</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="../css/styles.css"> 
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/agents/agent.js?v=3.2"></script>
+    <script src="../js/agents/helper.js?v=3.2"></script>
+    <script src="../js/agents/pusher.js?v=3.2"></script>
+    <script src="../js/agents/sound_engineer.js?v=3.2"></script>
+    <script src="../js/agents/brain.js?v=3.2"></script>
+    <script src="../js/agents/flowee.js?v=3.2"></script>
+    <script src="../js/agents/supabase_client.js?v=3.2"></script>
+    <script src="../js/agents/quest_engine.js?v=3.3"></script>
+</head>
+<body class="bg-black text-white m-0 p-0 overflow-hidden font-mono">
+
+    <!-- HUD Overlay -->
+    <div id="animus-hud" style="position: absolute; top: 20px; left: 20px; z-index: 9999; pointer-events: none;">
+        <h2 class="animus-title text-2xl md:text-4xl text-white drop-shadow-md">LISBON ATLAS</h2>
+        <div style="background: rgba(0,0,0,0.8); padding: 10px; border-left: 3px solid gold; pointer-events: auto; margin-top: 10px;">
+            <p style="margin:0; font-size:0.8em; color:#aaa;">SYSTEM STATUS</p>
+            <div id="sync-status" style="font-size:1.2em; color:gold; font-weight:bold;">ONLINE</div>
+        </div>
+        <a href="dashboard.html" class="block mt-4 text-xs text-white/50 hover:text-gold pointer-events-auto" style="text-decoration:none;">[ RETURN TO DASHBOARD ]</a>
+    </div>
+
+    <!-- Controls -->
+    <div style="position: absolute; bottom: 30px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px;">
+        <button onclick="toggleCreatorMode()" id="creator-btn" style="background: rgba(0,0,0,0.8); color: white; border: 1px solid white; padding: 15px; cursor: pointer; font-family: monospace; transition: all 0.3s;">
+            📍 DROP BEACON (CREATE)
+        </button>
+        <button onclick="centerOnUser()" style="background: gold; color: black; border: none; padding: 15px; font-weight: bold; cursor: pointer; font-family: monospace; box-shadow: 0 0 10px gold;">
+            👁️ LOCATE ME
+        </button>
+    </div>
+
+    <!-- Visual Upgrades -->
+    <div class="scanline-overlay"></div> 
+    <div id="radar-sweep" style="
+        position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        width: 150vh; height: 150vh; border-radius: 50%;
+        background: conic-gradient(from 0deg, transparent 0deg, rgba(255, 215, 0, 0.05) 60deg, transparent 60deg);
+        animation: radarSpin 6s linear infinite;
+        pointer-events: none; z-index: 500; opacity: 0.5;
+    "></div>
+
+    <style>
+    @keyframes radarSpin {
+        from { transform: translate(-50%, -50%) rotate(0deg); }
+        to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+    </style>
+
+    <!-- MAP CONTAINER -->
+    <div id="quest-map" style="height: 100vh; width: 100%; z-index: 1;"></div>
+
+    <!-- MODAL: CREATE BEACON -->
+    <div id="create-modal" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:rgba(10,10,10,0.95); padding:30px; border:2px solid gold; z-index:10000; width:300px; font-family: monospace; box-shadow: 0 0 50px rgba(0,0,0,0.8);">
+        <h3 style="color:gold; font-size: 1.2em; margin-bottom: 5px; text-align:center;">ENCODE MEMORY</h3>
+        <p style="color:#aaa; font-size:0.8em; margin-bottom: 15px; text-align:center;">Coordinates Locked.</p>
+        
+        <input type="text" id="new-quest-title" placeholder="Title" style="width:100%; padding:10px; margin-bottom:10px; background:#222; border:1px solid #444; color:white; font-family:'Courier New';">
+        <textarea id="new-quest-desc" placeholder="Description..." style="width:100%; padding:10px; margin-bottom:10px; background:#222; border:1px solid #444; color:white; min-height: 80px; font-family:'Courier New';"></textarea>
+        
+        <button onclick="saveBeacon()" style="width:100%; padding:10px; background:gold; border:none; font-weight:bold; cursor:pointer; margin-bottom: 5px; font-family:'Courier New';">UPLOAD TO ANIMUS</button>
+        <button onclick="closeModal()" style="width:100%; padding:5px; background:transparent; border:none; color:#555; cursor:pointer; font-family:'Courier New';">ABORT</button>
+    </div>
+
+    <script>
+        // --- 1. SETUP MAP ---
+        // Default View: Lisbon
+        const map = L.map('quest-map', {zoomControl: false}).setView([38.7223, -9.1393], 13);
+        
+        L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+        // Animus Dark Mode Tiles
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; OpenStreetMap &copy; CARTO',
+            subdomains: 'abcd',
+            maxZoom: 20
+        }).addTo(map);
+
+        let creatorMode = false;
+        let tempMarker = null;
+        let tempCoords = {};
+
+        // --- 2. LOGIC: CREATOR MODE (BEACON DROP) ---
+        function toggleCreatorMode() {
+            creatorMode = !creatorMode;
+            const btn = document.getElementById('creator-btn');
+            const mapDiv = document.getElementById('quest-map');
+            
+            if(creatorMode) {
+                btn.style.borderColor = "gold";
+                btn.style.color = "gold";
+                btn.innerHTML = "🛑 CANCEL DROP";
+                mapDiv.style.cursor = "crosshair";
+                document.getElementById('sync-status').innerText = "CREATOR MODE ACTIVE";
+            } else {
+                btn.style.borderColor = "white";
+                btn.style.color = "white";
+                btn.innerHTML = "📍 DROP BEACON (CREATE)";
+                mapDiv.style.cursor = "grab";
+                document.getElementById('sync-status').innerText = "ONLINE";
+                if(tempMarker) map.removeLayer(tempMarker);
+            }
+        }
+
+        // Click Handler (Drop Beacon)
+        map.on('click', function(e) {
+            if(!creatorMode) return;
+            if(tempMarker) map.removeLayer(tempMarker);
+            
+            tempMarker = L.marker(e.latlng).addTo(map);
+            tempCoords = e.latlng;
+            document.getElementById('create-modal').style.display = 'block';
+        });
+
+        async function saveBeacon() {
+            if(!window.QuestEngine) {
+                alert("Quest Engine Offline. Cannot upload.");
+                return;
+            }
+
+            const title = document.getElementById('new-quest-title').value;
+            const desc = document.getElementById('new-quest-desc').value;
+            
+            if(window.createWorldQuest) {
+                await window.createWorldQuest(title, desc, tempCoords.lat, tempCoords.lng);
+            } else {
+                alert("System Error: Quest Engine Link Broken.");
+                return;
+            }
+            
+            closeModal();
+            toggleCreatorMode(); 
+        }
+
+        function closeModal() {
+            document.getElementById('create-modal').style.display = 'none';
+        }
+
+        // --- 3. LOGIC: GPS & SYNC ---
+        function centerOnUser() {
+            map.locate({setView: true, maxZoom: 16});
+        }
+
+        map.on('locationfound', function(e) {
+            // User Dot
+            L.circleMarker(e.latlng, {
+                color: 'gold', fillColor: '#f03', fillOpacity: 0.8, radius: 8
+            }).addTo(map);
+            
+            // Accuracy Circle
+            L.circle(e.latlng, {
+                color: 'gold', fillColor: '#f03', fillOpacity: 0.1, radius: e.accuracy / 2
+            }).addTo(map);
+        });
+        
+        map.on('locationerror', function(e) {
+            alert("GPS Error: " + e.message);
+        });
+
+        // INIT: Load all quests on start
+        window.addEventListener('load', async () => {
+            if(window.QuestEngine) {
+                 if(window.initEngine) await window.initEngine();
+                 
+                 // Initial Load
+                 if(typeof window.loadMapPins === 'function') {
+                     await window.loadMapPins(map); 
+                 }
+            } else {
+                console.warn("QuestEngine not found on load.");
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+/* CIRCLE D FLOW - GLOBAL ARCHITECTURE 
+    Vibe: Lisbon Tech-Noir / Animus / Kingdom of Hearts
+*/
+
+/* --- 1. FARB-PALETTE (Die DNA) --- */
+:root {
+    --gold: #d4af37;
+    --gold-glow: rgba(212, 175, 55, 0.4);
+    --deep-blue: #002366;
+    --bg-dark: #050505;
+    --panel-bg: rgba(15, 15, 15, 0.85);
+    --tech-blue: #00f0ff;
+    --error-red: #ff3333;
+    --text-main: #e0e0e0;
+}
+
+/* --- 2. GLOBALER LOOK --- */
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    overflow-x: hidden;
+}
+
+h1, h2, h3, .cinzel {
+    font-family: 'Cinzel', serif;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+}
+
+/* --- 3. ANIMUS EFFEKTE (Scanlines & Glitch) --- */
+.scanlines::before {
+    content: "";
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    background-size: 100% 4px, 3px 100%;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+.glitch {
+    position: relative;
+    color: var(--gold);
+}
+
+.glitch:hover::after {
+    content: attr(data-text);
+    position: absolute; left: 2px; text-shadow: -1px 0 var(--error-red);
+    top: 0; background: var(--bg-dark); overflow: hidden;
+    clip: rect(0, 900px, 0, 0); animation: noise-anim 2s infinite linear alternate-reverse;
+}
+
+/* --- 4. HOLO-PANELS (Das "Haus" Interieur) --- */
+.holo-card {
+    background: var(--panel-bg);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-left: 4px solid var(--gold);
+    backdrop-filter: blur(10px);
+    padding: 20px;
+    transition: all 0.3s ease;
+}
+
+.holo-card:hover {
+    border-color: var(--gold);
+    box-shadow: 0 0 20px var(--gold-glow);
+    transform: translateX(5px);
+}
+
+/* --- 5. BUTTONS & INTERACTION --- */
+.btn-gold {
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    padding: 10px 25px;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: 0.3s;
+}
+
+.btn-gold:hover {
+    background: var(--gold);
+    color: black;
+    box-shadow: 0 0 15px var(--gold);
+}
+
+/* --- 6. ANIMATIONEN --- */
+@keyframes noise-anim {
+    0% { clip: rect(10px, 9999px, 50px, 0); }
+    100% { clip: rect(80px, 9999px, 100px, 0); }
+}
+
+@keyframes pulse-gold {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
+}
