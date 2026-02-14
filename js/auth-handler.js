@@ -125,6 +125,40 @@ async function handleLogout() {
     }
 }
 
+// --- 3b. PASSWORD RESET LOGIC ---
+async function handlePasswordReset() {
+    const email = getValue('login-email');
+
+    if (!email) {
+        showFeedback("Please enter your EMAIL address above to reset password.", "error");
+        document.getElementById('login-email').focus();
+        document.getElementById('login-email').style.borderColor = "red";
+        return;
+    }
+
+    // Reset style
+    document.getElementById('login-email').style.borderColor = "#333";
+
+    if (!window.supabaseClient) {
+        showFeedback("System Error: Neural Link Offline.", "error");
+        return;
+    }
+
+    try {
+        const { data, error } = await window.supabaseClient.auth.resetPasswordForEmail(email, {
+            redirectTo: window.location.origin + window.location.pathname.replace('/pages/', '/') + '?reset=true',
+        });
+
+        if (error) {
+            showFeedback("Reset Failed: " + error.message, "error");
+        } else {
+            showFeedback("Signal Sent. Check your comms (email) for the reset link.", "success");
+        }
+    } catch (err) {
+        showFeedback("System Error: " + err.message, "error");
+    }
+}
+
 // --- 4. SESSION CHECK (Protection for internal pages) ---
 async function checkUserSession() {
     if(typeof supabase === 'undefined') {
@@ -133,6 +167,16 @@ async function checkUserSession() {
     }
     const { data: { session } } = await supabase.auth.getSession();
     
+    // Check if handling a password reset flow
+    // Supabase redirects with #access_token=...&type=recovery
+    const hash = window.location.hash;
+    if (hash && hash.includes('type=recovery')) {
+        console.log("Password Recovery Mode Detected");
+        // Redirect to a password reset handling page or show a modal
+        // For now, let's just log it. A full 'Update Password' UI is a separate task.
+        showFeedback("Recovery Mode: Please go to Profile to change password.", "success");
+    }
+
     // If not on Landing Page/Login Page and no session
     const path = window.location.pathname;
     const isPublic = path.endsWith('index.html') || path.endsWith('login.html');

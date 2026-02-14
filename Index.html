@@ -202,8 +202,12 @@
                 <p style="font-size: 0.7em; color: #666; letter-spacing: 2px;" data-i18n="login_sub">IDENTIFIKATION</p>
                 
                 <input type="email" id="login-email" placeholder="EMAIL" style="width:100%; padding:12px; margin: 20px 0 10px; background:#111; border:1px solid #333; color:white;">
-                <input type="password" id="login-password" placeholder="PASSWORD" style="width:100%; padding:12px; margin-bottom: 25px; background:#111; border:1px solid #333; color:white;">
+                <input type="password" id="login-password" placeholder="PASSWORD" style="width:100%; padding:12px; margin-bottom: 10px; background:#111; border:1px solid #333; color:white;">
                 
+                <div style="text-align:right; margin-bottom:20px;">
+                    <a href="#" onclick="handlePasswordReset()" style="font-size:0.7em; color:#666; text-decoration:none; font-family:'Montserrat', sans-serif;">FORGOT PASSWORD?</a>
+                </div>
+
                 <button onclick="handleLogin()" style="width:100%; padding:15px; background:var(--lisbon-gold); color:black; font-weight:bold; border:none; cursor:pointer;" data-i18n="btn_login">INITIATE LOGIN</button>
             </div>
 

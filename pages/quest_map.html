@@ -40,6 +40,16 @@
         </button>
     </div>
 
+    <!-- SEARCH BAR (BETA) -->
+    <div id="map-search-container" style="position: absolute; top: 100px; left: 50%; transform: translateX(-50%); z-index: 10000; display: flex; gap: 10px; width: 90%; max-width: 400px; transition: all 0.3s;">
+        <input type="text" id="map-search-input" placeholder="SEARCH SECTOR / ADDRESS..." 
+            onkeypress="if(event.key === 'Enter') searchLocation()"
+            style="flex: 1; padding: 12px; background: rgba(0,0,0,0.85); border: 1px solid gold; color: white; font-family: monospace; border-radius: 0; box-shadow: 0 0 15px rgba(255,215,0,0.2);">
+        <button onclick="searchLocation()" style="padding: 12px 20px; background: gold; color: black; font-weight: bold; border: 1px solid gold; cursor: pointer; border-radius: 0;">
+            🔍
+        </button>
+    </div>
+
     <!-- Visual Upgrades -->
     <div class="scanline-overlay"></div> 
     <div id="radar-sweep" style="
@@ -170,6 +180,76 @@
         function closeModal() {
             document.getElementById('create-modal').style.display = 'none';
         }
+
+        // --- 1.5 LOGIC: SEARCH & GEOCODING ---
+        async function searchLocation() {
+            const query = document.getElementById('map-search-input').value;
+            if(!query) return;
+
+            const btn = document.querySelector('#map-search-container button');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = "⏳"; // Loading state
+
+            try {
+                // Nominatim Search (OpenStreetMap)
+                const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`);
+                const data = await response.json();
+
+                if(data && data.length > 0) {
+                    const lat = parseFloat(data[0].lat);
+                    const lon = parseFloat(data[0].lon);
+                    
+                    // Fly to location
+                    map.flyTo([lat, lon], 16, { duration: 1.5 });
+
+                    // Drop temporary marker
+                    if(tempMarker) map.removeLayer(tempMarker);
+                    tempMarker = L.marker([lat, lon]).addTo(map);
+                    
+                    // Store coords immediately for potential saving
+                    tempCoords = { lat: lat, lng: lon }; 
+
+                    // Popup Actions
+                    const displayName = data[0].display_name.split(',')[0];
+                    const popupContent = `
+                        <div style="text-align:center; font-family:monospace; color:black; min-width: 200px;">
+                            <h3 style="margin:0 0 10px 0; color:#333; border-bottom:1px solid #ccc; padding-bottom:5px;">${displayName}</h3>
+                            <div style="display:flex; flex-direction:column; gap:5px;">
+                                <button onclick="openCreateModalFromSearch(${lat}, ${lon})" style="padding:8px; background:gold; color:black; border:none; font-weight:bold; cursor:pointer; border-radius:4px;">
+                                    📍 CREATE POINT HERE
+                                </button>
+                                <button onclick="map.closePopup()" style="padding:8px; background:#eee; color:#333; border:1px solid #ccc; cursor:pointer; border-radius:4px;">
+                                    👁️ JUST VIEWING
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    
+                    // Bind and open popup
+                    setTimeout(() => {
+                        tempMarker.bindPopup(popupContent).openPopup();
+                    }, 1500); // Wait for flight
+
+                } else {
+                    alert("SECTOR NOT FOUND. TRY A DIFFERENT QUERY.");
+                }
+            } catch(e) {
+                console.error(e);
+                alert("SEARCH UPLINK FAILED.");
+            } finally {
+                btn.innerHTML = originalText;
+            }
+        }
+
+        // Helper to open modal from search result
+        window.openCreateModalFromSearch = function(lat, lng) {
+            tempCoords = { lat: lat, lng: lng };
+            document.getElementById('create-modal').style.display = 'block';
+            if(tempMarker) tempMarker.closePopup();
+            
+            // Auto-fill title with search if empty? better not to assume.
+            document.getElementById('new-quest-title').focus();
+        };
 
         // --- 3. LOGIC: GPS & SYNC ---
         function centerOnUser() {

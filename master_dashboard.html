@@ -387,17 +387,19 @@
                 
                 // Wait for Agents to Init
                 setTimeout(() => {
-                    if(window.FloweeEngine) {
-                        window.FloweeEngine.startTutorialSequence();
+                    if(window.Flowee) {
+                        window.Flowee.startTutorial();
                     } else {
-                        console.warn("FloweeEngine not found!");
-                        alert("Tutorial Engine Offline. Consult Console.");
+                        console.warn("Flowee Agent not found!");
+                        // alter("Tutorial Engine Offline."); // Silent fail is better for UX
                     }
                 }, 1000);
             }
         });
     </script>
     <!-- CORE AGENTS -->
+    <script src="js/agents/agent.js"></script> <!-- Base Class -->
+    <script src="js/agents/flowee.js"></script> <!-- Visual Guide -->
     <script src="js/agents/language_matrix.js"></script>
     <script src="js/agents/master-brain.js"></script>
     <script src="js/agents/quest_engine.js"></script>
