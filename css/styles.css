@@ -648,8 +648,66 @@ body.js-active * {
     font-weight: bold;
     text-shadow: 0 0 5px rgba(154, 77, 255, 0.3);
 }
+/* --- MOBILE OPTIMIZATION (PHASE 2025) --- */
+@media (max-width: 768px) {
+    /* 1. Stack Dashboard Grid */
+    .dashboard-grid {
+        display: flex;
+        flex-direction: column;
+        height: auto;
+        overflow-y: auto;
+        padding-bottom: 80px; /* Space for Bottom Nav */
+    }
 
-/* --- GUILD REGISTRY (Beta Initiation) --- */
+    .panel-left, .panel-right {
+        order: 2;
+        width: 100%;
+        height: auto;
+        border: none;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .map-section {
+        order: 1;
+        height: 50vh; /* Map takes half screen on mobile */
+        width: 100%;
+    }
+
+    /* 2. Mobile Bottom HUD */
+    .mobile-bottom-nav {
+        display: flex !important; /* Force show */
+        position: fixed;
+        bottom: 0; left: 0; width: 100%;
+        height: 70px;
+        background: rgba(5, 5, 8, 0.95);
+        border-top: 1px solid rgba(0, 240, 255, 0.3);
+        backdrop-filter: blur(10px);
+        z-index: 10000;
+        justify-content: space-around;
+        align-items: center;
+        padding-bottom: 10px; /* iPhone Safe Area */
+    }
+
+    .mobile-nav-item {
+        color: #666;
+        text-align: center;
+        font-size: 0.7em;
+        text-transform: uppercase;
+        font-family: 'Rajdhani', sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+    }
+    .mobile-nav-item.active { color: #00F0FF; text-shadow: 0 0 10px rgba(0,240,255,0.5); }
+    .mobile-nav-icon { font-size: 24px; }
+
+    /* 3. Hide Desktop Elements */
+    .horizon-bar, .flow-bar { display: none !important; }
+}
+
+/* Default Hide Bottom Nav on Desktop */
+.mobile-bottom-nav { display: none; }
 .guild-registry {
     background: radial-gradient(circle at center, #2a2a2a 0%, #111 100%);
     border: 2px solid #D4AF37; /* Mystic Gold */

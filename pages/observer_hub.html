@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circle-D-Flow | Observer Terminal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- EMAIL JS for instant notifications -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+       (function(){
+          // emailjs.init("YOUR_EMAILJS_PUBLIC_KEY"); // OPTIONAL: Uncomment and add key for Email notifications
+       })();
+    </script>
+    
+    <style>
+        :root {
+            --lisbon-gold: #d4af37;
+            --cyber-blue: #00f0ff;
+            --danger-red: #ff3232;
+            --dark-bg: #0a0a0a;
+        }
+
+        body {
+            margin: 0; padding: 0; background: var(--dark-bg); color: #fff;
+            font-family: 'Montserrat', sans-serif; overflow-x: hidden;
+        }
+
+        /* Top Header für Gäste */
+        .observer-header {
+            background: rgba(0,0,0,0.8); border-bottom: 1px solid var(--danger-red);
+            padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px);
+        }
+
+        .guest-warning {
+            color: var(--danger-red); font-family: 'Courier New', monospace; font-size: 0.8em;
+            letter-spacing: 2px; animation: pulse 2s infinite; display: flex; align-items: center; gap: 10px;
+        }
+
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+
+        .register-btn {
+            background: transparent; border: 1px solid var(--lisbon-gold); color: var(--lisbon-gold);
+            padding: 8px 15px; cursor: pointer; font-family: 'Cinzel', serif; font-weight: bold;
+            transition: 0.3s; text-decoration: none;
+        }
+        .register-btn:hover { background: var(--lisbon-gold); color: #000; box-shadow: 0 0 15px var(--lisbon-gold); }
+
+        /* Navigation Tabs */
+        .hub-nav { display: flex; justify-content: center; background: #111; border-bottom: 1px solid #333; }
+        .hub-nav button {
+            background: transparent; border: none; color: #666; padding: 15px 30px;
+            font-family: 'Cinzel', serif; font-size: 1em; cursor: pointer; transition: 0.3s;
+            border-bottom: 2px solid transparent; letter-spacing: 2px;
+        }
+        .hub-nav button.active { color: var(--cyber-blue); border-bottom: 2px solid var(--cyber-blue); text-shadow: 0 0 10px rgba(0,240,255,0.5); }
+        .hub-nav button:hover:not(.active) { color: #fff; }
+
+        /* Content Views */
+        .hub-view { display: none; padding: 40px 20px; max-width: 1200px; margin: 0 auto; min-height: 80vh; }
+        .hub-view.active { display: block; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Market Grid */
+        .market-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; margin-top: 30px; }
+        
+        .market-item-card {
+            background: rgba(20,20,20,0.8); border: 1px solid rgba(212,175,55,0.3);
+            border-radius: 5px; overflow: hidden; display: flex; flex-direction: column;
+            transition: 0.3s;
+        }
+        .market-item-card:hover { border-color: var(--cyber-blue); transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,240,255,0.1); }
+        .creator-trust-badge { margin: 15px 0; padding: 10px; background: rgba(255,255,255,0.02); border-left: 2px solid var(--lisbon-gold); font-family: 'Courier New', monospace; }
+        .buy-fiat-btn { width: 100%; padding: 15px; background: transparent; border-top: 1px solid #333; border-bottom:none; border-left:none; border-right:none; color: #fff; cursor: pointer; transition: 0.3s; font-family: 'Cinzel', serif; font-weight: bold; margin-top: auto; }
+        .buy-fiat-btn:hover { background: #fff; color: #000; }
+        
+        .item-category {
+             position: absolute; top: 10px; right: 10px; background: rgba(0,240,255,0.2); color: #00f0ff; border: 1px solid #00f0ff; padding: 2px 8px; font-size: 0.6em; font-weight: bold;
+        }
+
+        .guild-btn {
+            background: rgba(0,0,0,0.5); border: 1px solid #444; color: #888;
+            padding: 8px 15px; cursor: pointer; font-family: 'Cinzel', serif; font-size: 0.7em;
+            transition: 0.3s; letter-spacing: 1px;
+        }
+        .guild-btn.active, .guild-btn:hover {
+            border-color: var(--lisbon-gold); color: var(--lisbon-gold);
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+        }
+        
+        /* Leaflet Popup Hacking */
+        .cyber-popup .leaflet-popup-content-wrapper { background: transparent; box-shadow: none; border: none; padding: 0; }
+        .cyber-popup .leaflet-popup-tip { display: none; }
+
+    </style>
+</head>
+<body>
+
+    <header class="observer-header">
+        <div class="guest-warning">
+            <span>⚠️</span> <span data-i18n="header_warning">OBSERVER MODE: LIMITED ACCESS</span>
+        </div>
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <div class="lang-switcher" style="display: flex; gap: 5px;">
+                <button onclick="changeLanguage('en')" style="background:none; border:none; cursor:pointer;" title="English">🇬🇧</button>
+                <button onclick="changeLanguage('de')" style="background:none; border:none; cursor:pointer;" title="Deutsch">🇩🇪</button>
+                <button onclick="changeLanguage('pt')" style="background:none; border:none; cursor:pointer;" title="Português">🇵🇹</button>
+                <button onclick="changeLanguage('fr')" style="background:none; border:none; cursor:pointer;" title="Français">🇫🇷</button>
+            </div>
+            <a href="../index.html?login=true" class="register-btn" data-i18n="header_uplink">INITIATE FULL UPLINK</a>
+        </div>
+    </header>
+
+    <nav class="hub-nav">
+        <button class="active" onclick="switchHubTab('radar')" data-i18n="tab_radar">LIVE RADAR</button>
+        <button onclick="switchHubTab('archives')" data-i18n="tab_archives">THE ARCHIVES</button>
+        <button onclick="switchHubTab('market')" data-i18n="tab_market">HIGH PALAST MARKET</button>
+    </nav>
+
+    <!-- TAB 1: RADAR -->
+    <div id="view-radar" class="hub-view active">
+        <h1 class="cinzel" style="color: var(--lisbon-gold); text-align: center;" data-i18n="radar_title">LISBON LIVE GRID</h1>
+        <p style="text-align: center; color: #888; margin-bottom: 30px;" data-i18n="radar_desc">Exact coordinates of public jams and events. Agent login required to decode proprietary fragments.</p>
+        
+        <div id="guest-map" style="height: 500px; width: 100%; border: 1px solid var(--cyber-blue); border-radius: 4px; z-index: 1;"></div>
+    </div>
+
+    <!-- TAB 2: ARCHIVES (LORE) -->
+    <div id="view-archives" class="hub-view">
+        <h1 class="cinzel" style="color: var(--lisbon-gold); text-align: center;" data-i18n="archives_title">COMMUNITY ECHOES</h1>
+        <p style="text-align: center; color: #888; margin-bottom: 30px;" data-i18n="archives_desc">Glimpses into the logs of our top navigators. Only registered Agents see full dossiers.</p>
+        
+        <div style="border-left: 2px solid var(--cyber-blue); padding-left: 20px; margin-bottom: 20px; background: rgba(0,240,255,0.05); padding: 20px;">
+            <h3 style="color: var(--cyber-blue); margin-top: 0;">The Secrets of the African Queen</h3>
+            <p style="color: #ccc; font-size: 0.9em;">"We found a new signal near the docks last night. The frequency is stable..."</p>
+            <span style="font-size: 0.7em; color: #666;">- CREATED BY: AGENT ZERO | ❤️ 120 COMMENDS</span>
+        </div>
+        <div style="border-left: 2px solid var(--lisbon-gold); padding-left: 20px; margin-bottom: 20px; background: rgba(212,175,55,0.05); padding: 20px;">
+            <h3 style="color: var(--lisbon-gold); margin-top: 0;">Fado Shadow Network</h3>
+            <p style="color: #ccc; font-size: 0.9em;">"New underground performance spotted in Alfama. Access for Initiates only."</p>
+            <span style="font-size: 0.7em; color: #666;">- CREATED BY: LISBON_GHOST | ❤️ 85 COMMENDS</span>
+        </div>
+    </div>
+
+    <!-- TAB 3: MARKET -->
+    <div id="view-market" class="hub-view">
+        <h1 class="cinzel" style="color: var(--lisbon-gold); text-align: center;" data-i18n="market_title">THE GRAND BAZAAR</h1>
+        
+        <div class="guild-filter-bar" style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-bottom: 30px;">
+            <button onclick="filterByGuild('all')" class="guild-btn active">ALL</button>
+            <button onclick="filterByGuild('arts')" class="guild-btn">ARTS</button>
+            <button onclick="filterByGuild('skills')" class="guild-btn">SKILLS</button>
+            <button onclick="filterByGuild('sounds')" class="guild-btn">SOUNDS</button>
+            <button onclick="filterByGuild('healing')" class="guild-btn">HEALING</button>
+            <button onclick="filterByGuild('services')" class="guild-btn">SERVICES</button>
+        </div>
+
+        <div class="market-grid" id="public-market-grid">
+            <!-- Items loaded dynamically -->
+        </div>
+    </div>
+    
+    <!-- CALL TO ACTION FOOTER -->
+    <section class="upgrade-teaser" style="margin: 60px 20px; padding: 30px; border: 1px solid var(--lisbon-gold); background: rgba(212, 175, 55, 0.05); text-align: center;">
+        <h2 class="cinzel" style="color: var(--lisbon-gold);" data-i18n="cta_title">Become Part of the Legend</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 30px 0;">
+            <div>
+                <span style="font-size: 2em;">🎖️</span>
+                <h4 data-i18n="feat_xp_title">EXP & RANKS</h4>
+                <p style="font-size: 0.8em; color: #888;" data-i18n="feat_xp_desc">Rise from Initiate to Grandmaster.</p>
+            </div>
+            <div>
+                <span style="font-size: 2em;">📍</span>
+                <h4 data-i18n="feat_map_title">HIDDEN BEACONS</h4>
+                <p style="font-size: 0.8em; color: #888;" data-i18n="feat_map_desc">Find locations not on any map.</p>
+            </div>
+            <div>
+                <span style="font-size: 2em;">💎</span>
+                <h4 data-i18n="feat_earn_title">EARN CREDITS</h4>
+                <p style="font-size: 0.8em; color: #888;" data-i18n="feat_earn_desc">Sell your skills in the High Palast Market.</p>
+            </div>
+        </div>
+        <a href="../index.html?login=true" class="register-btn" style="padding: 15px 40px; font-size: 1.2em;" data-i18n="cta_btn">START SYSTEM UPLINK</a>
+    </section>
+
+    <!-- INQUIRY MODAL (P2P LEAD GEN) -->
+    <div id="inquiry-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 100000; justify-content: center; align-items: center; backdrop-filter: blur(8px);">
+        <div style="background: #0a0a0a; border: 1px solid var(--cyber-blue); padding: 30px; width: 90%; max-width: 400px; box-shadow: 0 0 30px rgba(0,240,255,0.2);">
+            
+            <h2 class="cinzel" style="color: var(--cyber-blue); margin-top: 0; border-bottom: 1px dashed var(--cyber-blue); padding-bottom: 10px;" data-i18n="modal_title">SECURE COMMS LINK</h2>
+            <p style="color: #aaa; font-size: 0.8em; margin-bottom: 20px;" data-i18n="modal_desc">Send a direct, encrypted request to the Navigator to discuss transaction details (MBWay, Revolut, etc).</p>
+            
+            <input type="hidden" id="inq-item-id">
+            <input type="hidden" id="inq-creator-id">
+            <input type="hidden" id="inq-item-name"> <!-- Hidden Title for Mail -->
+
+            <label style="color: var(--lisbon-gold); font-size: 0.7em; letter-spacing: 1px;" data-i18n="modal_contact">YOUR CONTACT (EMAIL OR MOBILE)</label>
+            <input type="text" id="inq-contact" placeholder="agent@mail.com" style="width: 100%; box-sizing: border-box; background: #111; border: 1px solid #333; color: white; padding: 12px; margin: 5px 0 15px 0; font-family: 'Courier New'; outline: none;">
+
+            <label style="color: var(--lisbon-gold); font-size: 0.7em; letter-spacing: 1px;" data-i18n="modal_msg">YOUR MESSAGE</label>
+            <textarea id="inq-message" rows="4" placeholder="..." style="width: 100%; box-sizing: border-box; background: #111; border: 1px solid #333; color: white; padding: 12px; margin: 5px 0 20px 0; font-family: 'Courier New'; outline: none; resize: none;"></textarea>
+
+            <div style="display: flex; gap: 10px;">
+                <button onclick="closeInquiryModal()" style="flex: 1; background: transparent; border: 1px solid #666; color: #666; padding: 12px; cursor: pointer; transition: 0.3s;" data-i18n="btn_abort">ABORT</button>
+                <button onclick="sendMarketInquiry()" style="flex: 2; background: rgba(0,240,255,0.1); border: 1px solid var(--cyber-blue); color: var(--cyber-blue); font-weight: bold; padding: 12px; cursor: pointer; transition: 0.3s;" onmouseover="this.style.background='var(--cyber-blue)'; this.style.color='#000';" onmouseout="this.style.background='rgba(0,240,255,0.1)'; this.style.color='var(--cyber-blue)';" data-i18n="btn_send">SEND TRANSMISSION</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOMO MODAL (Glitch Timer) -->
+    <div id="fomo-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 99999; justify-content: center; align-items: center; backdrop-filter: blur(5px);">
+        <div style="text-align: center; border: 1px solid var(--danger-red); padding: 40px; background: rgba(255,50,50,0.05); max-width: 400px; box-shadow: 0 0 30px rgba(255,50,50,0.2);">
+            <h2 style="color: var(--danger-red); font-family: 'Courier New'; margin-top: 0;" data-i18n="fomo_title">⚠️ SIGNAL DEGRADING</h2>
+            <p style="color: #ccc; font-size: 0.9em; line-height: 1.6; margin-bottom: 30px;" data-i18n="fomo_desc">
+                Guest connection unstable. You are only seeing a fraction of the Matrix. Register now to stabilize your GPS Uplink, earn EXP, and decode the full Codex.
+            </p>
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button onclick="document.getElementById('fomo-modal').style.display='none'" style="background: transparent; border: 1px solid #666; color: #666; padding: 10px 20px; cursor: pointer;" data-i18n="btn_snooze">SNOOZE</button>
+                <a href="../index.html?login=true" style="background: var(--danger-red); border: none; color: white; padding: 10px 20px; cursor: pointer; font-weight: bold; text-decoration: none;" data-i18n="btn_uplink">INITIATE UPLINK</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/agents/supabase_client.js"></script>
+    <script src="../js/agents/agent.js"></script>
+    <script src="../js/agents/helper.js"></script>
+    <script src="../js/agents/pusher.js"></script>
+    
+    <script>
+        // Use Global Client from supabase_client.js if available, else init local
+        // Assuming supabase_client.js initializes window.supabaseClient or similar
+        // For guest access we need anon key. It should be in the shared file.
+        // We will assume window.supabase exists from the library include + client init.
+        
+        // RE-INIT for Guest Page specifically to ensure connectivity
+        // Fallback to these keys if window.supabaseClient isn't ready
+        const guestSupabase = window.supabaseClient || window.supabase.createClient(
+            'https://agkmbaephgsnunlarntm.supabase.co', 
+            'sb_publishable_VwT4qFpNCgNizSXMILBcKQ_aevHvWvM'
+        );
+
+        let guestMap;
+        let currentLang = 'en';
+
+        const i18n = {
+            en: {
+                header_warning: "OBSERVER MODE: LIMITED ACCESS",
+                header_uplink: "INITIATE FULL UPLINK",
+                tab_radar: "LIVE RADAR",
+                tab_archives: "THE ARCHIVES",
+                tab_market: "HIGH PALAST MARKET",
+                radar_title: "LISBON LIVE GRID",
+                radar_desc: "Exact coordinates of public jams and events. Agent login required to decode proprietary fragments.",
+                archives_title: "COMMUNITY ECHOES",
+                archives_desc: "Glimpses into the logs of our top navigators. Only registered Agents see full dossiers.",
+                market_title: "THE GRAND BAZAAR",
+                cta_title: "Become Part of the Legend",
+                feat_xp_title: "EXP & RANKS",
+                feat_xp_desc: "Rise from Initiate to Grandmaster.",
+                feat_map_title: "HIDDEN BEACONS",
+                feat_map_desc: "Find locations not on any map.",
+                feat_earn_title: "EARN CREDITS",
+                feat_earn_desc: "Sell your skills in the High Palast Market.",
+                cta_btn: "START SYSTEM UPLINK",
+                modal_title: "SECURE COMMS LINK",
+                modal_desc: "Send a direct, encrypted request to the Navigator to discuss transaction details (MBWay, Revolut, etc).",
+                modal_contact: "YOUR CONTACT (EMAIL OR MOBILE)",
+                modal_msg: "YOUR MESSAGE",
+                btn_abort: "ABORT",
+                btn_send: "SEND TRANSMISSION",
+                fomo_title: "⚠️ SIGNAL DEGRADING",
+                fomo_desc: "Guest connection unstable. You are only seeing a fraction of the Matrix. Register now to stabilize your GPS Uplink, earn EXP, and decode the full Codex.",
+                btn_snooze: "SNOOZE",
+                btn_uplink: "INITIATE UPLINK"
+            },
+            de: {
+                header_warning: "BEOBACHTER-MODUS: ZUGANG BESCHRÄNKT",
+                header_uplink: "VOLLEN UPLINK STARTEN",
+                tab_radar: "LIVE RADAR",
+                tab_archives: "ARCHIV",
+                tab_market: "HIGH PALAST MARKT",
+                radar_title: "LISSABON LIVE NETZ",
+                radar_desc: "Exakte Koordinaten öffentlicher Jams und Events. Agenten-Login erforderlich, um private Fragmente zu entschlüsseln.",
+                archives_title: "GEMEINSCHAFTS-ECHO",
+                archives_desc: "Einblicke in die Logs unserer Top-Navigatoren. Nur registrierte Agenten sehen vollständige Dossiers.",
+                market_title: "DER GROSSE BASAR",
+                cta_title: "Werde Teil der Legende",
+                feat_xp_title: "EXP & RÄNGE",
+                feat_xp_desc: "Steige vom Initiaten zum Großmeister auf.",
+                feat_map_title: "VERBORGENE ORTE",
+                feat_map_desc: "Finde Orte, die auf keiner anderen Karte stehen.",
+                feat_earn_title: "CREDITS VERDIENEN",
+                feat_earn_desc: "Verkaufe dein Wissen im High Palast Markt.",
+                cta_btn: "SYSTEM-UPLINK STARTEN",
+                modal_title: "SICHERER KOMMUNIKATIONS-LINK",
+                modal_desc: "Sende eine direkte, verschlüsselte Anfrage an den Navigator, um Details (MBWay, Revolut, etc.) zu klären.",
+                modal_contact: "DEIN KONTAKT (EMAIL ODER HANDY)",
+                modal_msg: "DEINE NACHRICHT",
+                btn_abort: "ABBRECHEN",
+                btn_send: "SENDEN",
+                fomo_title: "⚠️ SIGNAL STÖRUNG",
+                fomo_desc: "Gast-Verbindung instabil. Du siehst nur einen Bruchteil der Matrix. Registriere dich jetzt für stabilen GPS-Uplink, EXP und den vollen Codex.",
+                btn_snooze: "SPÄTER",
+                btn_uplink: "UPLINK STARTEN"
+            },
+            pt: {
+                header_warning: "MODO OBSERVADOR: ACESSO LIMITADO",
+                header_uplink: "INICIAR UPLINK TOTAL",
+                tab_radar: "RADAR AO VIVO",
+                tab_archives: "OS ARQUIVOS",
+                tab_market: "MERCADO HIGH PALAST",
+                radar_title: "REDE AO VIVO DE LISBOA",
+                radar_desc: "Coordenadas exatas de jams e eventos públicos. Login necessário para decodificar fragmentos proprietários.",
+                archives_title: "ECOS DA COMUNIDADE",
+                archives_desc: "Vislumbres dos registros dos nossos melhores navegadores. Apenas Agentes registrados veem dossiês completos.",
+                market_title: "O GRANDE BAZAR",
+                cta_title: "Torne-se Parte da Lenda",
+                feat_xp_title: "EXP & CLASSIFICAÇÕES",
+                feat_xp_desc: "Suba de Iniciado a Grão-Mestre.",
+                feat_map_title: "FARÓIS ESCONDIDOS",
+                feat_map_desc: "Encontre locais que não estão em nenhum mapa.",
+                feat_earn_title: "GANHAR CRÉDITOS",
+                feat_earn_desc: "Venda suas habilidades no Mercado High Palast.",
+                cta_btn: "INICIAR UPLINK DO SISTEMA",
+                modal_title: "LINK DE COMUNICAÇÃO SEGURO",
+                modal_desc: "Envie um pedido direto e criptografado ao Navegador para discutir detalhes da transação (MBWay, Revolut, etc).",
+                modal_contact: "SEU CONTATO (EMAIL OU TELEMÓVEL)",
+                modal_msg: "SUA MENSAGEM",
+                btn_abort: "ABORTAR",
+                btn_send: "ENVIAR TRANSMISSÃO",
+                fomo_title: "⚠️ SINAL DEGRADANDO",
+                fomo_desc: "Conexão de convidado instável. Você vê apenas uma fração da Matrix. Registre-se agora para estabilizar seu Uplink GPS, ganhar EXP e decodificar o Codex completo.",
+                btn_snooze: "SNOOZE",
+                btn_uplink: "INICIAR UPLINK"
+            },
+            fr: {
+                header_warning: "MODE OBSERVATEUR: ACCÈS LIMITÉ",
+                header_uplink: "LANCER UPLINK COMPLET",
+                tab_radar: "RADAR EN DIRECT",
+                tab_archives: "LES ARCHIVES",
+                tab_market: "MARCHÉ HIGH PALAST",
+                radar_title: "GRILLE LIVE DE LISBONNE",
+                radar_desc: "Coordonnées exactes des jams et événements publics. Connexion Agent requise pour décoder les fragments propriétaires.",
+                archives_title: "ÉCHOS COMMUNAUTAIRES",
+                archives_desc: "Aperçus des journaux de nos meilleurs navigateurs. Seuls les Agents enregistrés voient les dossiers complets.",
+                market_title: "LE GRAND BAZAR",
+                cta_title: "Entrez dans la Légende",
+                feat_xp_title: "EXP & RANGS",
+                feat_xp_desc: "Passez d'Initié à Grand Maître.",
+                feat_map_title: "BALISES CACHÉES",
+                feat_map_desc: "Trouvez des lieux absents des cartes.",
+                feat_earn_title: "GAGNER DES CRÉDITS",
+                feat_earn_desc: "Vendez vos compétences au Marché High Palast.",
+                cta_btn: "LANCER UPLINK SYSTÈME",
+                modal_title: "LIEN COMMS SÉCURISÉ",
+                modal_desc: "Envoyez une demande cryptée directe au Navigateur pour discuter des détails (MBWay, Revolut, etc).",
+                modal_contact: "VOTRE CONTACT (EMAIL OU MOBILE)",
+                modal_msg: "VOTRE MESSAGE",
+                btn_abort: "ANNULER",
+                btn_send: "ENVOYER TRANSMISSION",
+                fomo_title: "⚠️ SIGNAL DÉGRADÉ",
+                fomo_desc: "Connexion invité instable. Vous ne voyez qu'une fraction de la Matrice. Inscrivez-vous pour stabiliser votre Uplink GPS, gagner de l'EXP et décoder tout le Codex.",
+                btn_snooze: "SNOOZE",
+                btn_uplink: "LANCER UPLINK"
+            }
+        };
+
+        function changeLanguage(lang) {
+            currentLang = lang;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (i18n[lang][key]) {
+                    el.innerText = i18n[lang][key];
+                }
+            });
+            // Update direction or flags style if needed
+        }
+
+        // --- TAB LOGIC ---
+        function switchHubTab(tabName) {
+            document.querySelectorAll('.hub-nav button').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            document.querySelectorAll('.hub-view').forEach(view => view.classList.remove('active'));
+            document.getElementById('view-' + tabName).classList.add('active');
+
+            // Lazy Load Radar
+            if (tabName === 'radar' && !guestMap) {
+                setTimeout(() => initGuestRadar(), 100); 
+            }
+            // Lazy Load Market
+            if (tabName === 'market') {
+                loadPublicMarket();
+            }
+        }
+
+        // --- RADAR LOGIC ---
+        async function initGuestRadar() {
+            guestMap = L.map('guest-map').setView([38.7223, -9.1393], 13);
+            
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; OpenStreetMap & CARTO',
+                subdomains: 'abcd',
+                maxZoom: 19
+            }).addTo(guestMap);
+
+            const { data: quests, error } = await guestSupabase.from('user_quests').select('*');
+
+            if (error) { console.error("Radar Error:", error); return; }
+
+            quests.forEach(quest => {
+                const isStory = (quest.type === 'story');
+                const markerColor = isStory ? '#d4af37' : '#00f0ff';
+                
+                const marker = L.circleMarker([quest.latitude, quest.longitude], {
+                    radius: 8, fillColor: markerColor, color: markerColor,
+                    weight: 2, opacity: 1, fillOpacity: 0.6
+                }).addTo(guestMap);
+
+                const popupHTML = `
+                    <div style="background: #0a0a0a; color: #fff; padding: 15px; border: 1px dashed ${markerColor}; text-align: center; width: 200px; font-family: 'Montserrat', sans-serif;">
+                        <h4 style="color: ${markerColor}; margin: 0 0 10px 0; font-family: 'Cinzel', serif; letter-spacing: 1px;">${quest.title}</h4>
+                        <p style="font-size: 0.75em; color: #888; margin-bottom: 15px;">
+                            ⚠️ Fragment verschlüsselt. Die Story und die EXP-Belohnung sind nur für Agenten sichtbar.
+                        </p>
+                        <a href="../index.html?login=true" style="display: inline-block; background: ${markerColor}; color: #000; padding: 8px 15px; text-decoration: none; font-weight: bold; font-size: 0.8em; transition: 0.3s;">
+                            INITIATE UPLINK
+                        </a>
+                    </div>
+                `;
+                marker.bindPopup(popupHTML, { className: 'cyber-popup' });
+            });
+        }
+
+        // --- MARKET LOGIC ---
+        async function loadPublicMarket(filterGuild = 'all') {
+            const grid = document.getElementById('public-market-grid');
+            grid.innerHTML = '<p style="color: var(--cyber-blue); text-align: center; grid-column: 1 / -1;">📡 SCANNING GUILD REGISTRIES...</p>';
+
+            let query = guestSupabase.from('market_items').select('*');
+            if (filterGuild !== 'all') {
+                query = query.eq('guild_category', filterGuild);
+            }
+
+            const { data: items, error } = await query.order('created_at', { ascending: false });
+
+            if (error || !items || items.length === 0) {
+                grid.innerHTML = '<p style="color: #666; text-align: center; grid-column: 1 / -1;">Keine Artefakte in dieser Gilde gefunden.</p>';
+                return;
+            }
+
+            grid.innerHTML = '';
+
+            items.forEach(item => {
+                const guildLabel = item.guild_category ? `GUILD OF ${item.guild_category.toUpperCase()}` : 'ARTIFACT';
+                // Safe Title Escaping for onclick
+                const safeTitle = item.title.replace(/'/g, "\\'"); 
+                const bgImage = item.image_url ? item.image_url : '../assets/branding/cqr-logo-gold.png';
+
+                grid.innerHTML += `
+                    <div class="market-item-card">
+                        <div style="height: 120px; background: url('${bgImage}') center/cover; opacity: 0.6; position: relative;">
+                            <span class="item-category">${guildLabel}</span>
+                        </div>
+                        <div style="padding: 15px; flex: 1; display: flex; flex-direction: column;">
+                            <h3 class="cinzel" style="color: var(--cyber-blue); font-size: 1em; margin-top:0;">${item.title}</h3>
+                            <div class="creator-trust-badge" style="font-size: 0.8em; padding: 5px;">
+                                <span style="color: var(--lisbon-gold);">SEALED BY THE GUILDS</span>
+                            </div>
+                            <p style="color: #888; font-size: 0.75em; flex:1;">${item.description || ''}</p>
+                            <button class="buy-fiat-btn" onclick="openInquiryModal('${item.id}', '${item.creator_id}', '${safeTitle}')" data-i18n="btn_request">
+                                REQUEST INTEL: ${item.price_fiat ? item.price_fiat + '€' : 'FREE'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function filterByGuild(guild) {
+            document.querySelectorAll('.guild-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            loadPublicMarket(guild);
+        }
+
+        // --- INQUIRY LOGIC ---
+        async function openInquiryModal(itemId, creatorId, itemName) {
+            document.getElementById('inq-item-id').value = itemId;
+            document.getElementById('inq-creator-id').value = creatorId;
+            document.getElementById('inq-item-name').value = itemName;
+            document.getElementById('inquiry-modal').style.display = 'flex';
+            
+            // Increment View Counter (Spy Sensor)
+            if(guestSupabase) {
+                 await guestSupabase.rpc('increment_market_views', { row_id: itemId });
+            }
+        }
+
+        function closeInquiryModal() {
+            document.getElementById('inquiry-modal').style.display = 'none';
+        }
+
+        async function sendMarketInquiry() {
+            const itemId = document.getElementById('inq-item-id').value;
+            const creatorId = document.getElementById('inq-creator-id').value;
+            const contact = document.getElementById('inq-contact').value.trim();
+            const message = document.getElementById('inq-message').value.trim();
+            const itemName = document.getElementById('inq-item-name').value;
+
+            if (!contact) return alert("System Error: Contact data required.");
+
+            // 1. Save to Supabase
+            const { data, error } = await guestSupabase.from('market_inquiries').insert([
+                { item_id: itemId, creator_id: creatorId, guest_contact: contact, message: message }
+            ]);
+
+            if (error) {
+                console.error(error);
+                alert("TRANSMISSION FAILED: Encrpytion Error.");
+            } else {
+                alert("TRANSMISSION SUCCESSFUL. The Navigator will contact you.");
+                closeInquiryModal();
+            }
+        }
+
+        // --- INIT ---
+        window.onload = () => {
+             // Default Tab
+             switchHubTab('radar');
+             
+             // FOMO Timer (10 Minutes = 600000)
+             setTimeout(() => {
+                document.getElementById('fomo-modal').style.display = 'flex';
+             }, 600000); 
+        };
+
+    </script>
+</body>
+</html>

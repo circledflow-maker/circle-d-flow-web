@@ -310,6 +310,14 @@
         document.addEventListener('DOMContentLoaded', () => {
             const savedLang = localStorage.getItem('cqr_lang') || 'pt';
             setLanguage(savedLang);
+
+            // AUTO-OPEN LOGIN IF REQUESTED
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('login') === 'true') {
+                setTimeout(() => {
+                    enterSystem('login');
+                }, 500); // Small delay to allow animations to settle
+            }
         });
 
         // Gate Logic
@@ -321,7 +329,7 @@
                 document.body.style.transition = "opacity 1s ease-in-out";
                 document.body.style.opacity = "0";
                 setTimeout(() => {
-                    window.location.href = 'master_dashboard.html?mode=guest';
+                    window.location.href = 'pages/observer_hub.html';
                 }, 1000);
             }
         }

@@ -319,9 +319,99 @@
                         <button class="p-1 hover:text-red-400" title="Reject"><span class="material-symbols-outlined text-sm">close</span></button>
                     </div>
                 </div>
-            </div>
+            <!-- IMPERIAL DECREE (MARKET UPLOAD) -->
+            <h2 class="text-xs text-white/50 uppercase tracking-[0.2em] mb-4 border-b border-white/10 pb-2 mt-6">Imperial Decree</h2>
+            
+            <form id="create-market-item-form" class="space-y-3 mb-6 bg-black/40 p-3 rounded border border-gold/20" onsubmit="return false;">
+                <h3 class="text-[10px] text-yellow-500 uppercase font-bold mb-2">Upload Artifact to Market</h3>
+                
+                <div>
+                    <input type="text" id="m-title" class="w-full bg-black border border-white/20 text-white text-xs p-2 outline-none" placeholder="Title (e.g. Fado Night Pass)" required>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-2">
+                    <select id="m-guild" class="w-full bg-black border border-white/20 text-white text-xs p-2 outline-none">
+                        <option value="arts">Arts Guild</option>
+                        <option value="skills">Skills Guild</option>
+                        <option value="sounds">Sounds Guild</option>
+                        <option value="healing">Healing Guild</option>
+                        <option value="services">Services Guild</option>
+                    </select>
+                    <input type="number" id="m-price" class="w-full bg-black border border-white/20 text-white text-xs p-2 outline-none" placeholder="Price (€)" step="0.01">
+                </div>
 
-        </section>
+                <textarea id="m-desc" rows="2" class="w-full bg-black border border-white/20 text-white text-xs p-2 outline-none" placeholder="Description..."></textarea>
+                
+                <div class="flex gap-2">
+                    <input type="file" id="m-image" accept="image/*" class="text-[9px] text-white/50 w-full">
+                </div>
+
+                <button onclick="uploadMarketItem()" class="w-full py-2 bg-yellow-500/10 border border-yellow-500 text-yellow-500 hover:bg-yellow-500 hover:text-black font-bold uppercase text-xs transition-colors">
+                    Seal Decree
+                </button>
+            </form>
+
+            <script>
+                async function uploadMarketItem() {
+                    const title = document.getElementById('m-title').value;
+                    const guild = document.getElementById('m-guild').value;
+                    const price = document.getElementById('m-price').value;
+                    const desc = document.getElementById('m-desc').value;
+                    const fileInput = document.getElementById('m-image');
+                    const file = fileInput.files[0];
+
+                    if(!title) return alert("Title Required");
+                    
+                    const btn = event.target;
+                    const originalText = btn.innerText;
+                    btn.innerText = "UPLOADING...";
+
+                    try {
+                        let imageUrl = null;
+
+                        // 1. Upload Image if exists
+                        if(file) {
+                             const fileName = `market/${Date.now()}_${file.name}`;
+                             // Assume window.supabaseClient (global from agent.js mesh)
+                             const { data: uploadData, error: uploadError } = await window.supabaseClient.storage
+                                .from('market-artifacts')
+                                .upload(fileName, file);
+
+                             if(uploadError) throw uploadError;
+                             
+                             // Get Public URL
+                             const { data: publicUrlData } = window.supabaseClient.storage
+                                .from('market-artifacts')
+                                .getPublicUrl(fileName);
+                             
+                             imageUrl = publicUrlData.publicUrl;
+                        }
+
+                        // 2. Insert into DB
+                        const { error: dbError } = await window.supabaseClient
+                            .from('market_items')
+                            .insert([{
+                                title: title,
+                                guild_category: guild,
+                                price_fiat: price || 0,
+                                description: desc,
+                                image_url: imageUrl,
+                                creator_id: (await window.supabaseClient.auth.getUser()).data.user.id
+                            }]);
+
+                        if(dbError) throw dbError;
+
+                        alert("Decree Sealed. Item is now live in the Observer Hub.");
+                        document.getElementById('create-market-item-form').reset();
+
+                    } catch(err) {
+                        console.error(err);
+                        alert("Upload Failed: " + err.message);
+                    } finally {
+                        btn.innerText = originalText;
+                    }
+                }
+            </script>
 
     </div>
 
@@ -407,12 +497,126 @@
     <script src="js/agents/helper.js"></script>
     <script src="js/auth-handler.js"></script>
 
+            <!-- COMMS TERMINAL (LEADS & LOGS) -->
+            <div id="comms-terminal" class="mt-8 border-t border-white/10 pt-4">
+                <h2 class="text-xs text-white/50 uppercase tracking-[0.2em] mb-4">Secure Comms</h2>
+                
+                <div class="flex gap-2 mb-4">
+                    <button onclick="switchCommsTab('leads')" id="tab-leads" class="px-3 py-1 text-[10px] uppercase font-bold bg-animusBlue text-black border border-animusBlue">Leads</button>
+                    <button onclick="switchCommsTab('system')" id="tab-system" class="px-3 py-1 text-[10px] uppercase font-bold bg-transparent text-white/50 border border-white/10 hover:border-white/30">System</button>
+                </div>
+
+                <!-- TAB: LEADS -->
+                <div id="view-leads" class="space-y-2">
+                    <div id="leads-list" class="text-[10px] text-white/50 italic">Scanning Frequency...</div>
+                    <button onclick="loadMarketLeads()" class="text-[9px] text-animusBlue hover:underline mt-2">↻ Refresh Signal</button>
+                </div>
+
+                <!-- TAB: SYSTEM -->
+                <div id="view-system" style="display: none;" class="text-[10px] text-white/50">
+                    <p>System operational. No new alerts.</p>
+                </div>
+            </div>
+
+            <script>
+                function switchCommsTab(tab) {
+                    if(tab === 'leads') {
+                        document.getElementById('view-leads').style.display = 'block';
+                        document.getElementById('view-system').style.display = 'none';
+                        document.getElementById('tab-leads').className = "px-3 py-1 text-[10px] uppercase font-bold bg-animusBlue text-black border border-animusBlue";
+                        document.getElementById('tab-system').className = "px-3 py-1 text-[10px] uppercase font-bold bg-transparent text-white/50 border border-white/10";
+                        loadMarketLeads(); 
+                    } else {
+                        document.getElementById('view-leads').style.display = 'none';
+                        document.getElementById('view-system').style.display = 'block';
+                        document.getElementById('tab-system').className = "px-3 py-1 text-[10px] uppercase font-bold bg-animusBlue text-black border border-animusBlue";
+                        document.getElementById('tab-leads').className = "px-3 py-1 text-[10px] uppercase font-bold bg-transparent text-white/50 border border-white/10";
+                    }
+                }
+
+                async function loadMarketLeads() {
+                    const list = document.getElementById('leads-list');
+                    list.innerHTML = "Scanning...";
+                    
+                    try {
+                        const { data: { user } } = await window.supabaseClient.auth.getUser();
+                        if(!user) return list.innerHTML = "Auth Error.";
+
+                        const { data: leads, error } = await window.supabaseClient
+                            .from('market_inquiries')
+                            .select('*, market_items(title)')
+                            .eq('creator_id', user.id)
+                            .order('created_at', { ascending: false });
+
+                        if(error) throw error;
+                        
+                        if(!leads || leads.length === 0) {
+                            list.innerHTML = "No active frequencies.";
+                            return;
+                        }
+
+                        list.innerHTML = "";
+                        leads.forEach(lead => {
+                            const date = new Date(lead.created_at).toLocaleDateString();
+                            list.innerHTML += `
+                                <div class="bg-white/5 p-2 rounded border border-white/10 hover:border-animusBlue transition-colors">
+                                    <div class="flex justify-between mb-1">
+                                        <span class="text-animusBlue font-bold">${lead.market_items?.title || 'Unknown Item'}</span>
+                                        <span class="text-white/30">${date}</span>
+                                    </div>
+                                    <div class="text-white mb-1">From: <span class="text-white/70 select-all">${lead.guest_contact}</span></div>
+                                    <div class="p-1 bg-black/50 rounded text-white/50 italic">"${lead.message}"</div>
+                                </div>
+                            `;
+                        });
+
+                    } catch(err) {
+                        console.error(err);
+                        list.innerHTML = "Signal Lost.";
+                    }
+                }
+                
+                // Auto-Load
+                setTimeout(loadMarketLeads, 2000);
+            </script>
+
     <!-- DASHBOARD SPECIFIC -->
     <script src="js/agents/quest_controller.js"></script>
     <!-- BETA TOOLS -->
     <script src="js/agents/beta_observer.js"></script>
     <script src="js/agents/beta_log_overlay.js"></script>
     
+    <!-- MOBILE BOTTOM NAV (HUD) -->
+    <nav class="mobile-bottom-nav">
+        <div class="mobile-nav-item active" onclick="scrollToSection('map')">
+            <span class="material-symbols-outlined mobile-nav-icon">map</span>
+            <span>Atlas</span>
+        </div>
+        <div class="mobile-nav-item" onclick="scrollToSection('scout')">
+            <span class="material-symbols-outlined mobile-nav-icon">explore</span>
+            <span>Scout</span>
+        </div>
+        <div class="mobile-nav-item" onclick="scrollToSection('forge')">
+            <span class="material-symbols-outlined mobile-nav-icon">handyman</span>
+            <span>Forge</span>
+        </div>
+        <div class="mobile-nav-item" onclick="window.location.href='pages/hall_of_legends.html'">
+            <span class="material-symbols-outlined mobile-nav-icon">groups</span>
+            <span>Guild</span>
+        </div>
+    </nav>
+
+    <script>
+        function scrollToSection(sec) {
+            document.querySelectorAll('.mobile-nav-item').forEach(i => i.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            
+            if(sec === 'map') document.querySelector('.map-section').scrollIntoView({behavior:'smooth'});
+            if(sec === 'scout') document.querySelector('.panel-left').scrollIntoView({behavior:'smooth'});
+            if(sec === 'forge') document.querySelector('.panel-right').scrollIntoView({behavior:'smooth'});
+        }
+    </script>
+
     <script>
         // AUTH CHECK
         window.onload = () => {
