@@ -1,54 +1,62 @@
--- Quest Guild V2: Enhanced Schema Setup
--- Run this in your Supabase SQL Editor to enable Karma, Comms, and Brotherhood logic.
+-- ==========================================
+-- 1. DIE CREW-TABELLE (Guilds)
+-- ==========================================
+CREATE TABLE IF NOT EXISTS public.guilds (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    name TEXT NOT NULL UNIQUE,
+    tag TEXT NOT NULL UNIQUE, -- z.B. C4C, LX99, WU
+    description TEXT,
+    leader_id UUID REFERENCES auth.users(id),
+    flow_treasury INTEGER DEFAULT 0, -- Die gemeinsame Kasse der Crew
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
 
--- 1. Enable Realtime triggers for user_quests and comms_messages
--- (Ensure 'supabase_realtime' publication exists and includes these tables)
-begin;
-  -- If not already enabled, add tables to publication
-  alter publication supabase_realtime add table user_quests;
-  alter publication supabase_realtime add table comms_messages;
-commit;
+-- RLS (Sicherheit)
+ALTER TABLE public.guilds ENABLE ROW LEVEL SECURITY;
 
--- 2. Enhance 'user_quests' table
-ALTER TABLE public.user_quests 
-ADD COLUMN IF NOT EXISTS type TEXT DEFAULT 'community', -- 'story' or 'community'
-ADD COLUMN IF NOT EXISTS likes INTEGER DEFAULT 0;       -- Karma count
+-- Jeder darf die Crews sehen
+DROP POLICY IF EXISTS "Crews sind öffentlich" ON public.guilds;
+CREATE POLICY "Crews sind öffentlich" ON public.guilds FOR SELECT USING (true);
 
--- 3. Enhance 'profiles' table
+-- Nur eingeloggte User dürfen eine Crew gründen
+DROP POLICY IF EXISTS "Agenten dürfen Crews gründen" ON public.guilds;
+CREATE POLICY "Agenten dürfen Crews gründen" ON public.guilds FOR INSERT WITH CHECK (auth.uid() = leader_id);
+
+-- ==========================================
+-- 2. PROFILE UPGRADE (Crew-Zugehörigkeit)
+-- ==========================================
 ALTER TABLE public.profiles 
-ADD COLUMN IF NOT EXISTS karma INTEGER DEFAULT 0,
-ADD COLUMN IF NOT EXISTS completed_quests TEXT[] DEFAULT '{}'; -- Array of Quest IDs
+ADD COLUMN IF NOT EXISTS guild_id UUID REFERENCES public.guilds(id);
 
--- 4. Create 'brotherhood_links' table (Friendships)
-CREATE TABLE IF NOT EXISTS public.brotherhood_links (
+-- ==========================================
+-- 3. GUILD INVITES (Einladungen)
+-- ==========================================
+CREATE TABLE IF NOT EXISTS public.guild_invites (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    requester_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
-    receiver_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
-    status TEXT DEFAULT 'pending', -- 'pending', 'active', 'blocked'
+    guild_id UUID REFERENCES public.guilds(id) ON DELETE CASCADE,
+    inviter_id UUID REFERENCES auth.users(id),
+    invitee_username TEXT NOT NULL, -- Wir laden über den Namen ein
+    status TEXT DEFAULT 'pending',  -- pending, accepted, declined
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- 5. Create 'comms_messages' table (Chat)
-CREATE TABLE IF NOT EXISTS public.comms_messages (
-    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    sender_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
-    receiver_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
-    message TEXT NOT NULL,
-    read BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
+-- Sicherheit
+ALTER TABLE public.guild_invites ENABLE ROW LEVEL SECURITY;
 
--- 6. Enable Row Level Security (RLS)
-ALTER TABLE public.brotherhood_links ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.comms_messages ENABLE ROW LEVEL SECURITY;
+-- Jeder darf Einladungen sehen (damit der Empfänger sie abrufen kann)
+DROP POLICY IF EXISTS "Invites öffentlich lesbar" ON public.guild_invites;
+CREATE POLICY "Invites öffentlich lesbar" ON public.guild_invites FOR SELECT USING (true);
 
--- 7. RLS Policies
--- Brotherhood Links: Users can see links they are involved in
-CREATE POLICY "Links visible to participants" ON public.brotherhood_links 
-    FOR ALL USING (auth.uid() = requester_id OR auth.uid() = receiver_id);
+-- Nur eingeloggte User dürfen einladen
+DROP POLICY IF EXISTS "Agenten dürfen einladen" ON public.guild_invites;
+CREATE POLICY "Agenten dürfen einladen" ON public.guild_invites FOR INSERT WITH CHECK (auth.uid() = inviter_id);
 
--- Comms Messages: Users can see messages they sent or received
-CREATE POLICY "Messages visible to participants" ON public.comms_messages 
-    FOR ALL USING (auth.uid() = sender_id OR auth.uid() = receiver_id);
+-- Jeder darf den Status seiner Einladungen updaten (Akzeptieren/Ablehnen)
+DROP POLICY IF EXISTS "Status Update erlaubt" ON public.guild_invites;
+CREATE POLICY "Status Update erlaubt" ON public.guild_invites FOR UPDATE USING (auth.uid() IS NOT NULL);
 
--- Finish
+-- ==========================================
+-- 4. BATTLEFIELD UPDATES (Guild Ownership)
+-- ==========================================
+ALTER TABLE public.battlefield_nodes
+ADD COLUMN IF NOT EXISTS controller_guild TEXT; -- Stores the Tag like [C4C]

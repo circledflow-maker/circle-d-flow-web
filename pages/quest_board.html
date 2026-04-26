@@ -57,42 +57,56 @@
                 
                 <!-- LIST COLUMN -->
                 <div style="width: 40%; border-right: 1px solid #222; overflow-y: auto; padding: 20px; padding-bottom: 100px;">
-                    <h3 style="color:#aaa; border-bottom:1px solid #333; padding-bottom:10px; margin-bottom:15px; font-size:0.9em;">AVAILABLE SEQUENCES</h3>
+                    <h3 style="color:#aaa; border-bottom:1px solid #333; padding-bottom:10px; margin-bottom:15px; font-size:0.9em;">SYSTEM PROTOCOLS</h3>
                     
-                    <div class="search-container" style="display:flex; margin-bottom:20px; border:1px solid #333; padding:5px;">
-                        <span style="padding:10px; color:gold;">👁️</span>
-                        <input type="text" id="codex-search" onkeyup="window.QuestEngine.filterCodex()" placeholder="Scan Fragments..." style="background:transparent; border:none; color:white; width:100%; font-family:'Courier New'; outline:none;">
-                    </div>
+                    <ul class="codex-list" style="list-style: none; padding: 0; margin: 0;">
+                        <!-- PROTOCOL 1 -->
+                        <li id="quest-protocol-1" class="quest-item active-quest" onclick="openProtocol(1)" style="padding: 15px; border-bottom: 1px solid #333; cursor: pointer; transition: 0.3s;">
+                            <span style="color: gold; font-size: 0.7em; letter-spacing: 2px;">▶ INIT_SEQUENCE</span>
+                            <h4 class="font-tech" style="color: #fff; margin: 5px 0;">PROTOCOL 1: THE FIRST BREATH</h4>
+                            <p style="color: #888; font-size: 0.8em; margin: 0;">Boots basic systems (Atlas & Sound).</p>
+                        </li>
 
-                    <div id="quest-anchor-list">
-                        <!-- Loaded via JS -->
-                        <div class="loader text-gold blink">LOADING ARCHIVES...</div>
-                    </div>
+                        <!-- PROTOCOL 2 -->
+                        <li id="quest-protocol-2" class="quest-item locked-quest" onclick="openProtocol(2)" style="padding: 15px; border-bottom: 1px solid #333; cursor: pointer; transition: 0.3s; opacity: 0.5;">
+                            <span style="color: #00f0ff; font-size: 0.7em; letter-spacing: 2px;">▶ ENCRYPTED</span>
+                            <h4 class="font-tech" style="color: #fff; margin: 5px 0;">PROTOCOL 2: THE MERCHANT</h4>
+                            <p style="color: #888; font-size: 0.8em; margin: 0;">Decrypts the High Palast Market.</p>
+                        </li>
+
+                        <!-- PROTOCOL 3 -->
+                        <li id="quest-protocol-3" class="quest-item locked-quest" onclick="openProtocol(3)" style="padding: 15px; border-bottom: 1px solid #333; cursor: pointer; transition: 0.3s; opacity: 0.5;">
+                            <span style="color: #ff3232; font-size: 0.7em; letter-spacing: 2px;">▶ ENCRYPTED</span>
+                            <h4 class="font-tech" style="color: #fff; margin: 5px 0;">PROTOCOL 3: TURF WARS</h4>
+                            <p style="color: #888; font-size: 0.8em; margin: 0;">Activates Weapon Systems for Lisbon.</p>
+                        </li>
+                    </ul>
                 </div>
 
-                <!-- DETAIL COLUMN -->
+                <!-- DETAIL COLUMN (LORE TERMINAL) -->
                 <div style="width: 60%; padding: 40px; position:relative; perspective: 1000px;">
-                     <!-- Actual Content wrapped for animation -->
-                     <div id="detail-card" style="height:100%; display:flex; flex-direction:column;">
-                        <div style="border-bottom: 2px solid gold; padding-bottom: 10px; margin-bottom: 20px;">
-                            <h1 id="detail-title" style="font-size:2.5em; color:white; font-family:'Cinzel', serif; line-height: 1.2;">SELECT SEQUENCE</h1>
-                            <p id="detail-subtitle" style="color:gold; font-family:'Courier New';">MEMORY FRAGMENT</p>
-                        </div>
-
-                        <div style="flex:1; overflow-y:auto; font-family:'Courier New'; font-size:1.1em; color:#ccc; line-height:1.6;" id="detail-desc">
-                            Select a memory sequence from the left to view details.
-                        </div>
-
-                        <div style="background:rgba(255,215,0,0.05); padding:15px; border:1px solid #333; margin-top:20px; display:flex; justify-content:space-between; align-items:center;">
-                            <div>
-                                <div style="font-size:0.8em; color:#666;">REWARD DATA</div>
-                                <div style="font-size:1.2em; color:white;"><span id="detail-exp" style="color:gold;">0</span> XP / <span id="detail-credits">0</span> Credits</div>
+                    
+                    <!-- ACTIVE PROTOCOL VIEW -->
+                    <div id="protocol-display" style="display: none; height: 100%; flex-direction: column; justify-content: space-between;">
+                        <div>
+                            <span id="proto-status" style="color: gold; font-family: 'Courier New'; font-size: 0.8em;">SYSTEM_BOOT_REQUIRED</span>
+                            <h2 id="proto-title" class="font-tech" style="color: #00f0ff; margin-top: 10px; border-bottom: 1px solid #333; padding-bottom: 10px; font-size: 2em;">TITEL</h2>
+                            
+                            <div id="proto-text" style="color: #ccc; font-size: 1.1em; line-height: 1.6; margin-top: 20px; font-family: 'Courier New';">
                             </div>
-                            <button id="sync-btn" onclick="redirectToQuest()" style="display:none; background:gold; color:black; border:none; padding:10px 20px; font-weight:bold; cursor:pointer; font-family:'Courier New'; box-shadow: 0 0 10px gold;">
-                                TARGET ON MAP 🎯
-                            </button>
                         </div>
-                     </div>
+
+                        <button id="proto-action-btn" onclick="completeProtocol()" style="background: transparent; border: 1px solid gold; color: gold; padding: 15px; font-family: 'Courier New'; font-weight: bold; width: 100%; cursor: pointer; transition: 0.3s; margin-top: 20px;">
+                            [ INITIATE UPLINK & ACCEPT ]
+                        </button>
+                    </div>
+
+                    <!-- EMPTY STATE -->
+                    <div id="protocol-empty" style="display: flex; height: 100%; justify-content: center; align-items: center; color: #444; font-family: 'Courier New'; text-align: center; flex-direction: column;">
+                        <img src="../assets/images/cqr-logo-gold.png" style="width: 50px; opacity: 0.2; margin-bottom: 20px;">
+                        <p>AWAITING INPUT...<br>Select a Protocol from the Index.</p>
+                    </div>
+
                 </div>
             </div>
 
@@ -223,18 +237,162 @@
     </style>
 
     <script>
-        // Start Engine
-        window.addEventListener('load', async () => {
-            if(window.QuestEngine) {
-                // Wait for Engine to be ready
-                if(window.initEngine) await window.initEngine();
-                
-                // Load Initial List
-                if(window.loadAllQuests) window.loadAllQuests();
-            } else {
-                console.error("Critical Failure: Quest Engine not detected.");
+        // --- THE LORE ARCHIVE (Die Texte für das Tutorial) ---
+        const protocols = {
+            1: {
+                title: "THE FIRST BREATH",
+                requiredLevel: 1,
+                expReward: 100,
+                nextLevel: 2,
+                text: `Willkommen in der Matrix von Lissabon, Navigator. <br><br>
+                       Du bist dem <b>Circle-D-Flow</b> beigetreten. Wir sind keine App, wir sind ein Netzwerk. Wir verbinden die physische Welt (Hip-Hop, Kunst, Rhythmus) mit der digitalen Matrix.<br><br>
+                       Deine erste Lektion: <b>Der Atlas & The Sound World</b>.<br>
+                       Sobald du diesen Uplink bestätigst, wird das System deine GPS-Signale kalibrieren und die Knotenpunkte für Live-Events und Beats (Sound World) in deinem Dashboard entsperren.<br><br>
+                       Lass den Flow durch dich fließen.`
+            },
+            2: {
+                title: "THE MERCHANT'S PATH",
+                requiredLevel: 2,
+                expReward: 200,
+                nextLevel: 3,
+                text: `Du hast die Umgebung gescannt. Jetzt lernst du zu überleben.<br><br>
+                       Wissen und Kunst haben einen Wert. Im <b>High Palast Market</b> (dem Bazaar) tauschen Gilden ihre Artefakte. Beats, Skills, Event-Tickets und Intel.<br><br>
+                       Hier wird nicht nur mit Fiat-Geld gehandelt, sondern auch mit <b>Flow Credits</b> – dem Blut unserer Wirtschaft. Verdiene Credits, indem du echtes Wissen teilst, und das Netzwerk wird dich belohnen.<br><br>
+                       Bestätige den Uplink, um die Verschlüsselung des Marktes in deinem Dashboard zu brechen.`
+            },
+            3: {
+                title: "THE ART OF WAR",
+                requiredLevel: 3,
+                expReward: 300,
+                nextLevel: 4,
+                text: `Die Straßen gehören niemandem, bis jemand sie beansprucht.<br><br>
+                       Willkommen bei den <b>Turf Wars</b>. Auf deinem Atlas siehst du nun rote Knotenpunkte (z.B. Favela LX). Um sie zu übernehmen, musst du physisch dorthin navigieren, deine 5 Säulen (Animus Stats) nutzen und die Firewalls hacken.<br><br>
+                       Kontrolliere die Knotenpunkte für deine zukünftige Gilde und ernte passiv Flow Credits. Der Krieg um Lissabon beginnt jetzt.<br><br>
+                       Schließe dieses finale Protokoll ab, um die Waffensysteme hochzufahren und ein vollwertiger Agent zu werden.`
             }
-        });
+        };
+
+        let activeProtocolId = null;
+
+        // Beim Laden der Seite prüfen, welche Protokolle der User sehen darf
+        async function checkProtocolStatus() {
+            // Wait for Supabase
+            if(!window.supabaseClient) { setTimeout(checkProtocolStatus, 300); return; }
+
+            const { data: { user } } = await window.supabaseClient.auth.getUser();
+            if(!user) return; // Auth redirect handled by brain
+
+            const { data: profile } = await window.supabaseClient.from('profiles').select('level').eq('id', user.id).single();
+            
+            const userLevel = profile.level || 1;
+            console.log("Current Level:", userLevel);
+
+            // Protokolle visualisieren
+            // 1 fertig?
+            if (userLevel >= 2) {
+                markCompleted('quest-protocol-1');
+                unlock('quest-protocol-2');
+            }
+            
+            // 2 fertig?
+            if (userLevel >= 3) {
+                markCompleted('quest-protocol-2');
+                unlock('quest-protocol-3');
+            }
+
+            // 3 fertig?
+            if (userLevel >= 4) {
+                markCompleted('quest-protocol-3');
+            }
+        }
+
+        function markCompleted(elmId) {
+            const elm = document.getElementById(elmId);
+            if(elm.innerHTML.indexOf('COMPLETED') === -1) {
+                elm.innerHTML += '<span style="color:#00ff00; float:right; font-size:0.8em; margin-top:5px;">[ COMPLETED ]</span>';
+            }
+        }
+
+        function unlock(elmId) {
+            const elm = document.getElementById(elmId);
+            elm.classList.remove('locked-quest');
+            elm.style.opacity = '1';
+        }
+
+        // Protokoll in der rechten Seite anzeigen
+        window.openProtocol = function(id) {
+            const proto = protocols[id];
+            const elm = document.getElementById(`quest-protocol-${id}`);
+            
+            // Checken, ob die Quest gelockt ist (kurzer Hack: wenn opacity != 1)
+            if (elm.style.opacity == '0.5') {
+                alert("ACCESS DENIED: Du musst das vorherige Protokoll abschließen.");
+                return;
+            }
+
+            document.getElementById('protocol-empty').style.display = 'none';
+            document.getElementById('protocol-display').style.display = 'flex';
+            
+            document.getElementById('proto-title').innerText = proto.title;
+            document.getElementById('proto-text').innerHTML = proto.text;
+            activeProtocolId = id;
+
+            // Button Logic: Wenn schon fertig, Button disablen
+            // (Wir checken das Level nochmal schnell oder einfach DOM check)
+            // Einfachheitshalber: Button immer da, aber wenn Level schon höher, passiert nix außer Alert "Schon fertig".
+        };
+
+        // Wenn der User auf "INITIATE UPLINK" klickt
+        window.completeProtocol = async function() {
+            if (!activeProtocolId) return;
+
+            const btn = document.getElementById('proto-action-btn');
+            const originalText = btn.innerText;
+            btn.innerText = "[ PROCESSING UPLINK... ]";
+            btn.style.color = "#00ff00";
+
+            const proto = protocols[activeProtocolId];
+            const { data: { user } } = await window.supabaseClient.auth.getUser();
+
+            // 1. Aktuelle EXP und Level holen
+            const { data: profile } = await window.supabaseClient.from('profiles').select('exp, level, available_stat_points').eq('id', user.id).single();
+            
+            // Validation: Ist User Level schon höher?
+            if(profile.level >= proto.nextLevel) {
+                 alert("PROTOCOL ALREADY ASSIMILATED.");
+                 btn.innerText = "[ ALREADY COMPLETED ]";
+                 return;
+            }
+
+            // 2. EXP draufrechnen und Level hart setzen (fürs Tutorial)
+            const newExp = (profile.exp || 0) + proto.expReward;
+            const newLevel = Math.max(profile.level, proto.nextLevel); 
+
+            // Dem User seine verdienten 10 Flow Points (Attributspunkte) für den Level Up geben!
+            const newStatPoints = (profile.available_stat_points || 0) + 10;
+
+            // 3. Datenbank Update
+            const { error } = await window.supabaseClient.from('profiles').update({ 
+                exp: newExp, 
+                level: newLevel,
+                available_stat_points: newStatPoints 
+            }).eq('id', user.id);
+
+            if (!error) {
+                // Erfolg!
+                setTimeout(() => {
+                    alert(`UPLINK SECURED!\n+${proto.expReward} EXP\nLEVEL UP: Du bist jetzt Level ${newLevel}.\nDas Dashboard wurde aktualisiert.`);
+                    window.location.href = '../master_dashboard.html'; // Zurück zum Dashboard, um den Unlock zu sehen!
+                }, 1000);
+            } else {
+                console.error(error);
+                alert("System Error. Verbindung abgebrochen.");
+                btn.innerText = originalText;
+                btn.style.color = "gold";
+            }
+        };
+
+        window.addEventListener('DOMContentLoaded', checkProtocolStatus);
     </script>
 </body>
 </html>

@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sacred Garden Cinema | The Oracle</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,700;1,400&family=Rajdhani:wght@300;400;600;700&family=Space+Mono&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <style>
+        :root {
+            --vision-violet: #5A2A84;
+            --haki-gold: #d4af37;
+            --haki-glow: rgba(212, 175, 55, 0.4);
+            --crystal-cyan: #00f0ff;
+        }
+
+        body, html { 
+            margin: 0; padding: 0; width: 100%; min-height: 100vh; 
+            background: #050510; color: white; font-family: 'Rajdhani', sans-serif; 
+            overflow-y: auto; 
+            display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+        }
+        
+        .garden-wall {
+            position: fixed; inset: 0;
+            background: radial-gradient(circle at 30% 20%, rgba(90, 42, 132, 0.1) 0%, transparent 70%),
+                        radial-gradient(circle at 70% 80%, rgba(212, 175, 55, 0.05) 0%, transparent 70%);
+            z-index: 1; pointer-events: none;
+        }
+
+        .btn-back {
+            position: absolute; top: 20px; left: 20px; z-index: 9999;
+            display: flex; align-items: center; gap: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px 20px; border-radius: 99px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            font-weight: bold; color: var(--haki-gold);
+            cursor: pointer; transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+        .btn-back:hover { background: rgba(212, 175, 55, 0.1); transform: translateX(-5px); }
+        .btn-back .material-symbols-outlined { pointer-events: none; }
+
+        .garden-header {
+            text-align: center; margin-top: 40px; position: relative; z-index: 50; pointer-events: none; flex-shrink: 0;
+        }
+        .garden-header h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.5rem, 5vw, 4rem); letter-spacing: 10px; font-style: italic;
+            background: linear-gradient(to right, #fff, var(--haki-gold), #fff);
+            background-clip: text;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin: 0; text-shadow: 0 0 40px var(--haki-glow);
+        }
+
+        /* --- THE ORACLE CRYSTAL BALL UI --- */
+        .oracle-wrapper {
+            position: relative; z-index: 50;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            margin-top: 20px;
+            flex-grow: 1;
+            min-height: 0;
+        }
+
+        .crystal-ball {
+            width: clamp(200px, 35vh, 320px); height: clamp(200px, 35vh, 320px);
+            border-radius: 50%;
+            position: relative;
+            background: rgba(10,5,20, 0.8);
+            border: 2px solid var(--haki-gold);
+            box-shadow: 
+                0 0 50px var(--haki-glow),
+                inset 0 0 80px rgba(212, 175, 55, 0.3),
+                inset 0 0 20px #000;
+            overflow: hidden;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.5s ease-out;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            flex-shrink: 0;
+        }
+
+        .crystal-ball::after {
+            content: ''; position: absolute; inset: 0; border-radius: 50%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, transparent 40%);
+            pointer-events: none;
+        }
+
+        .crystal-ball:hover {
+            box-shadow: 0 0 80px var(--crystal-cyan), inset 0 0 100px rgba(0, 240, 255, 0.4);
+            border-color: var(--crystal-cyan);
+            transform: scale(1.05);
+        }
+
+        .oracle-content-layer {
+            position: absolute; inset: 0;
+            background-size: cover; background-position: center;
+            opacity: 0.6; transition: 0.5s;
+        }
+
+        .oracle-text {
+            text-align: center; max-width: 600px; margin-top: 20px;
+            opacity: 1; transition: opacity 0.5s;
+            flex-shrink: 0;
+        }
+
+        .oracle-controls {
+            display: flex; gap: 40px; margin-top: 20px; align-items: center; margin-bottom: 40px; flex-shrink: 0;
+            position: relative; z-index: 100;
+        }
+
+        .control-arrow {
+            width: 50px; height: 50px; border-radius: 50%;
+            background: rgba(255,255,255,0.05); border: 1px solid var(--haki-gold);
+            display: flex; justify-content: center; align-items: center;
+            cursor: pointer; transition: 0.3s; color: var(--haki-gold);
+        }
+        .control-arrow:hover { background: var(--haki-gold); color: #000; transform: scale(1.2); }
+
+        .btn-explore {
+            background: linear-gradient(45deg, #1a0b2e, #2d1854);
+            border: 1px solid var(--crystal-cyan);
+            color: var(--crystal-cyan); padding: 12px 30px;
+            border-radius: 6px; cursor: pointer;
+            font-family: 'Space Mono', monospace; font-weight: bold; letter-spacing: 2px;
+            display: inline-block; margin-top: 15px; transition: 0.3s;
+        }
+        .btn-explore:hover { background: var(--crystal-cyan); color: #000; box-shadow: 0 0 30px rgba(0, 240, 255, 0.5); }
+
+        /* --- PORTFOLIO GALLERY LAYER (Hidden until explored) --- */
+        .portfolio-gallery {
+            position: relative; z-index: 80;
+            width: 90%; max-width: 1400px; margin: 100px auto;
+            display: none; padding-bottom: 100px;
+        }
+
+        .gallery-header {
+            font-family: 'Space Mono', monospace; color: var(--crystal-cyan);
+            border-bottom: 1px solid rgba(0, 240, 255, 0.3); padding-bottom: 10px; margin-bottom: 30px;
+            font-size: 1.5rem; text-transform: uppercase;
+        }
+
+        .grid-master {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .grid-item {
+            aspect-ratio: 1; background: #111; border: 1px solid rgba(255,255,255,0.1);
+            position: relative; overflow: hidden; border-radius: 10px; cursor: pointer;
+        }
+        .grid-item img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; transition: 0.5s; }
+        .grid-item:hover img { opacity: 1; transform: scale(1.1); }
+        
+        .grid-item.video-item::after {
+            content: '▶'; position: absolute; inset: 0;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 40px; color: var(--haki-gold); text-shadow: 0 0 20px rgba(0,0,0,0.8);
+            pointer-events: none;
+        }
+
+        /* --- RESPONSIVE ADJUSTMENTS --- */
+        @media (max-height: 800px) {
+            .garden-header h1 { font-size: 2.5rem; letter-spacing: 5px; }
+            .crystal-ball { width: 220px; height: 220px; }
+            .oracle-text h2 { font-size: 1.5rem; }
+            .oracle-text p { font-size: 11px; }
+        }
+
+        /* --- VOICE SYNC INDICATOR --- */
+        .voice-sync {
+            position: absolute; top: 100px; left: 20px;
+            display: flex; align-items: center; gap: 10px;
+            font-family: 'Space Mono', monospace; font-size: 0.6rem;
+            color: #4ade80; opacity: 0.6;
+            z-index: 100;
+        }
+        .voice-pulse { width: 8px; height: 8px; background: #4ade80; border-radius: 50%; animation: pulse 1s infinite; }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.6; }
+        }
+    </style>
+</head>
+<body>
+    <div id="three-canvas" style="position:fixed; inset:0; z-index:0; pointer-events:none;"></div>
+    <div class="garden-wall"></div>
+
+    <button class="btn-back" onclick="window.location.href='vision_sanctuary.html'">
+        <span class="material-symbols-outlined">temple_hindu</span>
+        RETURN TO SANCTUARY
+    </button>
+
+    <div class="garden-header">
+        <div class="text-[10px] uppercase tracking-[0.5em] text-white/30 mb-2 font-mono">The Cascade of Stories</div>
+        <h1>Sacred Garden Cinema</h1>
+        <div class="garden-desc text-white/50 text-xs tracking-widest mt-2 font-mono" id="oracle-status">"Consult the Oracle to view the Ancestral Flow."</div>
+    </div>
+
+    <!-- AUDIO SYNC INDICATOR -->
+    <div class="voice-sync">
+        <div class="voice-pulse"></div>
+        <span>CINEMA_SYNC: ACTIVE</span>
+        <span class="material-symbols-outlined" id="audio-toggle" style="cursor:pointer; margin-left:15px; font-size:1.2rem; color:var(--haki-gold);" onclick="toggleAudio()">volume_up</span>
+    </div>
+
+    <audio id="ambient-audio" loop>
+        <source src="../Assets/audio/ambient.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- CENTRAL ORACLE UI -->
+    <div class="oracle-wrapper" id="oracle-ui">
+        
+        <!-- The Crystal Ball -->
+        <div class="crystal-ball" id="crystal-node">
+            <div class="oracle-content-layer" id="crystal-bg" style="background-image: url('https://images.unsplash.com/photo-1542204165-65bf26472b9b?auto=format&fit=crop&w=400&q=80')"></div>
+            <span class="material-symbols-outlined text-6xl text-white z-10 drop-shadow-2xl" id="crystal-icon">photo_library</span>
+        </div>
+
+        <!-- The Text Context -->
+        <div class="oracle-text mt-8 px-4" id="oracle-info">
+            <h2 class="text-3xl font-bold tracking-widest text-[#00F0FF] mb-2 font-serif" id="info-title">The Photography Library</h2>
+            <p class="text-sm opacity-70 font-mono" id="info-desc">Mirrors the live Google Drive architecture. Contains the Anime / Reality Photography Archive. (25 Images, 3 Videos).</p>
+            <div id="explore-wrapper">
+                <button class="btn-explore" onclick="window.location.href='portfolio_anime_reality.html'">ACCESS TO PORTFOLIO</button>
+            </div>
+        </div>
+
+        <!-- The Controls -->
+        <div class="oracle-controls">
+            <div class="control-arrow" onclick="cycleOracle(-1)"><span class="material-symbols-outlined">chevron_left</span></div>
+            <div class="text-[12px] font-mono tracking-[0.3em] opacity-50">CYCLE MEMORIES</div>
+            <div class="control-arrow" onclick="cycleOracle(1)"><span class="material-symbols-outlined">chevron_right</span></div>
+        </div>
+
+    </div>
+
+    <!-- Portfolio is now completely offloaded to portfolio_anime_reality.html! -->
+    <!-- 3D Environment Scripts -->
+    <script type="importmap">
+        { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.module.js" } }
+    </script>
+    <script type="module">
+        import * as THREE from 'three';
+        // 3D Sacred Garden Particle Engine
+        const container = document.getElementById('three-canvas');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        container.appendChild(renderer.domElement);
+        camera.position.z = 20;
+
+        const geometry = new THREE.BufferGeometry();
+        const vertices = []; const sizes = [];
+        for (let i = 0; i < 300; i++) {
+            vertices.push((Math.random() - 0.5) * 50, (Math.random() - 0.5) * 50, (Math.random() - 0.5) * 50);
+            sizes.push(Math.random() * 2);
+        }
+        
+        geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+        geometry.setAttribute('size', new THREE.Float32BufferAttribute(sizes, 1));
+        
+        const material = new THREE.ShaderMaterial({
+            uniforms: { time: { value: 0 }, color: { value: new THREE.Color(0xd4af37) } },
+            vertexShader: `
+                attribute float size; uniform float time; varying float vOpacity;
+                void main() {
+                    vec3 pos = position; pos.y += sin(time * 0.5 + pos.x) * 2.0;
+                    vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
+                    gl_PointSize = size * (300.0 / -mvPosition.z);
+                    gl_Position = projectionMatrix * mvPosition;
+                    vOpacity = 0.5 + sin(time * 2.0 + pos.z) * 0.5;
+                }`,
+            fragmentShader: `
+                uniform vec3 color; varying float vOpacity;
+                void main() {
+                    float dist = length(gl_PointCoord - vec2(0.5));
+                    if(dist > 0.5) discard;
+                    gl_FragColor = vec4(color, vOpacity * (0.5 - dist) * 2.0);
+                }`,
+            transparent: true, depthWrite: false, blending: THREE.AdditiveBlending
+        });
+
+        const particles = new THREE.Points(geometry, material); scene.add(particles);
+
+        let time = 0;
+        function animate() {
+            requestAnimationFrame(animate); time += 0.01;
+            material.uniforms.time.value = time;
+            scene.rotation.y = time * 0.05; scene.rotation.x = Math.sin(time * 0.05) * 0.1;
+            renderer.render(scene, camera);
+        }
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+        animate();
+    </script>
+
+    <!-- Audio Logic -->
+    <script>
+        let audioEnabled = localStorage.getItem('vision_audio_enabled') !== 'false';
+        
+        function toggleAudio() {
+            audioEnabled = !audioEnabled;
+            localStorage.setItem('vision_audio_enabled', audioEnabled.toString());
+            updateAudioState();
+        }
+
+        function updateAudioState() {
+            const toggle = document.getElementById('audio-toggle');
+            const ambient = document.getElementById('ambient-audio');
+            
+            if (toggle) {
+                toggle.innerText = audioEnabled ? 'volume_up' : 'volume_off';
+            }
+            
+            if (ambient) {
+                if (audioEnabled) {
+                    ambient.play().catch(e => console.log("Autoplay blocked, waiting for interaction."));
+                } else {
+                    ambient.pause();
+                }
+            }
+        }
+
+        // Initialize state on load
+        document.addEventListener('DOMContentLoaded', () => {
+            updateAudioState();
+            
+            // Interaction to enable sound if blocked by browser
+            document.body.addEventListener('click', () => {
+                if (audioEnabled) {
+                    const ambient = document.getElementById('ambient-audio');
+                    if (ambient && ambient.paused) {
+                        ambient.play().catch(e => {});
+                    }
+                }
+            }, { once: true });
+        });
+    </script>
+
+    <!-- Oracle Logic -->
+    <script>
+        const oracleData = [
+            {
+                title: "Documentaries & Narratives",
+                desc: "The weight of words and the power of truth. Narrative and philosophical explorations of the human condition.",
+                icon: "history_edu",
+                bg: "https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=800&q=80",
+                color: "#E2725B", // Terracotta
+                category: "Narrative & Philosophy",
+                hasPortfolio: true
+            },
+            {
+                title: "Culture & Street",
+                desc: "The stone pavement and the neon pulse. Graffiti, urban exploration, and the collective rhythm of Lisbon.",
+                icon: "streetview",
+                bg: "https://images.unsplash.com/photo-1514933651103-005eec06c04b?auto=format&fit=crop&w=800&q=80",
+                color: "#d4af37", // Gold
+                category: "Urban Adventure",
+                hasPortfolio: true
+            },
+            {
+                title: "Portraits & Human Essence",
+                desc: "The soul's mirror. Capturing the raw vulnerability and quiet focus of Lisbon's diverse spirits.",
+                icon: "face",
+                bg: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=80",
+                color: "#9D50BB", // Amethyst
+                category: "Visual & Portrait",
+                hasPortfolio: true
+            },
+            {
+                title: "Live Performance",
+                desc: "Collective effervescence. Jam sessions, hip-hop rituals, and the raw energy of the Lisbon underground.",
+                icon: "mic_external_on",
+                bg: "https://images.unsplash.com/photo-1514525253361-bee8a187499b?auto=format&fit=crop&w=800&q=80",
+                color: "#00b09b", // Jade
+                category: "Performance & Art",
+                hasPortfolio: true
+            },
+            {
+                title: "Brand & Product",
+                desc: "Purposeful aesthetics. Collaborations that value authenticity over marketing. The alchemy of creation.",
+                icon: "workspace_premium",
+                bg: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=800&q=80",
+                color: "#FFB347", // Amber
+                category: "Purposeful Product",
+                hasPortfolio: true
+            },
+            {
+                title: "The Atelier",
+                desc: "Physical manifestations of flow. Canvas paintings, bespoke jewelry, clay, and handmade resin artworks.",
+                icon: "diamond",
+                bg: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=800&q=80",
+                color: "#E0E0E0", // Silver Crystal
+                category: "The Atelier",
+                hasPortfolio: true
+            },
+            {
+                title: "Soundwaves & Flowtalks",
+                desc: "The auditory chronicles. Deep DJ sets, pulse-driven aftermovies, and raw interview sessions.",
+                icon: "graphic_eq",
+                bg: "https://images.unsplash.com/photo-1516280440502-86927a3c3b01?auto=format&fit=crop&w=800&q=80",
+                color: "#FF00FF", // Pulse Magenta
+                category: "Soundwaves",
+                hasPortfolio: true
+            },
+            {
+                title: "Live Ingest: alter.life",
+                desc: "The raw biological data. 275GB of unedited truth arriving from the external drive. View the proxies in real-time.",
+                icon: "downloading",
+                bg: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80",
+                color: "#4ade80", // Living Green
+                category: "RAW Ingest: alter.life",
+                hasPortfolio: true
+            },
+            {
+                title: "AI Comparison Lab",
+                desc: "The digital mirror. Comparing six unique agentic editing styles. Download the XML projects to finalize your Flow in DaVinci.",
+                icon: "auto_awesome",
+                bg: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=800&q=80",
+                color: "#d4af37", // Gold
+                category: "AI Comparison Lab",
+                hasPortfolio: true
+            }
+        ];
+
+        let currentIndex = 0;
+
+        function cycleOracle(direction) {
+            currentIndex += direction;
+            if (currentIndex < 0) currentIndex = oracleData.length - 1;
+            if (currentIndex >= oracleData.length) currentIndex = 0;
+            
+            const data = oracleData[currentIndex];
+
+            // Animate out
+            gsap.to(['#crystal-bg', '#crystal-icon', '#info-title', '#info-desc', '#explore-wrapper'], {
+                opacity: 0, duration: 0.3, onComplete: () => {
+                    // Update content
+                    document.getElementById('crystal-bg').style.backgroundImage = `url('${data.bg}')`;
+                    document.getElementById('crystal-icon').innerText = data.icon;
+                    document.getElementById('crystal-icon').style.color = data.color;
+                    
+                    document.getElementById('info-title').innerText = data.title;
+                    document.getElementById('info-title').style.color = data.color;
+                    document.getElementById('info-desc').innerText = data.desc;
+
+                    const exploreBtnWrapper = document.getElementById('explore-wrapper');
+                    if(data.hasPortfolio) {
+                        exploreBtnWrapper.innerHTML = `<button class="btn-explore" onclick="window.location.href='portfolio_anime_reality.html?cat=${encodeURIComponent(data.category)}'">ACCESS TO PORTFOLIO</button>`;
+                        exploreBtnWrapper.style.display = "block";
+                    } else {
+                        exploreBtnWrapper.style.display = "none";
+                    }
+
+                    // Animate in
+                    gsap.to(['#crystal-bg', '#crystal-icon', '#info-title', '#info-desc', '#explore-wrapper'], { opacity: 1, duration: 0.5 });
+                    gsap.fromTo('#crystal-node', { scale: 0.9 }, { scale: 1, duration: 0.5, ease: "back.out(1.7)" });
+                }
+            });
+        }
+
+        // Initialize with first item
+        document.addEventListener('DOMContentLoaded', () => {
+            const data = oracleData[0];
+            document.getElementById('crystal-bg').style.backgroundImage = `url('${data.bg}')`;
+            document.getElementById('crystal-icon').innerText = data.icon;
+            document.getElementById('crystal-icon').style.color = data.color;
+            document.getElementById('info-title').innerText = data.title;
+            document.getElementById('info-title').style.color = data.color;
+            document.getElementById('info-desc').innerText = data.desc;
+            document.getElementById('explore-wrapper').innerHTML = `<button class="btn-explore" onclick="window.location.href='portfolio_anime_reality.html?cat=${encodeURIComponent(data.category)}'">ACCESS TO PORTFOLIO</button>`;
+        });
+    </script>
+<script src="../js/agents/pusher.js" defer></script>
+<script src="../js/agents/helper.js" defer></script>
+
+    <script src="../js/agents/tutorial_core.js" defer></script>
+    <script src="../js/agents/quest_controller.js" defer></script>
+    <script src="../js/agents/visual_integrity.js" defer></script>
+    <script src="../js/agents/sound_engineer.js" defer></script>
+    <script src="../js/agents/flowee.js" defer></script>
+</body>
+</html>

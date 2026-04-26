@@ -107,6 +107,24 @@
         <button onclick="closeModal()" style="width:100%; padding:5px; background:transparent; border:none; color:#555; cursor:pointer; font-family:'Courier New';">ABORT</button>
     </div>
 
+    <!-- HACKING INTERFACE (TURF WARS) -->
+    <div id="hacking-ui" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:20000; flex-direction:column; justify-content:center; align-items:center;">
+        <div id="hack-terminal" style="width:90%; max-width:500px; border:2px solid #00f0ff; padding:20px; background:#050510; box-shadow:0 0 30px rgba(0,240,255,0.3); font-family:monospace;">
+            <h2 id="hack-target-name" style="color:#00f0ff; text-align:center; margin-top:0;">TARGET: UNKNOWN</h2>
+            <div id="hack-timer" style="font-size:3em; color:red; text-align:center; font-weight:bold; margin:20px 0;">10.00</div>
+            
+            <div style="background:#111; height:20px; border:1px solid #333; margin-bottom:20px; position:relative;">
+                <div id="hack-progress" style="background:#00f0ff; width:0%; height:100%; transition:width 0.1s linear;"></div>
+            </div>
+
+            <div id="hack-matrix" style="height:100px; overflow:hidden; color:#0f0; font-size:0.8em; opacity:0.7; margin-bottom:20px; white-space:pre-wrap;">
+                INITIALIZING BRUTE FORCE...
+            </div>
+
+            <button onclick="abortHack()" style="width:100%; padding:10px; background:red; color:white; border:none; font-weight:bold; cursor:pointer;">EMERGENCY DISCONNECT</button>
+        </div>
+    </div>
+
     <script>
         // --- 1. SETUP MAP ---
         // Default View: Lisbon
@@ -272,6 +290,175 @@
             alert("GPS Error: " + e.message);
         });
 
+        // --- 4. TURF WARS LOGIC ---
+        let battleNodes = [];
+        let activeHackInterval = null;
+
+        async function loadBattlefieldNodes() {
+            console.log("Loading Battlefield Nodes...");
+            const { data: nodes, error } = await window.supabaseClient
+                .from('battlefield_nodes')
+                .select('*');
+
+            if(error) return console.error("Battlefield Error:", error);
+
+            nodes.forEach(node => {
+                const isControlled = (node.controller_id !== null);
+                const color = isControlled ? '#ff3232' : '#00f0ff'; // Red if taken, Blue if free
+                
+                const marker = L.circleMarker([node.latitude, node.longitude], {
+                    radius: 12,
+                    fillColor: color,
+                    color: '#fff',
+                    weight: 2,
+                    opacity: 1,
+                    fillOpacity: 0.6
+                }).addTo(map);
+
+                // Guild Tag Display
+                const guildTag = node.controller_guild ? `<span style="color:gold; font-weight:bold; font-size:1.2em;">[${node.controller_guild}]</span>` : '';
+
+                const popupContent = `
+                    <div style="text-align:center; min-width:200px; font-family:monospace;">
+                        <h3 style="color:${color}; margin:0 0 5px 0;">${node.node_name}</h3>
+                        ${guildTag}
+                        <p style="font-size:0.8em; color:#ccc;">${node.description || 'Strategic Point'}</p>
+                        <hr style="border-color:#333; margin:10px 0;">
+                        <div style="display:flex; justify-content:space-between; font-size:0.8em; margin-bottom:10px;">
+                            <span>DEFENSE:</span> <span style="color:gold;">${node.defense_level}</span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; font-size:0.8em; margin-bottom:10px;">
+                            <span>REQUIRED GNOSIS:</span> <span style="color:#0f0;">${node.required_gnosis}</span>
+                        </div>
+                        <button onclick="initiateHack('${node.id}', '${node.node_name}', ${node.required_gnosis}, ${node.latitude}, ${node.longitude})" 
+                            style="width:100%; padding:10px; background:${color}; color:black; font-weight:bold; border:none; cursor:pointer;">
+                            ${isControlled ? '⚔️ CONTEST NODE' : '⚡ HACK NODE'}
+                        </button>
+                    </div>
+                `;
+                marker.bindPopup(popupContent);
+            });
+        }
+
+        async function initiateHack(nodeId, nodeName, reqGnosis, lat, lng) {
+            // 1. Check Distance (GPS)
+            map.locate({setView: false, maxZoom: 16}); // Refresh GPS
+            
+            // 2. Check Stats
+            const { data: { user } } = await window.supabaseClient.auth.getUser();
+            if(!user) return alert("LOGIN REQUIRED");
+
+            const { data: profile } = await window.supabaseClient
+                .from('profiles')
+                .select('stat_gnosis, flow_class')
+                .eq('id', user.id)
+                .single();
+
+            const userGnosis = profile?.stat_gnosis || 0;
+
+            if(userGnosis < reqGnosis) {
+                return alert(`ACCESS DENIED. GNOSIS LEVEL ${userGnosis}/${reqGnosis} TOO LOW.`);
+            }
+
+            // 3. Start Minigame
+            map.closePopup();
+            startHackingMinigame(nodeId, nodeName, profile.flow_class);
+        }
+
+        function startHackingMinigame(nodeId, nodeName, userClass) {
+            const ui = document.getElementById('hacking-ui');
+            ui.style.display = 'flex';
+            document.getElementById('hack-target-name').innerText = `TARGET: ${nodeName}`;
+            
+            let timeLeft = 10.00;
+            const timerEl = document.getElementById('hack-timer');
+            const progressEl = document.getElementById('hack-progress');
+            const matrixEl = document.getElementById('hack-matrix');
+            
+            // Bonuses
+            let hackSpeed = 1.0;
+            if(userClass === 'TAGGER') {
+                hackSpeed = 1.5; // 50% Faster
+                matrixEl.innerText += "\n[!] TAGGER CLASS DETECTED. OVERCLOCKING...\n";
+            }
+            if(userClass === 'RUNNER') {
+                 timeLeft = 12.00;
+                 matrixEl.innerText += "\n[!] RUNNER CLASS DETECTED. EXTENDED WINDOW...\n";
+            }
+
+            let progress = 0;
+
+            activeHackInterval = setInterval(() => {
+                // Update Timer
+                timeLeft -= 0.1;
+                timerEl.innerText = timeLeft.toFixed(2);
+                
+                // Update Progress
+                progress += (1.5 * hackSpeed); // Base speed
+                progressEl.style.width = Math.min(progress, 100) + '%';
+                
+                // Matrix Generic Text
+                if(Math.random() > 0.7) matrixEl.innerText += `\n> 0x${Math.floor(Math.random()*9999).toString(16)}... OK`;
+                matrixEl.scrollTop = matrixEl.scrollHeight;
+
+                // Win Condition
+                if(progress >= 100) {
+                    clearInterval(activeHackInterval);
+                    completeHack(nodeId);
+                }
+
+                // Lose Condition
+                if(timeLeft <= 0) {
+                    clearInterval(activeHackInterval);
+                    failHack();
+                }
+
+            }, 100);
+        }
+
+        function abortHack() {
+            clearInterval(activeHackInterval);
+            document.getElementById('hacking-ui').style.display = 'none';
+            alert("HACK ABORTED. CONNECTION SEVERED.");
+        }
+
+        function failHack() {
+            document.getElementById('hacking-ui').style.display = 'none';
+            alert("HACK FAILED. SECURITY PROTOCOLS TRIGGERED. TRY AGAIN.");
+        }
+
+        async function completeHack(nodeId) {
+             const { data: { user } } = await window.supabaseClient.auth.getUser();
+             
+             // FETCH GUILD INFO FIRST
+             const { data: profile } = await window.supabaseClient
+                .from('profiles')
+                .select('guild_id, guilds(tag)')
+                .eq('id', user.id)
+                .single();
+
+             const guildTag = profile?.guilds?.tag || null;
+
+             // Update DB
+             const { error } = await window.supabaseClient
+                .from('battlefield_nodes')
+                .update({ 
+                    controller_id: user.id,
+                    controller_guild: guildTag, // Save the Tag!
+                    last_hacked_at: new Date().toISOString()
+                })
+                .eq('id', nodeId);
+
+             document.getElementById('hacking-ui').style.display = 'none';
+             
+             if(error) {
+                 alert("SYSTEM ERROR: COULD NOT CLAIM NODE.");
+             } else {
+                 alert(`SYSTEM BREACHED. NODE CAPTURED FOR [${guildTag || 'RONIN'}]!`);
+                 window.location.reload(); // Refresh map to show ownership
+             }
+        }
+
         // INIT: Load all quests on start
         window.addEventListener('load', async () => {
             if(window.QuestEngine) {
@@ -281,6 +468,9 @@
                  if(typeof window.loadMapPins === 'function') {
                      await window.loadMapPins(map); 
                  }
+                 
+                 // Load Turf Wars
+                 loadBattlefieldNodes();
             } else {
                 console.warn("QuestEngine not found on load.");
             }

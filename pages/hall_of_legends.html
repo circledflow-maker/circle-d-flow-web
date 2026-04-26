@@ -29,7 +29,7 @@
             <img src="../assets/images/cqr-logo-gold.png" style="width: 80px; filter: drop-shadow(0 0 10px gold);" class="mx-auto animate-pulse-slow">
             <h1 class="animus-title text-4xl md:text-6xl my-4 glitch-text" data-text="THE BROTHERHOOD" style="color:white; font-family:'Cinzel', serif;">THE BROTHERHOOD</h1>
             <p style="letter-spacing: 5px; color: #666; font-size: 0.9em; text-transform:uppercase;">LISBON CELL HIERARCHY</p>
-            <a href="../pages/dashboard.html" class="inline-block mt-4 text-xs text-white/50 hover:text-gold no-underline">[ RETURN TO DASHBOARD ]</a>
+            <a href="../master_dashboard.html" class="inline-block mt-4 text-xs text-white/50 hover:text-gold no-underline">[ RETURN TO DASHBOARD ]</a>
         </div>
 
         <!-- USER DOSSIER CARD -->
@@ -82,6 +82,64 @@
         }
         </style>
 
+        <!-- BROTHERHOOD HUB (GUILD INTERFACE) -->
+        <div id="brotherhood-hub" style="margin-bottom: 40px;">
+            
+            <!-- LONE WOLF UI (CREATE CREW) -->
+            <div id="lone-wolf-ui" style="display: none; background: rgba(10,10,10,0.8); border: 1px solid #00f0ff; padding: 30px; border-radius: 4px;">
+                <h3 class="font-tech" style="color: #00f0ff; margin-top: 0; font-size: 1.5em;">FOUND A SYNDICATE</h3>
+                <p style="color: #ccc; font-size: 0.9em; margin-bottom: 20px;">Unite Agents under your banner and conquer Lisbon.</p>
+                
+                <input type="text" id="crew-name" placeholder="SYNDICATE NAME (e.g. The Architects)" style="width: 100%; padding: 15px; margin-bottom: 10px; background: rgba(0,0,0,0.5); border: 1px solid #444; color: #fff; font-family: 'Courier New';">
+                <input type="text" id="crew-tag" placeholder="TAG (Max 4 characters, e.g. C4C)" maxlength="4" style="width: 100%; padding: 15px; margin-bottom: 20px; background: rgba(0,0,0,0.5); border: 1px solid #444; color: #fff; font-family: 'Courier New'; text-transform: uppercase;">
+                
+                <button onclick="createCrew()" style="width: 100%; background: #00f0ff; color: #000; padding: 15px; border: none; font-weight: bold; font-family: 'Orbitron'; cursor: pointer; transition: 0.3s;">
+                    ESTABLISH CREW
+                </button>
+
+                <!-- PENDING INVITES INBOX -->
+                <div id="pending-invites-container" style="display: none; margin-top: 30px; border-top: 1px dashed gold; padding-top: 20px;">
+                    <h4 style="color: gold; font-family: 'Courier New'; margin-bottom: 10px;">> INTERCEPTED SIGNALS (INVITES)</h4>
+                    <ul id="invites-list" style="list-style: none; padding: 0; margin: 0;">
+                        <!-- JS fills this -->
+                    </ul>
+                </div>
+            </div>
+
+            <!-- CREW HQ UI (MANAGE CREW) -->
+            <div id="crew-hq-ui" style="display: none; background: rgba(10,10,10,0.9); border: 1px solid gold; padding: 30px; border-radius: 4px; box-shadow: 0 0 30px rgba(212,175,55,0.1);">
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed gold; padding-bottom: 15px; margin-bottom: 20px;">
+                    <div>
+                        <span id="display-crew-tag" style="background: gold; color: #000; padding: 2px 8px; font-weight: bold; font-family: 'Courier New'; margin-right: 10px;">[TAG]</span>
+                        <h2 id="display-crew-name" class="font-tech" style="display: inline; color: #fff; margin: 0; font-size: 1.5em;">CREW NAME</h2>
+                    </div>
+                    <div style="text-align: right;">
+                        <span style="color: #888; font-size: 0.7em;">TREASURY</span><br>
+                        <strong id="display-crew-credits" style="color: #00ff00; font-size: 1.2em;">0</strong>
+                    </div>
+                </div>
+
+                <h4 style="color: #00f0ff; font-family: 'Courier New'; margin-bottom: 10px;">> ACTIVE OPERATIVES</h4>
+                <ul id="crew-members-list" style="list-style: none; padding: 0; color: #ccc; font-family: 'Montserrat'; font-size: 0.9em; margin-bottom: 30px;">
+                    <!-- JS fills this -->
+                </ul>
+                
+                <!-- RECRUITMENT -->
+                <div id="recruit-section" style="margin-top: 30px; border-top: 1px dashed #00f0ff; padding-top: 20px;">
+                    <h4 style="color: #00f0ff; font-family: 'Courier New'; margin-bottom: 10px;">> TRANSMIT RECRUIT SIGNAL</h4>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="recruit-username" placeholder="Agent Username..." style="flex: 1; background: rgba(0,0,0,0.5); border: 1px solid #444; color: #fff; padding: 10px; font-family: 'Courier New';">
+                        <button onclick="sendCrewInvite()" style="background: #00f0ff; color: #000; font-weight: bold; border: none; padding: 10px 20px; cursor: pointer; transition: 0.3s; font-family: 'Orbitron';">INVITE</button>
+                    </div>
+                </div>
+
+                <button onclick="leaveCrew()" style="margin-top: 30px; background: transparent; border: 1px dashed #ff3232; color: #ff3232; padding: 10px 20px; cursor: pointer; font-family: 'Courier New'; transition: 0.3s; width: 100%;">
+                    [ DESERT CREW ]
+                </button>
+            </div>
+
+        </div>
+
         <!-- LEADERBOARD TABLE -->
         <div style="margin-top: 20px;">
             <div style="display:flex; justify-content:space-between; align-items:flex-end; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 20px;">
@@ -103,7 +161,7 @@
         <button onclick="window.location.href='hall_of_legends.html'" class="nav-btn active" id="nav-bro"><span class="icon">🏛️</span><br>BROTHERHOOD</button>
         <div class="nav-divider"></div>
         <button onclick="window.QuestEngine.toggleComms()" class="nav-btn"><span class="icon">💬</span><br>COMMS</button>
-        <button onclick="window.location.href='../pages/dashboard.html'" class="nav-btn exit"><span class="icon">⚡</span><br>MAIN</button>
+        <button onclick="window.location.href='../master_dashboard.html'" class="nav-btn exit"><span class="icon">⚡</span><br>MAIN</button>
     </nav>
 
     <!-- COMMS TERMINAL (Slide-in) -->
@@ -147,7 +205,12 @@
         window.addEventListener('load', async () => {
              if(window.QuestEngine) {
                  if(window.initEngine) await window.initEngine(); // User Profile Load
-                 if(window.initBrotherhood) await window.initBrotherhood(); // Leaderboard Logic
+                 
+                 // Init Brotherhood Logic
+                 await loadBrotherhoodStatus();
+                 
+                 // Existing Leaderboard (keep separate function if possible, or assume initBrotherhood does it)
+                 if(window.initBrotherhood) await window.initBrotherhood(); 
 
                  // Avatar Update
                  if(window.userProfile && window.userProfile.avatar_url) {
@@ -157,6 +220,201 @@
                  document.getElementById('leaderboard-list').innerHTML = "<div class='text-red-500 text-center'>OFFLINE MODE</div>";
              }
         });
+
+        // --- THE BROTHERHOOD ENGINE ---
+
+        async function loadBrotherhoodStatus() {
+            if(!window.supabaseClient) return;
+
+            const { data: { user } } = await window.supabaseClient.auth.getUser();
+            if (!user) return;
+
+            // 1. Prüfe das Profil des Agenten
+            const { data: profile } = await window.supabaseClient
+                .from('profiles')
+                .select('guild_id, username, level')
+                .eq('id', user.id)
+                .single();
+
+            if (!profile) return;
+
+            // Nur Agenten ab Level 4 dürfen Crews gründen!
+            if (profile.level < 4 && !profile.guild_id) {
+                document.getElementById('lone-wolf-ui').style.display = 'block';
+                document.getElementById('lone-wolf-ui').innerHTML = `
+                    <h3 class="font-tech" style="color: #ff3232;">ACCESS DENIED</h3>
+                    <p style="color: #aaa;">Current Rank: ${profile.level}. Syndicate formation requires Rank 4 (Warlord). <br>Complete Protocols in the Codex.</p>
+                `;
+                return;
+            }
+
+            if (!profile.guild_id) {
+                // LONE WOLF
+                document.getElementById('lone-wolf-ui').style.display = 'block';
+                document.getElementById('crew-hq-ui').style.display = 'none';
+                // Check Invites
+                loadPendingInvites(profile.username);
+            } else {
+                // CREW HQ
+                document.getElementById('lone-wolf-ui').style.display = 'none';
+                document.getElementById('crew-hq-ui').style.display = 'block';
+                
+                // Lade Crew Daten
+                const { data: crew } = await window.supabaseClient.from('guilds').select('*').eq('id', profile.guild_id).single();
+                if (crew) {
+                    document.getElementById('display-crew-tag').innerText = `[${crew.tag}]`;
+                    document.getElementById('display-crew-name').innerText = crew.name;
+                    document.getElementById('display-crew-credits').innerText = crew.flow_treasury || 0;
+                    
+                    // Lade alle Mitglieder dieser Crew
+                    const { data: members } = await window.supabaseClient.from('profiles').select('username, flow_class, level').eq('guild_id', crew.id);
+                    const list = document.getElementById('crew-members-list');
+                    list.innerHTML = '';
+                    members.forEach(m => {
+                        const isLeader = (m.username === crew.leader_id) ? '👑 ' : ''; // (Simple logic, ideally check IDs)
+                        // Note: crew.leader_id is UUID, username is string. Logic mismatch? 
+                        // Actually leader_id in guilds is UUID. m.username is string. 
+                        // Real Leader Check:
+                        // We need leader UUID to compare. But here we iterate profiles. 
+                        // Let's just list them for now.
+                        list.innerHTML += `<li style="padding: 10px; background: rgba(255,255,255,0.05); margin-bottom: 5px; border-left: 2px solid #00f0ff;">
+                            <strong style="color: #fff;">${m.username}</strong> 
+                            <span style="color: gold; font-size: 0.8em; float: right;">LVL ${m.level} | ${m.flow_class || 'Recruit'}</span>
+                        </li>`;
+                    });
+                }
+            }
+        }
+
+        async function createCrew() {
+            const name = document.getElementById('crew-name').value.trim();
+            const tag = document.getElementById('crew-tag').value.trim().toUpperCase();
+            
+            if (name.length < 3 || tag.length < 2) {
+                alert("Crew Name or Tag too short."); return;
+            }
+
+            const { data: { user } } = await window.supabaseClient.auth.getUser();
+
+            // 1. Crew in Datenbank erstellen
+            const { data: newCrew, error: crewError } = await window.supabaseClient
+                .from('guilds')
+                .insert([{ name: name, tag: tag, leader_id: user.id }])
+                .select()
+                .single();
+
+            if (crewError) {
+                console.error(crewError);
+                alert("Error: Name or Tag already taken!"); return;
+            }
+
+            // 2. Profil des Gründers updaten
+            const { error: profileError } = await window.supabaseClient
+                .from('profiles')
+                .update({ guild_id: newCrew.id })
+                .eq('id', user.id);
+
+            if (!profileError) {
+                alert(`SYNDICATE ESTABLISHED: Welcome, Leader of [${tag}] ${name}!`);
+                location.reload();
+            }
+        }
+
+        async function leaveCrew() {
+            if(confirm("Are you sure you want to desert your Syndicate?")) {
+                const { data: { user } } = await window.supabaseClient.auth.getUser();
+                await window.supabaseClient.from('profiles').update({ guild_id: null }).eq('id', user.id);
+                location.reload();
+            }
+        }
+
+        // --- RECRUITMENT PROTOCOLS ---
+
+        async function sendCrewInvite() {
+            const targetUsername = document.getElementById('recruit-username').value.trim();
+            if (!targetUsername) return;
+
+            const { data: { user } } = await window.supabaseClient.auth.getUser();
+            
+            // Checke meine Gilden-ID
+            const { data: myProfile } = await window.supabaseClient.from('profiles').select('guild_id').eq('id', user.id).single();
+            if (!myProfile || !myProfile.guild_id) return;
+
+            // Checke, ob der Ziel-Agent existiert
+            const { data: targetProfile, error: targetError } = await window.supabaseClient
+                .from('profiles')
+                .select('id, guild_id')
+                .eq('username', targetUsername)
+                .single();
+
+            if (targetError || !targetProfile) {
+                alert("TRANSMISSION FAILED: Agent not found."); return;
+            }
+
+            if (targetProfile.guild_id) {
+                alert("TARGET LOCKED: Agent already in a Syndicate."); return;
+            }
+
+            // Einladung in die Datenbank schreiben
+            const { error: inviteError } = await window.supabaseClient.from('guild_invites').insert([{
+                guild_id: myProfile.guild_id,
+                inviter_id: user.id,
+                invitee_username: targetUsername
+            }]);
+
+            if (!inviteError) {
+                alert(`SIGNAL SENT: Invite transmitted to ${targetUsername}.`);
+                document.getElementById('recruit-username').value = '';
+            } else {
+                alert("System Error. Signal blocked.");
+            }
+        }
+
+        async function loadPendingInvites(myUsername) {
+            const { data: invites } = await window.supabaseClient
+                .from('guild_invites')
+                .select('id, guild_id, guilds(name, tag)')
+                .eq('invitee_username', myUsername)
+                .eq('status', 'pending');
+
+            if (invites && invites.length > 0) {
+                document.getElementById('pending-invites-container').style.display = 'block';
+                const list = document.getElementById('invites-list');
+                list.innerHTML = '';
+
+                invites.forEach(invite => {
+                    list.innerHTML += `
+                        <li style="background: rgba(255,215,0,0.1); border: 1px solid gold; padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <span style="color: gold; font-weight: bold;">[${invite.guilds.tag}] ${invite.guilds.name}</span><br>
+                                <span style="color: #aaa; font-size: 0.8em;">Demands your loyalty.</span>
+                            </div>
+                            <div>
+                                <button onclick="respondToInvite('${invite.id}', '${invite.guild_id}', 'accepted')" style="background: #00ff00; color: #000; border: none; padding: 5px 10px; cursor: pointer; font-weight: bold; margin-right: 5px;">ACCEPT</button>
+                                <button onclick="respondToInvite('${invite.id}', null, 'declined')" style="background: transparent; border: 1px solid #ff3232; color: #ff3232; padding: 5px 10px; cursor: pointer;">DENY</button>
+                            </div>
+                        </li>
+                    `;
+                });
+            }
+        }
+
+        async function respondToInvite(inviteId, targetGuildId, response) {
+            const { data: { user } } = await window.supabaseClient.auth.getUser();
+
+            // Setze Invite auf accepted oder declined
+            await window.supabaseClient.from('guild_invites').update({ status: response }).eq('id', inviteId);
+
+            if (response === 'accepted') {
+                // Trage den Agenten in die Gilde ein
+                await window.supabaseClient.from('profiles').update({ guild_id: targetGuildId }).eq('id', user.id);
+                alert("UPLINK SECURED: Welcome to the Brotherhood.");
+            } else {
+                alert("Invite Declined. You remain a Lone Wolf.");
+            }
+            
+            location.reload(); 
+        }
     </script>
 </body>
 </html>

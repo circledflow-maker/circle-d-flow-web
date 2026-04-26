@@ -610,7 +610,7 @@ class FloweeAgent {
             
             <img id="flowee-visual" src="${pathPrefix}flowee_pirate_phoenix.png" 
                 class="object-contain drop-shadow-[0_0_10px_rgba(139,92,246,0.5)] cursor-pointer pointer-events-auto hover:scale-110 transition-transform duration-300 animate-float-slow"
-                style="width: 50px; height: 50px; max-width: 50px; max-height: 50px;"
+                style="width: 35px; height: 35px; max-width: 35px; max-height: 35px;"
                 onclick="window.Flowee.toggleChat()"
                 onerror="this.src='${pathPrefix}logo.png'">
         `;

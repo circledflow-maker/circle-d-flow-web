@@ -1,7 +1,7 @@
 import os
 import re
 
-ROOT_DIR = r"c:\Users\Utilizador\circle-d-flow-web"
+ROOT_DIR = r"d:\circle-d-flow-web"
 
 AGENTS_BASE = [
     'js/agents/pusher.js',
@@ -62,6 +62,10 @@ def inject_agents():
             
             # loose check to see if the agent is already there (ignoring path differences for now to avoid duplicates)
             if agent_filename in content:
+                continue
+
+            # Exclude HUD/UI agents from cinematic pages
+            if rel_path.lower() in ['index.html', 'beta-initiation.html', 'pages\\dashboard.html', 'pages/dashboard.html', 'pages\\vision_sanctuary.html', 'pages/vision_sanctuary.html', 'pages\\marketplace.html', 'pages/marketplace.html', 'pages\\memory_cave.html', 'pages/memory_cave.html', 'pages\\portfolio_anime_reality.html', 'pages/portfolio_anime_reality.html'] and agent_filename in ['global_ticker.js', 'horizon_bar.js', 'social_matrix.js', 'orbital_menu.js', 'tutorial_core.js', 'flowee.js', 'network_hub.js', 'constructor_bot.js', 'kingdom_science.js', 'resonance_bridge.js', 'vault_space.js']:
                 continue
 
             script_tag = get_script_tag(agent, rel_path)

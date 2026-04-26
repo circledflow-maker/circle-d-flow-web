@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Photography Archive | Circle D Flow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <style>
+        :root {
+            --haki-gold: #d4af37;
+            --obsidian: #050505;
+            --electric: #00f0ff;
+        }
+
+        body {
+            background-color: var(--obsidian);
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(212, 175, 55, 0.05), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(0, 240, 255, 0.05), transparent 25%);
+        }
+
+        h1, h2, h3, .cinzel { font-family: 'Cinzel', serif; }
+        .mono { font-family: 'Space Mono', monospace; }
+
+        /* Dead code removed */
+
+        /* Asset Cards: The "Stone Pavement" Logic */
+        .asset-card {
+            position: relative;
+            background: #0a0a0a;
+            border: 1px solid rgba(226, 114, 91, 0.1); /* Terracotta tint */
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+        }
+
+        /* Varied Card Sizes for Rhythm */
+        .asset-card.standard { grid-row: span 2; }
+        .asset-card.tall { grid-row: span 3; }
+        .asset-card.wide { grid-column: span 2; grid-row: span 2; }
+        .asset-card.hero { grid-column: span 2; grid-row: span 3; }
+
+        .asset-card:hover {
+            transform: translateY(-8px) scale(1.01);
+            border-color: var(--haki-gold);
+            box-shadow: 0 30px 60px rgba(226, 114, 91, 0.15);
+            z-index: 10;
+        }
+
+        .asset-image-wrapper {
+            position: relative;
+            flex-grow: 1;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .asset-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s ease;
+            filter: saturate(0.8) contrast(1.1);
+        }
+
+        .asset-card:hover .asset-image {
+            transform: scale(1.1);
+            filter: saturate(1.2) contrast(1.2);
+        }
+
+        .asset-overlay {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%);
+            padding: 30px 20px 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s ease;
+            pointer-events: none;
+        }
+
+        .asset-card:hover .asset-overlay {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Specific styles for Video Cards */
+        .asset-card.video-card .asset-image-wrapper {
+            padding-top: 56.25%; /* 16:9 */
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+        
+        .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background: rgba(212, 175, 55, 0.2);
+            border: 2px solid var(--haki-gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+            z-index: 5;
+        }
+
+        .asset-card.video-card:hover .play-button {
+            background: var(--haki-gold);
+            color: black;
+            transform: translate(-50%, -50%) scale(1.1);
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.6);
+        }
+
+        .play-button span {
+            font-size: 40px;
+            margin-left: 5px;
+            color: var(--haki-gold);
+        }
+
+        .asset-card.video-card:hover .play-button span {
+            color: black;
+        }
+
+        /* Badge for category */
+        .category-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0,0,0,0.6);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.6rem;
+            letter-spacing: 2px;
+            font-family: 'Space Mono', monospace;
+            text-transform: uppercase;
+            backdrop-filter: blur(4px);
+            z-index: 5;
+        }
+
+        /* Coverflow Specific Styles */
+        .swiper {
+            width: 100%;
+            flex-grow: 1;
+            min-height: 0;
+            padding-top: 10px;
+            padding-bottom: 30px;
+        }
+
+        .swiper-slide {
+            background-position: center;
+            background-size: cover;
+            width: clamp(220px, 25vw, 350px);
+            height: clamp(300px, 60vh, 500px);
+            background: #0a0a0a;
+            border: 1px solid rgba(226, 114, 91, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: border-color 0.4s;
+        }
+
+        .swiper-slide:hover {
+            border-color: var(--haki-gold);
+            box-shadow: 0 30px 60px rgba(212, 175, 55, 0.15);
+        }
+
+        .swiper-slide.video-card {
+            width: clamp(300px, 40vw, 550px);
+            height: clamp(200px, 45vh, 350px);
+        }
+
+        .swiper-button-next, .swiper-button-prev { color: var(--haki-gold) !important; z-index: 100; }
+        .swiper-pagination-bullet { background: var(--haki-gold) !important; z-index: 100; }
+
+        @media (max-width: 768px) {
+            .swiper-slide { width: 250px; height: 350px; }
+            .swiper-slide.video-card { width: 300px; height: 200px; }
+        }
+
+        /* --- WEEKLY FLOW BANNER --- */
+        .weekly-banner {
+            background: rgba(212, 175, 55, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px auto 40px;
+            max-width: 1200px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            animation: bounce-in 1s ease;
+        }
+        .weekly-tag {
+            background: var(--haki-gold);
+            color: #000;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.6rem;
+            padding: 2px 10px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            display: inline-block;
+        }
+        .countdown-timer {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--haki-gold);
+            letter-spacing: 2px;
+        }
+
+        /* --- MEDIA PLAYER --- */
+        #cdf-player {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.95); z-index: 10000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: 0.4s ease;
+        }
+        #cdf-player.active {
+            opacity: 1; pointer-events: auto;
+        }
+        #player-media-container {
+            width: 80vw; height: 60vh;
+            display: flex; justify-content: center; align-items: center;
+            margin-bottom: 20px;
+        }
+        .btn-close {
+            position: absolute; top: 30px; right: 40px; font-size: 2rem; color: #fff;
+            cursor: pointer; transition: 0.3s;
+        }
+        .btn-close:hover { color: var(--haki-gold); transform: rotate(90deg); }
+        .player-info { text-align: center; }
+        .player-info .player-title { font-family: 'Cinzel', serif; font-size: 1.5rem; color: var(--haki-gold); margin-bottom: 5px; }
+        .player-info .player-meta { font-family: 'Space Mono', monospace; font-size: 0.8rem; color: #888; }
+
+        /* --- MASONRY GRID --- */
+        .masonry-grid {
+            column-count: 1;
+            column-gap: 20px;
+            padding-top: 40px;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        @media (min-width: 768px) { .masonry-grid { column-count: 2; } }
+        @media (min-width: 1024px) { .masonry-grid { column-count: 3; } }
+
+        .masonry-item {
+            break-inside: avoid;
+            margin-bottom: 20px;
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 1px solid rgba(226, 114, 91, 0.1);
+            transition: all 0.5s ease;
+        }
+        .masonry-item img {
+            width: 100%;
+            display: block;
+            filter: saturate(0.8) contrast(1.1);
+            transition: transform 0.8s ease, filter 0.8s ease;
+        }
+        .masonry-item:hover {
+            border-color: var(--haki-gold);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(212, 175, 55, 0.15);
+        }
+        .masonry-item:hover img {
+            transform: scale(1.05);
+            filter: saturate(1.2) contrast(1.2);
+        }
+
+        /* --- NEXUS GATEKEEPER (BOOKING MODAL) --- */
+        #nexus-gatekeeper {
+            position: fixed; bottom: 20px; right: 20px; z-index: 90;
+            background: rgba(5, 5, 5, 0.95);
+            border: 1px solid var(--haki-gold);
+            backdrop-filter: blur(20px);
+            border-radius: 12px;
+            padding: 20px;
+            width: 280px;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.8), 0 0 20px rgba(212,175,55,0.1);
+            transform: translateY(200%);
+            opacity: 0;
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
+            display: flex; flex-direction: column; gap: 15px;
+            pointer-events: none;
+        }
+        #nexus-gatekeeper.visible { 
+            transform: translateY(0); 
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .nexus-close { position: absolute; top: 10px; right: 10px; color: #fff; cursor: pointer; font-size: 18px; }
+        .nexus-close:hover { color: var(--haki-gold); }
+        .nexus-title { font-family: 'Cinzel', serif; color: var(--haki-gold); font-size: 1.1rem; }
+        .nexus-text { font-family: 'Space Mono', monospace; font-size: 0.75rem; color: #ccc; line-height: 1.4; }
+        .nexus-buttons { display: flex; gap: 10px; }
+        .nexus-btn {
+            flex: 1; padding: 8px 0; text-align: center; border-radius: 4px;
+            font-family: 'Space Mono', monospace; font-size: 0.7rem; cursor: pointer;
+            transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .nexus-btn.primary { background: var(--haki-gold); color: #000; border: none; }
+        .nexus-btn.primary:hover { background: #fff; }
+        .nexus-btn.secondary { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.3); }
+        .nexus-btn.secondary:hover { border-color: var(--haki-gold); color: var(--haki-gold); }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <div class="top-nav px-8 py-4 flex justify-between items-center bg-black/40 backdrop-blur-md border-b border-white/10 z-50">
+        <div class="flex items-center gap-4">
+            <img src="../assets/images/cqr-logo-gold.png" alt="Logo" class="w-10 h-10 opacity-80 drop-shadow-[0_0_10px_rgba(212,175,55,0.5)]" onerror="this.src='../assets/images/logo.png'">
+            <div>
+                <h2 class="cinzel text-lg md:text-xl text-[var(--haki-gold)] tracking-[4px]">THE ARCHIVE</h2>
+                <p class="mono text-[10px] text-white/50 tracking-widest uppercase">Anime / Reality Construct</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-4">
+            <button id="btn-mute-agent" class="flex items-center gap-2 text-white/50 border border-white/20 px-3 py-1.5 rounded-full hover:border-[var(--haki-gold)] hover:text-[var(--haki-gold)] transition-all" onclick="toggleAgentMute()">
+                <span class="material-symbols-outlined text-[16px]" id="mute-icon">notifications_active</span>
+                <span class="mono text-[10px]">AGENT ACTIVE</span>
+            </button>
+            <button class="btn-return flex items-center gap-2 text-[var(--haki-gold)] border border-[var(--haki-gold)] px-4 py-2 rounded-full hover:bg-[var(--haki-gold)] hover:text-black transition-all" onclick="window.location.href='memory_cave.html'">
+                <span class="material-symbols-outlined text-[18px]">auto_awesome</span>
+                <span class="hidden md:inline mono text-xs">RETURN</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Header Section -->
+    <div class="pt-[40px] pb-6 text-center px-4 relative z-10 flex-shrink-0">
+        <h1 class="text-3xl md:text-5xl cinzel text-white mb-2 drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]">Living memory</h1>
+        <p class="text-white/60 max-w-2xl mx-auto mono text-[10px] md:text-xs leading-relaxed tracking-widest uppercase">
+            A real-time reflection of the Google Drive master node.<br>
+            Current payload calculation...
+        </p>
+        
+        <!-- Filter Tabs -->
+        <div class="flex justify-center flex-wrap gap-4 mt-4 mx-auto max-w-[1200px]" id="category-tabs">
+            <!-- Dynamic Category Buttons will be injected here -->
+        </div>
+
+        <!-- Weekly Focus Banner -->
+        <div class="weekly-banner px-8">
+            <div class="text-left">
+                <span class="weekly-tag">WEEKLY FLOW FOCUS</span>
+                <h3 class="cinzel text-xl text-white" id="weekly-focus-title">Loading Focus...</h3>
+                <p class="mono text-[10px] text-white/40">Curated by the Archive Poet</p>
+            </div>
+            <div class="text-right">
+                <p class="mono text-[9px] text-white/30 uppercase mb-1">Next Vision Wave</p>
+                <div class="countdown-timer" id="weekly-countdown">00:00:00:00</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3D Swiper Carousel (VIDEOS ONLY) -->
+    <div class="swiper mySwiper" id="video-carousel" style="display: none;">
+        <div class="swiper-wrapper" id="portfolio-grid">
+            <!-- Javascript will inject Video Cards here -->
+        </div>
+        <div class="swiper-pagination"></div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+    </div>
+
+    <!-- Masonry Grid (PHOTOS ONLY) -->
+    <div class="overflow-y-auto w-full flex-grow relative" style="scroll-behavior: smooth;">
+        <div id="photography-masonry" class="masonry-grid pb-32">
+            <!-- Javascript will inject Photos here -->
+        </div>
+    </div>
+
+    <!-- Media Player Overlay -->
+    <div id="cdf-player">
+        <span class="material-symbols-outlined btn-close" onclick="window.CDF_Player.close()">close</span>
+        <div id="player-media-container"></div>
+        <div class="player-info">
+            <div class="player-title" id="player-title">Observation Node</div>
+            <div class="player-meta" id="player-meta">Loading Matrix...</div>
+        </div>
+    </div>
+
+    <!-- Nexus Gatekeeper (Booking Agent UI) -->
+    <div id="nexus-gatekeeper">
+        <span class="material-symbols-outlined nexus-close" onclick="document.getElementById('nexus-gatekeeper').classList.remove('visible')">close</span>
+        <div class="nexus-title"><span class="material-symbols-outlined" style="font-size:18px; vertical-align:-3px; margin-right:5px;">auto_awesome</span>Nexus Agent</div>
+        <div class="nexus-text" id="nexus-message">
+            Inspiriert von diesem Stil? <br>Sichere dir jetzt einen Slot für 2025/26.
+        </div>
+        <div class="nexus-buttons">
+            <button class="nexus-btn primary" onclick="window.open('https://calendly.com/', '_blank')">BOOK CALENDAR</button>
+            <button class="nexus-btn secondary" onclick="window.location.href='mailto:booking@kissyourheart.com'">SEND EMAIL</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="../js/data/portfolio_data.js?v=flow_matrix_v3"></script>
+
+    <script>
+        window.CDF_Player = {
+            open: function(asset) {
+                try {
+                    const player = document.getElementById('cdf-player');
+                    const container = document.getElementById('player-media-container');
+                    const title = document.getElementById('player-title');
+                    const meta = document.getElementById('player-meta');
+                    
+                    const assetName = asset && asset.name ? asset.name.toLowerCase() : "";
+                    const isVideo = assetName.endsWith('.mp4') || assetName.endsWith('.mov');
+                    const isXML = assetName.endsWith('.xml');
+                    
+                    if (isXML) {
+                        container.innerHTML = `
+                            <div class="flex flex-col items-center gap-6 p-8 bg-black/60 border border-[var(--haki-gold)] rounded-xl">
+                                <img src="../assets/ui/xml_icon.png" class="w-24 h-24 mb-4 drop-shadow-[0_0_20px_rgba(212,175,55,0.4)]">
+                                <h3 class="cinzel text-2xl text-[var(--haki-gold)]">AI EDIT COMPONENT</h3>
+                                <p class="mono text-xs text-white/60 mb-8 max-w-md text-center">Standard FCP7 XML format. Import this directly into DaVinci Resolve (File > Import > Timeline).</p>
+                                <a href="${asset.url}" download class="nexus-btn primary px-12 py-3 rounded-full no-underline">DOWNLOAD PROJECT PROJECT</a>
+                            </div>
+                        `;
+                    } else if (isVideo) {
+                        const videoSrc = asset.video_url || asset.url || (asset.id && !asset.id.startsWith("local_") ? `https://drive.google.com/file/d/${asset.id}/preview` : "");
+                        if (videoSrc.includes("drive.google.com")) {
+                            container.innerHTML = `<iframe id="player-content" style="width: 80vw; height: 60vh; border: none;" src="${videoSrc}" allow="autoplay; fullscreen"></iframe>`;
+                        } else {
+                            container.innerHTML = `<video id="player-content" style="width: 80vw; height: 60vh; border: none; background: #000;" src="${videoSrc}" controls></video>`;
+                            // Trigger play after a short delay to ensure DOM is ready and bypass autoplay blocks
+                            setTimeout(() => {
+                                const vid = document.getElementById('player-content');
+                                if (vid) {
+                                    vid.volume = 1.0;
+                                    vid.play().catch(e => console.log("Manual play required:", e));
+                                }
+                            }, 500);
+                        }
+                    } else if (asset && asset.id) {
+                        const imageUrl = asset.url || (asset.thumb_url ? asset.thumb_url : `https://drive.google.com/thumbnail?id=${asset.id}&sz=w1000`);
+                        container.innerHTML = `<img id="player-content" src="${imageUrl}" style="max-width: 80vw; max-height: 70vh;" alt="Media Resource" onerror="this.onerror=null; this.src='../assets/images/logo.png';">`;
+                    } else {
+                        container.innerHTML = `<h3 class="cinzel text-white">Asset not found</h3>`;
+                    }
+                    
+                    title.innerText = (asset && asset.professional_name) ? asset.professional_name : (asset && asset.name ? asset.name : "Unknown Trace");
+                    meta.innerText = isXML ? "AI Pipeline Project | Memory Node" : (isVideo ? "Cinematic Flow | Memory Node" : "Photographic Trace | Memory Node");
+                    
+                    player.classList.add('active');
+                } catch(e) {
+                    console.error("CDF Player Error:", e);
+                }
+            },
+            close: function() {
+                const player = document.getElementById('cdf-player');
+                const container = document.getElementById('player-media-container');
+                player.classList.remove('active');
+                setTimeout(() => { container.innerHTML = ""; }, 400);
+            }
+        };
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const grid = document.getElementById('portfolio-grid');
+            const urlParams = new URLSearchParams(window.location.search);
+            let activeCategory = urlParams.get('cat') || "Urban Adventure";
+            
+            let assets = [];
+            if (window.PortfolioData) {
+                let rawAssets = window.PortfolioData[activeCategory];
+                if (!rawAssets) {
+                    const keys = Object.keys(window.PortfolioData);
+                    const matchedKey = keys.find(k => k.toLowerCase().trim() === activeCategory.toLowerCase().trim());
+                    if (matchedKey) {
+                        rawAssets = window.PortfolioData[matchedKey];
+                        activeCategory = matchedKey;
+                    }
+                }
+
+                // Filter out .NEF files and duplicates to ensure clean categorization!
+                if (rawAssets) {
+                    const uniqueNames = new Set();
+                    assets = rawAssets.filter(item => {
+                        const nameLower = item.name.toLowerCase();
+                        if (nameLower.endsWith('.nef')) return false; // Skip RAW files
+                        
+                        // Use base name without extension for deduping
+                        const baseName = nameLower.split('.').slice(0, -1).join('.') || nameLower;
+                        if (uniqueNames.has(baseName)) return false;
+                        
+                        uniqueNames.add(baseName);
+                        return true;
+                    });
+                }
+            }
+            
+            // --- DYNAMIC TABS LOGIC ---
+            function renderTabs() {
+                const tabsContainer = document.getElementById('category-tabs');
+                if (!window.PortfolioData || !tabsContainer) return;
+                
+                const categories = Object.keys(window.PortfolioData);
+                tabsContainer.innerHTML = "";
+                
+                categories.forEach(cat => {
+                    const btn = document.createElement('button');
+                    const isActive = cat.toLowerCase().trim() === activeCategory.toLowerCase().trim();
+                    btn.className = `px-4 py-2 border-b-2 text-white mono text-[10px] tracking-widest hover:text-[var(--haki-gold)] transition-all ${isActive ? 'border-[var(--haki-gold)]' : 'border-transparent opacity-50'}`;
+                    btn.innerText = cat.toUpperCase();
+                    btn.onclick = () => window.location.href = `?cat=${encodeURIComponent(cat)}`;
+                    tabsContainer.appendChild(btn);
+                });
+            }
+            renderTabs();
+
+            // --- WEEKLY FLOW LOGIC ---
+            function updateWeeklyFlowBanner() {
+                const titleEl = document.getElementById('weekly-focus-title');
+                const timerEl = document.getElementById('weekly-countdown');
+                if (!titleEl || !timerEl) return;
+                
+                titleEl.innerText = `Diese Woche im Fokus: ${activeCategory}`;
+                
+                function updateTimer() {
+                    const now = new Date();
+                    const nextMonday = new Date();
+                    nextMonday.setDate(now.getDate() + (1 + 7 - now.getDay()) % 7);
+                    nextMonday.setHours(0, 0, 0, 0);
+                    if (now >= nextMonday) nextMonday.setDate(nextMonday.getDate() + 7);
+                    const diff = nextMonday - now;
+                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    const secs = Math.floor((diff % (1000 * 60)) / 1000);
+                    timerEl.innerText = `${days.toString().padStart(2, '0')}d : ${hours.toString().padStart(2, '0')}h : ${mins.toString().padStart(2, '0')}m : ${secs.toString().padStart(2, '0')}s`;
+                }
+                updateTimer();
+                setInterval(updateTimer, 1000);
+            }
+            updateWeeklyFlowBanner();
+
+            // Update Page Meta Info
+            const pageCaption = document.querySelector('.pt-\\[40px\\] p');
+            if (pageCaption) {
+                pageCaption.innerHTML = `
+                    A real-time reflection of the 3D Master Node.<br>
+                    Category: ${activeCategory} | Payload: ${assets ? assets.length : 0} Traces.
+                `;
+            }
+            
+            if (!assets || assets.length === 0) {
+                grid.innerHTML = `
+                    <div class="swiper-slide !w-full !max-w-2xl text-center py-20 px-8 bg-transparent border-none shadow-none flex justify-center items-center">
+                        <div>
+                            <div class="mono opacity-50 mb-6 font-bold text-lg">NEURAL CALIBRATION IN PROGRESS</div>
+                            <p class="mono opacity-40 text-xs mb-8">Segment [${activeCategory}] yielded 0 traces.</p>
+                        </div>
+                    </div>
+                `;
+                // Even if empty, start the auto-gatekeeper timer
+                triggerNexusGatekeeper("Noch keine Schätze in dieser Kategorie? <br>Lass uns gemeinsam etwas neues erschaffen.");
+                return;
+            }
+
+            // Clear containers to prevent duplicate rendering
+            grid.innerHTML = "";
+            document.getElementById('photography-masonry').innerHTML = "";
+
+
+            const videos = [];
+            const photos = [];
+            
+            assets.forEach(asset => {
+                const nameLower = asset.name.toLowerCase();
+                const isVideo = nameLower.endsWith('.mp4') || nameLower.endsWith('.mov') || nameLower.endsWith('.xml');
+                if (isVideo) videos.push(asset);
+                else photos.push(asset);
+            });
+
+            // Weekly Flow Constraints: Max 3 Videos, Max 12 Photos
+            const topVideos = videos.slice(0, 3);
+            const topPhotos = photos.slice(0, 12);
+            if (topVideos.length > 0) {
+                document.getElementById('video-carousel').style.display = 'block';
+                topVideos.forEach((asset, index) => {
+                    const isXML = asset.name.toLowerCase().endsWith('.xml');
+                    let thumbnail;
+                    if (isXML) {
+                        thumbnail = "../assets/ui/xml_icon.png";
+                    } else if (asset.thumb_url) {
+                        thumbnail = asset.thumb_url;
+                    } else if (asset.id && (asset.id.startsWith("local_") || asset.id.startsWith("fix_") || asset.id.startsWith("localFile_"))) {
+                        thumbnail = asset.url;
+                    } else if (asset.url && !asset.url.includes("drive.google.com")) {
+                        thumbnail = asset.url;
+                    } else {
+                        thumbnail = asset.id.includes("mock") ? "../assets/images/logo.png" : `https://drive.google.com/thumbnail?id=${asset.id}&sz=w800`;
+                    }
+                    const card = document.createElement('div');
+                    card.className = 'swiper-slide asset-card video-card';
+                    card.onclick = () => {
+                        window.CDF_Player.open(asset);
+                        if (!window.agentMuted) {
+                            triggerNexusGatekeeper(isXML ? "Bereit für den finalen Schnitt? Lad dir das Projekt in DaVinci." : "Planst du ein Event oder eine Jam-Session?<br>Lass uns über die visuelle Begleitung sprechen.", false);
+                        }
+                    };
+                    let badgeLabel = isXML ? 'AI PROJECT' : 'CINEMATIC FLOW';
+                    let metaLabel = isXML ? 'AI Timeline Engine' : 'Documentary Fragment';
+
+                    if (activeCategory === "Artist Spotlight") {
+                        badgeLabel = "ARTIST SPOTLIGHT";
+                        metaLabel = "Individual Portrait";
+                    } else if (activeCategory === "Soundwaves") {
+                        badgeLabel = "SOUNDWAVE";
+                        metaLabel = "DJ Performance";
+                    } else if (activeCategory === "The Atelier") {
+                        badgeLabel = "CREATIVE VORTEX";
+                        metaLabel = "Artistic Process";
+                    }
+
+                    const poetCaption = asset.poet_caption ? 
+                        `<div class="poet-desc mt-2 pt-2 border-t border-white/10 italic text-[9px] text-white/50 leading-relaxed whitespace-pre-line">${asset.poet_caption}</div>` : "";
+
+                    card.innerHTML = `
+                        <div class="category-badge border-[#E2725B] text-[#E2725B] shadow-[0_0_15px_rgba(226,114,91,0.4)]">${badgeLabel}</div>
+                        <div class="asset-image-wrapper">
+                            <img src="${thumbnail}" class="asset-image ${isXML ? '!object-contain p-8' : ''}" onerror="this.src='../assets/images/logo.png'">
+                        </div>
+                        <div class="play-button" style="border-color: ${isXML ? 'var(--haki-gold)' : '#E2725B'}; background: rgba(${isXML ? '212, 175, 55' : '226, 114, 91'}, 0.1);">
+                            <span class="material-symbols-outlined" style="color: ${isXML ? 'var(--haki-gold)' : '#E2725B'};">${isXML ? 'auto_awesome' : 'play_arrow'}</span>
+                        </div>
+                        <div class="asset-overlay">
+                            <h3 class="cinzel text-xl text-[var(--haki-gold)] mb-1">${asset.professional_name || asset.name}</h3>
+                            <p class="mono text-[10px] text-white/70 tracking-wider">${metaLabel}</p>
+                            ${poetCaption}
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+
+                new Swiper(".mySwiper", {
+                    effect: "coverflow", grabCursor: true, centeredSlides: true, slidesPerView: "auto",
+                    coverflowEffect: { rotate: 20, stretch: 0, depth: 250, modifier: 1, slideShadows: true },
+                    keyboard: { enabled: true },
+                    pagination: { el: ".swiper-pagination", clickable: true, dynamicBullets: true },
+                    navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" }
+                });
+            }
+
+            // Populate Photos (Masonry Grid)
+            const masonry = document.getElementById('photography-masonry');
+            if (topPhotos.length > 0) {
+                topPhotos.forEach((asset, index) => {
+                    let thumbnail;
+                    if (asset.thumb_url) {
+                        thumbnail = asset.thumb_url;
+                    } else if (asset.id && (asset.id.startsWith("local_") || asset.id.startsWith("fix_") || asset.id.startsWith("localFile_"))) {
+                        thumbnail = asset.url;
+                    } else if (asset.url && !asset.url.includes("drive.google.com")) {
+                        thumbnail = asset.url;
+                    } else {
+                        thumbnail = asset.id.includes("mock") ? "../assets/images/logo.png" : `https://drive.google.com/thumbnail?id=${asset.id}&sz=w800`;
+                    }
+                    const div = document.createElement('div');
+                    div.className = 'masonry-item';
+                    div.onclick = () => {
+                        window.CDF_Player.open(asset);
+                        if (!window.agentMuted) {
+                            let msg = "Inspiriert von diesem Stil?<br>Sichere dir jetzt einen Slot für 2025/26.";
+                            if (activeCategory.toLowerCase().includes("atelier")) {
+                                msg = "Interesse an einem Unikat oder einer Spezialanfertigung?";
+                            }
+                            triggerNexusGatekeeper(msg, false);
+                        }
+                    };
+                    const img = document.createElement('img');
+                    img.src = thumbnail;
+                    img.alt = asset.professional_name || asset.name;
+                    img.loading = "lazy";
+                    img.onerror = function() {
+                        this.onerror = null;
+                        this.src = '../assets/images/logo.png';
+                        this.style.opacity = '0.3';
+                        this.style.objectFit = 'contain';
+                    };
+                    div.appendChild(img);
+                    masonry.appendChild(div);
+                });
+            }
+
+            // Nexus Gatekeeper Analytics Logic (The Booking Agent)
+            let nexusTimer;
+            window.agentMuted = localStorage.getItem('agentMuted') === 'true';
+            
+            function toggleAgentMute() {
+                window.agentMuted = !window.agentMuted;
+                localStorage.setItem('agentMuted', window.agentMuted);
+                updateMuteUI();
+                if (window.agentMuted) {
+                    document.getElementById('nexus-gatekeeper').classList.remove('visible');
+                    clearTimeout(nexusTimer);
+                }
+            }
+
+            function updateMuteUI() {
+                const btn = document.getElementById('btn-mute-agent');
+                const icon = document.getElementById('mute-icon');
+                const text = btn.querySelector('.mono');
+                if (window.agentMuted) {
+                    icon.innerText = 'notifications_off';
+                    text.innerText = 'AGENT MUTED';
+                    btn.classList.add('opacity-40');
+                } else {
+                    icon.innerText = 'notifications_active';
+                    text.innerText = 'AGENT ACTIVE';
+                    btn.classList.remove('opacity-40');
+                }
+            }
+            updateMuteUI();
+            
+            function triggerNexusGatekeeper(message, immediate = false) {
+                if (window.agentMuted) return;
+                if (document.getElementById('nexus-gatekeeper').classList.contains('visible') && !immediate) return;
+                
+                clearTimeout(nexusTimer);
+                document.getElementById('nexus-message').innerHTML = message;
+                
+                if (immediate) {
+                    document.getElementById('nexus-gatekeeper').classList.add('visible');
+                } else {
+                    // Wait 6 seconds (instead of 10) for a non-blocking experience
+                    nexusTimer = setTimeout(() => {
+                        if (!window.agentMuted) document.getElementById('nexus-gatekeeper').classList.add('visible');
+                    }, 6000); 
+                }
+            }
+
+            // Auto-engage after 15 seconds on page (The "Observation" trigger)
+            setTimeout(() => {
+                triggerNexusGatekeeper("Lust auf einen Deep-Dive in den Flow? <br>Sichere dir jetzt deinen Termin.");
+            }, 15000);
+        });
+    </script>
+    <style>
+        @keyframes bounce-in {
+            0% { opacity: 0; transform: translateY(30px) scale(0.95); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+    </style>
+<script src="../js/agents/pusher.js" defer></script>
+<script src="../js/agents/helper.js" defer></script>
+    <script src="../js/agents/tutorial_core.js" defer></script>
+    <script src="../js/agents/quest_controller.js" defer></script>
+    <script src="../js/agents/visual_integrity.js" defer></script>
+    <script src="../js/agents/sound_engineer.js" defer></script>
+</body>
+</html>

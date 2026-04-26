@@ -69,39 +69,53 @@
 </head>
 <body class="h-screen w-screen flex flex-col">
 
-    <!-- MAINTENANCE MODE OVERLAY -->
-    <div id="maintenance-mode" style="
+    <!-- TUTORIAL BOOT OVERLAY (Level 1) -->
+    <div id="tutorial-boot-overlay" style="
         position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-        background: #000; z-index: 99999; 
-        display: none; flex-direction: column; justify-content: center; align-items: center; 
-        text-align: center; font-family: 'Cinzel', serif;">
-
-        <div style="position: absolute; width: 100%; height: 100%; background: radial-gradient(circle, #1a1a1a 0%, #000 100%); z-index: -1;"></div>
-
-        <img src="assets/branding/cqr-logo-gold.png" style="width: 120px; margin-bottom: 40px; filter: drop-shadow(0 0 20px gold); animation: pulse 4s infinite;">
-
-        <h1 style="color: #d4af37; font-size: 3em; letter-spacing: 10px; margin: 0;">SYSTEM PAUSED</h1>
-        <h2 style="color: #fff; font-family: 'Montserrat', sans-serif; font-weight: 300; letter-spacing: 5px; margin-top: 10px;">
-            „Der Flow kehrt zurück“
-        </h2>
-
-        <div style="margin-top: 50px; color: #444; font-family: 'Courier New', monospace; font-size: 0.9em; text-transform: uppercase;">
-            <p>Hintergrund-Synchronisation läuft...</p>
-            <div style="width: 200px; height: 1px; background: #333; margin: 20px auto; position: relative; overflow: hidden;">
-                <div style="position: absolute; width: 50px; height: 100%; background: gold; animation: move 3s infinite linear;"></div>
-            </div>
-            <p id="update-timer">Sequenz wird neu kodiert</p>
+        background: rgba(0,0,0,0.9); z-index: 99999; 
+        display: none; justify-content: center; align-items: center; 
+        backdrop-filter: blur(5px);">
+        
+        <div style="border: 1px solid #d4af37; padding: 40px; background: #0a0a0a; text-align: center; max-width: 500px; box-shadow: 0 0 30px rgba(212,175,55,0.2);">
+            <h2 class="font-tech" style="color: #ff3232; letter-spacing: 3px; font-size: 2em; margin-bottom: 20px;">SYSTEM OFFLINE</h2>
+            <p style="color: #aaa; font-family: 'Courier New', monospace; line-height: 1.5; margin-bottom: 20px;">
+                Navigator, deine Verbindung zur Matrix ist instabil. Die meisten Sektoren sind verschlüsselt.
+            </p>
+            <p style="color: #d4af37; font-family: 'Courier New'; font-weight: bold; margin-bottom: 30px; border: 1px dashed #d4af37; padding: 10px;">
+                MISSION: Öffne den CODEX und initiiere "PROTOCOL: THE FIRST BREATH", um die primären Systeme zu booten.
+            </p>
+            <button onclick="window.location.href='pages/quest_board.html'" style="background: #d4af37; color: #000; font-weight: bold; padding: 15px 30px; border: none; cursor: pointer; font-family: 'Orbitron', sans-serif; transition: all 0.3s; text-transform: uppercase;">
+                Zum Codex wechseln 📖
+            </button>
         </div>
     </div>
 
     <style>
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.7; }
-            50% { transform: scale(1.05); opacity: 1; }
+        /* THE ENCRYPTED NODE STYLE */
+        .node-locked {
+            opacity: 0.3;
+            pointer-events: none; /* Not clickable */
+            filter: grayscale(100%) blur(2px);
+            transition: all 1s ease-in-out;
+            position: relative;
         }
-        @keyframes move {
-            0% { left: -50px; }
-            100% { left: 200px; }
+
+        /* Lock Icon */
+        .node-locked::after {
+            content: "🔒 OFFLINE";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ff3232;
+            font-family: 'Courier New', monospace;
+            font-size: 0.7em;
+            font-weight: bold;
+            letter-spacing: 2px;
+            background: rgba(0,0,0,0.8);
+            padding: 2px 5px;
+            border: 1px solid #ff3232;
+            z-index: 10;
         }
     </style>
 
@@ -152,27 +166,107 @@
             <div class="mb-6">
                 <h2 class="text-xs text-white/50 uppercase tracking-[0.2em] mb-4 border-b border-white/10 pb-2">Planetary Systems</h2>
                 <div class="grid grid-cols-1 gap-2">
-                    <a href="pages/quest_map.html" class="flex items-center gap-3 p-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-animusBlue rounded transition-all group">
-                        <span class="material-symbols-outlined text-animusBlue group-hover:scale-110 transition-transform">public</span>
-                        <div>
-                            <div class="text-xs font-bold text-white uppercase">The Atlas</div>
-                            <div class="text-[9px] text-white/50">Global Quest Map</div>
-                        </div>
-                    </a>
-                    <a href="pages/quest_board.html" class="flex items-center gap-3 p-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-gold rounded transition-all group">
+                    
+                    <!-- CODEX (ALWAYS ONLINE) -->
+                    <a href="pages/quest_board.html" id="node-codex" class="flex items-center gap-3 p-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-gold rounded transition-all group">
                         <span class="material-symbols-outlined text-yellow-500 group-hover:scale-110 transition-transform">auto_stories</span>
                         <div>
                             <div class="text-xs font-bold text-white uppercase">The Codex</div>
                             <div class="text-[9px] text-white/50">Quest Board & Archives</div>
                         </div>
                     </a>
-                    <a href="pages/hall_of_legends.html" class="flex items-center gap-3 p-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-purple-500 rounded transition-all group">
-                        <span class="material-symbols-outlined text-purple-500 group-hover:scale-110 transition-transform">diversity_3</span>
+
+                    <!-- ATLAS (LOCKED LVL 2) -->
+                    <a href="pages/quest_map.html" id="node-map" class="dashboard-node node-locked flex items-center gap-3 p-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-animusBlue rounded transition-all group">
+                        <span class="material-symbols-outlined text-animusBlue group-hover:scale-110 transition-transform">public</span>
+                        <div>
+                            <div class="text-xs font-bold text-white uppercase">The Atlas</div>
+                            <div class="text-[9px] text-white/50">Global Quest Map</div>
+                        </div>
+                    </a>
+
+                    <!-- SOUND WORLD (LOCKED LVL 2) -->
+                    <a href="pages/sound_dashboard.html" id="node-sound" class="dashboard-node node-locked flex items-center gap-3 p-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-purple-400 rounded transition-all group">
+                        <span class="material-symbols-outlined text-purple-400 group-hover:scale-110 transition-transform">graphic_eq</span>
+                        <div>
+                            <div class="text-xs font-bold text-white uppercase">Sound World</div>
+                            <div class="text-[9px] text-white/50">frequencies & Audio</div>
+                        </div>
+                    </a>
+
+                    <!-- BAZAAR (LOCKED LVL 3) -->
+                    <a href="pages/marketplace.html" id="node-bazaar" class="dashboard-node node-locked flex items-center gap-3 p-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-green-400 rounded transition-all group">
+                        <span class="material-symbols-outlined text-green-400 group-hover:scale-110 transition-transform">storefront</span>
+                        <div>
+                            <div class="text-xs font-bold text-white uppercase">High Palast Market</div>
+                            <div class="text-[9px] text-white/50">Trade & Commerce</div>
+                        </div>
+                    </a>
+
+                    <!-- BROTHERHOOD (LOCKED LVL 4) -->
+                    <a href="pages/hall_of_legends.html" id="node-brotherhood" class="dashboard-node node-locked flex items-center gap-3 p-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-red-500 rounded transition-all group">
+                        <span class="material-symbols-outlined text-red-500 group-hover:scale-110 transition-transform">diversity_3</span>
                         <div>
                             <div class="text-xs font-bold text-white uppercase">Brotherhood</div>
                             <div class="text-[9px] text-white/50">Hall of Legends</div>
                         </div>
                     </a>
+
+                </div>
+            </div>
+
+            <!-- ANIMUS STATS (RPG LAYER) -->
+            <div class="mb-6">
+                <h2 class="text-xs text-white/50 uppercase tracking-[0.2em] mb-4 border-b border-white/10 pb-2">Animus Stats</h2>
+                
+                <div id="animus-stats-container" class="bg-black/40 border border-white/10 rounded p-3">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-xs font-bold text-animusBlue uppercase">Class: <span id="user-class-display" class="text-white">Unknown</span></span>
+                        <span class="text-[10px] text-gold uppercase" id="flow-points-display">FP: 0</span>
+                    </div>
+                    
+                    <div class="space-y-2 text-[10px] uppercase font-bold text-white/70">
+                         <!-- 5 Pillars -->
+                         <div class="flex justify-between items-center">
+                             <span>Signal (Hack)</span>
+                             <div class="w-1/2 bg-gray-800 h-1 rounded relative group cursor-pointer" onclick="investPoint('signal')">
+                                 <div id="bar-signal" class="bg-blue-500 h-full w-0 transition-all"></div>
+                                 <span id="val-signal" class="absolute -top-3 right-0 text-[9px] text-blue-400">0</span>
+                             </div>
+                         </div>
+                         <div class="flex justify-between items-center">
+                             <span>Frequency (Social)</span>
+                             <div class="w-1/2 bg-gray-800 h-1 rounded relative group cursor-pointer" onclick="investPoint('frequency')">
+                                 <div id="bar-frequency" class="bg-purple-500 h-full w-0 transition-all"></div>
+                                 <span id="val-frequency" class="absolute -top-3 right-0 text-[9px] text-purple-400">0</span>
+                             </div>
+                         </div>
+                         <div class="flex justify-between items-center">
+                             <span>Kinetic (Move)</span>
+                             <div class="w-1/2 bg-gray-800 h-1 rounded relative group cursor-pointer" onclick="investPoint('kinetic')">
+                                 <div id="bar-kinetic" class="bg-red-500 h-full w-0 transition-all"></div>
+                                 <span id="val-kinetic" class="absolute -top-3 right-0 text-[9px] text-red-400">0</span>
+                             </div>
+                         </div>
+                         <div class="flex justify-between items-center">
+                             <span>Visual (Create)</span>
+                             <div class="w-1/2 bg-gray-800 h-1 rounded relative group cursor-pointer" onclick="investPoint('visual')">
+                                 <div id="bar-visual" class="bg-yellow-500 h-full w-0 transition-all"></div>
+                                 <span id="val-visual" class="absolute -top-3 right-0 text-[9px] text-yellow-400">0</span>
+                             </div>
+                         </div>
+                         <div class="flex justify-between items-center">
+                             <span>Gnosis (Puzzle)</span>
+                             <div class="w-1/2 bg-gray-800 h-1 rounded relative group cursor-pointer" onclick="investPoint('gnosis')">
+                                 <div id="bar-gnosis" class="bg-green-500 h-full w-0 transition-all"></div>
+                                 <span id="val-gnosis" class="absolute -top-3 right-0 text-[9px] text-green-400">0</span>
+                             </div>
+                         </div>
+                    </div>
+                    
+                    <button onclick="openClassModal()" id="btn-choose-class" style="display:none;" class="w-full mt-3 py-1 border border-animusBlue text-animusBlue text-[10px] uppercase hover:bg-animusBlue hover:text-black transition-colors">
+                        Initialize Class
+                    </button>
                 </div>
             </div>
 
@@ -623,3 +717,220 @@
             if(typeof checkUserSession !== 'undefined') checkUserSession();
         };
     </script>
+
+    <!-- CLASS SELECTION MODAL -->
+    <div id="class-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:20000; justify-content:center; align-items:center;">
+        <div style="max-width:800px; width:90%; background:#0a0a0a; border:1px solid #00f0ff; padding:30px; border-radius:10px; box-shadow:0 0 50px rgba(0,240,255,0.2);">
+             <h2 class="font-tech text-3xl text-center text-animusBlue mb-6">CHOOSE YOUR PATH</h2>
+             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                 <div class="p-4 border border-white/20 hover:border-blue-500 cursor-pointer transition-all bg-white/5" onclick="selectClass('SPEAKER')">
+                     <h3 class="font-bold text-white text-xl mb-2">SPEAKER</h3>
+                     <p class="text-xs text-white/60">Masters of Frequency. Bonus to Social interactions and Team Buffs.</p>
+                     <div class="mt-2 text-blue-400 text-xs">+2 Frequency</div>
+                 </div>
+                 <div class="p-4 border border-white/20 hover:border-red-500 cursor-pointer transition-all bg-white/5" onclick="selectClass('RUNNER')">
+                     <h3 class="font-bold text-white text-xl mb-2">RUNNER</h3>
+                     <p class="text-xs text-white/60">Masters of Kinetic. Faster movement on map, reduced cooldowns.</p>
+                     <div class="mt-2 text-red-400 text-xs">+2 Kinetic</div>
+                 </div>
+                 <div class="p-4 border border-white/20 hover:border-yellow-500 cursor-pointer transition-all bg-white/5" onclick="selectClass('WEAVER')">
+                     <h3 class="font-bold text-white text-xl mb-2">WEAVER</h3>
+                     <p class="text-xs text-white/60">Masters of Visual. Required for Art Quests and Crafting.</p>
+                     <div class="mt-2 text-yellow-400 text-xs">+2 Visual</div>
+                 </div>
+                  <div class="p-4 border border-white/20 hover:border-green-500 cursor-pointer transition-all bg-white/5" onclick="selectClass('ORACLE')">
+                     <h3 class="font-bold text-white text-xl mb-2">ORACLE</h3>
+                     <p class="text-xs text-white/60">Masters of Gnosis. Solves puzzles instantly, sees hidden nodes.</p>
+                     <div class="mt-2 text-green-400 text-xs">+2 Gnosis</div>
+                 </div>
+                 <div class="p-4 border border-white/20 hover:border-purple-500 cursor-pointer transition-all bg-white/5" onclick="selectClass('TAGGER')">
+                     <h3 class="font-bold text-white text-xl mb-2">TAGGER</h3>
+                     <p class="text-xs text-white/60">Masters of Signal. Hacks nodes faster, harder to trace.</p>
+                     <div class="mt-2 text-purple-400 text-xs">+2 Signal</div>
+                 </div>
+             </div>
+             <button onclick="document.getElementById('class-modal').style.display='none'" class="w-full py-3 border border-white/20 text-white hover:bg-white/10 uppercase font-tech">DECIDE LATER</button>
+        </div>
+    </div>
+
+    <script>
+        // AUTH CHECK & RPG INIT
+        window.onload = async () => {
+            if(typeof checkUserSession !== 'undefined') checkUserSession();
+            // Load RPG Stats
+            if(window.supabaseClient) await loadAnimusStats();
+        };
+
+        let userProfile = null;
+
+        async function loadAnimusStats() {
+            const { data: { user } } = await window.supabaseClient.auth.getUser();
+            if(!user) return;
+
+            const { data: profile, error } = await window.supabaseClient
+                .from('profiles')
+                .select('flow_class, flow_points, stat_signal, stat_frequency, stat_kinetic, stat_visual, stat_gnosis')
+                .eq('id', user.id)
+                .single();
+
+            if(error) return console.error("Stats Error", error);
+            
+            userProfile = profile; // Cache
+
+            // Update UI
+            // Check elements exist first
+            const classDisplay = document.getElementById('user-class-display');
+            if(classDisplay) classDisplay.innerText = profile.flow_class || "INITIATE";
+            
+            const fpDisplay = document.getElementById('flow-points-display');
+            if(fpDisplay) fpDisplay.innerText = `FP: ${profile.flow_points || 0}`;
+
+            // Reveal Class Button if Null
+            const classBtn = document.getElementById('btn-choose-class');
+            if(classBtn) {
+                if(!profile.flow_class) {
+                    classBtn.style.display = 'block';
+                } else {
+                    classBtn.style.display = 'none';
+                }
+            }
+
+            // Update Bars (Max 10 for visual scaling, though logic is boundless)
+            updateStatBar('signal', profile.stat_signal);
+            updateStatBar('frequency', profile.stat_frequency);
+            updateStatBar('kinetic', profile.stat_kinetic);
+            updateStatBar('visual', profile.stat_visual);
+            updateStatBar('gnosis', profile.stat_gnosis);
+        }
+
+        function updateStatBar(stat, val) {
+            const el = document.getElementById(`bar-${stat}`);
+            const txt = document.getElementById(`val-${stat}`);
+            if(el) el.style.width = Math.min((val || 0) * 10, 100) + '%';
+            if(txt) txt.innerText = val || 0;
+        }
+
+        function openClassModal() {
+            document.getElementById('class-modal').style.display = 'flex';
+        }
+
+        async function selectClass(className) {
+            if(!confirm(`Commit to the Path of the ${className}? This cannot be undone easily.`)) return;
+            
+            const { data: { user } } = await window.supabaseClient.auth.getUser();
+            
+            // Define Base Stats
+            let updates = { flow_class: className };
+            if(className === 'SPEAKER') updates.stat_frequency = (userProfile.stat_frequency || 0) + 2;
+            if(className === 'RUNNER') updates.stat_kinetic = (userProfile.stat_kinetic || 0) + 2;
+            if(className === 'WEAVER') updates.stat_visual = (userProfile.stat_visual || 0) + 2;
+            if(className === 'ORACLE') updates.stat_gnosis = (userProfile.stat_gnosis || 0) + 2;
+            if(className === 'TAGGER') updates.stat_signal = (userProfile.stat_signal || 0) + 2;
+
+            const { error } = await window.supabaseClient
+                .from('profiles')
+                .update(updates)
+                .eq('id', user.id);
+
+            if(error) {
+                alert("Class Selection Failed: " + error.message);
+            } else {
+                alert(`Welcome, ${className}. Your Animus has evolved.`);
+                document.getElementById('class-modal').style.display = 'none';
+                loadAnimusStats(); // Refresh
+            }
+        }
+
+        async function investPoint(stat) {
+            if(!userProfile || (userProfile.flow_points || 0) < 1) {
+                return alert("Not enough Flow Points (FP). Level up to earn more.");
+            }
+            
+            if(!confirm(`Invest 1 FP into ${stat.toUpperCase()}?`)) return;
+
+            const { data: { user } } = await window.supabaseClient.auth.getUser();
+            
+            // Dynamic Update Key
+            const updatePayload = { 
+                flow_points: userProfile.flow_points - 1 
+            };
+            updatePayload[`stat_${stat}`] = (userProfile[`stat_${stat}`] || 0) + 1;
+
+            const { error } = await window.supabaseClient
+                .from('profiles')
+                .update(updatePayload)
+                .eq('id', user.id);
+
+            if(error) {
+                alert("Investment Failed");
+            } else {
+                // Optimistic Update
+                loadAnimusStats();
+            }
+        }
+    </script>
+
+    <!-- PROGRESSIVE DISCLOSURE SYSTEM -->
+    <script>
+        async function bootSystemProtocols() {
+            // Wait for Supabase
+            if(!window.supabaseClient) {
+                setTimeout(bootSystemProtocols, 500);
+                return;
+            }
+
+            const { data: { user } } = await window.supabaseClient.auth.getUser();
+            if (!user) return;
+
+            // Hole das Level (oder die EXP) des Users
+            const { data: profile } = await window.supabaseClient
+                .from('profiles')
+                .select('level, exp')
+                .eq('id', user.id)
+                .single();
+
+            if (!profile) return;
+
+            const userLevel = profile.level || 1; // Falls kein Level da ist, ist er Level 1
+
+            console.log(`[SYSTEM BOOT] User Level: ${userLevel}`);
+
+            // 1. TUTORIAL POPUP FÜR LEVEL 1
+            if (userLevel === 1) {
+                document.getElementById('tutorial-boot-overlay').style.display = 'flex';
+            }
+
+            // 2. PROGRESSIVE DISCLOSURE (Freischaltungen)
+            
+            // Level 2: Sound World & Map gehen online
+            if (userLevel >= 2) {
+                unlockNode('node-sound', 'AUDIO LINK ESTABLISHED');
+                unlockNode('node-map', 'GPS UPLINK SECURED');
+            }
+            
+            // Level 3: Bazaar geht online
+            if (userLevel >= 3) {
+                unlockNode('node-bazaar', 'MERCHANT ENCRYPTION BROKEN');
+            }
+
+            // Level 4: Turf Wars (Brotherhood) gehen online
+            if (userLevel >= 4) {
+                unlockNode('node-brotherhood', 'SYNDICATE UPLINK ESTABLISHED');
+            }
+        }
+
+        function unlockNode(nodeId, bootMessage) {
+            const node = document.getElementById(nodeId);
+            if (node && node.classList.contains('node-locked')) {
+                // Entferne die Sperre
+                node.classList.remove('node-locked');
+                
+                // Optional: Zeige eine kleine Benachrichtigung (Console for now)
+                console.log(`[SYSTEM]: ${nodeId} UNLOCKED - ${bootMessage}`);
+            }
+        }
+
+        // Skript ausführen, sobald die Seite lädt
+        window.addEventListener('DOMContentLoaded', bootSystemProtocols);
+    </script>
+</body>

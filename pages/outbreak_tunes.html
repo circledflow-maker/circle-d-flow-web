@@ -123,6 +123,7 @@
         <div id="sync-bar-kitchen" style="width: 33.4%; height: 100%; background: #ff8c00; float: left; box-shadow: 0 0 10px #ff8c00; transition: 1s;"></div>
     </div>
     <script>
+    <script>
         function updateTrinitySync(v, s, k) {
             const bar = document.getElementById('trinity-resonance-wrap');
             if(bar) bar.style.display = 'block'; // Show if active
@@ -142,6 +143,12 @@
              setTimeout(() => updateTrinitySync(60, 60, 60), 1000);
         }
     </script>
+
+    <!-- GUEST SOUND WARNING -->
+    <div id="guest-sound-warning" style="display: none; background: rgba(255,50,50,0.1); border-bottom: 1px solid #ff3232; padding: 10px; text-align: center; color: #ff3232; font-family: 'Courier New'; font-size: 0.8em; letter-spacing: 1px; position: relative; z-index: 9999;">
+        ⚠️ OBSERVER MODE: Gast-Zugang aktiv. Registriere dich, um Flow Credits zu nutzen und Zugang zum Live Lab zu erhalten.
+        <a href="../index.html" style="color: #fff; margin-left: 15px; text-decoration: underline;">UPLINK STARTEN</a>
+    </div>
 
     <!-- Video Background -->
     <video autoplay loop muted playsinline id="video-bg">
@@ -240,6 +247,19 @@
 
         <main class="relative z-10 pt-12 md:pt-16 pb-24 container mx-auto px-6">
             
+            <!-- SOUND WORLD NAV (The Sonic Bridge) -->
+            <nav style="display: flex; justify-content: center; background: rgba(0,0,0,0.8); border-bottom: 1px solid #333; padding: 12px 0; margin-bottom: 20px; border-radius: 8px;">
+                <div style="display: flex; gap: 20px; font-family: 'Courier New', monospace; font-size: 0.8em; letter-spacing: 1px; overflow-x: auto; padding: 0 10px;">
+                    <a href="outbreak_tunes.html" style="color: #ff3232; text-decoration: none; white-space: nowrap;">THE SIGNAL</a>
+                    <span style="color: #555;">|</span>
+                    <a href="live_lab.html" style="color: #00f0ff; text-decoration: none; white-space: nowrap;">LIVE LAB</a>
+                    <span style="color: #555;">|</span>
+                    <a href="qters_sanctuary.html" style="color: var(--lisbon-gold); text-decoration: none; white-space: nowrap;">SANCTUARY</a>
+                    <span style="color: #555;">|</span>
+                    <a href="observer_hub.html" style="color: #888; text-decoration: none; white-space: nowrap;">[ DISCONNECT ]</a>
+                </div>
+            </nav>
+            
             <!-- 1. THE FLYER-WALL (Ruste Juxx Tour) -->
             <section id="flyer-wall" class="mb-16 relative group">
                 <div class="absolute inset-0 bg-gradient-to-r from-red-600/20 to-orange-500/20 rounded-2xl blur-xl transition-opacity opcode-50 group-hover:opacity-80"></div>
@@ -294,7 +314,7 @@
                                 </div>
                             </div>
 
-                            <a href="https://shotgun.live/fr/events/ruste-juxx-show-case-lisbon-2026?utm_source=ig&utm_medium=social&utm_content=link_in_bio&fbclid=PAZXh0bgNhZW0CMTEAc3J0YwZhcHBfaWQMMjU2MjgxMDQwNTU4AAGnGdTHV6Osx88GkESM8EouIDb8wLfYUyLj2k5jQlOtiH-7tHPkkRV-wcMk9cA_aem_7ln1HTwr1ozpKr1rZhF33Q" target="_blank" class="px-8 py-4 bg-white text-black font-black uppercase tracking-widest hover:bg-mystic-gold hover:scale-105 transition-all shadow-[0_0_20px_rgba(255,255,255,0.3)] rounded flex items-center gap-2">
+                            <a href="https://shotgun.live/fr/events/ruste-juxx-show-case-lisbon-2026?utm_source=ig&utm_medium=social&utm_content=link_in_bio&fbclid=PAZXh0bgNhZW0CMTEAc3J0YwZhcHBfaWQMMjU2MjgxMDQwNTU4AAGnGdTHV6Osx88GkESM8EouIDb8wLfYUyLj2k5jQlOtiH-7tHPkkRV-wcMk9cA_aem_7ln1HTwr1ozpKr1rZhF33Q" target="_blank" class="get-tickets-btn px-8 py-4 bg-white text-black font-black uppercase tracking-widest hover:bg-mystic-gold hover:scale-105 transition-all shadow-[0_0_20px_rgba(255,255,255,0.3)] rounded flex items-center gap-2">
                                 <span class="material-symbols-outlined">confirmation_number</span>
                                 Get Tickets
                             </a>
@@ -910,6 +930,47 @@
 
     <!-- AUTOMATED AGENT INJECTION -->
     <script src="../js/agents/imperial_hud.js" defer></script>
+    <script>
+        async function checkSoundWorldAccess() {
+            const { data: { session } } = await supabase.auth.getSession();
+            
+            const ticketButtons = document.querySelectorAll('.get-tickets-btn'); // Using the added class
+
+            if (!session) {
+                // --- GUEST MODE ---
+                const banner = document.getElementById('guest-sound-warning');
+                if(banner) banner.style.display = 'block';
+                
+                // Hide member-only areas (e.g., chat)
+                const chatWidget = document.getElementById('flow-chat-widget');
+                if(chatWidget) chatWidget.style.display = 'none';
+
+                // Change ticket buttons for guests
+                ticketButtons.forEach(btn => {
+                    btn.innerHTML = '🎟️ REQUEST TICKET (FIAT)';
+                    btn.onclick = (e) => {
+                        e.preventDefault();
+                        alert("OBSERVER PROTOCOL: Contact our team or register for the credit market.");
+                        window.location.href = 'observer_hub.html?open_market=true';
+                    };
+                });
+            } else {
+                // --- MEMBER MODE ---
+                ticketButtons.forEach(btn => {
+                    // Start Smart Contract Simulation
+                    if(btn.innerText.includes('Get Tickets') || btn.innerText.includes('GET TICKETS')) {
+                         btn.innerHTML = '🎟️ USE FLOW CREDITS';
+                         btn.onclick = (e) => {
+                             // Preserve link opening behavior for now, but alert first
+                             alert("Initiating Smart Contract... 500 Credits authorized.");
+                         }
+                    }
+                });
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', checkSoundWorldAccess);
+    </script>
 </body>
 </html>
 
