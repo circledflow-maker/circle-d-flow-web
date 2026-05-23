@@ -23,11 +23,19 @@ const translations = {
         
         "criz_title": "C-RIZ LISTENING PARTY",
         "criz_date": "DATE: 02. JUNE 2026",
+        "criz_time": "TIME: 18:00",
+        "criz_location": "LOCATION: SECRET GARDEN LX",
         "criz_desc": "The genesis of the new wave. Exclusive early preview of the album in the Matrix.",
+        "criz_teaser": "DJ Set by C-RIZ, Secret Guests, Drinks by African Queen Kitchen.",
         "cdf_title": "CIRCLE D FLOW : THE AWAKENING",
-        "cdf_date": "DATE: 15. OCT 2026",
+        "cdf_date": "DATE: 27. JUNE 2026",
+        "cdf_time": "TIME: 18:00",
+        "cdf_location": "LOCATION: SECRET GARDEN LX",
         "cdf_desc": "Enter the sacred halls. Experience the exclusive line-up. Take the destiny test and secure your place.",
+        "cdf_teaser": "Experience the fusion of music, art, and spirituality. More details coming soon.",
         "btn_ticket_small": "[ GET TICKET ]",
+        "btn_info_small": "[ INFO ]",
+        "lb_teaser_title": "LINE-UP & DETAILS",
         "btn_buy_small": "[ ACQUIRE ]"
     },
     "de": {
@@ -54,11 +62,19 @@ const translations = {
         
         "criz_title": "C-RIZ LISTENING PARTY",
         "criz_date": "DATUM: 02. JUNI 2026",
+        "criz_time": "ZEIT: 18:00 UHR",
+        "criz_location": "ORT: SECRET GARDEN LX",
         "criz_desc": "Die Entstehung der neuen Welle. Exklusives Preview des Albums in der Matrix.",
+        "criz_teaser": "DJ Set von C-RIZ, Secret Guests, Drinks by African Queen Kitchen.",
         "cdf_title": "CIRCLE D FLOW : THE AWAKENING",
-        "cdf_date": "DATUM: 15. OKT 2026",
+        "cdf_date": "DATUM: 27. JUNI 2026",
+        "cdf_time": "ZEIT: 18:00 UHR",
+        "cdf_location": "ORT: SECRET GARDEN LX",
         "cdf_desc": "Tritt in die heiligen Hallen ein. Erlebe das exklusive Line-up. Nimm die Prüfung an und sichere dir deinen Platz.",
+        "cdf_teaser": "Erlebe die Verschmelzung von Musik, Kunst und Spiritualität. Mehr Details folgen in Kürze.",
         "btn_ticket_small": "[ TICKET HOLEN ]",
+        "btn_info_small": "[ INFO ]",
+        "lb_teaser_title": "LINE-UP & DETAILS",
         "btn_buy_small": "[ ERWERBEN ]"
     },
     "fr": {
@@ -85,11 +101,19 @@ const translations = {
         
         "criz_title": "C-RIZ LISTENING PARTY",
         "criz_date": "DATE: 02 JUIN 2026",
+        "criz_time": "HEURE: 18:00",
+        "criz_location": "LIEU: SECRET GARDEN LX",
         "criz_desc": "La genèse de la nouvelle vague. Aperçu exclusif de l'album dans la Matrice.",
+        "criz_teaser": "DJ Set par C-RIZ, Invités Surprises, Boissons par African Queen Kitchen.",
         "cdf_title": "CIRCLE D FLOW : THE AWAKENING",
-        "cdf_date": "DATE: 15 OCT 2026",
+        "cdf_date": "DATE: 27 JUIN 2026",
+        "cdf_time": "HEURE: 18:00",
+        "cdf_location": "LIEU: SECRET GARDEN LX",
         "cdf_desc": "Entre dans les salles sacrées. Découvre le line-up exclusif. Passe l'épreuve du destin et assure ta place.",
-        "btn_ticket_small": "[ OBTENIR LE BILLET ]",
+        "cdf_teaser": "Découvrez la fusion de la musique, de l'art et de la spiritualité. Plus de détails à venir.",
+        "btn_ticket_small": "[ OBTENIR BILLET ]",
+        "btn_info_small": "[ INFO ]",
+        "lb_teaser_title": "LINE-UP & DÉTAILS",
         "btn_buy_small": "[ ACQUÉRIR ]"
     },
     "pt": {
@@ -116,11 +140,19 @@ const translations = {
         
         "criz_title": "C-RIZ LISTENING PARTY",
         "criz_date": "DATA: 02 JUNHO 2026",
+        "criz_time": "HORA: 18:00",
+        "criz_location": "LOCAL: SECRET GARDEN LX",
         "criz_desc": "A génese da nova vaga. Antevisão exclusiva do álbum na Matrix.",
+        "criz_teaser": "DJ Set de C-RIZ, Convidados Secretos, Bebidas por African Queen Kitchen.",
         "cdf_title": "CIRCLE D FLOW : THE AWAKENING",
-        "cdf_date": "DATA: 15 OUT 2026",
+        "cdf_date": "DATA: 27 JUNHO 2026",
+        "cdf_time": "HORA: 18:00",
+        "cdf_location": "LOCAL: SECRET GARDEN LX",
         "cdf_desc": "Entra nos salões sagrados. Descobre o alinhamento exclusivo. Faz o teste do destino e garante o teu lugar.",
+        "cdf_teaser": "Experiencie a fusão de música, arte e espiritualidade. Mais detalhes em breve.",
         "btn_ticket_small": "[ OBTER BILHETE ]",
+        "btn_info_small": "[ INFO ]",
+        "lb_teaser_title": "ALINHAMENTO E DETALHES",
         "btn_buy_small": "[ ADQUIRIR ]"
     }
 };

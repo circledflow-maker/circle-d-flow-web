@@ -160,6 +160,53 @@ class BantabaApp {
         }});
     }
 
+    openInfoLightbox(eventId) {
+        const lb = document.getElementById('info-lightbox');
+        const title = document.getElementById('info-lb-title');
+        const date = document.getElementById('info-lb-date');
+        const time = document.getElementById('info-lb-time');
+        const loc = document.getElementById('info-lb-location');
+        const desc = document.getElementById('info-lb-desc');
+        const teaser = document.getElementById('info-lb-teaser');
+        const ticketBtn = document.getElementById('info-lb-ticket-btn');
+
+        const lang = localStorage.getItem('cqr_lang') || 'de';
+        const t = translations[lang] || translations['en'];
+
+        if(eventId === 'criz') {
+            title.innerText = t['criz_title'] || "C-RIZ LISTENING PARTY";
+            date.innerText = t['criz_date'] || "DATUM: 02. JUNI 2026";
+            time.innerText = t['criz_time'] || "ZEIT: TBA";
+            loc.innerText = t['criz_location'] || "ORT: TBA";
+            desc.innerText = t['criz_desc'] || "Die Entstehung der neuen Welle...";
+            teaser.innerText = t['criz_teaser'] || "DJ Set von C-RIZ, Secret Guests, Drinks by African Queen Kitchen.";
+        } else if(eventId === 'circledflow') {
+            title.innerText = t['cdf_title'] || "CIRCLE D FLOW : THE AWAKENING";
+            date.innerText = t['cdf_date'] || "DATUM: 27. JUNI 2026";
+            time.innerText = t['cdf_time'] || "ZEIT: TBA";
+            loc.innerText = t['cdf_location'] || "ORT: TBA";
+            desc.innerText = t['cdf_desc'] || "Tritt in die heiligen Hallen ein...";
+            teaser.innerText = t['cdf_teaser'] || "Erlebe die Verschmelzung von Musik, Kunst und Spiritualität. Mehr Details folgen in Kürze.";
+        }
+        
+        ticketBtn.onclick = () => {
+            this.closeInfoLightbox();
+            this.openLightbox(eventId);
+        };
+
+        lb.classList.remove('hidden');
+        lb.classList.add('flex');
+        gsap.fromTo(lb, { opacity: 0 }, { opacity: 1, duration: 0.3 });
+    }
+
+    closeInfoLightbox() {
+        const lb = document.getElementById('info-lightbox');
+        gsap.to(lb, { opacity: 0, duration: 0.3, onComplete: () => {
+            lb.classList.add('hidden');
+            lb.classList.remove('flex');
+        }});
+    }
+
     proceedToDice() {
         this.closeLightbox();
         

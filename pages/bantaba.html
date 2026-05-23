@@ -216,24 +216,30 @@
                     <div id="grid-events" class="bounty-grid w-full">
                         
                         <!-- Event: C-RIZ -->
-                        <div class="bounty-card cursor-pointer" onclick="app.openLightbox('criz')">
+                        <div class="bounty-card">
                             <div class="bounty-pin" style="background: #ef4444;"></div>
                             <h3 class="text-2xl cinzel text-white mb-2" data-i18n="criz_title">C-RIZ LISTENING PARTY</h3>
-                            <p class="text-sm text-red-400 font-mono mb-4" data-i18n="criz_date">DATUM: 02. JUNI 2026</p>
+                            <p class="text-sm text-red-400 font-mono mb-1" data-i18n="criz_date">DATUM: 02. JUNI 2026</p>
+                            <p class="text-xs text-red-400/70 font-mono mb-1" data-i18n="criz_time">ZEIT: TBA</p>
+                            <p class="text-xs text-red-400/70 font-mono mb-4" data-i18n="criz_location">ORT: TBA</p>
                             <p class="text-sm text-gray-400 mb-6" data-i18n="criz_desc">The genesis of the new wave. Exclusive early preview of the album in the Matrix.</p>
-                            <div class="text-right">
-                                <span class="text-red-500 font-mono text-sm hover:underline" data-i18n="btn_ticket_small">[ TICKET HOLEN ]</span>
+                            <div class="flex justify-between items-center mt-auto">
+                                <button class="text-gray-400 font-mono text-sm hover:text-white transition" onclick="app.openInfoLightbox('criz')" data-i18n="btn_info_small">[ INFO ]</button>
+                                <button class="text-red-500 font-mono text-sm hover:underline transition" onclick="app.openLightbox('criz')" data-i18n="btn_ticket_small">[ TICKET HOLEN ]</button>
                             </div>
                         </div>
 
                         <!-- Event: Circle D Flow -->
-                        <div class="bounty-card cursor-pointer" onclick="app.openLightbox('circledflow')">
+                        <div class="bounty-card">
                             <div class="bounty-pin" style="background: #d4af37;"></div>
                             <h3 class="text-2xl cinzel text-white mb-2" data-i18n="cdf_title">CIRCLE D FLOW : THE AWAKENING</h3>
-                            <p class="text-sm text-[#d4af37] font-mono mb-4" data-i18n="cdf_date">DATUM: 15. OKT 2026</p>
+                            <p class="text-sm text-[#d4af37] font-mono mb-1" data-i18n="cdf_date">DATUM: 27. JUNI 2026</p>
+                            <p class="text-xs text-[#d4af37]/70 font-mono mb-1" data-i18n="cdf_time">ZEIT: TBA</p>
+                            <p class="text-xs text-[#d4af37]/70 font-mono mb-4" data-i18n="cdf_location">ORT: TBA</p>
                             <p class="text-sm text-gray-400 mb-6" data-i18n="cdf_desc">Tritt in die heiligen Hallen ein. Erlebe das exklusive Line-up. Nimm die Schicksalsprüfung an.</p>
-                            <div class="text-right">
-                                <span class="text-emerald-500 font-mono text-sm hover:underline" data-i18n="btn_ticket_small">[ TICKET HOLEN ]</span>
+                            <div class="flex justify-between items-center mt-auto">
+                                <button class="text-gray-400 font-mono text-sm hover:text-white transition" onclick="app.openInfoLightbox('circledflow')" data-i18n="btn_info_small">[ INFO ]</button>
+                                <button class="text-emerald-500 font-mono text-sm hover:underline transition" onclick="app.openLightbox('circledflow')" data-i18n="btn_ticket_small">[ TICKET HOLEN ]</button>
                             </div>
                         </div>
 
@@ -271,7 +277,30 @@
                     <button class="text-gray-500 hover:text-white font-mono transition bg-black/50 px-4 py-2 rounded" onclick="app.turnPage(0)" data-i18n="btn_back">← Zurück zum Eingang</button>
                 </div>
 
-                <!-- LIGHTBOX (Hidden) -->
+                <!-- INFO LIGHTBOX (Hidden) -->
+                <div id="info-lightbox" class="fixed inset-0 z-[60] bg-black/90 hidden flex-col justify-center items-center backdrop-blur-sm p-4 overflow-y-auto">
+                    <div class="bg-[#111] border border-[#d4af37] w-full max-w-md p-6 relative rounded-lg shadow-2xl text-center my-auto">
+                        <button onclick="app.closeInfoLightbox()" class="absolute top-2 right-4 text-gray-500 hover:text-white text-4xl leading-none">&times;</button>
+                        
+                        <h2 id="info-lb-title" class="text-2xl md:text-3xl cinzel text-[#d4af37] mb-2 mt-4 md:mt-0">EVENT TITLE</h2>
+                        <div class="flex flex-col gap-1 mb-4 border-b border-gray-800 pb-4">
+                            <p id="info-lb-date" class="text-sm font-mono text-[#d4af37]">DATE</p>
+                            <p id="info-lb-time" class="text-xs font-mono text-gray-400">TIME</p>
+                            <p id="info-lb-location" class="text-xs font-mono text-gray-400">LOCATION</p>
+                        </div>
+                        
+                        <p id="info-lb-desc" class="text-gray-300 leading-relaxed mb-6 text-sm md:text-base">Event description goes here...</p>
+
+                        <div class="bg-black/50 p-6 border border-[#d4af37]/30 mb-8 rounded text-left">
+                            <h4 class="font-mono text-[#d4af37] mb-2" data-i18n="lb_teaser_title">Line-Up & Teaser</h4>
+                            <p id="info-lb-teaser" class="text-sm text-gray-400">Teaser text...</p>
+                        </div>
+
+                        <button class="btn-gold w-full text-center" id="info-lb-ticket-btn" data-i18n="btn_ticket_small">[ TICKET HOLEN ]</button>
+                    </div>
+                </div>
+
+                <!-- TICKET LIGHTBOX (Hidden) -->
                 <div id="event-lightbox" class="fixed inset-0 z-50 bg-black/90 hidden flex-col justify-center items-center backdrop-blur-sm p-4 overflow-y-auto">
                     <div class="bg-[#111] border border-[#d4af37] w-full max-w-md p-6 relative rounded-lg shadow-2xl text-center my-auto">
                         <!-- Close btn -->
