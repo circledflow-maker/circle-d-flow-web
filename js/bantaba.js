@@ -23,10 +23,26 @@ class BantabaApp {
         const { data: { session } } = await window.supabaseClient.auth.getSession();
         if (session) {
             this.setLoggedInState(session.user.email);
+            // Handle return from Magic Link
+            if (window.location.hash.includes('access_token')) {
+                // Clear the hash so we don't re-trigger on next reload
+                window.history.replaceState(null, null, window.location.pathname);
+                
+                // Auto-forward to page 3 and roll
+                this.currentEventId = localStorage.getItem('last_event_id') || 'criz';
+                this.proceedToDice();
+                
+                // Wait for page transition then roll
+                setTimeout(() => {
+                    this.initiateRoll();
+                }, 1500);
+            }
         } else {
-            // Listen for auth changes (e.g. returning from magic link)
+            // Listen for auth changes
             window.supabaseClient.auth.onAuthStateChange((event, session) => {
-                if (session) this.setLoggedInState(session.user.email);
+                if (session) {
+                    this.setLoggedInState(session.user.email);
+                }
             });
         }
     }
@@ -151,6 +167,11 @@ class BantabaApp {
 
     proceedToDice() {
         this.closeLightbox();
+        
+        // Save the event id so we can restore it after magic link login
+        if (this.currentEventId) {
+            localStorage.setItem('last_event_id', this.currentEventId);
+        }
         
         const flyer = document.getElementById('checkout-flyer');
         if (flyer) {
@@ -641,8 +662,8 @@ class BantabaApp {
                 
                 gsap.to(this.dice.position, { y: 1.5, duration: 1, ease: "bounce.out" });
                 
-                // Cinematic scale
-                gsap.to(this.dice.scale, { x: 1.8, y: 1.8, z: 1.8, duration: 1, ease: "elastic.out(1, 0.3)" });
+                // Cinematic scale (reduced to prevent UI overlap on mobile)
+                gsap.to(this.dice.scale, { x: 1.3, y: 1.3, z: 1.3, duration: 1, ease: "elastic.out(1, 0.3)" });
 
                 // UI Update
                 document.getElementById('btn-roll').style.display = 'none';
