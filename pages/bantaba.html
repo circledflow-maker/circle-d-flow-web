@@ -141,17 +141,10 @@
             to { background-position: 100px 100px; }
         }
 
-        /* Return button */
-        .btn-return {
-            position: absolute;
-            top: 20px; left: 20px;
-            z-index: 100;
-            color: rgba(255,255,255,0.5);
-            font-family: 'Space Mono', monospace;
-            text-decoration: none;
-            transition: color 0.3s;
+        /* Burger Menu Styles */
+        #burger-btn span {
+            transform-origin: center;
         }
-        .btn-return:hover { color: var(--haki-gold); }
 
     </style>
 </head>
@@ -171,7 +164,43 @@
         </div>
     </div>
 
-    <a href="../index.html" class="btn-return" data-i18n="btn_return">[ RETURN TO ORBIT ]</a>
+    <!-- Hamburger Menu Button -->
+    <button id="burger-btn" class="absolute top-6 left-6 z-[100] focus:outline-none flex flex-col gap-1.5 p-2 bg-black/50 border border-[#d4af37]/30 rounded hover:bg-[#d4af37]/10 transition">
+        <span class="block w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
+        <span class="block w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
+        <span class="block w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
+    </button>
+
+    <!-- Fullscreen Menu Overlay -->
+    <div id="mobile-menu" class="fixed inset-0 bg-black/95 z-[90] flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 backdrop-blur-md">
+        <nav class="flex flex-col gap-8 text-center">
+            <a href="../index.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition gold-glow" data-i18n="nav_orbit">Return to Orbit</a>
+            <a href="about.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition gold-glow" data-i18n="nav_about">About us</a>
+            <a href="policy.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition gold-glow" data-i18n="nav_policy">Policy</a>
+        </nav>
+    </div>
+
+    <script>
+        const burgerBtn = document.getElementById('burger-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const spans = burgerBtn.querySelectorAll('span');
+        let menuOpen = false;
+
+        burgerBtn.addEventListener('click', () => {
+            menuOpen = !menuOpen;
+            if(menuOpen) {
+                mobileMenu.classList.remove('opacity-0', 'pointer-events-none');
+                spans[0].style.transform = 'translateY(8px) rotate(45deg)';
+                spans[1].style.opacity = '0';
+                spans[2].style.transform = 'translateY(-8px) rotate(-45deg)';
+            } else {
+                mobileMenu.classList.add('opacity-0', 'pointer-events-none');
+                spans[0].style.transform = 'none';
+                spans[1].style.opacity = '1';
+                spans[2].style.transform = 'none';
+            }
+        });
+    </script>
 
     <div id="manga-container">
         

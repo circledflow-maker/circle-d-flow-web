@@ -24,7 +24,7 @@ const translations = {
         "criz_title": "C-RIZ LISTENING PARTY",
         "criz_date": "DATE: 02. JUNE 2026",
         "criz_time": "TIME: 18:00",
-        "criz_location": "LOCATION: SECRET GARDEN LX",
+        "criz_location": "LOCATION: HEMPY ROOTS",
         "criz_desc": "The genesis of the new wave. Exclusive early preview of the album in the Matrix.",
         "criz_teaser": "DJ Set by C-RIZ, Secret Guests, Drinks by African Queen Kitchen.",
         "cdf_title": "CIRCLE D FLOW : THE AWAKENING",
@@ -36,7 +36,15 @@ const translations = {
         "btn_ticket_small": "[ GET TICKET ]",
         "btn_info_small": "[ INFO ]",
         "lb_teaser_title": "LINE-UP & DETAILS",
-        "btn_buy_small": "[ ACQUIRE ]"
+        "btn_buy_small": "[ ACQUIRE ]",
+        
+        "nav_orbit": "Return to Orbit",
+        "nav_about": "About us",
+        "nav_policy": "Policy",
+        "about_title": "About us",
+        "about_text": "We create space and time to connect not only with others, but also with our true selves. Circle D Flow is a growing collective in Lisbon building bridges within the local creative scene through curated cultural experiences.",
+        "policy_title": "Policy & Privacy",
+        "policy_text": "We respect your privacy. By using this site, you accept essential cookies and data handling to provide the Bantaba experience."
     },
     "de": {
         "btn_return": "[ ZURÜCK ZUM ORBIT ]",
@@ -63,7 +71,7 @@ const translations = {
         "criz_title": "C-RIZ LISTENING PARTY",
         "criz_date": "DATUM: 02. JUNI 2026",
         "criz_time": "ZEIT: 18:00 UHR",
-        "criz_location": "ORT: SECRET GARDEN LX",
+        "criz_location": "ORT: HEMPY ROOTS",
         "criz_desc": "Die Entstehung der neuen Welle. Exklusives Preview des Albums in der Matrix.",
         "criz_teaser": "DJ Set von C-RIZ, Secret Guests, Drinks by African Queen Kitchen.",
         "cdf_title": "CIRCLE D FLOW : THE AWAKENING",
@@ -75,7 +83,15 @@ const translations = {
         "btn_ticket_small": "[ TICKET HOLEN ]",
         "btn_info_small": "[ INFO ]",
         "lb_teaser_title": "LINE-UP & DETAILS",
-        "btn_buy_small": "[ ERWERBEN ]"
+        "btn_buy_small": "[ ERWERBEN ]",
+        
+        "nav_orbit": "Zurück zum Orbit",
+        "nav_about": "About us",
+        "nav_policy": "Policy",
+        "about_title": "Über Uns",
+        "about_text": "Wir schaffen Raum und Zeit, um uns nicht nur mit anderen, sondern auch mit unserem Selbst zu verbinden. Circle D Flow ist ein wachsendes Kollektiv in Lissabon, das durch kuratierte kulturelle Erlebnisse Brücken in der lokalen Kreativszene baut.",
+        "policy_title": "Datenschutz & Policy",
+        "policy_text": "Wir respektieren deine Privatsphäre. Durch die Nutzung dieser Seite akzeptierst du essenzielle Cookies und die Datenverarbeitung für das Bantaba-Erlebnis."
     },
     "fr": {
         "btn_return": "[ RETOUR À L'ORBITE ]",
@@ -102,7 +118,7 @@ const translations = {
         "criz_title": "C-RIZ LISTENING PARTY",
         "criz_date": "DATE: 02 JUIN 2026",
         "criz_time": "HEURE: 18:00",
-        "criz_location": "LIEU: SECRET GARDEN LX",
+        "criz_location": "LIEU: HEMPY ROOTS",
         "criz_desc": "La genèse de la nouvelle vague. Aperçu exclusif de l'album dans la Matrice.",
         "criz_teaser": "DJ Set par C-RIZ, Invités Surprises, Boissons par African Queen Kitchen.",
         "cdf_title": "CIRCLE D FLOW : THE AWAKENING",
@@ -114,7 +130,15 @@ const translations = {
         "btn_ticket_small": "[ OBTENIR BILLET ]",
         "btn_info_small": "[ INFO ]",
         "lb_teaser_title": "LINE-UP & DÉTAILS",
-        "btn_buy_small": "[ ACQUÉRIR ]"
+        "btn_buy_small": "[ ACQUÉRIR ]",
+        
+        "nav_orbit": "Retour à l'Orbite",
+        "nav_about": "À propos",
+        "nav_policy": "Politique",
+        "about_title": "À propos de nous",
+        "about_text": "Nous créons de l'espace et du temps pour nous connecter non seulement avec les autres, mais aussi avec notre véritable moi. Circle D Flow est un collectif grandissant à Lisbonne qui jette des ponts dans la scène créative locale à travers des expériences culturelles organisées.",
+        "policy_title": "Politique de confidentialité",
+        "policy_text": "Nous respectons votre vie privée. En utilisant ce site, vous acceptez les cookies essentiels et le traitement des données pour l'expérience Bantaba."
     },
     "pt": {
         "btn_return": "[ VOLTAR À ÓRBITA ]",
@@ -141,7 +165,7 @@ const translations = {
         "criz_title": "C-RIZ LISTENING PARTY",
         "criz_date": "DATA: 02 JUNHO 2026",
         "criz_time": "HORA: 18:00",
-        "criz_location": "LOCAL: SECRET GARDEN LX",
+        "criz_location": "LOCAL: HEMPY ROOTS",
         "criz_desc": "A génese da nova vaga. Antevisão exclusiva do álbum na Matrix.",
         "criz_teaser": "DJ Set de C-RIZ, Convidados Secretos, Bebidas por African Queen Kitchen.",
         "cdf_title": "CIRCLE D FLOW : THE AWAKENING",
@@ -153,7 +177,15 @@ const translations = {
         "btn_ticket_small": "[ OBTER BILHETE ]",
         "btn_info_small": "[ INFO ]",
         "lb_teaser_title": "ALINHAMENTO E DETALHES",
-        "btn_buy_small": "[ ADQUIRIR ]"
+        "btn_buy_small": "[ ADQUIRIR ]",
+        
+        "nav_orbit": "Voltar à Órbita",
+        "nav_about": "Sobre nós",
+        "nav_policy": "Política",
+        "about_title": "Sobre nós",
+        "about_text": "Criamos espaço e tempo para nos conectarmos não só com os outros, mas também com o nosso verdadeiro eu. Circle D Flow é um coletivo crescente em Lisboa que constrói pontes na cena criativa local através de experiências culturais selecionadas.",
+        "policy_title": "Política de Privacidade",
+        "policy_text": "Respeitamos a tua privacidade. Ao utilizar este site, aceitas os cookies essenciais e o processamento de dados para a experiência Bantaba."
     }
 };
 
