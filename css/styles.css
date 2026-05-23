@@ -1263,12 +1263,11 @@ body.js-active * {
 
 /* --- 1. GLOBAL GAME ATMOSPHERE --- */
 body {
-    background-color: #050505;
+    background-color: #120818; /* Matched to Marketplace Void */
     background-image: 
-        radial-gradient(circle at 50% 50%, #1a1a1a 0%, #000 100%),
         linear-gradient(0deg, rgba(255, 215, 0, 0.03) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255, 215, 0, 0.03) 1px, transparent 1px);
-    background-size: 100% 100%, 40px 40px, 40px 40px; /* Grid */
+    background-size: 40px 40px, 40px 40px; /* Sharp Grid */
     color: #e0e0e0;
     font-family: 'Courier New', monospace;
     overflow-x: hidden;

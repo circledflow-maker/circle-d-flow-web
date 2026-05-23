@@ -23,30 +23,60 @@ class QuestEngine {
         this.mapMarkers = {};
 
         // SYSTEM QUEST REGISTRY (Tutorials)
+        // SYSTEM QUEST REGISTRY (Tutorials)
+        // SYSTEM QUEST REGISTRY (Tutorials)
         this.SYSTEM_QUESTS = [
-            // 1. INITIATION
-            { id: 'Q-INIT-001', title: 'PROTOCOL: THE FIRST BREATH', description: 'Enter the Gateway. Begin your journey.', reward_exp: 10, type: 'story', page: 'index.html' },
-            { id: 'Q-INIT-002', title: 'PROTOCOL: IDENTIFICATION', description: 'Update Profile in Dashboard.', reward_exp: 50, type: 'story', page: 'dashboard.html' }, // Triggered manually in Profile
-            // 2. TRINITY
-            { id: 'Q-VIS-101', title: 'PROTOCOL: VISIONARY WITNESS', description: 'Visit the Gallery or Kiss Your Heart.', reward_exp: 30, type: 'story', page: 'gallery.html' },
-            { id: 'Q-SOU-101', title: 'PROTOCOL: SONIC RESONANCE', description: 'Enter the Soundscape (Outbreak Tunes).', reward_exp: 30, type: 'story', page: 'outbreak_tunes.html' },
-            { id: 'Q-TAS-101', title: 'PROTOCOL: CULINARY ALCHEMIST', description: 'Visit the African Queen Kitchen.', reward_exp: 30, type: 'story', page: 'african-queen-kitchen.html' },
-            // 3. HIGH PALACE
-            { id: 'Q-GOV-101', title: 'PROTOCOL: SOVEREIGN PATH', description: 'Enter the High Palast Hub.', reward_exp: 50, type: 'story', page: 'high_palast.html' },
-            { id: 'Q-SOC-102', title: 'PROTOCOL: WISDOM KEEPER', description: 'Enter the Royal Library.', reward_exp: 40, type: 'story', page: 'library.html' },
-            { id: 'Q-ECO-103', title: 'PROTOCOL: TREASURY INSPECTOR', description: 'Visit the Palast Treasury.', reward_exp: 40, type: 'story', page: 'palast_treasury.html' },
-            // 4. BATTLE FIELD
-            { id: 'Q-BAT-101', title: 'PROTOCOL: ENTER THE ARENA', description: 'Step into the Battle Arena.', reward_exp: 50, type: 'story', page: 'arena.html' },
-            { id: 'Q-BAT-102', title: 'PROTOCOL: LADDER CLIMBER', description: 'Check the Hall of Legends.', reward_exp: 30, type: 'story', page: 'hall_of_legends.html' },
-            // 5. MARKET
-            { id: 'Q-ECO-101', title: 'PROTOCOL: BAZAAR WALKER', description: 'Enter the Marketplace.', reward_exp: 30, type: 'community', page: 'marketplace.html' },
-            { id: 'Q-ECO-102', title: 'PROTOCOL: MERCHANTS MIND', description: 'Visit the Upload Station.', reward_exp: 50, type: 'community', page: 'marketplace-upload.html' },
-            // 6. CONNECTION
-            { id: 'Q-SOC-201', title: 'PROTOCOL: SIGNAL BOOST', description: 'Send a Friend Request.', reward_exp: 50, type: 'community', page: 'comms' }, // Manual Trigger
-            { id: 'Q-SOC-202', title: 'PROTOCOL: GUILD MEMBER', description: 'Visit the Guild Hall.', reward_exp: 30, type: 'community', page: 'guild.html' },
-            // 7. KNOWLEDGE
-            { id: 'Q-KNO-101', title: 'PROTOCOL: ARCHIVE ACCESS', description: 'Open the Codex.', reward_exp: 30, type: 'story', page: 'quest_board.html' },
-            { id: 'Q-KNO-102', title: 'PROTOCOL: QUIZ MASTER', description: 'Complete a Quiz.', reward_exp: 100, type: 'story', page: 'quiz.html' } // Manual Trigger
+            // 1. LEVEL 1: AWAKENING (Unlocks Map & Sound)
+            { 
+                id: 'Q-PROTO-01', 
+                index: 1,
+                title: 'THE FIRST BREATH', 
+                description: 'Initialize your connection. Visit the Quest Map and secure a signal.', 
+                reward_exp: 100, 
+                type: 'story', 
+                page: 'quest_map.html',
+                targetUrl: 'quest_map.html',
+                nextLevel: 2,
+                text: `Welcome to the Matrix of Lisbon, Navigator.<br><br>
+                       You have joined the <b>Circle-D-Flow</b>. We are not an app, we are a network. We connect the physical world (Hip-Hop, Arthouse, Rhythm) with the digital Matrix.<br><br>
+                       Your first lesson: <b>The Atlas & The Sound World</b>.<br>
+                       Once you confirm this uplink, the system will calibrate your GPS signals and unlock the nodes for Live-Events and Beats (Sound World) in your Dashboard.<br><br>
+                       Let the flow move through you.`
+            },
+            // 2. LEVEL 2: COMMERCE (Unlocks Bazaar)
+            { 
+                id: 'Q-PROTO-02', 
+                index: 2,
+                title: 'MARKET ONBOARDING PROTOCOL', 
+                description: 'Master the economy. Learn to Navigate, Forge, and Trade.', 
+                reward_exp: 230, // Total possible (50+30+150)
+                type: 'tutorial', 
+                page: 'marketplace.html?tutorial=active',
+                targetUrl: 'marketplace.html?tutorial=active',
+                nextLevel: 3,
+                text: `The economy of the Matrix awaits.<br><br>
+                       Before you engage in turf wars, you must understand the flow of credits.<br>
+                       <b>PHASE 1: Reconnaissance (+50 XP)</b><br>Scan the Bazaar by using a Guild Filter.<br><br>
+                       <b>PHASE 2: The Blueprint (+30 XP)</b><br>Visit the Forge and test the Currency Converter.<br><br>
+                       <b>PHASE 3: The Artisan (+150 XP)</b><br>Forge your first artifact (Optional).<br><br>
+                       <button onclick="window.location.href='marketplace.html?tutorial=active'" style="color:gold; border:1px solid gold; background:transparent; padding:5px;">ENTER THE BAZAAR 🚀</button>`
+            },
+            // 3. LEVEL 3: WARFARE (Unlocks Brotherhood)
+            { 
+                id: 'Q-PROTO-03', 
+                index: 3,
+                title: 'THE ART OF WAR', 
+                description: 'Prove your worth. Enter the Hall of Legends.', 
+                reward_exp: 500, 
+                type: 'story', 
+                page: 'hall_of_legends.html',
+                targetUrl: 'hall_of_legends.html',
+                nextLevel: 4,
+                text: `The streets belong to no one, until someone claims them.<br><br>
+                       Welcome to the <b>Turf Wars</b>. On your Atlas, you now see red nodes (e.g. Favela LX). To capture them, you must physically navigate there, use your 5 Pillars (Animus Stats), and hack the firewalls.<br><br>
+                       Control the nodes for your future Guild and farm passive Flow Credits. The War for Lisbon begins now.<br><br>
+                       Complete this final protocol to spin up the weapon systems and become a fully sanctioned Agent.`
+            }
         ];
 
         this.init();
@@ -194,6 +224,12 @@ class QuestEngine {
             const label = titleOverride || "QUEST COMPLETE";
             if(window.Pusher) window.Pusher.showToast(`✅ ${label}: +${xp} XP`, "success");
             if(window.SoundEngineer) window.SoundEngineer.playSFX('mission_complete');
+            
+            // Sync with Vitality Agent if present
+            if (window.VitalityAgent) {
+                window.VitalityAgent.addEXP(parseInt(xp));
+            }
+
             await this.loadProfile();
         }
     }
@@ -207,6 +243,102 @@ class QuestEngine {
         const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) + Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ/2) * Math.sin(Δλ/2);
         const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
         return R * c;
+    }
+
+    /**
+     * Executes the Logic for System Protocols (Tutorials)
+     * Handles DB updates, Level Ups, and Redirection.
+     */
+    async executeProtocolUplink(protocolIndex, btnId) {
+        const btn = document.getElementById(btnId);
+        const originalText = btn ? btn.innerText : 'Scanning...';
+        
+        try {
+            if(btn) {
+                btn.innerText = "[ PROCESSING UPLINK... ]";
+                btn.style.color = "#00ff00";
+            }
+
+            const proto = this.SYSTEM_QUESTS.find(q => q.index === protocolIndex);
+            if(!proto) throw new Error("Protocol Data Corrupt");
+
+            // 1. Auth & Profile
+            const { data: { user } } = await this.supabase.auth.getUser();
+            
+            // GHOST MODE BYPASS
+            if(!user) {
+                if(this.isOfflineMode) {
+                    console.warn("[QuestEngine] Ghost Mode: Mocking Uplink Success.");
+                    if(window.Pusher) window.Pusher.showToast(`👻 GHOST UPLINK: +${proto.reward_exp} XP`, "success");
+                    if(window.SoundEngineer) window.SoundEngineer.playSFX('mission_complete');
+                    
+                    if(btn) btn.innerText = "[ GHOST ACCESS GRANTED ]";
+                    
+                    setTimeout(() => {
+                        window.Helper ? window.Helper.safeRedirect(proto.targetUrl) : window.location.href = proto.targetUrl;
+                    }, 1000);
+                    return;
+                } else {
+                    throw new Error("Not Authenticated");
+                }
+            }
+
+            const { data: profile } = await this.supabase.from('profiles').select('exp, level, available_stat_points').eq('id', user.id).single();
+            
+            // 2. Validation
+            if(profile && profile.level >= proto.nextLevel) {
+                 if(window.Pusher) window.Pusher.showToast("PROTOCOL ALREADY ASSIMILATED", "info");
+                 else alert("PROTOCOL ALREADY ASSIMILATED.");
+                 
+                 if(btn) btn.innerText = "[ ALREADY COMPLETED ]";
+                 
+                 // Safe Redirect anyway
+                 setTimeout(() => window.Helper ? window.Helper.safeRedirect(proto.targetUrl) : window.location.href = proto.targetUrl, 1000);
+                 return;
+            }
+
+            // 3. Calculate New Stats
+            const newExp = (profile ? profile.exp : 0) + proto.reward_exp;
+            const newLevel = Math.max(profile ? profile.level : 1, proto.nextLevel); 
+            const newStatPoints = (profile ? profile.available_stat_points : 0) + 10; // Bonus for leveling up via protocol
+
+            // 4. Update Database
+            const { error } = await this.supabase.from('profiles').update({ 
+                exp: newExp, 
+                level: newLevel,
+                available_stat_points: newStatPoints 
+            }).eq('id', user.id);
+
+            if(error) throw error;
+
+            // 5. Success
+            if(window.SoundEngineer) window.SoundEngineer.playSFX('mission_complete');
+            if(window.Pusher) window.Pusher.showToast(`UPLINK SECURED! +${proto.reward_exp} XP`, "success");
+            
+            if(btn) btn.innerText = "[ ACCESS GRANTED ]";
+
+            setTimeout(() => {
+                alert(`LEVEL UP: You are now Level ${newLevel}.\nRedirecting to Mission Area...`);
+                window.Helper ? window.Helper.safeRedirect(proto.targetUrl) : window.location.href = proto.targetUrl;
+            }, 1000);
+
+        } catch (e) {
+            console.error("[QuestEngine] Uplink Failed:", e);
+            
+            if (e.message === "Not Authenticated" || e.message.includes("Auth")) {
+                if(window.Pusher) window.Pusher.showToast("SESSION EXPIRED. Redirecting...", "error");
+                // Don't auto-redirect in dev/ghost mode if possible, but strict auth might demand it.
+                // For now, allow retry.
+            } else {
+                if(window.Pusher) window.Pusher.showToast("UPLINK FAILED: " + e.message, "error");
+                else alert("System Error: " + e.message);
+            }
+            
+            if(btn) {
+                btn.innerText = "RETRY UPLINK";
+                btn.style.color = "red";
+            }
+        }
     }
 
     openInCodex(questId) {
@@ -647,5 +779,90 @@ window.submitKarma = async (isPositive) => {
 };
 
 window.closeKarmaModal = () => { document.getElementById('karma-modal').style.display='none'; };
+
+// --- PROTOCOL 1 SPECIFIC ---
+QuestEngine.prototype.establishUplink = async function(questId) {
+    console.log("📡 Initiating Uplink for:", questId);
+    
+    // 1. Visuals
+    const btn = document.querySelector('#uplink-stage-1 button');
+    if(btn) btn.innerHTML = "⏳ SYNCHRONIZING...";
+    
+    await new Promise(r => setTimeout(r, 1500)); // Fake delay
+
+    // 2. Grant Reward (Logic from executeProtocolUplink)
+    try {
+        const proto = this.SYSTEM_QUESTS.find(q => q.id === questId);
+        if(!proto) throw new Error("Protocol Not Found");
+
+        // Auth Check (or Ghost)
+        const { data: { user } } = await this.supabase.auth.getUser();
+        
+        if(user) {
+             const { data: profile } = await this.supabase.from('profiles').select('exp, completed_quests').eq('id', user.id).single();
+             if(profile && !profile.completed_quests?.includes(questId)) {
+                 const newExp = (profile.exp || 0) + proto.reward_exp;
+                 const newCompleted = [...(profile.completed_quests || []), questId];
+                 await this.supabase.from('profiles').update({ exp: newExp, completed_quests: newCompleted }).eq('id', user.id);
+             }
+        } else if(this.isOfflineMode) {
+            console.log("👻 Ghost Uplink Complete");
+            // PERSIST GHOST PROGRESS
+            let ghostProgress = JSON.parse(sessionStorage.getItem('ghost_progress') || '[]');
+            if(!ghostProgress.includes(questId)) {
+                ghostProgress.push(questId);
+                sessionStorage.setItem('ghost_progress', JSON.stringify(ghostProgress));
+            }
+            // PERSIST GHOST MODE flag itself is usually session based, but let's ensure it.
+            sessionStorage.setItem('ghost_mode_active', 'true');
+
+        } else {
+             throw new Error("No Signal");
+        }
+
+        // 3. Success State
+        if(window.SoundEngineer) window.SoundEngineer.playSFX('success_chime');
+        if(window.Pusher) window.Pusher.showToast("UPLINK SECURED", "success");
+
+        document.getElementById('uplink-stage-1').style.display = 'none';
+        document.getElementById('uplink-stage-2').style.display = 'block';
+
+    } catch(e) {
+        console.error("Uplink Error:", e);
+        alert("SIGNAL LOST. RETRYING...");
+        if(btn) btn.innerHTML = "✍️ ESTABLISH UPLINK (+100 XP)";
+    }
+};
+
+// Check if we need to show the modal on load
+window.addEventListener('load', () => {
+    // If we are on quest_map and came from Protocol 1 (or just check if it's done?)
+    // For simplicity, if we are in Ghost Mode or Session exists, check if Quest 1 is done?
+    // Let's just show it if the URL or Session Storage says so?
+    // OR: Just show it if we are on quest_map.html and it's not done.
+    
+    setTimeout(() => {
+        // Logic: If user has NOT completed Q-PROTO-01, show modal.
+        // For prototype/walkthrough, let's show it if NO pins are loaded locally? 
+        // Or better: Checking Profile requires async.
+        
+        if(document.getElementById('protocol-modal')) {
+             // We can expose a method to check status
+             // For now, let's force it open if we detect we are in "Tutorial Mode" or just arrived.
+             // Simplest: If sessionStorage has 'target_quest_id' === 'Q-PROTO-01' ? No, that was for map target.
+             // Let's check profile.
+             
+             const engine = window.QuestEngine;
+             if(engine && (engine.user || engine.isOfflineMode)) {
+                 // Check if incomplete
+                 // Mock check for now: always show if not explicitly done this session?
+                 // Real check:
+                 // if(!engine.profile?.completed_quests?.includes('Q-PROTO-01')) {
+                     document.getElementById('protocol-modal').style.display = 'flex';
+                 // }
+             }
+        }
+    }, 1000);
+});
 
 // End of Valid File Content

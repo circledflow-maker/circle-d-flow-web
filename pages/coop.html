@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Co-Op Terminal | Circle D Flow</title>
+    <title>The Resonance Bar | Circle D Flow</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Cinzel:wght@400;700&family=Space+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;600&family=Space+Mono&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
     <link rel="stylesheet" href="../css/styles.css">
     <script id="tailwind-config">
@@ -13,7 +13,16 @@
             darkMode: "class",
             theme: {
                 extend: {
-                    colors: { "primary": "#8A2BE2", "hologram": "#00FFFF" },
+                    colors: {
+                        tao: {
+                            earth: '#2E3B32',     // Dark muted green
+                            wood: '#5C4033',      // Rich brown
+                            fire: '#D47E3D',      // Warm campfire orange
+                            water: '#2C4957',     // Deep river blue
+                            metal: '#B0C4DE',     // Muted silver
+                            void: '#0B0F0D'       // Deep background
+                        }
+                    },
                     fontFamily: {
                         "display": ["Cinzel", "serif"],
                         "body": ["Plus Jakarta Sans", "sans-serif"],
@@ -25,71 +34,195 @@
     </script>
     <style>
         /* Page Transition */
-        body { opacity: 0; animation: fadeIn 0.8s ease-out forwards; }
+        body { opacity: 0; animation: fadeIn 1.2s ease-in-out forwards; background-color: var(--color-tao-void); }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Organic floating effect */
+        .float-organic { animation: floatSlow 6s ease-in-out infinite; }
+        @keyframes floatSlow { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+
+        /* Gentle pulse for the campfire */
+        .pulse-fire { animation: firePulse 3s infinite alternate; }
+        @keyframes firePulse { 
+            0% { box-shadow: 0 0 15px rgba(212, 126, 61, 0.4); } 
+            100% { box-shadow: 0 0 35px rgba(212, 126, 61, 0.8); } 
+        }
+        
+        .nature-border {
+            border: 1px solid rgba(138, 154, 91, 0.2);
+            background: linear-gradient(135deg, rgba(82, 110, 72, 0.1) 0%, rgba(11, 15, 13, 0.9) 100%);
+            backdrop-filter: blur(10px);
+        }
     </style>
 </head>
-<body class="bg-[#050406] text-white min-h-screen font-body">
+<body class="bg-tao-void text-white min-h-screen font-body overflow-x-hidden relative">
+
+    <!-- Atmospheric Organic Background -->
+    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div class="absolute top-0 right-0 w-[50vw] h-[50vw] bg-tao-earth/10 rounded-full blur-[100px] transform translate-x-1/4 -translate-y-1/4"></div>
+        <div class="absolute bottom-0 left-0 w-[60vw] h-[60vw] bg-tao-wood/10 rounded-full blur-[120px] transform -translate-x-1/4 translate-y-1/4"></div>
+        <!-- subtle noise texture overlay could go here -->
+    </div>
 
     <!-- HORIZON BAR -->
-    <div id="horizon-bar-root"></div>
+    <div id="horizon-bar-root" class="relative z-50"></div>
 
     <!-- BEAM MENU (Dropdown) -->
-    <div id="beam-menu" class="hidden absolute top-20 right-4 z-50 bg-[#0F0A13] border border-white/10 rounded-xl shadow-2xl p-2 w-48 backdrop-blur-xl animate-fade-in-up">
-        <div class="text-[10px] text-white/30 uppercase tracking-widest px-2 py-1 mb-1 font-mono">Beam To</div>
-        <a href="vault_space.html" class="block px-3 py-2 rounded hover:bg-white/5 text-sm text-white/80 hover:text-white transition-colors flex items-center gap-2"><span class="material-symbols-outlined text-xs">hub</span> Vault Space</a>
-        <a href="chat.html" class="block px-3 py-2 rounded hover:bg-white/5 text-sm text-white/80 hover:text-white transition-colors flex items-center gap-2"><span class="material-symbols-outlined text-xs">chat</span> The Source</a>
-        <a href="dashboard.html" class="block px-3 py-2 rounded hover:bg-white/5 text-sm text-white/80 hover:text-white transition-colors flex items-center gap-2"><span class="material-symbols-outlined text-xs">dashboard</span> Dashboard</a>
+    <div id="beam-menu" class="hidden absolute top-20 right-4 z-50 bg-black/80 border border-tao-earth/30 rounded-xl shadow-2xl p-2 w-48 backdrop-blur-xl transition-all">
+        <div class="text-[10px] text-white/30 uppercase tracking-widest px-2 py-1 mb-1 font-mono">Navigate</div>
+        <a href="vault_space.html" class="block px-3 py-2 rounded hover:bg-white/5 text-sm text-white/80 hover:text-tao-fire transition-colors flex items-center gap-2"><span class="material-symbols-outlined text-xs">public</span> The World</a>
+        <a href="chat.html" class="block px-3 py-2 rounded hover:bg-white/5 text-sm text-white/80 hover:text-tao-water transition-colors flex items-center gap-2"><span class="material-symbols-outlined text-xs">forum</span> The Sanctuary</a>
+        <a href="dashboard.html" class="block px-3 py-2 rounded hover:bg-white/5 text-sm text-white/80 hover:text-white transition-colors flex items-center gap-2"><span class="material-symbols-outlined text-xs">space_dashboard</span> Control Panel</a>
         <div class="h-px bg-white/5 my-1"></div>
         <button onclick="window.history.back()" class="w-full text-left px-3 py-2 rounded hover:bg-white/5 text-sm text-white/50 hover:text-white transition-colors flex items-center gap-2"><span class="material-symbols-outlined text-xs">arrow_back</span> Return</button>
     </div>
 
-    <!-- BEAM TRIGGER (Mobile/Desktop) -->
-    <button class="fixed top-24 right-6 z-40 w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-orange-400 hover:text-orange-300 transition-colors border border-orange-500/20" onclick="document.getElementById('beam-menu').classList.toggle('hidden')">
-        <span class="material-symbols-outlined">grid_view</span>
+    <!-- RETURN BUTTON -->
+    <button onclick="window.location.href='dashboard.html'" class="absolute top-20 md:top-6 left-4 md:left-6 z-50 flex items-center gap-2 text-white/50 hover:text-white transition-colors bg-black/40 px-4 py-2 rounded-full border border-white/10 hover:border-white/30 text-sm font-mono tracking-wide">
+        <span class="material-symbols-outlined text-sm">arrow_back</span> Captain's Quarters
     </button>
 
-    <main class="relative z-10 pt-32 pb-20 px-4 max-w-7xl mx-auto">
+    <!-- MAIN CONTENT -->
+    <main class="relative z-10 pt-24 pb-20 px-4 max-w-6xl mx-auto flex flex-col gap-10">
         
         <!-- HEADER -->
-        <div class="text-center mb-16 relative">
-            <div class="absolute inset-0 bg-orange-500/10 blur-[100px] rounded-full pointer-events-none"></div>
-            <h1 class="text-4xl md:text-6xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-white to-orange-400 mb-4 drop-shadow-[0_0_20px_rgba(249,115,22,0.8)]">
-                KARMA EXCHANGE
+        <div class="text-center relative">
+            <h1 class="text-4xl md:text-6xl font-display font-medium text-transparent bg-clip-text bg-gradient-to-r from-tao-metal via-white to-tao-earth mb-3 tracking-wide">
+                THE RESONANCE BAR
             </h1>
-            <p class="text-orange-300/60 font-mono text-sm tracking-widest uppercase">"Find your Flow. Serve the Circle."</p>
+            <p class="text-white/50 font-body text-sm md:text-base tracking-widest max-w-xl mx-auto italic">
+                "Where action is natural, and non-action bears fruit."
+            </p>
         </div>
 
-        <!-- ACTIONS & TABS -->
-        <div class="flex flex-col items-center gap-6 mb-12">
+        <!-- DASHBOARD GRID -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
-            <div class="flex gap-4">
-                <a href="quest-create.html" class="px-8 py-3 bg-orange-600 hover:bg-orange-500 text-black font-bold uppercase tracking-widest rounded-lg transition-all shadow-[0_0_20px_rgba(249,115,22,0.6)] flex items-center gap-2 clip-ninja">
-                    <span class="material-symbols-outlined">auto_fix</span>
-                    Manifest Quest
-                </a>
-                <button class="px-8 py-3 bg-white/5 border border-white/10 hover:bg-white/10 text-white font-bold uppercase tracking-widest rounded-lg transition-all flex items-center gap-2" onclick="window.CoopAgent.refreshLobbies()">
-                    <span class="material-symbols-outlined">refresh</span>
-                    Refresh
-                </button>
+            <!-- LEFT: FLOW IDENTITY -->
+            <div class="lg:col-span-1 flex flex-col gap-6">
+                <!-- User Profile Card -->
+                <div class="nature-border rounded-2xl p-6 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-3 opacity-50 view-profile-btn cursor-pointer hover:opacity-100 transition-opacity" onclick="window.location.href='profile-full.html'">
+                        <span class="material-symbols-outlined text-sm">settings</span>
+                    </div>
+                    
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-16 h-16 rounded-full border-2 border-tao-fire/50 overflow-hidden relative">
+                            <img src="../Assets/images/logo.png" alt="Avatar" class="w-full h-full object-cover opacity-80" id="res-bar-avatar">
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-display text-white tracking-wide" id="res-bar-name">Initiate</h2>
+                            <span class="text-xs font-mono text-tao-fire uppercase tracking-widest px-2 py-0.5 bg-tao-fire/10 rounded border border-tao-fire/20 mt-1 inline-block" id="res-bar-role">Visual Flow</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 text-center">
+                        <div class="bg-black/30 rounded-lg p-3 border border-white/5">
+                            <div class="text-2xl font-body font-bold text-tao-metal" id="res-bar-tp">120</div>
+                            <div class="text-[10px] text-white/40 uppercase tracking-wider font-mono">Trust Points</div>
+                        </div>
+                        <div class="bg-black/30 rounded-lg p-3 border border-white/5">
+                            <div class="text-2xl font-body font-bold text-tao-earth" id="res-bar-exp">850</div>
+                            <div class="text-[10px] text-white/40 uppercase tracking-wider font-mono">Resonance EXP</div>
+                        </div>
+                    </div>
+
+                    <!-- Flow Tags -->
+                    <div class="mt-6">
+                        <div class="text-xs text-white/30 uppercase tracking-widest mb-3">Your Aura</div>
+                        <div class="flex flex-wrap gap-2" id="res-bar-tags">
+                            <span class="text-[10px] px-2 py-1 rounded bg-tao-water/20 border border-tao-water/30 text-white/80">Cinematographer</span>
+                            <span class="text-[10px] px-2 py-1 rounded bg-tao-earth/20 border border-tao-earth/30 text-white/80">Hip-Hop Vibe</span>
+                            <span class="text-[10px] px-2 py-1 rounded bg-white/5 border border-white/10 text-white/50 cursor-pointer hover:text-white" onclick="window.location.href='profile-full.html'">+ Add Vibe</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Guidance / Onboarding Prompt -->
+                <div class="nature-border rounded-xl p-5 border-l-2 border-l-tao-fire cursor-pointer hover:bg-white/5 transition-colors" onclick="window.location.href='partner-scanner.html'">
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 class="text-sm font-bold text-tao-fire">Flow Questionnaire</h3>
+                        <span class="text-[10px] bg-tao-fire/20 text-tao-fire px-2 py-0.5 rounded font-mono">+50 EXP</span>
+                    </div>
+                    <p class="text-xs text-white/50 leading-relaxed">
+                        Refine your harmony with the community. Complete the optional questionnaire to better align with potential collaborators.
+                    </p>
+                </div>
             </div>
 
-            <!-- TABS -->
-            <div class="flex gap-2 p-1 bg-white/5 rounded-full backdrop-blur-md border border-white/10">
-                <button class="px-6 py-2 rounded-full bg-orange-500 text-black font-bold text-xs uppercase transition-colors" onclick="window.CoopAgent.switchTab('available')">Flowing</button>
-                <button class="px-6 py-2 rounded-full hover:bg-white/10 text-white/50 hover:text-white font-bold text-xs uppercase transition-colors" onclick="window.CoopAgent.switchTab('mine')">My Path</button>
-                <button class="px-6 py-2 rounded-full hover:bg-white/10 text-white/50 hover:text-white font-bold text-xs uppercase transition-colors" onclick="window.CoopAgent.switchTab('log')">The Archives</button>
-            </div>
+            <!-- RIGHT: THE EVENT VILLAGE (3-SLOT VISUALIZER) -->
+            <div class="lg:col-span-2 nature-border rounded-3xl p-8 relative overflow-hidden flex flex-col">
+                <div class="flex justify-between items-start mb-6 z-10">
+                    <div>
+                        <h2 class="text-2xl font-display text-white tracking-wide flex items-center gap-3">
+                            <span class="material-symbols-outlined text-tao-fire text-3xl">landscape</span> 
+                            The Event Village
+                        </h2>
+                        <p class="text-xs text-white/40 mt-1 max-w-sm">Manage your focus. You may host 1 primary event (Campfire) and participate in up to 2 collaborations (Lanterns).</p>
+                    </div>
+                    <div>
+                        <button class="px-5 py-2.5 bg-tao-earth/80 hover:bg-tao-earth text-white rounded-lg transition-all border border-tao-earth shadow-[0_0_15px_rgba(46,59,50,0.5)] flex items-center gap-2 text-sm uppercase tracking-widest font-semibold" onclick="window.location.href='quest-create.html'">
+                            <span class="material-symbols-outlined text-sm">add_circle</span> Manifest Event
+                        </button>
+                    </div>
+                </div>
 
-        </div>
+                <!-- 3-Slot Visual Area -->
+                <div class="flex-1 min-h-[350px] relative bg-black/20 rounded-2xl border border-white/5 p-6 flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16">
+                    
+                    <!-- Collaboration Lantern 1 (Slot 2) -->
+                    <div class="flex flex-col items-center gap-4 group cursor-pointer" onclick="window.location.href='chat.html'">
+                        <div class="w-16 h-16 rounded-full bg-tao-wood/20 border border-tao-wood/40 flex items-center justify-center float-organic transition-all group-hover:border-tao-water group-hover:bg-tao-water/20">
+                             <span class="material-symbols-outlined text-tao-wood/60 group-hover:text-tao-water text-2xl">wb_incandescent</span>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-xs font-bold text-white/70">Support Role</div>
+                            <div class="text-[10px] text-white/40">Nature Walk (Empty)</div>
+                        </div>
+                    </div>
 
-        <!-- LOBBY LIST -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="lobby-grid">
-            <!-- INJECTED BY AGENT -->
-            <div class="col-span-full text-center py-20 border border-dashed border-white/10 rounded-2xl bg-white/5">
-                <span class="material-symbols-outlined text-5xl text-white/20 mb-4 animate-spin-slow">radar</span>
-                <p class="text-white/40 font-mono">Scanning for Open Frequencies...</p>
+                    <!-- The Campfire (Primary Focus Slot 1) -->
+                    <div class="flex flex-col items-center gap-5 relative group cursor-pointer" onclick="window.location.href='chat.html'">
+                        <div class="w-32 h-32 rounded-full bg-tao-fire/10 border border-tao-fire/30 flex items-center justify-center pulse-fire relative z-10 transition-all group-hover:bg-tao-fire/20">
+                            <!-- Simulated Fire Graphic -->
+                            <span class="material-symbols-outlined text-tao-fire text-5xl">local_fire_department</span>
+                            
+                            <!-- Current Event Badge -->
+                            <div class="absolute -bottom-3 bg-black border border-tao-fire/50 rounded-full px-3 py-1 text-[10px] font-mono text-tao-fire whitespace-nowrap">
+                                MAIN FOCUS
+                            </div>
+                        </div>
+                        <div class="text-center mt-2">
+                            <div id="coop-focus-title" class="text-sm font-display font-bold text-white">C-Riz Release Party</div>
+                            <div id="coop-focus-subtitle" class="text-[10px] text-white/50 font-mono mt-1">ClimaLabs • April 24</div>
+                        </div>
+                    </div>
+
+                    <!-- Collaboration Lantern 2 (Slot 3) -->
+                    <div class="flex flex-col items-center gap-4 group cursor-pointer">
+                        <div class="w-16 h-16 rounded-full bg-black/40 border border-white/10 border-dashed flex items-center justify-center float-organic transition-all group-hover:border-white/30">
+                             <span class="material-symbols-outlined text-white/20 text-xl group-hover:text-white/40">add</span>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-xs font-bold text-white/30">Empty Lantern</div>
+                            <div class="text-[10px] text-white/20">Available Space</div>
+                        </div>
+                    </div>
+
+                </div>
+                
+                <div class="mt-8 flex flex-col gap-4 z-10 w-full">
+                    <button class="w-full bg-tao-water/20 border border-tao-water/50 hover:bg-tao-water/40 text-white py-4 rounded-xl text-sm font-bold uppercase tracking-widest transition-all shadow-[0_0_15px_rgba(44,73,87,0.3)] hover:shadow-[0_0_25px_rgba(44,73,87,0.5)] flex items-center justify-center gap-2" onclick="window.location.href='partner-scanner.html'">
+                        <span class="material-symbols-outlined">radar</span> Explore Full Community Grid
+                    </button>
+                    <div class="flex justify-end mt-2">
+                        <button class="text-xs text-white/40 hover:text-white uppercase tracking-widest flex items-center gap-1 transition-colors" onclick="window.location.href='chat.html'">
+                            The Sanctuary <span class="material-symbols-outlined text-xs">arrow_forward</span>
+                        </button>
+                    </div>
+                </div>
             </div>
+            
         </div>
 
     </main>
@@ -100,9 +233,63 @@
     <script src="../js/agents/helper.js"></script>
     <script src="../js/agents/network_hub.js"></script>
     <script src="../js/agents/global_ticker.js"></script>
+    <script src="../js/agents/constructor_bot.js" defer></script>
+    <script src="../js/agents/kingdom_science.js" defer></script>
+    <script src="../js/agents/resonance_bridge.js" defer></script>
+    <script src="../js/agents/vault_space.js" defer></script>
+    <script src="../js/agents/horizon_bar.js" defer></script>
+    <script src="../js/agents/social_matrix.js" defer></script>
+    <script src="../js/agents/orbital_menu.js" defer></script>
+    <script src="../js/agents/tutorial_core.js" defer></script>
+    <script src="../js/agents/quest_controller.js" defer></script>
+    <script src="../js/agents/visual_integrity.js" defer></script>
+    <script src="../js/agents/sound_engineer.js" defer></script>
+    <script src="../js/agents/flowee.js"></script>
     
-    <!-- COOP AGENT -->
-    <script src="../js/agents/coop_agent.js"></script>
+    <script>
+        // Init Mock Data for Dashboard
+        document.addEventListener('DOMContentLoaded', () => {
+            // Init Identity from Partner Scanner (circle_partner_details)
+            let username = "Initiate";
+            let role = "Visual Flow";
+            
+            // Check legacy names first
+            const savedName = localStorage.getItem('cdf_name') || localStorage.getItem('cdf_user_username');
+            if(savedName) username = savedName;
 
+            // Override with new partner details if available (higher priority)
+            const partnerDataStr = localStorage.getItem('circle_partner_details');
+            if(partnerDataStr) {
+                try {
+                    const pd = JSON.parse(partnerDataStr);
+                    if(pd.email) username = pd.email.split('@')[0];
+                    if(pd.role) role = pd.role;
+                } catch(e) {}
+            }
+
+            document.getElementById('res-bar-name').innerText = username;
+            document.getElementById('res-bar-role').innerText = role;
+
+            // TP & EXP Logic
+            const tp = localStorage.getItem('cdf_trust_points') || 100;
+            const exp = localStorage.getItem('cdf_xp') || 0;
+
+            document.getElementById('res-bar-tp').innerText = tp;
+            document.getElementById('res-bar-exp').innerText = exp;
+            
+            // Dynamic Main Focus Event (circle_selected_event)
+            const latestEventString = localStorage.getItem('circle_selected_event');
+            if(latestEventString) {
+                try {
+                    const evt = JSON.parse(latestEventString);
+                    document.getElementById('coop-focus-title').innerText = evt.title;
+                    document.getElementById('coop-focus-subtitle').innerText = evt.date || 'TBA';
+                } catch(e) {}
+            } else {
+                document.getElementById('coop-focus-title').innerText = "No Active Focus";
+                document.getElementById('coop-focus-subtitle').innerText = "Awaiting Orders";
+            }
+        });
+    </script>
 </body>
 </html>

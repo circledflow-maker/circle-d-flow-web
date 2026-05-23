@@ -2,6 +2,12 @@
   "name": "circle-d-flow-web",
   "version": "1.0.0",
   "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
     "stripe": "^14.14.0"
+  },
+  "scripts": {
+    "dev": "npx serve . -l 3000",
+    "start": "npm run dev"
   }
 }

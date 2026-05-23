@@ -57,18 +57,14 @@ class HorizonBarAgent {
                 </span>
             </div>
 
-            <!-- Right: Inventory / Profile (Fixed Width, No Shrink) -->
-            <div class="flex items-center gap-4 flex-shrink-0 z-50">
-                 <!-- Toggle LightHouse/Aura (Quick Switch) -->
-                 <div class="hidden md:flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-3 py-1 hover:border-amber-500/50 cursor-pointer transition-colors" onclick="window.HorizonBar.toggleMode()">
-                    <span class="material-symbols-outlined text-[10px] text-amber-500">light_mode</span>
-                </div>
-
-                <!-- Bag/Inventory -->
-                <div class="aura-orb-small cursor-pointer hover:scale-110 transition-transform relative" onclick="window.location.href='profile-full.html'" title="Open Inventory">
-                    <span class="material-symbols-outlined text-amber-500 text-2xl drop-shadow-[0_0_5px_rgba(245,158,11,0.5)]">backpack</span>
-                    <div class="absolute -top-1 -right-1 w-4 h-4 bg-red-600 rounded-full text-[8px] flex items-center justify-center font-bold border border-black hidden" id="bag-count">0</div>
-                </div>
+            <!-- Right: Fast Travel Links (Replaces Icons) -->
+            <div class="flex items-center gap-2 flex-shrink-0 z-50">
+                <a href="master_dashboard.html" class="text-white/50 hover:text-amber-500 transition-colors text-[10px] uppercase font-mono tracking-widest flex items-center gap-1.5 border border-white/10 bg-black/40 px-3 py-1.5 rounded-full hover:border-amber-500/50 hidden md:flex">
+                    <span class="material-symbols-outlined text-[14px]">grid_view</span> Dashboard
+                </a>
+                <a href="coop.html" class="text-white/50 hover:text-amber-500 transition-colors text-[10px] uppercase font-mono tracking-widest flex items-center gap-1.5 border border-white/10 bg-black/40 px-3 py-1.5 rounded-full hover:border-amber-500/50">
+                    <span class="material-symbols-outlined text-[14px]">public</span> Orbit
+                </a>
             </div>
 
             <!-- The Ghost Menu (Radial/Dropdown) -->
@@ -90,7 +86,7 @@ class HorizonBarAgent {
                     </a>
                     <a href="marketplace.html" class="flex items-center gap-3 p-3 hover:bg-white/5 rounded-lg text-white/80 hover:text-amber-400 transition-colors group">
                         <span class="material-symbols-outlined group-hover:shake">storefront</span>
-                        <span class="text-sm font-bold uppercase tracking-widest">Bazaar</span>
+                        <span class="text-sm font-bold uppercase tracking-widest">THE BAZAAR</span>
                     </a>
                     <a href="battle.html" class="flex items-center gap-3 p-3 hover:bg-white/5 rounded-lg text-white/80 hover:text-amber-400 transition-colors group">
                         <span class="material-symbols-outlined group-hover:ping">swords</span>
@@ -143,25 +139,21 @@ class HorizonBarAgent {
     }
 
     injectForgeButton() {
-        // Injects the Forge button into the navbar if it's the Horizon Bar
-        const container = document.querySelector('.horizon-bar .flex-shrink-0'); // Usually the right side
-        // Actually, let's put it near the Ticker/Center for visibility
-        const tickerContainer = document.querySelector('.ticker-container');
+        // Injects the Forge button into the navbar
+        const rightSection = document.querySelector('.horizon-bar .flex.items-center.gap-2'); 
         
-        if (tickerContainer && !document.getElementById('hb-forge-btn')) {
-            const btn = document.createElement('button');
+        if (rightSection && !document.getElementById('hb-forge-btn')) {
+            const btn = document.createElement('a');
             btn.id = 'hb-forge-btn';
-            btn.onclick = () => {
-                if(window.MarketplaceCore) window.MarketplaceCore.openForge();
-            };
-            btn.className = "hidden md:flex items-center gap-2 px-3 py-1 bg-[#CD7F32]/10 border border-[#CD7F32]/50 text-[#CD7F32] text-[10px] font-bold uppercase rounded hover:bg-[#CD7F32] hover:text-black transition-all mr-4";
+            btn.href = 'marketplace-upload.html';
+            btn.className = "hidden md:flex items-center gap-2 px-3 py-1.5 bg-[#CD7F32]/10 border border-[#CD7F32]/50 text-[#CD7F32] text-[10px] font-bold uppercase rounded hover:bg-[#CD7F32] hover:text-black transition-all mr-2";
             btn.innerHTML = `
-                <span class="material-symbols-outlined text-sm">hammer</span>
-                <span>Forge</span>
+                <span class="material-symbols-outlined text-sm">auto_fix</span>
+                <span>The Forge</span>
             `;
             
-            // Insert before the ticker
-            tickerContainer.parentNode.insertBefore(btn, tickerContainer);
+            // Insert at the beginning of the right section
+            rightSection.prepend(btn);
         }
     }
 

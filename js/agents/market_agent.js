@@ -100,8 +100,8 @@ window.MarketAgent = {
         setTimeout(() => {
              document.querySelectorAll('.gild-island').forEach(el => el.style.opacity = '1');
         }, 1000);
-    }
-
+    },
+    
     // --- 2. THE PIT TICKER (Live Auction) ---
 
     startPitTicker: function() {

@@ -35,79 +35,93 @@
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* ORG XIII AESTHETIC */
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
-        }
-        
-        .nobody-glow {
-            text-shadow: 0 0 10px rgba(224, 255, 255, 0.5);
-        }
-        
-        .chain-border {
-            border-image: linear-gradient(to right, transparent, #C0C0C0, transparent) 1;
+        /* BENIN HUT INTERIOR THEME */
+        body {
+            background: #08040a url('../benin_bg.png') no-repeat center center fixed;
+            background-size: cover;
+            color: #f4e4bc;
         }
 
-        /* QUEST CARD */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at center, rgba(62, 39, 35, 0.6) 0%, rgba(0, 0, 0, 0.9) 100%);
+            z-index: -1;
+        }
+
+        .sales-counter {
+            background: #3E2723 url('https://www.transparenttextures.com/patterns/dark-matter.png');
+            border-bottom: 8px solid #21110E;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+            position: relative;
+            z-index: 20;
+        }
+
+        .clay-slab {
+            background: rgba(62, 39, 35, 0.8) url('https://www.transparenttextures.com/patterns/paper-fibers.png');
+            border: 1px solid rgba(255, 174, 66, 0.2);
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .glow-orange {
+            text-shadow: 0 0 15px rgba(255, 174, 66, 0.6);
+        }
+        
         .quest-card {
-            transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+            background: rgba(0,0,0,0.4);
+            border-left: 4px solid #FFAE42;
+            transition: all 0.3s ease;
         }
         .quest-card:hover {
-            box-shadow: 0 0 30px rgba(224, 255, 255, 0.2);
-            border-color: rgba(255, 255, 255, 0.5);
-            z-index: 10;
+            background: rgba(255, 174, 66, 0.1);
+            transform: scale(1.02);
         }
     </style>
 </head>
-<body class="bg-[#020202] text-gray-200 min-h-screen font-display overflow-x-hidden selection:bg-white selection:text-black">
+<body class="text-gray-200 min-h-screen font-display overflow-x-hidden selection:bg-[#FFAE42] selection:text-black">
 
-    <!-- HORIZON BAR -->
-    <div id="horizon-bar-root"></div>
+    <!-- HORIZON BAR SYNC -->
+    <header class="fixed top-0 w-full z-[100] h-16 grid grid-cols-[1fr_2fr_1fr] items-center px-8 bg-black/90 border-b border-[#FFAE42]/20">
+        <div class="flex justify-start">
+            <a href="marketplace.html" class="flex items-center gap-2 text-[#FFAE42]/70 hover:text-[#FFAE42] transition-colors">
+                <span class="material-symbols-outlined">arrow_back</span>
+                <span class="text-[10px] font-bold uppercase tracking-widest">Back to Orbit</span>
+            </a>
+        </div>
+        <div class="flex justify-center">
+            <h1 class="font-cinzel font-bold text-lg tracking-[0.4em] text-[#FFAE42]">THE GILD STALL</h1>
+        </div>
+        <div class="flex justify-end gap-4">
+             <div id="guild-level-display" class="text-[10px] font-bold text-[#FFAE42]/60 uppercase tracking-widest">Master Artisan</div>
+        </div>
+    </header>
 
-    <!-- BACKGROUND ATMOSPHERE (The World That Never Was) -->
-    <div class="fixed inset-0 z-0 pointer-events-none opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
-    <div class="fixed inset-0 z-0 pointer-events-none bg-gradient-to-t from-black via-transparent to-[#1a1a1a]"></div>
-    
-    <!-- NAVIGATION -->
-    <!-- NAVIGATION -->
-    <nav class="fixed top-0 w-full z-50 p-6 flex justify-between items-center bg-gradient-to-b from-black to-transparent">
-        <a href="fivedoors.html" class="flex items-center gap-3 text-white/30 hover:text-white transition-colors group">
-            <span class="material-symbols-outlined group-hover:-translate-x-1 transition-transform">arrow_back</span>
-            <span class="uppercase tracking-[0.2em] text-[10px] font-mono">Return to The Hub</span>
-        </a>
-        <div id="guild-level-display"></div> <!-- Populated by Agent -->
-        <div class="w-10"></div> <!-- Spacer -->
-    </nav>
-
-    <!-- MAIN CONTENT -->
-    <main class="relative z-10 container mx-auto px-4 pt-24 pb-12 grid grid-cols-1 lg:grid-cols-12 gap-8">
-
-        <!-- LEFT COLUMN: THE MISSION BOARD (8 Cols) -->
-        <div class="lg:col-span-8 space-y-8">
-            
-            <!-- HEADER -->
-            <div class="relative p-12 glass-panel rounded-sm text-center overflow-hidden">
-                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/50 to-transparent"></div>
-                <h1 class="text-5xl md:text-7xl font-black text-white nobody-glow mb-2 tracking-tighter">THE WILL OF D.</h1>
-                <p class="font-mono text-gray-400 text-xs uppercase tracking-[0.5em]">The Circle D Flow • Lisbon HQ</p>
-                <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/50 to-transparent"></div>
+    <!-- SALES COUNTER AREA -->
+    <div class="sales-counter mt-16 py-12 px-8 flex flex-col md:flex-row items-center gap-10">
+        <div class="relative">
+            <div class="w-40 h-40 rounded-full border-4 border-[#FFAE42] shadow-[0_0_30px_rgba(255,174,66,0.3)] overflow-hidden">
+                <img id="master-avatar" src="../Assets/images/flowee_pirate_phoenix.png" class="w-full h-full object-cover">
             </div>
-
-            <!-- MISSION BOARD AREA -->
-            <div class="glass-panel rounded-sm p-8 relative min-h-[600px]">
-                <!-- Chains Decoration -->
-                <div class="absolute top-0 left-8 w-[1px] h-20 bg-gradient-to-b from-white/30 to-transparent"></div>
-                <div class="absolute top-0 right-8 w-[1px] h-20 bg-gradient-to-b from-white/30 to-transparent"></div>
-                
-                <h2 class="text-2xl text-gray-300 font-bold mb-8 flex items-center justify-center gap-4">
-                    <span class="h-[1px] w-12 bg-gray-600"></span>
-                    <span class="material-symbols-outlined text-white animate-spin-slow">public</span>
-                    <span class="uppercase tracking-[0.2em]">Global Missions</span>
-                    <span class="h-[1px] w-12 bg-gray-600"></span>
-                </h2>
+            <div class="absolute -bottom-2 -right-2 bg-[#FFAE42] text-black text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-tighter shadow-xl">Merchant</div>
+        </div>
+        
+        <div class="text-center md:text-left">
+            <h2 class="text-5xl font-cinzel font-bold text-white glow-orange mb-2">The Will of D.</h2>
+            <p class="font-mono text-[#FFAE42]/60 text-[10px] uppercase tracking-[0.5em]">Lisbon HQ • Central Registry</p>
+            <div class="flex gap-4 mt-4">
+                <div class="clay-slab px-4 py-2 rounded text-center">
+                    <div id="treasury-credits" class="text-xl font-mono text-white">0</div>
+                    <div class="text-[8px] uppercase tracking-widest text-white/40">Essence</div>
+                </div>
+                <div class="clay-slab px-4 py-2 rounded text-center">
+                    <div id="treasury-manillas" class="text-xl font-mono text-[#FFAE42]">0</div>
+                    <div class="text-[8px] uppercase tracking-widest text-[#FFAE42]/40">Munny</div>
+                </div>
+            </div>
+        </div>
+    </div>
                 
                 <div id="quest-board-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <!-- Dynamic Quests via Agent -->

@@ -19,12 +19,8 @@ class OrbitalMenuAgent {
     }
 
     init() {
-        // Skip on Dashboard/Index (they have their own Nav)
-        if (this.isDashboard || this.isIndex) return;
-
-        console.log(`[${this.name}] Injecting Global Navigation...`);
-        this.injectStyles();
-        this.renderMenu();
+        // Disabled: The Orbital Menu has been fully replaced by the Horizon Bar (Imperial Navigation)
+        return;
     }
 
     injectStyles() {
@@ -116,11 +112,12 @@ class OrbitalMenuAgent {
             }
             
             /* POSITIONS (Relative to Trigger) */
-            .orbital-menu-container.open .node-north { transform: translate(0, -70px) scale(1); } /* Settings */
-            .orbital-menu-container.open .node-west  { transform: translate(-70px, 0) scale(1); } /* Vault */
-            .orbital-menu-container.open .node-south { transform: translate(0, 70px) scale(1); } /* Dashboard */
-            .orbital-menu-container.open .node-east  { transform: translate(70px, 0) scale(1); } /* Social */
-            .orbital-menu-container.open .node-exit  { transform: translate(50px, -50px) scale(0.8); } /* Logout */
+            .orbital-menu-container.open .node-north { transform: translate(0, -75px) scale(1); } /* Settings */
+            .orbital-menu-container.open .node-west  { transform: translate(-75px, 0) scale(1); } /* Vault */
+            .orbital-menu-container.open .node-south { transform: translate(0, 75px) scale(1); } /* Dashboard */
+            .orbital-menu-container.open .node-east  { transform: translate(75px, 0) scale(1); } /* Crew */
+            .orbital-menu-container.open .node-cal   { transform: translate(55px, 55px) scale(0.9); } /* Calendar */
+            .orbital-menu-container.open .node-exit  { transform: translate(55px, -55px) scale(0.8); } /* Logout */
 
             /* TOOLTIP */
             .orbital-tooltip {
@@ -165,6 +162,11 @@ class OrbitalMenuAgent {
             <div class="orbital-node node-east" style="--node-bg: #10B981" onclick="window.location.href='navigators_log.html'">
                 <span class="material-symbols-outlined text-[18px]">diversity_3</span>
                 <div class="orbital-tooltip" style="left: 100%; margin-left: 5px;">Crew</div>
+            </div>
+
+            <div class="orbital-node node-cal" style="--node-bg: #FBBF24" onclick="window.location.href='calendar.html'">
+                <span class="material-symbols-outlined text-[18px]">calendar_month</span>
+                <div class="orbital-tooltip" style="left: 100%; margin-left: 5px;">Calendar</div>
             </div>
 
             <div class="orbital-node node-exit" style="--node-bg: #EF4444" onclick="window.location.href='logout.html'">

@@ -23,6 +23,16 @@ class ImperialHUDAgent {
         
         // Expose to window
         window.ImperialHUD = this;
+        
+        // Proxy legacy global ticker calls to the new HUD
+        window.pushTickerMessage = (msg, layer = 'system') => {
+            let lowerLayer = layer.toLowerCase();
+            // Map common legacy layers
+            if(lowerLayer === 'emergency') lowerLayer = 'system';
+            if(lowerLayer === 'captain') lowerLayer = 'flowee';
+            if(lowerLayer === 'queen') lowerLayer = 'bazaar';
+            this.pushMessage(msg, lowerLayer);
+        };
     }
 
     getPathPrefix() {
@@ -47,23 +57,17 @@ class ImperialHUDAgent {
 
             .imperial-hud {
                 position: fixed;
-                top: 15px;
-                left: 50%;
-                transform: translateX(-50%);
-                width: 96%;
-                max-width: 1400px;
-                height: 70px;
-                background: var(--obsidian);
-                backdrop-filter: blur(15px);
-                border: 1px solid rgba(212, 175, 55, 0.3);
-                border-radius: 40px;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 25px;
+                background: rgba(0, 0, 0, 0.85);
+                backdrop-filter: blur(5px);
+                z-index: 99999;
                 display: flex;
                 align-items: center;
-                justify-content: space-between;
-                padding: 0 30px;
-                z-index: 10000;
-                box-shadow: 0 15px 35px rgba(0,0,0,0.6);
-                transition: all 0.3s ease;
+                border-bottom: 1px solid rgba(0, 255, 212, 0.2);
+                transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             }
             
             /* Responsive Shrink */
@@ -76,6 +80,15 @@ class ImperialHUDAgent {
                 }
                 .hud-center { display: none; } /* Hide Ticker on mobile portrait to save space, or make it smaller */
                 .cqr-logo span { display: none; }
+            }
+
+            /* Top Row Elements container */
+            .hud-main-row {
+                display: flex;
+                width: 100%;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0 30px;
             }
 
             /* Left Section */
@@ -113,21 +126,29 @@ class ImperialHUDAgent {
             .cqr-logo { font-family: 'Cinzel', serif; color: white; font-size: 1.2rem; margin: 0; line-height: 1; font-weight: bold; }
             .cqr-logo span { color: var(--haki-gold); font-size: 0.8em; }
 
-            /* Center Ticker */
-            .hud-center { flex: 1; display: flex; justify-content: center; }
+            /* Bottom Ticker Stream */
+            .hud-bottom-ticker {
+                width: 100%;
+                border-top: 1px solid rgba(212, 175, 55, 0.1);
+                display: flex;
+                justify-content: center;
+                padding-top: 5px;
+                padding-bottom: 5px;
+            }
             .ticker-wrap {
                 width: 100%;
-                max-width: 500px;
+                max-width: 800px;
                 overflow: hidden;
                 mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
                 -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
             }
             .ticker-content {
-                font-family: 'Cinzel', serif;
-                font-size: 0.85rem;
-                color: var(--haki-gold);
+                font-family: 'Space Mono', monospace;
+                font-size: 0.70rem;
+                color: #00ffd4;
+                text-shadow: 0 0 8px #00ffd4;
                 text-transform: uppercase;
-                letter-spacing: 1px;
+                letter-spacing: 2px;
                 white-space: nowrap;
                 text-align: center;
                 transition: opacity 0.5s ease;
@@ -216,40 +237,11 @@ class ImperialHUDAgent {
         bar.id = 'imperial-hud-root';
         bar.className = 'imperial-hud';
         bar.innerHTML = `
-            <div class="hud-left">
-                <div class="flowee-avatar-container" onclick="window.Flowee ? window.Flowee.toggleChat() : ImperialHUD.triggerFloweeSpeech()">
-                    <div class="flowee-glow"></div>
-                    <!-- Using a generic placeholder if asset missing, or text -->
-                    <div class="flowee-hud-icon flex items-center justify-center bg-black text-[8px] text-blue-300 font-mono">AI</div> 
-                </div>
-                <!-- Branding Update -->
-                <a href="${homeLink}" class="log-pose-branding no-underline">
-                    <span class="system-status">SYSTEM: ONLINE</span>
-                    <!-- C4C - Your Kingdom -->
-                    <h2 class="cqr-logo" style="font-size: 1rem;">C4C<span> - YOUR KINGDOM</span></h2>
-                </a>
-            </div>
 
-            <div class="hud-center">
+            <div class="hud-bottom-ticker">
                 <div class="ticker-wrap">
                     <div id="ticker-text" class="ticker-content">// INITIALIZING IMPERIAL FREQUENCY...</div>
                 </div>
-            </div>
-
-            <div class="hud-right">
-                ${prefix === '' ? '' : `
-                <div class="manilla-display" title="Your Manilla Balance">
-                    <div class="manilla-icon"></div>
-                    <span id="user-balance">0</span>
-                </div>
-                <a href="${marketLink}" class="hud-btn"><span class="material-symbols-outlined">storefront</span></a>
-                <div class="user-mask-profile" onclick="window.location.href='${dashboardLink}'" title="Captain's Quarters"></div>
-                `}
-                
-                <!-- MINIMIZE TOGGLE -->
-                <button class="hud-minimize-btn" onclick="ImperialHUD.toggleMinimize()">
-                    <span class="material-symbols-outlined" id="hud-toggle-icon">expand_less</span>
-                </button>
             </div>
             
             <!-- MINIMIZED STRIP CONTENT (Hidden by default) -->
@@ -262,43 +254,7 @@ class ImperialHUDAgent {
     }
 
     toggleMinimize() {
-        const bar = document.getElementById('imperial-hud-root');
-        const icon = document.getElementById('hud-toggle-icon');
-        const center = bar.querySelector('.hud-center');
-        const left = bar.querySelector('.hud-left');
-        const right = bar.querySelector('.hud-right');
-        const mini = bar.querySelector('.hud-minimized-content');
-
-        if (bar.classList.contains('minimized')) {
-            // MAXIMIZE
-            bar.classList.remove('minimized');
-            icon.innerText = 'expand_less';
-            // Restore visibility
-            center.style.display = 'flex';
-            left.style.display = 'flex';
-             // Right needs to be flex but we might have hidden specific children? 
-             // Actually css class 'minimized' should handle hiding/showing via CSS for smoother anims
-             // But for now, JS toggle is fine.
-             right.querySelector('.manilla-display').style.display = 'flex';
-             right.querySelector('.user-mask-profile').style.display = 'block';
-             right.querySelector('.hud-btn').style.display = 'block';
-             
-             mini.style.display = 'none';
-        } else {
-            // MINIMIZE
-            bar.classList.add('minimized');
-            icon.innerText = 'expand_more';
-            
-            center.style.display = 'none';
-            left.style.display = 'none';
-            
-            // Hide bulky right items
-            right.querySelector('.manilla-display').style.display = 'none';
-            right.querySelector('.user-mask-profile').style.display = 'none';
-            right.querySelector('.hud-btn').style.display = 'none';
-            
-            mini.style.display = 'flex';
-        }
+        // Obsolete function. Heavy UI has been streamlined into a single ticker.
     }
 
     initTicker() {
@@ -310,6 +266,7 @@ class ImperialHUDAgent {
         // Start Default Loop
         this.pushMessage("THE GOLDEN VAULT IS UNSEALED. LISBON BETA IS LIVE.", "system");
         this.pushMessage("RHYTHM STEERED BY DJ_QTERS.", "system");
+        this.pushMessage("CIRCLE D FLOW JAM TOMORROW AT THE TEJO.", "bazaar");
     }
 
     pushMessage(text, type = 'system') {

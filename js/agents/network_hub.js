@@ -413,16 +413,73 @@ class NetworkNexus {
         // 1. Save Local (Immediate)
         localStorage.setItem(key, value);
         
-        // 2. Sync "Cloud" (Async / Mock)
-        if(navigator.onLine) {
-            // Simulate Network Request
-            // In real app: await fetch('/api/sync', { ... })
-            console.log(`[${this.name}] ☁️ Syncing: ${key}`);
+        // 2. Sync "Cloud" via n8n (Real Pulse)
+        if(navigator.onLine && window.API_CONFIG) {
+            this.log(`☁️ Pulsing to Cloud: ${key}`);
+            this.pulseToN8N('DATA_SYNC', { key, value });
         } else {
             this.queueForSync(key, value);
         }
 
         return true;
+    }
+
+    /**
+     * Sends data to the n8n PikaPod Webhook
+     */
+    async pulseToN8N(type, payload = {}) {
+        if (!window.API_CONFIG || !window.API_CONFIG.n8n) return;
+
+        const url = window.API_CONFIG.n8n.webhookUrl;
+        const body = {
+            type: type,
+            timestamp: new Date().toISOString(),
+            user: localStorage.getItem('cdf_user_username') || 'Anonymous',
+            data: payload
+        };
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+
+            if (response.ok) {
+                this.log("✅ n8n Pulse Success.");
+                return true;
+            } else {
+                const text = await response.text();
+                this.log(`❌ n8n Error [${response.status}]: ${text}`);
+                return false;
+            }
+        } catch (e) {
+            this.log(`❌ n8n Pulse Failed (Check CORS/Network): ${e.message}`);
+            console.error("[NetworkHub] n8n Fetch Error:", e);
+            return false;
+        }
+    }
+
+    /**
+     * Triggers a full system sync with user consent via Flowee
+     */
+    async triggerConsentSync() {
+        if (!window.Flowee) return;
+
+        this.log("Requesting Sync Permission...");
+        
+        // Use Flowee to ask the user in chat
+        const q = "Navigator, your local progress is desynced from the Weltenbaum-Reaktor. Shall I pulse a Cloud Sync? (Yes/No)";
+        window.Flowee.talk(true, q, "guide");
+
+        // We listen for the user's response in the Chat log (if we have a better listener we'd use it)
+        // For now, let's just add a one-time global command
+        window.Resonance?.addMessage({
+            id: Date.now(),
+            text: "--- SYNC REQUIRED ---",
+            user: { name: 'SYSTEM', id: 'master_root', avatar: '../Assets/images/logo.png' },
+            timestamp: Date.now()
+        });
     }
 
     queueForSync(key, value) {

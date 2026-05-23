@@ -29,7 +29,7 @@ class VisualIntegrityAgent {
         const docWidth = document.documentElement.clientWidth;
         const bodyWidth = document.body.scrollWidth;
 
-        if (bodyWidth > docWidth) {
+        if (bodyWidth > docWidth + 2) {
             console.warn(`[${this.name}] Horizontal Overflow Detected! Body: ${bodyWidth}px > Viewport: ${docWidth}px`);
             
             // Find the culprit

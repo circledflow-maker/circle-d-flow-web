@@ -234,26 +234,89 @@
             letter-spacing: 2px;
         }
 
-        /* --- MEDIA PLAYER --- */
+        /* --- MEDIA PLAYER & COMMENT SYSTEM --- */
         #cdf-player {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(0,0,0,0.95); z-index: 10000;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            opacity: 0; pointer-events: none; transition: 0.4s ease;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(5,5,5,0.98);
+            z-index: 10000;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 60px 20px;
+            overflow-y: auto;
+            opacity: 0;
+            transition: opacity 0.4s ease;
         }
-        #cdf-player.active {
-            opacity: 1; pointer-events: auto;
-        }
+        #cdf-player.active { display: flex; opacity: 1; }
+        
         #player-media-container {
-            width: 80vw; height: 60vh;
-            display: flex; justify-content: center; align-items: center;
+            width: 100%;
+            display: flex;
+            justify-content: center;
             margin-bottom: 20px;
         }
-        .btn-close {
-            position: absolute; top: 30px; right: 40px; font-size: 2rem; color: #fff;
-            cursor: pointer; transition: 0.3s;
+
+        .comment-section {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255,255,255,0.03);
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+            width: 100%;
+            max-width: 800px;
+            border-radius: 8px;
         }
-        .btn-close:hover { color: var(--haki-gold); transform: rotate(90deg); }
+        .comment-input-wrap {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .comment-input {
+            flex-grow: 1;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            color: white;
+            padding: 10px 15px;
+            font-family: 'Space Mono', monospace;
+            font-size: 12px;
+            outline: none;
+        }
+        .comment-input:focus { border-color: var(--haki-gold); }
+        .comment-btn {
+            background: var(--haki-gold);
+            color: black;
+            border: none;
+            padding: 0 20px;
+            font-family: 'Cinzel', serif;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .comment-btn:hover { background: white; transform: translateY(-2px); }
+        .comment-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        .comment-item {
+            padding: 12px;
+            border-left: 2px solid var(--haki-gold);
+            background: rgba(255,255,255,0.02);
+            border-radius: 0 4px 4px 0;
+        }
+        .comment-meta {
+            font-size: 10px;
+            color: var(--haki-gold);
+            opacity: 0.6;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .comment-text { font-size: 13px; opacity: 0.9; line-height: 1.4; }
         .player-info { text-align: center; }
         .player-info .player-title { font-family: 'Cinzel', serif; font-size: 1.5rem; color: var(--haki-gold); margin-bottom: 5px; }
         .player-info .player-meta { font-family: 'Space Mono', monospace; font-size: 0.8rem; color: #888; }
@@ -402,11 +465,25 @@
 
     <!-- Media Player Overlay -->
     <div id="cdf-player">
-        <span class="material-symbols-outlined btn-close" onclick="window.CDF_Player.close()">close</span>
-        <div id="player-media-container"></div>
-        <div class="player-info">
-            <div class="player-title" id="player-title">Observation Node</div>
-            <div class="player-meta" id="player-meta">Loading Matrix...</div>
+        <span class="material-symbols-outlined btn-close" style="position: absolute; top: 20px; right: 30px; cursor: pointer; font-size: 40px; color: var(--haki-gold);" onclick="window.CDF_Player.close()">close</span>
+        
+        <div id="player-media-container" style="width: 100%; display: flex; justify-content: center;"></div>
+        
+        <div class="player-info text-center mt-8">
+            <div class="player-title cinzel text-3xl text-[var(--haki-gold)] mb-2" id="player-title">Observation Node</div>
+            <div class="player-meta mono text-xs opacity-50 uppercase tracking-widest mb-6" id="player-meta">Loading Matrix...</div>
+        </div>
+
+        <!-- Comment Section -->
+        <div class="comment-section">
+            <div class="mono text-[10px] uppercase tracking-tighter opacity-40 mb-4">Neural Feedback / Comments</div>
+            <div class="comment-input-wrap">
+                <input type="text" id="comment-input" class="comment-input" placeholder="Enter your trace reflection...">
+                <button class="comment-btn" onclick="window.CDF_Player.postComment()">POST</button>
+            </div>
+            <div id="comment-list" class="comment-list">
+                <!-- Comments will be injected here -->
+            </div>
         </div>
     </div>
 
@@ -429,16 +506,23 @@
 
     <script>
         window.CDF_Player = {
+            activeAssetId: null,
             open: function(asset) {
                 try {
+                    this.activeAssetId = asset.id;
                     const player = document.getElementById('cdf-player');
                     const container = document.getElementById('player-media-container');
                     const title = document.getElementById('player-title');
                     const meta = document.getElementById('player-meta');
                     
                     const assetName = asset && asset.name ? asset.name.toLowerCase() : "";
-                    const isVideo = assetName.endsWith('.mp4') || assetName.endsWith('.mov');
+                    const isVideo = asset.type === 'video' || assetName.endsWith('.mp4') || assetName.endsWith('.mov');
                     const isXML = assetName.endsWith('.xml');
+                    
+                    if (window.bgMusic && !window.bgMusic.paused) {
+                        window.bgMusic.pause();
+                        window.wasPlayingMusic = true;
+                    }
                     
                     if (isXML) {
                         container.innerHTML = `
@@ -446,35 +530,26 @@
                                 <img src="../assets/ui/xml_icon.png" class="w-24 h-24 mb-4 drop-shadow-[0_0_20px_rgba(212,175,55,0.4)]">
                                 <h3 class="cinzel text-2xl text-[var(--haki-gold)]">AI EDIT COMPONENT</h3>
                                 <p class="mono text-xs text-white/60 mb-8 max-w-md text-center">Standard FCP7 XML format. Import this directly into DaVinci Resolve (File > Import > Timeline).</p>
-                                <a href="${asset.url}" download class="nexus-btn primary px-12 py-3 rounded-full no-underline">DOWNLOAD PROJECT PROJECT</a>
+                                <a href="${asset.url}" download class="nexus-btn primary px-12 py-3 rounded-full no-underline">DOWNLOAD PROJECT</a>
                             </div>
                         `;
                     } else if (isVideo) {
-                        const videoSrc = asset.video_url || asset.url || (asset.id && !asset.id.startsWith("local_") ? `https://drive.google.com/file/d/${asset.id}/preview` : "");
-                        if (videoSrc.includes("drive.google.com")) {
-                            container.innerHTML = `<iframe id="player-content" style="width: 80vw; height: 60vh; border: none;" src="${videoSrc}" allow="autoplay; fullscreen"></iframe>`;
-                        } else {
-                            container.innerHTML = `<video id="player-content" style="width: 80vw; height: 60vh; border: none; background: #000;" src="${videoSrc}" controls></video>`;
-                            // Trigger play after a short delay to ensure DOM is ready and bypass autoplay blocks
-                            setTimeout(() => {
-                                const vid = document.getElementById('player-content');
-                                if (vid) {
-                                    vid.volume = 1.0;
-                                    vid.play().catch(e => console.log("Manual play required:", e));
-                                }
-                            }, 500);
+                        let videoSrc = asset.video_url || asset.url;
+                        if (!videoSrc && asset.id && !asset.id.startsWith("lr_")) {
+                            // Direct Google Drive Video Stream Fix
+                            videoSrc = `https://drive.google.com/uc?export=download&id=${asset.id}`;
                         }
-                    } else if (asset && asset.id) {
-                        const imageUrl = asset.url || (asset.thumb_url ? asset.thumb_url : `https://drive.google.com/thumbnail?id=${asset.id}&sz=w1000`);
-                        container.innerHTML = `<img id="player-content" src="${imageUrl}" style="max-width: 80vw; max-height: 70vh;" alt="Media Resource" onerror="this.onerror=null; this.src='../assets/images/logo.png';">`;
+                        container.innerHTML = `<video id="player-content" style="max-width: 80vw; max-height: 60vh; border: 2px solid var(--haki-gold); box-shadow: 0 0 30px rgba(212,175,55,0.2);" src="${videoSrc}" controls autoplay playsinline></video>`;
                     } else {
-                        container.innerHTML = `<h3 class="cinzel text-white">Asset not found</h3>`;
+                        const imageUrl = asset.url || (asset.id ? `https://drive.google.com/thumbnail?id=${asset.id}&sz=w1000` : '../assets/images/logo.png');
+                        container.innerHTML = `<img id="player-content" src="${imageUrl}" style="max-width: 80vw; max-height: 70vh; border: 2px solid var(--haki-gold); box-shadow: 0 0 30px rgba(212,175,55,0.2);" alt="Media Resource">`;
                     }
                     
-                    title.innerText = (asset && asset.professional_name) ? asset.professional_name : (asset && asset.name ? asset.name : "Unknown Trace");
+                    title.innerText = asset.professional_name || asset.name || "Unknown Trace";
                     meta.innerText = isXML ? "AI Pipeline Project | Memory Node" : (isVideo ? "Cinematic Flow | Memory Node" : "Photographic Trace | Memory Node");
                     
                     player.classList.add('active');
+                    this.loadComments();
                 } catch(e) {
                     console.error("CDF Player Error:", e);
                 }
@@ -484,6 +559,45 @@
                 const container = document.getElementById('player-media-container');
                 player.classList.remove('active');
                 setTimeout(() => { container.innerHTML = ""; }, 400);
+                
+                if (window.wasPlayingMusic && !window.agentMuted) {
+                    window.bgMusic.play().catch(e => {});
+                }
+            },
+            postComment: function() {
+                const input = document.getElementById('comment-input');
+                const text = input.value.trim();
+                if (!text || !this.activeAssetId) return;
+
+                const comments = JSON.parse(localStorage.getItem('cdf_comments') || '{}');
+                if (!comments[this.activeAssetId]) comments[this.activeAssetId] = [];
+                
+                comments[this.activeAssetId].unshift({
+                    text: text,
+                    date: new Date().toLocaleString(),
+                    user: "Anonymous Hunter"
+                });
+
+                localStorage.setItem('cdf_comments', JSON.stringify(comments));
+                input.value = "";
+                this.loadComments();
+            },
+            loadComments: function() {
+                const list = document.getElementById('comment-list');
+                const comments = JSON.parse(localStorage.getItem('cdf_comments') || '{}');
+                const assetComments = comments[this.activeAssetId] || [];
+                
+                list.innerHTML = assetComments.length === 0 ? 
+                    '<div class="mono text-[10px] opacity-30 italic">No feedback traces recorded yet. Be the first.</div>' : 
+                    assetComments.map(c => `
+                        <div class="comment-item">
+                            <div class="comment-meta mono">
+                                <span>${c.user}</span>
+                                <span>${c.date}</span>
+                            </div>
+                            <div class="comment-text">${c.text}</div>
+                        </div>
+                    `).join('');
             }
         };
     </script>
@@ -721,6 +835,11 @@
             let nexusTimer;
             window.agentMuted = localStorage.getItem('agentMuted') === 'true';
             
+            window.bgMusic = new Audio('../Music Qter/Hugo Kant - This Old Tune.mp3');
+            window.bgMusic.loop = true;
+            window.bgMusic.volume = 0.3; // Soft background volume
+            window.wasPlayingMusic = false;
+
             function toggleAgentMute() {
                 window.agentMuted = !window.agentMuted;
                 localStorage.setItem('agentMuted', window.agentMuted);
@@ -728,8 +847,19 @@
                 if (window.agentMuted) {
                     document.getElementById('nexus-gatekeeper').classList.remove('visible');
                     clearTimeout(nexusTimer);
+                    window.bgMusic.pause();
+                } else {
+                    window.bgMusic.play().catch(e => console.log("Autoplay blocked:", e));
                 }
             }
+
+            // Ensure audio plays on first click if not muted
+            document.body.addEventListener('click', function initAudio() {
+                if (!window.agentMuted && window.bgMusic.paused) {
+                    window.bgMusic.play().catch(e => console.log("Autoplay blocked:", e));
+                }
+                document.body.removeEventListener('click', initAudio);
+            }, { once: true });
 
             function updateMuteUI() {
                 const btn = document.getElementById('btn-mute-agent');

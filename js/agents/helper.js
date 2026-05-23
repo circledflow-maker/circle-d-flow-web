@@ -443,6 +443,92 @@ class HelperAgent extends Agent {
             this.captureGlitch('RUNTIME_ERROR', `${context}: ${e.message}`);
         }
     }
+
+    async hardReset() {
+        if(!confirm("⚠️ WARNING: This will WIPE your identity, XP, and progress. Are you sure?")) return;
+        
+        console.log("[Helper] INITIATING HARD RESET...");
+        localStorage.clear();
+        
+        if(window.supabaseClient) {
+            // Optional: We could delete from DB, but usually we just sign out and clear local state for 'New Account' feel
+            await window.supabaseClient.auth.signOut();
+        }
+        
+        alert("SYSTEM WIPED. REBOOTING...");
+        window.location.href = '../index.html';
+    }
+
+    /**
+     * Resets only the Walkthrough/Tutorial flags to allow re-testing the First World flow.
+     */
+    resetWalkthrough() {
+        console.log("[Helper] Resetting Walkthrough Flags...");
+        const keys = [
+            'cdf_tour_started', 
+            'cdf_tour_done_dashboard.html',
+            'cdf_imperial_step',
+            'cdf_initiation_market_visited',
+            'cdf_initiation_rune_found',
+            'onboardingComplete'
+        ];
+        keys.forEach(k => localStorage.removeItem(k));
+        
+        if(window.Pusher) window.Pusher.showToast("Walkthrough Reset. Reloading...", "success");
+        setTimeout(() => window.location.reload(), 1500);
+    }
+
+    // --- NAVIGATION SAFETY ---
+    
+    /**
+     * Safely redirects the user, ensuring the target page exists (conceptually)
+     * and handling relative paths logic.
+     */
+    safeRedirect(target) {
+        if(!target) {
+            console.warn("[Helper] Empty redirect target. Defaulting to Dashboard.");
+            target = 'dashboard.html';
+        }
+
+        // Handle "Right Area" logic
+        if(target === 'home' || target === 'root') target = '../index.html';
+        if(target === 'dashboard') target = 'dashboard.html';
+        if(target === 'codex') target = 'quest_board.html';
+
+        // Check if we need to adjust path based on current location
+        const isPages = window.location.pathname.includes('/pages/');
+        const isRoot = !isPages;
+
+        let finalPath = target;
+        
+        // --- 0. SPECIAL EXCEPTION FOR ROOT-LEVEL INITIATION ---
+        const rootExceptions = ['beta-initiation.html'];
+        const isRootException = rootExceptions.some(exc => target.endsWith(exc)); // Corrected check
+
+        // If target implies pages/ but we are IN pages/, remove prefix
+        if(isPages && target.startsWith('pages/')) {
+            finalPath = target.replace('pages/', '');
+        }
+        // If target does NOT have pages/ but we are in ROOT, and it's a page (and not a root exception)
+        else if(isRoot && !target.startsWith('pages/') && !target.includes('index.html') && !target.startsWith('../') && !isRootException) {
+           finalPath = 'pages/' + target;
+        }
+
+        console.log(`[Helper] Redirecting: ${target} -> ${finalPath}`);
+        window.location.href = finalPath;
+    }
+
+    /**
+     * Inserts keywords or parameters into the URL for specific page states.
+     * e.g. opening a specific tab or quest.
+     */
+    insertKeywords(params = {}) {
+        const url = new URL(window.location);
+        Object.keys(params).forEach(key => url.searchParams.set(key, params[key]));
+        window.history.pushState({}, '', url);
+        console.log("[Helper] Keywords Inserted:", params);
+    }
+
 }
 
 new HelperAgent();

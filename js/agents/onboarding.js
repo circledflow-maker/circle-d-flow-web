@@ -22,6 +22,12 @@ window.Onboarding = {
             return;
         }
 
+        // NEW: If on Dashboard, suppress this modal (Dashboard has its own Welcome Overlay)
+        if (window.location.pathname.includes('dashboard.html')) {
+            console.log("[Onboarding] Suppressed on Dashboard. Overlay Active.");
+            return;
+        }
+
         if (sessionDismissed) {
              console.log("[Onboarding] Dismissed for this session.");
              return;
@@ -87,12 +93,12 @@ window.Onboarding = {
         // We do NOT set dismissed here, because we want them to finish the mission.
         // But we close the modal to show the Log.
         
-        if (window.CaptainsLog) {
-            window.CaptainsLog.open('log');
+        if (window.SoulPass) {
+            window.SoulPass.open();
             this.close();
         } else {
-            console.error("CaptainsLog missing.");
-            alert("System Error: Captain's Log Agent missing. Reloading...");
+            console.error("SoulPass missing.");
+            alert("System Error: Soul Pass Agent missing. Reloading...");
             window.location.reload();
         }
     },

@@ -40,13 +40,50 @@ class RefereeAgent {
         this.init();
     }
 
-    init() {
+    async init() {
         console.log("⚖️ [Referee] The Arbiter is watching.");
+        
+        // SYNC WITH SUPABASE (Fitable Table)
+        await this.syncFitable();
+
         this.renderPillars();
         this.renderLeaderboard();
         this.renderLiveFeed();
-        // this.updateTicker(); // Handled by CSS for now
         this.syncTournament();
+    }
+
+    async syncFitable() {
+        if (!window.supabaseClient) return;
+
+        const { data: { user } } = await window.supabaseClient.auth.getUser();
+        if (!user) return;
+
+        console.log(`[Referee] Syncing Fitable Stats for ${user.id}...`);
+
+        const { data, error } = await window.supabaseClient
+            .from('fitable')
+            .select('*')
+            .eq('id', user.id)
+            .single();
+
+        if (error) {
+            console.error("[Referee] Sync Error:", error.message);
+            return;
+        }
+
+        if (data) {
+            // Update Local state for faster UI reaction
+            this.xp = data.xp;
+            this.wins = data.wins;
+            this.streak = data.streak;
+            
+            // Sync to LocalStorage for offline/legacy support
+            localStorage.setItem('cdf_xp', data.xp.toString());
+            localStorage.setItem('cdf_wins', data.wins.toString());
+            localStorage.setItem('cdf_streak', data.streak.toString());
+            
+            console.log("[Referee] Fitable Stats Synchronized.");
+        }
     }
 
     syncTournament() {
@@ -375,7 +412,30 @@ class RefereeAgent {
 
         console.log(`[Battle] Result: ${outcome.toUpperCase()} | XP: +${xpChange} | Streak: ${streak}`);
 
+        // 6. SYNC TO SUPABASE
+        this.updateFitableDB(currentXP, wins, streak);
+
         return { outcome, xp: xpChange, loss: karmaChange, streak: streak };
+    }
+
+    async updateFitableDB(xp, wins, streak) {
+        if (!window.supabaseClient) return;
+        
+        const { data: { user } } = await window.supabaseClient.auth.getUser();
+        if (!user) return;
+
+        const { error } = await window.supabaseClient
+            .from('fitable')
+            .update({ 
+                xp: xp, 
+                wins: wins, 
+                streak: streak,
+                last_battle_at: new Date().toISOString()
+            })
+            .eq('id', user.id);
+
+        if (error) console.error("[Referee] DB Update Failed:", error.message);
+        else console.log("[Referee] DB Synced.");
     }
 
     renderVerdict(win, data) {

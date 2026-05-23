@@ -413,9 +413,9 @@ class CaptainsLogAgent {
                             
                             <div style="margin-top: 2rem; padding: 1rem; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); border-radius: 8px;">
                                 <p style="font-size: 0.75rem; color: #9ca3af; text-transform: uppercase;">Next Objective</p>
-                                <h3 style="font-size: 1.25rem; color: white; font-weight: bold; margin-top: 0.25rem;">THE ARTIFACT BAZAAR</h3>
+                                <h3 style="font-size: 1.25rem; color: white; font-weight: bold; margin-top: 0.25rem;">THE DASHBOARD</h3>
                                 <p style="font-size: 0.75rem; color: #6b7280; margin-top: 0.5rem;">Warping in <span id="mission-timer" style="color: #d4af37; font-weight: bold;">5</span>s...</p>
-                                <button onclick="const t = window.location.pathname.includes('/pages/') ? 'marketplace.html' : 'pages/marketplace.html'; window.location.href=t" style="margin-top: 1rem; padding: 0.5rem 1rem; background: #d4af37; color: black; border: none; font-weight: bold; cursor: pointer; border-radius: 4px;">WARP NOW</button>
+                                <button onclick="const t = window.location.pathname.includes('/pages/') ? 'dashboard.html' : 'pages/dashboard.html'; window.location.href=t" style="margin-top: 1rem; padding: 0.5rem 1rem; background: #d4af37; color: black; border: none; font-weight: bold; cursor: pointer; border-radius: 4px;">WARP NOW</button>
                             </div>
                         </div>
                     `;
@@ -429,8 +429,8 @@ class CaptainsLogAgent {
                         if(timerEl) timerEl.innerText = timeLeft;
                         if(timeLeft <= 0) {
                             clearInterval(interval);
-                            console.log("[CaptainsLog] Auto-Warping to Marketplace...");
-                            const target = window.location.pathname.includes('/pages/') ? 'marketplace.html' : 'pages/marketplace.html';
+                            console.log("[CaptainsLog] Auto-Warping to Dashboard...");
+                            const target = window.location.pathname.includes('/pages/') ? 'dashboard.html' : 'pages/dashboard.html';
                             window.location.href = target; 
                         }
                     }, 1000);
@@ -438,8 +438,8 @@ class CaptainsLogAgent {
                 } catch (err) {
                     console.error("[CaptainsLog] CRITICAL ERROR IN MISSION COMPLETION:", err);
                     // Fallback Alert & Redirect
-                    alert("IDENTITY SYNCED. Redirecting to Marketplace...");
-                    const target = window.location.pathname.includes('/pages/') ? 'marketplace.html' : 'pages/marketplace.html';
+                    alert("IDENTITY SYNCED. Redirecting to Dashboard...");
+                    const target = window.location.pathname.includes('/pages/') ? 'dashboard.html' : 'pages/dashboard.html';
                     window.location.href = target;
                 }
                 

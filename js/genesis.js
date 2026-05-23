@@ -7,47 +7,49 @@ const Genesis = {
     state: {
         step: 0,
         scores: {
-            weaver: 0,
-            soundsmith: 0,
+            arcane: 0,
+            kinetic: 0,
             visionary: 0,
+            harmonizer: 0,
+            soundsmith: 0,
             alchemist: 0
         },
         selectedClass: null
     },
 
-    // The "Genesis Check" Questions (Hip Hop, One Piece, Artist Life)
+    // The Oracle of Yggdrasil Questions
     questions: [
         {
             id: 1,
-            theme: "HIP HOP",
-            text: "The beat drops. The cypher circle opens. What is your instinct?",
+            theme: "RESONANCE CHECK",
+            text: "When the cosmic storm rises, what part of the spirit are you?",
             options: [
-                { text: "Weave the connections between the crew.", class: "weaver", icon: "hub" }, // Emerald
-                { text: "Drop a flow that shakes the ground.", class: "soundsmith", icon: "graphic_eq" }, // Violet
-                { text: "Visualize the scene like a movie director.", class: "visionary", icon: "visibility" }, // Gold
-                { text: "Ensure everyone is fed and supplied.", class: "alchemist", icon: "restaurant" } // Red
+                { text: "The Lightning - Pulsing with binary codes and systems.", class: "arcane", icon: "bolt" },
+                { text: "The Wave - Adapting to the flow with pure physical power.", class: "kinetic", icon: "waves" },
+                { text: "The Rock - Standing as the disciplined base of the mountain.", class: "kinetic", icon: "terrain" },
+                { text: "The Wind - Moving the seeds of the future through vision.", class: "visionary", icon: "air" }
             ]
         },
         {
             id: 2,
-            theme: "ONE PIECE",
-            text: "You discover a Devil Fruit. What power does it grant you?",
+            theme: "FLOW STATE",
+            text: "When do you lose your sense of time in the Yggdrasil Matrix?",
             options: [
-                { text: "The Spider-Web Fruit (Network & Control)", class: "weaver", icon: "share" },
-                { text: "The Rumble-Rumble Fruit (Sound & Energy)", class: "soundsmith", icon: "music_note" },
-                { text: "The Future-Sight Fruit (Prophecy & Design)", class: "visionary", icon: "light_mode" },
-                { text: "The Banquet-Banquet Fruit (Creation & Matter)", class: "alchemist", icon: "science" }
+                { text: "When I create a complex structure from the pure void.", class: "visionary", icon: "auto_fix_high" },
+                { text: "When my body and mind vanish into a single perfect motion.", class: "kinetic", icon: "sports_martial_arts" },
+                { text: "When I weave the invisible connections between spirits.", class: "harmonizer", icon: "diversity_3" },
+                { text: "When I drop a frequency that resonates with the stars.", class: "soundsmith", icon: "graphic_eq" }
             ]
         },
         {
             id: 3,
-            theme: "ARTIST LIFE",
-            text: "Deadline is in 1 hour. Zero energy. What saves you?",
+            theme: "THE TREE OF WORLDS",
+            text: "Which part of the Weltenbaum [Yggdrasil] do you protect?",
             options: [
-                { text: "Calling my Nakama for backup.", class: "weaver", icon: "groups" },
-                { text: "Putting on the 'God Mode' playlist.", class: "soundsmith", icon: "headphones" },
-                { text: "A sudden flash of pure inspiration.", class: "visionary", icon: "bolt" },
-                { text: "A strong coffee and a solid meal.", class: "alchemist", icon: "coffee" }
+                { text: "The Roots - Guarding the origin and sacred knowledge.", class: "arcane", icon: "psychology" },
+                { text: "The Trunk - Holding the stability and raw strength.", class: "kinetic", icon: "fitness_center" },
+                { text: "The Leaves - Catching the light of pure innovation.", class: "visionary", icon: "emergency_light" },
+                { text: "The Fruits - Alchemizing the essence and nourishment.", class: "alchemist", icon: "science" }
             ]
         }
     ],
@@ -206,6 +208,38 @@ const Genesis = {
         }
     },
 
+    async syncToSupabase(className, scores) {
+        console.log("☁️ [Genesis] Syncing to Neural Net (Supabase)...");
+        
+        if (!window.supabaseClient) {
+            console.error("Supabase Client missing. Cannot sync.");
+            return;
+        }
+
+        try {
+            const { data: { user } } = await window.supabaseClient.auth.getUser();
+            if(!user) {
+                console.warn("User not authenticated during Genesis. Local only.");
+                return;
+            }
+
+            // Update Profile
+            const { error } = await window.supabaseClient.from('profiles').update({
+                character_class: className,
+                stats: scores,
+                onboarding_complete: true,
+                level: 1,
+                exp: 100
+            }).eq('id', user.id);
+
+            if(error) throw error;
+            console.log("✅ [Genesis] Sync Complete.");
+
+        } catch (e) {
+            console.error("[Genesis] Sync Failed:", e);
+        }
+    },
+
     openGate() {
         console.log("🌀 [Genesis] Opening The Gate...");
         try {
@@ -234,7 +268,7 @@ const Genesis = {
         // 2. Redirect to Dashboard (The Standard Hub)
         setTimeout(() => {
             console.log("🚀 [Genesis] Jumping to Dashboard.");
-            window.location.href = 'dashboard.html';
+            window.location.href = 'master_dashboard.html';
         }, 2000); 
     }
 };

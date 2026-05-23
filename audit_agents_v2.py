@@ -1,7 +1,7 @@
 import os
 
 def audit_agents():
-    root_dir = "c:\\Users\\Utilizador\\circle-d-flow-web"
+    root_dir = r"d:\circle-d-flow-web"
     required_agents = ['pulsar.js', 'helper.js', 'flowee.js']
     # pulsar.js is actually pusher.js in some contexts, let's use pusher.js as per user request
     required_agents = ['pusher.js', 'helper.js', 'flowee.js']

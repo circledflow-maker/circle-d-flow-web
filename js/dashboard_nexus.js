@@ -87,7 +87,7 @@ window.ApexNexus = {
 
     init: function() {
         // this.setupEventListeners(); // Removed: Method does not exist
-        this.renderProfile();
+        this.renderDashboardIdentity();
         this.checkIntegrity(); // New: Self-Repair
         this.updateXPUI(); // New: Gamification Init
         
@@ -374,39 +374,59 @@ window.ApexNexus = {
     },
 
     renderWelcomeTrinity: function() {
-        if(localStorage.getItem('seen_command_trinity')) return;
+        console.log("[Apex] Checking Trinity Welcome status...");
+        if(localStorage.getItem('seen_command_trinity')) {
+            console.log("[Apex] Trinity Welcome already seen. Skipping.");
+            return;
+        }
+
+        console.log("[Apex] Trinity Modal Triggered. Preparing for first contact...");
 
         setTimeout(() => {
+            console.log("[Apex] Opening Trinity Modal now.");
             const modal = document.createElement('dialog');
-            modal.className = "bg-transparent p-0 backdrop:bg-black/95 backdrop:backdrop-blur-sm open:animate-scale-in";
+            modal.className = "trinity-modal bg-transparent p-0 backdrop:bg-black/95 backdrop:backdrop-blur-sm open:animate-scale-in overflow-hidden outline-none border-none";
+            modal.style.cssText = "outline: none; border: none; background: transparent;";
+            
             modal.innerHTML = `
-                <div class="w-[800px] h-[500px] bg-[#0F0A13] border border-mystic-gold rounded-3xl shadow-[0_0_50px_rgba(255,215,0,0.2)] overflow-hidden relative flex flex-col items-center justify-center p-8 text-center bg-[url('../Assets/images/logo.png')] bg-no-repeat bg-center bg-opacity-10 bg-[length:400px]">
+                <div class="w-[800px] h-[550px] relative flex flex-col items-center justify-center p-8 text-center rounded-3xl overflow-hidden shadow-2xl" 
+                     style="background: rgba(20, 15, 25, 0.85); backdrop-filter: blur(50px); border: 1px solid rgba(212, 175, 55, 0.6); box-shadow: 0 0 100px rgba(212,175,55,0.15), inset 0 0 40px rgba(212, 175, 55, 0.2); transform: perspective(1000px) rotateX(2deg); transform-style: preserve-3d; margin: auto;">
                     
-                    <h2 class="text-3xl font-serif font-bold text-mystic-gold uppercase tracking-widest mb-4">Greetings, Flow Creator.</h2>
+                    <!-- 3D Floating Heart Logo -->
+                    <div class="absolute inset-0 flex items-center justify-center pointer-events-none" style="transform: translateZ(-50px);">
+                         <img src="../assets/images/cqr-logo-gold.png" class="w-[450px] opacity-15 drop-shadow-[0_0_30px_rgba(212,175,55,0.8)] animate-pulse" />
+                    </div>
+
+                    <h2 class="text-4xl font-serif font-bold text-[#d4af37] uppercase tracking-widest mb-4" style="transform: translateZ(30px); text-shadow: 0 0 15px rgba(212,175,55,0.8), 2px 2px 4px rgba(0,0,0,0.8);">Greetings, Flow Creator.</h2>
                     
-                    <p class="text-white/80 max-w-lg mb-8 leading-relaxed font-serif">
+                    <p class="text-white max-w-lg mb-10 leading-relaxed font-serif text-lg" style="transform: translateZ(20px); text-shadow: 0 0 10px rgba(0,0,0,1);">
                         You have reached the core of the Yggdrasil-Matrix. Here, your path is no longer solitary. You stand before the three pillars that hold our world together.
                     </p>
 
-                    <div class="grid grid-cols-3 gap-8 w-full max-w-2xl mb-8">
-                        <div class="flex flex-col items-center gap-2">
-                            <span class="material-symbols-outlined text-4xl text-pink-500">visibility</span>
-                            <h3 class="text-xs font-bold text-white uppercase tracking-widest">Visual</h3>
-                            <p class="text-[10px] text-white/50">The Eye of Nyame</p>
+                    <div class="grid grid-cols-3 gap-8 w-full max-w-2xl mb-10" style="transform: translateZ(40px);">
+                        <!-- Vis -->
+                        <div class="group flex flex-col items-center gap-3 p-4 rounded-xl border border-pink-500/20 bg-pink-500/5 hover:border-pink-500 hover:bg-pink-500/20 transition-all hover:-translate-y-2 cursor-crosshair shadow-[0_0_15px_rgba(236,72,153,0.1)]">
+                            <span class="material-symbols-outlined text-5xl text-pink-400 drop-shadow-[0_0_15px_rgba(236,72,153,0.8)] group-hover:animate-pulse">visibility</span>
+                            <h3 class="text-sm font-bold text-white uppercase tracking-widest drop-shadow-[0_2px_4px_black]">Visual</h3>
+                            <p class="text-[10px] text-pink-200 uppercase tracking-widest drop-shadow-[0_2px_4px_black]">The Eye of Nyame</p>
                         </div>
-                        <div class="flex flex-col items-center gap-2">
-                             <span class="material-symbols-outlined text-4xl text-purple-500">graphic_eq</span>
-                            <h3 class="text-xs font-bold text-white uppercase tracking-widest">Sound</h3>
-                            <p class="text-[10px] text-white/50">The Beat of Anansi</p>
+                        <!-- Sound -->
+                        <div class="group flex flex-col items-center gap-3 p-4 rounded-xl border border-purple-500/20 bg-purple-500/5 hover:border-purple-500 hover:bg-purple-500/20 transition-all hover:-translate-y-2 cursor-crosshair shadow-[0_0_15px_rgba(168,85,247,0.1)]">
+                             <span class="material-symbols-outlined text-5xl text-purple-400 drop-shadow-[0_0_15px_rgba(168,85,247,0.8)] group-hover:animate-pulse">graphic_eq</span>
+                            <h3 class="text-sm font-bold text-white uppercase tracking-widest drop-shadow-[0_2px_4px_black]">Sound</h3>
+                            <p class="text-[10px] text-purple-200 uppercase tracking-widest drop-shadow-[0_2px_4px_black]">The Beat of Anansi</p>
                         </div>
-                        <div class="flex flex-col items-center gap-2">
-                             <span class="material-symbols-outlined text-4xl text-orange-500">restaurant</span>
-                            <h3 class="text-xs font-bold text-white uppercase tracking-widest">Taste</h3>
-                            <p class="text-[10px] text-white/50">The Soul of Queen</p>
+                        <!-- Taste -->
+                        <div class="group flex flex-col items-center gap-3 p-4 rounded-xl border border-orange-500/20 bg-orange-500/5 hover:border-orange-500 hover:bg-orange-500/20 transition-all hover:-translate-y-2 cursor-crosshair shadow-[0_0_15px_rgba(249,115,22,0.1)]">
+                             <span class="material-symbols-outlined text-5xl text-orange-400 drop-shadow-[0_0_15px_rgba(249,115,22,0.8)] group-hover:animate-pulse">restaurant</span>
+                            <h3 class="text-sm font-bold text-white uppercase tracking-widest drop-shadow-[0_2px_4px_black]">Taste</h3>
+                            <p class="text-[10px] text-orange-200 uppercase tracking-widest drop-shadow-[0_2px_4px_black]">The Soul of Queen</p>
                         </div>
                     </div>
 
-                    <button onclick="localStorage.setItem('seen_command_trinity', 'true'); this.closest('dialog').close(); window.Flowee.talk(true, 'The Path is open. Organize your Destiny.');" class="px-8 py-3 bg-mystic-gold text-black font-bold uppercase tracking-wider rounded hover:bg-white transition-colors">
+                    <button onclick="window.ApexNexus.closeTrinityModal()" 
+                            class="relative px-12 py-4 border-2 border-[#d4af37] bg-[#d4af37]/10 text-white font-bold uppercase tracking-widest rounded-lg hover:text-black hover:bg-[#d4af37] transition-all hover:-translate-y-1 shadow-[0_0_20px_rgba(212,175,55,0.3)] hover:shadow-[0_0_40px_rgba(212,175,55,0.8)]"
+                            style="transform: translateZ(50px); text-shadow: 0 2px 4px rgba(0,0,0,0.5);">
                         Enter the Council
                     </button>
                 </div>
@@ -414,6 +434,90 @@ window.ApexNexus = {
             document.body.appendChild(modal);
             modal.showModal();
         }, 1000);
+    },
+
+    closeTrinityModal: function() {
+        const modal = document.querySelector('dialog.trinity-modal');
+        if(!modal) return;
+        
+        console.log("[Apex] Entering Council. Initiating Flash Burst...");
+
+        // 1. Flash Burst Effect (CSS-based for zero dependency)
+        const flash = document.createElement('div');
+        flash.id = "trinity-flash";
+        flash.style.cssText = "position:fixed; inset:0; background:white; z-index:2147483647; opacity:1; pointer-events:none; transition: opacity 1.5s ease-out;";
+        document.body.appendChild(flash);
+        
+        // 2. Shake Effect for parent
+        document.body.style.transition = "transform 0.1s";
+        let shakes = 0;
+        const shakeInterval = setInterval(() => {
+            document.body.style.transform = `translate(${(Math.random()-0.5)*20}px, ${(Math.random()-0.5)*20}px)`;
+            shakes++;
+            if(shakes > 15) {
+                clearInterval(shakeInterval);
+                document.body.style.transform = "";
+            }
+        }, 50);
+
+        setTimeout(() => {
+            flash.style.opacity = '0';
+            localStorage.setItem('seen_command_trinity', 'true');
+            if (modal) modal.close();
+            
+            // 3. TRIGGER CINEMATIC ENTRY
+            this.triggerCinematicEntry();
+
+            setTimeout(() => {
+                if (flash) flash.remove();
+            }, 1500);
+        }, 300);
+    },
+
+    triggerCinematicEntry: function() {
+        console.log("🚀 [Apex] Orbit Fly-Through Initiated.");
+        
+        const compass = document.getElementById('flow-compass');
+        const planets = document.querySelectorAll('.planet-container');
+        const main = document.querySelector('main');
+
+        // Apply 3D Entrance to Main Container
+        if (main) {
+            main.animate([
+                { opacity: 0, transform: 'scale(0.8) translateZ(-500px)', filter: 'blur(20px)' },
+                { opacity: 1, transform: 'scale(1) translateZ(0)', filter: 'blur(0px)' }
+            ], {
+                duration: 2500,
+                easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
+                fill: 'forwards'
+            });
+        }
+
+        // Staggered Entrance for Planets
+        planets.forEach((planet, index) => {
+            planet.animate([
+                { opacity: 0, transform: 'scale(0) translateY(100px)' },
+                { opacity: 1, transform: 'scale(1) translateY(0)' }
+            ], {
+                duration: 1000,
+                delay: 500 + (index * 150),
+                easing: 'back.out(1.2)',
+                fill: 'forwards'
+            });
+        });
+
+        // Compass Spin-up
+        if (compass) {
+            compass.animate([
+                { transform: 'rotate(-180deg) scale(0)', opacity: 0 },
+                { transform: 'rotate(0deg) scale(1)', opacity: 1 }
+            ], {
+                duration: 2000,
+                delay: 300,
+                easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+                fill: 'forwards'
+            });
+        }
     },
 
     // NEW: Social Handshake (Phase 33)

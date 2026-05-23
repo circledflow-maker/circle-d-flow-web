@@ -52,6 +52,7 @@ class PusherAgent extends Agent {
             .pusher-toast.type-karma { border-color: rgba(168, 85, 247, 0.5); background: rgba(168, 85, 247, 0.05); }
             .pusher-toast.type-error { border-color: rgba(239, 68, 68, 0.5); background: rgba(239, 68, 68, 0.1); color: #FCA5A5; }
             .pusher-toast.type-success { border-color: rgba(34, 197, 94, 0.5); background: rgba(34, 197, 94, 0.05); color: #86EFAC; }
+            .pusher-toast.type-guide { border-color: rgba(56, 189, 248, 0.5); background: rgba(56, 189, 248, 0.1); color: #BAE6FD; }
         `;
         document.head.appendChild(style);
     }
@@ -92,6 +93,7 @@ class PusherAgent extends Agent {
         if (type === 'karma') icon = 'auto_awesome';
         if (type === 'success') icon = 'check_circle';
         if (type === 'error') icon = 'warning';
+        if (type === 'guide') icon = 'menu_book';
 
         toast.innerHTML = `
             <span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1">${icon}</span>

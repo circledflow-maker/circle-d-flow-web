@@ -1,204 +1,382 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" class="dark">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="description" content="Circle D Flow: Professional photography and creative services in Lisbon. Capture your moment.">
-    <meta property="og:title" content="Circle D Flow | Quest Create">
-    <meta property="og:description" content="Circle D Flow: Professional photography and creative services in Lisbon. Capture your moment.">
-    <meta property="og:type" content="website">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Quest | Circle D Flow</title>
+    <title>The Forge | Circle D Flow</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;600&family=Space+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link rel="stylesheet" href="../css/styles.css">
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        tao: {
+                            earth: '#2E3B32',
+                            wood: '#5C4033',
+                            fire: '#D47E3D',
+                            water: '#2C4957',
+                            metal: '#B0C4DE',
+                            void: '#0B0F0D'
+                        }
+                    },
+                    fontFamily: {
+                        "display": ["Cinzel", "serif"],
+                        "body": ["Plus Jakarta Sans", "sans-serif"],
+                        "mono": ["Space Mono", "monospace"]
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #0F0A13;
-            color: white;
+        body { opacity: 0; animation: fadeIn 1.2s ease-in-out forwards; background-color: var(--color-tao-void); color: white; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .forge-panel {
+            background: linear-gradient(145deg, rgba(46,59,50,0.4) 0%, rgba(11,15,13,0.95) 100%);
+            border: 1px solid rgba(212,126,61,0.2);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        .font-serif {
-            font-family: 'Playfair Display', serif;
+        .input-tao {
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(212,126,61,0.3);
+            color: #fff;
+            transition: all 0.3s ease;
+        }
+        .input-tao:focus {
+            border-color: var(--color-tao-fire);
+            box-shadow: 0 0 10px rgba(212,126,61,0.2);
+            outline: none;
         }
 
-        .text-electric {
-            color: #9A4DFF;
+        .select-chip {
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.05);
+            transition: all 0.2s ease;
+            cursor: pointer;
         }
+        .select-chip.active {
+            border-color: var(--color-tao-fire);
+            background: rgba(212,126,61,0.2);
+            color: var(--color-tao-fire);
+        }
+        
+        /* Custom scrollbar for tags */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 
-<body class="bg-[#0F0A13] text-white min-h-screen relative overflow-x-hidden">
+<body class="bg-tao-void text-white min-h-screen relative overflow-x-hidden">
+
+    <!-- Atmospheric Organic Background -->
+    <div class="fixed inset-0 pointer-events-none z-0">
+        <div class="absolute top-1/4 left-0 w-[40vw] h-[40vw] bg-tao-fire/5 rounded-full blur-[100px] -translate-x-1/2"></div>
+        <div class="absolute bottom-0 right-0 w-[50vw] h-[50vw] bg-tao-earth/10 rounded-full blur-[120px] translate-x-1/4 translate-y-1/4"></div>
+    </div>
 
     <!-- Navbar -->
-    <nav class="fixed w-full z-50 transition-all duration-300 border-b border-white/5 bg-[#0F0A13]/80 backdrop-blur-md">
+    <nav class="fixed w-full z-50 transition-all duration-300 border-b border-tao-earth/20 bg-tao-void/80 backdrop-blur-md">
         <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-            <a href="../index.html" class="flex items-center gap-3">
+            <a href="coop.html" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
                 <img src="../Assets/images/logo.png" alt="CDF Logo" class="w-8 h-8 object-contain">
-                <span class="font-serif font-bold text-xl tracking-wide">Circle D Flow</span>
+                <span class="font-display font-medium text-xl tracking-wide text-white">The Forge</span>
             </a>
-            <a href="dashboard.html" class="text-white/60 hover:text-white transition-colors">Back to Dashboard</a>
+            <div class="flex items-center gap-4">
+                <a href="coop.html" class="text-white/50 hover:text-white transition-colors text-sm font-mono tracking-widest flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm">arrow_back</span> Bar
+                </a>
+                <a href="dashboard.html" class="text-white/50 hover:text-tao-fire transition-colors text-sm font-mono tracking-widest flex items-center gap-2 border border-white/10 px-3 py-1 rounded-full hover:border-tao-fire/50">
+                    <span class="material-symbols-outlined text-sm">home</span> Quarters
+                </a>
+            </div>
         </div>
     </nav>
 
-    <main class="pt-24 pb-20 px-6 max-w-4xl mx-auto flex items-center justify-center min-h-[90vh]">
-        <!-- Parchment Container -->
-        <div class="relative w-full p-8 md:p-16 text-[#3E2723]">
-            
-            <!-- Paper Background (CSS Generated for now) -->
-            <div class="absolute inset-0 bg-[#D4C6A9] transform rotate-1 rounded-sm shadow-[0_0_50px_rgba(0,0,0,0.5)] z-0" style="background-image: url('https://www.transparenttextures.com/patterns/aged-paper.png'); box-shadow: inset 0 0 100px rgba(62,39,35,0.4);"></div>
-            <div class="absolute inset-0 bg-[#D4C6A9] transform -rotate-1 rounded-sm shadow-xl z-0 opacity-80 mix-blend-multiply"></div>
-            
-            <!-- Content -->
-            <div class="relative z-10">
-                <div class="text-center mb-10">
-                    <span class="font-mono font-bold uppercase tracking-[0.3em] text-[#5D4037] opacity-80 text-sm">Sacred Vow</span>
-                    <h1 class="text-5xl md:text-6xl font-display font-bold mb-4 text-[#3E2723] drop-shadow-sm">Decree of the Flow</h1>
-                    <div class="w-32 h-1 bg-[#3E2723] mx-auto rounded-full opacity-30 my-4"></div>
-                    <p class="font-hand italic text-[#5D4037] text-lg">"As the River shapes the Earth, so does your Will shape the Kingdom."</p>
+    <main class="pt-28 pb-20 px-4 md:px-6 max-w-4xl mx-auto relative z-10 min-h-[90vh]">
+        
+        <div class="text-center mb-10">
+            <h1 class="text-4xl md:text-5xl font-display font-bold mb-3 text-transparent bg-clip-text bg-gradient-to-r from-tao-fire to-white">
+                Event Inkubator
+            </h1>
+            <p class="font-body text-white/50 text-sm tracking-widest uppercase italic">"Heat the iron. Shape the flow."</p>
+        </div>
+
+        <div class="forge-panel rounded-2xl p-6 md:p-10">
+            <form id="incubator-form" class="space-y-10">
+                
+                <!-- 1. The Core (Title & Type) -->
+                <div>
+                    <h2 class="text-xl font-display text-tao-fire mb-4 flex items-center gap-2 border-b border-tao-fire/20 pb-2">
+                        <span class="material-symbols-outlined">center_focus_strong</span> 1. The Core
+                    </h2>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-xs uppercase tracking-widest text-white/50 mb-2">Event Title</label>
+                            <input type="text" id="event-title" required class="w-full input-tao rounded-lg px-4 py-3 font-body text-lg" placeholder="e.g. C-Riz Hearing Release Party">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-xs uppercase tracking-widest text-white/50 mb-3">Event Spirit & Type</label>
+                            <div class="flex flex-wrap gap-3" id="type-selector">
+                                <div class="select-chip px-4 py-2 rounded-full text-sm font-bold active" onclick="toggleChip(this, 'type')">Exhibition</div>
+                                <div class="select-chip px-4 py-2 rounded-full text-sm font-bold" onclick="toggleChip(this, 'type')">Concert</div>
+                                <div class="select-chip px-4 py-2 rounded-full text-sm font-bold" onclick="toggleChip(this, 'type')">Jam Session</div>
+                                <div class="select-chip px-4 py-2 rounded-full text-sm font-bold" onclick="toggleChip(this, 'type')">Workshop</div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs uppercase tracking-widest text-white/50 mb-2">Location Coordinates / Address</label>
+                            <input type="text" id="event-location" class="w-full input-tao rounded-lg px-4 py-3 font-body text-lg" placeholder="e.g. ClimaLabs, LxFactory, Area 51...">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs uppercase tracking-widest text-white/50 mb-2">Event Space-Time</label>
+                            <input type="date" id="event-date" class="w-full input-tao rounded-lg px-4 py-3 font-body text-lg text-white" style="color-scheme: dark;">
+                        </div>
+                    </div>
                 </div>
 
-                <form id="create-quest-form" class="space-y-8">
-                    <div class="relative">
-                        <label class="block font-display font-bold text-lg text-[#3E2723] mb-2 pl-2">The Calling (Title)</label>
-                        <input type="text" name="title" required
-                            class="w-full bg-[#3E2723]/10 border-b-2 border-[#3E2723]/30 px-4 py-3 text-[#3E2723] font-mono text-xl placeholder-[#3E2723]/40 focus:border-[#3E2723] focus:outline-none focus:bg-[#3E2723]/5 transition-all rounded-t-lg"
-                            placeholder="e.g. Awakening the Dragon's Pulse">
-                    </div>
-
-                    <div class="relative">
-                        <label class="block font-display font-bold text-lg text-[#3E2723] mb-2 pl-2">Prophecy & Path</label>
-                        <textarea name="description" rows="4" required
-                            class="w-full bg-[#3E2723]/10 border-2 border-[#3E2723]/20 rounded-lg px-6 py-4 text-[#3E2723] font-mono text-lg leading-relaxed placeholder-[#3E2723]/40 focus:border-[#3E2723]/50 focus:outline-none transition-all resize-none"
-                            placeholder="What must be done to align with the Flow?"></textarea>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- 2. Logistics & Needs (Location Check) -->
+                <div>
+                    <h2 class="text-xl font-display text-tao-fire mb-4 flex items-center gap-2 border-b border-tao-fire/20 pb-2">
+                        <span class="material-symbols-outlined">foundation</span> 2. Location Check
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label class="block font-display font-bold text-lg text-[#3E2723] mb-2 pl-2">Karma Reward</label>
-                            <div class="relative">
-                                <select name="xpReward"
-                                    class="w-full bg-[#3E2723] text-[#D4C6A9] font-bold border-2 border-[#3E2723] rounded-lg px-6 py-4 appearance-none focus:outline-none shadow-lg cursor-pointer hover:bg-[#5D4037] transition-colors font-mono">
-                                    <option value="15">Spark (15 Flow)</option>
-                                    <option value="50">Ripple (50 Flow)</option>
-                                    <option value="100">Wave (100 Flow)</option>
-                                    <option value="200">Torrent (200 Flow)</option>
-                                    <option value="500">Tsunami (500 Flow)</option>
-                                </select>
-                                <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-[#D4C6A9] pointer-events-none">arrow_drop_down</span>
+                            <label class="block text-xs uppercase tracking-widest text-white/50 mb-3">Physical Requirements</label>
+                            <div class="space-y-2">
+                                <label class="flex items-center gap-3 cursor-pointer group">
+                                    <input type="checkbox" class="w-4 h-4 rounded border-tao-earth bg-black text-tao-fire focus:ring-tao-fire/50">
+                                    <span class="text-sm group-hover:text-tao-fire transition-colors">Kitchen Access required</span>
+                                </label>
+                                <label class="flex items-center gap-3 cursor-pointer group">
+                                    <input type="checkbox" class="w-4 h-4 rounded border-tao-earth bg-black text-tao-fire focus:ring-tao-fire/50">
+                                    <span class="text-sm group-hover:text-tao-fire transition-colors">Sound System (PA) required</span>
+                                </label>
+                                <label class="flex items-center gap-3 cursor-pointer group">
+                                    <input type="checkbox" class="w-4 h-4 rounded border-tao-earth bg-black text-tao-fire focus:ring-tao-fire/50">
+                                    <span class="text-sm group-hover:text-tao-fire transition-colors">Outdoor Area</span>
+                                </label>
                             </div>
                         </div>
                         <div>
-                            <label class="block font-display font-bold text-lg text-[#3E2723] mb-2 pl-2">Nature of Quest</label>
-                            <div class="relative">
-                                <select name="type"
-                                    class="w-full bg-[#3E2723] text-[#D4C6A9] font-bold border-2 border-[#3E2723] rounded-lg px-6 py-4 appearance-none focus:outline-none shadow-lg cursor-pointer hover:bg-[#5D4037] transition-colors font-mono">
-                                    <option value="Harmonize">Harmonize (Social)</option>
-                                    <option value="Discovery">Discovery (Scout)</option>
-                                    <option value="Creation">Creation (Art/Music)</option>
-                                    <option value="Balance">Balance (Wellness)</option>
-                                </select>
-                                <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-[#D4C6A9] pointer-events-none">category</span>
-                            </div>
+                            <label class="block text-xs uppercase tracking-widest text-white/50 mb-3">Guest Capacity</label>
+                            <select class="w-full input-tao rounded-lg px-4 py-3 font-body text-sm cursor-pointer">
+                                <option>Intimate (1-15)</option>
+                                <option>Gathering (15-50)</option>
+                                <option>Crowd (50-100)</option>
+                                <option>Festival (100+)</option>
+                            </select>
                         </div>
                     </div>
+                </div>
 
-                    <div class="pt-8 flex justify-center">
-                        <button type="submit"
-                            class="relative px-12 py-5 bg-[#3E2723] text-[#D4C6A9] font-display font-bold text-xl uppercase tracking-widest rounded shadow-[0_5px_15px_rgba(62,39,35,0.4)] hover:bg-[#5D4037] hover:-translate-y-1 hover:shadow-[0_10px_20px_rgba(62,39,35,0.5)] transition-all flex items-center gap-3 group">
-                            <span class="material-symbols-outlined text-2xl group-hover:rotate-12 transition-transform h-8 w-8">auto_fix</span>
-                            <span>Manifest Intent</span>
-                            
-                            <!-- Wax Seal Visual -->
-                            <div class="absolute -right-6 -bottom-6 w-16 h-16 bg-[#8B4513] rounded-full flex items-center justify-center shadow-inner border-4 border-[#3E2723] group-hover:scale-110 transition-transform">
-                                <span class="font-cinzel text-xs text-[#D4C6A9] opacity-80">道</span>
+                <!-- 3. Economy System -->
+                <div>
+                    <h2 class="text-xl font-display text-tao-fire mb-4 flex items-center gap-2 border-b border-tao-fire/20 pb-2">
+                        <span class="material-symbols-outlined">currency_exchange</span> 3. Economy (Value Transfer)
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <label class="relative flex cursor-pointer rounded-lg border bg-black/30 p-4 shadow-sm focus:outline-none border-tao-fire bg-tao-fire/10 economy-card" onclick="selectEconomy(this)">
+                            <input type="radio" name="economy" value="free" class="sr-only" checked>
+                            <div class="flex flex-col">
+                                <span class="block text-sm font-bold text-white mb-1"><span class="text-tao-fire">Free Flow</span> (Donation) </span>
+                                <span class="block text-xs text-white/50">Open access. Guests pay what they feel or use the 3-Dice system at the door.</span>
                             </div>
-                        </button>
-                    </div>
-                </form>
-            </div>
-            
-            <!-- Corner Decorations -->
-            <div class="absolute top-0 left-0 w-24 h-24 border-t-4 border-l-4 border-[#3E2723] opacity-20 rounded-tl-3xl m-4 pointer-events-none"></div>
-            <div class="absolute top-0 right-0 w-24 h-24 border-t-4 border-r-4 border-[#3E2723] opacity-20 rounded-tr-3xl m-4 pointer-events-none"></div>
-            <div class="absolute bottom-0 left-0 w-24 h-24 border-b-4 border-l-4 border-[#3E2723] opacity-20 rounded-bl-3xl m-4 pointer-events-none"></div>
-            <div class="absolute bottom-0 right-0 w-24 h-24 border-b-4 border-r-4 border-[#3E2723] opacity-20 rounded-br-3xl m-4 pointer-events-none"></div>
+                        </label>
 
+                        <label class="relative flex cursor-pointer rounded-lg border border-white/10 bg-black/30 p-4 shadow-sm focus:outline-none hover:border-white/30 economy-card transition-colors" onclick="selectEconomy(this)">
+                            <input type="radio" name="economy" value="fixed" class="sr-only">
+                            <div class="flex flex-col">
+                                <span class="block text-sm font-bold text-white mb-1">Fixed Ticket</span>
+                                <span class="block text-xs text-white/50">Set price for entry. Guaranteed value exchange upfront.</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 4. Community Matches (Flow Needs) -->
+                <div>
+                    <h2 class="text-xl font-display text-tao-fire mb-4 flex items-center gap-2 border-b border-tao-fire/20 pb-2">
+                        <span class="material-symbols-outlined">group_add</span> 4. Flow Needs (Who do you need?)
+                    </h2>
+                    
+                    <p class="text-xs text-white/40 mb-3 block">Select the roles you need to successfully execute this event. This links to the Flow-Finder.</p>
+                    <div class="flex flex-wrap gap-2" id="needs-selector">
+                        <div class="select-chip px-3 py-1.5 rounded text-xs font-mono" onclick="toggleChip(this, 'need')">Graphic Designer (Flyer)</div>
+                        <div class="select-chip px-3 py-1.5 rounded text-xs font-mono" onclick="toggleChip(this, 'need')">Photographer</div>
+                        <div class="select-chip px-3 py-1.5 rounded text-xs font-mono" onclick="toggleChip(this, 'need')">Videographer</div>
+                        <div class="select-chip px-3 py-1.5 rounded text-xs font-mono" onclick="toggleChip(this, 'need')">DJ / Sound</div>
+                        <div class="select-chip px-3 py-1.5 rounded text-xs font-mono" onclick="toggleChip(this, 'need')">Cleanup Crew</div>
+                    </div>
+                </div>
+
+                <!-- Visual Output Tag Generator -->
+                <div class="bg-black/50 border border-tao-fire/30 p-4 rounded-xl mt-6">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-[10px] text-white/40 uppercase tracking-widest">Generated Signal Data</span>
+                        <span class="material-symbols-outlined text-tao-fire text-sm animate-pulse">radar</span>
+                    </div>
+                    <div id="signal-tags" class="font-mono text-xs text-tao-fire whitespace-normal leading-relaxed">
+                        [SIGNAL: C-RIZ HEARING] [TYPE: EXHIBITION] [LOC: INTIMATE, SOUND] [ECON: FREE_FLOW] [NEEDS: NONE]
+                    </div>
+                </div>
+
+                <!-- Action -->
+                <div class="pt-6 flex justify-between items-center">
+                    <p class="text-xs text-white/30 hidden md:block">Igniting the forge adds this to your Event Village slots.</p>
+                    <button type="button" onclick="manifestEvent()"
+                        class="w-full md:w-auto px-8 py-4 bg-tao-fire hover:bg-[#E58C4F] text-black font-display font-bold text-lg rounded shadow-[0_0_20px_rgba(212,126,61,0.4)] transition-all flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined">local_fire_department</span>
+                        Manifest Event
+                    </button>
+                </div>
+            </form>
         </div>
     </main>
 
-    <!-- Legacy Scripts Removed -->
+    <!-- Success Modal -->
+    <div id="success-modal" class="hidden fixed inset-0 z-[100] bg-black/90 backdrop-blur flex justify-center items-center p-4 opacity-0 transition-opacity duration-500">
+        <div class="forge-panel p-8 rounded-2xl max-w-sm w-full text-center border-tao-fire/50 relative overflow-hidden">
+            <div class="absolute inset-0 bg-tao-fire/10 animate-pulse pointer-events-none"></div>
+            <span class="material-symbols-outlined text-tao-fire text-6xl mb-4 relative z-10">check_circle</span>
+            <h2 class="text-2xl font-display text-white mb-2 relative z-10">Event Forged</h2>
+            <p class="text-sm text-white/60 mb-6 relative z-10">The signal has been cast into the Resonance Bar. Nakamas can now connect to your open positions.</p>
+            <button onclick="window.location.href='coop.html'" class="px-6 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded font-mono text-sm uppercase tracking-widest relative z-10 transition-colors">
+                Return to Bar
+            </button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Use QuestController for consistency
+        // UI Logic
+        function selectEconomy(element) {
+            document.querySelectorAll('.economy-card').forEach(c => {
+                c.classList.remove('border-tao-fire', 'bg-tao-fire/10');
+                c.classList.add('border-white/10');
+            });
+            element.classList.remove('border-white/10');
+            element.classList.add('border-tao-fire', 'bg-tao-fire/10');
+            updateSignalTags();
+        }
+
+        function toggleChip(element, group) {
+            if (group === 'type') {
+                // Single select for type
+                const chips = element.parentElement.querySelectorAll('.select-chip');
+                chips.forEach(c => c.classList.remove('active'));
+                element.classList.add('active');
+            } else {
+                // Multi select for needs
+                element.classList.toggle('active');
+            }
+            updateSignalTags();
+        }
+
+        function updateSignalTags() {
+            const title = document.getElementById('event-title').value || "EMPTY_SIGNAL";
+            const typeChip = document.querySelector('#type-selector .active');
+            const type = typeChip ? typeChip.innerText.toUpperCase() : "UNKNOWN";
             
-            const form = document.getElementById('create-quest-form');
-            form.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const formData = new FormData(form);
-                const title = formData.get('title');
-                const type = formData.get('type');
-                const xp = parseInt(formData.get('xpReward'));
-                const desc = formData.get('description');
+            const ecoRadio = document.querySelector('input[name="economy"]:checked');
+            const eco = ecoRadio ? (ecoRadio.value === 'free' ? 'FREE_FLOW' : 'FIXED') : 'FREE_FLOW';
 
-                if(window.QuestController) {
-                    window.QuestController.createQuest(title, type, xp);
-                    
-                    // Add description manually if Controller doesn't support it yet (it mostly handles title/xp)
-                    // In a real app, we'd update the controller to accept descriptions.
-                    
-                    // Dispatch Event for Flowee
-                    const event = new CustomEvent('cdf-quest-created', {
-                        detail: { title: title }
-                    });
-                    window.dispatchEvent(event);
+            const needChips = document.querySelectorAll('#needs-selector .active');
+            const needs = Array.from(needChips).map(c => c.innerText.toUpperCase()).join(", ") || "NONE";
 
-                    if(window.Pusher) window.Pusher.showToast(`Quest Manifested: ${title}`, 'success');
+            const tagString = `[SIGNAL: ${title.toUpperCase()}] [TYPE: ${type}] [ECON: ${eco}] [NEEDS: ${needs}]`;
+            document.getElementById('signal-tags').innerText = tagString;
+        }
 
-                    // Redirect logic
-                    setTimeout(() => {
-                        window.location.href = 'master_dashboard.html'; // Return to base
-                    }, 2000);
-                } else {
-                    alert("System Offline. (QuestController missing)");
+        document.getElementById('event-title').addEventListener('input', updateSignalTags);
+
+        function manifestEvent() {
+            const title = document.getElementById('event-title').value;
+            if(!title) {
+                alert("The forge requires a title to cast a signal.");
+                return;
+            }
+            
+            // Gather dynamic data
+            const typeChip = document.querySelector('#type-selector .active');
+            const type = typeChip ? typeChip.innerText : "Gathering";
+            
+            const ecoRadio = document.querySelector('input[name="economy"]:checked');
+            const eco = ecoRadio ? (ecoRadio.value === 'free' ? 'Free Flow' : 'Fixed Ticket') : 'Free Flow';
+
+            const needChips = document.querySelectorAll('#needs-selector .active');
+            const needs = Array.from(needChips).map(c => c.innerText);
+
+            const address = document.getElementById('event-location') ? document.getElementById('event-location').value : '';
+            const date = document.getElementById('event-date') ? document.getElementById('event-date').value : '';
+
+            const locationChecks = [];
+            // Assuming location checkboxes are checked (hardcoded selector as they don't have IDs)
+            document.querySelectorAll('input[type="checkbox"]').forEach(c => {
+                if (c.checked && c.nextElementSibling && c.nextElementSibling.innerText !== 'Clear out kitchen (Assigned: Will)') { // avoid the tasks ones
+                     locationChecks.push(c.nextElementSibling.innerText);
                 }
             });
-        });
+
+            const eventData = {
+                 title: title,
+                 type: type,
+                 date: date || 'TBA',
+                 economy: eco,
+                 needs: needs,
+                 locationChecks: locationChecks,
+                 address: address || 'ClimaLabs' // fallback
+            };
+            localStorage.setItem('cdf_latest_event', JSON.stringify(eventData));
+
+            // Advancing the tutorial state to Step 3
+            if (parseInt(localStorage.getItem('cdf_connection_tour_step') || 1) <= 2) {
+                 localStorage.setItem('cdf_connection_tour_step', 3);
+            }
+
+            // Global Notification Broadcast
+            if (window.Pusher) {
+                 window.Pusher.showToast(`BROADCAST: New Signal emitted from The Forge: ${title}`, 'success');
+            }
+
+            // Show Success
+            const modal = document.getElementById('success-modal');
+            modal.classList.remove('hidden');
+            // small delay to let display:block apply before opacity fade
+            setTimeout(() => { modal.classList.remove('opacity-0'); }, 10);
+        }
+
+        // Initialize Live Tags
+        updateSignalTags();
     </script>
-    <!-- PHOENIX-EE CORE AGENTS -->
-    <script src='../js/agents/visual_eye.js' defer></script>
-    <script src='../js/agents/helper.js' defer></script>
-    <script src='../js/agents/pusher.js' defer></script>
-    <script src='../js/agents/bridge_pusher.js' defer></script>
+    <script src="../js/agents/pusher.js" defer></script>
+    <script src="../js/agents/helper.js" defer></script>
     <script src="../js/agents/global_ticker.js" defer></script>
     <script src="../js/agents/network_hub.js" defer></script>
     <script src="../js/agents/constructor_bot.js" defer></script>
     <script src="../js/agents/kingdom_science.js" defer></script>
     <script src="../js/agents/resonance_bridge.js" defer></script>
     <script src="../js/agents/vault_space.js" defer></script>
+    <script src="../js/agents/horizon_bar.js" defer></script>
+    <script src="../js/agents/social_matrix.js" defer></script>
     <script src="../js/agents/orbital_menu.js" defer></script>
     <script src="../js/agents/tutorial_core.js" defer></script>
     <script src="../js/agents/quest_controller.js" defer></script>
     <script src="../js/agents/visual_integrity.js" defer></script>
     <script src="../js/agents/sound_engineer.js" defer></script>
-    <script src="../js/agents/horizon_bar.js" defer></script>
-    <script src="../js/agents/social_matrix.js" defer></script>
-    <script src='../js/agents/flowee.js' defer></script>
-    <script src='../js/agents/device_sync.js' defer></script>
-    <script src='../js/agents/stress_test.js' defer></script>
-    <div id="flowee-agent" class="fixed bottom-8 left-8 z-50 flex flex-col items-center group cursor-pointer"></div>
-
-    <!-- AUTOMATED AGENT INJECTION -->
-
-    <!-- AUTOMATED AGENT INJECTION -->
-    <script src="../js/agents/imperial_hud.js" defer></script>
+    <script src="../js/agents/flowee.js"></script>
 </body>
-
 </html>
-
-

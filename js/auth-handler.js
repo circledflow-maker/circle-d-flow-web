@@ -19,23 +19,82 @@ function getRedirectPath(target) {
     return target;
 }
 
+// --- 0. ERROR HANDLING (URL Hash) ---
+window.addEventListener('load', checkAuthErrors);
+
+function checkAuthErrors() {
+    const hash = window.location.hash;
+    if (!hash) return;
+
+    // Handle Expired Token / Access Denied
+    if (hash.includes('error=access_denied') && hash.includes('otp_expired')) {
+        console.warn("Auth Error: Link Expired");
+        setTimeout(() => {
+            showFeedback(`⚠️ Security Link Expired. <a href="#" onclick="document.getElementById('auth-modal').style.display='flex'; document.getElementById('login-email').focus(); return false;">Click here</a> to log in and trigger a new code.`, "error");
+        }, 1000); // Wait for UI
+    }
+}
+
+// --- RESEND CONFIRMATION ---
+async function handleResendConfirmation(email) {
+    if(!email) return;
+    showFeedback("Requesting new security link...", "neutral");
+    
+    const { error } = await window.supabaseClient.auth.resend({
+        type: 'signup',
+        email: email,
+        options: {
+            emailRedirectTo: window.location.origin
+        }
+    });
+
+    if (error) {
+        showFeedback("Error: " + error.message, "error");
+    } else {
+        showFeedback("✅ New Link Sent! Check your email immediately.", "success");
+    }
+}
+
+// --- 1. LOGIN LOGIC ---
+// --- HELPER: WAIT FOR STORAGE (The Fix for "No Token" bug) ---
+async function waitForSessionAndRedirect(target) {
+    console.log("⏳ Verifying Session persistence...");
+    let retries = 0;
+    
+    const check = async () => {
+        const { data: { session } } = await window.supabaseClient.auth.getSession();
+        const token = localStorage.getItem('sb-agkmbaephgsnunlarntm-auth-token'); 
+        
+        if (session && token) {
+            console.log("✅ Session persisted. Redirecting.");
+            window.location.replace(target);
+        } else {
+            retries++;
+            if (retries > 20) { // 2 seconds max
+                console.warn("⚠️ Persistence slow. Forcing redirect anyway.");
+                window.location.replace(target);
+            } else {
+                setTimeout(check, 100);
+            }
+        }
+    };
+    check();
+}
+
 // --- 1. LOGIN LOGIC ---
 async function handleLogin(argEmail, argPassword) {
-    showFeedback("Authenticating...", "neutral"); // Visual Feedback immediately
+    showFeedback("Authenticating...", "neutral"); 
     
-    // Ensure Client is Ready
     if (!window.supabaseClient) {
-        showFeedback("System Error: Neural Link Offline (Supabase Client Missing).", "error");
-        console.error("Critical: window.supabaseClient is undefined.");
+        showFeedback("System Error: Neural Link Offline.", "error");
         return;
     }
 
-    // Support for both new Multilingual Modal IDs and old IDs
     const email = argEmail || getValue('login-email') || getValue('auth-email');
     const password = argPassword || getValue('login-password') || getValue('auth-password');
 
     if (!email || !password) {
-        showFeedback("Please enter email and password / Bitte Email und Passwort eingeben.", "error");
+        showFeedback("Please enter email and password.", "error");
         return;
     }
 
@@ -46,19 +105,20 @@ async function handleLogin(argEmail, argPassword) {
         });
 
         if (error) {
-            showFeedback("Access Denied / Zugriff verweigert: " + error.message, "error");
+            // Check for unconfirmed email error
+            if(error.message.includes("Email not confirmed")) {
+                showFeedback(`⚠️ Email not verified. <a href="#" onclick="handleResendConfirmation('${email}'); return false;" style="color:var(--lisbon-gold); text-decoration:underline;">CLICK TO RESEND LINK</a>`, "error");
+            } else {
+                showFeedback("Access Denied: " + error.message, "error");
+            }
         } else {
             const target = getRedirectPath('master_dashboard.html');
-            showFeedback(`Identity Confirmed. <a href="${target}" style="color:#00ff00;text-decoration:underline;">Click here</a> if not redirected...`, "success");
-            
-            setTimeout(() => {
-                console.log("Auto-Redirecting to:", target);
-                window.location.replace(target);
-            }, 1000);
+            localStorage.setItem('cqr_auth_state', 'logged_in'); // PERSIST FOR DASHBOARD SECURITY
+            showFeedback(`Identity Confirmed. Calibrating...`, "success");
+            waitForSessionAndRedirect(target); // USE NEW HELPER
         }
     } catch (err) {
         showFeedback("System Error: " + err.message, "error");
-        console.error(err);
     }
 }
 
@@ -66,9 +126,8 @@ async function handleLogin(argEmail, argPassword) {
 async function handleRegister(argEmail, argPassword, argUsername) {
     showFeedback("Encoding Agent Profile...", "neutral");
 
-    // Ensure Client is Ready
     if (!window.supabaseClient) {
-        showFeedback("System Error: Neural Link Offline (Supabase Client Missing).", "error");
+        showFeedback("System Error: Neural Link Offline.", "error");
         return;
     }
 
@@ -77,7 +136,7 @@ async function handleRegister(argEmail, argPassword, argUsername) {
     const username = argUsername || getValue('reg-username') || getValue('auth-username');
 
     if (!email || !password || !username) {
-        showFeedback("Complete data required / Vollständige Daten erforderlich.", "error");
+        showFeedback("Complete data required.", "error");
         return;
     }
 
@@ -85,25 +144,26 @@ async function handleRegister(argEmail, argPassword, argUsername) {
         const { data, error } = await window.supabaseClient.auth.signUp({
             email: email,
             password: password,
-            options: {
-                data: { username: username }
-            }
+            options: { data: { username: username } }
         });
 
         if (error) {
             showFeedback("Registration failed: " + error.message, "error");
         } else {
-            const target = getRedirectPath('pages/beta-initiation.html');
-            showFeedback(`Profile Created. <a href="${target}" style="color:#00ff00;text-decoration:underline;">Click here</a> to enter...`, "success");
-            
-            setTimeout(() => {
-                console.log("Auto-Redirecting to:", target);
-                window.location.replace(target);
-            }, 1000);
+            // Check if email confirmation is required (Supabase setting)
+            if (data.user && !data.session) {
+                showFeedback("Registration Success! Please CHECK YOUR EMAIL to confirm account.", "success");
+                return; 
+            }
+
+            const target = getRedirectPath('master_dashboard.html');
+            showFeedback(`Profile Created. Initializing...`, "success");
+            localStorage.removeItem('seen_command_trinity'); // Force welcome for new users
+            localStorage.setItem('cqr_auth_state', 'logged_in'); // PERSIST FOR DASHBOARD SECURITY
+            waitForSessionAndRedirect(target); // USE NEW HELPER
         }
     } catch (err) {
          showFeedback("System Error: " + err.message, "error");
-         console.error(err);
     }
 }
 
@@ -161,11 +221,11 @@ async function handlePasswordReset() {
 
 // --- 4. SESSION CHECK (Protection for internal pages) ---
 async function checkUserSession() {
-    if(typeof supabase === 'undefined') {
+    if(!window.supabaseClient) {
         console.warn("Supabase not loaded yet.");
         return;
     }
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { session } } = await window.supabaseClient.auth.getSession();
     
     // Check if handling a password reset flow
     // Supabase redirects with #access_token=...&type=recovery

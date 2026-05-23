@@ -26,6 +26,7 @@ class BrainAgent extends Agent {
     }
 
     init() {
+        if(!this.knowledgeBank) this.knowledgeBank = this.defaultKnowledge || [];
         console.log(`🧠 [Brain] Neural Link Established. Loaded ${this.knowledgeBank.length} synapses.`);
         // Load State
         const savedState = JSON.parse(localStorage.getItem('cdf_brain_state') || '{"lastSession": 0, "questionsAnswered": 0, "currentStreak": 0}');

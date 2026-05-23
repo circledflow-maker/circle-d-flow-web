@@ -26,6 +26,9 @@ class LanguageMatrix {
                 
                 // NEW KEYS
                 join_circle: "Join the Circle",
+                enter_zone: "Enter the Zone (Ticket)",
+                join_circle_artist: "Join the Circle (Artist)",
+                syncing_flow: "Synchronizing Flow...",
                 unlock_full: "Unlock the full experience.",
                 bazaar_title: "The Bazaar",
                 circle_title: "The Circle",
@@ -87,6 +90,9 @@ class LanguageMatrix {
 
                 // NEW KEYS
                 join_circle: "Tritt dem Kreis bei",
+                enter_zone: "Zone betreten (Ticket)",
+                join_circle_artist: "Dem Kreis beitreten (Artist)",
+                syncing_flow: "Flow wird synchronisiert...",
                 unlock_full: "Entfessle das volle Erlebnis.",
                 bazaar_title: "Der Basar",
                 circle_title: "Der Kreis",
@@ -128,25 +134,89 @@ class LanguageMatrix {
                 new_feature_trinity: "NEU: Der Trinity-Status! Halte Vision, Sound und Küche in Balance.",
                 new_feature_jamtruck: "UPDATE: Der Jamtruck-Slider ist live. Hilf uns, die 700€ zu knacken!"
             },
+            it: {
+                bazaar: "Il Bazar",
+                kitchen: "Cucina African Queen",
+                dashboard: "Pannello Principale",
+                sanctuary: "Santuario di Qter",
+                missions: "Missioni Imperiali",
+                wisdom: "Saggezza Antica",
+                login: "Identificati",
+                register: "Diventa un Navigatore",
+                dismiss: "Ignora Protocollo (Ospite)",
+                jamtruck: "Progresso Jamtruck",
+                vision_title: "Perfezione Curata",
+                taste_title: "African Queen",
+                enter_gateway: "Entra nel Portale",
+                welcome_guide: "Benvenuto, Viaggiatore.",
+                flow_call: "Il Flow ti chiama",
+
+                // NEW KEYS
+                join_circle: "Unisciti al Circolo",
+                unlock_full: "Sblocca l'esperienza completa.",
+                bazaar_title: "Il Bazar",
+                circle_title: "Il Circolo",
+                academy_title: "L'Accademia",
+                vision_brand: "Impero della Visione",
+                taste_brand: "Impero del Gusto",
+
+                // AUTH & QUESTS
+                auth_login_title: "CAPITANO DI RITORNO",
+                auth_register_title: "NUOVO NAVIGATORE",
+                login_username_placeholder: "Nome Cacciatore",
+                login_password_placeholder: "Password",
+                login_btn: "ENTRA NEL SISTEMA",
+                reg_email_placeholder: "Anima Digitale (Email)",
+                reg_username_placeholder: "Scegli il tuo Soprannome",
+                reg_password_placeholder: "Crea Password",
+                reg_btn: "INIZIALIZZA BETA",
+                
+                // Fog
+                fog_message: "IL FLUSSO STA CAMBIANDO...",
+                update_msg: "Aggiornamento di Sistema installato. Ti guiderò io.",
+
+                // Tutorial Quests
+                quest_initi_title: "Iniziazione",
+                quest_initi_text: "Benvenuto, Navigatore! Sono Flowee. La tua prima missione: Visita il Bazar.",
+                quest_initi_btn: "Imposta rotta: Bazar",
+                tutorial_welcome: "Benvenuto al Centro di Comando. Questa Bussola è il tuo strumento di navigazione.",
+                
+                quest_econ_title: "L'Economia",
+                quest_econ_text: "Questo è il Mercato. Qui scambiamo Flow-Credits. Clicca su un TukTuk per testare l'interfaccia.",
+                quest_econ_success: "Eccellente! Hai compreso il commercio. +50 EXP! Prossima: La Musica.",
+                quest_econ_btn: "Imposta rotta: Santuario",
+
+                quest_vibe_title: "L'Atmosfera",
+                quest_vibe_text: "DJ Qter controlla il ritmo qui. Avvia una traccia per sincronizzare la tua anima.",
+                quest_vibe_success: "Senti il Flow? +100 EXP! Ultima fermata: La Cucina.",
+                quest_vibe_btn: "Imposta rotta: Cucina",
+
+                // Updates
+                new_feature_trinity: "NUOVO: Lo status Trinity! Mantieni Visione, Suono e Cucina in equilibrio.",
+                new_feature_jamtruck: "AGGIORNAMENTO: L'indicatore Jamtruck è attivo. Aiutaci a raggiungere 700€!"
+            },
             pt: {
                 bazaar: "O Bazar",
                 kitchen: "Cozinha African Queen",
-                dashboard: "Painel Mestre",
+                dashboard: "Painel Principal",
                 sanctuary: "Santuário do Qter",
                 missions: "Missões Imperiais",
                 wisdom: "Sabedoria Antiga",
                 login: "Identifique-se",
                 register: "Torne-se Navegador",
-                dismiss: "Ignorar Protocolo (Convidado)",
-                jamtruck: "Progresso do Jamtruck",
+                dismiss: "Ignorar Protocolo (Visitante)",
+                jamtruck: "Progresso Jamtruck",
                 vision_title: "Perfeição Curada",
                 taste_title: "African Queen",
                 enter_gateway: "Entrar no Portal",
                 welcome_guide: "Bem-vindo, Viajante.",
-                flow_call: "O Flow Chama por Ti",
+                flow_call: "O Flow te chama",
 
                 // NEW KEYS
                 join_circle: "Junte-se ao Círculo",
+                enter_zone: "Entrar na Zona (Bilhete)",
+                join_circle_artist: "Junte-se ao Círculo (Artista)",
+                syncing_flow: "Sincronizando o Flow...",
                 unlock_full: "Desbloqueie a experiência completa.",
                 bazaar_title: "O Bazar",
                 circle_title: "O Círculo",
@@ -155,8 +225,8 @@ class LanguageMatrix {
                 taste_brand: "Império do Sabor",
 
                 // AUTH & QUESTS
-                auth_login_title: "CAPITÃO RETORNANDO",
-                auth_register_title: "NOVO NAVEGADOR",
+                auth_login_title: "CAPITÃO DE VOLTA",
+                auth_register_title: "NOVO NAVIGATOR",
                 login_username_placeholder: "Nome de Caçador",
                 login_password_placeholder: "Senha",
                 login_btn: "ENTRAR NO SISTEMA",
@@ -167,27 +237,27 @@ class LanguageMatrix {
                 
                 // Fog
                 fog_message: "O FLUXO ESTÁ MUDANDO...",
-                update_msg: "Atualização do Sistema instalada. Eu vou guiá-lo.",
+                update_msg: "Atualização de Sistema instalada. Eu vou te guiar.",
 
                 // Tutorial Quests
                 quest_initi_title: "Iniciação",
-                quest_initi_text: "Bem-vindo, Navegador! Eu sou Flowee. Sua primeira tarefa: Visite o Bazar.",
-                quest_initi_btn: "Definir Curso: Bazar",
+                quest_initi_text: "Bem-vindo, Navegador! Eu sou Flowee. Sua primeira missão: Visite o Bazar.",
+                quest_initi_btn: "Definir Rota: Bazar",
                 tutorial_welcome: "Bem-vindo ao Centro de Comando. Esta Bússola é sua ferramenta de navegação.",
                 
                 quest_econ_title: "A Economia",
-                quest_econ_text: "Este é o Mercado. Aqui negociamos com Flow-Credits. Clique em um TukTuk para testar a interface.",
-                quest_econ_success: "Excelente! Você entende de comércio. +50 EXP! Próximo: A Música.",
-                quest_econ_btn: "Definir Curso: Santuário",
+                quest_econ_text: "Este é o Mercado. Aqui negociamos com Flow-Credits. Clique em um TukTuk para testar.",
+                quest_econ_success: "Excelente! Você entende o comércio. +50 EXP! Próximo: A Música.",
+                quest_econ_btn: "Definir Rota: Santuário",
 
                 quest_vibe_title: "A Vibe",
-                quest_vibe_text: "DJ Qter controla o ritmo aqui. Inicie uma faixa para sincronizar sua alma.",
+                quest_vibe_text: "DJ Qter controla o ritmo aqui. Toque uma música para sincronizar.",
                 quest_vibe_success: "Você sente o Flow? +100 EXP! Última parada: A Cozinha.",
-                quest_vibe_btn: "Definir Curso: Cozinha",
+                quest_vibe_btn: "Definir Rota: Cozinha",
 
                 // Updates
-                new_feature_trinity: "NOVO: O Status Trinity! Mantenha Visão, Som e Cozinha em equilíbrio.",
-                new_feature_jamtruck: "ATUALIZAÇÃO: O Slider do Jamtruck está ativo. Ajude-nos a alcançar 700€!"
+                new_feature_trinity: "NOVO: Status Trinity! Mantenha Visão, Som e Cozinha em equilíbrio.",
+                new_feature_jamtruck: "ATUALIZAÇÃO: Indicador Jamtruck está ativo. Ajude-nos a bater 700€!"
             },
             fr: {
                 bazaar: "Le Bazar",
@@ -291,14 +361,16 @@ class LanguageMatrix {
             }
             .lang-btn {
                 cursor: pointer;
-                font-size: 1.2rem;
+                font-size: 0.9rem;
+                font-family: 'Montserrat', 'Inter', sans-serif;
+                font-weight: bold;
+                color: white;
                 opacity: 0.6;
-                filter: grayscale(0.5);
                 transition: all 0.2s;
             }
             .lang-btn:hover, .lang-btn.active {
                 opacity: 1;
-                filter: grayscale(0);
+                color: #d4af37; /* Gold */
                 transform: scale(1.1);
             }
         `;
@@ -312,10 +384,11 @@ class LanguageMatrix {
         const switcher = document.createElement('div');
         switcher.className = 'lang-switcher';
         switcher.innerHTML = `
-            <span class="lang-btn" onclick="LanguageMatrix.setLanguage('en')" title="English">🇬🇧</span>
-            <span class="lang-btn" onclick="LanguageMatrix.setLanguage('de')" title="Deutsch">🇩🇪</span>
-            <span class="lang-btn" onclick="LanguageMatrix.setLanguage('pt')" title="Português">🇵🇹</span>
-            <span class="lang-btn" onclick="LanguageMatrix.setLanguage('fr')" title="Français">🇫🇷</span>
+            <span class="lang-btn" onclick="LanguageMatrix.setLanguage('en')" title="English">E</span>
+            <span class="lang-btn" onclick="LanguageMatrix.setLanguage('fr')" title="Français">FR</span>
+            <span class="lang-btn" onclick="LanguageMatrix.setLanguage('de')" title="Deutsch">DE</span>
+            <span class="lang-btn" onclick="LanguageMatrix.setLanguage('it')" title="Italiano">IT</span>
+            <span class="lang-btn" onclick="LanguageMatrix.setLanguage('pt')" title="Português">PT</span>
         `;
         document.body.appendChild(switcher);
     }

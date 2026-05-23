@@ -22,7 +22,33 @@ window.GrandArchitect = {
                 window.Flowee.initRoyalMode();
                 window.Flowee.talk(true, "Welcome home, Architect. The resonance is strong tonight.");
             }
+            this.handleKineticUI();
         }, 1000);
+    },
+
+    handleKineticUI: function() {
+        // Check if user is Kinetic
+        const userClass = localStorage.getItem('userClass') || (window.userProfile ? window.userProfile.flow_class : null);
+        const widgets = document.getElementById('kinetic-widgets');
+        const node = document.getElementById('node-kinetic');
+        
+        if (userClass === 'KINETIC') {
+            if(widgets) widgets.style.display = 'block';
+            if(node) node.style.display = 'flex';
+            console.log("🏃 KINETIC MODE ACTIVE: High-performance widgets and Arena node initialized.");
+            
+            // Pulse the recovery bar
+            setInterval(() => {
+                const bar = document.getElementById('recovery-bar');
+                const percent = document.getElementById('recovery-percent');
+                if(bar && percent) {
+                    let val = parseInt(percent.innerText);
+                    val = val > 98 ? 85 : val + 1;
+                    percent.innerText = val + "%";
+                    bar.style.width = val + "%";
+                }
+            }, 5000);
+        }
     },
 
     initMap: function() {

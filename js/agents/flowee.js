@@ -43,6 +43,26 @@ class FloweeAgent {
                 question: "Can I create Quests?",
                 answer: "Yes! Use the 'Quest Architect' in the West Quadrant. You need Karma to mint new Quests.",
                 deep_link: "/dashboard/quest-maker"
+            },
+            {
+                keywords: ["sanctuary", "orbs", "hub", "vision", "path", "grotto"],
+                question: "What is the Vision Sanctuary?",
+                answer: "The Vision Sanctuary is our central hub. Click the colored orbs to travel: Gold for Portfolio, Blue for the AI Oasis Dashboard, and Green for the Memory Cave."
+            },
+            {
+                keywords: ["portfolio", "gold", "voyage"],
+                question: "What is the Voyage Portfolio?",
+                answer: "The Voyage Portfolio (Gold Orb) showcases past creations and cinematics."
+            },
+            {
+                keywords: ["oasis", "blue", "dashboard"],
+                question: "What is the Vision Oasis?",
+                answer: "The Vision Oasis (Blue Orb) is the command center where agents (like me!) process your daily content pipeline."
+            },
+            {
+                keywords: ["cave", "green", "memory", "garden"],
+                question: "What is the Memory Cave?",
+                answer: "The Memory Cave (Green Orb) or Sacred Garden is where community legacies and past flows are recorded."
             }
         ];
 
@@ -59,9 +79,9 @@ class FloweeAgent {
         this.tutorialMatrix = {
             // LANDING / GATEWAY
             "index.html": [
-                { text: "Welcome, Voyager. This is the Gateway to the Circle.", target: "#gateway-overlay" },
-                { text: "Choose your Language at the top right to harmonize the frequency.", target: ".lang-switcher" },
-                { text: "Explore the Trinity: Taste (Queen), Vision (Capture), and Sound (Rhythm).", target: ".grid" }
+                { text: "Welcome, Voyager. This is the Gateway to the Circle. Hold to grow.", target: "#canvas-container" },
+                { text: "Choose your Language at the top right to harmonize the frequency.", target: ".lang-selector" },
+                { text: "Discover the Trinity by navigating the 3D space.", target: "#title-overlay" }
             ],
             // DASHBOARD COMPASS
             "dashboard.html": [
@@ -133,13 +153,21 @@ class FloweeAgent {
 
         // --- IMPERIAL INITIATION MATRIX (The Voyager's Path) ---
         this.imperialSteps = [
-            { id: 1, page: "index.html", text: "Welcome, Traveler. Choose your tongue (Top Right) and Identify Yourself to enter the Flow.", target: ".lang-switcher", check: () => localStorage.getItem('cdf_user_username') },
+            { id: 1, page: "index.html", text: "Welcome, Traveler. Choose your tongue (Top Right) and Identify Yourself to enter the Flow.", target: ".lang-selector", check: () => localStorage.getItem('cdf_user_username') },
             { id: 2, page: "marketplace.html", text: "The Bazaar. Click on an Artifact to inspect its value.", target: ".grid", check: () => localStorage.getItem('cdf_initiation_market_visited') },
             { id: 3, page: "outbreak_tunes.html", text: "Listen... The Wisdom Rune appears after 30 seconds of resonance.", target: "#video-bg", check: () => localStorage.getItem('cdf_initiation_rune_found') },
             { id: 4, page: "african-queen-kitchen.html", text: "Fuel for the Soul. Check the Jamtruck Progress and simulate an order.", target: "#jamtruck-slider", check: () => localStorage.getItem('cdf_initiation_kitchen_visited') },
             { id: 5, page: "dashboard.html", text: "The Mission Board. Open your Quests to see your path.", target: "#quest-log-btn", check: () => localStorage.getItem('cdf_initiation_quests_viewed') },
             { id: 6, page: "dashboard.html", text: "Psst... This is not for everyone. 3 clicks on the Vision-Icon... only for the Architect.", target: "#planet-Vision", check: () => localStorage.getItem('cdf_initiation_vision_found') },
             { id: 7, page: "master_dashboard.html", text: "The Captain's Eye. Toggle the 'Flow Sync' lever to master the system.", target: "#flow-sync-toggle", check: () => localStorage.getItem('cdf_artifact_genesis') }
+        ];
+
+        // --- COMMUNITY CONNECTION MATRIX ---
+        this.communitySteps = [
+            { id: 1, page: "coop.html", text: "Welcome to the Resonance Bar! Let's forge a new event. Click 'Manifest Event'.", target: "button[onclick=\"window.location.href='quest-create.html'\"]" },
+            { id: 2, page: "quest-create.html", text: "Welcome to The Forge! Fill out your event details, location needs, and hit Manifest Event.", target: "button[onclick='manifestEvent()']" },
+            { id: 3, page: "chat.html", text: "Success! You are now in The Sanctuary. Make sure to open your 'Event Ledger'.", target: "button[onclick=\"switchTab('tasks')\"]" },
+            { id: 4, page: "chat.html", text: "Welcome to the Ledger! Scroll down to The Wisdom Wall and engrave a note for the next Master Flow.", target: "#wisdom-form" }
         ];
 
         // --- TRINITY RESONANCE (Admin Sync) ---
@@ -286,8 +314,11 @@ class FloweeAgent {
     }
 
     addChatMessage(text, sender, link=null) {
-        const log = document.getElementById('flowee-chat-log');
-        if(!log) return;
+        const log = document.getElementById('flowee-messages') || document.getElementById('flowee-chat-log');
+        if(!log) {
+            console.warn("[Flowee] Chat log container not found.");
+            return;
+        }
         
         const div = document.createElement('div');
         div.className = sender === 'user' 
@@ -346,9 +377,9 @@ class FloweeAgent {
             this.checkMissionBriefing(); 
             
             // Check Level Up Progress (Resonance Integration)
-            if(window.Resonance) {
+            if(window.Resonance && typeof window.Resonance.getProgress === 'function') {
                 const progress = window.Resonance.getProgress();
-                if(progress.percent >= 90) {
+                if(progress && progress.percent >= 90) {
                      this.talk(true, `Resonance Critical! Only ${progress.remaining} XP to Level ${progress.level + 1}. Push it!`);
                      this.element.classList.add('animate-pulse');
                 }
@@ -358,8 +389,9 @@ class FloweeAgent {
             const tourStarted = localStorage.getItem('cdf_tour_started');
             
             if(window.location.pathname.includes('dashboard.html')) {
-                // BETA OVERRIDE: Force Auto-Start (User Request)
-                console.log("[Flowee] Auto-Start Protocol Initiated.");
+                // BETA OVERRIDE: Disabled Loop (User Request)
+                console.log("[Flowee] Auto-Start Protocol Paused. Waiting for User Init.");
+                /*
                 if(window.Helper) window.Helper.saveData('cdf_tour_started', 'true');
                 else localStorage.setItem('cdf_tour_started', 'true');
                 this.talk(true, "Initialization Complete. Starting Ghost-Run Protocol in 3 seconds...", "guide");
@@ -368,6 +400,7 @@ class FloweeAgent {
                     this.tutorialActive = true; 
                     this.initiateTutorialProtocol();
                 }, 3000);
+                */
             }
 
             // BETA LAUNCH: Mission #1 - The Grand Line Awakening
@@ -395,12 +428,25 @@ class FloweeAgent {
 
             // IMPERIAL INITIATION (Global Quest)
             this.checkImperialInitiation();
-
-            // TRINITY SYNC CHECK
-            this.syncTrinityResonance();
-
+            
+            // COMMUNITY CONNECTION TUTORIAL
+            this.checkCommunityTutorial();
 
         }, 1000);
+    }
+
+    recalculateBubblePosition() {
+        const bubble = document.getElementById('flowee-bubble');
+        if(!bubble) return;
+        
+        // Simple distinct positioning based on screen size
+        if(window.innerWidth < 768) {
+            bubble.style.bottom = '80px';
+            bubble.style.right = '20px';
+        } else {
+            bubble.style.bottom = '100px';
+            bubble.style.right = '30px';
+        }
     }
 
     checkPageTutorial() {
@@ -594,7 +640,15 @@ class FloweeAgent {
         // pointer-events-auto on children re-enables clicking Flowee
         // FIX: Increased bottom margin to avoid overlapping with Footer Banners (was bottom-4)
         // FIX: Z-Index 10000 to beat Overlay
-        container.className = 'fixed bottom-28 right-4 z-[10001] flex flex-col items-end pointer-events-none group transition-all duration-500';
+        container.style.position = 'fixed';
+        container.style.bottom = '100px';
+        container.style.right = '40px';
+        container.style.zIndex = '999999';
+        container.style.display = 'flex';
+        container.style.flexDirection = 'column';
+        container.style.alignItems = 'flex-end';
+        container.style.pointerEvents = 'none';
+        container.className = 'group transition-all duration-500';
         
         this.container = container;
 
@@ -602,53 +656,114 @@ class FloweeAgent {
         const isRoot = path.endsWith('index.html') || path.endsWith('/') || path.endsWith('beta-initiation.html');
         const pathPrefix = isRoot ? 'Assets/images/' : '../Assets/images/';
 
-        this.container.innerHTML = `
-            <div id="flowee-bubble" class="mb-2 mr-4 w-48 bg-white text-black p-3 rounded-xl rounded-br-none shadow-[0_0_20px_rgba(139,92,246,0.3)] text-xs font-medium opacity-0 pointer-events-none transition-all duration-300 transform scale-90 origin-bottom-right">
-                <p>System Online.</p>
-                <div class="absolute bottom-[-6px] right-0 w-4 h-4 bg-white transform rotate-45"></div>
-            </div>
+            const img = document.createElement('img');
+            img.id = 'flowee-visual';
+            img.src = `${pathPrefix}flowee_pirate_phoenix.png`;
+            img.style.width = '35px';
+            img.style.height = '35px';
+            img.style.maxWidth = '35px';
+            img.style.maxHeight = '35px';
+            img.style.objectFit = 'contain';
+            img.style.cursor = 'pointer';
+            img.style.pointerEvents = 'auto';
+            img.style.filter = 'drop-shadow(0 0 10px rgba(139,92,246,0.5))';
+            img.style.zIndex = '1000001';
+            img.className = 'hover:scale-110 transition-transform duration-300 animate-float-slow';
             
-            <img id="flowee-visual" src="${pathPrefix}flowee_pirate_phoenix.png" 
-                class="object-contain drop-shadow-[0_0_10px_rgba(139,92,246,0.5)] cursor-pointer pointer-events-auto hover:scale-110 transition-transform duration-300 animate-float-slow"
-                style="width: 35px; height: 35px; max-width: 35px; max-height: 35px;"
-                onclick="window.Flowee.toggleChat()"
-                onerror="this.src='${pathPrefix}logo.png'">
-        `;
-        
-        this.element = document.getElementById('flowee-visual');
-        this.bubble = document.getElementById('flowee-bubble');
+            img.addEventListener('click', (e) => {
+                console.log("[Flowee] Icon Clicked!");
+                e.stopPropagation();
+                window.Flowee.toggleChat();
+            });
+            img.onerror = () => { img.src = `${pathPrefix}logo.png`; };
+
+            const bubble = document.createElement('div');
+            bubble.id = 'flowee-bubble';
+            bubble.style.marginBottom = '8px';
+            bubble.style.marginRight = '16px';
+            bubble.style.width = '192px';
+            bubble.style.backgroundColor = '#fff';
+            bubble.style.color = '#000';
+            bubble.style.padding = '12px';
+            bubble.style.borderRadius = '12px';
+            bubble.style.borderBottomRightRadius = '0px';
+            bubble.style.boxShadow = '0 0 20px rgba(139,92,246,0.3)';
+            bubble.style.fontSize = '12px';
+            bubble.style.fontWeight = '500';
+            bubble.style.opacity = '0';
+            bubble.style.pointerEvents = 'none';
+            bubble.style.transition = 'all 0.3s';
+            bubble.style.transform = 'scale(0.9)';
+            bubble.style.transformOrigin = 'bottom right';
+            bubble.innerHTML = `<p>System Online.</p><div style="position:absolute; bottom:-6px; right:0; width:16px; height:16px; background:#fff; transform:rotate(45deg);"></div>`;
+
+            this.container.appendChild(bubble);
+            this.container.appendChild(img);
+
+            this.element = img;
+            this.bubble = bubble;
     }
 
     renderChatInterface() {
         const chatDiv = document.createElement('div');
         chatDiv.id = 'flowee-chat';
-        chatDiv.className = "fixed bottom-24 right-8 w-80 h-96 z-[60] bg-black/90 border border-mystic-gold/30 rounded-2xl backdrop-blur-xl p-4 flex flex-col hidden transition-all duration-300 transform scale-95 opacity-0 origin-bottom-right shadow-2xl";
+        chatDiv.style.position = 'fixed';
+        chatDiv.style.bottom = '96px';
+        chatDiv.style.right = '32px';
+        chatDiv.style.width = '320px';
+        chatDiv.style.height = '384px';
+        chatDiv.style.zIndex = '1000000';
+        chatDiv.style.backgroundColor = 'rgba(0,0,0,0.95)';
+        chatDiv.style.border = '1px solid rgba(212,175,55,0.3)';
+        chatDiv.style.borderRadius = '16px';
+        chatDiv.style.backdropFilter = 'blur(24px)';
+        chatDiv.style.padding = '16px';
+        chatDiv.style.display = 'none';
+        chatDiv.style.flexDirection = 'column';
+        chatDiv.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+        chatDiv.style.transform = 'scale(0.95)';
+        chatDiv.style.opacity = '0';
+        chatDiv.style.transformOrigin = 'bottom right';
+        chatDiv.style.boxShadow = '0 25px 50px -12px rgba(0, 0, 0, 0.7)';
+        chatDiv.style.fontFamily = "'Montserrat', sans-serif";
+        chatDiv.style.pointerEvents = 'auto';
+
+        const path = window.location.pathname;
+        const isRoot = path.endsWith('index.html') || path.endsWith('/') || path.endsWith('beta-initiation.html');
+        const pathPrefix = isRoot ? 'Assets/images/' : '../Assets/images/';
+
         chatDiv.innerHTML = `
             <!-- Header -->
-            <div class="flex justify-between items-center border-b border-white/10 pb-2 mb-2">
-                <div class="flex items-center gap-2">
-                    <span class="material-symbols-outlined text-mystic-gold">smart_toy</span>
-                    <span class="text-xs font-bold text-white uppercase tracking-widest">Flowee AI</span>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-bottom: 10px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                     <img src="${pathPrefix}logo.png" style="width: 20px; height: 20px;">
+                     <span style="font-family: 'Cinzel', serif; color: var(--haki-gold); font-size: 0.8rem; letter-spacing: 2px; font-weight: bold;">Flowee AI</span>
                 </div>
-                <div class="flex items-center gap-2">
-                     <button onclick="window.Flowee.restartTutorial()" class="text-white/50 hover:text-electric text-[10px] uppercase font-bold" title="Restart Tutorial">Restart Path</button>
-                    <button onclick="window.Flowee.toggleChat()" class="text-white/50 hover:text-white material-symbols-outlined text-sm">close</button>
-                </div>
-            </div>
-            
-            <!-- Chat Log -->
-            <div id="flowee-chat-log" class="flex-1 overflow-y-auto custom-scrollbar space-y-3 text-xs mb-3 p-1">
-                <div class="bg-primary-500/10 p-2 rounded-lg border border-primary-500/20 text-white/80">
-                    Greetings, Creator. I am connected to the Yggdrasil Matrix. Ask me anything.
+                <div style="display: flex; gap: 12px; align-items: center;">
+                    <span id="flowee-dismiss-btn" onclick="window.Flowee.dismissCommunityTutorial()" style="display: none; cursor: pointer; color: #EF4444; font-size: 10px; text-transform: uppercase; font-weight: bold; letter-spacing: 1px; border: 1px solid #EF4444; padding: 2px 4px; border-radius: 4px;">Dismiss Training</span>
+                    <span onclick="window.Flowee.toggleChat()" style="cursor: pointer; color: rgba(255,255,255,0.5); font-size: 18px;" class="material-symbols-outlined">close</span>
                 </div>
             </div>
 
-            <!-- Input -->
-            <div class="relative">
-                <input type="text" id="flowee-input" placeholder="Ask Flowee..." 
-                    class="w-full bg-white/5 border border-white/20 rounded-full py-2 px-4 text-xs text-white focus:outline-none focus:border-mystic-gold"
+            <!-- Messages Area -->
+            <div id="flowee-messages" style="flex: 1; overflow-y: auto; padding: 4px; display: flex; flex-direction: column; gap: 12px; font-size: 0.8rem; color: #eee; scroll-behavior: smooth;">
+                <div style="background: rgba(212,175,55,0.1); border-left: 3px solid var(--haki-gold); padding: 10px; border-radius: 4px; line-height: 1.4;">
+                    Greetings, Creator. The Agentic Bridge is initialized. How shall we proceed with the Flow?
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div style="position: relative; margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+                <input id="flowee-input" type="text" placeholder="Command the Matrix..." 
+                    style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(212,175,55,0.2); border-radius: 20px; padding: 12px 45px 12px 20px; color: #fff; font-size: 0.8rem; outline: none; box-sizing: border-box; transition: border-color 0.3s;"
+                    onfocus="this.style.borderColor='rgba(212,175,55,0.6)'"
+                    onblur="this.style.borderColor='rgba(212,175,55,0.2)'"
                     onkeypress="if(event.key === 'Enter') window.Flowee.processInput(this.value)">
-                <button onclick="window.Flowee.processInput(document.getElementById('flowee-input').value)" class="absolute right-2 top-1/2 -translate-y-1/2 text-mystic-gold hover:text-white material-symbols-outlined text-sm">send</button>
+                <button onclick="window.Flowee.processInput(document.getElementById('flowee-input').value)" 
+                    style="position: absolute; right: 12px; top: 22px; background: none; border: none; color: var(--haki-gold); cursor: pointer; transition: transform 0.2s;" 
+                    onmousedown="this.style.transform='scale(0.9)'" 
+                    onmouseup="this.style.transform='scale(1)'"
+                    class="material-symbols-outlined">send</button>
             </div>
         `;
         document.body.appendChild(chatDiv);
@@ -656,31 +771,43 @@ class FloweeAgent {
     }
 
     toggleChat() {
-        if(!this.chatInterface) return;
+        console.log("[Flowee] Toggling Chat Interface...");
+        if(!this.chatInterface) {
+            console.error("[Flowee] Chat interface NOT initialized!");
+            return;
+        }
         const chat = this.chatInterface;
         
-        if(chat.classList.contains('hidden')) {
-            chat.classList.remove('hidden');
-            // Small delay to allow display:block to apply before opacity transition
+        if(chat.style.display === 'none') {
+            chat.style.display = 'flex';
+            // Small delay for transition
             setTimeout(() => {
-                chat.classList.remove('scale-95', 'opacity-0');
+                chat.style.transform = 'scale(1)';
+                chat.style.opacity = '1';
             }, 10);
-            document.getElementById('flowee-input').focus();
-            this.shush(); // Hide bubble when chat opens
+            const input = document.getElementById('flowee-input');
+            if(input) input.focus();
+            this.shush();
         } else {
-            chat.classList.add('scale-95', 'opacity-0');
+            chat.style.transform = 'scale(0.95)';
+            chat.style.opacity = '0';
             setTimeout(() => {
-                chat.classList.add('hidden');
+                chat.style.display = 'none';
             }, 300);
         }
     }
 
     processInput(text) {
-        if(!text.trim()) return;
+        if(!text || !text.trim()) return;
         
+        const input = document.getElementById('flowee-input');
+        if(input) input.value = '';
+
         // 1. User Message
         this.addChatMessage(text, 'user');
-        document.getElementById('flowee-input').value = '';
+
+        // Dispatch Global Event for Agentic Brain
+        window.dispatchEvent(new CustomEvent('CDF_USER_CHAT', { detail: { text } }));
 
         // 2. AI Processing
         setTimeout(() => {
@@ -789,6 +916,9 @@ class FloweeAgent {
             if(q.startsWith('/inspect-vault')) {
                  return { text: "Accessing User Vault... [Access Denied: Requires Key]" };
             }
+            if(q === '/wa-ping' || q === '/portal-status' || q === '/sync-full' || q === '/cloud-pulse') {
+                return { text: "Acknowledged. Accessing Agentic Bridge protocols..." };
+            }
             // If strictly a slash command but not found above, fall through to intentMap OR return error? 
             // Better to fall through so intentMap can catch it if defined there.
             // return { text: "Command not recognized, Captain." }; 
@@ -814,10 +944,23 @@ class FloweeAgent {
             { keys: ["shop", "buy", "sell", "market", "bazaar", "trade"], url: "pages/marketplace.html", msg: "Entering Economic Zone... Opening Bazaar." },
             
             // ARENA / BATTLE
-            { keys: ["fight", "battle", "arena", "pvp", "duel"], url: "pages/arena.html", msg: "Weapons Check... Entering The Arena." }
+            { keys: ["fight", "battle", "arena", "pvp", "duel"], url: "pages/arena.html", msg: "Weapons Check... Entering The Arena." },
+            
+            // SANCTUARY REPLIES
+            { keys: ["sanctuary", "hub", "grotto", "center"], url: "pages/vision_sanctuary.html", msg: "Returning to the Root. Warping to the Sanctuary." },
+            { keys: ["portfolio", "voyage", "creations", "art"], url: "pages/voyage_portfolio.html", msg: "Accessing the archives... Opening the Voyage Portfolio." },
+            { keys: ["oasis", "pipeline", "agent dashboard", "flowee config"], url: "pages/vision_oasis.html", msg: "Entering the AI Forge... Welcome to the Vision Oasis." },
+            { keys: ["cave", "memory", "garden", "cinema"], url: "pages/memory_cave.html", msg: "Quiet your mind... Descending into the Memory Cave." }
         ];
 
-        // Check Redirections
+        // 2.5 SPECIAL: CONFIRMATIONS (If Brain is waiting)
+        const isConfirm = ["yes", "ja", "ok", "sync", "confirm", "yep", "do it"].some(k => q === k);
+        const isDeny = ["no", "nein", "abort", "stop", "cancel"].some(k => q === k);
+
+        if (window.AgenticBrain?.syncPending) {
+            if (isConfirm) return { text: "Protocol Authorized. Synchronizing..." };
+            if (isDeny) return { text: "Synchronisation aborted." };
+        }
         for(const entry of redirectionMatrix) {
             if(entry.keys.some(k => q.includes(k))) {
                 return { 
@@ -828,6 +971,12 @@ class FloweeAgent {
         }
 
         const intentMap = [
+            // CLOUD PULSE (Agentic Bridge)
+            { triggers: ["cloud-pulse", "cloud pulse", "sync cloud", "pulse"], text: "Initiating Cloud Pulse Handshake...", action: () => {
+                if(window.AgenticBrain) window.AgenticBrain.requestSyncConsent();
+                else this.talk(true, "Agentic Brain not detected. Bridge is offline.", "error");
+            }},
+
             // NEW: MANUAL OVERRIDES (User Request) - TOP PRIORITY
             { triggers: ["next mission", "start mission 2", "start quest", "skip", "next", "continue", "proceed", "go on"], text: "Advancing to the next cycle...", action: () => {
                 const current = parseInt(localStorage.getItem('cdf_tutorial_step') || 0);
@@ -1017,6 +1166,7 @@ class FloweeAgent {
             }
         }
 
+        if (window.AgenticBrain?.syncPending) return { text: "Awaiting confirmation for the Cloud Pulse (Yes/No)..." };
         return { text: "I'm searching the Matrix... Try 'Quests', 'Bag', 'Market', or 'Help'.", link: null };
     }
 
@@ -1305,6 +1455,69 @@ class FloweeAgent {
         } else {
             this.talk(true, "Profile updated. Looking good, Creator!", "success");
         }
+    }
+
+    // --- COMMUNITY TUTORIAL SPECIFIC LOGIC ---
+    checkCommunityTutorial() {
+        const step = parseInt(localStorage.getItem('cdf_connection_tour_step') || 1);
+        if(step > 4) return; // Done or Dimissed
+
+        const currentTask = this.communitySteps.find(s => s.id === step);
+        const path = window.location.pathname.split('/').pop() || 'index.html';
+
+        if(currentTask && path.includes(currentTask.page)) {
+            // Show dismiss button if chat is rendered
+            const dismissBtn = document.getElementById('flowee-dismiss-btn');
+            if(dismissBtn) dismissBtn.style.display = 'block';
+
+            setTimeout(() => {
+                this.talk(true, `[CONNECTION GUIDE ${step}/4] ${currentTask.text}`, "guide");
+                if (currentTask.target) {
+                    let attempts = 0;
+                    const findTarget = setInterval(() => {
+                        attempts++;
+                        let el = null;
+                        
+                        // Handle onClick attribute string matching target more gracefully
+                        if(currentTask.target.includes('onclick=')) {
+                             // Simple fallback for tricky targets
+                             el = document.querySelector('button') // not perfect but just for tutorial glow
+                        } else {
+                             el = document.querySelector(currentTask.target);
+                        }
+
+                        if (el || attempts > 5) {
+                            clearInterval(findTarget);
+                            if (el) this.highlight(currentTask.target);
+                        }
+                    }, 1000);
+                }
+
+                // Auto-advance step 3 to 4 if they reach chat.html
+                if(step === 3) {
+                     setTimeout(() => {
+                          localStorage.setItem('cdf_connection_tour_step', 4);
+                          this.checkCommunityTutorial(); // trigger next hint
+                     }, 4000);
+                }
+            }, 2000);
+        }
+    }
+
+    dismissCommunityTutorial(isCompleted = false) {
+         localStorage.setItem('cdf_connection_tour_step', 5); // mark done
+         const dismissBtn = document.getElementById('flowee-dismiss-btn');
+         if(dismissBtn) dismissBtn.style.display = 'none';
+
+         if(window.Simulation && typeof window.Simulation.addXP === 'function') {
+             window.Simulation.addXP(50);
+         } else {
+             const xp = parseInt(localStorage.getItem('cdf_xp')) || 0;
+             localStorage.setItem('cdf_xp', xp + 50);
+             if(window.Pusher) window.Pusher.showToast('SYSTEM: +50 EXP ACCUMULATED', 'xp');
+         }
+
+         if(!isCompleted) this.talk(true, "Training wheels off. Welcome to the Deep Flow.", "guide");
     }
 
 }

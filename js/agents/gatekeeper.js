@@ -41,14 +41,20 @@ class GatekeeperAgent {
             // NEW: Beta Protocol Enforcement
             if (!localStorage.getItem('cdf_beta_key') && !window.location.href.includes('beta-initiation')) {
                  console.warn(`[${this.name}] Beta Key Missing. Redirecting to Initiation...`);
-                 window.location.href = '../beta-initiation.html';
+                 const isPages = window.location.pathname.includes('/pages/');
+                 window.location.href = isPages ? 'beta-initiation.html' : 'pages/beta-initiation.html';
                  return;
             }
 
             this.userChannel = this.deriveChannel(user); // NEW: Determine Channel
             console.log(`[${this.name}] User Detected: ${user.email} | Channel: ${this.userChannel}`);
-            // Auto-Redirect to Core
-            this.enterCore();
+            
+            // Auto-Redirect to Core ONLY if not on the initiation page
+            if (!window.location.href.includes('beta-initiation')) {
+                this.enterCore();
+            } else {
+                console.log(`[${this.name}] User on Initiation page. Suppressing redirect.`);
+            }
         } else {
             console.log(`[${this.name}] Stranger Detected. Showing Gateway.`);
             // Ensure Gateway is visible (remove loading states if any)
@@ -79,24 +85,32 @@ class GatekeeperAgent {
 
     enterCore() {
         // Visual transition could go here
-        window.location.href = 'pages/dashboard.html';
+        const isPages = window.location.pathname.includes('/pages/');
+        window.location.href = isPages ? '../master_dashboard.html' : 'master_dashboard.html';
+    }
+
+    openLoginModal() {
+        const modal = document.getElementById('auth-modal');
+        if (modal) {
+            modal.style.display = 'flex';
+            setTimeout(() => modal.style.opacity = '1', 10);
+            // Focus email
+            const emailInput = document.getElementById('login-email');
+            if(emailInput) emailInput.focus();
+        }
+    }
+
+    closeLoginModal() {
+        const modal = document.getElementById('auth-modal');
+        if (modal) {
+            modal.style.opacity = '0';
+            setTimeout(() => modal.style.display = 'none', 500);
+        }
     }
 
     openExam() {
-        // Trigger the Login Modal
-        if (window.netlifyIdentity) {
-            window.netlifyIdentity.open();
-        } else {
-            console.warn(`[${this.name}] Hunter Exam (Auth) Protocol missing!`);
-            // Local Dev Bypass
-            if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
-                if(confirm("[DEV MODE] Netlify Identity not detected. Bypass to Dashboard?")) {
-                    this.enterCore();
-                }
-            } else {
-                 alert("Authentication System Offline. Please check console.");
-        }
-        }
+        // Legacy/Netlify fallback
+        this.openLoginModal();
     }
 
     openBazaarPreview() {

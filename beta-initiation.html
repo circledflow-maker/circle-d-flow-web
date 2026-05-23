@@ -17,6 +17,9 @@
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/api_config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/agents/supabase_client.js"></script>
     <script src="js/agents/language_matrix.js"></script>
     <script src="js/agents/master-brain.js"></script>
     <script>
@@ -83,437 +86,426 @@
         }
     </style>
 </head>
+<!-- THE PATH: SHADOW TO LIGHT INITIATION RITUAL -->
 <body class="h-screen w-screen flex items-center justify-center relative overflow-hidden bg-black text-white">
     
-    <!-- I. The Particle Abyss -->
-    <canvas id="particle-canvas" class="absolute inset-0 z-0"></canvas>
-    
-    <!-- II. The Wizard Container -->
-    <main class="relative z-20 w-full max-w-4xl px-4 transition-all duration-500" id="wizard-container">
+    <!-- 1. CINEMATIC OVERLAY (Dialogue & UI) -->
+    <div id="cinematic-overlay" class="absolute inset-0 z-50 flex items-center justify-center pointer-events-none">
         
-        <!-- Header -->
-        <header class="text-center mb-12">
-            <h1 class="text-4xl md:text-5xl font-serif font-bold text-transparent bg-clip-text bg-gradient-to-r from-mystic-gold to-white tracking-tighter mb-2">The Gateway of Nyame</h1>
-            <p class="text-xs font-mono text-white/40 uppercase tracking-[0.3em]">Protocol: Initiation</p>
-        </header>
-
-        <!-- WIZARD STEPS -->
-        
-        <!-- STEP 1: IDENTITY (Email/Name) -->
-        <div id="step-identity" class="step-panel bg-black/80 border border-white/10 rounded-2xl p-8 backdrop-blur-xl md:w-2/3 mx-auto shadow-[0_0_50px_rgba(255,255,255,0.05)]">
-            <div class="flex items-center gap-4 mb-6 border-b border-white/10 pb-4">
-                <div class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center font-bold text-white">1</div>
-                <h2 class="text-xl font-bold uppercase tracking-widest text-white">Identity Matrix</h2>
+        <!-- Phase 1: Identity Altar -->
+        <div id="phase-altar" class="hidden text-center max-w-lg p-6 bg-black/40 backdrop-blur-xl border border-white/10 rounded-2xl pointer-events-auto">
+            <h2 class="text-3xl font-serif text-mystic-gold mb-2 uppercase tracking-[0.2em]" data-i18n="ritual_step_1">The Altar of Identity</h2>
+            <p class="text-sm text-white/60 mb-4 italic" id="flowee-msg-1">"Who knocks at the roots? Use your seal or carve your data below..."</p>
+            
+            <!-- Social Login Buttons (Floating in 3D too, but accessible here) -->
+            <div class="flex gap-4 justify-center mb-4">
+                <button onclick="netlifyIdentity.open()" class="px-6 py-3 bg-white text-black font-bold rounded-lg hover:scale-105 transition-transform uppercase text-xs">Google Account</button>
+                <button onclick="netlifyIdentity.open()" class="px-6 py-3 bg-white/10 border border-white/20 text-white font-bold rounded-lg hover:scale-105 transition-transform uppercase text-xs">Apple / Samsung</button>
             </div>
             
-            <div class="space-y-6">
-                 <!-- Netlify Identity Trigger -->
-                 <div class="text-center p-4 bg-white/5 rounded-lg border border-white/5">
-                    <p class="text-xs text-white/60 mb-3">Link your digital soul (Email/Google)</p>
-                    <button onclick="netlifyIdentity.open()" class="px-6 py-2 bg-white text-black font-bold uppercase tracking-widest rounded hover:bg-gray-200 transition-colors text-xs">
-                        Connect Account
-                    </button>
-                    <div id="auth-status" class="mt-2 text-[10px] text-green-400 font-mono hidden">● LINK ESTABLISHED</div>
-                 </div>
-
-                 <!-- Email Address -->
-                 <div>
-                    <label class="block text-xs uppercase text-white/50 mb-1">Soul Link (Email)</label>
-                    <input type="email" id="identity-email" class="w-full bg-black/50 border border-white/20 rounded p-3 text-white focus:border-mystic-gold outline-none tracking-widest font-mono" placeholder="Enter your email...">
-                 </div>
-
-                 <!-- Hunter Handle -->
-                 <div>
-                    <label class="block text-xs uppercase text-white/50 mb-1">Hunter Handle</label>
-                    <input type="text" id="reg-username" class="w-full bg-black/50 border border-white/20 rounded p-3 text-white focus:border-mystic-gold outline-none tracking-widest font-mono" placeholder="Enter your alias...">
-                 </div>
-
-                 <!-- Password (New) -->
-                 <div>
-                    <label class="block text-xs uppercase text-white/50 mb-1">Passphrase</label>
-                    <input type="password" id="reg-password" class="w-full bg-black/50 border border-white/20 rounded p-3 text-white focus:border-mystic-gold outline-none tracking-widest font-mono" placeholder="Create Secret...">
-                 </div>
-
-                 <button onclick="Wizard.nextStep('step-test')" class="w-full py-4 bg-mystic-gold/10 border border-mystic-gold/50 text-mystic-gold font-bold uppercase tracking-widest hover:bg-mystic-gold hover:text-black transition-all rounded mt-4">
-                    Proceed to Testing
-                 </button>
-            </div>
-        </div>
-
-        <!-- STEP 2: CLASSIFICATION TEST (Quiz) -->
-        <div id="step-test" class="step-panel hidden bg-black/80 border border-white/10 rounded-2xl p-8 backdrop-blur-xl md:w-2/3 mx-auto shadow-[0_0_50px_rgba(255,255,255,0.05)]">
-            <div class="flex items-center gap-4 mb-6 border-b border-white/10 pb-4">
-                <div class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center font-bold text-white">2</div>
-                <h2 class="text-xl font-bold uppercase tracking-widest text-white">Resonance Test</h2>
-            </div>
+            <div class="h-px w-full bg-white/10 mb-4"></div>
             
-            <div id="quiz-container" class="space-y-6">
-                <!-- Dynamic Question -->
-                <h3 id="quiz-question" class="text-lg font-serif italic text-white/90 text-center"></h3>
-                <div id="quiz-options" class="grid grid-cols-1 gap-3"></div>
+            <!-- Manual Input (Appears on the 3D Altar) -->
+            <div class="space-y-4 text-left">
+                <div>
+                   <label class="block text-[10px] uppercase text-white/50 mb-1">Soul Link (Email)</label>
+                   <input type="email" id="identity-email" class="w-full bg-black/50 border border-white/20 rounded p-3 text-white focus:border-mystic-gold outline-none font-mono" placeholder="your@email.com">
+                </div>
+                <div>
+                   <label class="block text-[10px] uppercase text-white/50 mb-1">Secret Cipher (Password)</label>
+                   <input type="password" id="reg-password" class="w-full bg-black/50 border border-white/20 rounded p-3 text-white focus:border-mystic-gold outline-none font-mono" placeholder="********">
+                </div>
+                <button onclick="window.Initiation.nextPhase()" class="w-full py-4 bg-mystic-gold/20 border border-mystic-gold/50 text-mystic-gold font-bold uppercase tracking-widest hover:bg-mystic-gold hover:text-black transition-all rounded">Next Ritual Step</button>
             </div>
         </div>
 
-        <!-- STEP 3: RESULT & REGISTRY -->
-        <div id="step-result" class="step-panel hidden text-center">
-            <div class="bg-black/80 border-2 border-mystic-gold rounded-2xl p-12 backdrop-blur-xl relative overflow-hidden group max-w-xl mx-auto">
-                <div class="absolute inset-0 bg-mystic-gold/5 animate-pulse-slow"></div>
-                
-                <span class="material-symbols-outlined text-6xl text-mystic-gold mb-4 animate-float">verified</span>
-                <h2 class="text-3xl font-serif font-bold text-white mb-2">INITIATION COMPLETE</h2>
-                <div class="h-px w-24 bg-mystic-gold/50 mx-auto mb-6"></div>
-                
-                <div class="space-y-2 mb-8">
-                    <p class="text-sm text-white/60">CLASS ASSIGNED</p>
-                    <h3 id="result-class" class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-mystic-gold to-white uppercase tracking-widest">...</h3>
-                    <p id="result-nen" class="text-xs font-mono text-mystic-gold uppercase mt-2">...</p>
-                </div>
+        <!-- Phase 2: Name Tablet -->
+        <div id="phase-tablet" class="hidden text-center max-w-sm p-10 bg-black/40 backdrop-blur-xl border border-white/10 rounded-2xl pointer-events-auto">
+             <h2 class="text-2xl font-serif text-mystic-gold mb-2 uppercase tracking-[0.2em]">The Stone of Names</h2>
+             <p class="text-xs text-white/60 mb-6 italic" id="flowee-msg-2">"Every soul needs a handle to be called through the æther. What is yours?"</p>
+             <input type="text" id="reg-username" class="w-full bg-black/50 border border-white/40 rounded p-4 text-center text-xl text-white focus:border-mystic-gold outline-none tracking-[0.3em] font-mono mb-4" placeholder="USER NAME">
+             <button onclick="window.Initiation.nextPhase()" class="px-10 py-3 bg-mystic-gold text-black font-bold uppercase tracking-widest hover:scale-110 transition-transform">Confirm Identity</button>
+        </div>
 
-                <div class="bg-white/5 p-4 rounded border border-white/10 mb-8">
-                    <p class="text-[10px] text-white/40 uppercase">Adinkra Symbol</p>
-                    <p id="result-symbol" class="text-lg font-bold text-white">...</p>
-                </div>
+        <!-- Phase 3: The Codex of Respect -->
+        <div id="phase-respect" class="hidden text-center max-w-2xl p-10 bg-black/60 backdrop-blur-3xl border-2 border-mystic-gold/50 rounded-2xl pointer-events-auto">
+             <span class="material-symbols-outlined text-6xl text-mystic-gold mb-4 animate-pulse">balance</span>
+             <h2 class="text-3xl font-serif text-white mb-6 uppercase tracking-[0.3em]">The Law of Resonance</h2>
+             <p class="text-lg italic text-white/90 mb-6 leading-relaxed">
+                "In this Kosmos, respect for every soul is the law. We build not just profiles, but Orbits. Follow your curiosity and intuition, for you are not alone."
+             </p>
+             <p class="text-xs font-mono text-mystic-gold uppercase mb-8">Respect every soul. Create your world. Make a difference.</p>
+             <button onclick="window.Initiation.nextPhase()" class="px-12 py-4 bg-mystic-gold text-black font-bold uppercase tracking-widest hover:shadow-[0_0_30px_rgba(212,175,55,0.6)] transition-all">I Accept the Code</button>
+        </div>
 
-                <button onclick="enterDashboard()" class="px-8 py-3 bg-mystic-gold text-black font-bold uppercase tracking-widest hover:scale-105 transition-transform shadow-[0_0_20px_rgba(212,175,55,0.4)]">
-                    Enter Apex Dashboard
-                </button>
+        <!-- Phase 4: Soul-Design Quiz -->
+        <div id="phase-quiz" class="hidden text-center w-full max-w-4xl px-4 pointer-events-auto">
+            <h3 id="quiz-question" class="text-4xl md:text-5xl font-serif italic text-white mb-12 drop-shadow-lg"></h3>
+            <div id="quiz-options" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+                <!-- Spawns Energy Fragment Buttons -->
             </div>
         </div>
 
-    </main>
-
-    <!-- Flowee Agent (Guide) -->
-    <div id="flowee-agent" class="fixed bottom-8 right-8 z-50 pointer-events-none transition-transform duration-500 scale-0 origin-bottom-right">
-         <div class="relative w-32 h-32">
-            <img src="Assets/images/flowee_pirate_phoenix.png" class="w-full h-full object-contain animate-float drop-shadow-[0_0_20px_rgba(147,51,234,0.5)]">
-            <div id="flowee-speech" class="absolute bottom-full right-0 w-48 bg-white text-black p-3 rounded-xl rounded-br-none text-xs font-medium mb-2 shadow-lg">
-                Greetings, Initiate. Let's build your profile.
-            </div>
+        <!-- Phase 5: Conclusion & Redirect -->
+        <div id="phase-finish" class="hidden text-center">
+             <div class="animate-ping w-24 h-24 bg-mystic-gold rounded-full mx-auto mb-8 blur-xl opacity-50"></div>
+             <h2 class="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-mystic-gold uppercase tracking-[0.5em] mb-4">AWAKENED</h2>
+             <p id="assigned-class" class="text-2xl font-serif italic text-white/80 mb-10">...</p>
+             <div class="text-xs font-mono text-white/40 uppercase animate-pulse">Entering your Orbit in 5 seconds...</div>
         </div>
     </div>
 
-    <!-- Auth Script -->
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <!-- 2. FLIGHT COMPANION (Flowee) -->
+    <div id="flowee-companion" class="fixed bottom-10 right-10 z-50 pointer-events-none transition-all duration-1000 scale-0">
+        <img id="flowee-img" src="Assets/images/flowee_pirate_phoenix.png" class="w-32 h-32 object-contain drop-shadow-[0_0_30px_rgba(154,77,234,1)] animate-float">
+        <div id="flowee-bubble" class="absolute bottom-full right-0 w-64 bg-white text-black p-4 rounded-2xl rounded-br-none shadow-2xl text-xs font-bold mb-4 opacity-0 scale-0 transition-all origin-bottom-right">
+            Howdy, Traveler! Ready to find your soul's rhythm?
+        </div>
+    </div>
 
-    <!-- PHOENIX-EE CORE AGENTS -->
-    <script src="js/agents/bridge_pusher.js"></script>
-    <script src="js/agents/pusher.js"></script>
-    <script src="js/agents/helper.js"></script>
-    <script src="js/agents/global_ticker.js" defer></script>
-    <script src="js/agents/network_hub.js" defer></script>
-    <script src="js/agents/constructor_bot.js" defer></script>
-    <script src="js/agents/kingdom_science.js" defer></script>
-    <script src="js/agents/resonance_bridge.js" defer></script>
-    <script src="js/agents/vault_space.js" defer></script>
-    <script src="js/agents/orbital_menu.js" defer></script>
+    <!-- 3. AUDIO CONTEXT (Initiation Beats) -->
+    <div id="audio-hint" class="fixed top-half left-half -translate-x-1/2 -translate-y-1/2 z-[100] text-center bg-black/80 p-10 rounded-full border border-white/20 cursor-pointer" onclick="window.Initiation.startRitual()">
+        <span class="material-symbols-outlined text-6xl text-white mb-4 animate-bounce">water_drop</span>
+        <div class="text-sm font-mono text-white/60 uppercase tracking-widest">Tap to begin the ritual</div>
+    </div>
+
+    <!-- Initiation Logic & Engine -->
+    <script type="module">
+        import InitiationOrbit from './js/initiation_orbit.js';
+        
+        // TRANSLATION MATRIX FOR INITIATION
+        const i18n_matrix = {
+            en: {
+                msg1: "Well, who knocks at the gates of eternity? Before the tree lets you in, we need your digital fingerprint...",
+                msg2: "Every soul needs a name to be called into the æther. Choose wisely!",
+                msg3: "Pause for a moment, traveler. This is no ordinary place. This is a space of souls.",
+                msg_finish: "Welcome home! Your Orbit awaits you.",
+                q1: "A melody drifts through the roots. What does your soul do first?",
+                q1_o1: "Analyze the sacred structure.",
+                q1_o2: "Verse a rhyme to the beat.",
+                q1_o3: "Spin into a handstand.",
+                q2: "Yggdrasil offers you a tool. Which do you grasp?",
+                q2_o1: "The Sound Alchemist's Deck.",
+                q2_o2: "The Voyager's TukTuk Key.",
+                q2_o3: "The Community Drum.",
+                q3: "Your Orbit is empty. How do you fill the void?",
+                q3_o1: "Weave harmony with others.",
+                q3_o2: "Show the world my movement.",
+                q3_o3: "Build a base of knowledge."
+            },
+            de: {
+                msg1: "Na, wer klopft denn da an die Tore der Ewigkeit? Bevor der Baum dich einlässt, brauchen wir deinen digitalen Fingerabdruck...",
+                msg2: "Jede Seele braucht einen Namen, der in den Äther gerufen werden kann. Wähle weise!",
+                msg3: "Halt kurz inne, Reisender. Dies ist kein gewöhnlicher Ort. Dies ist ein Raum der Seelen.",
+                msg_finish: "Willkommen zu Hause! Dein Orbit wartet auf dich.",
+                q1: "Eine Melodie zieht durch die Wurzeln. Was tut deine Seele zuerst?",
+                q1_o1: "Die heilige Struktur analysieren.",
+                q1_o2: "Einen Reim auf den Beat sprechen.",
+                q1_o3: "Dich in einen Handstand drehen.",
+                q2: "Yggdrasil bietet dir ein Werkzeug an. Welches greifst du?",
+                q2_o1: "Das Deck des Klang-Alchemisten.",
+                q2_o2: "Den TukTuk-Schlüssel des Voyagers.",
+                q2_o3: "Die Trommel der Gemeinschaft.",
+                q3: "Dein Orbit ist leer. Wie füllst du die Leere?",
+                q3_o1: "Harmonie mit anderen weben.",
+                q3_o2: "Der Welt meine Bewegung zeigen.",
+                q3_o3: "Eine Wissensbasis aufbauen."
+            },
+            fr: {
+                msg1: "Eh bien, qui frappe aux portes de l'éternité ? Avant que l'arbre ne vous laisse entrer, nous avons besoin de votre empreinte numérique...",
+                msg2: "Chaque âme a besoin d'un nom pour être appelée dans l'éther. Choisissez judicieusement !",
+                msg3: "Faites une pause, voyageur. Ce n'est pas un endroit ordinaire. C'est un espace d'âmes.",
+                msg_finish: "Bienvenue à la maison ! Votre Orbite vous attend.",
+                q1: "Une mélodie dérive à travers les racines. Que fait votre âme en premier ?",
+                q1_o1: "Analyser la structure sacrée.",
+                q1_o2: "Réciter une rime sur le rythme.",
+                q1_o3: "Faire un poirier.",
+                q2: "Yggdrasil vous offre un outil. Lequel saisissez-vous ?",
+                q2_o1: "Le platine de l'Alchimiste Sonore.",
+                q2_o2: "La clé du TukTuk du Voyageur.",
+                q2_o3: "Le tambour de la communauté.",
+                q3: "Votre Orbite est vide. Comment remplissez-vous le vide ?",
+                q3_o1: "Tisser l'harmonie avec les autres.",
+                q3_o2: "Montrer mon mouvement au monde.",
+                q3_o3: "Construire une base de connaissances."
+            },
+            it: {
+                msg1: "Bene, chi bussa alle porte dell'eternità? Prima che l'albero ti lasci entrare, abbiamo bisogno della tua impronta digitale...",
+                msg2: "Ogni anima ha bisogno di un nome per essere chiamata nell'etere. Scegli saggiamente!",
+                msg3: "Fermati un attimo, viaggiatore. Questo non è un posto qualunque. È uno spazio per le anime.",
+                msg_finish: "Bentornato a casa! La tua Orbita ti aspetta.",
+                q1: "Una melodia scivola tra le radici. Cosa fa la tua anima per prima?",
+                q1_o1: "Analizzare la struttura sacra.",
+                q1_o2: "Declamare una rima a tempo.",
+                q1_o3: "Fare una verticale.",
+                q2: "Yggdrasil ti offre uno strumento. Quale afferri?",
+                q2_o1: "La consolle dell'Alchimista del Suono.",
+                q2_o2: "La chiave del TukTuk del Viaggiatore.",
+                q2_o3: "Il tamburo della comunità.",
+                q3: "La tua Orbita è vuota. Come riempi il vuoto?",
+                q3_o1: "Tessere l'armonia con gli altri.",
+                q3_o2: "Mostrare il mio movimento al mondo.",
+                q3_o3: "Costruire una base di conoscenze."
+            }
+        };
+
+        class InitiationRitual {
+            constructor() {
+                this.engine = new InitiationOrbit();
+                this.phase = 0;
+                this.score = { CREATOR:0, KINESTHETIC:0, PATHFINDER:0, HARMONIZER:0, SAGE:0 };
+            }
+
+            startRitual() {
+                document.getElementById('audio-hint').classList.add('hidden');
+                
+                // Continuous Audio Playback
+                if (!window.initiationAudio) {
+                    try {
+                        const audio = new Audio('Assets/audio/cinematic_drone.mp3');
+                        audio.loop = true;
+                        audio.volume = 0.4;
+                        audio.play().catch(e => console.log('Audio autoplay required interact first', e));
+                        window.initiationAudio = audio;
+                    } catch (e) {
+                         console.log('Audio not found, skipping');
+                    }
+                }
+                
+                const f = document.getElementById('flowee-companion');
+                f.classList.remove('scale-0');
+                f.classList.add('scale-100');
+                
+                this.nextPhase();
+            }
+
+            nextPhase() {
+                this.phase++;
+                const panels = ['phase-altar', 'phase-tablet', 'phase-respect', 'phase-quiz', 'phase-finish'];
+                document.querySelectorAll('.step-panel, div[id^="phase-"]').forEach(p => p.classList.add('hidden'));
+
+                const bubble = document.getElementById('flowee-bubble');
+                const flowee = document.getElementById('flowee-companion');
+                
+                const lang = localStorage.getItem('cqr_lang') || 'en';
+                const i18n = i18n_matrix[lang] || i18n_matrix['en'];
+
+                const showTalk = (msg) => {
+                    bubble.innerText = msg;
+                    bubble.classList.remove('opacity-0', 'scale-0');
+                    bubble.classList.add('opacity-1', 'scale-100');
+                    setTimeout(() => {
+                        bubble.classList.remove('opacity-1', 'scale-100');
+                        bubble.classList.add('opacity-0', 'scale-0');
+                    }, 5000);
+                };
+
+                if(this.phase === 1) {
+                    document.getElementById('phase-altar').classList.remove('hidden');
+                    this.engine.state = 'ALTAR';
+                    showTalk(i18n.msg1);
+                } else if(this.phase === 2) {
+                    document.getElementById('phase-tablet').classList.remove('hidden');
+                    this.engine.state = 'TABLET';
+                    showTalk(i18n.msg2);
+                } else if(this.phase === 3) {
+                    document.getElementById('phase-respect').classList.remove('hidden');
+                    this.engine.state = 'MESSAGE';
+                    showTalk(i18n.msg3);
+                } else if(this.phase === 4) {
+                    document.getElementById('phase-quiz').classList.remove('hidden');
+                    // Setup smooth transition properties once
+                    const qText = document.getElementById('quiz-question');
+                    const qOpts = document.getElementById('quiz-options');
+                    qText.style.transition = 'opacity 0.4s ease';
+                    qOpts.style.transition = 'opacity 0.4s ease';
+                    
+                    this.renderQuiz(0);
+                    this.engine.state = 'QUIZ';
+                }
+            }
+
+            renderQuiz(idx) {
+                const lang = localStorage.getItem('cqr_lang') || 'en';
+                const i18n = i18n_matrix[lang] || i18n_matrix['en'];
+                
+                const qData = [
+                    { q: i18n.q1, options: [ {t: i18n.q1_o1, type: 'SAGE'}, {t: i18n.q1_o2, type: 'HARMONIZER'}, {t: i18n.q1_o3, type: 'KINESTHETIC'} ] },
+                    { q: i18n.q2, options: [ {t: i18n.q2_o1, type: 'CREATOR'}, {t: i18n.q2_o2, type: 'PATHFINDER'}, {t: i18n.q2_o3, type: 'HARMONIZER'} ] },
+                    { q: i18n.q3, options: [ {t: i18n.q3_o1, type: 'PATHFINDER'}, {t: i18n.q3_o2, type: 'KINESTHETIC'}, {t: i18n.q3_o3, type: 'SAGE'} ] }
+                ];
+
+                if(idx >= qData.length) {
+                    this.finishRitual(i18n.msg_finish);
+                    return;
+                }
+                const q = qData[idx];
+                const qText = document.getElementById('quiz-question');
+                const qOpts = document.getElementById('quiz-options');
+                
+                // Fade out before changing content
+                qText.style.opacity = '0';
+                qOpts.style.opacity = '0';
+                
+                setTimeout(() => {
+                    qText.innerText = q.q;
+                    qOpts.innerHTML = '';
+                    
+                    q.options.forEach(opt => {
+                        const btn = document.createElement('button');
+                        btn.className = "p-8 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 hover:border-mystic-gold shadow-xl transition-all text-xl font-serif text-white/90 relative group";
+                        btn.innerHTML = `
+                            <div class="relative z-10">${opt.t}</div>
+                            <div class="absolute inset-0 bg-gradient-to-t from-mystic-gold/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl"></div>
+                        `;
+                        btn.onclick = () => {
+                            this.score[opt.type]++;
+                            
+                            // Flowee haptic reaction
+                            const flowee = document.getElementById('flowee-companion');
+                            flowee.classList.add('scale-110', 'brightness-150');
+                            setTimeout(() => flowee.classList.remove('scale-110', 'brightness-150'), 300);
+                            
+                            this.renderQuiz(idx + 1);
+                        };
+                        qOpts.appendChild(btn);
+                    });
+                    
+                    // Fade back in
+                    qText.style.opacity = '1';
+                    qOpts.style.opacity = '1';
+                }, 400); // Wait for fade out to complete
+            }
+
+            finishRitual(translatedFinishMessage) {
+                const winner = Object.keys(this.score).reduce((a, b) => this.score[a] > this.score[b] ? a : b);
+                document.getElementById('phase-quiz').classList.add('hidden');
+                document.getElementById('phase-finish').classList.remove('hidden');
+                
+                const classLabel = document.getElementById('assigned-class');
+                classLabel.innerText = `YOU ARE A ${winner}`;
+                
+                // Show 3D Result
+                const symbolMap = { 'CREATOR': 'ANANSE', 'SAGE': 'SANKOFA', 'KINESTHETIC': 'SESA', 'PATHFINDER': 'AKOKO', 'HARMONIZER': 'AKOMA' };
+                this.engine.showSymbolResult(symbolMap[winner] || 'SANKOFA');
+                this.engine.state = 'DOOR';
+                
+                // Save to local
+                const user = {
+                    username: document.getElementById('reg-username').value,
+                    email: document.getElementById('identity-email').value,
+                    class: winner,
+                    joined: new Date().toISOString(),
+                    adinkra_symbol: symbolMap[winner]
+                };
+                localStorage.setItem('cqr_user', JSON.stringify(user));
+                localStorage.setItem('cqr_auth_state', 'logged_in');
+                
+                // Crucial for Soul Pass (Dashboard)
+                localStorage.setItem('cdf_user_username', user.username);
+                localStorage.setItem('cdf_user_email', user.email);
+                localStorage.setItem('cdf_user_rank', winner);
+                
+                const selectedLang = localStorage.getItem('cqr_lang') || 'en';
+                const password = document.getElementById('reg-password').value;
+
+                // Sync to Supabase Auth
+                if (window.supabaseClient && user.email && password) {
+                    window.supabaseClient.auth.signUp({
+                        email: user.email,
+                        password: password,
+                        options: {
+                            data: {
+                                username: user.username,
+                                class: user.class,
+                                adinkra_symbol: user.adinkra_symbol,
+                                joined: user.joined,
+                                language: selectedLang
+                            }
+                        }
+                    }).then(({ data, error }) => {
+                        if (error) {
+                            console.error('⚠️ Supabase Auth Sync Failed:', error.message);
+                            // If they already exist, we can try signing them in
+                            if (error.status === 400 && error.message.includes("already registered")) {
+                                window.supabaseClient.auth.signInWithPassword({
+                                    email: user.email,
+                                    password: password
+                                }).then(res => {
+                                    if(res.error) console.error("Login fallback failed:", res.error);
+                                    else console.log("✅ Supabase Auth Sync Fallback Login Success");
+                                });
+                            }
+                        } else {
+                            console.log('✅ Supabase Auth Sync Success');
+                            // Ensure profile is updated directly just in case triggers fail
+                            if (data.user) {
+                                window.supabaseClient.from('profiles').upsert({
+                                    id: data.user.id,
+                                    class: user.class,
+                                    metadata: {
+                                        username: user.username,
+                                        adinkra_symbol: user.adinkra_symbol
+                                    }
+                                }).then(res => {
+                                    if (res.error) console.error("Profile UPSERT failed:", res.error);
+                                });
+                            }
+                        }
+                    });
+                }
+
+                // Sync to n8n (PikaPod)
+                if (window.API_CONFIG && window.API_CONFIG.n8n) {
+                    fetch(window.API_CONFIG.n8n.webhookUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            event: 'beta_initiation_complete',
+                            source: 'circle-d-flow-web',
+                            user: {
+                                username: user.username,
+                                email: user.email,
+                                class: user.class,
+                                language: selectedLang,
+                                symbol: user.adinkra_symbol
+                            },
+                            timestamp: user.joined
+                        })
+                    }).then(() => console.log('✅ Flow data synced to n8n Weltenbaum-Reaktor'))
+                      .catch(err => console.error('⚠️ n8n Sync Failed:', err));
+                }
+
+                setTimeout(() => {
+                    const bubble = document.getElementById('flowee-bubble');
+                    bubble.innerText = translatedFinishMessage || "Welcome home! Your Orbit awaits.";
+                    bubble.classList.remove('opacity-0', 'scale-0');
+                    bubble.classList.add('opacity-1', 'scale-100');
+                }, 1000);
+
+                setTimeout(() => {
+                    window.location.href = 'pages/dashboard.html';
+                }, 5500);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            window.Initiation = new InitiationRitual();
+        });
+    </script>
+
+    <!-- UI Logic Overlay -->
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <style>
+        .material-symbols-outlined { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px) rotate(5deg); } }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+    </style>
+<script src="js/agents/pusher.js" defer></script>
+<script src="js/agents/helper.js" defer></script>
     <script src="js/agents/tutorial_core.js" defer></script>
     <script src="js/agents/quest_controller.js" defer></script>
     <script src="js/agents/visual_integrity.js" defer></script>
     <script src="js/agents/sound_engineer.js" defer></script>
-    <script src="js/agents/horizon_bar.js" defer></script>
-    <script src="js/agents/social_matrix.js" defer></script>
-    <script src="js/agents/flowee.js"></script>
-
-    <script>
-        // --- WIZARD LOGIC ---
-        const Wizard = {
-            data: {
-                username: '',
-                score: { visual: 0, sound: 0, taste: 0, motion: 0, nature: 0, tech: 0, spirit: 0 }
-            },
-            
-            questions: [
-                {
-                    q: "In the chaos of the city, what calls to your soul first?",
-                    options: [
-                        { text: "The vibrant graffiti on the walls.", type: 'visual' },
-                        { text: "The rhythm of the street music.", type: 'sound' },
-                        { text: "The scent of exotic street food.", type: 'taste' },
-                        { text: "The movement of the crowds.", type: 'motion' },
-                        { text: "The hidden parks and trees.", type: 'nature' },
-                        { text: "The neon signs and tech.", type: 'tech' },
-                        { text: "The unseen energy of the people.", type: 'spirit' }
-                    ]
-                },
-                {
-                    q: "How do you shape the world?",
-                    options: [
-                        { text: "With Color & Vision.", type: 'visual' },
-                        { text: "With Audio & Frequency.", type: 'sound' },
-                        { text: "With Flavour & Experience.", type: 'taste' },
-                        { text: "With Dance & Action.", type: 'motion' },
-                        { text: "With Growth & Care.", type: 'nature' },
-                        { text: "With Code & Logic.", type: 'tech' },
-                        { text: "With Wisdom & Empathy.", type: 'spirit' }
-                    ]
-                }
-            ],
-            
-            init: function() {
-                // Initialize Flowee
-                setTimeout(() => {
-                    const f = document.getElementById('flowee-agent');
-                    // Ensure element exists before accessing classList
-                    if(f) {
-                        f.classList.remove('scale-0');
-                        f.classList.add('scale-100');
-                    }
-                }, 500);
-
-                // ENTER KEY LISTENER
-                const inputs = ['reg-username', 'identity-email', 'reg-password'];
-                inputs.forEach(id => {
-                    const el = document.getElementById(id);
-                    if(el) {
-                        el.addEventListener('keypress', (e) => {
-                            if(e.key === 'Enter') {
-                                this.nextStep('step-test');
-                            }
-                        });
-                    }
-                });
-
-                // ... (Auth Listener remains checks) ... 
-                if(window.netlifyIdentity) {
-                    netlifyIdentity.on('login', user => {
-                        document.getElementById('auth-status').classList.remove('hidden');
-                        this.data.username = user.user_metadata?.full_name || user.email.split('@')[0];
-                        document.getElementById('reg-username').value = this.data.username;
-                    });
-                }
-                
-                this.initParticles();
-            },
-
-            nextStep: function(stepId) {
-                // Modified to handle simple step transitions or specific checks
-                 if(stepId === 'step-test') {
-                    const name = document.getElementById('reg-username').value;
-                    const email = document.getElementById('identity-email').value;
-                    const pass = document.getElementById('reg-password').value;
-                    
-                    if (!name?.trim() || !email?.trim() || !email.includes('@') || !pass?.trim()) {
-                        alert("IDENTITY MATRIX INCOMPLETE.\n\nPlease provide Valid Email, Handle, and Passphrase.");
-                        return;
-                    }
-                    
-                    this.data.username = name;
-                    
-                    // SAVE TO CQR (Unified User Object)
-                    const newUser = {
-                        username: name,
-                        name: name, // Legacy Compat
-                        email: email,
-                        password: pass, // In a real app, hash this!
-                        xp: 0,
-                        quest_step: 0,
-                        joined: new Date().toISOString()
-                    };
-                    localStorage.setItem('cqr_user', JSON.stringify(newUser));
-                    localStorage.setItem('cqr_auth_state', 'logged_in');
-
-                    // LEGACY SUPPORT (Optional, keeping for safety)
-                    localStorage.setItem('cdf_user_username', name);
-                    
-                     // Visual Feedback
-                    const btn = document.querySelector('#step-identity button');
-                    if(btn) {
-                        btn.innerText = "Processing...";
-                        btn.disabled = true;
-                        btn.classList.add('opacity-50', 'cursor-wait');
-                    }
-
-                     // Transition with Delay
-                    try {
-                        if(window.Flowee) window.Flowee.talk(true, `Identity Confirmed: ${name}. Initiating Classification Protocol in 3 seconds...`);
-                    } catch(e) {
-                         console.warn("Flowee Speech Failed", e);
-                    }
-                    
-                    setTimeout(() => {
-                        document.querySelectorAll('.step-panel').forEach(el => el.classList.add('hidden'));
-                        document.getElementById(stepId).classList.remove('hidden');
-                        this.renderQuiz(0);
-                        
-                        // Reset Button for back navigation if needed (though we hide panel)
-                        if(btn) {
-                             btn.innerText = "Proceed to Testing";
-                             btn.disabled = false;
-                             btn.classList.remove('opacity-50', 'cursor-wait');
-                        }
-                    }, 3000);
-                }
-            },
-
-            renderQuiz: function(index) {
-                if(index >= this.questions.length) {
-                    this.finishTest();
-                    return;
-                }
-
-                const q = this.questions[index];
-                document.getElementById('quiz-question').innerText = q.q;
-                
-                const opts = document.getElementById('quiz-options');
-                opts.innerHTML = '';
-                
-                // Grid layout for 7 options
-                opts.className = "grid grid-cols-1 md:grid-cols-2 gap-2 w-full max-w-2xl text-left";
-
-                q.options.forEach(opt => {
-                    const btn = document.createElement('button');
-                    btn.className = "text-left p-3 bg-white/5 border border-white/10 rounded hover:bg-white/10 hover:border-mystic-gold/50 transition-all text-xs text-white/80 animate-fade-in";
-                    btn.innerText = `> ${opt.text}`;
-                    btn.onclick = () => {
-                        this.data.score[opt.type]++;
-                        this.renderQuiz(index + 1);
-                    };
-                    opts.appendChild(btn);
-                });
-            },
-
-            finishTest: function() {
-                // Calculate Result (Max Score)
-                const s = this.data.score;
-                let type = Object.keys(s).reduce((a, b) => s[a] > s[b] ? a : b);
-
-                // Map to Lore (7 Classes)
-                const map = {
-                    'visual': { class: 'Weaver', nen: 'Emission (Visual)', symbol: 'Gye Nyame' },
-                    'sound': { class: 'Sound-Smith', nen: 'Transmutation (Sound)', symbol: 'Anansi' },
-                    'taste': { class: 'Architect', nen: 'Enhancement (Taste)', symbol: 'Duafe' },
-                    'motion': { class: 'Navigator', nen: 'Manipulation (Flow)', symbol: 'Nkonson' },
-                    'nature': { class: 'Botanist', nen: 'Conjuration (Life)', symbol: 'Nyame Nti' },
-                    'tech':   { class: 'Operator', nen: 'Specialization (Data)', symbol: 'Dame-Dame' },
-                    'spirit': { class: 'Oracle', nen: 'Emission (Spirit)', symbol: 'Hwe Mu' }
-                };
-                
-                const result = map[type];
-                
-                // UPDATE CQR USER
-                let user = JSON.parse(localStorage.getItem('cqr_user')) || {};
-                user.class = result.class;
-                user.nen_type = result.nen;
-                user.adinkra = result.symbol;
-                user.beta_key = `${result.class.substring(0,3).toUpperCase()}-${Math.floor(1000+Math.random()*9000)}`;
-                
-                localStorage.setItem('cqr_user', JSON.stringify(user));
-
-                // LEGACY SUPPORT
-                localStorage.setItem('user_class', result.class);
-                localStorage.setItem('user_nen_type_v2', result.nen);
-                localStorage.setItem('cdf_adinkra_symbol', result.symbol);
-                localStorage.setItem('cdf_beta_key', user.beta_key);
-
-                // Show Result UI
-                document.getElementById('step-test').classList.add('hidden');
-                document.getElementById('step-result').classList.remove('hidden');
-                
-                document.getElementById('result-class').innerText = result.class;
-                document.getElementById('result-nen').innerText = result.nen;
-                document.getElementById('result-symbol').innerText = result.symbol;
-                
-                if(window.Flowee) window.Flowee.talk(true, `Analysis Complete. You are a ${result.class}. Welcome to the Fold.`);
-
-                // AUTO REDIRECT (7 Seconds)
-                let countdown = 7;
-                const btn = document.querySelector('#step-result button');
-                const interval = setInterval(() => {
-                    countdown--;
-                    btn.innerText = `Enter Apex Dashboard (${countdown}s)`;
-                    if(countdown <= 0) {
-                        clearInterval(interval);
-                        enterDashboard();
-                    }
-                }, 1000);
-            },
-            
-            initParticles: function() {
-                const canvas = document.getElementById('particle-canvas');
-                const ctx = canvas.getContext('2d');
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-                
-                const particles = [];
-                for(let i=0; i<50; i++) {
-                    particles.push({
-                        x: Math.random() * canvas.width,
-                        y: Math.random() * canvas.height,
-                        vx: (Math.random() - 0.5) * 0.5,
-                        vy: (Math.random() - 0.5) * 0.5,
-                        size: Math.random() * 2
-                    });
-                }
-                
-                function animate() {
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
-                    particles.forEach(p => {
-                        p.x += p.vx; p.y += p.vy;
-                        if(p.x < 0) p.x = canvas.width;
-                        if(p.x > canvas.width) p.x = 0;
-                        if(p.y < 0) p.y = canvas.height;
-                        if(p.y > canvas.height) p.y = 0;
-                        ctx.beginPath();
-                        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                        ctx.fill();
-                    });
-                    requestAnimationFrame(animate);
-                }
-                animate();
-            }
-        };
-
-        // --- 4. REDIRECT LOGIC ---
-        function enterDashboard() {
-            console.log("Entering Dashboard...");
-            const btn = document.querySelector('#step-result button');
-            if(btn) btn.innerText = "ACCESSING...";
-            
-            // Set Session
-            sessionStorage.setItem('cdf_beta_session', 'active');
-            
-            // Artificial Delay for Effect
-            setTimeout(() => {
-                const target = "pages/master_dashboard.html?first_time=true";
-                console.log("Redirecting to: " + target);
-                
-                if(window.MasterBrain) {
-                    window.MasterBrain.triggerMysticFog(target);
-                } else {
-                    window.location.assign(target);
-                }
-            }, 500);
-        }
-
-        // Initialize Wizard
-        Wizard.init();
-    </script>
-
-
-    <!-- AUTOMATED AGENT INJECTION -->
-
-    <!-- AUTOMATED AGENT INJECTION -->
-    <script src="js/agents/imperial_hud.js" defer></script>
-    <script src="js/agents/quest_engine.js"></script>
-    <script>
-        // ... (Wizard Logic Overlay to Trigger Quest Completion)
-        const originalNextStep = Wizard.nextStep;
-        Wizard.nextStep = function(stepId) {
-            // Call Original
-            originalNextStep.apply(this, arguments);
-            
-            // Hook for Quest Completion (Identity)
-            if(stepId === 'step-test') {
-                 if(window.QuestEngine) {
-                     // We force complete because 'ACCEPT' action usually implies just clicking 'Accept' on parchment,
-                     // but here we used the parchment as a 'Welcome' and the Registration Actions as the Proof.
-                     // Actually q1_intro is 'ACCEPT' type, so manual completion via this hook is fine or redundant if they clicked accept.
-                     // But to be safe if they dismissed parchment but still registered:
-                     window.QuestEngine.completeQuest('q1_intro');
-                 }
-            }
-        };
-    </script>
 </body>
 </html>

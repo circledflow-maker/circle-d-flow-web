@@ -12,6 +12,18 @@
     <script src="../js/agents/pusher.js?v=3.2"></script>
     <script src="../js/agents/sound_engineer.js?v=3.2"></script>
     <script src="../js/agents/brain.js?v=3.2"></script>
+    <script src="../js/agents/global_ticker.js" defer></script>
+    <script src="../js/agents/network_hub.js" defer></script>
+    <script src="../js/agents/constructor_bot.js" defer></script>
+    <script src="../js/agents/kingdom_science.js" defer></script>
+    <script src="../js/agents/resonance_bridge.js" defer></script>
+    <script src="../js/agents/vault_space.js" defer></script>
+    <script src="../js/agents/horizon_bar.js" defer></script>
+    <script src="../js/agents/social_matrix.js" defer></script>
+    <script src="../js/agents/orbital_menu.js" defer></script>
+    <script src="../js/agents/tutorial_core.js" defer></script>
+    <script src="../js/agents/quest_controller.js" defer></script>
+    <script src="../js/agents/visual_integrity.js" defer></script>
     <script src="../js/agents/flowee.js?v=3.2"></script>
     <script src="../js/agents/supabase_client.js?v=3.2"></script>
     <script src="../js/agents/quest_engine.js?v=3.3"></script> <!-- Updated Version -->
@@ -71,7 +83,7 @@
                         <li id="quest-protocol-2" class="quest-item locked-quest" onclick="openProtocol(2)" style="padding: 15px; border-bottom: 1px solid #333; cursor: pointer; transition: 0.3s; opacity: 0.5;">
                             <span style="color: #00f0ff; font-size: 0.7em; letter-spacing: 2px;">▶ ENCRYPTED</span>
                             <h4 class="font-tech" style="color: #fff; margin: 5px 0;">PROTOCOL 2: THE MERCHANT</h4>
-                            <p style="color: #888; font-size: 0.8em; margin: 0;">Decrypts the High Palast Market.</p>
+                            <p style="color: #888; font-size: 0.8em; margin: 0;">Decrypts the High Palace Market.</p>
                         </li>
 
                         <!-- PROTOCOL 3 -->
@@ -87,7 +99,7 @@
                 <div style="width: 60%; padding: 40px; position:relative; perspective: 1000px;">
                     
                     <!-- ACTIVE PROTOCOL VIEW -->
-                    <div id="protocol-display" style="display: none; height: 100%; flex-direction: column; justify-content: space-between;">
+                    <div id="protocol-display" style="display: none; height: 100%; flex-direction: column; justify-content: space-between; overflow-y: auto; padding-bottom: 100px;">
                         <div>
                             <span id="proto-status" style="color: gold; font-family: 'Courier New'; font-size: 0.8em;">SYSTEM_BOOT_REQUIRED</span>
                             <h2 id="proto-title" class="font-tech" style="color: #00f0ff; margin-top: 10px; border-bottom: 1px solid #333; padding-bottom: 10px; font-size: 2em;">TITEL</h2>
@@ -96,8 +108,8 @@
                             </div>
                         </div>
 
-                        <button id="proto-action-btn" onclick="completeProtocol()" style="background: transparent; border: 1px solid gold; color: gold; padding: 15px; font-family: 'Courier New'; font-weight: bold; width: 100%; cursor: pointer; transition: 0.3s; margin-top: 20px;">
-                            [ INITIATE UPLINK & ACCEPT ]
+                        <button id="proto-action-btn" onclick="completeProtocol()" style="background: transparent; border: 1px solid gold; color: gold; padding: 15px; font-family: 'Courier New'; font-weight: bold; width: 100%; cursor: pointer; transition: 0.3s; margin-top: 20px; flex-shrink: 0;">
+                            [ INITIATE UPLINK & ACCESS TARGET ]
                         </button>
                     </div>
 
@@ -168,7 +180,7 @@
         <button onclick="window.location.href='hall_of_legends.html'" class="nav-btn" id="nav-bro"><span class="icon">🏛️</span><br>BROTHERHOOD</button>
         <div class="nav-divider"></div>
         <button onclick="window.QuestEngine.toggleComms()" class="nav-btn"><span class="icon">💬</span><br>COMMS</button>
-        <button onclick="window.location.href='../pages/dashboard.html'" class="nav-btn exit"><span class="icon">⚡</span><br>MAIN</button>
+        <button onclick="window.Helper ? window.Helper.safeRedirect('dashboard.html') : window.location.href='dashboard.html'" class="nav-btn exit"><span class="icon">⚡</span><br>MAIN</button>
     </nav>
     
     <!-- COMMS TERMINAL (Slide-in) -->
@@ -237,96 +249,120 @@
     </style>
 
     <script>
-        // --- THE LORE ARCHIVE (Die Texte für das Tutorial) ---
-        const protocols = {
-            1: {
-                title: "THE FIRST BREATH",
-                requiredLevel: 1,
-                expReward: 100,
-                nextLevel: 2,
-                text: `Willkommen in der Matrix von Lissabon, Navigator. <br><br>
-                       Du bist dem <b>Circle-D-Flow</b> beigetreten. Wir sind keine App, wir sind ein Netzwerk. Wir verbinden die physische Welt (Hip-Hop, Kunst, Rhythmus) mit der digitalen Matrix.<br><br>
-                       Deine erste Lektion: <b>Der Atlas & The Sound World</b>.<br>
-                       Sobald du diesen Uplink bestätigst, wird das System deine GPS-Signale kalibrieren und die Knotenpunkte für Live-Events und Beats (Sound World) in deinem Dashboard entsperren.<br><br>
-                       Lass den Flow durch dich fließen.`
-            },
-            2: {
-                title: "THE MERCHANT'S PATH",
-                requiredLevel: 2,
-                expReward: 200,
-                nextLevel: 3,
-                text: `Du hast die Umgebung gescannt. Jetzt lernst du zu überleben.<br><br>
-                       Wissen und Kunst haben einen Wert. Im <b>High Palast Market</b> (dem Bazaar) tauschen Gilden ihre Artefakte. Beats, Skills, Event-Tickets und Intel.<br><br>
-                       Hier wird nicht nur mit Fiat-Geld gehandelt, sondern auch mit <b>Flow Credits</b> – dem Blut unserer Wirtschaft. Verdiene Credits, indem du echtes Wissen teilst, und das Netzwerk wird dich belohnen.<br><br>
-                       Bestätige den Uplink, um die Verschlüsselung des Marktes in deinem Dashboard zu brechen.`
-            },
-            3: {
-                title: "THE ART OF WAR",
-                requiredLevel: 3,
-                expReward: 300,
-                nextLevel: 4,
-                text: `Die Straßen gehören niemandem, bis jemand sie beansprucht.<br><br>
-                       Willkommen bei den <b>Turf Wars</b>. Auf deinem Atlas siehst du nun rote Knotenpunkte (z.B. Favela LX). Um sie zu übernehmen, musst du physisch dorthin navigieren, deine 5 Säulen (Animus Stats) nutzen und die Firewalls hacken.<br><br>
-                       Kontrolliere die Knotenpunkte für deine zukünftige Gilde und ernte passiv Flow Credits. Der Krieg um Lissabon beginnt jetzt.<br><br>
-                       Schließe dieses finale Protokoll ab, um die Waffensysteme hochzufahren und ein vollwertiger Agent zu werden.`
-            }
-        };
-
         let activeProtocolId = null;
 
-        // Beim Laden der Seite prüfen, welche Protokolle der User sehen darf
+        // On Load: Check Status
         async function checkProtocolStatus() {
-            // Wait for Supabase
-            if(!window.supabaseClient) { setTimeout(checkProtocolStatus, 300); return; }
+            // ROBUST AUTH CHECK v3 (Merciful)
+            // 1. Wait for Supabase (Max 10s)
+            let retryCount = 0;
+            while(!window.supabaseClient && retryCount < 40) {
+                await new Promise(r => setTimeout(r, 250));
+                retryCount++;
+            }
+            
+            if (!window.supabaseClient) {
+                 console.error("Supabase Timeout. Showing Manual Login."); 
+                 // Allow user to stay but show error
+                 document.body.innerHTML += `<div style="position:fixed;top:0;left:0;width:100%;height:100%;bg:black;color:red;z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;">
+                    <h2>CONNECTION LOST</h2>
+                    <button onclick="window.location.reload()">RETRY UPLINK</button>
+                    <button onclick="window.location.href='../index.html'">RETURN TO GATEWAY</button>
+                 </div>`;
+                 return;
+            }
 
-            const { data: { user } } = await window.supabaseClient.auth.getUser();
-            if(!user) return; // Auth redirect handled by brain
+            // 2. Check Session
+            const { data: { session } } = await window.supabaseClient.auth.getSession();
+            if (!session) {
+                // 3. Fallback: Check LocalStorage
+                const localSession = localStorage.getItem('sb-agkmbaephgsnunlarntm-auth-token');
+                
+                if(localSession) {
+                    console.warn("⚠️ Session hydrating...");
+                    await new Promise(r => setTimeout(r, 500)); // Wait for hydration
+                    // Re-check
+                    const { data: { session: session2 } } = await window.supabaseClient.auth.getSession();
+                    if(!session2) {
+                        console.warn("⛔ Hydration failed. Redirecting.");
+                        window.location.href = '../index.html';
+                        return;
+                    }
+                } else {
+                    console.warn("⛔ No Session found. Staying on page for debug.");
+                    // window.location.href = '../index.html'; 
+                    document.body.innerHTML += `<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);color:gold;z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;font-family:'Courier New';text-align:center;">
+                        <h2 style="font-size:2em;margin-bottom:20px;">ACCESS RESTRICTED</h2>
+                        <p style="color:#666;margin-bottom:30px;">NEURAL LINK SEVERED (NO SESSION)</p>
+                        <div style="display:flex;gap:20px;flex-wrap:wrap;justify-content:center;">
+                            <button onclick="window.location.reload()" style="padding:10px 20px;border:1px solid gold;background:transparent;color:gold;cursor:pointer;font-weight:bold;">RETRY CONNECTION</button>
+                            <button onclick="document.querySelector('.auth-overlay').remove(); window.QuestEngine.isOfflineMode = true; console.log('👻 Ghost Protocol Active');" style="padding:10px 20px;border:1px solid #333;background:rgba(255,255,255,0.05);color:#aaa;cursor:pointer;">GHOST PROTOCOL (DEV)</button>
+                            <button onclick="window.location.href='../index.html'" style="padding:10px 20px;border:1px solid #444;background:transparent;color:#888;cursor:pointer;">RETURN TO GATEWAY</button>
+                        </div>
+                     </div>`.replace('style="', 'class="auth-overlay" style="'); // Hack to add class for removal
+                    return;
+                }
+            } 
+            
+            // Get User from Session (guaranteed to exist if we are here)
+            // But we need to be careful if session is valid but user is not populated? (Rare)
+            // Re-fetch user to be safe for profile lookup
+            const { data: { user } } = await window.supabaseClient.auth.getUser(); 
+            // If getUser fails but session exists, we might be offline or token expired.
+            // But let's proceed with session user if getUser fails?
+            // Actually, best to just use session.user
+            const activeUser = user || (await window.supabaseClient.auth.getSession()).data.session?.user;
+            
+            if(!activeUser) { window.location.href = '../index.html'; return; } 
 
             const { data: profile } = await window.supabaseClient.from('profiles').select('level').eq('id', user.id).single();
-            
             const userLevel = profile.level || 1;
             console.log("Current Level:", userLevel);
 
-            // Protokolle visualisieren
-            // 1 fertig?
-            if (userLevel >= 2) {
-                markCompleted('quest-protocol-1');
-                unlock('quest-protocol-2');
-            }
+            // 309: Unlock Logic (Visuals & Ghost Support)
+            let effectiveLevel = userLevel;
             
-            // 2 fertig?
-            if (userLevel >= 3) {
-                markCompleted('quest-protocol-2');
-                unlock('quest-protocol-3');
+            // Ghost Mode / Offline Check
+            if (activeUser && window.QuestEngine && window.QuestEngine.isOfflineMode) {
+                 const ghostProgress = JSON.parse(sessionStorage.getItem('ghost_progress') || '[]');
+                 if(ghostProgress.includes('Q-PROTO-01')) effectiveLevel = Math.max(effectiveLevel, 2);
+                 if(ghostProgress.includes('Q-PROTO-02')) effectiveLevel = Math.max(effectiveLevel, 3);
             }
 
-            // 3 fertig?
-            if (userLevel >= 4) {
-                markCompleted('quest-protocol-3');
-            }
+            console.log("Effective Level:", effectiveLevel);
+
+            if (effectiveLevel >= 2) { markCompleted('quest-protocol-1'); unlock('quest-protocol-2'); }
+            if (effectiveLevel >= 3) { markCompleted('quest-protocol-2'); unlock('quest-protocol-3'); }
+            if (effectiveLevel >= 4) { markCompleted('quest-protocol-3'); }
         }
 
         function markCompleted(elmId) {
             const elm = document.getElementById(elmId);
-            if(elm.innerHTML.indexOf('COMPLETED') === -1) {
+            if(elm && elm.innerHTML.indexOf('COMPLETED') === -1) {
                 elm.innerHTML += '<span style="color:#00ff00; float:right; font-size:0.8em; margin-top:5px;">[ COMPLETED ]</span>';
             }
         }
 
         function unlock(elmId) {
             const elm = document.getElementById(elmId);
-            elm.classList.remove('locked-quest');
-            elm.style.opacity = '1';
+            if(elm) {
+                elm.classList.remove('locked-quest');
+                elm.style.opacity = '1';
+                // Remove existing onclick to avoid double binding if called multiple times? No, onclick is attribute.
+            }
         }
 
-        // Protokoll in der rechten Seite anzeigen
-        window.openProtocol = function(id) {
-            const proto = protocols[id];
-            const elm = document.getElementById(`quest-protocol-${id}`);
-            
-            // Checken, ob die Quest gelockt ist (kurzer Hack: wenn opacity != 1)
-            if (elm.style.opacity == '0.5') {
-                alert("ACCESS DENIED: Du musst das vorherige Protokoll abschließen.");
+        // Display Protocol Details
+        window.openProtocol = function(index) {
+            // Fetch from Engine Source of Truth
+            const proto = window.QuestEngine.SYSTEM_QUESTS.find(q => q.index === index);
+            if(!proto) return console.error("Protocol not found:", index);
+
+            const elm = document.getElementById(`quest-protocol-${index}`);
+            // Security Check
+            if (getComputedStyle(elm).opacity === "0.5") { // Robust check
+                if(window.Pusher) window.Pusher.showToast("ACCESS DENIED: Previous Protocol Required.", "error");
+                else alert("ACCESS DENIED: Previous Protocol Required.");
                 return;
             }
 
@@ -334,62 +370,68 @@
             document.getElementById('protocol-display').style.display = 'flex';
             
             document.getElementById('proto-title').innerText = proto.title;
+            // Use text from Engine
             document.getElementById('proto-text').innerHTML = proto.text;
-            activeProtocolId = id;
+            activeProtocolId = index;
+            
+            // Output status
+            console.log("Active Protocol:", activeProtocolId);
+            
+            // Reset Button State
+            const btn = document.getElementById('proto-action-btn');
+            
+            // CHECK COMPLETION (Ghost or Real)
+            let isComplete = false;
+            const engine = window.QuestEngine;
+            
+            if(engine) {
+                if(engine.user && engine.profile?.completed_quests?.includes(proto.id)) isComplete = true;
+                else if(engine.isOfflineMode) {
+                    const ghostProgress = JSON.parse(sessionStorage.getItem('ghost_progress') || '[]');
+                    if(ghostProgress.includes(proto.id)) isComplete = true;
+                }
+                // Also check sessionStorage for quick updates in same session if profile lag
+                if(JSON.parse(sessionStorage.getItem('ghost_progress') || '[]').includes(proto.id)) isComplete = true;
+            }
 
-            // Button Logic: Wenn schon fertig, Button disablen
-            // (Wir checken das Level nochmal schnell oder einfach DOM check)
-            // Einfachheitshalber: Button immer da, aber wenn Level schon höher, passiert nix außer Alert "Schon fertig".
+            if(isComplete) {
+                btn.innerText = "[ MISSION COMPLETE: PROCEED TO NEXT ]";
+                btn.style.color = "#00ff00";
+                
+                // Logic for "Proceed to Next"
+                if(proto.nextLevel) {
+                    const nextProtoIndex = proto.nextLevel; // Assuming index matches level for 1->2->3
+                    
+                    btn.onclick = () => {
+                        console.log("Proceeding to Protocol:", nextProtoIndex);
+                        
+                        // 1. Manually Unlock Next (Visual Feedback)
+                        unlock(`quest-protocol-${nextProtoIndex}`);
+                        
+                        // 2. Open Next
+                        window.openProtocol(nextProtoIndex);
+                        
+                        // 3. Toast
+                        if(window.Pusher) window.Pusher.showToast("ACCESS GRANTED: Protocol " + nextProtoIndex, "success");
+                    };
+                } else {
+                     // End of Line
+                     btn.onclick = () => alert("All Protocols Complete. Awaiting Updates.");
+                }
+
+            } else {
+                btn.innerText = "[ INITIATE UPLINK & ACCESS TARGET ]";
+                btn.style.color = "gold";
+                // Restore original handler (via window.completeProtocol)
+                btn.onclick = window.completeProtocol;
+            }
         };
 
-        // Wenn der User auf "INITIATE UPLINK" klickt
-        window.completeProtocol = async function() {
+        // Action Trigger
+        window.completeProtocol = function() {
             if (!activeProtocolId) return;
-
-            const btn = document.getElementById('proto-action-btn');
-            const originalText = btn.innerText;
-            btn.innerText = "[ PROCESSING UPLINK... ]";
-            btn.style.color = "#00ff00";
-
-            const proto = protocols[activeProtocolId];
-            const { data: { user } } = await window.supabaseClient.auth.getUser();
-
-            // 1. Aktuelle EXP und Level holen
-            const { data: profile } = await window.supabaseClient.from('profiles').select('exp, level, available_stat_points').eq('id', user.id).single();
-            
-            // Validation: Ist User Level schon höher?
-            if(profile.level >= proto.nextLevel) {
-                 alert("PROTOCOL ALREADY ASSIMILATED.");
-                 btn.innerText = "[ ALREADY COMPLETED ]";
-                 return;
-            }
-
-            // 2. EXP draufrechnen und Level hart setzen (fürs Tutorial)
-            const newExp = (profile.exp || 0) + proto.expReward;
-            const newLevel = Math.max(profile.level, proto.nextLevel); 
-
-            // Dem User seine verdienten 10 Flow Points (Attributspunkte) für den Level Up geben!
-            const newStatPoints = (profile.available_stat_points || 0) + 10;
-
-            // 3. Datenbank Update
-            const { error } = await window.supabaseClient.from('profiles').update({ 
-                exp: newExp, 
-                level: newLevel,
-                available_stat_points: newStatPoints 
-            }).eq('id', user.id);
-
-            if (!error) {
-                // Erfolg!
-                setTimeout(() => {
-                    alert(`UPLINK SECURED!\n+${proto.expReward} EXP\nLEVEL UP: Du bist jetzt Level ${newLevel}.\nDas Dashboard wurde aktualisiert.`);
-                    window.location.href = '../master_dashboard.html'; // Zurück zum Dashboard, um den Unlock zu sehen!
-                }, 1000);
-            } else {
-                console.error(error);
-                alert("System Error. Verbindung abgebrochen.");
-                btn.innerText = originalText;
-                btn.style.color = "gold";
-            }
+            // Call Agent safely
+            window.QuestEngine.executeProtocolUplink(activeProtocolId, 'proto-action-btn');
         };
 
         window.addEventListener('DOMContentLoaded', checkProtocolStatus);

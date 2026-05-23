@@ -5,23 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Quest Forge | Circle D Flow</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Cinzel:wght@400;700;900&family=Space+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <!-- Maptalks (WebGL 3D Map Engine) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maptalks/dist/maptalks.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/maptalks/dist/maptalks.min.js"></script>
     <style>
         body {
-            background-color: #050508;
+            background-color: #1a1005; /* Warm dark brown/black */
             background-image: 
-                linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+                linear-gradient(rgba(212, 175, 55, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(212, 175, 55, 0.03) 1px, transparent 1px);
             background-size: 40px 40px;
             color: #E0E0E0;
             overflow: hidden;
             font-family: 'Rajdhani', sans-serif;
         }
-        .font-tech { font-family: 'Orbitron', sans-serif; }
-        .text-animusBlue { color: #00F0FF; }
+        .font-tech { font-family: 'Cinzel', serif; } /* Imperial Benin feel */
+        .font-mono { font-family: 'Space Mono', monospace; }
+        .text-animusBlue { color: #8A2BE2; } /* KYHeart Purple */
+        .text-gold { color: #D4AF37; }
+        .bg-gold { background-color: #D4AF37 !important; }
+        .bg-animus { background-color: #8A2BE2 !important; }
         
         /* Layout Grid */
         .dashboard-grid {
@@ -32,37 +37,70 @@
         
         /* Panels */
         .panel-left, .panel-right {
-            background: rgba(10, 15, 20, 0.9);
-            border-right: 1px solid rgba(0, 240, 255, 0.1);
-            border-left: 1px solid rgba(0, 240, 255, 0.1);
+            background: rgba(20, 10, 5, 0.9);
+            border-right: 1px solid rgba(212, 175, 55, 0.2);
+            border-left: 1px solid rgba(212, 175, 55, 0.2);
             overflow-y: auto;
             backdrop-filter: blur(10px);
         }
 
-        /* Map */
+        /* Map style overrides */
         .map-section {
             position: relative;
             z-index: 1;
+        }
+        #forge-map {
+            filter: sepia(0.6) hue-rotate(340deg) brightness(0.9) contrast(1.2);
         }
 
         /* Quest Card */
         .quest-card {
             background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(212,175,55,0.1);
             padding: 12px;
-            border-radius: 4px;
+            border-radius: 8px; /* Cozy */
             margin-bottom: 8px;
             transition: all 0.2s;
         }
         .quest-card:hover {
-            border-color: #00F0FF;
-            background: rgba(0, 240, 255, 0.05);
+            border-color: #D4AF37;
+            background: rgba(212, 175, 55, 0.05);
         }
 
+        /* FF7 x Benin Hybrid Aesthetic */
+        .ff7-menu {
+            background: linear-gradient(180deg, rgba(60, 40, 20, 0.6) 0%, rgba(20, 10, 0, 0.9) 100%);
+            border: 2px solid rgba(212, 175, 55, 0.4);
+            box-shadow: inset 0 0 20px rgba(212, 175, 55, 0.2), 0 0 40px rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+        }
+        .ff7-menu::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: url('https://www.transparenttextures.com/patterns/az-subtle.png'); /* African-style subtle pattern */
+            opacity: 0.1;
+            pointer-events: none;
+        }
+        .ff7-text-box {
+            background: rgba(40, 20, 10, 0.4);
+            border-left: 4px solid #D4AF37;
+            padding: 15px;
+            border-radius: 4px;
+        }
+        .glow-gold {
+            text-shadow: 0 0 15px rgba(212, 175, 55, 0.6);
+        }
+        .glow-blue {
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.8);
+        }
+        
         /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: #00F0FF; border-radius: 2px; }
-        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: #8A2BE2; border-radius: 2px; }
+        ::-webkit-scrollbar-track { background: #1a1005; }
     </style>
     <!-- SUPABASE -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -76,16 +114,16 @@
         display: none; justify-content: center; align-items: center; 
         backdrop-filter: blur(5px);">
         
-        <div style="border: 1px solid #d4af37; padding: 40px; background: #0a0a0a; text-align: center; max-width: 500px; box-shadow: 0 0 30px rgba(212,175,55,0.2);">
-            <h2 class="font-tech" style="color: #ff3232; letter-spacing: 3px; font-size: 2em; margin-bottom: 20px;">SYSTEM OFFLINE</h2>
-            <p style="color: #aaa; font-family: 'Courier New', monospace; line-height: 1.5; margin-bottom: 20px;">
-                Navigator, deine Verbindung zur Matrix ist instabil. Die meisten Sektoren sind verschlüsselt.
+        <div style="border: 1px solid #d4af37; padding: 40px; background: #1a1005; text-align: center; max-width: 500px; border-radius: 12px; box-shadow: 0 0 40px rgba(212,175,55,0.3);">
+            <h2 class="font-tech" style="color: #d4af37; letter-spacing: 3px; font-size: 2em; margin-bottom: 20px;">ORACLE AWAKENING</h2>
+            <p style="color: #E0E0E0; font-family: 'Space Mono', monospace; line-height: 1.5; margin-bottom: 20px;">
+                Welcome, Artist. The Flow awaits. Connect your spirit to the map to begin your journey through the Battleground.
             </p>
-            <p style="color: #d4af37; font-family: 'Courier New'; font-weight: bold; margin-bottom: 30px; border: 1px dashed #d4af37; padding: 10px;">
-                MISSION: Öffne den CODEX und initiiere "PROTOCOL: THE FIRST BREATH", um die primären Systeme zu booten.
+            <p style="color: #8A2BE2; font-family: 'Space Mono', monospace; font-weight: bold; margin-bottom: 30px; border: 1px dashed #8A2BE2; padding: 10px;">
+                QUEST: Open the Codex and initiate your first Adinkra Seal to sync your frequency.
             </p>
-            <button onclick="window.location.href='pages/quest_board.html'" style="background: #d4af37; color: #000; font-weight: bold; padding: 15px 30px; border: none; cursor: pointer; font-family: 'Orbitron', sans-serif; transition: all 0.3s; text-transform: uppercase;">
-                Zum Codex wechseln 📖
+            <button onclick="window.location.href='pages/quest_board.html'" style="background: #d4af37; color: #1a1005; font-weight: bold; padding: 15px 30px; border: none; border-radius: 4px; cursor: pointer; font-family: 'Cinzel', serif; transition: all 0.3s; text-transform: uppercase;">
+                Open Codex 📖
             </button>
         </div>
     </div>
@@ -140,14 +178,14 @@
     </script>
 
     <!-- Top HUD -->
-    <header class="h-16 flex items-center justify-between px-6 bg-black/90 border-b border-white/10 z-50">
+    <header class="h-[69px] pt-[5px] flex items-center justify-between px-6 bg-black/90 border-b border-white/10 z-50 relative">
         <div class="flex items-center gap-4">
-            <span class="material-symbols-outlined text-animusBlue">handyman</span>
-            <h1 class="font-tech text-lg text-white uppercase tracking-widest">The Quest Forge</h1>
+            <span class="material-symbols-outlined text-animusBlue">map</span>
+            <h1 class="font-tech text-lg text-white uppercase tracking-widest">D Map | Quest World</h1>
         </div>
         <div class="flex gap-4 items-center">
             <div class="text-right">
-                <div class="text-[10px] text-white/50 uppercase">Active Agents</div>
+                <div class="text-[10px] text-white/50 uppercase">Active Artists</div>
                 <div class="font-bold text-animusBlue">24</div>
             </div>
             <button onclick="window.Helper.performLogout()" class="px-3 py-1 border border-red-500/50 text-red-500 text-xs hover:bg-red-500/10 uppercase tracking-widest">
@@ -167,6 +205,42 @@
                 <h2 class="text-xs text-white/50 uppercase tracking-[0.2em] mb-4 border-b border-white/10 pb-2">Planetary Systems</h2>
                 <div class="grid grid-cols-1 gap-2">
                     
+                    <!-- D MAP (MAIN) -->
+                    <a href="#" id="node-map" class="dashboard-node flex items-center gap-3 p-3 bg-animusBlue/10 hover:bg-animusBlue/20 border border-animusBlue/50 rounded transition-all group">
+                        <span class="material-symbols-outlined text-animusBlue group-hover:scale-110 transition-transform">map</span>
+                        <div>
+                            <div class="text-xs font-bold text-white uppercase">D Map</div>
+                            <div class="text-[9px] text-animusBlue">Global Quest Map</div>
+                        </div>
+                    </a>
+
+                    <!-- THE COLOSSEUM -->
+                    <a href="pages/colosseum.html" id="node-colosseum" class="dashboard-node flex items-center gap-3 p-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-yellow-500 rounded transition-all group">
+                        <span class="material-symbols-outlined text-yellow-500 group-hover:scale-110 transition-transform">stadium</span>
+                        <div>
+                            <div class="text-xs font-bold text-white uppercase">The Colosseum</div>
+                            <div class="text-[9px] text-white/50">Events & Live Battles</div>
+                        </div>
+                    </a>
+
+                    <!-- ARENA -->
+                    <a href="pages/arena.html" id="node-arena" class="dashboard-node flex items-center gap-3 p-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-red-500 rounded transition-all group">
+                        <span class="material-symbols-outlined text-red-500 group-hover:scale-110 transition-transform">swords</span>
+                        <div>
+                            <div class="text-xs font-bold text-white uppercase">Arena</div>
+                            <div class="text-[9px] text-white/50">Skill & Combat Zone</div>
+                        </div>
+                    </a>
+
+                    <!-- BROTHERHOOD (HALL OF LEGENDS) -->
+                    <a href="pages/hall_of_legends.html" id="node-brotherhood" class="dashboard-node flex items-center gap-3 p-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-purple-400 rounded transition-all group">
+                        <span class="material-symbols-outlined text-purple-400 group-hover:scale-110 transition-transform">diversity_3</span>
+                        <div>
+                            <div class="text-xs font-bold text-white uppercase">Hall of Legends</div>
+                            <div class="text-[9px] text-white/50">Guilds & Rankings</div>
+                        </div>
+                    </a>
+                    
                     <!-- CODEX (ALWAYS ONLINE) -->
                     <a href="pages/quest_board.html" id="node-codex" class="flex items-center gap-3 p-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-gold rounded transition-all group">
                         <span class="material-symbols-outlined text-yellow-500 group-hover:scale-110 transition-transform">auto_stories</span>
@@ -176,26 +250,8 @@
                         </div>
                     </a>
 
-                    <!-- ATLAS (LOCKED LVL 2) -->
-                    <a href="pages/quest_map.html" id="node-map" class="dashboard-node node-locked flex items-center gap-3 p-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-animusBlue rounded transition-all group">
-                        <span class="material-symbols-outlined text-animusBlue group-hover:scale-110 transition-transform">public</span>
-                        <div>
-                            <div class="text-xs font-bold text-white uppercase">The Atlas</div>
-                            <div class="text-[9px] text-white/50">Global Quest Map</div>
-                        </div>
-                    </a>
-
-                    <!-- SOUND WORLD (LOCKED LVL 2) -->
-                    <a href="pages/sound_dashboard.html" id="node-sound" class="dashboard-node node-locked flex items-center gap-3 p-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-purple-400 rounded transition-all group">
-                        <span class="material-symbols-outlined text-purple-400 group-hover:scale-110 transition-transform">graphic_eq</span>
-                        <div>
-                            <div class="text-xs font-bold text-white uppercase">Sound World</div>
-                            <div class="text-[9px] text-white/50">frequencies & Audio</div>
-                        </div>
-                    </a>
-
-                    <!-- BAZAAR (LOCKED LVL 3) -->
-                    <a href="pages/marketplace.html" id="node-bazaar" class="dashboard-node node-locked flex items-center gap-3 p-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-green-400 rounded transition-all group">
+                    <!-- BAZAAR (UNLOCKED) -->
+                    <a href="pages/marketplace.html" id="node-bazaar" class="dashboard-node flex items-center gap-3 p-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-green-400 rounded transition-all group">
                         <span class="material-symbols-outlined text-green-400 group-hover:scale-110 transition-transform">storefront</span>
                         <div>
                             <div class="text-xs font-bold text-white uppercase">High Palast Market</div>
@@ -203,79 +259,106 @@
                         </div>
                     </a>
 
-                    <!-- BROTHERHOOD (LOCKED LVL 4) -->
-                    <a href="pages/hall_of_legends.html" id="node-brotherhood" class="dashboard-node node-locked flex items-center gap-3 p-3 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-red-500 rounded transition-all group">
-                        <span class="material-symbols-outlined text-red-500 group-hover:scale-110 transition-transform">diversity_3</span>
-                        <div>
-                            <div class="text-xs font-bold text-white uppercase">Brotherhood</div>
-                            <div class="text-[9px] text-white/50">Hall of Legends</div>
-                        </div>
-                    </a>
-
                 </div>
             </div>
 
-            <!-- ANIMUS STATS (RPG LAYER) -->
+            <!-- FLOW CHARACTER STATS (RPG LAYER) -->
             <div class="mb-6">
-                <h2 class="text-xs text-white/50 uppercase tracking-[0.2em] mb-4 border-b border-white/10 pb-2">Animus Stats</h2>
+                <h2 class="text-xs text-white/50 uppercase tracking-[0.2em] mb-4 border-b border-white/10 pb-2">Flow Character Stats</h2>
                 
-                <div id="animus-stats-container" class="bg-black/40 border border-white/10 rounded p-3">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-xs font-bold text-animusBlue uppercase">Class: <span id="user-class-display" class="text-white">Unknown</span></span>
-                        <span class="text-[10px] text-gold uppercase" id="flow-points-display">FP: 0</span>
+                <div id="animus-stats-container" class="bg-black/40 border border-white/10 rounded-xl p-4 shadow-[0_0_15px_rgba(212,175,55,0.05)]">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-xs font-bold text-animusBlue uppercase">Mastery: <span id="user-class-display" class="text-white">Novice</span></span>
+                        <span class="text-[10px] text-gold uppercase font-mono" id="flow-points-display">XP: 0</span>
                     </div>
                     
-                    <div class="space-y-2 text-[10px] uppercase font-bold text-white/70">
-                         <!-- 5 Pillars -->
+                    <div class="space-y-3 text-[10px] uppercase font-bold text-white/70">
+                         <!-- 4 Pillars + 1 Extra -->
                          <div class="flex justify-between items-center">
-                             <span>Signal (Hack)</span>
-                             <div class="w-1/2 bg-gray-800 h-1 rounded relative group cursor-pointer" onclick="investPoint('signal')">
-                                 <div id="bar-signal" class="bg-blue-500 h-full w-0 transition-all"></div>
-                                 <span id="val-signal" class="absolute -top-3 right-0 text-[9px] text-blue-400">0</span>
+                             <span>Visual (Sankofa)</span>
+                             <div class="w-1/2 bg-gray-800 h-2 rounded relative group cursor-pointer" onclick="investPoint('visionary')">
+                                 <div id="bar-visionary" class="bg-purple-500 h-full w-0 transition-all rounded"></div>
+                                 <span id="val-visionary" class="absolute -top-4 right-0 text-[9px] text-purple-400 font-mono">0</span>
                              </div>
                          </div>
                          <div class="flex justify-between items-center">
-                             <span>Frequency (Social)</span>
-                             <div class="w-1/2 bg-gray-800 h-1 rounded relative group cursor-pointer" onclick="investPoint('frequency')">
-                                 <div id="bar-frequency" class="bg-purple-500 h-full w-0 transition-all"></div>
-                                 <span id="val-frequency" class="absolute -top-3 right-0 text-[9px] text-purple-400">0</span>
+                             <span>Audio (Nkyinkyim)</span>
+                             <div class="w-1/2 bg-gray-800 h-2 rounded relative group cursor-pointer" onclick="investPoint('arcane')">
+                                 <div id="bar-arcane" class="bg-blue-500 h-full w-0 transition-all rounded"></div>
+                                 <span id="val-arcane" class="absolute -top-4 right-0 text-[9px] text-blue-400 font-mono">0</span>
                              </div>
                          </div>
                          <div class="flex justify-between items-center">
-                             <span>Kinetic (Move)</span>
-                             <div class="w-1/2 bg-gray-800 h-1 rounded relative group cursor-pointer" onclick="investPoint('kinetic')">
-                                 <div id="bar-kinetic" class="bg-red-500 h-full w-0 transition-all"></div>
-                                 <span id="val-kinetic" class="absolute -top-3 right-0 text-[9px] text-red-400">0</span>
+                             <span>Movement (Kinetic)</span>
+                             <div class="w-1/2 bg-gray-800 h-2 rounded relative group cursor-pointer" onclick="investPoint('kinetic')">
+                                 <div id="bar-kinetic" class="bg-red-500 h-full w-0 transition-all rounded"></div>
+                                 <span id="val-kinetic" class="absolute -top-4 right-0 text-[9px] text-red-400 font-mono">0</span>
                              </div>
                          </div>
                          <div class="flex justify-between items-center">
-                             <span>Visual (Create)</span>
-                             <div class="w-1/2 bg-gray-800 h-1 rounded relative group cursor-pointer" onclick="investPoint('visual')">
-                                 <div id="bar-visual" class="bg-yellow-500 h-full w-0 transition-all"></div>
-                                 <span id="val-visual" class="absolute -top-3 right-0 text-[9px] text-yellow-400">0</span>
+                             <span>Culinary (Bese Saka)</span>
+                             <div class="w-1/2 bg-gray-800 h-2 rounded relative group cursor-pointer" onclick="investPoint('alchemist')">
+                                 <div id="bar-alchemist" class="bg-orange-500 h-full w-0 transition-all rounded"></div>
+                                 <span id="val-alchemist" class="absolute -top-4 right-0 text-[9px] text-orange-400 font-mono">0</span>
                              </div>
                          </div>
                          <div class="flex justify-between items-center">
-                             <span>Gnosis (Puzzle)</span>
-                             <div class="w-1/2 bg-gray-800 h-1 rounded relative group cursor-pointer" onclick="investPoint('gnosis')">
-                                 <div id="bar-gnosis" class="bg-green-500 h-full w-0 transition-all"></div>
-                                 <span id="val-gnosis" class="absolute -top-3 right-0 text-[9px] text-green-400">0</span>
+                             <span>Community (Boa Me)</span>
+                             <div class="w-1/2 bg-gray-800 h-2 rounded relative group cursor-pointer" onclick="investPoint('harmonizer')">
+                                 <div id="bar-harmonizer" class="bg-emerald-500 h-full w-0 transition-all rounded"></div>
+                                 <span id="val-harmonizer" class="absolute -top-4 right-0 text-[9px] text-emerald-400 font-mono">0</span>
                              </div>
                          </div>
                     </div>
-                    
+
+                    <!-- KINETIC SPECIFIC WIDGETS -->
+                    <div id="kinetic-widgets" class="mt-4 pt-4 border-t border-white/10 space-y-4" style="display: none;">
+                        <div class="space-y-1">
+                            <div class="flex justify-between text-[9px] uppercase tracking-widest text-gold font-bold">
+                                <span>Flow Energy (Stamina)</span>
+                                <span id="recovery-percent">92%</span>
+                            </div>
+                            <div class="w-full bg-gray-900 h-1.5 rounded-full overflow-hidden border border-white/5">
+                                <div id="recovery-bar" class="bg-gradient-to-r from-gold to-yellow-300 h-full w-[92%] shadow-[0_0_10px_rgba(212,175,55,0.5)] transition-all duration-1000"></div>
+                            </div>
+                        </div>
+                        <div class="space-y-1">
+                    <div id="character-vitals" class="mt-4 space-y-3">
+                        <!-- EXP BAR -->
+                        <div>
+                            <div class="flex justify-between text-[9px] uppercase tracking-widest text-gold mb-1">
+                                <span>Soul Level: <span id="soul-level">1</span></span>
+                                <span>EXP: <span id="exp-val">0</span>/1000</span>
+                            </div>
+                            <div class="w-full h-1 bg-white/10 rounded-full overflow-hidden">
+                                <div id="exp-bar" class="h-full bg-gold transition-all duration-500" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <!-- VITALITY / STAMINA -->
+                        <div>
+                            <div class="flex justify-between text-[9px] uppercase tracking-widest text-animusBlue mb-1">
+                                <span>Flow Vitality (Stamina)</span>
+                                <span id="stamina-val">100%</span>
+                            </div>
+                            <div class="w-full h-1 bg-white/10 rounded-full overflow-hidden">
+                                <div id="stamina-bar" class="h-full bg-animusBlue transition-all duration-300" style="width: 100%"></div>
+                            </div>
+                        </div>
+                    </div>
+
                     <button onclick="openClassModal()" id="btn-choose-class" style="display:none;" class="w-full mt-3 py-1 border border-animusBlue text-animusBlue text-[10px] uppercase hover:bg-animusBlue hover:text-black transition-colors">
                         Initialize Class
                     </button>
                 </div>
             </div>
 
-            <h2 class="text-xs text-white/50 uppercase tracking-[0.2em] mb-4 border-b border-white/10 pb-2">Active Sessions</h2>
+            <h2 class="text-xs text-white/50 uppercase tracking-[0.2em] mb-4 border-b border-white/10 pb-2">Active Quests / Seals</h2>
             
             <!-- Summoning Status -->
             <div class="bg-purple-900/10 border border-purple-500/30 p-3 rounded mb-6">
                 <div class="flex justify-between items-center mb-2">
-                    <span class="text-purple-400 font-bold text-xs uppercase">Summoning Circle</span>
+                    <span class="text-purple-400 font-bold text-xs uppercase">Sanctuary Sync</span>
                     <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
                 </div>
                 <div class="text-[10px] text-white/60 mb-2">Gate Open: 3 Slots Rem.</div>
@@ -285,7 +368,7 @@
             <!-- Flow Sync Override (Trinity Step) -->
             <div class="mb-6 p-4 border border-white/10 rounded-xl bg-black/40">
                 <div class="flex items-center justify-between mb-2">
-                    <span class="text-xs font-bold text-white uppercase tracking-widest">Flow Sync</span>
+                    <span class="text-xs font-bold text-white uppercase tracking-widest">Wu Wei Pause</span>
                     <label class="relative inline-flex items-center cursor-pointer">
                         <input type="checkbox" id="flow-sync-toggle" class="sr-only peer" onchange="toggleFlowSync()">
                         <div class="w-9 h-5 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-animusBlue"></div>
@@ -297,7 +380,7 @@
                 function toggleFlowSync() {
                     const active = document.getElementById('flow-sync-toggle').checked;
                     if(active) {
-                        alert("FLOW SYNC ACTIVE. System Paused.");
+                        alert("WU WEI ACTIVE. System Paused to recover Flow Energy.");
                         // Trigger Tutorial Completion if applicable
                         if(window.Flowee) window.Flowee.completeImperialStep(7, 500, "Compass of the First Hour Unlocked. You are the Architect.");
                     } else {
@@ -307,31 +390,18 @@
             </script>
 
             <!-- Live Sessions List -->
-            <div class="space-y-3">
-                <div class="flex items-center gap-3 p-2 hover:bg-white/5 rounded cursor-pointer">
-                    <div class="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center text-xs">📸</div>
-                    <div>
-                        <div class="text-sm font-bold text-white">Shoot: LX Factory</div>
-                        <div class="text-[10px] text-animusBlue">In Progress • 14m</div>
-                    </div>
-                </div>
-                <div class="flex items-center gap-3 p-2 hover:bg-white/5 rounded cursor-pointer">
-                    <div class="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center text-xs">🏎️</div>
-                    <div>
-                        <div class="text-sm font-bold text-white">TukTour: Alfama</div>
-                        <div class="text-[10px] text-green-400">Starting Soon</div>
-                    </div>
-                </div>
+            <div id="live-sessions-list" class="space-y-3">
+                <div class="text-[10px] text-white/30 italic">No active sectors detected.</div>
             </div>
         </section>
 
         <!-- CENTER: Imperial Map -->
         <section class="map-section bg-black relative">
-            <div id="forge-map" class="h-full w-full opacity-60"></div>
+            <div id="dmap-3d-container" class="h-full w-full absolute inset-0"></div>
             
             <!-- Overlay Info -->
-            <div class="absolute bottom-6 left-6 pointer-events-none">
-                <div class="text-4xl font-tech text-white/10 select-none">LISBON SECTOR</div>
+            <div class="absolute bottom-6 left-6 pointer-events-none z-10">
+                <div class="text-4xl font-tech text-white/10 select-none">LISBON BATTLEGROUND</div>
             </div>
         </section>
 
@@ -373,7 +443,7 @@
                 <div class="text-[9px] text-white/30 mt-2">Broadcasts to all active Scouts</div>
             </div>
 
-            <h2 class="text-xs text-white/50 uppercase tracking-[0.2em] mb-4 border-b border-white/10 pb-2">Quest Protocol</h2>
+            <h2 class="text-xs text-white/50 uppercase tracking-[0.2em] mb-4 border-b border-white/10 pb-2">System Oracle Quests</h2>
             
             <!-- Creation Form (QUEST 6 TRIGGER) -->
             <form id="create-quest-form" class="space-y-3 mb-6" onsubmit="return false;">
@@ -401,18 +471,10 @@
             </form>
             
             <!-- Review Queue -->
-            <h2 class="text-xs text-white/50 uppercase tracking-[0.2em] mb-4 border-b border-white/10 pb-2">Pending Reviews</h2>
-            <div class="space-y-2">
-                <div class="quest-card flex justify-between items-center group">
-                    <div>
-                        <div class="text-xs font-bold text-white">User: Kaito_99</div>
-                        <div class="text-[9px] text-white/50">Photo Submission</div>
-                    </div>
-                    <div class="flex gap-1 opacity-50 group-hover:opacity-100 transition-opacity">
-                        <button class="p-1 hover:text-green-400" title="Approve"><span class="material-symbols-outlined text-sm">check</span></button>
-                        <button class="p-1 hover:text-red-400" title="Reject"><span class="material-symbols-outlined text-sm">close</span></button>
-                    </div>
-                </div>
+            <div id="review-queue-list" class="space-y-2">
+                <!-- Data will be injected by quest_engine.js or dashboard logic -->
+                <div class="text-[10px] text-white/30 italic text-center py-4">No pending reviews in your sector.</div>
+            </div>
             <!-- IMPERIAL DECREE (MARKET UPLOAD) -->
             <h2 class="text-xs text-white/50 uppercase tracking-[0.2em] mb-4 border-b border-white/10 pb-2 mt-6">Imperial Decree</h2>
             
@@ -506,37 +568,284 @@
                     }
                 }
             </script>
-
     </div>
 
-    <!-- SCRIPTS -->
+    <!-- EVENT LIGHTBOX (Mastery Node UI) -->
+    <style>.bg-gold { background-color: #d4af37; }</style>
+    <div id="event-lightbox" class="fixed inset-0 z-[1000] flex items-center justify-center bg-black/80 backdrop-blur-xl hidden">
+        <div class="relative w-[900px] max-w-[95%] bg-[#0a0a0a] border border-white/10 rounded-3xl overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.8)] flex flex-row">
+            
+            <!-- LEFT: Media Section -->
+            <div class="w-1/2 relative bg-black flex items-center justify-center border-r border-white/5 h-[500px]">
+                <div id="lightbox-loader" class="absolute inset-0 flex items-center justify-center bg-black/60 z-10">
+                    <p class="text-gold font-cinzel text-[10px] tracking-[0.3em] animate-pulse">Synchronizing Flow...</p>
+                </div>
+                
+                <div id="flyer-placeholder" class="w-full h-full relative overflow-hidden hidden">
+                    <img src="assets/images/mastery_checkin_counter.png" class="w-full h-full object-cover brightness-50">
+                    <div class="absolute inset-0 flex items-center justify-center flex-col bg-black/40">
+                        <span class="material-symbols-outlined text-gold text-5xl mb-4 animate-pulse">login</span>
+                        <span class="text-[12px] text-white/80 uppercase tracking-[0.4em] font-black glow-blue">Mastery Check-In</span>
+                        <span class="text-[9px] text-gold/60 mt-2 uppercase tracking-widest font-bold italic">Waiting for specific node assets...</span>
+                    </div>
+                </div>
+                
+                <img id="event-flyer" src="" class="w-full h-full object-cover hidden" 
+                     onload="document.getElementById('lightbox-loader').style.display='none'; this.style.display='block'; document.getElementById('flyer-placeholder').style.display='none';"
+                     onerror="this.style.display='none'; document.getElementById('lightbox-loader').style.display='none'; document.getElementById('flyer-placeholder').style.display='flex';">
+                     
+                <video id="event-reel" src="" class="w-full h-full object-cover hidden" autoplay loop muted playsinline
+                     onloadeddata="document.getElementById('lightbox-loader').style.display='none'; this.style.display='block'; document.getElementById('flyer-placeholder').style.display='none';"
+                     onerror="this.style.display='none'; document.getElementById('lightbox-loader').style.display='none'; document.getElementById('flyer-placeholder').style.display='flex';"></video>
+            </div>
+
+            <!-- RIGHT: Content Section (Benin x FF7 Hybrid) -->
+            <div class="w-1/2 p-10 flex flex-col justify-between h-[500px] bg-gradient-to-br from-[#1a1005] to-[#0a0500]">
+                <div class="relative">
+                    <h2 id="event-title" class="text-3xl font-cinzel text-gold mb-1 tracking-[0.1em] uppercase glow-gold">Event Title</h2>
+                    <div class="flex items-center gap-3 mb-6">
+                        <span id="event-date" class="text-[10px] text-gold/80 font-mono uppercase tracking-[0.2em]">02 JUNE 2026</span>
+                        <div class="h-px flex-1 bg-gradient-to-r from-gold/40 to-transparent"></div>
+                    </div>
+
+                    <!-- EVENT SPECS -->
+                    <div id="event-specs" class="flex gap-4 mb-8">
+                        <div class="flex items-center gap-2 bg-gold/10 px-3 py-1 rounded border border-gold/20">
+                            <span class="material-symbols-outlined text-[14px] text-gold">schedule</span>
+                            <span class="text-[9px] uppercase tracking-widest text-gold/60">4 Hours</span>
+                        </div>
+                        <div class="flex items-center gap-2 bg-gold/10 px-3 py-1 rounded border border-gold/20">
+                            <span class="material-symbols-outlined text-[14px] text-gold">bolt</span>
+                            <span class="text-[9px] uppercase tracking-widest text-gold/60">High Energy</span>
+                        </div>
+                        <div class="flex items-center gap-2 bg-gold/10 px-3 py-1 rounded border border-gold/20">
+                            <span class="material-symbols-outlined text-[14px] text-gold">groups</span>
+                            <span class="text-[9px] uppercase tracking-widest text-gold/60">Limited Slots</span>
+                        </div>
+                    </div>
+
+                    <p id="event-desc" class="text-[13px] text-white/70 mb-8 leading-relaxed font-light ff7-text-box italic">Detailed description will appear here.</p>
+                    
+                    <!-- MERCHANT COUNTER (THEKE) - Benin Style -->
+                    <div id="merchant-container" style="display:none;" class="ff7-menu p-5 rounded-xl flex items-center gap-5 border-l-8 border-gold">
+                        <div class="relative w-20 h-20 rounded-lg border border-gold/40 overflow-hidden shrink-0 shadow-[0_0_20px_rgba(212,175,55,0.3)]">
+                            <img id="merchant-img" src="" class="w-full h-full object-cover brightness-110 sepia-[0.2]">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-[8px] text-gold/60 uppercase tracking-[0.3em] font-black mb-1">Station Elder</div>
+                            <h4 id="merchant-name" class="text-gold text-sm uppercase tracking-[0.1em] font-black mb-1">ORACLE</h4>
+                            <p id="merchant-dialogue" class="text-white/80 text-[10px] leading-tight font-mono">"Greetings, wanderer. The frequencies are aligned."</p>
+                        </div>
+                    </div>
+
+                    <!-- HEALING TIMER -->
+                    <div id="healing-timer-box" style="display:none;" class="mt-2 p-3 bg-gold/5 border border-gold/20 rounded-lg">
+                        <div class="flex justify-between text-[9px] text-gold uppercase mb-1 font-black">
+                            <span class="animate-pulse">Restoring Vitality...</span>
+                            <span id="dwell-countdown">20:00</span>
+                        </div>
+                        <div class="w-full h-1 bg-gold/20 rounded-full overflow-hidden">
+                            <div id="dwell-progress" class="h-full bg-gold w-0 shadow-[0_0_15px_#D4AF37]"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-4">
+                    <div id="standard-actions" class="flex flex-col gap-3">
+                        <div class="flex gap-4">
+                            <div class="flex-1">
+                                <button onclick="enterZone()" id="btn-enter-zone" class="w-full bg-gold text-black text-[12px] font-black py-4 uppercase tracking-[0.2em] hover:brightness-125 transition-all shadow-[0_4px_20px_rgba(212,175,55,0.4)] border-none cursor-pointer">Enter Zone</button>
+                                <p class="text-[8px] text-gold/60 mt-2 text-center uppercase tracking-widest font-bold">
+                                    <span class="text-cyan-400">🎲 Dice Entry:</span> Roll the Dice to enter. Lead to ticket purchase via Dice Arena.
+                                </p>
+                            </div>
+                            <div class="flex-1">
+                                <button onclick="joinCircle()" class="w-full border border-white/20 text-white/80 text-[11px] py-4 uppercase tracking-[0.1em] hover:bg-white/10 transition-all font-bold cursor-pointer">Join Circle</button>
+                                <p class="text-[8px] text-white/40 mt-2 text-center uppercase tracking-widest">Synchronize your frequency. Become an Artist in the Circle.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="healing-actions" style="display:none;" class="flex flex-col gap-2">
+                        <button id="btn-start-resting" onclick="startDwellHealing()" class="w-full bg-gradient-to-r from-[#8A2BE2] to-[#4B0082] text-white text-[13px] font-black py-5 uppercase tracking-[0.3em] hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_0_30px_rgba(138,43,226,0.5)] border-none rounded-xl cursor-pointer">
+                            Initiate Deep Rest
+                        </button>
+                        <p class="text-[9px] text-animusBlue text-center uppercase tracking-widest font-black animate-pulse">Deep Rest (20m): +200 XP, +100 Flow & +50 Karma Points</p>
+                    </div>
+
+                    <button id="event-insta-btn" style="display:none;" onclick="openInsta()" class="w-full border border-white/10 text-white/40 text-[9px] py-2 uppercase tracking-[0.3em] hover:bg-white/5 transition-all">Visit Instagram Profile</button>
+                </div>
+            </div>
+
+            <button onclick="closeLightbox()" class="absolute top-6 right-6 text-white/30 hover:text-white transition-colors z-20">
+                <span class="material-symbols-outlined text-3xl">close</span>
+            </button>
+        </div>
+    </div>
+    <script src="js/agents/lisbon_3d_map.js"></script>
+
     <script>
-        // --- MAP INIT ---
-        const map = L.map('forge-map', {
-            zoomControl: false,
-            attributionControl: false
-        }).setView([38.7223, -9.1393], 13);
+        // --- MAP CONTAINER ---
+        const mapContainer = document.getElementById('map-container');
 
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-            maxZoom: 19
-        }).addTo(map);
+        function openLightbox(event) {
+            const lightbox = document.getElementById('event-lightbox');
+            const loader = document.getElementById('lightbox-loader');
+            const flyer = document.getElementById('event-flyer');
+            const reel = document.getElementById('event-reel');
+            const placeholder = document.getElementById('flyer-placeholder');
+            const title = document.getElementById('event-title');
+            const date = document.getElementById('event-date');
+            const desc = document.getElementById('event-desc');
 
-        // Scout Markers (Simulated)
-        const scouts = [
-            {lat: 38.7100, lng: -9.1400},
-            {lat: 38.7300, lng: -9.1500},
-            {lat: 38.7200, lng: -9.1350}
-        ];
-        scouts.forEach(s => {
-            L.circleMarker([s.lat, s.lng], {
-                radius: 4,
-                fillColor: "#00F0FF",
-                color: "#000",
-                weight: 1,
-                opacity: 1,
-                fillOpacity: 0.8
-            }).addTo(map);
-        });
+            loader.style.display = 'flex';
+            flyer.style.display = 'none';
+            reel.style.display = 'none';
+            placeholder.style.display = 'none';
+            
+            // Check if there's a valid reel (video)
+            if (event.reel && typeof event.reel === 'string' && event.reel.length > 0) {
+                reel.src = event.reel;
+                flyer.src = ''; 
+                // Note: visibility is handled by onloadeddata/onerror in the HTML
+            } else {
+                flyer.src = event.flyer || 'assets/images/placeholder_event.jpg';
+                reel.src = ''; 
+                // Note: visibility is handled by onload/onerror in the HTML
+            }
+
+            title.innerText = event.title || "Unknown Vision";
+            date.innerText = event.date || "Timeline Syncing...";
+            desc.innerText = event.desc || "The Oracle is silent on this matter for now.";
+
+            const instaBtn = document.getElementById('event-insta-btn');
+            const merchantBox = document.getElementById('merchant-container');
+            const restBtnBox = document.getElementById('healing-actions');
+            const standardActions = document.getElementById('standard-actions');
+
+            if (event.insta) {
+                instaBtn.style.display = 'block';
+                instaBtn.onclick = () => window.open(event.insta, '_blank');
+            } else {
+                instaBtn.style.display = 'none';
+            }
+
+            // Merchant / Counter Logic
+            merchantBox.style.display = 'flex';
+            document.getElementById('merchant-img').src = event.merchant || 'assets/images/healing_oracle.png';
+            document.getElementById('merchant-name').innerText = event.merchantName || 'The Oracle';
+            document.getElementById('merchant-dialogue').innerText = event.welcome || `"Greetings, wanderer. How can I help you at ${event.title}?"`;
+
+            if (event.type === 'healing') {
+                restBtnBox.style.display = 'flex';
+                standardActions.style.display = 'none';
+            } else {
+                restBtnBox.style.display = 'none';
+                standardActions.style.display = 'flex';
+            }
+
+            lightbox.classList.remove('hidden');
+        }
+
+        let dwellInterval = null;
+        function startDwellHealing() {
+            const timerBox = document.getElementById('healing-timer-box');
+            const countdownEl = document.getElementById('dwell-countdown');
+            const progressEl = document.getElementById('dwell-progress');
+            const restBtn = document.getElementById('btn-start-resting');
+
+            timerBox.style.display = 'block';
+            restBtn.disabled = true;
+            restBtn.innerText = "Deep Rest in Progress...";
+            
+            let seconds = 20 * 60; // 20 minutes
+            const total = seconds;
+
+            if (dwellInterval) clearInterval(dwellInterval);
+            
+            if (window.VitalityAgent) window.VitalityAgent.setResting(true);
+
+            dwellInterval = setInterval(() => {
+                seconds--;
+                const m = Math.floor(seconds / 60);
+                const s = seconds % 60;
+                countdownEl.innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+                
+                const pct = ((total - seconds) / total) * 100;
+                progressEl.style.width = `${pct}%`;
+
+                if (seconds <= 0) {
+                    clearInterval(dwellInterval);
+                    timerBox.style.display = 'none';
+                    restBtn.disabled = false;
+                    restBtn.innerText = "Rest Complete! +100 Flow Points";
+                    if (window.VitalityAgent) {
+                        window.VitalityAgent.recharge(100);
+                        window.VitalityAgent.addKarma(50);
+                        window.VitalityAgent.addEXP(200);
+                    }
+                    if (window.Flowee) window.Flowee.talk(true, "Your soul has entered Flow. Your frequency is restored.", "celebrate");
+                }
+            }, 1000);
+        }
+
+        function closeLightbox() {
+            document.getElementById('event-lightbox').classList.add('hidden');
+            document.getElementById('event-reel').pause();
+        }
+
+        function enterZone() {
+            window.location.href = 'dice.html';
+        }
+
+        async function joinCircle() {
+            // Save the chosen event locally so Co-Op Field can display it
+            const eventTitle = document.getElementById('event-title').innerText;
+            const eventDate = document.getElementById('event-date').innerText;
+            localStorage.setItem('circle_selected_event', JSON.stringify({ title: eventTitle, date: eventDate }));
+
+            if(window.Flowee) window.Flowee.talk(true, "Synchronizing your frequency with the Artist collective...", "celebrate");
+            
+            try {
+                const client = window.supabaseClient;
+                if(!client) {
+                    console.log("Supabase Offline - proceeding locally");
+                    setTimeout(() => {
+                        window.location.href = 'pages/partner-scanner.html';
+                    }, 1000);
+                    return;
+                }
+
+                const { data: { user } } = await client.auth.getUser();
+                if(!user) {
+                    if(window.Flowee) window.Flowee.talk(true, "Authentication required to join the Circle. Redirecting to Partner Scanner...", "warn");
+                    setTimeout(() => {
+                        window.location.href = 'pages/partner-scanner.html';
+                    }, 2000);
+                    return;
+                }
+
+                const { data: profile } = await client.from('profiles').select('metadata').eq('id', user.id).single();
+                const currentMetadata = profile?.metadata || {};
+
+                const { error } = await client.from('profiles').update({
+                    metadata: { ...currentMetadata, role: 'Artist', joined_circle_at: new Date().toISOString() }
+                }).eq('id', user.id);
+
+                if(error) throw error;
+
+                if(window.Pusher) window.Pusher.showToast("Welcome to the Circle, Artist.", "success");
+                alert("Welcome to the Circle! You have been tagged as an Artist in the system.");
+                closeLightbox();
+            } catch(err) {
+                console.error(err);
+                // Fallback to local routing
+                setTimeout(() => {
+                    window.location.href = 'pages/partner-scanner.html';
+                }, 1000);
+            }
+        }
 
         // --- QUEST LOGIC ---
         function triggerGoldenHour() {
@@ -582,12 +891,26 @@
         });
     </script>
     <!-- CORE AGENTS -->
+    <script src="js/api_config.js"></script>
+    <script src="js/agents/supabase_client.js"></script>
     <script src="js/agents/agent.js"></script> <!-- Base Class -->
+    <script src="js/agents/global_ticker.js" defer></script>
+    <script src="js/agents/network_hub.js" defer></script>
+    <script src="js/agents/constructor_bot.js" defer></script>
+    <script src="js/agents/kingdom_science.js" defer></script>
+    <script src="js/agents/resonance_bridge.js" defer></script>
+    <script src="js/agents/social_matrix.js" defer></script>
+    <script src="js/agents/orbital_menu.js" defer></script>
+    <script src="js/agents/tutorial_core.js" defer></script>
+    <script src="js/agents/visual_integrity.js" defer></script>
+    <script src="js/agents/sound_engineer.js" defer></script>
     <script src="js/agents/flowee.js"></script> <!-- Visual Guide -->
     <script src="js/agents/language_matrix.js"></script>
     <script src="js/agents/master-brain.js"></script>
     <script src="js/agents/quest_engine.js"></script>
     <script src="js/agents/pusher.js"></script>
+    <script src="js/agents/flow_vitality.js"></script>
+    <script src="js/agents/event_rpg_logic.js"></script>
     <script src="js/agents/helper.js"></script>
     <script src="js/auth-handler.js"></script>
 
@@ -722,33 +1045,44 @@
     <div id="class-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:20000; justify-content:center; align-items:center;">
         <div style="max-width:800px; width:90%; background:#0a0a0a; border:1px solid #00f0ff; padding:30px; border-radius:10px; box-shadow:0 0 50px rgba(0,240,255,0.2);">
              <h2 class="font-tech text-3xl text-center text-animusBlue mb-6">CHOOSE YOUR PATH</h2>
-             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                 <div class="p-4 border border-white/20 hover:border-blue-500 cursor-pointer transition-all bg-white/5" onclick="selectClass('SPEAKER')">
-                     <h3 class="font-bold text-white text-xl mb-2">SPEAKER</h3>
-                     <p class="text-xs text-white/60">Masters of Frequency. Bonus to Social interactions and Team Buffs.</p>
-                     <div class="mt-2 text-blue-400 text-xs">+2 Frequency</div>
-                 </div>
-                 <div class="p-4 border border-white/20 hover:border-red-500 cursor-pointer transition-all bg-white/5" onclick="selectClass('RUNNER')">
-                     <h3 class="font-bold text-white text-xl mb-2">RUNNER</h3>
-                     <p class="text-xs text-white/60">Masters of Kinetic. Faster movement on map, reduced cooldowns.</p>
-                     <div class="mt-2 text-red-400 text-xs">+2 Kinetic</div>
-                 </div>
-                 <div class="p-4 border border-white/20 hover:border-yellow-500 cursor-pointer transition-all bg-white/5" onclick="selectClass('WEAVER')">
-                     <h3 class="font-bold text-white text-xl mb-2">WEAVER</h3>
-                     <p class="text-xs text-white/60">Masters of Visual. Required for Art Quests and Crafting.</p>
-                     <div class="mt-2 text-yellow-400 text-xs">+2 Visual</div>
-                 </div>
-                  <div class="p-4 border border-white/20 hover:border-green-500 cursor-pointer transition-all bg-white/5" onclick="selectClass('ORACLE')">
-                     <h3 class="font-bold text-white text-xl mb-2">ORACLE</h3>
-                     <p class="text-xs text-white/60">Masters of Gnosis. Solves puzzles instantly, sees hidden nodes.</p>
-                     <div class="mt-2 text-green-400 text-xs">+2 Gnosis</div>
-                 </div>
-                 <div class="p-4 border border-white/20 hover:border-purple-500 cursor-pointer transition-all bg-white/5" onclick="selectClass('TAGGER')">
-                     <h3 class="font-bold text-white text-xl mb-2">TAGGER</h3>
-                     <p class="text-xs text-white/60">Masters of Signal. Hacks nodes faster, harder to trace.</p>
-                     <div class="mt-2 text-purple-400 text-xs">+2 Signal</div>
-                 </div>
-             </div>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                  <!-- ARCANE -->
+                  <div class="p-4 border border-white/20 hover:border-blue-500 cursor-pointer transition-all bg-white/5" onclick="selectClass('ARCANE')">
+                      <h3 class="font-bold text-white text-xl mb-2 uppercase">Arcane</h3>
+                      <p class="text-xs text-white/60">Masters of the Binary. Fast data processing and system overrides.</p>
+                      <div class="mt-2 text-blue-400 text-xs">+2 Arcane</div>
+                  </div>
+                  <!-- HARMONIZER -->
+                  <div class="p-4 border border-white/20 hover:border-emerald-500 cursor-pointer transition-all bg-white/5" onclick="selectClass('HARMONIZER')">
+                      <h3 class="font-bold text-white text-xl mb-2 uppercase">Harmonizer</h3>
+                      <p class="text-xs text-white/60">Masters of Connection. Bonus to Social interactions and Group Flow.</p>
+                      <div class="mt-2 text-emerald-400 text-xs">+2 Harmonizer</div>
+                  </div>
+                  <!-- KINETIC -->
+                  <div class="p-4 border border-white/20 hover:border-red-600 cursor-pointer transition-all bg-white/5" onclick="selectClass('KINETIC')">
+                      <h3 class="font-bold text-white text-xl mb-2 uppercase">Kinetic</h3>
+                      <p class="text-xs text-white/60">The Athlete Path. For skaters, surfers, and martial artists. High recovery.</p>
+                      <div class="mt-2 text-red-500 text-xs">+2 Kinetic</div>
+                  </div>
+                  <!-- VISIONARY -->
+                  <div class="p-4 border border-white/20 hover:border-yellow-500 cursor-pointer transition-all bg-white/5" onclick="selectClass('VISIONARY')">
+                      <h3 class="font-bold text-white text-xl mb-2 uppercase">Visionary</h3>
+                      <p class="text-xs text-white/60">Masters of Design. Required for Art Quests and Creative Flow.</p>
+                      <div class="mt-2 text-yellow-500 text-xs">+2 Visionary</div>
+                  </div>
+                  <!-- ALCHEMIST -->
+                  <div class="p-4 border border-white/20 hover:border-orange-500 cursor-pointer transition-all bg-white/5" onclick="selectClass('ALCHEMIST')">
+                      <h3 class="font-bold text-white text-xl mb-2 uppercase">Alchemist</h3>
+                      <p class="text-xs text-white/60">Masters of the Seed. Crafting and Material Alchemization.</p>
+                      <div class="mt-2 text-orange-400 text-xs">+2 Alchemist</div>
+                  </div>
+                  <!-- SOUNDSMITH -->
+                  <div class="p-4 border border-white/20 hover:border-violet-500 cursor-pointer transition-all bg-white/5" onclick="selectClass('SOUNDSMITH')">
+                      <h3 class="font-bold text-white text-xl mb-2 uppercase">Soundsmith</h3>
+                      <p class="text-xs text-white/60">Masters of Resonance. Audio engineering and frequency control.</p>
+                      <div class="mt-2 text-violet-400 text-xs">+2 Soundsmith</div>
+                  </div>
+              </div>
              <button onclick="document.getElementById('class-modal').style.display='none'" class="w-full py-3 border border-white/20 text-white hover:bg-white/10 uppercase font-tech">DECIDE LATER</button>
         </div>
     </div>
@@ -822,7 +1156,7 @@
             // Define Base Stats
             let updates = { flow_class: className };
             if(className === 'SPEAKER') updates.stat_frequency = (userProfile.stat_frequency || 0) + 2;
-            if(className === 'RUNNER') updates.stat_kinetic = (userProfile.stat_kinetic || 0) + 2;
+            if(className === 'KINETIC') updates.stat_kinetic = (userProfile.stat_kinetic || 0) + 2;
             if(className === 'WEAVER') updates.stat_visual = (userProfile.stat_visual || 0) + 2;
             if(className === 'ORACLE') updates.stat_gnosis = (userProfile.stat_gnosis || 0) + 2;
             if(className === 'TAGGER') updates.stat_signal = (userProfile.stat_signal || 0) + 2;
@@ -900,23 +1234,13 @@
                 document.getElementById('tutorial-boot-overlay').style.display = 'flex';
             }
 
-            // 2. PROGRESSIVE DISCLOSURE (Freischaltungen)
+            // FORCE UNLOCK ALL FOR FINAL STAGING
+            unlockNode('node-sound', 'AUDIO LINK ESTABLISHED');
+            unlockNode('node-map', 'GPS UPLINK SECURED');
+            unlockNode('node-bazaar', 'MERCHANT ENCRYPTION BROKEN');
+            unlockNode('node-brotherhood', 'SYNDICATE UPLINK ESTABLISHED');
             
-            // Level 2: Sound World & Map gehen online
-            if (userLevel >= 2) {
-                unlockNode('node-sound', 'AUDIO LINK ESTABLISHED');
-                unlockNode('node-map', 'GPS UPLINK SECURED');
-            }
-            
-            // Level 3: Bazaar geht online
-            if (userLevel >= 3) {
-                unlockNode('node-bazaar', 'MERCHANT ENCRYPTION BROKEN');
-            }
-
-            // Level 4: Turf Wars (Brotherhood) gehen online
-            if (userLevel >= 4) {
-                unlockNode('node-brotherhood', 'SYNDICATE UPLINK ESTABLISHED');
-            }
+            console.log(`[SYSTEM BOOT] Full Access Override Enabled`);
         }
 
         function unlockNode(nodeId, bootMessage) {

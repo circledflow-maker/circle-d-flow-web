@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -18,327 +18,355 @@
     <link rel="stylesheet" href="../css/styles.css">
     
     <style>
-        /* PERGAMENT STYLES */
+        /* ANCIENT PARCHMENT & BENIN VIBE */
         body {
-            background-color: #0F0A13; /* Void Background */
-            background-image: url('https://www.transparenttextures.com/patterns/black-scales.png');
-            color: white;
-        }
-        
-        .pergament-scroll {
-            background-color: #FDFBF7;
-            background-image: url("https://www.transparenttextures.com/patterns/aged-paper.png");
-            box-shadow: 0 0 50px rgba(0,0,0,0.8);
-            border-radius: 2px;
-            border: 1px solid #D7CCC8;
-            transform: rotate(-0.5deg);
+            background: #08040a url('../benin_bg.png') no-repeat center center fixed;
+            background-size: cover;
             color: #3E2723;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
-        
-        .pergament-scroll::before, .pergament-scroll::after {
-            content: '';
-            position: absolute;
-            left: 0; right: 0;
-            height: 24px;
-            background: linear-gradient(to bottom, #8D6E63, #5D4037);
-            box-shadow: 0 5px 10px rgba(0,0,0,0.5);
-            border-radius: 4px;
-            z-index: 10;
-        }
-        
-        .pergament-scroll::before { top: -12px; }
-        .pergament-scroll::after { bottom: -12px; }
 
-        .horizon-bar {
-            /* Fallback/Local def if styles.css fails */
+        body::before {
+            content: '';
             position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 95%;
-            max-width: 1200px;
-            height: 60px;
-            background: rgba(15, 10, 19, 0.95);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 215, 0, 0.2);
-            border-radius: 30px;
-            display: flex;
+            inset: 0;
+            background: radial-gradient(circle at center, rgba(18, 8, 24, 0.4) 0%, rgba(0, 0, 0, 0.9) 100%);
+            z-index: -1;
+        }
+
+        .parchment-scroll {
+            background: #f4e4bc url('https://www.transparenttextures.com/patterns/paper-fibers.png');
+            box-shadow: 
+                0 30px 60px rgba(0,0,0,0.8),
+                inset 0 0 100px rgba(139, 69, 19, 0.2);
+            border: 20px solid transparent;
+            border-image: url('https://www.transparenttextures.com/patterns/dark-matter.png') 30 round;
+            position: relative;
+            color: #3E2723;
+            border-radius: 4px;
+        }
+
+        /* 3-COLUMN HEADER SYNC */
+        .horizon-bar {
+            display: grid !important;
+            grid-template-columns: 1fr 2fr 1fr !important;
             align-items: center;
-            justify-content: space-between;
-            padding: 0 25px;
-            z-index: 50;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+            padding: 0 30px;
+            background: rgba(18, 8, 24, 0.95);
+            border-bottom: 1px solid rgba(255, 174, 66, 0.3);
+            z-index: 100;
+            height: 64px;
+            position: fixed; top: 0; left: 0; width: 100%;
+        }
+        .header-section { display: flex; align-items: center; }
+        .header-left { justify-content: flex-start; }
+        .header-center { justify-content: center; }
+        .header-right { justify-content: flex-end; gap: 15px; }
+
+        input, textarea, select {
+            background: rgba(139, 69, 19, 0.05) !important;
+            border: 1px solid rgba(139, 69, 19, 0.3) !important;
+            color: #3E2723 !important;
+            border-radius: 0px !important;
+            border-bottom: 2px solid #8B4513 !important;
         }
         
-        /* Form Overrides for Parchment */
-        .pergament-scroll input, .pergament-scroll textarea, .pergament-scroll select {
-            color: #3E2723 !important;
-            border-color: #A1887F !important;
-        }
-        .pergament-scroll input::placeholder, .pergament-scroll textarea::placeholder {
-            color: #8D6E63 !important;
+        .profile-upload-circle {
+            width: 80px; height: 80px;
+            border-radius: 50%;
+            border: 3px solid #8B4513;
+            overflow: hidden;
+            background: #D7CCC8;
+            cursor: pointer;
+            margin: 0 auto 20px;
+            position: relative;
         }
     </style>
 </head>
 
-<body class="bg-[#0F0A13] min-h-screen relative overflow-x-hidden selection:bg-electric selection:text-white">
+<body class="min-h-screen relative overflow-x-hidden">
 
-    <!-- HEADER (Horizon Bar) -->
-    <header class="horizon-bar">
-        <div class="flex items-center gap-4">
-            <a href="../index.html" class="flex items-center gap-2 group">
-                <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-gold to-amber-700 border border-gold/30 flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <span class="material-symbols-outlined text-black text-sm font-bold">token</span>
-                </div>
-                <span class="font-cinzel font-bold text-lg tracking-widest text-[#FFD700] group-hover:text-white transition-colors">GRAND BAZAAR</span>
+    <!-- NAV (Synchronized Horizon Bar) -->
+    <header class="fixed top-0 w-full z-[100] h-16 grid grid-cols-[1fr_2fr_1fr] items-center px-8 bg-black/90 border-b border-[#FFAE42]/20 backdrop-blur-md">
+        <div class="flex justify-start">
+            <a href="marketplace.html" class="flex items-center gap-2 text-[#FFAE42]/70 hover:text-[#FFAE42] transition-colors group">
+                <span class="material-symbols-outlined text-sm group-hover:-translate-x-1 transition-transform">arrow_back</span>
+                <span class="text-[10px] font-bold uppercase tracking-widest">Back to Village</span>
             </a>
         </div>
 
-        <div class="flex items-center gap-6">
-            <a href="marketplace.html" class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-mist hover:text-white transition-colors">
-                <span class="material-symbols-outlined text-base">storefront</span>
-                <span>Back to Market</span>
+        <div class="flex justify-center">
+            <h1 class="font-cinzel font-bold text-lg tracking-[0.4em] text-[#FFAE42] drop-shadow-lg">THE FORGE</h1>
+        </div>
+
+        <div class="flex justify-end gap-4 items-center">
+            <a href="marketplace-stall.html" class="px-4 py-1.5 border border-[#FFAE42]/50 text-[#FFAE42] text-[10px] font-bold uppercase rounded hover:bg-[#FFAE42] hover:text-black transition-all flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm">storefront</span> MY STALL
             </a>
+            <a href="dashboard.html" class="px-4 py-1.5 bg-[#FFAE42] text-black text-[10px] font-bold uppercase rounded hover:bg-white transition-all">ORBIT</a>
         </div>
     </header>
 
-    <main class="pt-32 pb-20 px-6 max-w-2xl mx-auto z-10 relative">
-        <!-- PERGAMENT SCROLL CONTAINER -->
-        <div class="pergament-scroll p-8 relative">
-            <div class="absolute -top-4 left-1/2 -translate-x-1/2 w-32 h-8 bg-[#8B4513] rounded shadow-lg flex items-center justify-center border-2 border-[#D2691E] z-20">
-                 <span class="text-[#FFD700] font-cinzel font-bold text-xs tracking-widest">IMPERIAL DECREE</span>
-            </div>
+    <main class="w-full h-screen pt-16 flex items-center justify-center p-6 z-10 relative">
+        <!-- PARCHMENT SCROLL HORIZONTAL -->
+        <div class="parchment-scroll w-full max-w-7xl h-full max-h-[85vh] p-8 flex flex-col md:flex-row gap-8 overflow-y-auto md:overflow-hidden">
+            
+            <!-- LEFT COLUMN: Identity & Settings -->
+            <div class="w-full md:w-1/4 flex flex-col border-b md:border-b-0 md:border-r border-[#8B4513]/20 pb-6 md:pb-0 md:pr-6 shrink-0">
+                <h1 class="text-3xl font-cinzel font-bold mb-1 text-[#3E2723] text-center">The Forge</h1>
+                <p class="text-[#3E2723]/60 mb-6 text-center font-serif italic text-xs">"Declare your offering."</p>
 
-            <h1 class="text-4xl font-cinzel font-bold mb-2 text-[#3E2723] text-center mt-4">List Your Flow</h1>
-            <p class="text-[#5D4037] mb-8 text-center font-serif italic">"By the seal of the Guilds, declare your offering to the Kingdom."</p>
+                <div class="text-center mb-8">
+                    <div class="profile-upload-circle group mx-auto mb-4" onclick="document.getElementById('profile-upload').click()">
+                        <img id="profile-preview" class="w-full h-full object-cover hidden">
+                        <div class="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/40 transition-all">
+                            <span class="material-symbols-outlined text-white">photo_camera</span>
+                        </div>
+                        <input type="file" id="profile-upload" accept="image/*" class="hidden" onchange="handleProfileImage(this)">
+                    </div>
+                    <input type="text" id="seller-name" placeholder="Seller Name" class="text-center text-xl font-cinzel font-bold w-full bg-transparent border-none outline-none focus:ring-0 placeholder:text-[#8B4513]/30">
+                    <p class="text-[9px] uppercase tracking-widest text-[#8B4513] mt-1">Merchant Identity</p>
+                </div>
 
-            <form id="upload-form" class="space-y-6">
+                <div class="flex-grow"></div>
 
-                <!-- Type Selector -->
-                <div class="grid grid-cols-3 gap-4">
+                <!-- Type Selector Column -->
+                <div class="flex flex-col gap-3">
+                    <label class="text-[9px] uppercase font-bold text-[#8B4513]/50 tracking-widest mb-1">Listing Type</label>
                     <label class="cursor-pointer">
                         <input type="radio" name="listing_type" value="manual" class="peer sr-only" checked onchange="toggleLinkField()">
-                        <div class="p-4 rounded bg-[#EFEBE9] border-2 border-[#D7CCC8] peer-checked:border-[#8B4513] peer-checked:bg-[#D7CCC8] transition-all text-center h-full flex flex-col justify-center shadow-inner hover:shadow-md">
-                            <span class="material-symbols-outlined text-2xl mb-2 text-[#5D4037]">handshake</span>
-                            <p class="font-bold text-sm text-[#3E2723]">Deal</p>
+                        <div class="p-3 rounded bg-black/5 border border-[#8B4513]/30 peer-checked:border-[#8B4513] peer-checked:bg-[#8B4513]/10 transition-all flex items-center gap-3">
+                            <span class="material-symbols-outlined text-xl text-[#8B4513]">handshake</span>
+                            <span class="font-bold text-xs uppercase text-[#8B4513]">Deal</span>
                         </div>
                     </label>
                     <label class="cursor-pointer">
                         <input type="radio" name="listing_type" value="external" class="peer sr-only" onchange="toggleLinkField()">
-                        <div class="p-4 rounded bg-[#EFEBE9] border-2 border-[#D7CCC8] peer-checked:border-[#8B4513] peer-checked:bg-[#D7CCC8] transition-all text-center h-full flex flex-col justify-center shadow-inner hover:shadow-md">
-                            <span class="material-symbols-outlined text-2xl mb-2 text-[#5D4037]">link</span>
-                            <p class="font-bold text-sm text-[#3E2723]">Link</p>
+                        <div class="p-3 rounded bg-black/5 border border-[#8B4513]/30 peer-checked:border-[#8B4513] peer-checked:bg-[#8B4513]/10 transition-all flex items-center gap-3">
+                            <span class="material-symbols-outlined text-xl text-[#8B4513]">link</span>
+                            <span class="font-bold text-xs uppercase text-[#8B4513]">Link</span>
                         </div>
                     </label>
-                    <!-- DRIVER OPTION -->
-                    <label class="cursor-pointer" id="driver-option">
-                        <input type="radio" name="listing_type" value="service_fleet" class="peer sr-only" onchange="toggleLinkField()">
-                        <div class="p-4 rounded bg-[#EFEBE9] border-2 border-[#D7CCC8] peer-checked:border-green-700 peer-checked:bg-green-100 peer-hover:bg-[#D7CCC8] transition-all text-center h-full flex flex-col justify-center relative overflow-hidden group shadow-inner hover:shadow-md">
-                            <span class="material-symbols-outlined text-2xl mb-2 text-green-700">rickshaw</span>
-                            <p class="font-bold text-sm text-green-800">TukTuk</p>
-                            <div class="absolute inset-0 bg-black/80 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity" id="driver-lock-overlay">
-                                 <span class="material-symbols-outlined text-xs mb-1 text-white">lock</span>
-                                 <span class="text-[8px] uppercase text-white">Verify First</span>
-                            </div>
+                    <label class="cursor-pointer">
+                        <input type="radio" name="listing_type" value="service" class="peer sr-only" onchange="toggleLinkField()">
+                        <div class="p-3 rounded bg-black/5 border border-[#8B4513]/30 peer-checked:border-[#8B4513] peer-checked:bg-[#8B4513]/10 transition-all flex items-center gap-3">
+                            <span class="material-symbols-outlined text-xl text-[#8B4513]">settings_accessibility</span>
+                            <span class="font-bold text-xs uppercase text-[#8B4513]">Skill</span>
                         </div>
                     </label>
                 </div>
+            </div>
 
-                <!-- Basic Info -->
-                <div class="space-y-4">
-                    <input type="text" name="title" required placeholder="Item Title" class="w-full bg-[#EFEBE9] border border-[#A1887F] rounded px-4 py-3 focus:border-[#5D4037] outline-none text-[#3E2723] placeholder-[#8D6E63] shadow-inner font-serif">
-
-                    <div class="grid grid-cols-2 gap-4" id="price-container">
-                        <div class="relative">
-                            <span class="absolute left-3 top-3 text-[#5D4037]">€</span>
-                            <input type="number" name="price_eur" id="input-eur" placeholder="Price (EUR)" step="0.01" class="w-full bg-[#EFEBE9] border border-[#A1887F] rounded pl-8 pr-4 py-3 focus:border-[#5D4037] outline-none text-[#3E2723] placeholder-[#8D6E63] shadow-inner font-mono font-bold font-mono" oninput="calculateFlow()">
+            <!-- CENTER & RIGHT: Artifact Form -->
+            <form id="upload-form" class="w-full md:w-3/4 flex flex-col md:flex-row gap-8">
+                
+                <!-- CENTER COLUMN: Image Upload -->
+                <div class="w-full md:w-1/2 h-64 md:h-full relative flex flex-col shrink-0">
+                    <div class="w-full h-full bg-black/5 rounded border-2 border-dashed border-[#8B4513]/30 flex flex-col items-center justify-center overflow-hidden relative cursor-pointer hover:bg-black/10 transition-colors"
+                         onclick="document.getElementById('image-upload').click()">
+                        <img id="preview-img" class="absolute inset-0 w-full h-full object-contain bg-black/90 hidden z-10">
+                        <div class="text-center p-4 z-0 bg-black/40 rounded-xl px-6 py-8 backdrop-blur-sm shadow-2xl border border-white/10" id="upload-hint">
+                            <span class="material-symbols-outlined text-[#FFAE42] text-6xl mb-4 drop-shadow-[0_0_15px_rgba(255,174,66,0.6)]">add_a_photo</span>
+                            <p class="text-sm uppercase font-bold text-[#FFAE42] tracking-widest drop-shadow-md">Upload Visual</p>
                         </div>
-                        <div class="relative">
-                            <span class="absolute left-3 top-3 text-[#FF6F00] text-xs pt-1 font-bold">Flow</span>
-                            <input type="number" name="price" id="input-flow" required placeholder="Credits" class="w-full bg-[#EFEBE9] border border-[#A1887F] rounded pl-12 pr-4 py-3 focus:border-[#5D4037] outline-none text-[#3E2723] placeholder-[#8D6E63] shadow-inner font-mono font-bold font-mono">
-                        </div>
+                        <input type="file" id="image-upload" accept="image/*" class="hidden" onchange="handleImage(this)">
                     </div>
-                    
-                     <div class="relative group">
-                        <div class="w-full h-32 bg-[#D7CCC8] rounded border-2 border-dashed border-[#8D6E63] flex items-center justify-center overflow-hidden relative cursor-pointer hover:bg-[#BCAAA4] transition-colors"
-                             onclick="document.getElementById('image-upload').click()">
-                            <img id="preview-img" class="absolute inset-0 w-full h-full object-cover hidden">
-                            <div class="text-center p-4">
-                                <span class="material-symbols-outlined text-[#5D4037] text-3xl mb-1">add_a_photo</span>
-                                <p class="text-xs text-[#5D4037]">Upload Artifact Visual</p>
-                            </div>
-                            <input type="file" id="image-upload" accept="image/*" class="hidden" onchange="handleImage(this)">
-                        </div>
+                </div>
+
+                <!-- RIGHT COLUMN: Details & Submit -->
+                <div class="w-full md:w-1/2 flex flex-col h-full space-y-5">
+                    <div class="relative">
+                        <label class="text-[9px] uppercase font-bold text-[#8B4513]/50 absolute -top-2 left-2 bg-[#f4e4bc] px-1">Artifact Title</label>
+                        <input type="text" name="title" required placeholder="E.g. Royal Benin Bronze" class="w-full px-4 py-3 outline-none font-serif text-lg bg-transparent">
                     </div>
 
-                    <textarea name="description" rows="4" required placeholder="Description..." class="w-full bg-[#EFEBE9] border border-[#A1887F] rounded px-4 py-3 focus:border-[#5D4037] outline-none text-[#3E2723] placeholder-[#8D6E63] shadow-inner font-serif"></textarea>
-
-                    <!-- TUKTUK SPECIFIC FIELDS -->
-                    <div id="tuktuk-fields" class="hidden space-y-4 p-4 bg-green-900/10 border border-green-700/30 rounded">
-                        <p class="text-xs font-bold uppercase text-green-800 tracking-widest border-b border-green-800/20 pb-1 mb-2">Fleet Operations Data</p>
-                        
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="text-[10px] uppercase text-green-900 mb-1 block font-bold">Service Mode</label>
-                                <select name="service_mode" class="w-full bg-[#EFEBE9] border border-green-700/30 rounded p-2 text-sm focus:border-green-700 outline-none text-[#3E2723]">
-                                    <option value="live">Live Hail (Now)</option>
-                                    <option value="calendar">Calendar Booking</option>
-                                    <option value="hybrid">Hybrid (Both)</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="text-[10px] uppercase text-green-900 mb-1 block font-bold">Vehicle Class</label>
-                                <select name="vehicle_type" class="w-full bg-[#EFEBE9] border border-green-700/30 rounded p-2 text-sm focus:border-green-700 outline-none text-[#3E2723]">
-                                    <option value="classic">Classic TukTuk</option>
-                                    <option value="electric">E-Tuk (Eco Boost)</option>
-                                    <option value="van">Imperial Van</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="text-[10px] uppercase text-green-900 mb-1 block font-bold">Primary Zone</label>
-                            <select name="zone" class="w-full bg-[#EFEBE9] border border-green-700/30 rounded p-2 text-sm focus:border-green-700 outline-none text-[#3E2723]">
-                                <option value="Alfama">Alfama (The Old Quarter)</option>
-                                <option value="Baixa">Baixa (The Grid)</option>
-                                <option value="Bairro Alto">Bairro Alto (The Heights)</option>
-                                <option value="Belem">Belem (The Harbor)</option>
-                                <option value="Expo">Expo (The Future)</option>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="relative">
+                            <label class="text-[9px] uppercase font-bold text-[#8B4513]/50 absolute -top-2 left-2 bg-[#f4e4bc] px-1">Guild Sector</label>
+                            <select name="category" class="w-full px-4 py-3 outline-none text-sm appearance-none bg-transparent">
+                                <option value="Arts">Arts (Visuals)</option>
+                                <option value="Sounds">Sounds (Audio)</option>
+                                <option value="Skills">Skills (Services)</option>
+                                <option value="Products">Products (Physical)</option>
+                                <option value="Healing">Healing (Wellness)</option>
                             </select>
                         </div>
+                        <div class="relative">
+                            <label class="text-[9px] uppercase font-bold text-[#8B4513]/50 absolute -top-2 left-2 bg-[#f4e4bc] px-1 z-10 flex justify-between w-[calc(100%-16px)]">
+                                <span>Price (FC)</span>
+                                <span id="fiat-preview" class="text-green-700 font-mono">~ 0.00 €</span>
+                            </label>
+                            <input type="number" id="price_flow" name="price_flow" required placeholder="1000" class="w-full px-4 py-3 outline-none font-mono font-bold pt-5 bg-transparent">
+                        </div>
                     </div>
-                </div>
 
-                <!-- Dynamic Link Field -->
-                <div id="external-link-field" class="hidden">
-                    <input type="url" name="external_url" placeholder="https://" class="w-full bg-[#EFEBE9] border border-[#A1887F] rounded px-4 py-3 focus:border-[#5D4037] outline-none text-[#3E2723] placeholder-[#8D6E63] shadow-inner">
-                </div>
-                
-                 <!-- Owner Info -->
-                <div class="p-4 bg-[#8D6E63]/10 rounded-xl space-y-4 border border-[#8D6E63]/20">
-                    <p class="text-xs font-bold uppercase text-[#8B4513] tracking-widest">Seller Requirement</p>
-                    <input type="email" name="owner_email" placeholder="Your Email (for notifications)" class="w-full bg-[#EFEBE9] border border-[#A1887F] rounded px-4 py-3 focus:border-[#5D4037] outline-none text-[#3E2723] placeholder-[#8D6E63] shadow-inner font-serif">
-                </div>
+                    <div class="relative flex-grow flex flex-col min-h-[150px]">
+                        <label class="text-[9px] uppercase font-bold text-[#8B4513]/50 absolute -top-2 left-2 bg-[#f4e4bc] px-1">Description</label>
+                        <textarea name="description" required placeholder="Describe the essence of this offering..." class="w-full px-4 py-3 outline-none font-serif italic flex-grow resize-none bg-transparent"></textarea>
+                    </div>
 
-                <!-- Submit Button -->
-                <button type="submit" class="w-full py-4 bg-[#8B4513] hover:bg-[#5D4037] text-[#FFD700] font-cinzel font-bold text-lg rounded shadow-[0_4px_0_#3E2723] active:shadow-none active:translate-y-[4px] transition-all flex items-center justify-center gap-2 border border-[#3E2723]">
-                    <span class="material-symbols-outlined">edit_square</span>
-                    Inscribe
-                </button>
-                
-                <p class="text-center text-[10px] uppercase tracking-widest text-[#8D6E63] mt-4">
-                    Seal of the Guilds Required
-                </p>
-
+                    <!-- Submit Button -->
+                    <button type="submit" class="w-full py-4 mt-auto bg-[#3E2723] hover:bg-black text-[#FFAE42] font-cinzel font-bold text-xl rounded shadow-2xl transition-all flex items-center justify-center gap-3 shrink-0 group">
+                        <span class="material-symbols-outlined group-hover:scale-125 transition-transform">seal</span>
+                        INSCRIBE IN LEDGER
+                    </button>
+                    <p class="text-center text-[8px] uppercase tracking-[0.3em] text-[#8B4513]/40 mt-1 shrink-0">The Grand Bazaar Protocol v4.5</p>
+                </div>
             </form>
         </div>
     </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/compressorjs@1.2.1/dist/compressor.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/agents/supabase_client.js?v=3.2"></script>
+    
     <script>
-        const isMuseum = window.location.search.includes('legacy=true');
-        
-        // FORM HANDLER
-        document.getElementById('upload-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const formData = new FormData(e.target);
-            
-            // Basic Logic Stub
-            const msg = isMuseum ? "Artifact Inscribed." : "Listing Published.";
-            alert(msg);
-            
-            if(window.Gamification) {
-                window.Gamification.addXP(50, 'Market Listing');
-            }
-            
-            window.location.href = isMuseum ? 'services-community.html' : 'marketplace.html';
-        });
+        let currentUser = null;
 
-        // Price Calc
-        function calculateFlow() {
-            const eur = document.getElementById('input-eur').value;
-            const flow = document.getElementById('input-flow');
-            if (eur) flow.value = Math.round(eur * 13);
+        // 1. LOAD PROFILE DATA
+        async function loadProfile() {
+            if(!window.supabaseClient) return;
+            const { data: { user } } = await window.supabaseClient.auth.getUser();
+            if(!user) return;
+            currentUser = user;
+
+            const { data: profile } = await window.supabaseClient
+                .from('profiles')
+                .select('full_name, avatar_url')
+                .eq('id', user.id)
+                .single();
+
+            if(profile) {
+                document.getElementById('seller-name').value = profile.full_name || "";
+                if(profile.avatar_url) {
+                    const img = document.getElementById('profile-preview');
+                    img.src = profile.avatar_url;
+                    img.classList.remove('hidden');
+                }
+            }
         }
 
-        // Image Preview
         function handleImage(input) {
             const preview = document.getElementById('preview-img');
+            const hint = document.getElementById('upload-hint');
             if(input.files && input.files[0]) {
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     preview.src = e.target.result;
                     preview.classList.remove('hidden');
+                    if(hint) hint.classList.add('hidden');
                 }
                 reader.readAsDataURL(input.files[0]);
             }
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-             setTimeout(() => {
-                 if(window.FleetAgent && window.FleetAgent.isDriver()) {
-                     const overlay = document.getElementById('driver-lock-overlay');
-                     if(overlay) overlay.style.display = 'none';
-                 }
-             }, 500);
+        async function handleProfileImage(input) {
+            if(!input.files || !input.files[0] || !currentUser) return;
+            const file = input.files[0];
+            const fileExt = file.name.split('.').pop();
+            const fileName = `avatars/${currentUser.id}_${Date.now()}.${fileExt}`;
+            
+            try {
+                const { data, error } = await window.supabaseClient.storage
+                    .from('artifact-visuals')
+                    .upload(fileName, file);
+                if(error) throw error;
+
+                const { data: { publicUrl } } = window.supabaseClient.storage
+                    .from('artifact-visuals')
+                    .getPublicUrl(fileName);
+
+                document.getElementById('profile-preview').src = publicUrl;
+                document.getElementById('profile-preview').classList.remove('hidden');
+                
+                // Update profile immediately
+                await window.supabaseClient.from('profiles')
+                    .update({ avatar_url: publicUrl })
+                    .eq('id', currentUser.id);
+
+            } catch(e) { alert("Error updating avatar: " + e.message); }
+        }
+
+        // 3. FORM SUBMISSION
+        document.getElementById('upload-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = "FORGING...";
+            btn.disabled = true;
+
+            try {
+                const formData = new FormData(e.target);
+                const sellerName = document.getElementById('seller-name').value;
+                const fileInput = document.getElementById('image-upload');
+                const file = fileInput.files[0];
+                let imageUrl = null;
+
+                // A. Update Profile Name if changed
+                await window.supabaseClient.from('profiles')
+                    .update({ full_name: sellerName })
+                    .eq('id', currentUser.id);
+
+                // B. Upload Product Image
+                if(file) {
+                    const fileName = `listings/${currentUser.id}_${Date.now()}.jpg`;
+                    const { data, error } = await window.supabaseClient.storage
+                        .from('artifact-visuals')
+                        .upload(fileName, file);
+                    if(error) throw error;
+                    const { data: { publicUrl } } = window.supabaseClient.storage
+                        .from('artifact-visuals')
+                        .getPublicUrl(fileName);
+                    imageUrl = publicUrl;
+                }
+
+                // C. Insert Artifact
+                const newItem = {
+                    vendor_id: currentUser ? currentUser.id : 'local-test-id',
+                    vendor_name: sellerName || 'Unknown Vendor',
+                    title: formData.get('title'),
+                    description: formData.get('description'),
+                    category: formData.get('category'),
+                    price_flow: parseInt(formData.get('price_flow')),
+                    price_fiat: (parseInt(formData.get('price_flow')) / 100).toFixed(2),
+                    image_url: imageUrl || document.getElementById('preview-img').src, // Use base64 if no URL
+                    is_active: true,
+                    created_at: new Date().toISOString()
+                };
+
+                let dbError = null;
+                try {
+                    const { error } = await window.supabaseClient.from('market_items').insert([newItem]);
+                    dbError = error;
+                } catch(e) { dbError = e; }
+
+                if(dbError) {
+                    console.warn("Supabase failed, falling back to local storage.", dbError);
+                    let offlineItems = JSON.parse(localStorage.getItem('cqr_offline_items') || '[]');
+                    newItem.id = 'local_' + Date.now();
+                    offlineItems.unshift(newItem);
+                    localStorage.setItem('cqr_offline_items', JSON.stringify(offlineItems));
+                }
+
+                alert("ARTIFACT SEALED. Es liegt nun in deinem Shop!");
+                window.location.href = 'marketplace.html';
+
+            } catch(err) { 
+                alert("Forge Error: " + err.message);
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
         });
 
-        // Toggle Logic Update
-        function toggleLinkField() {
-            if (isMuseum) return;
-            const types = document.getElementsByName('listing_type');
-            let selected;
-            for (const t of types) if (t.checked) selected = t.value;
+        // 4. PRICE CONVERSION LOGIC
+        document.getElementById('price_flow').addEventListener('input', (e) => {
+            const fc = parseInt(e.target.value) || 0;
+            const eur = (fc / 100).toFixed(2);
+            document.getElementById('fiat-preview').innerText = `~ ${eur} €`;
+        });
 
-            const externalField = document.getElementById('external-link-field');
-            const tuktukFields = document.getElementById('tuktuk-fields');
-
-            externalField.classList.add('hidden');
-            externalField.querySelector('input').removeAttribute('required');
-            tuktukFields.classList.add('hidden');
-
-            if (selected === 'external') {
-                externalField.classList.remove('hidden');
-                externalField.querySelector('input').setAttribute('required', 'true');
-            }
-
-            if(selected === 'service_fleet') {
-                if(window.FleetAgent && !window.FleetAgent.isDriver()) {
-                    triggerVerificationFlow();
-                    types[0].checked = true; 
-                    return;
-                }
-                tuktukFields.classList.remove('hidden');
-                const titleInput = document.querySelector('input[name="title"]');
-                if(!titleInput.value) titleInput.value = "Imperial TukTuk Service";
-                const descInput = document.querySelector('textarea[name="description"]');
-                if(!descInput.value) descInput.value = "Official transport service. Available for Tours and Fast-Travel.";
-            }
-        }
-
-        function triggerVerificationFlow() {
-            if(confirm("🏴 IMPERIAL FLEET REGISTRY\n\nTo list as a TukTuk Driver, you must verify your vehicle with the CQR Seal.\n\nUpload Photo now?")) {
-                const input = document.getElementById('image-upload');
-                input.click();
-                
-                input.onchange = async (e) => {
-                    const file = e.target.files[0];
-                    if(file) {
-                        alert("Analyzing Seal Pattern... Please wait.");
-                        if(window.FleetAgent) await window.FleetAgent.verifyDriver(file);
-                        alert("✅ VERIFICATION SUCCESSFUL\n\nWelcome to the Fleet, Captain. You may now list your services.");
-                        location.reload();
-                    }
-                };
-            }
-        }
+        window.addEventListener('load', loadProfile);
     </script>
-    
-    <!-- AGENTS -->
-    <div id="flowee-agent" class="fixed bottom-8 left-8 z-50 flex flex-col items-center group cursor-pointer"></div>
-    <script src='../js/agents/pusher.js' defer></script>
-    <script src='../js/agents/helper.js' defer></script>
-    <script src="../js/agents/fleet_agent.js"></script>
-    <script src="../js/agents/imperial_hud.js" defer></script>
 </body>
+</html>
+
 </html>

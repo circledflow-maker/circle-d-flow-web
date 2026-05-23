@@ -40,10 +40,16 @@
         </h1>
 
         <!-- QUEST 5 TRIGGER: ENTER BATTLE -->
-        <button id="enter-battle-btn" class="mb-8 px-8 py-4 bg-red-600/20 border-2 border-red-600 text-red-500 font-bold uppercase tracking-[0.3em] hover:bg-red-600 hover:text-white transition-all shadow-[0_0_30px_rgba(220,38,38,0.3)] animate-pulse">
-            <span class="material-symbols-outlined align-middle mr-2">swords</span>
-            Register for Combat
-        </button>
+        <div class="flex gap-4 mb-8">
+            <button onclick="window.location.href='../master_dashboard.html'" class="px-8 py-4 bg-black/40 border-2 border-animusBlue text-animusBlue font-bold uppercase tracking-[0.3em] hover:bg-animusBlue hover:text-black transition-all shadow-[0_0_30px_rgba(0,240,255,0.3)]">
+                <span class="material-symbols-outlined align-middle mr-2">map</span>
+                D Map
+            </button>
+            <button id="enter-battle-btn" class="px-8 py-4 bg-red-600/20 border-2 border-red-600 text-red-500 font-bold uppercase tracking-[0.3em] hover:bg-red-600 hover:text-white transition-all shadow-[0_0_30px_rgba(220,38,38,0.3)] animate-pulse">
+                <span class="material-symbols-outlined align-middle mr-2">swords</span>
+                Register for Combat
+            </button>
+        </div>>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-6xl">
             <!-- Door 1: The Arena (Ranked) -->
@@ -84,6 +90,19 @@
     <script src="../js/agents/supabase_client.js?v=3.2"></script>
     <script src="../js/agents/agent.js?v=3.2"></script>
     <script src="../js/agents/brain.js?v=3.2"></script>
+    <script src="../js/agents/global_ticker.js" defer></script>
+    <script src="../js/agents/network_hub.js" defer></script>
+    <script src="../js/agents/constructor_bot.js" defer></script>
+    <script src="../js/agents/kingdom_science.js" defer></script>
+    <script src="../js/agents/resonance_bridge.js" defer></script>
+    <script src="../js/agents/vault_space.js" defer></script>
+    <script src="../js/agents/horizon_bar.js" defer></script>
+    <script src="../js/agents/social_matrix.js" defer></script>
+    <script src="../js/agents/orbital_menu.js" defer></script>
+    <script src="../js/agents/tutorial_core.js" defer></script>
+    <script src="../js/agents/quest_controller.js" defer></script>
+    <script src="../js/agents/visual_integrity.js" defer></script>
+    <script src="../js/agents/sound_engineer.js" defer></script>
     <script src="../js/agents/flowee.js?v=3.2"></script>
     <script src="../js/agents/quest_engine.js?v=3.2"></script>
     <script src="../js/agents/imperial_hud.js?v=3.2"></script>

@@ -7,89 +7,108 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        electric: '#9A4DFF',
-                        dark: '#0F0A13',
-                        panel: '#1A1622',
-                        success: '#00FF94',
-                        danger: '#FF2A51'
-                    },
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif']
-                    }
-                }
-            }
+    <style>
+        body {
+            background: #08040a url('../benin_bg.png') no-repeat center center fixed;
+            background-size: cover;
+            color: #f4e4bc;
+            font-family: 'Plus Jakarta Sans', 'sans-serif';
         }
-    </script>
-    <!-- SOUND CREW AGENTS -->
-    <script src='../js/agents/sound_engineer.js' defer></script>
-    <script src='../js/agents/bass_pusher.js' defer></script>
-    <script src='../js/agents/tour_coordinator.js' defer></script>
-    <script src='../js/agents/sound_mission_control.js' defer></script>
-    <script src='../js/dashboard_logic.js' defer></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-             // Init Dashboard
-             if(window.SoundMissionControl) {
-                 window.SoundMissionControl.renderMissionTable('mission-list-body');
-             } else {
-                 // Retry if race condition
-                 setTimeout(() => {
-                     if(window.SoundMissionControl) window.SoundMissionControl.renderMissionTable('mission-list-body');
-                 }, 500);
-             }
-        });
-    </script>
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at center, rgba(62, 39, 35, 0.7) 0%, rgba(0, 0, 0, 0.95) 100%);
+            z-index: -1;
+        }
+
+        .sales-counter {
+            background: #3E2723 url('https://www.transparenttextures.com/patterns/dark-matter.png');
+            border-bottom: 8px solid #21110E;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+            position: relative;
+            z-index: 20;
+        }
+
+        .clay-slab {
+            background: rgba(62, 39, 35, 0.8) url('https://www.transparenttextures.com/patterns/paper-fibers.png');
+            border: 1px solid rgba(255, 174, 66, 0.2);
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+            border-radius: 12px;
+        }
+
+        .glow-electric {
+            text-shadow: 0 0 15px rgba(154, 77, 255, 0.6);
+        }
+    </style>
 </head>
-<body class="bg-dark text-white min-h-screen flex flex-col font-sans">
+<body class="text-white min-h-screen flex flex-col font-sans">
+
+    <!-- HORIZON BAR SYNC -->
+    <header class="fixed top-0 w-full z-[110] h-16 grid grid-cols-[1fr_2fr_1fr] items-center px-8 bg-black/90 border-b border-[#FFAE42]/20">
+        <div class="flex justify-start">
+            <a href="marketplace.html" class="flex items-center gap-2 text-[#FFAE42]/70 hover:text-[#FFAE42] transition-colors">
+                <span class="material-symbols-outlined">arrow_back</span>
+                <span class="text-[10px] font-bold uppercase tracking-widest">Back to Orbit</span>
+            </a>
+        </div>
+        <div class="flex justify-center">
+            <h1 class="font-cinzel font-bold text-lg tracking-[0.4em] text-[#FFAE42]">SOUND ATELIER</h1>
+        </div>
+        <div class="flex justify-end gap-4">
+             <div class="text-[10px] font-bold text-[#FFAE42]/60 uppercase tracking-widest">Master Engineer</div>
+        </div>
+    </header>
 
     <!-- The Gate (Lock Screen) -->
-    <div id="the-gate" class="fixed inset-0 z-[100] bg-dark flex flex-col items-center justify-center p-6">
+    <div id="the-gate" class="fixed inset-0 z-[120] bg-black/95 flex flex-col items-center justify-center p-6 backdrop-blur-3xl">
         <div class="mb-8 relative">
-            <div class="absolute inset-0 bg-electric/20 blur-xl rounded-full animate-pulse"></div>
-            <span class="material-symbols-outlined text-8xl text-electric relative z-10">lock</span>
+            <div class="absolute inset-0 bg-electric/20 blur-3xl rounded-full animate-pulse"></div>
+            <span class="material-symbols-outlined text-9xl text-electric relative z-10">tune</span>
         </div>
-        <h1 class="text-4xl font-bold mb-2 tracking-tighter">RESTRICTED FREQUENCY</h1>
-        <p class="text-white/50 mb-8 max-w-md text-center">Only DJ Qter and certified Sound Engineers may access the Sound-Command.</p>
+        <h1 class="text-4xl font-bold mb-2 tracking-tighter text-[#FFAE42]">SONIC RESONANCE</h1>
+        <p class="text-white/50 mb-8 max-w-md text-center">Only DJ Qter and certified Sound Engineers may access the Atelier.</p>
         
         <div class="flex flex-col gap-4 w-full max-w-xs">
-            <input type="password" id="access-code" placeholder="Enter Sonic Key..." 
+            <input type="password" id="access-code" placeholder="Pulse Code..." 
                 class="bg-white/5 border border-white/10 rounded-xl px-6 py-4 text-center text-xl tracking-[1em] focus:outline-none focus:border-electric transition-colors">
-            <button onclick="unlockConsole()" class="py-4 bg-electric text-white font-bold rounded-xl uppercase tracking-widest hover:bg-white hover:text-black transition-all shadow-[0_0_20px_rgba(154,77,255,0.4)]">
-                Initialize System
+            <button onclick="unlockConsole()" class="py-4 bg-[#3E2723] text-[#FFAE42] font-bold rounded-xl uppercase tracking-widest hover:bg-[#FFAE42] hover:text-black transition-all shadow-2xl">
+                Harmonize
             </button>
         </div>
-        <p id="error-msg" class="text-danger mt-4 text-sm hidden">ACCESS DENIED. FREQUENCY MISMATCH.</p>
     </div>
 
-    <!-- MAIN CONSOLE (Hidden by default) -->
-    <div id="console-ui" class="flex-1 flex flex-col hidden opacity-0 transition-opacity duration-1000 min-h-screen">
-        <!-- Top Bar -->
-        <header class="h-20 border-b border-white/5 bg-panel/90 backdrop-blur-md sticky top-0 z-50 flex items-center justify-between px-8 shadow-lg">
-            <div class="flex items-center gap-4">
-                <div class="w-3 h-3 bg-success rounded-full animate-pulse shadow-[0_0_10px_#00FF94]"></div>
-                <h1 class="text-xl font-bold tracking-widest text-white/80">SOUND-COMMAND v2.0 (BUDOKAI)</h1>
+    <!-- MAIN CONSOLE -->
+    <div id="console-ui" class="flex-1 flex flex-col hidden opacity-0 transition-opacity duration-1000 min-h-screen pt-16">
+        
+        <!-- SALES COUNTER AREA -->
+        <div class="sales-counter py-12 px-8 flex flex-col md:flex-row items-center gap-10">
+            <div class="relative">
+                <div class="w-40 h-40 rounded-full border-4 border-electric shadow-[0_0_40px_rgba(154,77,255,0.4)] overflow-hidden">
+                    <img id="master-avatar" src="../Assets/images/flowee_pirate_phoenix.png" class="w-full h-full object-cover">
+                </div>
+                <div class="absolute -bottom-2 -right-2 bg-electric text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-tighter shadow-xl">Master DJ</div>
             </div>
-            <div class="flex items-center gap-6">
-                 <div class="text-right">
-                    <div class="text-[10px] text-white/40 uppercase tracking-widest">System Status</div>
-                    <div class="text-success font-bold text-sm">OPTIMAL</div>
-                 </div>
-                 <button onclick="logout()" class="p-2 hover:bg-white/10 rounded-lg transition-colors text-white/50 hover:text-white">
-                    <span class="material-symbols-outlined">power_settings_new</span>
-                 </button>
+            
+            <div class="text-center md:text-left">
+                <h2 class="text-5xl font-cinzel font-bold text-white glow-electric mb-2">DJ Qter's Desk</h2>
+                <p class="font-mono text-electric/60 text-[10px] uppercase tracking-[0.5em]">Budokai Sound-Command • Lisbon</p>
+                <div class="flex gap-4 mt-4">
+                    <div class="clay-slab px-4 py-2 text-center border-electric/30 bg-electric/10">
+                        <div class="text-xl font-bold text-success">OPTIMAL</div>
+                        <div class="text-[8px] uppercase tracking-widest text-white/40">Frequency Status</div>
+                    </div>
+                </div>
             </div>
-        </header>
+        </div>
 
         <!-- Main Dashboard Grid -->
         <main class="flex-1 p-8 grid grid-cols-1 md:grid-cols-2 gap-8 pb-20">
             
             <!-- 1. Stage-Master (Tournament Control) -->
-            <div class="bg-panel border border-white/5 rounded-2xl p-6 relative group hover:border-electric/30 transition-colors">
+            <div class="clay-slab p-6 relative group hover:border-electric transition-colors">
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-lg font-bold flex items-center gap-2">
                         <span class="material-symbols-outlined text-electric">swords</span>

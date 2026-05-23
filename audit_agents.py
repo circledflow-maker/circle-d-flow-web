@@ -2,7 +2,7 @@ import os
 import re
 
 # Directory to scan
-ROOT_DIR = r"c:\Users\Utilizador\circle-d-flow-web"
+ROOT_DIR = r"d:\circle-d-flow-web"
 # Agents to ensure are present
 AGENTS = {
     'global_ticker.js': '<script src="js/agents/global_ticker.js" defer></script>',
