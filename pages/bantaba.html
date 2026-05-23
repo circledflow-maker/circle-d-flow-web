@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Bantaba - The Guild of Destiny</title>
+    
+    <!-- Fonts & Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    
+    <!-- Three.js & GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+    <style>
+        :root {
+            --haki-gold: #d4af37;
+            --dark-void: #0a0a0a;
+        }
+
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            background-color: var(--dark-void);
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            overflow: hidden; /* We handle scrolling via JS / custom container */
+        }
+
+        /* Manga Container */
+        #manga-container {
+            display: flex;
+            width: 300vw; /* 3 pages */
+            height: 100vh;
+            transition: transform 1.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+            will-change: transform;
+        }
+
+        .manga-page {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        /* 3D Canvases */
+        #canvas-page1, #canvas-page3 {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 1;
+        }
+
+        /* Overlays */
+        .page-overlay {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            pointer-events: none; /* Let clicks pass to 3D unless specified */
+        }
+
+        .interactive-layer {
+            pointer-events: auto;
+        }
+
+        /* UI Elements */
+        h1, h2, h3, .cinzel { font-family: 'Cinzel', serif; }
+        .gold-glow { text-shadow: 0 0 15px rgba(212,175,55,0.6); }
+
+        .btn-gold {
+            background: transparent;
+            border: 2px solid var(--haki-gold);
+            color: var(--haki-gold);
+            padding: 12px 30px;
+            font-family: 'Space Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(212,175,55,0.2) inset;
+        }
+        .btn-gold:hover {
+            background: var(--haki-gold);
+            color: black;
+            box-shadow: 0 0 20px rgba(212,175,55,0.6);
+        }
+
+        /* Bounty Board Grid */
+        .bounty-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 40px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .bounty-card {
+            background: rgba(20, 20, 20, 0.9);
+            border: 1px solid #333;
+            border-bottom: 3px solid var(--haki-gold);
+            padding: 20px;
+            position: relative;
+            transition: transform 0.3s;
+        }
+        .bounty-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--haki-gold);
+        }
+
+        .bounty-pin {
+            position: absolute;
+            top: -10px; left: 50%;
+            transform: translateX(-50%);
+            width: 15px; height: 15px;
+            background: #d4af37;
+            border-radius: 50%;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.5);
+        }
+
+        /* Ambient Dust */
+        .dust-particles {
+            position: absolute;
+            width: 100%; height: 100%;
+            background-image: radial-gradient(circle, rgba(212,175,55,0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.3;
+            animation: drift 20s linear infinite;
+            z-index: 0;
+            pointer-events: none;
+        }
+        @keyframes drift {
+            from { background-position: 0 0; }
+            to { background-position: 100px 100px; }
+        }
+
+        /* Return button */
+        .btn-return {
+            position: absolute;
+            top: 20px; left: 20px;
+            z-index: 100;
+            color: rgba(255,255,255,0.5);
+            font-family: 'Space Mono', monospace;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .btn-return:hover { color: var(--haki-gold); }
+
+    </style>
+</head>
+<body>
+
+    <!-- Language Selector -->
+    <div class="absolute top-6 right-6 z-[100] flex gap-2 font-mono text-sm">
+        <button onclick="changeLanguage('en')" class="text-gray-500 hover:text-[#d4af37] transition">EN</button><span class="text-gray-700">|</span>
+        <button onclick="changeLanguage('de')" class="text-gray-500 hover:text-[#d4af37] transition">DE</button><span class="text-gray-700">|</span>
+        <button onclick="changeLanguage('fr')" class="text-gray-500 hover:text-[#d4af37] transition">FR</button><span class="text-gray-700">|</span>
+        <button onclick="changeLanguage('pt')" class="text-gray-500 hover:text-[#d4af37] transition">PT</button>
+    </div>
+
+    <a href="../index.html" class="btn-return" data-i18n="btn_return">[ RETURN TO ORBIT ]</a>
+
+    <div id="manga-container">
+        
+        <!-- PAGE 1: THE COVER (GRIOT) -->
+        <div class="manga-page" id="page1">
+            <div id="canvas-page1"></div>
+            <div class="page-overlay justify-center items-center">
+                <div class="interactive-layer bg-black/60 p-6 md:p-10 backdrop-blur-md border border-[#d4af37]/30 flex flex-col items-center absolute top-10 w-[90%] max-w-2xl text-center">
+                    <h1 class="text-4xl md:text-5xl cinzel text-[#d4af37] gold-glow mb-4" data-i18n="page1_title">Willkommen im Bantaba</h1>
+                    <p class="text-gray-300 max-w-lg text-center mb-6 italic text-sm md:text-base" data-i18n="page1_desc">
+                        Der traditionelle Treffpunkt. Ein Safe Space ohne Vorurteile. Hier fließen Schicksal, Kultur und C4C-Philosophie zusammen.
+                    </p>
+                    <button class="btn-gold interactive-layer" onclick="app.turnPage(1)" data-i18n="page1_btn">Betrete die Gilde</button>
+                </div>
+                
+                <!-- Dialogue Box for Griot -->
+                <div id="griot-dialogue" class="absolute bottom-6 left-1/2 transform -translate-x-1/2 w-[95%] md:max-w-md bg-black/80 border-t-4 border-[#d4af37] p-4 md:p-6 z-50 hidden text-center shadow-2xl rounded-t-lg">
+                    <p class="text-[#d4af37] font-bold cinzel mb-2" data-i18n="griot_name">The Griot</p>
+                    <p class="text-sm font-mono text-gray-300 typing-effect" id="griot-text" data-i18n="griot_text">Ah, ein neuer Wanderer. Tritt näher, das Schicksal hat dich erwartet...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 2: THE BOUNTY BOARD -->
+        <div class="manga-page" id="page2" style="background: url('../assets/branding/cqr-bg-dark.jpg') center/cover;">
+            <div class="dust-particles"></div>
+            <div class="page-overlay interactive-layer flex flex-col h-full">
+                
+                <div class="w-full text-center py-8 bg-gradient-to-b from-black to-transparent">
+                    <h2 class="text-4xl md:text-5xl cinzel text-[#d4af37]" data-i18n="page2_title">Griot's Bounty Board</h2>
+                    
+                    <!-- Navigation Tabs -->
+                    <div class="mt-6 flex justify-center gap-8">
+                        <button id="tab-events" class="text-[#d4af37] font-bold border-b-2 border-[#d4af37] pb-1 cinzel text-xl transition-all" onclick="app.switchTab('events')" data-i18n="tab_events">Events</button>
+                        <button id="tab-bazar" class="text-gray-500 hover:text-[#d4af37] pb-1 cinzel text-xl transition-all" onclick="app.clickBazar()" data-i18n="tab_bazar">Bazar</button>
+                    </div>
+                </div>
+
+                <div class="flex-1 overflow-y-auto w-full max-w-6xl mx-auto px-4 pb-20 relative">
+                    
+                    <!-- EVENTS GRID -->
+                    <div id="grid-events" class="bounty-grid w-full">
+                        
+                        <!-- Event: C-RIZ -->
+                        <div class="bounty-card cursor-pointer" onclick="app.openLightbox('criz')">
+                            <div class="bounty-pin" style="background: #ef4444;"></div>
+                            <h3 class="text-2xl cinzel text-white mb-2" data-i18n="criz_title">C-RIZ LISTENING PARTY</h3>
+                            <p class="text-sm text-red-400 font-mono mb-4" data-i18n="criz_date">DATUM: 02. JUNI 2026</p>
+                            <p class="text-sm text-gray-400 mb-6" data-i18n="criz_desc">The genesis of the new wave. Exclusive early preview of the album in the Matrix.</p>
+                            <div class="text-right">
+                                <span class="text-red-500 font-mono text-sm hover:underline" data-i18n="btn_ticket_small">[ TICKET HOLEN ]</span>
+                            </div>
+                        </div>
+
+                        <!-- Event: Circle D Flow -->
+                        <div class="bounty-card cursor-pointer" onclick="app.openLightbox('circledflow')">
+                            <div class="bounty-pin" style="background: #d4af37;"></div>
+                            <h3 class="text-2xl cinzel text-white mb-2" data-i18n="cdf_title">CIRCLE D FLOW : THE AWAKENING</h3>
+                            <p class="text-sm text-[#d4af37] font-mono mb-4" data-i18n="cdf_date">DATUM: 15. OKT 2026</p>
+                            <p class="text-sm text-gray-400 mb-6" data-i18n="cdf_desc">Tritt in die heiligen Hallen ein. Erlebe das exklusive Line-up. Nimm die Schicksalsprüfung an.</p>
+                            <div class="text-right">
+                                <span class="text-emerald-500 font-mono text-sm hover:underline" data-i18n="btn_ticket_small">[ TICKET HOLEN ]</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- BAZAR GRID (Initially Hidden) -->
+                    <div id="grid-bazar" class="bounty-grid w-full hidden">
+                        
+                        <!-- Marketplace 1 -->
+                        <div class="bounty-card">
+                            <div class="bounty-pin" style="background: #a855f7;"></div>
+                            <h3 class="text-xl cinzel text-white mb-2">ITEM: MAFE SUPREME</h3>
+                            <p class="text-xs text-purple-400 font-mono mb-4">VON: KITCHEN CREW</p>
+                            <p class="text-sm text-gray-400 mb-6">Ein legendäres Gericht, das Körper und Seele heilt. Begrenzte Stückzahl im Bazar.</p>
+                            <div class="text-right">
+                                <span class="text-purple-400 font-mono text-sm cursor-pointer hover:text-white transition" data-i18n="btn_buy_small">[ ERWERBEN ]</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Marketplace 2 -->
+                        <div class="bounty-card">
+                            <div class="bounty-pin" style="background: #3b82f6;"></div>
+                            <h3 class="text-xl cinzel text-white mb-2">ITEM: RESIN ART CUBE</h3>
+                            <p class="text-xs text-blue-400 font-mono mb-4">VON: THE ALCHEMIST</p>
+                            <p class="text-sm text-gray-400 mb-6">Physisches Artefakt der Resonance. Speichert kinetische Energie.</p>
+                            <div class="text-right">
+                                <span class="text-blue-400 font-mono text-sm cursor-pointer hover:text-white transition" data-i18n="btn_buy_small">[ ERWERBEN ]</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                
+                <div class="absolute bottom-6 left-6">
+                    <button class="text-gray-500 hover:text-white font-mono transition bg-black/50 px-4 py-2 rounded" onclick="app.turnPage(0)" data-i18n="btn_back">← Zurück zum Eingang</button>
+                </div>
+
+                <!-- LIGHTBOX (Hidden) -->
+                <div id="event-lightbox" class="fixed inset-0 z-50 bg-black/90 hidden flex-col justify-center items-center backdrop-blur-sm p-4">
+                    <div class="bg-[#111] border border-[#d4af37] max-w-2xl w-[95%] p-6 md:p-8 relative rounded-lg shadow-2xl text-center break-words">
+                        <!-- Close btn -->
+                        <button onclick="app.closeLightbox()" class="absolute top-2 right-4 text-gray-500 hover:text-white text-4xl leading-none">&times;</button>
+                        
+                        <h2 id="lb-title" class="text-2xl md:text-4xl cinzel text-[#d4af37] mb-2 mt-4 md:mt-0">EVENT TITLE</h2>
+                        <p id="lb-date" class="text-sm font-mono text-gray-400 mb-4 border-b border-gray-800 pb-4">DATE</p>
+                        
+                        <p id="lb-desc" class="text-gray-300 leading-relaxed mb-6 text-sm md:text-base">Event description goes here...</p>
+
+                        <div class="bg-black/50 p-6 border border-gray-800 mb-8 rounded">
+                            <h4 class="font-mono text-[#d4af37] mb-2" data-i18n="lb_protocol">ZUGANGS-PROTOKOLL:</h4>
+                            <p class="text-sm text-gray-400" data-i18n="lb_desc_protocol">Um ein Ticket zu erhalten, musst du die Prüfung am antiken Becher bestehen. Der Würfel bestimmt deinen Beitrag.</p>
+                        </div>
+
+                        <button class="btn-gold w-full text-center" onclick="app.proceedToDice()" data-i18n="btn_get_ticket">Zum Ticket</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- PAGE 3: THE CUP & DICE -->
+        <div class="manga-page" id="page3">
+            <div id="canvas-page3"></div>
+            
+            <div class="page-overlay justify-start items-center pt-6 md:pt-10 pointer-events-none overflow-y-auto">
+                <div class="interactive-layer bg-black/60 p-6 md:p-8 backdrop-blur-md border border-[#d4af37]/30 flex flex-col items-center max-w-md w-[95%] text-center pointer-events-auto">
+                    
+                    <!-- Dynamic Event Flyer for Checkout -->
+                    <img id="checkout-flyer" src="" class="w-full h-48 md:h-64 object-cover border border-[#d4af37] mb-6 rounded shadow-lg hidden">
+                    
+                    <h2 class="text-3xl md:text-4xl cinzel text-[#d4af37] mb-2" data-i18n="page3_title">Zum Ticket</h2>
+                    <p class="text-sm text-gray-400 mb-6 font-mono" data-i18n="page3_desc">Tritt vor den antiken Becher. Dein Beitrag zum Event wird vom Flow bestimmt.</p>
+                    
+                    <!-- Auth Section -->
+                    <div id="auth-section" class="w-full mb-6">
+                        <p class="text-xs text-red-400 mb-3 font-mono text-left uppercase">Legitimation Erforderlich (Bot-Schutz)</p>
+                        
+                        <div class="flex flex-col gap-3 mb-4">
+                            <!-- Google Login -->
+                            <button id="btn-google-login" class="flex items-center justify-center gap-3 bg-white text-black font-bold py-2 px-4 rounded hover:bg-gray-200 transition" onclick="app.loginGoogle()">
+                                <svg class="w-5 h-5" viewBox="0 0 24 24"><path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                                Continue with Google
+                            </button>
+                        </div>
+                        
+                        <div class="flex items-center gap-2 mb-4">
+                            <hr class="flex-1 border-gray-700"><span class="text-xs text-gray-500 font-mono">ODER MAGIC LINK</span><hr class="flex-1 border-gray-700">
+                        </div>
+
+                        <input type="email" id="user-email" placeholder="DEINE E-MAIL..." class="w-full bg-black/50 border border-[#d4af37] text-white p-3 mb-2 font-mono text-center outline-none focus:ring-2 focus:ring-[#d4af37]" data-i18n="input_email">
+                        <button id="btn-magic-link" class="w-full bg-gray-800 text-white font-mono py-2 hover:bg-gray-700 transition border border-gray-600 mb-2" onclick="app.loginMagicLink()">Send Magic Link</button>
+                    </div>
+
+                    <!-- Logged In User Info (Hidden initially) -->
+                    <div id="user-info-section" class="w-full mb-6 hidden bg-black/50 border border-emerald-500/30 p-3 rounded text-left">
+                        <p class="text-xs text-emerald-400 font-mono mb-1 uppercase">✓ Verifiziert</p>
+                        <p id="logged-in-email" class="text-sm text-white truncate"></p>
+                        <button onclick="app.logout()" class="text-xs text-gray-500 hover:text-white underline mt-2">Ausloggen</button>
+                    </div>
+                    
+                    <!-- Only visible if logged in -->
+                    <button id="btn-roll" class="btn-gold w-full hidden" onclick="app.initiateRoll()" data-i18n="btn_roll">Hebe den Becher</button>
+                    
+                    <!-- Result Area -->
+                    <div id="roll-result" class="hidden mt-6 w-full">
+                        <div class="border-t border-[#d4af37]/30 pt-4 mb-2 text-sm text-gray-400 font-mono" data-i18n="result_title">Das Schicksal entschied:</div>
+                        <div id="result-amount" class="text-4xl cinzel text-white mb-6">€0</div>
+                        <a id="btn-checkout" href="#" class="inline-block bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 cinzel transition-colors w-full rounded text-center" data-i18n="btn_checkout">ZUR KASSE (STRIPE)</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="absolute bottom-6 left-6 md:bottom-10 md:left-10 interactive-layer z-[100]">
+                <button class="btn-gold bg-black/90 shadow-2xl font-bold" onclick="app.turnPage(1)" data-i18n="btn_back_board">← Zurück zum Board</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <!-- Stripe -->
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        const stripe = Stripe('pk_test_51PKYdIRwAOCIX9wGgH2U006J9N3rI7G96tBq3Rj0yQ9ZJc40J8z2XW86T7ZpWvVqG9X0B96JbW481z8aM71sM71s00kY7W7H9c'); 
+    </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/agents/supabase_client.js"></script>
+    <script src="../js/translations.js"></script>
+    <script src="../js/bantaba.js"></script>
+
+    <script>
+        // Apply translations on load
+        document.addEventListener('DOMContentLoaded', () => {
+            if(typeof applyTranslations === 'function') {
+                applyTranslations();
+            }
+        });
+    </script>
+</body>
+</html>
