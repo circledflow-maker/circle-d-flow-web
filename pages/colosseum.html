@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Colosseum | Circle D Flow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Space+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/styles.css">
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#8A2BE2",
+                        "haki-gold": "#D4AF37",
+                        "animusBlue": "#00F0FF",
+                        "imperial-red": "#D62828",
+                    },
+                    fontFamily: {
+                        "display": ["Cinzel", "serif"],
+                        "mono": ["Space Mono", "monospace"]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-[#050406] text-white min-h-screen font-display overflow-hidden">
+
+    <!-- HORIZON BAR -->
+    <div id="horizon-bar-root"></div>
+
+    <!-- MAIN HUB -->
+    <main class="relative z-10 w-full h-screen flex flex-col items-center justify-center p-4">
+        
+        <h1 class="text-6xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-600 via-yellow-400 to-yellow-600 mb-4 drop-shadow-[0_0_30px_rgba(212,175,55,0.5)]">
+            THE COLOSSEUM
+        </h1>
+        <p class="text-animusBlue tracking-widest uppercase text-sm mb-12 font-mono">Events & Live Battles</p>
+
+        <!-- EVENT TICKET TRIGGER -->
+        <button id="enter-colosseum-btn" onclick="window.location.href='../master_dashboard.html'" class="mb-8 px-8 py-4 bg-yellow-600/20 border-2 border-yellow-500 text-yellow-500 font-bold uppercase tracking-[0.3em] hover:bg-yellow-600 hover:text-black transition-all shadow-[0_0_30px_rgba(212,175,55,0.3)]">
+            <span class="material-symbols-outlined align-middle mr-2">stadium</span>
+            Return to D Map
+        </button>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl">
+            <!-- Event 1 -->
+            <a href="#" class="group relative aspect-video bg-black/40 border border-white/10 rounded-2xl overflow-hidden flex flex-col items-center justify-center hover:border-[#D4AF37] transition-all">
+                <div class="absolute inset-0 bg-gradient-to-br from-yellow-900/40 to-black opacity-50 group-hover:scale-110 group-hover:opacity-80 transition-all duration-700"></div>
+                <div class="relative z-10 text-center p-6">
+                    <span class="material-symbols-outlined text-6xl text-[#D4AF37] mb-4 group-hover:animate-pulse">confirmation_number</span>
+                    <h2 class="text-3xl font-bold">LIVING ROOM SESSIONS</h2>
+                    <p class="text-xs font-mono text-white/50 mt-2">Active Event | 1000 XP Reward</p>
+                </div>
+            </a>
+
+            <!-- Event 2 -->
+            <a href="#" class="group relative aspect-video bg-black/40 border border-white/10 rounded-2xl overflow-hidden flex flex-col items-center justify-center hover:border-animusBlue transition-all">
+                <div class="absolute inset-0 bg-gradient-to-br from-blue-900/40 to-black opacity-50"></div>
+                <div class="relative z-10 text-center p-6">
+                    <span class="material-symbols-outlined text-6xl text-animusBlue mb-4">festival</span>
+                    <h2 class="text-3xl font-bold">CIRCLE D FLOW 2026</h2>
+                    <p class="text-xs font-mono text-white/50 mt-2">Upcoming | Secret Garden LX</p>
+                </div>
+            </a>
+        </div>
+
+    </main>
+
+    <!-- AGENTS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/agents/supabase_client.js"></script>
+    <script src="../js/agents/agent.js"></script>
+    <script src="../js/agents/horizon_bar.js" defer></script>
+
+</body>
+</html>

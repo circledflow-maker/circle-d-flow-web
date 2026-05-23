@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Hub | The Bazaar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&family=Cinzel:wght@700&family=Space+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <style>
+        body {
+            background: #08040a url('../benin_bg.png') no-repeat center center fixed;
+            background-size: cover;
+            color: #f4e4bc;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at center, rgba(138, 43, 226, 0.2) 0%, rgba(0, 0, 0, 0.95) 100%);
+            z-index: -1;
+        }
+
+        .shop-container {
+            display: grid;
+            grid-template-columns: 450px 1fr;
+            height: 100vh;
+            padding-top: 64px;
+        }
+
+        .merchant-side {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            padding-bottom: 50px;
+            position: relative;
+        }
+
+        .merchant-img {
+            height: 85vh;
+            filter: drop-shadow(0 0 30px rgba(138, 43, 226, 0.3));
+            object-fit: contain;
+            transition: all 0.5s ease;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-15px) scale(1.02); }
+        }
+
+        .dialogue-bubble {
+            background: rgba(40, 20, 60, 0.95);
+            border: 2px solid #8A2BE2;
+            padding: 15px 20px;
+            border-radius: 15px;
+            position: absolute;
+            top: 65%;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            width: 80%;
+            max-width: 350px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.85rem;
+            z-index: 50;
+            opacity: 0;
+            animation: popIn 0.8s forwards 1s;
+            text-align: center;
+        }
+
+        @keyframes popIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .inventory-side {
+            padding: 40px;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border-left: 1px solid rgba(138, 43, 226, 0.1);
+        }
+
+        .clay-slab {
+            background: #2e1a3e url('https://www.transparenttextures.com/patterns/dark-matter.png');
+            border: 1px solid rgba(138, 43, 226, 0.2);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.5);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .clay-slab:hover {
+            border-color: #8A2BE2;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(138, 43, 226, 0.2);
+        }
+
+        .price-tag {
+            color: #8A2BE2;
+            font-family: 'Cinzel', serif;
+            font-weight: bold;
+        }
+
+        .buy-btn {
+            background: #8A2BE2;
+            color: white;
+            font-weight: bold;
+            text-transform: uppercase;
+            padding: 8px 20px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .buy-btn:hover {
+            background: white;
+            color: #8A2BE2;
+            box-shadow: 0 0 20px #8A2BE2;
+        }
+
+        /* CUSTOM SCROLLBAR */
+        .inventory-side::-webkit-scrollbar { width: 6px; }
+        .inventory-side::-webkit-scrollbar-thumb { background: #8A2BE2; border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+    <!-- HORIZON BAR -->
+    <header class="fixed top-0 w-full z-[100] h-16 grid grid-cols-[1fr_2fr_1fr] items-center px-8 bg-black/90 border-b border-[#8A2BE2]/20">
+        <div class="flex justify-start">
+            <a href="marketplace.html" class="flex items-center gap-2 text-[#8A2BE2]/70 hover:text-[#8A2BE2] transition-colors">
+                <span class="material-symbols-outlined">arrow_back</span>
+                <span class="text-[10px] font-bold uppercase tracking-widest">Back to Village</span>
+            </a>
+        </div>
+        <div class="flex justify-center">
+            <h1 class="font-cinzel font-bold text-lg tracking-[0.4em] text-[#8A2BE2]">SERVICE HUB</h1>
+        </div>
+        <div class="flex justify-end gap-6 items-center">
+             <div class="text-right">
+                <div class="text-[8px] text-[#8A2BE2]/50 uppercase">Network Nodes</div>
+                <div class="text-white font-bold text-sm">ACTIVE</div>
+             </div>
+             <span class="material-symbols-outlined text-[#8A2BE2]">hub</span>
+        </div>
+    </header>
+
+    <div class="shop-container">
+        <!-- MERCHANT -->
+        <div class="merchant-side">
+            <div class="dialogue-bubble">
+                "Efficiency is the bridge between dreams and reality. Which node can we activate for you?"
+            </div>
+            <img src="../Assets/images/services_coordinator.png" class="merchant-img" alt="Service Coordinator">
+            <div class="absolute bottom-10 left-1/2 -translate-x-1/2 text-center">
+                <h3 class="text-2xl font-cinzel text-[#8A2BE2] glow-orange">THE COORDINATOR</h3>
+                <p class="text-[10px] uppercase tracking-[0.3em] opacity-50">Architect of the community Mesh</p>
+            </div>
+        </div>
+
+        <!-- INVENTORY -->
+        <div class="inventory-side">
+            <div class="mb-10">
+                <h2 class="text-3xl font-cinzel mb-2">Professional Services</h2>
+                <p class="text-sm text-white/40 uppercase tracking-widest">Connect with Experts & Builders</p>
+            </div>
+
+            <div id="services-grid" class="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-20">
+                <!-- ITEMS INJECTED HERE -->
+                <div class="col-span-full py-20 text-center animate-pulse opacity-30">
+                    <span class="material-symbols-outlined text-6xl">settings_input_component</span>
+                    <p class="mt-4 uppercase tracking-[0.5em]">Linking Nodes...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/agents/supabase_client.js"></script>
+    <script>
+        async function loadServices() {
+            const grid = document.getElementById('services-grid');
+            const { data, error } = await window.supabaseClient
+                .from('market_items')
+                .select('*')
+                .eq('category', 'Services')
+                .eq('is_active', true);
+
+            if (error || !data || data.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full clay-slab text-center p-10 opacity-50">
+                        <p>No active services in the hub. Check back soon.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = '';
+            data.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'clay-slab flex gap-6 items-center';
+                div.innerHTML = `
+                    <div class="w-24 h-24 rounded bg-black/40 overflow-hidden flex-shrink-0">
+                        <img src="${item.image_url || '../Assets/images/default_artifact.png'}" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-lg font-bold text-white mb-1">${item.name}</h4>
+                        <p class="text-xs text-white/40 mb-3 line-clamp-1">${item.description}</p>
+                        <div class="flex justify-between items-center">
+                            <div class="price-tag">${item.price_fc} FC</div>
+                            <button class="buy-btn text-[10px]">Contract</button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(div);
+            });
+        }
+
+        window.onload = loadServices;
+    </script>
+</body>
+</html>

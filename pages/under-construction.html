@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circle D Flow | Under Construction</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #050505; color: white; overflow: hidden; height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .mystic-text { font-family: 'Cormorant Garamond', serif; letter-spacing: 0.1em; }
+        .mono-text { font-family: 'Space Mono', monospace; font-size: 0.7rem; color: rgba(255,255,255,0.4); }
+        .pulsing-aura {
+            position: absolute; width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(212,175,55,0.1) 0%, transparent 70%);
+            animation: pulse 4s infinite alternate;
+        }
+        @keyframes pulse { from { opacity: 0.3; transform: scale(1); } to { opacity: 0.7; transform: scale(1.2); } }
+    </style>
+</head>
+<body class="relative">
+    <div class="pulsing-aura"></div>
+    <div class="text-center z-10 p-10">
+        <h1 class="mystic-text text-5xl md:text-6xl font-bold mb-4 uppercase tracking-[0.3em]">Phase: Genesis</h1>
+        <div class="h-px w-24 bg-mystic-gold/50 mx-auto mb-10"></div>
+        <p class="mystic-text italic text-2xl text-white/80 mb-10">"The roots of this world are still growing. This path is being woven..."</p>
+        <p class="mono-text uppercase tracking-widest mb-10">Status: Under Construction | Protocol: Incomplete</p>
+        <button onclick="window.location.href='../index.html'" class="px-8 py-3 border border-white/20 hover:border-white/80 transition-all font-mono text-xs uppercase tracking-widest">Return to Singularity</button>
+    </div>
+<script src="../js/agents/pusher.js" defer></script>
+<script src="../js/agents/helper.js" defer></script>
+<script src="../js/agents/global_ticker.js" defer></script>
+<script src="../js/agents/network_hub.js" defer></script>
+<script src="../js/agents/constructor_bot.js" defer></script>
+<script src="../js/agents/kingdom_science.js" defer></script>
+<script src="../js/agents/resonance_bridge.js" defer></script>
+<script src="../js/agents/vault_space.js" defer></script>
+<script src="../js/agents/horizon_bar.js" defer></script>
+<script src="../js/agents/social_matrix.js" defer></script>
+<script src="../js/agents/orbital_menu.js" defer></script>
+    <script src="../js/agents/tutorial_core.js" defer></script>
+    <script src="../js/agents/quest_controller.js" defer></script>
+    <script src="../js/agents/visual_integrity.js" defer></script>
+    <script src="../js/agents/sound_engineer.js" defer></script>
+    <script src="../js/agents/flowee.js" defer></script>
+</body>
+</html>

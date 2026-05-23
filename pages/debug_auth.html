@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Auth Debugger | Circle D Flow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/agents/supabase_client.js?v=debug"></script>
+</head>
+<body class="bg-gray-900 text-white p-8 font-mono">
+    <h1 class="text-2xl text-yellow-500 mb-4">🔮 AUTH DEBUGGER</h1>
+    
+    <div class="space-y-4">
+        <div class="p-4 border border-gray-700 rounded bg-gray-800">
+            <h3 class="font-bold text-gray-400">1. CLIENT STATUS</h3>
+            <div id="status-client" class="text-blue-400">Checking...</div>
+        </div>
+
+        <div class="p-4 border border-gray-700 rounded bg-gray-800">
+            <h3 class="font-bold text-gray-400">2. LOCAL STORAGE TOKENS</h3>
+            <pre id="status-local" class="text-xs text-green-400 overflow-x-auto">Checking...</pre>
+        </div>
+
+        <div class="p-4 border border-gray-700 rounded bg-gray-800">
+            <h3 class="font-bold text-gray-400">3. ACTIVE SESSION (getSession)</h3>
+            <pre id="status-session" class="text-xs text-yellow-400 overflow-x-auto">Checking...</pre>
+        </div>
+
+        <div class="flex gap-4">
+            <button onclick="checkAuth()" class="px-4 py-2 bg-blue-600 rounded hover:bg-blue-500">🔄 RE-CHECK</button>
+            <button onclick="window.location.href='dashboard.html'" class="px-4 py-2 bg-green-600 rounded hover:bg-green-500">🚀 TRY DASHBOARD</button>
+            <button onclick="const s=localStorage.getItem('sb-agkmbaephgsnunlarntm-auth-token'); if(s) { alert('Token Found!'); } else { alert('No Token!'); }" class="px-4 py-2 bg-gray-600 rounded">🔍 TEST STORAGE</button>
+        </div>
+    </div>
+
+    <script>
+        async function checkAuth() {
+            const elClient = document.getElementById('status-client');
+            const elLocal = document.getElementById('status-local');
+            const elSession = document.getElementById('status-session');
+
+            // 1. Client
+            if(window.supabaseClient) {
+                elClient.innerHTML = "✅ Supabase Client Initialized";
+            } else {
+                elClient.innerHTML = "❌ Supabase Client MISSING (Wait...)";
+                setTimeout(checkAuth, 500);
+                return;
+            }
+
+            // 2. Local Storage
+            const key = 'sb-agkmbaephgsnunlarntm-auth-token';
+            const token = localStorage.getItem(key);
+            elLocal.innerText = token ? "✅ Token Found:\n" + token.substring(0, 50) + "..." : "❌ NO TOKEN FOUND IN LOCAL STORAGE";
+
+            // 3. Session
+            const { data, error } = await window.supabaseClient.auth.getSession();
+            if(error) {
+                elSession.innerText = "❌ ERROR: " + error.message;
+            } else if (data.session) {
+                elSession.innerText = "✅ SESSION ACTIVE for: " + data.session.user.email + "\nExpires At: " + new Date(data.session.expires_at * 1000).toLocaleString();
+            } else {
+                elSession.innerText = "⚠️ SESSION IS NULL (Not Logged In)";
+            }
+        }
+
+        setTimeout(checkAuth, 1000);
+    </script>
+<script src="../js/agents/pusher.js" defer></script>
+<script src="../js/agents/helper.js" defer></script>
+<script src="../js/agents/global_ticker.js" defer></script>
+<script src="../js/agents/network_hub.js" defer></script>
+<script src="../js/agents/constructor_bot.js" defer></script>
+<script src="../js/agents/kingdom_science.js" defer></script>
+<script src="../js/agents/resonance_bridge.js" defer></script>
+<script src="../js/agents/vault_space.js" defer></script>
+<script src="../js/agents/horizon_bar.js" defer></script>
+<script src="../js/agents/social_matrix.js" defer></script>
+<script src="../js/agents/orbital_menu.js" defer></script>
+    <script src="../js/agents/tutorial_core.js" defer></script>
+    <script src="../js/agents/quest_controller.js" defer></script>
+    <script src="../js/agents/visual_integrity.js" defer></script>
+    <script src="../js/agents/sound_engineer.js" defer></script>
+    <script src="../js/agents/flowee.js" defer></script>
+</body>
+</html>

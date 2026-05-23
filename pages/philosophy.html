@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Philosophy of Flow | KyheartLx</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,700;1,400&family=Space+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --terracotta: #E2725B;
+            --haki-gold: #d4af37;
+            --obsidian: #050505;
+        }
+
+        body {
+            background-color: var(--obsidian);
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.8;
+        }
+
+        .cinzel { font-family: 'Cinzel', serif; }
+        .garamond { font-family: 'Cormorant Garamond', serif; }
+        .mono { font-family: 'Space Mono', monospace; }
+
+        .hero-section {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(to bottom, transparent, var(--obsidian)),
+                        url('https://images.unsplash.com/photo-1542204165-65bf26472b9b?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(5, 5, 5, 0.6);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+        }
+
+        .philosophy-container {
+            max-width: 900px;
+            margin: -100px auto 100px;
+            padding: 80px;
+            background: #0a0a0a;
+            border: 1px solid rgba(226, 114, 91, 0.2);
+            position: relative;
+            z-index: 20;
+            box-shadow: 0 50px 100px rgba(0,0,0,0.9);
+        }
+
+        .dropcap {
+            float: left;
+            font-family: 'Cinzel', serif;
+            font-size: 5rem;
+            line-height: 1;
+            padding-right: 15px;
+            color: var(--terracotta);
+        }
+
+        .quote-block {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 2rem;
+            color: var(--haki-gold);
+            border-left: 2px solid var(--terracotta);
+            padding-left: 30px;
+            margin: 60px 0;
+            line-height: 1.4;
+        }
+
+        .btn-return {
+            margin-top: 40px;
+            padding: 15px 40px;
+            border: 1px solid var(--haki-gold);
+            color: var(--haki-gold);
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            font-size: 0.7rem;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .btn-return:hover {
+            background: var(--haki-gold);
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="cinzel text-5xl md:text-7xl tracking-[15px] mb-4">THE PHILOSOPHY</h1>
+            <p class="mono text-sm tracking-[8px] text-white/50 uppercase">KyheartLx // Lisbon Matrix</p>
+        </div>
+    </section>
+
+    <article class="philosophy-container">
+        <p class="garamond text-2xl mb-12 text-white/80 leading-relaxed">
+            <span class="dropcap">W</span>here does the artist end and the moment begin? In the winding stone alleys of Alfama or the ecstatic roar of a Lisbon jam session, I look for the same thing: <strong>Immersion.</strong>
+        </p>
+
+        <p class="mb-8">
+            Grounded in Mihaly Csikszentmihalyi’s psychology of "Flow," my work is a relentless pursuit of the present moment. It is the state where action and awareness merge—where the skateboarder, the musician, and the eye behind the lens become one with the frequency.
+        </p>
+
+        <div class="quote-block">
+            "The best moments in our lives are not the passive, receptive, relaxing times… The best moments usually occur if a person’s body or mind is stretched to its limits in a voluntary effort to accomplish something difficult and worthwhile."
+        </div>
+
+        <h2 class="cinzel text-3xl mb-8 text-[var(--terracotta)] tracking-widest">Documentary Authenticity</h2>
+        <p class="mb-8 font-light italic text-white/60">
+            I vehemently avoid generic "influencer" tropes. Lisbon is not a backdrop; it is a living, breathing participant in the ritual of life. My aesthetic is raw, documentary-style authenticity combined with high-quality, "Tiny Desk" intimacy.
+        </p>
+
+        <p class="mb-12">
+            My Flow Matrix classification system is not just a way to organize assets. It is a taxonomy of the human spirit. From the <strong>Kinesthetic</strong> rhythm of street basketball to the <strong>Narrative & Philosophy</strong> found in local interviews, every frame is an attempt to capture a fragment of the universal Flow.
+        </p>
+
+        <div class="text-center">
+            <h3 class="cinzel text-xl tracking-[10px] text-white/30 uppercase mb-8">Join the Flow</h3>
+            <button class="btn-return" onclick="window.history.back()">Return to Sanctuary</button>
+        </div>
+    </article>
+
+<script src="../js/agents/pusher.js" defer></script>
+<script src="../js/agents/helper.js" defer></script>
+<script src="../js/agents/global_ticker.js" defer></script>
+<script src="../js/agents/network_hub.js" defer></script>
+<script src="../js/agents/constructor_bot.js" defer></script>
+<script src="../js/agents/kingdom_science.js" defer></script>
+<script src="../js/agents/resonance_bridge.js" defer></script>
+<script src="../js/agents/vault_space.js" defer></script>
+<script src="../js/agents/horizon_bar.js" defer></script>
+<script src="../js/agents/social_matrix.js" defer></script>
+<script src="../js/agents/orbital_menu.js" defer></script>
+    <script src="../js/agents/tutorial_core.js" defer></script>
+    <script src="../js/agents/quest_controller.js" defer></script>
+    <script src="../js/agents/visual_integrity.js" defer></script>
+    <script src="../js/agents/sound_engineer.js" defer></script>
+    <script src="../js/agents/flowee.js" defer></script>
+</body>
+</html>
