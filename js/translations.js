@@ -135,6 +135,12 @@ function applyTranslations() {
     const t = translations[lang];
     if(!t) return;
 
+    // Update Language Dropdown Display
+    const langDisplay = document.getElementById('current-lang-display');
+    if(langDisplay) {
+        langDisplay.innerText = lang.toUpperCase();
+    }
+
     document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
         if(t[key]) {

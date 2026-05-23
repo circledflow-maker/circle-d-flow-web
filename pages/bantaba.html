@@ -158,11 +158,17 @@
 <body class="notranslate">
 
     <!-- Language Selector -->
-    <div class="absolute top-6 right-6 z-[100] flex gap-2 font-mono text-sm">
-        <button onclick="changeLanguage('en')" class="text-gray-500 hover:text-[#d4af37] transition">EN</button><span class="text-gray-700">|</span>
-        <button onclick="changeLanguage('de')" class="text-gray-500 hover:text-[#d4af37] transition">DE</button><span class="text-gray-700">|</span>
-        <button onclick="changeLanguage('fr')" class="text-gray-500 hover:text-[#d4af37] transition">FR</button><span class="text-gray-700">|</span>
-        <button onclick="changeLanguage('pt')" class="text-gray-500 hover:text-[#d4af37] transition">PT</button>
+    <div class="absolute top-6 right-6 z-[100] group font-mono text-sm">
+        <button class="bg-[#111] border border-[#d4af37]/50 text-[#d4af37] px-3 py-1 rounded hover:bg-white/10 transition flex items-center gap-1">
+            <span id="current-lang-display">DE</span>
+            <span class="text-[10px]">▼</span>
+        </button>
+        <div class="absolute right-0 mt-2 bg-black/90 border border-[#d4af37]/50 rounded shadow-xl hidden group-hover:block w-full text-center divide-y divide-[#d4af37]/20">
+            <button onclick="changeLanguage('en')" class="w-full text-gray-400 hover:text-[#d4af37] py-2 hover:bg-white/5 transition block">EN</button>
+            <button onclick="changeLanguage('de')" class="w-full text-gray-400 hover:text-[#d4af37] py-2 hover:bg-white/5 transition block">DE</button>
+            <button onclick="changeLanguage('fr')" class="w-full text-gray-400 hover:text-[#d4af37] py-2 hover:bg-white/5 transition block">FR</button>
+            <button onclick="changeLanguage('pt')" class="w-full text-gray-400 hover:text-[#d4af37] py-2 hover:bg-white/5 transition block">PT</button>
+        </div>
     </div>
 
     <a href="../index.html" class="btn-return" data-i18n="btn_return">[ RETURN TO ORBIT ]</a>
@@ -172,8 +178,8 @@
         <!-- PAGE 1: THE COVER (GRIOT) -->
         <div class="manga-page" id="page1">
             <div id="canvas-page1"></div>
-            <div class="page-overlay justify-center items-center">
-                <div class="interactive-layer bg-black/60 p-6 md:p-10 backdrop-blur-md border border-[#d4af37]/30 flex flex-col items-center absolute top-10 w-[90%] max-w-2xl text-center">
+            <div class="page-overlay justify-start md:justify-center items-center pt-24 md:pt-0 overflow-y-auto pointer-events-auto pb-48">
+                <div class="interactive-layer bg-black/60 p-6 md:p-10 backdrop-blur-md border border-[#d4af37]/30 flex flex-col items-center w-[90%] max-w-2xl text-center mt-10 md:mt-0">
                     <h1 class="text-4xl md:text-5xl cinzel text-[#d4af37] gold-glow mb-4" data-i18n="page1_title">Willkommen zu Circle D Flow</h1>
                     <p class="text-gray-300 max-w-lg text-center mb-6 italic text-sm md:text-base" data-i18n="page1_desc">
                         Dieser Bereich ist Bantaba, der traditionelle Treffpunkt. Ein Safe Space ohne Vorurteile. Hier fließen Schicksal, Kultur und C4C-Philosophie zusammen.

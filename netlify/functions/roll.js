@@ -13,8 +13,42 @@ exports.handler = async (event, context) => {
             return { statusCode: 400, body: JSON.stringify({ error: 'Email is required' }) };
         }
 
-        // Generate Roll (1 to 6)
-        const rolledValue = Math.floor(Math.random() * 6) + 1;
+        let rolledValue = null;
+
+        // Connect to Supabase
+        const supabaseUrl = process.env.SUPABASE_URL;
+        const supabaseKey = process.env.SUPABASE_ANON_KEY;
+        let dbClient = null;
+
+        if (supabaseUrl && supabaseKey) {
+            const { createClient } = require('@supabase/supabase-js');
+            dbClient = createClient(supabaseUrl, supabaseKey);
+            
+            // Check if this user already rolled for this event
+            const { data: existingRoll, error: fetchError } = await dbClient
+                .from('user_rolls')
+                .select('rolled_value')
+                .eq('email', email)
+                .eq('event_id', eventId)
+                .single();
+                
+            if (existingRoll && !fetchError) {
+                // Use the existing roll!
+                rolledValue = existingRoll.rolled_value;
+            }
+        }
+
+        // If no existing roll found or no DB connection, generate a new one
+        if (!rolledValue) {
+            rolledValue = Math.floor(Math.random() * 6) + 1;
+            
+            // Save it to Supabase if DB connection exists
+            if (dbClient) {
+                await dbClient.from('user_rolls').insert([
+                    { email: email, event_id: eventId, rolled_value: rolledValue }
+                ]);
+            }
+        }
         
         // Product Logic
         let productName = 'Circle D Flow Ticket';

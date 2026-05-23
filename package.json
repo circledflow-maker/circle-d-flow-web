@@ -2,6 +2,7 @@
   "name": "circle-d-flow-web",
   "version": "1.0.0",
   "dependencies": {
+    "@supabase/supabase-js": "^2.106.1",
     "cors": "^2.8.6",
     "express": "^5.2.1",
     "stripe": "^14.14.0"
