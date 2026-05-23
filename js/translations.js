@@ -126,12 +126,12 @@ const translations = {
 };
 
 function changeLanguage(lang) {
-    localStorage.setItem('bantaba_lang', lang);
+    localStorage.setItem('cqr_lang', lang);
     location.reload();
 }
 
 function applyTranslations() {
-    const lang = localStorage.getItem('bantaba_lang') || 'de'; // Default to German
+    const lang = localStorage.getItem('cqr_lang') || 'de'; // Default to German
     const t = translations[lang];
     if(!t) return;
 

@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="google" content="notranslate">
     <title>Bantaba - The Guild of Destiny</title>
     
     <!-- Fonts & Tailwind -->
@@ -154,7 +155,7 @@
 
     </style>
 </head>
-<body>
+<body class="notranslate">
 
     <!-- Language Selector -->
     <div class="absolute top-6 right-6 z-[100] flex gap-2 font-mono text-sm">
@@ -265,8 +266,8 @@
                 </div>
 
                 <!-- LIGHTBOX (Hidden) -->
-                <div id="event-lightbox" class="fixed inset-0 z-50 bg-black/90 hidden flex-col justify-center items-center backdrop-blur-sm p-4">
-                    <div class="bg-[#111] border border-[#d4af37] max-w-2xl w-[95%] p-6 md:p-8 relative rounded-lg shadow-2xl text-center break-words">
+                <div id="event-lightbox" class="fixed inset-0 z-50 bg-black/90 hidden flex-col justify-center items-center backdrop-blur-sm p-4 overflow-y-auto">
+                    <div class="bg-[#111] border border-[#d4af37] w-full max-w-md p-6 relative rounded-lg shadow-2xl text-center my-auto">
                         <!-- Close btn -->
                         <button onclick="app.closeLightbox()" class="absolute top-2 right-4 text-gray-500 hover:text-white text-4xl leading-none">&times;</button>
                         
@@ -291,14 +292,16 @@
         <div class="manga-page" id="page3">
             <div id="canvas-page3"></div>
             
-            <div class="page-overlay justify-start items-center pt-6 md:pt-10 pointer-events-none overflow-y-auto">
+            <div class="page-overlay justify-start items-center pt-6 md:pt-10 pointer-events-auto overflow-y-auto pb-32">
                 <div class="interactive-layer bg-black/60 p-6 md:p-8 backdrop-blur-md border border-[#d4af37]/30 flex flex-col items-center max-w-md w-[95%] text-center pointer-events-auto">
                     
                     <!-- Dynamic Event Flyer for Checkout -->
-                    <img id="checkout-flyer" src="" class="w-full h-48 md:h-64 object-cover border border-[#d4af37] mb-6 rounded shadow-lg hidden">
-                    
-                    <h2 class="text-3xl md:text-4xl cinzel text-[#d4af37] mb-2" data-i18n="page3_title">Zum Ticket</h2>
-                    <p class="text-sm text-gray-400 mb-6 font-mono" data-i18n="page3_desc">Tritt vor den antiken Becher. Dein Beitrag zum Event wird vom Flow bestimmt.</p>
+                    <div id="page3-header-text">
+                        <img id="checkout-flyer" src="" class="w-full h-32 md:h-64 object-cover border border-[#d4af37] mb-6 rounded shadow-lg hidden transition-all duration-500">
+                        
+                        <h2 class="text-3xl md:text-4xl cinzel text-[#d4af37] mb-2" data-i18n="page3_title">Zum Ticket</h2>
+                        <p class="text-sm text-gray-400 mb-6 font-mono" data-i18n="page3_desc">Tritt vor den antiken Becher. Dein Beitrag zum Event wird vom Flow bestimmt.</p>
+                    </div>
                     
                     <!-- Auth Section -->
                     <div id="auth-section" class="w-full mb-6">
@@ -368,6 +371,38 @@
                 applyTranslations();
             }
         });
+    </script>
+
+    <!-- Cookie Banner -->
+    <div id="cookie-banner" class="fixed bottom-0 left-0 w-full bg-black/95 border-t border-[#d4af37]/50 z-[9999] p-4 flex flex-col md:flex-row items-center justify-between text-sm transition-transform transform translate-y-full duration-500 font-mono">
+        <div class="text-gray-300 mb-4 md:mb-0 max-w-3xl text-center md:text-left">
+            Wir verwenden Cookies (wie z.B. das Speichern deiner Sprache), um deine Erfahrung zu verbessern. Durch die weitere Nutzung stimmst du unserer <a href="privacy.html" class="text-[#d4af37] underline">Datenschutzerklärung</a> zu.
+        </div>
+        <div class="flex gap-4">
+            <button onclick="acceptCookies()" class="bg-[#d4af37] text-black px-4 py-2 font-bold hover:bg-white transition">Akzeptieren</button>
+            <button onclick="declineCookies()" class="border border-gray-500 text-gray-300 px-4 py-2 hover:bg-gray-800 transition">Ablehnen</button>
+        </div>
+    </div>
+    <script>
+        function checkCookies() {
+            if(!localStorage.getItem('cookie_consent')) {
+                setTimeout(() => {
+                    const banner = document.getElementById('cookie-banner');
+                    if(banner) banner.classList.remove('translate-y-full');
+                }, 1500);
+            }
+        }
+        function acceptCookies() {
+            localStorage.setItem('cookie_consent', 'accepted');
+            const banner = document.getElementById('cookie-banner');
+            if(banner) banner.classList.add('translate-y-full');
+        }
+        function declineCookies() {
+            localStorage.setItem('cookie_consent', 'declined');
+            const banner = document.getElementById('cookie-banner');
+            if(banner) banner.classList.add('translate-y-full');
+        }
+        document.addEventListener('DOMContentLoaded', checkCookies);
     </script>
 </body>
 </html>

@@ -28,14 +28,9 @@ class BantabaApp {
                 // Clear the hash so we don't re-trigger on next reload
                 window.history.replaceState(null, null, window.location.pathname);
                 
-                // Auto-forward to page 3 and roll
+                // Auto-forward to page 3
                 this.currentEventId = localStorage.getItem('last_event_id') || 'criz';
                 this.proceedToDice();
-                
-                // Wait for page transition then roll
-                setTimeout(() => {
-                    this.initiateRoll();
-                }, 1500);
             }
         } else {
             // Listen for auth changes
@@ -176,10 +171,10 @@ class BantabaApp {
         const flyer = document.getElementById('checkout-flyer');
         if (flyer) {
             if (this.currentEventId === 'criz') {
-                flyer.src = '../assets/images/c-riz-flyer.jpg';
+                flyer.src = '../Assets/images/c-riz-flyer.jpg';
                 flyer.classList.remove('hidden');
             } else if (this.currentEventId === 'circledflow') {
-                flyer.src = '../assets/images/circle-d-flow-flyer.png';
+                flyer.src = '../Assets/images/circle-d-flow-flyer.png';
                 flyer.classList.remove('hidden');
             } else {
                 flyer.classList.add('hidden');
@@ -609,6 +604,13 @@ class BantabaApp {
         btnRoll.innerText = "Das Schicksal entscheidet...";
         btnRoll.disabled = true;
         this.isRolling = true;
+        
+        // Hide UI elements so the dice is clearly visible
+        const uiText = document.getElementById('page3-header-text');
+        if (uiText) gsap.to(uiText, { opacity: 0, height: 0, margin: 0, padding: 0, duration: 0.5 });
+        const userInfo = document.getElementById('user-info-section');
+        if (userInfo) gsap.to(userInfo, { opacity: 0, height: 0, margin: 0, padding: 0, duration: 0.5 });
+        gsap.to(btnRoll, { opacity: 0, height: 0, margin: 0, padding: 0, duration: 0.5 });
 
         // Animate Cup Lift
         gsap.to(this.cup.position, { y: 12, duration: 1.5, ease: "back.in(1)" });
