@@ -146,6 +146,70 @@
             transform-origin: center;
         }
 
+        /* Manga Grid Styles */
+        .manga-grid {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 15px;
+            width: 100%;
+        }
+        @media(min-width: 768px) {
+            .manga-grid {
+                grid-template-columns: repeat(3, 1fr);
+                grid-template-rows: repeat(2, 350px);
+            }
+        }
+        .manga-panel {
+            position: relative;
+            overflow: hidden;
+            border: 2px solid #222;
+            cursor: pointer;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+            min-height: 250px;
+        }
+        .manga-panel img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(120%);
+            transition: filter 0.4s ease, transform 0.4s ease;
+        }
+        .manga-panel:hover {
+            border-color: var(--haki-gold);
+            z-index: 10;
+        }
+        @media(min-width: 768px) {
+            .manga-panel:hover { transform: scale(1.02); }
+        }
+        .manga-panel:hover img {
+            filter: grayscale(0%) contrast(100%);
+            transform: scale(1.05);
+        }
+        
+        /* Asymmetrical layouts for Desktop */
+        @media(min-width: 768px) {
+            .panel-earth { grid-column: span 2; clip-path: polygon(0 0, 100% 0, 96% 100%, 0 100%); }
+            .panel-water { grid-column: span 1; clip-path: polygon(6% 0, 100% 0, 100% 100%, 0 100%); }
+            .panel-fire { grid-column: span 1; grid-row: span 1; clip-path: polygon(0 0, 100% 0, 100% 95%, 0 100%); }
+            .panel-wind { grid-column: span 1; grid-row: span 1; clip-path: polygon(0 0, 100% 5%, 100% 100%, 0 95%); }
+            .panel-void { grid-column: span 1; grid-row: span 1; clip-path: polygon(0 5%, 100% 0, 100% 100%, 0 100%); }
+        }
+        
+        .manga-title {
+            position: absolute; bottom: 15px; left: 15px;
+            background: rgba(0,0,0,0.85);
+            padding: 8px 15px;
+            border-left: 3px solid var(--haki-gold);
+            font-family: 'Cinzel', serif;
+            color: white;
+            font-size: 1.2rem;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.3s, transform 0.3s;
+            pointer-events: none;
+        }
+        .manga-panel:hover .manga-title {
+            opacity: 1; transform: translateY(0);
+        }
     </style>
 </head>
 <body class="notranslate">
@@ -170,6 +234,53 @@
         <span class="block w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
         <span class="block w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
     </button>
+
+    <!-- INFO LIGHTBOX -->
+    <div id="info-lightbox" class="fixed inset-0 bg-black/90 z-50 hidden flex-col items-center justify-center p-4 backdrop-blur-sm opacity-0 transition-opacity duration-300">
+        <div class="w-full max-w-lg bg-[#0a0a0a] border border-[#d4af37]/50 rounded p-6 shadow-2xl relative mt-16 md:mt-0">
+            <button class="absolute top-4 right-4 text-gray-400 hover:text-white font-mono" onclick="app.closeInfoLightbox()">[X]</button>
+            <h2 id="il-title" class="text-2xl cinzel text-[#d4af37] mb-2">Titel</h2>
+            <div class="flex gap-4 mb-4 font-mono text-xs text-gray-500">
+                <span id="il-date">Datum</span>
+                <span id="il-time">Zeit</span>
+                <span id="il-loc">Ort</span>
+            </div>
+            <p id="il-desc" class="text-gray-300 mb-4">Beschreibung</p>
+            <p id="il-teaser" class="text-sm italic text-gray-400 mb-6 border-l-2 border-[#d4af37] pl-3">Teaser</p>
+            <button class="w-full border border-[#d4af37] text-[#d4af37] py-2 font-mono hover:bg-[#d4af37] hover:text-black transition" onclick="app.closeInfoLightbox(); app.openLightbox('criz');" data-i18n="btn_ticket_small">[ TICKET HOLEN ]</button>
+        </div>
+    </div>
+
+    <!-- PORTFOLIO LIGHTBOX -->
+    <div id="portfolio-lightbox" class="fixed inset-0 bg-black/95 z-[150] hidden flex flex-col md:flex-row items-center justify-center p-4 backdrop-blur-sm opacity-0 transition-opacity duration-300">
+        <button class="absolute top-6 right-6 text-white hover:text-[#d4af37] text-4xl font-light z-10" onclick="app.closePortfolioLightbox()">×</button>
+        
+        <!-- Image Area -->
+        <div class="w-full md:w-3/5 h-[40vh] md:h-[80vh] relative border-4 border-white/10 md:mr-8 mb-4 md:mb-0 shadow-2xl">
+            <img id="pl-image" src="" class="w-full h-full object-cover" alt="Portfolio Image">
+        </div>
+
+        <!-- Scroll/Text Area -->
+        <div class="w-full md:w-2/5 bg-black/80 border border-[#d4af37]/30 p-6 md:p-8 rounded relative overflow-hidden shadow-2xl max-h-[50vh] md:max-h-[80vh] overflow-y-auto">
+            <!-- decorative line -->
+            <div class="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-[#d4af37] to-transparent"></div>
+            
+            <h2 id="pl-title" class="text-3xl cinzel text-[#d4af37] mb-2 gold-glow">Ring Name</h2>
+            <p id="pl-loc" class="text-sm font-mono text-gray-400 mb-6 uppercase tracking-wider">Location context</p>
+            
+            <div class="bg-white/5 border-l-2 border-[#d4af37] p-4 mb-6 italic text-gray-200">
+                <p id="pl-quote" class="font-serif text-lg">"Quote"</p>
+            </div>
+            
+            <p id="pl-phil" class="text-gray-300 font-light leading-relaxed mb-8 text-base">Philosophy text.</p>
+            
+            <p id="pl-cta" class="text-[#d4af37] font-bold cinzel text-sm md:text-lg mb-4">CTA text</p>
+            
+            <div class="text-left mt-6">
+                 <button class="border border-[#d4af37] text-[#d4af37] px-4 py-2 text-sm font-mono hover:bg-[#d4af37] hover:text-black transition" onclick="app.closePortfolioLightbox();" data-i18n="btn_back_board">← Back to Board</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Fullscreen Menu Overlay -->
     <div id="mobile-menu" class="fixed inset-0 bg-black/95 z-[90] flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 backdrop-blur-md">
@@ -233,9 +344,10 @@
                     <h2 class="text-4xl md:text-5xl cinzel text-[#d4af37]" data-i18n="page2_title">Griot's Bounty Board</h2>
                     
                     <!-- Navigation Tabs -->
-                    <div class="mt-6 flex justify-center gap-8">
-                        <button id="tab-events" class="text-[#d4af37] font-bold border-b-2 border-[#d4af37] pb-1 cinzel text-xl transition-all" onclick="app.switchTab('events')" data-i18n="tab_events">Events</button>
-                        <button id="tab-bazar" class="text-gray-500 hover:text-[#d4af37] pb-1 cinzel text-xl transition-all" onclick="app.clickBazar()" data-i18n="tab_bazar">Bazar</button>
+                    <div class="mt-6 flex justify-center gap-6 md:gap-8 flex-wrap px-4">
+                        <button id="tab-events" class="text-[#d4af37] font-bold border-b-2 border-[#d4af37] pb-1 cinzel text-lg md:text-xl transition-all" onclick="app.switchTab('events')" data-i18n="tab_events">Events</button>
+                        <button id="tab-portfolio" class="text-gray-500 hover:text-[#d4af37] pb-1 cinzel text-lg md:text-xl transition-all border-b-2 border-transparent" onclick="app.switchTab('portfolio')" data-i18n="tab_portfolio">Portfolio</button>
+                        <button id="tab-bazar" class="text-gray-500 hover:text-[#d4af37] pb-1 cinzel text-lg md:text-xl transition-all border-b-2 border-transparent" onclick="app.switchTab('bazar')" data-i18n="tab_bazar">Bazar</button>
                     </div>
                 </div>
 
@@ -425,6 +537,7 @@
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/agents/supabase_client.js"></script>
+    <script src="../js/data/portfolio_data.js"></script>
     <script src="../js/translations.js"></script>
     <script src="../js/bantaba.js"></script>
 

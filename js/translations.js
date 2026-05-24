@@ -44,7 +44,39 @@ const translations = {
         "about_title": "About us",
         "about_text": "We create space and time to connect not only with others, but also with our true selves. Circle D Flow is a growing collective in Lisbon building bridges within the local creative scene through curated cultural experiences.",
         "policy_title": "Policy & Privacy",
-        "policy_text": "We respect your privacy. By using this site, you accept essential cookies and data handling to provide the Bantaba experience."
+        "policy_text": "We respect your privacy. By using this site, you accept essential cookies and data handling to provide the Bantaba experience.",
+        
+        "tab_portfolio": "Portfolio",
+        
+        "port_earth_title": "Ring of Earth",
+        "port_earth_loc": "Miradouro da Senhora do Monte – The city breathes.",
+        "port_earth_quote": "\"Perceive that which cannot be seen with the eye.\" - Musashi",
+        "port_earth_phil": "A tree can only grow high if its roots are deeply anchored. This is the beginning of our journey.",
+        "port_earth_cta": "Discover our next Photo Walk locations in the [ BAZAR ]",
+        
+        "port_water_title": "Ring of Water",
+        "port_water_loc": "Secret Garden LX – Outbreak Music Session.",
+        "port_water_quote": "\"Learn to be like water: soft, adaptable, but capable of breaking any stone.\" - Musashi",
+        "port_water_phil": "The true state of flow, Wu Wei. No effort, just pure intuition.",
+        "port_water_cta": "Feel your flow. Book your session and let us capture your true self.",
+        
+        "port_fire_title": "Ring of Fire",
+        "port_fire_loc": "Bantaba Space – The colors of rebellion.",
+        "port_fire_quote": "\"In battle you must break the rhythm of your opponent.\" - Musashi",
+        "port_fire_phil": "True art breaks the norm. It burns with the 'Will of D', the unstoppable fire that puts freedom above all.",
+        "port_fire_cta": "Experience the heat of creativity at our next C4C Jam.",
+        
+        "port_wind_title": "Ring of Wind",
+        "port_wind_loc": "HempyRoots – The Circle unites.",
+        "port_wind_quote": "\"Know the ways of all professions.\" - Musashi",
+        "port_wind_phil": "We are not lone fighters. In the Guild House of Circle D Flow, everyone brings their own strength. The wind carries our stories further.",
+        "port_wind_cta": "Be part of the movement. Get your ticket for the next Gathering under [ EVENTS ].",
+        
+        "port_void_title": "Ring of Void",
+        "port_void_loc": "Studio Session – The inward gaze.",
+        "port_void_quote": "\"In the void is virtue, and no evil. Wisdom has existence, principle has existence, the Way has existence, spirit is nothingness.\" - Musashi",
+        "port_void_phil": "Kiss Your Heart. Free your mind of judgments, and what remains is your purest form.",
+        "port_void_cta": "Support our vision. Every contribution in the [ BAZAR ] keeps this philosophy alive."
     },
     "de": {
         "btn_return": "[ ZURÜCK ZUM ORBIT ]",
@@ -91,7 +123,39 @@ const translations = {
         "about_title": "Über Uns",
         "about_text": "Wir schaffen Raum und Zeit, um uns nicht nur mit anderen, sondern auch mit unserem Selbst zu verbinden. Circle D Flow ist ein wachsendes Kollektiv in Lissabon, das durch kuratierte kulturelle Erlebnisse Brücken in der lokalen Kreativszene baut.",
         "policy_title": "Datenschutz & Policy",
-        "policy_text": "Wir respektieren deine Privatsphäre. Durch die Nutzung dieser Seite akzeptierst du essenzielle Cookies und die Datenverarbeitung für das Bantaba-Erlebnis."
+        "policy_text": "Wir respektieren deine Privatsphäre. Durch die Nutzung dieser Seite akzeptierst du essenzielle Cookies und die Datenverarbeitung für das Bantaba-Erlebnis.",
+        
+        "tab_portfolio": "Portfolio",
+        
+        "port_earth_title": "Der Ring der Erde",
+        "port_earth_loc": "Miradouro da Senhora do Monte – Die Stadt atmet.",
+        "port_earth_quote": "\"Erkenne das Große im Kleinen und das Kleine im Großen.\" - Musashi",
+        "port_earth_phil": "Ein Baum kann nur hoch wachsen, wenn seine Wurzeln tief in der Erde verankert sind. Das ist der Beginn unserer Reise.",
+        "port_earth_cta": "Entdecke die Orte unseres nächsten Photo Walks im [ BAZAR ].",
+        
+        "port_water_title": "Der Ring des Wassers",
+        "port_water_loc": "Secret Garden LX – Outbreak Music Session.",
+        "port_water_quote": "\"Lerne, wie Wasser zu sein: weich, anpassungsfähig, aber fähig, jeden Stein zu durchbrechen.\" - Musashi",
+        "port_water_phil": "Der wahre Flow-Zustand, Wu Wei. Keine Anstrengung, nur pure Intuition.",
+        "port_water_cta": "Fühle deinen Flow. Buch deine Session und lass uns dein wahres Ich einfangen.",
+        
+        "port_fire_title": "Der Ring des Feuers",
+        "port_fire_loc": "Bantaba Space – Die Farben der Rebellion.",
+        "port_fire_quote": "\"In der Schlacht musst du den Rhythmus des Gegners brechen.\" - Musashi",
+        "port_fire_phil": "Wahre Kunst bricht die Norm. Sie brennt mit dem 'Will of D', dem unaufhaltsamen Feuer, das die Freiheit über alles stellt.",
+        "port_fire_cta": "Erlebe die Hitze der Kreativität bei unserem nächsten C4C Jam.",
+        
+        "port_wind_title": "Der Ring des Windes",
+        "port_wind_loc": "HempyRoots – The Circle unites.",
+        "port_wind_quote": "\"Kenne die Wege aller Berufe.\" - Musashi",
+        "port_wind_phil": "Wir sind keine Einzelkämpfer. Im Gilden-Haus des Circle D Flow bringt jeder seine eigene Kraft mit. Der Wind trägt unsere Geschichten weiter.",
+        "port_wind_cta": "Sei Teil der Bewegung. Hol dir dein Ticket für das nächste Gathering unter [ EVENTS ].",
+        
+        "port_void_title": "Der Ring der Leere",
+        "port_void_loc": "Studio Session – Der Blick nach Innen.",
+        "port_void_quote": "\"In der Leere ist das Gute, nicht das Böse. Weisheit existiert, Prinzipien existieren, der Weg existiert, aber der Geist ist leer.\" - Musashi",
+        "port_void_phil": "Kiss Your Heart. Befreie deinen Geist von Urteilen, und was bleibt, ist deine reinste Form.",
+        "port_void_cta": "Unterstütze unsere Vision. Jeder Beitrag im [ BAZAR ] hält diese Philosophie am Leben."
     },
     "fr": {
         "btn_return": "[ RETOUR À L'ORBITE ]",
@@ -138,7 +202,39 @@ const translations = {
         "about_title": "À propos de nous",
         "about_text": "Nous créons de l'espace et du temps pour nous connecter non seulement avec les autres, mais aussi avec notre véritable moi. Circle D Flow est un collectif grandissant à Lisbonne qui jette des ponts dans la scène créative locale à travers des expériences culturelles organisées.",
         "policy_title": "Politique de confidentialité",
-        "policy_text": "Nous respectons votre vie privée. En utilisant ce site, vous acceptez les cookies essentiels et le traitement des données pour l'expérience Bantaba."
+        "policy_text": "Nous respectons votre vie privée. En utilisant ce site, vous acceptez les cookies essentiels et le traitement des données pour l'expérience Bantaba.",
+        
+        "tab_portfolio": "Portfolio",
+        
+        "port_earth_title": "L'Anneau de la Terre",
+        "port_earth_loc": "Miradouro da Senhora do Monte – La ville respire.",
+        "port_earth_quote": "\"Perçois ce qui ne peut être vu avec l'œil.\" - Musashi",
+        "port_earth_phil": "Un arbre ne peut grandir que si ses racines sont profondément ancrées. C'est le début de notre voyage.",
+        "port_earth_cta": "Découvrez nos prochains lieux de Photo Walk dans le [ BAZAR ]",
+        
+        "port_water_title": "L'Anneau de l'Eau",
+        "port_water_loc": "Secret Garden LX – Outbreak Music Session.",
+        "port_water_quote": "\"Apprends à être comme l'eau : douce, adaptable, mais capable de briser n'importe quelle pierre.\" - Musashi",
+        "port_water_phil": "Le véritable état de flow, Wu Wei. Sans effort, juste de la pure intuition.",
+        "port_water_cta": "Ressens ton flow. Réserve ta session et laisse-nous capturer ta véritable nature.",
+        
+        "port_fire_title": "L'Anneau du Feu",
+        "port_fire_loc": "Bantaba Space – Les couleurs de la rébellion.",
+        "port_fire_quote": "\"Dans la bataille, tu dois briser le rythme de l'adversaire.\" - Musashi",
+        "port_fire_phil": "L'art véritable brise la norme. Il brûle avec la 'Volonté du D', le feu imparable qui met la liberté au-dessus de tout.",
+        "port_fire_cta": "Découvrez la chaleur de la créativité lors de notre prochain C4C Jam.",
+        
+        "port_wind_title": "L'Anneau du Vent",
+        "port_wind_loc": "HempyRoots – Le Cercle s'unit.",
+        "port_wind_quote": "\"Connais les voies de toutes les professions.\" - Musashi",
+        "port_wind_phil": "Nous ne sommes pas des combattants solitaires. Dans la Guilde Circle D Flow, chacun apporte sa force. Le vent porte nos histoires plus loin.",
+        "port_wind_cta": "Fais partie du mouvement. Prends ton billet pour le prochain Gathering dans [ EVENTS ].",
+        
+        "port_void_title": "L'Anneau du Vide",
+        "port_void_loc": "Session Studio – Le regard vers l'intérieur.",
+        "port_void_quote": "\"Dans le vide se trouve la vertu, sans aucun mal. La sagesse existe, les principes existent, la Voie existe, mais l'esprit est vide.\" - Musashi",
+        "port_void_phil": "Kiss Your Heart. Libère ton esprit des jugements, et ce qui reste est ta forme la plus pure.",
+        "port_void_cta": "Soutiens notre vision. Chaque contribution dans le [ BAZAR ] garde cette philosophie vivante."
     },
     "pt": {
         "btn_return": "[ VOLTAR À ÓRBITA ]",
@@ -185,7 +281,39 @@ const translations = {
         "about_title": "Sobre nós",
         "about_text": "Criamos espaço e tempo para nos conectarmos não só com os outros, mas também com o nosso verdadeiro eu. Circle D Flow é um coletivo crescente em Lisboa que constrói pontes na cena criativa local através de experiências culturais selecionadas.",
         "policy_title": "Política de Privacidade",
-        "policy_text": "Respeitamos a tua privacidade. Ao utilizar este site, aceitas os cookies essenciais e o processamento de dados para a experiência Bantaba."
+        "policy_text": "Respeitamos a tua privacidade. Ao utilizar este site, aceitas os cookies essenciais e o processamento de dados para a experiência Bantaba.",
+        
+        "tab_portfolio": "Portfólio",
+        
+        "port_earth_title": "O Anel da Terra",
+        "port_earth_loc": "Miradouro da Senhora do Monte – A cidade respira.",
+        "port_earth_quote": "\"Percebe aquilo que não pode ser visto com o olho.\" - Musashi",
+        "port_earth_phil": "Uma árvore só pode crescer se as suas raízes estiverem profundamente ancoradas. Este é o começo da nossa jornada.",
+        "port_earth_cta": "Descubra os próximos locais dos nossos Photo Walks no [ BAZAR ]",
+        
+        "port_water_title": "O Anel da Água",
+        "port_water_loc": "Secret Garden LX – Outbreak Music Session.",
+        "port_water_quote": "\"Aprende a ser como a água: suave, adaptável, mas capaz de quebrar qualquer pedra.\" - Musashi",
+        "port_water_phil": "O verdadeiro estado de flow, Wu Wei. Sem esforço, apenas pura intuição.",
+        "port_water_cta": "Sente o teu flow. Reserva a tua sessão e deixa-nos capturar a tua verdadeira essência.",
+        
+        "port_fire_title": "O Anel do Fogo",
+        "port_fire_loc": "Bantaba Space – As cores da rebelião.",
+        "port_fire_quote": "\"Na batalha, deves quebrar o ritmo do oponente.\" - Musashi",
+        "port_fire_phil": "A verdadeira arte quebra a norma. Arde com a 'Vontade do D', o fogo imparável que coloca a liberdade acima de tudo.",
+        "port_fire_cta": "Experimenta o calor da criatividade na nossa próxima C4C Jam.",
+        
+        "port_wind_title": "O Anel do Vento",
+        "port_wind_loc": "HempyRoots – O Círculo une-se.",
+        "port_wind_quote": "\"Conhece os caminhos de todas as profissões.\" - Musashi",
+        "port_wind_phil": "Não somos guerreiros solitários. Na Guilda Circle D Flow, cada um traz a sua força. O vento transporta as nossas histórias mais além.",
+        "port_wind_cta": "Faz parte do movimento. Adquire o teu bilhete para o próximo Gathering nos [ EVENTS ].",
+        
+        "port_void_title": "O Anel do Vazio",
+        "port_void_loc": "Studio Session – O olhar para dentro.",
+        "port_void_quote": "\"No vazio está a virtude, não o mal. A sabedoria existe, os princípios existem, o Caminho existe, mas a mente está vazia.\" - Musashi",
+        "port_void_phil": "Kiss Your Heart. Liberta a tua mente dos julgamentos, e o que resta é a tua forma mais pura.",
+        "port_void_cta": "Apoia a nossa visão. Cada contribuição no [ BAZAR ] mantém esta filosofia viva."
     }
 };
 

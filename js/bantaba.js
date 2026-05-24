@@ -97,34 +97,50 @@ class BantabaApp {
 
     // --- UI LOGIC (TABS & LIGHTBOX) ---
     switchTab(tabName) {
-        const btnEvents = document.getElementById('tab-events');
-        const btnBazar = document.getElementById('tab-bazar');
-        const gridEvents = document.getElementById('grid-events');
-        const gridBazar = document.getElementById('grid-bazar');
+        if(tabName === 'bazar') {
+            this.clickBazar();
+            return;
+        }
 
-        if(tabName === 'events') {
-            btnEvents.classList.replace('text-gray-500', 'text-[#d4af37]');
-            btnEvents.classList.add('border-b-2', 'border-[#d4af37]', 'font-bold');
-            btnBazar.classList.replace('text-[#d4af37]', 'text-gray-500');
-            btnBazar.classList.remove('border-b-2', 'border-[#d4af37]', 'font-bold');
+        const tabs = ['events', 'bazar', 'portfolio'];
+        tabs.forEach(tab => {
+            const btn = document.getElementById(`tab-${tab}`);
+            const grid = document.getElementById(`grid-${tab}`);
+            if(!btn || !grid) return;
             
-            gridEvents.classList.remove('hidden');
-            gridBazar.classList.add('hidden');
-        } else {
-            btnBazar.classList.replace('text-gray-500', 'text-[#d4af37]');
-            btnBazar.classList.add('border-b-2', 'border-[#d4af37]', 'font-bold');
-            btnEvents.classList.replace('text-[#d4af37]', 'text-gray-500');
-            btnEvents.classList.remove('border-b-2', 'border-[#d4af37]', 'font-bold');
-            
-            gridBazar.classList.remove('hidden');
-            gridEvents.classList.add('hidden');
+            if(tab === tabName) {
+                btn.classList.replace('text-gray-500', 'text-[#d4af37]');
+                btn.classList.add('border-[#d4af37]', 'font-bold');
+                btn.classList.remove('border-transparent');
+                grid.classList.remove('hidden');
+            } else {
+                btn.classList.replace('text-[#d4af37]', 'text-gray-500');
+                btn.classList.remove('border-[#d4af37]', 'font-bold');
+                btn.classList.add('border-transparent');
+                grid.classList.add('hidden');
+            }
+        });
+        
+        // Auto-fill images if portfolio data is loaded
+        if(tabName === 'portfolio' && window.PortfolioData) {
+            this.populatePortfolioGrid();
         }
     }
 
+    populatePortfolioGrid() {
+        const getImg = (cat) => window.PortfolioData[cat] && window.PortfolioData[cat].length > 0 ? window.PortfolioData[cat][0].url : '../assets/branding/cqr-bg-dark.jpg';
+        
+        document.getElementById('img-earth').src = getImg('Nature & Mysticism');
+        document.getElementById('img-water').src = getImg('Circle D Flow');
+        document.getElementById('img-fire').src = getImg('Urban Adventure');
+        document.getElementById('img-wind').src = getImg('The Atelier');
+        document.getElementById('img-void').src = getImg('Studio Exclusives');
+    }
+
     clickBazar() {
-        const lang = localStorage.getItem('bantaba_lang') || 'en';
-        let msg = "Page is under construction and we are happy to welcome you soon!";
-        if(lang === 'de') msg = "Die Seite befindet sich im Aufbau. Wir freuen uns darauf, dich bald hier begrüßen zu dürfen!";
+        const lang = localStorage.getItem('cqr_lang') || 'de';
+        let msg = "Die Seite befindet sich im Aufbau. Wir freuen uns darauf, dich bald hier begrüßen zu dürfen!";
+        if(lang === 'en') msg = "Page is under construction and we are happy to welcome you soon!";
         if(lang === 'fr') msg = "Page en construction. Nous serons heureux de vous y accueillir bientôt !";
         if(lang === 'pt') msg = "A página está em construção. Esperamos receber-te em breve!";
         alert(msg);
@@ -148,8 +164,43 @@ class BantabaApp {
         this.currentEventId = eventId;
 
         lb.classList.remove('hidden');
-        lb.classList.add('flex');
-        gsap.fromTo(lb, { opacity: 0 }, { opacity: 1, duration: 0.3 });
+        // small animation
+        setTimeout(() => lb.classList.remove('opacity-0'), 10);
+    }
+
+    closeLightbox() {
+        const lb = document.getElementById('event-lightbox');
+        lb.classList.add('opacity-0');
+        setTimeout(() => lb.classList.add('hidden'), 300);
+    }
+
+    // Portfolio Lightbox Logic
+    openPortfolioLightbox(ringName) {
+        const lb = document.getElementById('portfolio-lightbox');
+        
+        // Grab current language
+        const lang = localStorage.getItem('cqr_lang') || 'de';
+        const t = translations[lang];
+        
+        // Populate text based on ring
+        document.getElementById('pl-title').innerText = t[`port_${ringName}_title`] || "Ring";
+        document.getElementById('pl-loc').innerText = t[`port_${ringName}_loc`] || "Location";
+        document.getElementById('pl-quote').innerText = t[`port_${ringName}_quote`] || "Quote";
+        document.getElementById('pl-phil').innerText = t[`port_${ringName}_phil`] || "Philosophy";
+        document.getElementById('pl-cta').innerText = t[`port_${ringName}_cta`] || "Action";
+        
+        // Set Image (grabbed from the clicked panel's image)
+        const imgSrc = document.getElementById(`img-${ringName}`).src;
+        document.getElementById('pl-image').src = imgSrc;
+        
+        lb.classList.remove('hidden');
+        setTimeout(() => lb.classList.remove('opacity-0'), 10);
+    }
+
+    closePortfolioLightbox() {
+        const lb = document.getElementById('portfolio-lightbox');
+        lb.classList.add('opacity-0');
+        setTimeout(() => lb.classList.add('hidden'), 300);
     }
 
     closeLightbox() {
