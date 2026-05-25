@@ -17,7 +17,7 @@ else:
     print("WARNING: No GEMINI_API_KEY found in .env!")
 
 # Use the Gemini 1.5 Pro or Flash model (Flash is faster for bulk processing)
-model = genai.GenerativeModel('gemini-1.5-flash')
+model = genai.GenerativeModel('gemini-1.5-flash-latest')
 
 SYSTEM_PROMPT = """
 Du bist der digitale Griot und Master-Kurator für das Fotografie- und Video-Portfolio von "Kiss Your Heart" und der "Circle D Flow" Community in Lissabon. Deine Aufgabe ist es, hochgeladene visuelle Medien (Bilder/Videos) autonom zu analysieren, ihre Qualität zu prüfen, sie in das philosophische Konzept der "5 Ringe" (Miyamoto Musashi) einzuordnen und passende, Manga-inspirierte Texte zu generieren. 
