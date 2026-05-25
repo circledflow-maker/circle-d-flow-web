@@ -15,10 +15,18 @@ class BantabaApp {
             }
         }, 2000);
 
-        // Hash routing for Griot's Board
+        // Hash routing for Griot's Board & Checkout
         setTimeout(() => {
             if (window.location.hash === '#board' || window.location.hash === '#board/') {
                 this.turnPage(1);
+            } else if (window.location.hash.includes('#checkout')) {
+                // If returning from Auth to checkout, grab the event ID and jump to dice page
+                const savedEvent = localStorage.getItem('last_event_id');
+                if (savedEvent) {
+                    this.currentEventId = savedEvent;
+                }
+                this.turnPage(2);
+                this.proceedToDice(); // Updates the flyer and auth UI state
             }
         }, 100);
 
@@ -63,12 +71,14 @@ class BantabaApp {
 
     async loginGoogle() {
         if (!window.supabaseClient) return alert("Supabase Client not loaded.");
-        await window.supabaseClient.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.href }});
+        const redirectUrl = window.location.origin + window.location.pathname + "#checkout";
+        await window.supabaseClient.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: redirectUrl }});
     }
 
     async loginApple() {
         if (!window.supabaseClient) return alert("Supabase Client not loaded.");
-        await window.supabaseClient.auth.signInWithOAuth({ provider: 'apple', options: { redirectTo: window.location.href }});
+        const redirectUrl = window.location.origin + window.location.pathname + "#checkout";
+        await window.supabaseClient.auth.signInWithOAuth({ provider: 'apple', options: { redirectTo: redirectUrl }});
     }
 
     async loginMagicLink() {
@@ -76,7 +86,8 @@ class BantabaApp {
         const email = document.getElementById('user-email').value;
         if (!email) return alert("Bitte E-Mail eingeben für den Magic Link.");
         
-        const { error } = await window.supabaseClient.auth.signInWithOtp({ email, options: { emailRedirectTo: window.location.href }});
+        const redirectUrl = window.location.origin + window.location.pathname + "#checkout";
+        const { error } = await window.supabaseClient.auth.signInWithOtp({ email, options: { emailRedirectTo: redirectUrl }});
         if (error) alert(error.message);
         else alert("Magic Link gesendet! Bitte checke deine E-Mails (auch den Spam-Ordner).");
     }
