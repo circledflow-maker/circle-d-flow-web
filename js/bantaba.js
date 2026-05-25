@@ -14,6 +14,14 @@ class BantabaApp {
                 gsap.fromTo(diag, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 1 });
             }
         }, 2000);
+
+        // Hash routing for Griot's Board
+        setTimeout(() => {
+            if (window.location.hash === '#board' || window.location.hash === '#board/') {
+                this.turnPage(1);
+            }
+        }, 100);
+
         // Initial check for session
         setTimeout(() => this.checkSession(), 500);
     }

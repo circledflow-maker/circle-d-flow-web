@@ -238,18 +238,44 @@
     </button>
 
     <!-- INFO LIGHTBOX -->
-    <div id="info-lightbox" class="fixed inset-0 bg-black/90 z-50 hidden flex-col items-center justify-center p-4 backdrop-blur-sm opacity-0 transition-opacity duration-300">
-        <div class="w-full max-w-lg bg-[#0a0a0a] border border-[#d4af37]/50 rounded p-6 shadow-2xl relative mt-16 md:mt-0">
-            <button class="absolute top-4 right-4 text-gray-400 hover:text-white font-mono" onclick="app.closeInfoLightbox()">[X]</button>
-            <h2 id="il-title" class="text-2xl cinzel text-[#d4af37] mb-2">Titel</h2>
-            <div class="flex gap-4 mb-4 font-mono text-xs text-gray-500">
-                <span id="il-date">Datum</span>
-                <span id="il-time">Zeit</span>
-                <span id="il-loc">Ort</span>
+    <div id="info-lightbox" class="fixed inset-0 z-[160] bg-black/90 hidden flex-col justify-center items-center backdrop-blur-sm p-4 overflow-y-auto">
+        <div class="bg-[#111] border border-[#d4af37] w-full max-w-md p-6 relative rounded-lg shadow-2xl text-center my-auto pointer-events-auto">
+            <button onclick="app.closeInfoLightbox()" class="absolute top-2 right-4 text-gray-500 hover:text-white text-4xl leading-none">&times;</button>
+            
+            <h2 id="info-lb-title" class="text-2xl md:text-3xl cinzel text-[#d4af37] mb-2 mt-4 md:mt-0">EVENT TITLE</h2>
+            <div class="flex flex-col gap-1 mb-4 border-b border-gray-800 pb-4">
+                <p id="info-lb-date" class="text-sm font-mono text-[#d4af37]">DATE</p>
+                <p id="info-lb-time" class="text-xs font-mono text-gray-400">TIME</p>
+                <p id="info-lb-location" class="text-xs font-mono text-gray-400">LOCATION</p>
             </div>
-            <p id="il-desc" class="text-gray-300 mb-4">Beschreibung</p>
-            <p id="il-teaser" class="text-sm italic text-gray-400 mb-6 border-l-2 border-[#d4af37] pl-3">Teaser</p>
-            <button class="w-full border border-[#d4af37] text-[#d4af37] py-2 font-mono hover:bg-[#d4af37] hover:text-black transition" onclick="app.closeInfoLightbox(); app.openLightbox('criz');" data-i18n="btn_ticket_small">[ TICKET HOLEN ]</button>
+            
+            <p id="info-lb-desc" class="text-gray-300 leading-relaxed mb-6 text-sm md:text-base">Event description goes here...</p>
+
+            <div class="bg-black/50 p-6 border border-[#d4af37]/30 mb-8 rounded text-left">
+                <h4 class="font-mono text-[#d4af37] mb-2" data-i18n="lb_teaser_title">Line-Up & Teaser</h4>
+                <p id="info-lb-teaser" class="text-sm text-gray-400">Teaser text...</p>
+            </div>
+
+            <button class="btn-gold w-full text-center" id="info-lb-ticket-btn" data-i18n="btn_ticket_small" onclick="app.closeInfoLightbox(); app.openLightbox(app.currentEventId);">[ TICKET HOLEN ]</button>
+        </div>
+    </div>
+
+    <!-- TICKET LIGHTBOX -->
+    <div id="event-lightbox" class="fixed inset-0 z-[160] bg-black/90 hidden flex-col justify-center items-center backdrop-blur-sm p-4 overflow-y-auto">
+        <div class="bg-[#111] border border-[#d4af37] w-full max-w-md p-6 relative rounded-lg shadow-2xl text-center my-auto pointer-events-auto">
+            <button onclick="app.closeLightbox()" class="absolute top-2 right-4 text-gray-500 hover:text-white text-4xl leading-none">&times;</button>
+            
+            <h2 id="lb-title" class="text-2xl md:text-4xl cinzel text-[#d4af37] mb-2 mt-4 md:mt-0">EVENT TITLE</h2>
+            <p id="lb-date" class="text-sm font-mono text-gray-400 mb-4 border-b border-gray-800 pb-4">DATE</p>
+            
+            <p id="lb-desc" class="text-gray-300 leading-relaxed mb-6 text-sm md:text-base">Event description goes here...</p>
+
+            <div class="bg-black/50 p-6 border border-gray-800 mb-8 rounded text-left">
+                <h4 class="font-mono text-[#d4af37] mb-2" data-i18n="lb_protocol">ZUGANGS-PROTOKOLL:</h4>
+                <p class="text-sm text-gray-400" data-i18n="lb_desc_protocol">Um ein Ticket zu erhalten, musst du die Prüfung am antiken Becher bestehen. Der Würfel bestimmt deinen Beitrag.</p>
+            </div>
+
+            <button class="btn-gold w-full text-center" onclick="app.proceedToDice()" data-i18n="btn_get_ticket">Zum Ticket</button>
         </div>
     </div>
 
@@ -288,7 +314,7 @@
     <div id="mobile-menu" class="fixed inset-0 bg-black/95 z-[90] flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 backdrop-blur-md">
         <nav class="flex flex-col gap-8 text-center">
             <a href="../index.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition gold-glow" data-i18n="nav_orbit">Return to Orbit</a>
-            <a href="bantaba.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition gold-glow" data-i18n="nav_guild_board">Guild Board</a>
+            <a href="bantaba.html#board" onclick="if(window.app){app.turnPage(1);document.getElementById('burger-btn').click();}" class="cinzel text-2xl text-white hover:text-[#d4af37] transition gold-glow" data-i18n="nav_guild_board">Guild Board</a>
             <a href="about.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition gold-glow" data-i18n="nav_about">About us</a>
             <a href="policy.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition gold-glow" data-i18n="nav_policy">Policy</a>
         </nav>
@@ -339,12 +365,12 @@
         </div>
 
         <!-- PAGE 2: THE BOUNTY BOARD -->
-        <div class="manga-page" id="page2" style="background: url('../Assets/images/vision_oasis_bg.png') center/cover;">
+        <div class="manga-page" id="page2" style="background: url('../Assets/images/destiny_grotto_beach_bg.png') center/cover;">
             <div class="dust-particles"></div>
-            <div class="page-overlay interactive-layer flex flex-col h-full">
+            <div class="page-overlay interactive-layer flex flex-col h-full bg-black/50">
                 
-                <div class="w-full text-center py-8 bg-gradient-to-b from-black to-transparent">
-                    <h2 class="text-4xl md:text-5xl cinzel text-[#d4af37]" data-i18n="page2_title">Griot's Bounty Board</h2>
+                <div class="w-full text-center py-8 bg-black/80 shadow-2xl border-b border-[#d4af37]/30">
+                    <h2 class="text-4xl md:text-5xl cinzel text-[#d4af37] gold-glow" data-i18n="page2_title">Griot's Bounty Board</h2>
                     
                     <!-- Navigation Tabs -->
                     <div class="mt-6 flex justify-center gap-6 md:gap-8 flex-wrap px-4">
@@ -452,48 +478,7 @@
                     <button class="text-gray-500 hover:text-white font-mono transition bg-black/50 px-4 py-2 rounded" onclick="app.turnPage(0)" data-i18n="btn_back">← Zurück zum Eingang</button>
                 </div>
 
-                <!-- INFO LIGHTBOX (Hidden) -->
-                <div id="info-lightbox" class="fixed inset-0 z-[60] bg-black/90 hidden flex-col justify-center items-center backdrop-blur-sm p-4 overflow-y-auto">
-                    <div class="bg-[#111] border border-[#d4af37] w-full max-w-md p-6 relative rounded-lg shadow-2xl text-center my-auto">
-                        <button onclick="app.closeInfoLightbox()" class="absolute top-2 right-4 text-gray-500 hover:text-white text-4xl leading-none">&times;</button>
-                        
-                        <h2 id="info-lb-title" class="text-2xl md:text-3xl cinzel text-[#d4af37] mb-2 mt-4 md:mt-0">EVENT TITLE</h2>
-                        <div class="flex flex-col gap-1 mb-4 border-b border-gray-800 pb-4">
-                            <p id="info-lb-date" class="text-sm font-mono text-[#d4af37]">DATE</p>
-                            <p id="info-lb-time" class="text-xs font-mono text-gray-400">TIME</p>
-                            <p id="info-lb-location" class="text-xs font-mono text-gray-400">LOCATION</p>
-                        </div>
-                        
-                        <p id="info-lb-desc" class="text-gray-300 leading-relaxed mb-6 text-sm md:text-base">Event description goes here...</p>
 
-                        <div class="bg-black/50 p-6 border border-[#d4af37]/30 mb-8 rounded text-left">
-                            <h4 class="font-mono text-[#d4af37] mb-2" data-i18n="lb_teaser_title">Line-Up & Teaser</h4>
-                            <p id="info-lb-teaser" class="text-sm text-gray-400">Teaser text...</p>
-                        </div>
-
-                        <button class="btn-gold w-full text-center" id="info-lb-ticket-btn" data-i18n="btn_ticket_small">[ TICKET HOLEN ]</button>
-                    </div>
-                </div>
-
-                <!-- TICKET LIGHTBOX (Hidden) -->
-                <div id="event-lightbox" class="fixed inset-0 z-50 bg-black/90 hidden flex-col justify-center items-center backdrop-blur-sm p-4 overflow-y-auto">
-                    <div class="bg-[#111] border border-[#d4af37] w-full max-w-md p-6 relative rounded-lg shadow-2xl text-center my-auto">
-                        <!-- Close btn -->
-                        <button onclick="app.closeLightbox()" class="absolute top-2 right-4 text-gray-500 hover:text-white text-4xl leading-none">&times;</button>
-                        
-                        <h2 id="lb-title" class="text-2xl md:text-4xl cinzel text-[#d4af37] mb-2 mt-4 md:mt-0">EVENT TITLE</h2>
-                        <p id="lb-date" class="text-sm font-mono text-gray-400 mb-4 border-b border-gray-800 pb-4">DATE</p>
-                        
-                        <p id="lb-desc" class="text-gray-300 leading-relaxed mb-6 text-sm md:text-base">Event description goes here...</p>
-
-                        <div class="bg-black/50 p-6 border border-gray-800 mb-8 rounded">
-                            <h4 class="font-mono text-[#d4af37] mb-2" data-i18n="lb_protocol">ZUGANGS-PROTOKOLL:</h4>
-                            <p class="text-sm text-gray-400" data-i18n="lb_desc_protocol">Um ein Ticket zu erhalten, musst du die Prüfung am antiken Becher bestehen. Der Würfel bestimmt deinen Beitrag.</p>
-                        </div>
-
-                        <button class="btn-gold w-full text-center" onclick="app.proceedToDice()" data-i18n="btn_get_ticket">Zum Ticket</button>
-                    </div>
-                </div>
 
             </div>
         </div>

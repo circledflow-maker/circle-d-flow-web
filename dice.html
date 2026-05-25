@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roll the Dice | Circle D Flow</title>
+    <link rel="stylesheet" href="css/dice.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <div class="nav-overlay" style="position: fixed; top: 20px; left: 20px; z-index: 1000; display: flex; gap: 15px;">
+        <a href="index.html" class="nav-icon-btn" title="Home" style="color: #fff; text-decoration: none; font-family: 'Inter', sans-serif; font-size: 14px; opacity: 0.7; transition: opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'">Home</a>
+        <a href="master_dashboard.html" class="nav-icon-btn" title="Dashboard" style="color: #fff; text-decoration: none; font-family: 'Inter', sans-serif; font-size: 14px; opacity: 0.7; transition: opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'">Dashboard</a>
+    </div>
+
+    <div class="container">
+        <!-- Step 1: The Lock -->
+        <div id="lock-screen" class="screen active">
+            <div class="logo-area">
+                <h1>Circle D Flow</h1>
+                <p>Enter your email to unlock your ticket price.</p>
+            </div>
+            
+            <form id="email-form">
+                <input type="email" id="email-input" placeholder="gast@email.com" required>
+                <button type="submit" class="glow-button">Unlock & Roll</button>
+            </form>
+            <div id="error-message" class="error-hidden"></div>
+        </div>
+
+        <!-- Step 2: The Dice Roll -->
+        <div id="dice-screen" class="screen">
+            <h2 class="roll-title">Rolling your destiny...</h2>
+            
+            <div class="scene">
+                <div class="cube" id="cube">
+                    <div class="cube__face cube__face--front">1</div>
+                    <div class="cube__face cube__face--back">6</div>
+                    <div class="cube__face cube__face--right">3</div>
+                    <div class="cube__face cube__face--left">4</div>
+                    <div class="cube__face cube__face--top">2</div>
+                    <div class="cube__face cube__face--bottom">5</div>
+                </div>
+            </div>
+
+            <div id="result-popup" class="popup hidden">
+                <h2 id="result-text">It's a 4!</h2>
+                <p>Your contribution is <span id="result-amount">4</span>€.</p>
+                <a id="checkout-btn" href="#" class="glow-button checkout-btn">Proceed to Checkout</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/dice.js"></script>
+</body>
+</html>

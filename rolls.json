@@ -1,0 +1,27 @@
+{
+  "circle.d.flow@gmail.com": {
+    "rolled": 1,
+    "checkout_url": "https://checkout.stripe.com/g/pay/cs_live_a1vrfUw8lV3BTtFPIt9ZRY11ZPMEp3FjQMRSsucMov4fv2rmegQzU3Wt8U#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdicGRmZGhqaWBTZHdsZGtxJz8ncXdgZHFoYGtxWjQnKSdkdWxOYHwnPyd1blppbHNgWjA0VmFgZzZXUkRKRkxdPHJCPXRCa39mdjA2dHBfVH1rR2BBUURjR2hrcFNIPWE0PXJBV3JHcU1Wc3JDdVJ%2FRGFMbklsf2xzN1RVVzNpTVdIMX1rNz0yR1FwNTVNQ3VXUlE3cicpJ2N3amhWYHdzYHcnP3F3cGApJ2dkZm5id2pwa2FGamlqdyc%2FJyZjY2NjY2MnKSdpZHxqcHFRfHVgJz8ndmxrYmlgWmxxYGgnKSdga2RnaWBVaWRmYG1qaWFgd3YnP3F3cGB4JSUl",
+    "timestamp": "2026-05-05T10:27:27.677Z"
+  },
+  "tester@example.com": {
+    "rolled": 3,
+    "checkout_url": "https://checkout.stripe.com/c/pay/cs_live_a1RjaKPWAyKNONffWeUyBKvk9xV9U3CpGaWYdCpQigsgyX8FZ173VagNlf#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdicGRmZGhqaWBTZHdsZGtxJz8nZmprcXdqaScpJ2R1bE5gfCc%2FJ3VuWmlsc2BaMDRWYWBnNldSREpGTF08ckI9dEJrf2Z2MDZ0cF9UfWtHYEFRRGNHaGtwU0g9YTQ9ckFXckdxTVZzckN1Un9EYUxuSWx%2FbHM3VFVXM2lNV0gxfWs3PTJHUXA1NU1DdVdSUTdyJyknY3dqaFZgd3Ngdyc%2FcXdwYCknZ2RmbmJ3anBrYUZqaWp3Jz8nJmNjY2NjYycpJ2lkfGpwcVF8dWAnPyd2bGtiaWBabHFgaCcpJ2BrZGdpYFVpZGZgbWppYWB3dic%2FcXdwYHgl",
+    "timestamp": "2026-05-22T15:12:52.880Z"
+  },
+  "d.hope2772@gmqil.com": {
+    "rolled": 5,
+    "checkout_url": "https://checkout.stripe.com/c/pay/cs_live_a1lSFANklnboskULxbheCAA2TExYIwSaihXFnV0f7V39cPQmAzvMxMKf3R#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdicGRmZGhqaWBTZHdsZGtxJz8nZmprcXdqaScpJ2R1bE5gfCc%2FJ3VuWmlsc2BaMDRWYWBnNldSREpGTF08ckI9dEJrf2Z2MDZ0cF9UfWtHYEFRRGNHaGtwU0g9YTQ9ckFXckdxTVZzckN1Un9EYUxuSWx%2FbHM3VFVXM2lNV0gxfWs3PTJHUXA1NU1DdVdSUTdyJyknY3dqaFZgd3Ngdyc%2FcXdwYCknZ2RmbmJ3anBrYUZqaWp3Jz8nJmNjY2NjYycpJ2lkfGpwcVF8dWAnPyd2bGtiaWBabHFgaCcpJ2BrZGdpYFVpZGZgbWppYWB3dic%2FcXdwYHgl",
+    "timestamp": "2026-05-23T13:20:07.174Z"
+  },
+  "s@gmail.com": {
+    "rolled": 5,
+    "checkout_url": "https://checkout.stripe.com/c/pay/cs_live_a18g0VvKz6rZneY0wCQvy3RtN7bcI0D8fpxixWrmeqGHAVy8PJUMpe1jXa#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdicGRmZGhqaWBTZHdsZGtxJz8nZmprcXdqaScpJ2R1bE5gfCc%2FJ3VuWmlsc2BaMDRWYWBnNldSREpGTF08ckI9dEJrf2Z2MDZ0cF9UfWtHYEFRRGNHaGtwU0g9YTQ9ckFXckdxTVZzckN1Un9EYUxuSWx%2FbHM3VFVXM2lNV0gxfWs3PTJHUXA1NU1DdVdSUTdyJyknY3dqaFZgd3Ngdyc%2FcXdwYCknZ2RmbmJ3anBrYUZqaWp3Jz8nJmNjY2NjYycpJ2lkfGpwcVF8dWAnPyd2bGtiaWBabHFgaCcpJ2BrZGdpYFVpZGZgbWppYWB3dic%2FcXdwYHgl",
+    "timestamp": "2026-05-23T15:49:31.616Z"
+  },
+  "s": {
+    "rolled": 1,
+    "checkout_url": "https://checkout.stripe.com/c/pay/cs_live_a16AwVDN2sKDYbdzUhXHPgZ2Jop6Ez4tksxxxp73mjzWLtSeHyafdSfbqD#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdicGRmZGhqaWBTZHdsZGtxJz8nZmprcXdqaScpJ2R1bE5gfCc%2FJ3VuWmlsc2BaMDRWYWBnNldSREpGTF08ckI9dEJrf2Z2MDZ0cF9UfWtHYEFRRGNHaGtwU0g9YTQ9ckFXckdxTVZzckN1Un9EYUxuSWx%2FbHM3VFVXM2lNV0gxfWs3PTJHUXA1NU1DdVdSUTdyJyknY3dqaFZgd3Ngdyc%2FcXdwYCknZ2RmbmJ3anBrYUZqaWp3Jz8nJmNjY2NjYycpJ2lkfGpwcVF8dWAnPyd2bGtiaWBabHFgaCcpJ2BrZGdpYFVpZGZgbWppYWB3dic%2FcXdwYHgl",
+    "timestamp": "2026-05-23T15:49:58.183Z"
+  }
+}
