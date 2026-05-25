@@ -9,6 +9,11 @@
   },
   "scripts": {
     "dev": "npx serve . -l 3000",
-    "start": "npm run dev"
+    "start": "npm run dev",
+    "agent:lighthouse": "node scripts/lighthouse_runner.js"
+  },
+  "devDependencies": {
+    "chrome-launcher": "^1.2.1",
+    "lighthouse": "^13.3.0"
   }
 }
