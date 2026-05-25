@@ -129,7 +129,7 @@ class BantabaApp {
 
     populatePortfolioGrid() {
         const getImg = (cat) => {
-            if(!window.PortfolioData[cat] || window.PortfolioData[cat].length === 0) return '../assets/branding/cqr-bg-dark.jpg';
+            if(!window.PortfolioData[cat] || window.PortfolioData[cat].length === 0) return '../Assets/images/vision_oasis_bg.png';
             // Prefer an item that is NOT a video
             let item = window.PortfolioData[cat].find(i => i.type !== 'video');
             if(!item) item = window.PortfolioData[cat][0]; // fallback to first item
@@ -137,9 +137,9 @@ class BantabaApp {
             if (item.id) {
                 return `https://drive.google.com/uc?export=view&id=${item.id}`;
             } else if (item.name) {
-                return `../assets/lightroom_sync/${item.name}`;
+                return `../Assets/lightroom_sync/${item.name}`;
             }
-            return '../assets/branding/cqr-bg-dark.jpg';
+            return '../Assets/images/vision_oasis_bg.png';
         };
         
         const earthEl = document.getElementById('img-earth');
@@ -341,7 +341,7 @@ class BantabaApp {
         // GLTF Loader for the Blender Griot Model
         const loader = new THREE.GLTFLoader();
         loader.load(
-            '../assets/models/griot.glb', 
+            '../Assets/models/griot.glb', 
             (gltf) => {
                 console.log("Griot Model Loaded!");
                 const griot = gltf.scene;
@@ -739,7 +739,7 @@ class BantabaApp {
         gsap.to(this.dice.position, { y: 4, duration: 1, yoyo: true, repeat: 2 });
 
         try {
-            const response = await fetch('/.netlify/functions/roll', {
+            const response = await fetch('/api/roll', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email: email, eventId: this.currentEventId })

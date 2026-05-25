@@ -28,3 +28,17 @@ node_modules/
 *.pdf
 *.MOV
 rclone
+
+# Cleanup large folders
+content creation/
+Resolve Project Backups/
+DCIM/
+Music*/
+Portfolio_Content/
+raw_uploads/
+scratch/
+node.exe
+npm*
+npx*
+*.crdownload
+temp*/

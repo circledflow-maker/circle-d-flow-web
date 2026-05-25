@@ -288,6 +288,7 @@
     <div id="mobile-menu" class="fixed inset-0 bg-black/95 z-[90] flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 backdrop-blur-md">
         <nav class="flex flex-col gap-8 text-center">
             <a href="../index.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition gold-glow" data-i18n="nav_orbit">Return to Orbit</a>
+            <a href="bantaba.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition gold-glow" data-i18n="nav_guild_board">Guild Board</a>
             <a href="about.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition gold-glow" data-i18n="nav_about">About us</a>
             <a href="policy.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition gold-glow" data-i18n="nav_policy">Policy</a>
         </nav>
@@ -338,7 +339,7 @@
         </div>
 
         <!-- PAGE 2: THE BOUNTY BOARD -->
-        <div class="manga-page" id="page2" style="background: url('../assets/branding/cqr-bg-dark.jpg') center/cover;">
+        <div class="manga-page" id="page2" style="background: url('../Assets/images/vision_oasis_bg.png') center/cover;">
             <div class="dust-particles"></div>
             <div class="page-overlay interactive-layer flex flex-col h-full">
                 
@@ -420,27 +421,27 @@
                         <div class="manga-grid mt-4">
                             <!-- Earth -->
                             <div class="manga-panel panel-earth" onclick="app.openPortfolioLightbox('earth')">
-                                <img id="img-earth" src="../assets/branding/cqr-bg-dark.jpg" alt="Earth">
+                                <img id="img-earth" src="../Assets/images/vision_oasis_bg.png" alt="Earth">
                                 <div class="manga-title" data-i18n="port_earth_title">Ring of Earth</div>
                             </div>
                             <!-- Water -->
                             <div class="manga-panel panel-water" onclick="app.openPortfolioLightbox('water')">
-                                <img id="img-water" src="../assets/branding/cqr-bg-dark.jpg" alt="Water">
+                                <img id="img-water" src="../Assets/images/vision_oasis_bg.png" alt="Water">
                                 <div class="manga-title" data-i18n="port_water_title">Ring of Water</div>
                             </div>
                             <!-- Fire -->
                             <div class="manga-panel panel-fire" onclick="app.openPortfolioLightbox('fire')">
-                                <img id="img-fire" src="../assets/branding/cqr-bg-dark.jpg" alt="Fire">
+                                <img id="img-fire" src="../Assets/images/vision_oasis_bg.png" alt="Fire">
                                 <div class="manga-title" data-i18n="port_fire_title">Ring of Fire</div>
                             </div>
                             <!-- Wind -->
                             <div class="manga-panel panel-wind" onclick="app.openPortfolioLightbox('wind')">
-                                <img id="img-wind" src="../assets/branding/cqr-bg-dark.jpg" alt="Wind">
+                                <img id="img-wind" src="../Assets/images/vision_oasis_bg.png" alt="Wind">
                                 <div class="manga-title" data-i18n="port_wind_title">Ring of Wind</div>
                             </div>
                             <!-- Void -->
                             <div class="manga-panel panel-void" onclick="app.openPortfolioLightbox('void')">
-                                <img id="img-void" src="../assets/branding/cqr-bg-dark.jpg" alt="Void">
+                                <img id="img-void" src="../Assets/images/vision_oasis_bg.png" alt="Void">
                                 <div class="manga-title" data-i18n="port_void_title">Ring of Void</div>
                             </div>
                         </div>
@@ -499,7 +500,7 @@
 
         <!-- PAGE 3: THE CUP & DICE -->
         <div class="manga-page" id="page3">
-            <div id="canvas-page3"></div>
+            <div id="canvas-page3" class="absolute inset-0 z-0 pointer-events-none"></div>
             
             <div class="page-overlay justify-start items-center pt-6 md:pt-10 pointer-events-auto overflow-y-auto pb-32">
                 <div class="interactive-layer bg-black/60 p-6 md:p-8 backdrop-blur-md border border-[#d4af37]/30 flex flex-col items-center max-w-md w-[95%] text-center pointer-events-auto">
