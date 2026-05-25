@@ -128,13 +128,34 @@ class BantabaApp {
     }
 
     populatePortfolioGrid() {
-        const getImg = (cat) => window.PortfolioData[cat] && window.PortfolioData[cat].length > 0 ? window.PortfolioData[cat][0].url : '../assets/branding/cqr-bg-dark.jpg';
+        const getImg = (cat) => {
+            if(!window.PortfolioData[cat] || window.PortfolioData[cat].length === 0) return '../assets/branding/cqr-bg-dark.jpg';
+            // Prefer an item that is NOT a video
+            let item = window.PortfolioData[cat].find(i => i.type !== 'video');
+            if(!item) item = window.PortfolioData[cat][0]; // fallback to first item
+            
+            if (item.id) {
+                return `https://drive.google.com/uc?export=view&id=${item.id}`;
+            } else if (item.name) {
+                return `../assets/lightroom_sync/${item.name}`;
+            }
+            return '../assets/branding/cqr-bg-dark.jpg';
+        };
         
-        document.getElementById('img-earth').src = getImg('Nature & Mysticism');
-        document.getElementById('img-water').src = getImg('Circle D Flow');
-        document.getElementById('img-fire').src = getImg('Urban Adventure');
-        document.getElementById('img-wind').src = getImg('The Atelier');
-        document.getElementById('img-void').src = getImg('Studio Exclusives');
+        const earthEl = document.getElementById('img-earth');
+        if(earthEl) earthEl.src = getImg('Nature & Mysticism');
+        
+        const waterEl = document.getElementById('img-water');
+        if(waterEl) waterEl.src = getImg('Circle D Flow');
+        
+        const fireEl = document.getElementById('img-fire');
+        if(fireEl) fireEl.src = getImg('Urban Adventure');
+        
+        const windEl = document.getElementById('img-wind');
+        if(windEl) windEl.src = getImg('The Atelier');
+        
+        const voidEl = document.getElementById('img-void');
+        if(voidEl) voidEl.src = getImg('Studio Exclusives');
     }
 
     clickBazar() {

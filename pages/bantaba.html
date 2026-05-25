@@ -27,7 +27,9 @@
             background-color: var(--dark-void);
             color: white;
             font-family: 'Montserrat', sans-serif;
-            overflow: hidden; /* We handle scrolling via JS / custom container */
+            overflow: hidden !important; /* Force hide scrollbars */
+            position: fixed; /* Prevent mobile viewport from scrolling */
+            overscroll-behavior: none; /* Prevent bounce effects */
         }
 
         /* Manga Container */
