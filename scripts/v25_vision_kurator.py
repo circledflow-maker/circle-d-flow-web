@@ -153,8 +153,8 @@ def main():
         while img_count < images_per_ring and image_idx < len(images):
             f_path = images[image_idx]
             f_name = os.path.basename(f_path)
-            # relative path for web
-            rel_path = f"../assets/{'gdrive_sync' if 'gdrive_sync' in f_path else 'lightroom_sync'}/{f_name}"
+            # Using Assets with capital A to match the file system for case-sensitive hosting (Vercel)
+            rel_path = f"../Assets/{'gdrive_sync' if 'gdrive_sync' in f_path else 'lightroom_sync'}/{f_name}"
             
             print(f"  [AI] Analyzing Image: {f_name}")
             v_data = analyze_asset_for_ring(f_path, ring, False)
@@ -178,7 +178,7 @@ def main():
         while vid_count < videos_per_ring and video_idx < len(videos):
             f_path = videos[video_idx]
             f_name = os.path.basename(f_path)
-            rel_path = f"../assets/{'gdrive_sync' if 'gdrive_sync' in f_path else 'lightroom_sync'}/{f_name}"
+            rel_path = f"../Assets/{'gdrive_sync' if 'gdrive_sync' in f_path else 'lightroom_sync'}/{f_name}"
             
             print(f"  [AI] Analyzing Video: {f_name}")
             v_data = analyze_asset_for_ring(f_path, ring, True)

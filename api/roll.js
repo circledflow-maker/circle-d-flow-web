@@ -7,7 +7,7 @@ module.exports = async (req, res) => {
     }
 
     try {
-        const { email, eventId } = req.body;
+        const { email, eventId, existingRoll } = req.body;
 
         if (!email) {
             return res.status(400).json({ error: 'Email is required' });
@@ -39,7 +39,12 @@ module.exports = async (req, res) => {
 
         // If no existing roll found or no DB connection, generate a new one
         if (!rolledValue) {
-            rolledValue = Math.floor(Math.random() * 6) + 1;
+            if (existingRoll) {
+                rolledValue = parseInt(existingRoll);
+            }
+            if (!rolledValue || isNaN(rolledValue) || rolledValue < 1 || rolledValue > 6) {
+                rolledValue = Math.floor(Math.random() * 6) + 1;
+            }
             
             if (dbClient) {
                 await dbClient.from('user_rolls').insert([

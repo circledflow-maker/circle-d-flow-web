@@ -768,12 +768,20 @@ class BantabaApp {
         gsap.to(this.dice.position, { y: 4, duration: 1, yoyo: true, repeat: 2 });
 
         try {
+            const localRollKey = `dice_roll_${email}_${this.currentEventId}`;
+            const existingRoll = localStorage.getItem(localRollKey);
+
             const response = await fetch('/api/roll', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: email, eventId: this.currentEventId })
+                body: JSON.stringify({ email: email, eventId: this.currentEventId, existingRoll: existingRoll })
             });
             const data = await response.json();
+            
+            const finalRoll = data.rolled || data.rollResult;
+            if (finalRoll) {
+                localStorage.setItem(localRollKey, finalRoll);
+            }
 
             // Stop rolling and resolve final rotation
             setTimeout(() => {
@@ -818,7 +826,7 @@ class BantabaApp {
                 // UI Update
                 document.getElementById('btn-roll').style.display = 'none';
                 document.getElementById('roll-result').classList.remove('hidden');
-                document.getElementById('result-amount').innerText = data.rolled;
+                document.getElementById('result-amount').innerText = (data.rolled || data.rollResult) + ' €';
                 document.getElementById('btn-checkout').href = data.checkout_url;
                 
             }, 2500);
