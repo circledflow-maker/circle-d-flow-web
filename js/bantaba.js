@@ -256,22 +256,22 @@ class BantabaApp {
         if(eventId === 'criz') {
             title.innerText = t['criz_title'] || "C-RIZ LISTENING PARTY";
             date.innerText = t['criz_date'] || "DATUM: 02. JUNI 2026";
-            time.innerText = t['criz_time'] || "ZEIT: TBA";
-            loc.innerText = t['criz_location'] || "ORT: TBA";
-            desc.innerText = t['criz_desc'] || "Die Entstehung der neuen Welle...";
-            teaser.innerText = t['criz_teaser'] || "DJ Set von C-RIZ, Secret Guests, Drinks by African Queen Kitchen.";
+            time.innerText = t['criz_time'] || "ZEIT: 18:00 - 23:00";
+            loc.innerText = t['criz_location'] || "ORT: HEMPY ROOTS, Raum Köln";
+            desc.innerHTML = (t['criz_desc'] || "Die Entstehung der neuen Welle. Exklusive Preview des Albums in der Matrix.<br><br><b>Der Künstler:</b> C-RIZ bringt mystische Beats und spirituelle Tiefe zusammen.<br><a href='#' class='text-[#d4af37] hover:underline'>[+] Mehr über C-RIZ lesen</a>") + "<br><br>" + "Location: Hempy Roots ist ein sicherer Raum für Kreativität und Verbindung.";
+            teaser.innerHTML = t['criz_teaser'] || "<b>PROGRAMM:</b><br><span class='text-gray-300'>18:00</span> - Einlass & Ambient Flow<br><span class='text-gray-300'>19:00</span> - C-RIZ Live Session<br><span class='text-gray-300'>21:00</span> - Secret Guest Performance<br><span class='text-gray-300'>22:00</span> - Open Jam & Networking<br><br><i>TBA Catering.</i>";
         } else if(eventId === 'circledflow') {
             title.innerText = t['cdf_title'] || "CIRCLE D FLOW : THE AWAKENING";
             date.innerText = t['cdf_date'] || "DATUM: 27. JUNI 2026";
-            time.innerText = t['cdf_time'] || "ZEIT: TBA";
-            loc.innerText = t['cdf_location'] || "ORT: TBA";
-            desc.innerText = t['cdf_desc'] || "Tritt in die heiligen Hallen ein...";
-            teaser.innerText = t['cdf_teaser'] || "Erlebe die Verschmelzung von Musik, Kunst und Spiritualität. Mehr Details folgen in Kürze.";
+            time.innerText = t['cdf_time'] || "ZEIT: 16:00 - Open End";
+            loc.innerText = t['cdf_location'] || "ORT: SECRET GARDEN LX";
+            desc.innerHTML = (t['cdf_desc'] || "Tritt in die heiligen Hallen ein. Erlebe die Verschmelzung von Musik, Kunst und Spiritualität.<br><br><b>Die Vision:</b> Eine Feier des Lebens und der Kreation im Verborgenen.<br><a href='#' class='text-[#d4af37] hover:underline'>[+] Mehr über das Kollektiv erfahren</a>");
+            teaser.innerHTML = t['cdf_teaser'] || "<b>PROGRAMM:</b><br><span class='text-gray-300'>16:00</span> - Arrival & Meditation<br><span class='text-gray-300'>18:00</span> - Live Acts (Circle D Flow)<br><span class='text-gray-300'>22:00</span> - DJ Sets & Dance<br><br><i>Location Details werden nach Ticket-Kauf gesendet.</i>";
         }
         
         ticketBtn.onclick = () => {
             this.closeInfoLightbox();
-            this.openLightbox(eventId);
+            this.goToCheckout(eventId);
         };
 
         lb.classList.remove('hidden');
@@ -285,6 +285,11 @@ class BantabaApp {
             lb.classList.add('hidden');
             lb.classList.remove('flex');
         }});
+    }
+
+    goToCheckout(eventId) {
+        this.currentEventId = eventId;
+        this.proceedToDice();
     }
 
     proceedToDice() {
