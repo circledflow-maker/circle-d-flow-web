@@ -110,6 +110,11 @@ class BantabaApp {
             return;
         }
 
+        if(tabName === 'portfolio') {
+            window.location.href = 'portfolio_anime_reality.html';
+            return;
+        }
+
         const tabs = ['events', 'bazar', 'portfolio'];
         tabs.forEach(tab => {
             const btn = document.getElementById(`tab-${tab}`);
