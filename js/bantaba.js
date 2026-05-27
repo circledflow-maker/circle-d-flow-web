@@ -6,9 +6,14 @@ class BantabaApp {
         this.initPage1();
         this.initPage3();
         
-        // Show Griot dialogue when entering page 2
-        // We will trigger this in turnPage instead!
-        // Removing the timeout here.
+        // Show Griot dialogue after a short delay on load
+        setTimeout(() => {
+            const diag = document.getElementById('griot-dialogue');
+            if(diag && this.currentPage === 0) {
+                diag.classList.remove('hidden');
+                gsap.fromTo(diag, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 1 });
+            }
+        }, 1500);
 
         // Hash routing for Checkout (Magic Link Return)
         setTimeout(() => {
@@ -99,12 +104,12 @@ class BantabaApp {
         // Slide the container (Manga flip effect)
         this.container.style.transform = `translateX(-${pageIndex * 100}vw)`;
         
-        if(pageIndex === 1) {
-            // Trigger Griot dialogue animation when entering page 2
+        if(pageIndex === 0) {
+            // Trigger Griot dialogue animation when entering page 1
             const diag = document.getElementById('griot-dialogue');
             if(diag && diag.classList.contains('hidden')) {
                 diag.classList.remove('hidden');
-                gsap.fromTo(diag, { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 1, delay: 0.5 });
+                gsap.fromTo(diag, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 1, delay: 0.5 });
             }
         }
         
@@ -466,7 +471,7 @@ class BantabaApp {
 
         // Handle resize
         window.addEventListener('resize', () => {
-            if(this.currentPage === 1) { // Changed to 1 because Griot is now on Page 2
+            if(this.currentPage === 0) { // Griot is on Page 1
                 camera.aspect = window.innerWidth / window.innerHeight;
                 camera.updateProjectionMatrix();
                 renderer.setSize(window.innerWidth, window.innerHeight);
