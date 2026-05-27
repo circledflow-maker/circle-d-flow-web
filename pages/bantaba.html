@@ -371,31 +371,35 @@
         <div class="manga-page" id="page1">
             <div id="canvas-griot" class="absolute top-0 left-0 w-full h-full z-[1]"></div>
             
-            <div class="page-overlay justify-center items-center pt-24 md:pt-0 pointer-events-none pb-12 z-[10] flex flex-col h-full">
+            <div class="page-overlay justify-between items-center pt-8 md:pt-12 pointer-events-none pb-6 z-[10] flex flex-col h-full">
                 
-                <div class="interactive-layer bg-black/60 p-6 md:p-10 backdrop-blur-md border border-[#d4af37]/30 flex flex-col items-center w-[90%] max-w-2xl text-center mt-10 md:mt-0 shadow-2xl rounded-lg">
-                    <h1 class="text-4xl md:text-5xl cinzel text-[#d4af37] gold-glow mb-4" data-i18n="page1_title">WELCOME FROM DCIRCLE</h1>
-                    <p class="text-gray-300 max-w-lg text-center mb-6 italic text-sm md:text-base" data-i18n="page1_desc">
+                <!-- Welcome Box at the Top -->
+                <div class="interactive-layer bg-black/40 backdrop-blur-sm border-t border-b border-[#d4af37]/20 flex flex-col items-center w-full py-4 text-center shadow-lg">
+                    <h1 class="text-3xl md:text-5xl cinzel text-[#d4af37] gold-glow mb-2" data-i18n="page1_title">WELCOME FROM DCIRCLE</h1>
+                    <p class="text-gray-300 max-w-lg text-center px-4 italic text-[11px] md:text-sm" data-i18n="page1_desc">
                         Dieser Bereich ist Bantaba, der traditionelle Treffpunkt. Ein Safe Space ohne Vorurteile. Hier fließen Schicksal, Kultur und C4C-Philosophie zusammen.
                     </p>
                 </div>
 
-                <!-- Navigation Tabs (Golden Panel) on Page 1 -->
-                <div class="interactive-layer mt-12 bg-black/80 border border-[#d4af37] p-6 rounded-lg shadow-[0_0_20px_rgba(212,175,55,0.3)] w-[90%] max-w-4xl text-center pointer-events-auto">
-                    <h3 class="text-xl cinzel text-[#d4af37] mb-4">Choose your Path</h3>
-                    <div class="flex justify-center gap-4 md:gap-8 flex-wrap">
-                        <button class="text-[#d4af37] font-bold border-b-2 border-[#d4af37] pb-1 cinzel text-lg md:text-xl transition-all hover:text-white" onclick="app.switchTab('events'); app.turnPage(1);" data-i18n="tab_events">Events</button>
-                        <button class="text-[#d4af37] font-bold border-b-2 border-[#d4af37] pb-1 cinzel text-lg md:text-xl transition-all hover:text-white" onclick="window.location.href='portfolio_anime_reality.html'" data-i18n="tab_portfolio">Portfolio</button>
-                        <button class="text-[#d4af37] font-bold border-b-2 border-[#d4af37] pb-1 cinzel text-lg md:text-xl transition-all hover:text-white" onclick="app.switchTab('bazar'); app.turnPage(1);" data-i18n="tab_bazar">Bazar</button>
-                        <button class="text-amber-500 font-bold border-b-2 border-amber-500 pb-1 cinzel text-lg md:text-xl transition-all hover:text-white" onclick="app.switchTab('alliance'); app.turnPage(1);">Alliance</button>
-                        <button class="text-[#d4af37] font-bold border-b-2 border-[#d4af37] pb-1 cinzel text-lg md:text-xl transition-all hover:text-white" onclick="app.switchTab('jamsessions'); app.turnPage(1);" data-i18n="tab_jamsessions">Jamsessions</button>
+                <!-- Spacer to let the 3D Griot shine -->
+                <div class="flex-1 w-full min-h-[150px]"></div>
+
+                <!-- Navigation Tabs (Golden Panel) just above dialogue -->
+                <div class="interactive-layer bg-black/70 border-t border-b border-[#d4af37]/50 py-4 w-full text-center pointer-events-auto shadow-[0_0_15px_rgba(212,175,55,0.2)] mb-4">
+                    <h3 class="text-lg cinzel text-[#d4af37] mb-3">Choose your Path</h3>
+                    <div class="flex justify-center gap-x-4 gap-y-2 flex-wrap px-2">
+                        <button class="text-[#d4af37] font-bold border-b border-[#d4af37] pb-0.5 cinzel text-sm md:text-lg hover:text-white transition-all" onclick="app.switchTab('events'); app.turnPage(1);" data-i18n="tab_events">Events</button>
+                        <button class="text-[#d4af37] font-bold border-b border-[#d4af37] pb-0.5 cinzel text-sm md:text-lg hover:text-white transition-all" onclick="window.location.href='portfolio_anime_reality.html'" data-i18n="tab_portfolio">Portfolio</button>
+                        <button class="text-[#d4af37] font-bold border-b border-[#d4af37] pb-0.5 cinzel text-sm md:text-lg hover:text-white transition-all" onclick="app.switchTab('bazar'); app.turnPage(1);" data-i18n="tab_bazar">Bazar</button>
+                        <button class="text-amber-500 font-bold border-b border-amber-500 pb-0.5 cinzel text-sm md:text-lg hover:text-white transition-all" onclick="app.switchTab('alliance'); app.turnPage(1);">Alliance</button>
+                        <button class="text-[#d4af37] font-bold border-b border-[#d4af37] pb-0.5 cinzel text-sm md:text-lg hover:text-white transition-all" onclick="app.switchTab('jamsessions'); app.turnPage(1);" data-i18n="tab_jamsessions">Jamsessions</button>
                     </div>
                 </div>
 
-                <!-- Dialogue Box for Griot AT THE BOTTOM of Page 1 -->
-                <div id="griot-dialogue" class="w-[95%] md:max-w-xl mx-auto bg-black/80 border border-[#d4af37] p-4 md:p-6 text-center shadow-2xl rounded-lg mt-auto mb-8 pointer-events-auto hidden">
-                    <p class="text-[#d4af37] font-bold cinzel mb-2" data-i18n="griot_name">The Griot</p>
-                    <p class="text-sm font-mono text-gray-300 typing-effect" id="griot-text" data-i18n="griot_text">Ah, ein neuer Wanderer. Tritt näher, das Schicksal hat dich erwartet...</p>
+                <!-- Dialogue Box for Griot AT THE BOTTOM -->
+                <div id="griot-dialogue" class="w-[95%] md:max-w-xl mx-auto bg-black/80 border border-[#d4af37] p-3 md:p-6 text-center shadow-2xl rounded-lg pointer-events-auto hidden">
+                    <p class="text-[#d4af37] font-bold cinzel text-xs md:text-base mb-1" data-i18n="griot_name">The Griot</p>
+                    <p class="text-xs md:text-sm font-mono text-gray-300 typing-effect" id="griot-text" data-i18n="griot_text">Ah, ein neuer Wanderer. Tritt näher, das Schicksal hat dich erwartet...</p>
                 </div>
             </div>
         </div>
@@ -407,13 +411,24 @@
                 
                 <div class="w-full text-center py-6 bg-black/90 shadow-2xl border-b border-[#d4af37]/30 flex justify-between items-center px-4 md:px-8 sticky top-0 z-50">
                     <button class="text-gray-400 hover:text-[#d4af37] transition font-mono flex items-center gap-2" onclick="app.turnPage(0)">
-                        <span class="material-symbols-outlined text-sm">arrow_back</span> Back
+                        <span class="material-symbols-outlined text-sm">arrow_back</span> <span class="hidden md:inline">Back</span>
                     </button>
-                    <h2 class="text-3xl md:text-4xl cinzel text-[#d4af37] gold-glow" data-i18n="page2_title">Griot's Bounty Board</h2>
-                    <div class="w-20"></div> <!-- Spacer for balance -->
+                    <h2 class="text-2xl md:text-4xl cinzel text-[#d4af37] gold-glow" data-i18n="page2_title">Griot's Bounty Board</h2>
+                    <div class="w-10 md:w-20"></div> <!-- Spacer for balance -->
                 </div>
 
-                <div class="flex-1 overflow-y-auto w-full max-w-6xl mx-auto px-4 pb-20 relative">
+                <!-- Category Menu on the Board -->
+                <div class="w-full bg-black/60 backdrop-blur border-b border-[#d4af37]/20 py-3 mb-6 px-2 sticky top-[76px] md:top-[88px] z-40 shadow-md pointer-events-auto">
+                    <div class="flex justify-center gap-x-4 gap-y-2 flex-wrap">
+                        <button id="tab-events" class="text-[#d4af37] border-b border-[#d4af37] pb-0.5 cinzel text-xs md:text-sm font-bold transition-all hover:text-white" onclick="app.switchTab('events')" data-i18n="tab_events">Events</button>
+                        <button id="tab-portfolio" class="text-gray-500 border-b border-transparent pb-0.5 cinzel text-xs md:text-sm font-bold transition-all hover:text-[#d4af37]" onclick="window.location.href='portfolio_anime_reality.html'" data-i18n="tab_portfolio">Portfolio</button>
+                        <button id="tab-bazar" class="text-gray-500 border-b border-transparent pb-0.5 cinzel text-xs md:text-sm font-bold transition-all hover:text-[#d4af37]" onclick="app.switchTab('bazar')" data-i18n="tab_bazar">Bazar</button>
+                        <button id="tab-alliance" class="text-gray-500 border-b border-transparent pb-0.5 cinzel text-xs md:text-sm font-bold transition-all hover:text-amber-500" onclick="app.switchTab('alliance')">Alliance</button>
+                        <button id="tab-jamsessions" class="text-gray-500 border-b border-transparent pb-0.5 cinzel text-xs md:text-sm font-bold transition-all hover:text-[#d4af37]" onclick="app.switchTab('jamsessions')" data-i18n="tab_jamsessions">Jamsessions</button>
+                    </div>
+                </div>
+
+                <div class="flex-1 overflow-y-auto w-full max-w-6xl mx-auto px-4 pb-20 relative pt-2">
                     
                     <!-- EVENTS GRID -->
                     <div id="grid-events" class="bounty-grid w-full">
@@ -559,8 +574,8 @@
                     </div>
                 </div>
                 
-                <div class="absolute bottom-6 left-6">
-                    <button class="text-gray-500 hover:text-white font-mono transition bg-black/50 px-4 py-2 rounded" onclick="app.turnPage(0)" data-i18n="btn_back">← Zurück zum Eingang</button>
+                <div class="absolute bottom-6 left-6 hidden">
+                    <!-- Removed floating back button as there's a sticky one now -->
                 </div>
 
 
