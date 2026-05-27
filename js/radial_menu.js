@@ -72,6 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     function loadArchiveCategory(category) {
+        if (!category || !galleryGrid) return;
         galleryGrid.innerHTML = '';
         
         // Hide traditional 5 rings nav when in Archive mode
