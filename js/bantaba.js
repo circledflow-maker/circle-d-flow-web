@@ -6,14 +6,9 @@ class BantabaApp {
         this.initPage1();
         this.initPage3();
         
-        // Show Griot dialogue after a short delay
-        setTimeout(() => {
-            const diag = document.getElementById('griot-dialogue');
-            if(diag) {
-                diag.classList.remove('hidden');
-                gsap.fromTo(diag, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 1 });
-            }
-        }, 2000);
+        // Show Griot dialogue when entering page 2
+        // We will trigger this in turnPage instead!
+        // Removing the timeout here.
 
         // Hash routing for Checkout (Magic Link Return)
         setTimeout(() => {
@@ -103,6 +98,15 @@ class BantabaApp {
         this.currentPage = pageIndex;
         // Slide the container (Manga flip effect)
         this.container.style.transform = `translateX(-${pageIndex * 100}vw)`;
+        
+        if(pageIndex === 1) {
+            // Trigger Griot dialogue animation when entering page 2
+            const diag = document.getElementById('griot-dialogue');
+            if(diag && diag.classList.contains('hidden')) {
+                diag.classList.remove('hidden');
+                gsap.fromTo(diag, { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 1, delay: 0.5 });
+            }
+        }
         
         if(pageIndex === 2) {
             // Trigger Cup preparation animation when entering page 3
@@ -375,9 +379,9 @@ class BantabaApp {
         this.turnPage(2);
     }
 
-    // --- PAGE 1: THE GRIOT SCENE ---
+    // --- PAGE 2: THE GRIOT SCENE ---
     initPage1() {
-        const container = document.getElementById('canvas-page1');
+        const container = document.getElementById('canvas-griot');
         const scene = new THREE.Scene();
         scene.fog = new THREE.FogExp2(0x0a0a0a, 0.05);
 
@@ -462,7 +466,7 @@ class BantabaApp {
 
         // Handle resize
         window.addEventListener('resize', () => {
-            if(this.currentPage === 0) {
+            if(this.currentPage === 1) { // Changed to 1 because Griot is now on Page 2
                 camera.aspect = window.innerWidth / window.innerHeight;
                 camera.updateProjectionMatrix();
                 renderer.setSize(window.innerWidth, window.innerHeight);

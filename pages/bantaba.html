@@ -367,10 +367,9 @@
 
     <div id="manga-container">
         
-        <!-- PAGE 1: THE COVER (GRIOT) -->
-        <div class="manga-page" id="page1">
-            <div id="canvas-page1"></div>
-            <div class="page-overlay justify-start md:justify-center items-center pt-24 md:pt-0 overflow-y-auto pointer-events-auto pb-48">
+        <!-- PAGE 1: THE WELCOME PAGE -->
+        <div class="manga-page" id="page1" style="background: url('../Assets/images/vision_oasis_bg.png') center/cover;">
+            <div class="page-overlay justify-start md:justify-center items-center pt-24 md:pt-0 pointer-events-auto pb-48">
                 <div class="interactive-layer bg-black/60 p-6 md:p-10 backdrop-blur-md border border-[#d4af37]/30 flex flex-col items-center w-[90%] max-w-2xl text-center mt-10 md:mt-0">
                     <h1 class="text-4xl md:text-5xl cinzel text-[#d4af37] gold-glow mb-4" data-i18n="page1_title">Willkommen zu Circle D Flow</h1>
                     <p class="text-gray-300 max-w-lg text-center mb-6 italic text-sm md:text-base" data-i18n="page1_desc">
@@ -378,21 +377,22 @@
                     </p>
                     <button class="btn-gold interactive-layer" onclick="app.turnPage(1)" data-i18n="page1_btn">Betrete die Gilde</button>
                 </div>
-                
-                <!-- Dialogue Box for Griot -->
-                <div id="griot-dialogue" class="absolute bottom-6 left-1/2 transform -translate-x-1/2 w-[95%] md:max-w-md bg-black/80 border-t-4 border-[#d4af37] p-4 md:p-6 z-50 hidden text-center shadow-2xl rounded-t-lg">
-                    <p class="text-[#d4af37] font-bold cinzel mb-2" data-i18n="griot_name">The Griot</p>
-                    <p class="text-sm font-mono text-gray-300 typing-effect" id="griot-text" data-i18n="griot_text">Ah, ein neuer Wanderer. Tritt näher, das Schicksal hat dich erwartet...</p>
-                </div>
             </div>
         </div>
 
-        <!-- PAGE 2: THE BOUNTY BOARD -->
-        <div class="manga-page" id="page2" style="background: url('../Assets/images/destiny_grotto_beach_bg.png') center/cover;">
-            <div class="dust-particles"></div>
-            <div class="page-overlay interactive-layer flex flex-col h-full bg-black/50">
+        <!-- PAGE 2: THE BOUNTY BOARD & GRIOT -->
+        <div class="manga-page" id="page2">
+            <div id="canvas-griot" class="absolute top-0 left-0 w-full h-full z-[1]"></div>
+            
+            <div class="page-overlay interactive-layer flex flex-col h-full bg-black/50 z-[10] overflow-y-auto">
                 
-                <div class="w-full text-center py-8 bg-black/80 shadow-2xl border-b border-[#d4af37]/30">
+                <!-- Dialogue Box for Griot AT THE TOP -->
+                <div id="griot-dialogue" class="w-[95%] md:max-w-xl mx-auto bg-black/80 border border-[#d4af37] p-4 md:p-6 text-center shadow-2xl rounded-lg mt-8 mb-4 pointer-events-auto hidden">
+                    <p class="text-[#d4af37] font-bold cinzel mb-2" data-i18n="griot_name">The Griot</p>
+                    <p class="text-sm font-mono text-gray-300 typing-effect" id="griot-text" data-i18n="griot_text">Ah, ein neuer Wanderer. Tritt näher, das Schicksal hat dich erwartet...</p>
+                </div>
+                
+                <div class="w-full text-center py-8 bg-black/70 shadow-2xl border-y border-[#d4af37]/30 backdrop-blur-sm mt-auto pointer-events-auto">
                     <h2 class="text-4xl md:text-5xl cinzel text-[#d4af37] gold-glow" data-i18n="page2_title">Griot's Bounty Board</h2>
                     
                     <!-- Navigation Tabs -->
