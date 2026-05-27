@@ -124,7 +124,7 @@ class BantabaApp {
             return;
         }
 
-        const tabs = ['events', 'bazar', 'portfolio', 'alliance'];
+        const tabs = ['events', 'bazar', 'portfolio', 'alliance', 'jamsessions'];
         tabs.forEach(tab => {
             const btn = document.getElementById(`tab-${tab}`);
             const grid = document.getElementById(`grid-${tab}`);
@@ -299,6 +299,51 @@ class BantabaApp {
             lb.classList.add('hidden');
             lb.classList.remove('flex');
         }});
+    }
+
+    openSupportLightbox(eventId) {
+        this.currentEventId = eventId;
+        const lb = document.getElementById('support-lightbox');
+        lb.classList.remove('hidden');
+        lb.classList.add('flex');
+        gsap.fromTo(lb, { opacity: 0 }, { opacity: 1, duration: 0.3 });
+    }
+
+    closeSupportLightbox() {
+        const lb = document.getElementById('support-lightbox');
+        gsap.to(lb, { opacity: 0, duration: 0.3, onComplete: () => {
+            lb.classList.add('hidden');
+            lb.classList.remove('flex');
+        }});
+    }
+
+    async startStripeCheckout(amount) {
+        try {
+            const response = await fetch('/api/support-checkout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ eventId: this.currentEventId, amount: amount })
+            });
+            const data = await response.json();
+            if(data.checkout_url) {
+                window.location.href = data.checkout_url;
+            } else {
+                alert("Fehler bei der Verbindung zu Stripe.");
+            }
+        } catch (e) {
+            console.error("Stripe Checkout failed:", e);
+            alert("Fehler bei der Stripe-Verbindung.");
+        }
+    }
+
+    async startStripeCustomCheckout() {
+        const amountInput = document.getElementById('custom-support-amount');
+        const amount = parseInt(amountInput.value);
+        if(!amount || amount < 1) {
+            alert("Bitte einen gültigen Betrag eingeben.");
+            return;
+        }
+        await this.startStripeCheckout(amount);
     }
 
     goToCheckout(eventId) {
