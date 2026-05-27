@@ -1,0 +1,26 @@
+[
+    {
+        "id": "casa-mocamba",
+        "name": "Casa Mocamba",
+        "role": "Cultural Hub & Gastronomy",
+        "description": "A vibrant space in Lisbon celebrating African heritage, food, and music.",
+        "link": "https://www.instagram.com/casamocamba/",
+        "image": "images/partners/casa_mocamba.jpg"
+    },
+    {
+        "id": "secret-garden-lx",
+        "name": "Secret Garden LX",
+        "role": "Creative Sanctuary",
+        "description": "An underground garden and creative space hosting immersive events and art exhibitions.",
+        "link": "https://www.instagram.com/secretgardenlx/",
+        "image": "images/partners/secret_garden.jpg"
+    },
+    {
+        "id": "hempyroots",
+        "name": "HempyRoots",
+        "role": "Holistic Wellness",
+        "description": "Pioneers in CBD and holistic wellness, bringing natural balance to the flow state.",
+        "link": "https://hempyroots.com/",
+        "image": "images/partners/hempyroots.jpg"
+    }
+]

@@ -256,7 +256,7 @@
                 <p id="info-lb-teaser" class="text-sm text-gray-400">Teaser text...</p>
             </div>
 
-            <button class="btn-gold w-full text-center" id="info-lb-ticket-btn" data-i18n="btn_ticket_small" onclick="app.closeInfoLightbox(); app.openLightbox(app.currentEventId);">[ TICKET HOLEN ]</button>
+            <button class="btn-gold w-full text-center" id="info-lb-ticket-btn" data-i18n="btn_ticket_small" onclick="app.closeInfoLightbox(); app.openLightbox(app.currentEventId);">[ LET'S SUPPORT ]</button>
         </div>
     </div>
 
@@ -275,7 +275,7 @@
                 <p class="text-sm text-gray-400" data-i18n="lb_desc_protocol">Um ein Ticket zu erhalten, musst du die Prüfung am antiken Becher bestehen. Der Würfel bestimmt deinen Beitrag.</p>
             </div>
 
-            <button class="btn-gold w-full text-center" onclick="app.proceedToDice()" data-i18n="btn_get_ticket">Zum Ticket</button>
+            <button class="btn-gold w-full text-center" onclick="app.proceedToDice()" data-i18n="btn_get_ticket">Let's Support</button>
         </div>
     </div>
 
@@ -377,6 +377,7 @@
                         <button id="tab-events" class="text-[#d4af37] font-bold border-b-2 border-[#d4af37] pb-1 cinzel text-lg md:text-xl transition-all" onclick="app.switchTab('events')" data-i18n="tab_events">Events</button>
                         <button id="tab-portfolio" class="text-gray-500 hover:text-[#d4af37] pb-1 cinzel text-lg md:text-xl transition-all border-b-2 border-transparent" onclick="window.location.href='portfolio_anime_reality.html'" data-i18n="tab_portfolio">Portfolio</button>
                         <button id="tab-bazar" class="text-gray-500 hover:text-[#d4af37] pb-1 cinzel text-lg md:text-xl transition-all border-b-2 border-transparent" onclick="app.switchTab('bazar')" data-i18n="tab_bazar">Bazar</button>
+                        <button id="tab-alliance" class="text-gray-500 hover:text-amber-500 pb-1 cinzel text-lg md:text-xl transition-all border-b-2 border-transparent" onclick="app.switchTab('alliance')">Alliance</button>
                     </div>
                 </div>
 
@@ -395,7 +396,7 @@
                             <p class="text-sm text-gray-400 mb-6" data-i18n="criz_desc">The genesis of the new wave. Exclusive early preview of the album in the Matrix.</p>
                             <div class="flex justify-between items-center mt-auto">
                                 <button class="text-gray-400 font-mono text-sm hover:text-white transition" onclick="app.openInfoLightbox('criz')" data-i18n="btn_info_small">[ INFO ]</button>
-                                <button class="text-red-500 font-mono text-sm hover:underline transition" onclick="app.goToCheckout('criz')"  data-i18n="btn_ticket_small">[ TICKET HOLEN ]</button>
+                                <button class="text-red-500 font-mono text-sm hover:underline transition" onclick="app.goToCheckout('criz')"  data-i18n="btn_ticket_small">[ LET'S SUPPORT ]</button>
                             </div>
                         </div>
 
@@ -409,7 +410,7 @@
                             <p class="text-sm text-gray-400 mb-6" data-i18n="cdf_desc">Tritt in die heiligen Hallen ein. Erlebe das exklusive Line-up. Nimm die Schicksalsprüfung an.</p>
                             <div class="flex justify-between items-center mt-auto">
                                 <button class="text-gray-400 font-mono text-sm hover:text-white transition" onclick="app.openInfoLightbox('circledflow')" data-i18n="btn_info_small">[ INFO ]</button>
-                                <button class="text-emerald-500 font-mono text-sm hover:underline transition" onclick="app.goToCheckout('circledflow')"  data-i18n="btn_ticket_small">[ TICKET HOLEN ]</button>
+                                <button class="text-emerald-500 font-mono text-sm hover:underline transition" onclick="app.goToCheckout('circledflow')"  data-i18n="btn_ticket_small">[ LET'S SUPPORT ]</button>
                             </div>
                         </div>
 
@@ -440,6 +441,43 @@
                             </div>
                         </div>
 
+                    </div>
+
+                    <!-- ALLIANCE GRID (Initially Hidden) -->
+                    <div id="grid-alliance" class="bounty-grid w-full hidden" style="background: rgba(15, 5, 24, 0.8);">
+                        <!-- Filled dynamically from data/partners.json or statically -->
+                        <!-- Manga Panel 1 -->
+                        <div class="bounty-card" style="border: 1px solid #f59e0b; background: rgba(0,0,0,0.6);">
+                            <div class="bounty-pin" style="background: #f59e0b;"></div>
+                            <h3 class="text-xl cinzel text-white mb-2">Casa Mocamba</h3>
+                            <p class="text-xs text-amber-500 font-mono mb-4">ROLE: Cultural Hub & Gastronomy</p>
+                            <p class="text-sm text-gray-300 mb-6">A vibrant space in Lisbon celebrating African heritage, food, and music.</p>
+                            <div class="text-right">
+                                <a href="https://www.instagram.com/casamocamba/" target="_blank" class="text-amber-500 font-mono text-sm hover:text-white transition">[ CONNECT ]</a>
+                            </div>
+                        </div>
+
+                        <!-- Manga Panel 2 -->
+                        <div class="bounty-card" style="border: 1px solid #f59e0b; background: rgba(0,0,0,0.6);">
+                            <div class="bounty-pin" style="background: #f59e0b;"></div>
+                            <h3 class="text-xl cinzel text-white mb-2">Secret Garden LX</h3>
+                            <p class="text-xs text-amber-500 font-mono mb-4">ROLE: Creative Sanctuary</p>
+                            <p class="text-sm text-gray-300 mb-6">An underground garden and creative space hosting immersive events and art exhibitions.</p>
+                            <div class="text-right">
+                                <a href="https://www.instagram.com/secretgardenlx/" target="_blank" class="text-amber-500 font-mono text-sm hover:text-white transition">[ CONNECT ]</a>
+                            </div>
+                        </div>
+
+                        <!-- Manga Panel 3 -->
+                        <div class="bounty-card" style="border: 1px solid #f59e0b; background: rgba(0,0,0,0.6);">
+                            <div class="bounty-pin" style="background: #f59e0b;"></div>
+                            <h3 class="text-xl cinzel text-white mb-2">HempyRoots</h3>
+                            <p class="text-xs text-amber-500 font-mono mb-4">ROLE: Holistic Wellness</p>
+                            <p class="text-sm text-gray-300 mb-6">Pioneers in CBD and holistic wellness, bringing natural balance to the flow state.</p>
+                            <div class="text-right">
+                                <a href="https://hempyroots.com/" target="_blank" class="text-amber-500 font-mono text-sm hover:text-white transition">[ CONNECT ]</a>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- PORTFOLIO GRID (Initially Hidden) -->
@@ -494,7 +532,7 @@
                     <div id="page3-header-text">
                         <img id="checkout-flyer" src="" class="w-full h-32 md:h-64 object-cover border border-[#d4af37] mb-6 rounded shadow-lg hidden transition-all duration-500">
                         
-                        <h2 class="text-3xl md:text-4xl cinzel text-[#d4af37] mb-2" data-i18n="page3_title">Zum Ticket</h2>
+                        <h2 class="text-3xl md:text-4xl cinzel text-[#d4af37] mb-2" data-i18n="page3_title">Let's Support</h2>
                         <p class="text-sm text-gray-400 mb-6 font-mono" data-i18n="page3_desc">Tritt vor den antiken Becher. Dein Beitrag zum Event wird vom Flow bestimmt.</p>
                     </div>
                     

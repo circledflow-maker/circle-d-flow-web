@@ -15,11 +15,9 @@ class BantabaApp {
             }
         }, 2000);
 
-        // Hash routing for Griot's Board & Checkout
+        // Hash routing for Checkout (Magic Link Return)
         setTimeout(() => {
-            if (window.location.hash === '#board' || window.location.hash === '#board/') {
-                this.turnPage(1);
-            } else if (window.location.hash.includes('#checkout')) {
+            if (window.location.hash.includes('#checkout')) {
                 // If returning from Auth to checkout, grab the event ID and jump to dice page
                 const savedEvent = localStorage.getItem('last_event_id');
                 if (savedEvent) {
@@ -126,7 +124,7 @@ class BantabaApp {
             return;
         }
 
-        const tabs = ['events', 'bazar', 'portfolio'];
+        const tabs = ['events', 'bazar', 'portfolio', 'alliance'];
         tabs.forEach(tab => {
             const btn = document.getElementById(`tab-${tab}`);
             const grid = document.getElementById(`grid-${tab}`);

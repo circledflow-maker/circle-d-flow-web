@@ -373,7 +373,17 @@ class OrbitEngine {
             } else if(obj.userData.id) {
                 const id = obj.userData.id;
                 if(id === 'visionary') {
-                    this.transitionToLuvo(obj);
+                    // Animatic Transition to Portfolio
+                    const overlay = document.getElementById('flowee-intro');
+                    if(overlay) {
+                        overlay.style.display = 'flex';
+                        overlay.innerHTML = "<h2 style='color:var(--haki-gold); font-family:Cinzel; text-align:center'>Entering Portfolio...</h2>";
+                        gsap.to(overlay, { opacity: 1, duration: 1, onComplete: () => {
+                            window.location.href = 'pages/portfolio_anime_reality.html';
+                        }});
+                    } else {
+                        window.location.href = 'pages/portfolio_anime_reality.html';
+                    }
                 } else if(id === 'harmonizer') {
                     // Animatic Transition to Bantaba
                     const overlay = document.getElementById('flowee-intro');
