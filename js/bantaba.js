@@ -4,12 +4,12 @@ class BantabaApp {
         this.container = document.getElementById('manga-container');
         
         this.initPage1();
-        this.initPage3();
+        this.initPage4();
         
         // Show Griot dialogue after a short delay on load
         setTimeout(() => {
             const diag = document.getElementById('griot-dialogue');
-            if(diag && this.currentPage === 0) {
+            if(diag && this.currentPage === 1) {
                 diag.classList.remove('hidden');
                 gsap.fromTo(diag, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 1 });
             }
@@ -23,7 +23,7 @@ class BantabaApp {
                 if (savedEvent) {
                     this.currentEventId = savedEvent;
                 }
-                this.turnPage(2);
+                this.turnPage(3);
                 this.proceedToDice(); // Updates the flyer and auth UI state
             }
         }, 100);
@@ -104,8 +104,8 @@ class BantabaApp {
         // Slide the container (Manga flip effect)
         this.container.style.transform = `translateX(-${pageIndex * 100}vw)`;
         
-        if(pageIndex === 0) {
-            // Trigger Griot dialogue animation when entering page 1
+        if(pageIndex === 1) {
+            // Trigger Griot dialogue animation when entering page 2
             const diag = document.getElementById('griot-dialogue');
             if(diag && diag.classList.contains('hidden')) {
                 diag.classList.remove('hidden');
@@ -113,8 +113,8 @@ class BantabaApp {
             }
         }
         
-        if(pageIndex === 2) {
-            // Trigger Cup preparation animation when entering page 3
+        if(pageIndex === 3) {
+            // Trigger Cup preparation animation when entering page 4
             if(this.cup) {
                 gsap.to(this.cup.position, { y: 2, duration: 2, ease: "power2.inOut" });
             }
@@ -381,7 +381,7 @@ class BantabaApp {
             }
         }
         
-        this.turnPage(2);
+        this.turnPage(3);
     }
 
     // --- PAGE 2: THE GRIOT SCENE ---

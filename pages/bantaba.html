@@ -35,7 +35,7 @@
         /* Manga Container */
         #manga-container {
             display: flex;
-            width: 300vw; /* 3 pages */
+            width: 400vw; /* 4 pages */
             height: 100vh;
             transition: transform 1.2s cubic-bezier(0.645, 0.045, 0.355, 1);
             will-change: transform;
@@ -367,50 +367,65 @@
 
     <div id="manga-container">
         
-        <!-- PAGE 1: LANDING PAGE (Griot + Welcome + Tabs) -->
+        <!-- PAGE 1: LANDING PAGE (Welcome only) -->
         <div class="manga-page" id="page1">
             <div id="canvas-griot" class="absolute top-0 left-0 w-full h-full z-[1]"></div>
             
-            <div class="page-overlay justify-between items-center pt-8 md:pt-12 pointer-events-none pb-6 z-[10] flex flex-col h-full">
+            <div class="page-overlay justify-center items-center pointer-events-none pb-6 z-[10] flex flex-col h-full">
                 
-                <!-- Welcome Box at the Top -->
-                <div class="interactive-layer bg-black/40 backdrop-blur-sm border-t border-b border-[#d4af37]/20 flex flex-col items-center w-full py-4 text-center shadow-lg">
+                <!-- Welcome Box -->
+                <div class="interactive-layer bg-black/40 backdrop-blur-sm border-t border-b border-[#d4af37]/20 flex flex-col items-center w-full py-8 text-center shadow-lg">
                     <h1 class="text-3xl md:text-5xl cinzel text-[#d4af37] gold-glow mb-2" data-i18n="page1_title">Welcome to D. Circle</h1>
-                    <p class="text-gray-300 max-w-lg text-center px-4 italic text-[11px] md:text-sm" data-i18n="page1_desc">
+                    <p class="text-gray-300 max-w-lg text-center px-4 italic text-[11px] md:text-sm mb-6" data-i18n="page1_desc">
                         Dieser Bereich ist Bantaba, der traditionelle Treffpunkt. Ein Safe Space ohne Vorurteile. Hier fließen Schicksal, Kultur und C4C-Philosophie zusammen.
                     </p>
-                </div>
-
-                <!-- Spacer to let the 3D Griot shine -->
-                <div class="flex-1 w-full min-h-[150px]"></div>
-
-                <!-- Navigation Tabs (Golden Panel) just above dialogue -->
-                <div class="interactive-layer bg-black/70 border-t border-b border-[#d4af37]/50 py-4 w-full text-center pointer-events-auto shadow-[0_0_15px_rgba(212,175,55,0.2)] mb-4">
-                    <h3 class="text-lg cinzel text-[#d4af37] mb-3">Choose your Path</h3>
-                    <div class="flex flex-wrap justify-center gap-4 mt-6">
-                        <button class="border border-[#d4af37] px-4 py-2 rounded-full text-white mono text-[10px] tracking-widest hover:bg-[#d4af37] hover:text-black transition-all uppercase" onclick="app.switchTab('events'); app.turnPage(1);" data-i18n="tab_events">Events</button>
-                        <button class="border border-[#d4af37] px-4 py-2 rounded-full text-white mono text-[10px] tracking-widest hover:bg-[#d4af37] hover:text-black transition-all uppercase" onclick="window.location.href='portfolio_anime_reality.html'" data-i18n="tab_portfolio">Portfolio</button>
-                        <button class="border border-[#d4af37] px-4 py-2 rounded-full text-white mono text-[10px] tracking-widest hover:bg-[#d4af37] hover:text-black transition-all uppercase" onclick="app.switchTab('bazar'); app.turnPage(1);" data-i18n="tab_bazar">Bazar</button>
-                        <button class="border border-amber-500 px-4 py-2 rounded-full text-white mono text-[10px] tracking-widest hover:bg-amber-500 hover:text-black transition-all uppercase" onclick="app.switchTab('alliance'); app.turnPage(1);">Alliance</button>
-                        <button class="border border-[#d4af37] px-4 py-2 rounded-full text-white mono text-[10px] tracking-widest hover:bg-[#d4af37] hover:text-black transition-all uppercase" onclick="app.switchTab('jamsessions'); app.turnPage(1);" data-i18n="tab_jamsessions">Jamsessions</button>
-                    </div>
-                </div>
-
-                <!-- Dialogue Box for Griot AT THE BOTTOM -->
-                <div id="griot-dialogue" class="w-[95%] md:max-w-xl mx-auto bg-black/80 border border-[#d4af37] p-3 md:p-6 text-center shadow-2xl rounded-lg pointer-events-auto hidden">
-                    <p class="text-[#d4af37] font-bold cinzel text-xs md:text-base mb-1" data-i18n="griot_name">The Griot</p>
-                    <p class="text-xs md:text-sm font-mono text-gray-300 typing-effect" id="griot-text" data-i18n="griot_text">Ah, ein neuer Wanderer. Tritt näher, das Schicksal hat dich erwartet...</p>
+                    <button class="border border-[#d4af37] text-[#d4af37] hover:bg-[#d4af37] hover:text-black px-8 py-3 rounded-full uppercase tracking-widest text-sm transition font-bold" onclick="app.turnPage(1)" data-i18n="page1_btn">ENTER BANTABA</button>
                 </div>
             </div>
         </div>
 
-        <!-- PAGE 2: THE BOUNTY BOARD GRIDS -->
-        <div class="manga-page" id="page2" style="background: url('../Assets/images/destiny_grotto_beach_bg.png') center/cover;">
+        <!-- PAGE 2: THE GRIOT & THE TABS -->
+        <div class="manga-page" id="page2">
+            <!-- Reuse canvas? We can't move the canvas easily in DOM without breaking 3D, but since manga-page moves, we just leave canvas in page1 and let it bleed, or move it. Actually, wait: canvas-griot is in page 1. Since background moves, we should make canvas-griot position fixed! -->
+            <div class="page-overlay justify-between items-center pt-8 md:pt-12 pointer-events-none pb-6 z-[10] flex flex-col h-full">
+                
+                <!-- Spacer to let the 3D Griot shine -->
+                <div class="flex-1 w-full min-h-[150px]"></div>
+
+                <!-- Dialogue Box for Griot AT THE BOTTOM -->
+                <div id="griot-dialogue" class="w-[95%] md:max-w-xl mx-auto bg-black/80 border border-[#d4af37] p-3 md:p-6 text-center shadow-2xl rounded-lg pointer-events-auto mb-4">
+                    <p class="text-[#d4af37] font-bold cinzel text-xs md:text-base mb-1" data-i18n="griot_name">The Griot</p>
+                    <p class="text-xs md:text-sm font-mono text-gray-300 typing-effect" id="griot-text" data-i18n="griot_text">Ah, ein neuer Wanderer. Tritt näher, das Schicksal hat dich erwartet...</p>
+                </div>
+
+                <!-- Navigation Tabs (Golden Panel) just below dialogue -->
+                <div class="interactive-layer bg-black/70 border-t border-b border-[#d4af37]/50 py-4 w-full text-center pointer-events-auto shadow-[0_0_15px_rgba(212,175,55,0.2)]">
+                    <h3 class="text-lg cinzel text-[#d4af37] mb-3">Choose your Path</h3>
+                    <div class="flex flex-wrap justify-center gap-4 mt-6">
+                        <button class="border border-[#d4af37] px-4 py-2 rounded-full text-white mono text-[10px] tracking-widest hover:bg-[#d4af37] hover:text-black transition-all uppercase" onclick="app.switchTab('events'); app.turnPage(2);" data-i18n="tab_events">Events</button>
+                        <button class="border border-[#d4af37] px-4 py-2 rounded-full text-white mono text-[10px] tracking-widest hover:bg-[#d4af37] hover:text-black transition-all uppercase" onclick="window.location.href='portfolio_anime_reality.html'" data-i18n="tab_portfolio">Portfolio</button>
+                        <button class="border border-[#d4af37] px-4 py-2 rounded-full text-white mono text-[10px] tracking-widest hover:bg-[#d4af37] hover:text-black transition-all uppercase" onclick="app.switchTab('bazar'); app.turnPage(2);" data-i18n="tab_bazar">Bazar</button>
+                        <button class="border border-amber-500 px-4 py-2 rounded-full text-white mono text-[10px] tracking-widest hover:bg-amber-500 hover:text-black transition-all uppercase" onclick="app.switchTab('alliance'); app.turnPage(2);">Alliance</button>
+                        <button class="border border-[#d4af37] px-4 py-2 rounded-full text-white mono text-[10px] tracking-widest hover:bg-[#d4af37] hover:text-black transition-all uppercase" onclick="app.switchTab('jamsessions'); app.turnPage(2);" data-i18n="tab_jamsessions">Jamsessions</button>
+                    </div>
+                </div>
+
+                <!-- Back button to page 1 -->
+                <div class="absolute top-6 left-6 interactive-layer z-[100]">
+                    <button class="text-[#d4af37] hover:text-white transition font-mono flex items-center gap-2" onclick="app.turnPage(0)">
+                        <span class="material-symbols-outlined">arrow_back</span> Back
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 3: THE BOUNTY BOARD GRIDS -->
+        <div class="manga-page" id="page3" style="background: url('../Assets/images/destiny_grotto_beach_bg.png') center/cover;">
             <div class="dust-particles"></div>
             <div class="page-overlay interactive-layer flex flex-col h-full bg-black/70 overflow-y-auto z-[10]">
                 
                 <div class="w-full text-center py-6 bg-black/90 shadow-2xl border-b border-[#d4af37]/30 flex justify-between items-center px-4 md:px-8 sticky top-0 z-50">
-                    <button class="text-gray-400 hover:text-[#d4af37] transition font-mono flex items-center gap-2" onclick="app.turnPage(0)">
+                    <button class="text-gray-400 hover:text-[#d4af37] transition font-mono flex items-center gap-2" onclick="app.turnPage(1)">
                         <span class="material-symbols-outlined text-sm">arrow_back</span> <span class="hidden md:inline">Back</span>
                     </button>
                     <h2 class="text-2xl md:text-4xl cinzel text-[#d4af37] gold-glow" data-i18n="page2_title">Griot's Bounty Board</h2>
@@ -583,9 +598,9 @@
             </div>
         </div>
 
-        <!-- PAGE 3: THE CUP & DICE -->
-        <div class="manga-page" id="page3">
-            <div id="canvas-page3" class="absolute inset-0 z-0 pointer-events-none"></div>
+        <!-- PAGE 4: THE CUP & DICE -->
+        <div class="manga-page" id="page4">
+            <div id="canvas-page4" class="absolute inset-0 z-0 pointer-events-none"></div>
             
             <div class="page-overlay justify-start items-center pt-6 md:pt-10 pointer-events-auto overflow-y-auto pb-32">
                 <div class="interactive-layer bg-black/60 p-6 md:p-8 backdrop-blur-md border border-[#d4af37]/30 flex flex-col items-center max-w-md w-[95%] text-center pointer-events-auto">
@@ -638,7 +653,7 @@
             </div>
             
             <div class="absolute bottom-6 left-6 md:bottom-10 md:left-10 interactive-layer z-[100]">
-                <button class="btn-gold bg-black/90 shadow-2xl font-bold" onclick="app.turnPage(1)" data-i18n="btn_back_board">← Zurück zum Board</button>
+                <button class="btn-gold bg-black/90 shadow-2xl font-bold" onclick="app.turnPage(2)" data-i18n="btn_back_board">← Zurück zum Board</button>
             </div>
         </div>
 

@@ -1,7 +1,7 @@
 const translations = {
     "en": {
         "btn_return": "[ RETURN TO ORBIT ]",
-        "page1_title": "Welcome from DCircle",
+        "page1_title": "Welcome to D. Circle",
         "page1_desc": "This area is Bantaba, the traditional meeting place. A safe space without prejudice. Where destiny, culture, and C4C-philosophy converge.",
         "page1_btn": "Enter Bantaba",
         "griot_name": "The Griot",
@@ -84,7 +84,7 @@ const translations = {
     },
     "de": {
         "btn_return": "[ ZURÜCK ZUM ORBIT ]",
-        "page1_title": "Welcome from DCircle",
+        "page1_title": "Welcome to D. Circle",
         "page1_desc": "Dieser Bereich ist Bantaba, der traditionelle Treffpunkt. Ein Safe Space ohne Vorurteile. Hier fließen Schicksal, Kultur und C4C-Philosophie zusammen.",
         "page1_btn": "Enter Bantaba",
         "griot_name": "The Griot",
@@ -167,7 +167,7 @@ const translations = {
     },
     "fr": {
         "btn_return": "[ RETOUR À L'ORBITE ]",
-        "page1_title": "Welcome from DCircle",
+        "page1_title": "Welcome to D. Circle",
         "page1_desc": "Le lieu de rencontre traditionnel. Un espace sûr sans préjugés. Où le destin, la culture et la philosophie C4C convergent.",
         "page1_btn": "Enter Bantaba",
         "griot_name": "Le Griot",
@@ -250,7 +250,7 @@ const translations = {
     },
     "pt": {
         "btn_return": "[ VOLTAR À ÓRBITA ]",
-        "page1_title": "Welcome from DCircle",
+        "page1_title": "Welcome to D. Circle",
         "page1_desc": "O ponto de encontro tradicional. Um espaço seguro sem preconceitos. Onde o destino, a cultura e a filosofia C4C convergem.",
         "page1_btn": "Enter Bantaba",
         "griot_name": "O Griot",
