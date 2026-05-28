@@ -396,6 +396,18 @@ class OrbitEngine {
                     } else {
                         window.location.href = 'pages/bantaba.html';
                     }
+                } else if(id === 'kinetic') {
+                    // Animatic Transition to Heart World
+                    const overlay = document.getElementById('flowee-intro');
+                    if(overlay) {
+                        overlay.style.display = 'flex';
+                        overlay.innerHTML = "<h2 style='color:#ff5522; font-family:Cinzel; text-align:center'>Entering the Heart...</h2>";
+                        gsap.to(overlay, { opacity: 1, duration: 1, onComplete: () => {
+                            window.location.href = 'pages/heart.html';
+                        }});
+                    } else {
+                        window.location.href = 'pages/heart.html';
+                    }
                 } else {
                     this.showWorldOverlay(id);
                 }

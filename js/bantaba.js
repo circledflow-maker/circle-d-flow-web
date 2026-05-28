@@ -651,9 +651,9 @@ class BantabaApp {
         gsap.to(griotGroup.position, { y: -5.5, duration: 2, repeat: -1, yoyo: true, ease: "sine.inOut" });
     }
 
-    // --- PAGE 3: THE DESTINY TEST SCENE ---
-    initPage3() {
-        const container = document.getElementById('canvas-page3');
+    // --- PAGE 4: THE DESTINY TEST SCENE ---
+    initPage4() {
+        const container = document.getElementById('canvas-page4');
         const scene = new THREE.Scene();
         scene.fog = new THREE.FogExp2(0x000000, 0.05);
 
@@ -769,7 +769,7 @@ class BantabaApp {
         animate();
 
         window.addEventListener('resize', () => {
-            if(this.currentPage === 2) {
+            if(this.currentPage === 3) {
                 camera.aspect = window.innerWidth / window.innerHeight;
                 camera.updateProjectionMatrix();
                 renderer.setSize(window.innerWidth, window.innerHeight);
