@@ -675,58 +675,202 @@
             const urlParams = new URLSearchParams(window.location.search);
             const rings = ['Feuer', 'Wasser', 'Erde', 'Luft', 'Realm', 'Artist', 'Nature', 'Event'];
             let activeCategory = urlParams.get('cat') || "Feuer";
+
+window.loadCategory = function(catName) {
+    activeCategory = catName;
+    renderTabs();
+    updateWeeklyFlowBanner(); renderGrid();
+    renderGrid();
+    
+    // Smooth scroll to top of grid for mobile
+    const gridEl = document.getElementById('photography-masonry');
+    if(gridEl) {
+        window.scrollTo({
+            top: gridEl.offsetTop - 150,
+            behavior: 'smooth'
+        });
+    }
+    
+    // Also close the radial menu after clicking
+    const radialMenu = document.getElementById('radial-menu');
+    const triggerBtn = document.getElementById('radial-trigger');
+    if(radialMenu && !radialMenu.classList.contains('pointer-events-none')) {
+        // Trigger a click to close it
+        triggerBtn.click();
+    }
+};
+
+function renderGrid() {
+    const grid = document.getElementById('portfolio-grid');
+    const masonry = document.getElementById('photography-masonry');
+    
+    const rings = ['Feuer', 'Wasser', 'Erde', 'Luft', 'Realm', 'Artist', 'Nature', 'Event'];
+    const keywordMap = {
+        'feuer': ['fire', 'jam', 'red', 'action', 'heat', 'party', 'jamsessions', 'burn', 'energy', 'stage'],
+        'wasser': ['water', 'fluid', 'blue', 'sea', 'river', 'calm', 'flow', 'surf', 'soundwaves', 'ocean', 'wave'],
+        'erde': ['earth', 'ground', 'green', 'tree', 'mountain', 'street', 'city', 'urban', 'castle', 'stone', 'root'],
+        'luft': ['air', 'sky', 'wind', 'cloud', 'jump', 'fly', 'bird', 'high', 'space'],
+        'realm': ['realm', 'void', 'dark', 'studio', 'abstract', 'inside', 'black', 'atelier', 'indoor', 'session'],
+        'artist': ['artist', 'portrait', 'model', 'face', 'people', 'man', 'woman', 'spotlight', 'close', 'person'],
+        'nature': ['nature', 'leaf', 'flower', 'forest', 'wild', 'plant', 'outdoor', 'wood', 'landscape'],
+        'event': ['event', 'crowd', 'live', 'concert', 'gig', 'performance', 'show', 'festival', 'people']
+    };
+    
+    let assets = [];
+    if (window.PortfolioData) {
+        let allAssets = [];
+        Object.values(window.PortfolioData).forEach(arr => {
+            if (Array.isArray(arr)) {
+                allAssets.push(...arr);
+            }
+        });
+        
+        const targetKeywords = keywordMap[activeCategory.toLowerCase()] || [activeCategory.toLowerCase()];
+        
+        let matchedAssets = allAssets.filter(item => {
+            const searchString = `${item.name} ${item.professional_name || ''} ${item.tags ? item.tags.join(' ') : ''}`.toLowerCase();
+            return targetKeywords.some(kw => searchString.includes(kw));
+        });
+        
+        if (matchedAssets.length === 0 && allAssets.length > 0) {
+            let idx = rings.indexOf(activeCategory);
+            if (idx === -1) idx = 1; else idx += 1;
+            matchedAssets = allAssets.filter((a, i) => i % idx === 0).slice(0, 15);
+        }
+        
+        if (matchedAssets.length === 0) matchedAssets = allAssets.slice(0, 12);
+
+        const uniqueNames = new Set();
+        assets = matchedAssets.filter(item => {
+            const nameLower = item.name.toLowerCase();
+            if (nameLower.endsWith('.nef')) return false; 
             
-            // Map keywords to our new Rings
-            const keywordMap = {
-                'feuer': ['fire', 'jam', 'red', 'action', 'heat', 'party', 'jamsessions', 'burn', 'energy', 'stage'],
-                'wasser': ['water', 'fluid', 'blue', 'sea', 'river', 'calm', 'flow', 'surf', 'soundwaves', 'ocean', 'wave'],
-                'erde': ['earth', 'ground', 'green', 'tree', 'mountain', 'street', 'city', 'urban', 'castle', 'stone', 'root'],
-                'luft': ['air', 'sky', 'wind', 'cloud', 'jump', 'fly', 'bird', 'high', 'space'],
-                'realm': ['realm', 'void', 'dark', 'studio', 'abstract', 'inside', 'black', 'atelier', 'indoor', 'session'],
-                'artist': ['artist', 'portrait', 'model', 'face', 'people', 'man', 'woman', 'spotlight', 'close', 'person'],
-                'nature': ['nature', 'leaf', 'flower', 'forest', 'wild', 'plant', 'outdoor', 'wood', 'landscape'],
-                'event': ['event', 'crowd', 'live', 'concert', 'gig', 'performance', 'show', 'festival', 'people']
+            const baseName = nameLower.split('.').slice(0, -1).join('.') || nameLower;
+            if (uniqueNames.has(baseName)) return false;
+            
+            uniqueNames.add(baseName);
+            return true;
+        });
+    }
+
+    const pageCaption = document.querySelector('.pt-\\[40px\\] p');
+    if (pageCaption) {
+        pageCaption.innerHTML = `A real-time reflection of the 3D Master Node.<br>Category: ${activeCategory} | Payload: ${assets ? assets.length : 0} Traces.`;
+    }
+
+    if (!assets || assets.length === 0) {
+        grid.innerHTML = `<div class="swiper-slide !w-full !max-w-2xl text-center py-20 px-8 bg-transparent border-none shadow-none flex justify-center items-center">
+            <div>
+                <div class="mono opacity-50 mb-6 font-bold text-lg">NEURAL CALIBRATION IN PROGRESS</div>
+                <p class="mono opacity-40 text-xs mb-8">Segment [${activeCategory}] yielded 0 traces.</p>
+            </div>
+        </div>`;
+        if(typeof triggerNexusGatekeeper === 'function') {
+            triggerNexusGatekeeper("Noch keine Schätze in dieser Kategorie? <br>Lass uns gemeinsam etwas neues erschaffen.");
+        }
+        return;
+    }
+
+    grid.innerHTML = "";
+    masonry.innerHTML = "";
+
+    const videos = [];
+    const photos = [];
+    
+    assets.forEach(asset => {
+        const nameLower = asset.name.toLowerCase();
+        const isVideo = nameLower.endsWith('.mp4') || nameLower.endsWith('.mov') || nameLower.endsWith('.xml');
+        if (isVideo) videos.push(asset);
+        else photos.push(asset);
+    });
+
+    const topVideos = videos.slice(0, 3);
+    const topPhotos = photos.slice(0, 12);
+    
+    if (topVideos.length > 0) {
+        document.getElementById('video-carousel').style.display = 'block';
+        topVideos.forEach((asset) => {
+            const isXML = asset.name.toLowerCase().endsWith('.xml');
+            let thumbnail = "../Assets/images/Logo.png";
+            if (isXML) thumbnail = "../assets/ui/xml_icon.png";
+            else if (asset.thumb_url) thumbnail = asset.thumb_url;
+            else if (asset.id && (asset.id.startsWith("local_") || asset.id.startsWith("fix_") || asset.id.startsWith("localFile_"))) thumbnail = asset.url;
+            else if (asset.url && !asset.url.includes("drive.google.com")) thumbnail = asset.url;
+            else if (!asset.id.includes("mock")) thumbnail = `https://drive.google.com/thumbnail?id=${asset.id}&sz=w800`;
+
+            const card = document.createElement('div');
+            card.className = 'swiper-slide asset-card video-card';
+            card.onclick = () => {
+                window.CDF_Player.open(asset);
             };
             
-            let assets = [];
-            if (window.PortfolioData) {
-                let allAssets = [];
-                Object.values(window.PortfolioData).forEach(arr => {
-                    if (Array.isArray(arr)) {
-                        allAssets.push(...arr);
-                    }
-                });
-                
-                // Agent Logic: Search through all assets and match based on keywords
-                const targetKeywords = keywordMap[activeCategory.toLowerCase()] || [activeCategory.toLowerCase()];
-                
-                let matchedAssets = allAssets.filter(item => {
-                    const searchString = `${item.name} ${item.professional_name || ''} ${item.tags ? item.tags.join(' ') : ''}`.toLowerCase();
-                    return targetKeywords.some(kw => searchString.includes(kw));
-                });
-                
-                // Fallback if no exact keyword match: return a random slice or default category match
-                if (matchedAssets.length === 0 && allAssets.length > 0) {
-                    // Pick 10 assets deterministically based on string length to avoid empty pages
-                    let idx = rings.indexOf(activeCategory);
-                    if (idx === -1) idx = 1; else idx += 1;
-                    matchedAssets = allAssets.filter((a, i) => i % idx === 0).slice(0, 15);
-                }
-                
-                if (matchedAssets.length === 0) matchedAssets = allAssets.slice(0, 12);
+            let badgeLabel = isXML ? 'AI PROJECT' : 'CINEMATIC FLOW';
+            let metaLabel = isXML ? 'AI Timeline Engine' : 'Documentary Fragment';
 
-                const uniqueNames = new Set();
-                assets = matchedAssets.filter(item => {
-                    const nameLower = item.name.toLowerCase();
-                    if (nameLower.endsWith('.nef')) return false; // Skip RAW files
-                    
-                    const baseName = nameLower.split('.').slice(0, -1).join('.') || nameLower;
-                    if (uniqueNames.has(baseName)) return false;
-                    
-                    uniqueNames.add(baseName);
-                    return true;
-                });
-            }
+            if (activeCategory === "Artist Spotlight") { badgeLabel = "ARTIST SPOTLIGHT"; metaLabel = "Individual Portrait"; }
+            else if (activeCategory === "Soundwaves") { badgeLabel = "SOUNDWAVE"; metaLabel = "DJ Performance"; }
+            else if (activeCategory === "The Atelier") { badgeLabel = "CREATIVE VORTEX"; metaLabel = "Artistic Process"; }
+
+            const mediaElement = (!isXML && asset.url && (asset.url.toLowerCase().endsWith('.mp4') || asset.url.toLowerCase().endsWith('.mov'))) 
+                ? `<video src="${asset.url}" class="asset-image" autoplay muted loop playsinline></video>`
+                : `<img src="${thumbnail}" class="asset-image ${isXML ? '!object-contain p-8' : ''}" onerror="this.src='../Assets/images/Logo.png'">`;
+
+            card.innerHTML = `
+                <div class="category-badge border-[#E2725B] text-[#E2725B] shadow-[0_0_15px_rgba(226,114,91,0.4)]">${badgeLabel}</div>
+                <div class="asset-image-wrapper">${mediaElement}</div>
+                <div class="play-button" style="border-color: ${isXML ? 'var(--haki-gold)' : '#E2725B'}; background: rgba(${isXML ? '212, 175, 55' : '226, 114, 91'}, 0.1);">
+                    <span class="material-symbols-outlined" style="color: ${isXML ? 'var(--haki-gold)' : '#E2725B'};">${isXML ? 'auto_awesome' : 'play_arrow'}</span>
+                </div>
+                <div class="asset-overlay">
+                    <h3 class="cinzel text-xl text-[var(--haki-gold)] mb-1">${asset.professional_name || asset.name}</h3>
+                    <p class="mono text-[10px] text-white/70 tracking-wider">${metaLabel}</p>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+        
+        // Re-init swiper if needed
+        if(window.swiperInstance) window.swiperInstance.destroy();
+        window.swiperInstance = new Swiper(".mySwiper", {
+            effect: "coverflow", grabCursor: true, centeredSlides: true, slidesPerView: "auto",
+            coverflowEffect: { rotate: 20, stretch: 0, depth: 250, modifier: 1, slideShadows: true },
+            keyboard: { enabled: true },
+            pagination: { el: ".swiper-pagination", clickable: true, dynamicBullets: true },
+            navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" }
+        });
+    } else {
+        document.getElementById('video-carousel').style.display = 'none';
+    }
+
+    if (topPhotos.length > 0) {
+        topPhotos.forEach((asset) => {
+            let thumbnail = "../Assets/images/Logo.png";
+            if (asset.thumb_url) thumbnail = asset.thumb_url;
+            else if (asset.id && (asset.id.startsWith("local_") || asset.id.startsWith("fix_") || asset.id.startsWith("localFile_"))) thumbnail = asset.url;
+            else if (asset.url && !asset.url.includes("drive.google.com")) thumbnail = asset.url;
+            else if (!asset.id.includes("mock")) thumbnail = `https://drive.google.com/thumbnail?id=${asset.id}&sz=w800`;
+
+            const div = document.createElement('div');
+            div.className = 'masonry-item';
+            div.onclick = () => {
+                window.CDF_Player.open(asset);
+            };
+            const img = document.createElement('img');
+            img.src = thumbnail;
+            img.alt = asset.professional_name || asset.name;
+            img.loading = "lazy";
+            img.onerror = function() {
+                this.onerror = null;
+                this.src = '../Assets/images/Logo.png';
+                this.style.opacity = '0.3';
+                this.style.objectFit = 'contain';
+            };
+            div.appendChild(img);
+            masonry.appendChild(div);
+        });
+    }
+}
+
             
             // --- DYNAMIC TABS LOGIC ---
             function renderTabs() {
@@ -741,7 +885,7 @@
                     const isActive = cat.toLowerCase().trim() === activeCategory.toLowerCase().trim();
                     btn.className = `px-4 py-2 border-b-2 text-white mono text-[10px] tracking-widest hover:text-[var(--haki-gold)] transition-all ${isActive ? 'border-[var(--haki-gold)]' : 'border-transparent opacity-50'}`;
                     btn.innerText = cat.toUpperCase();
-                    btn.onclick = () => window.location.href = `?cat=${encodeURIComponent(cat)}`;
+                    btn.onclick = () => window.loadCategory(cat);
                     tabsContainer.appendChild(btn);
                 });
             }
@@ -771,7 +915,7 @@
                 updateTimer();
                 setInterval(updateTimer, 1000);
             }
-            updateWeeklyFlowBanner();
+            updateWeeklyFlowBanner(); renderGrid();
 
             // Update Page Meta Info
             const pageCaption = document.querySelector('.pt-\\[40px\\] p');
@@ -922,7 +1066,7 @@
                         this.style.objectFit = 'contain';
                     };
                     div.appendChild(img);
-                    masonryGrid.appendChild(div);
+                    masonry.appendChild(div);
                 });
             }
             
@@ -936,46 +1080,6 @@
             100% { opacity: 1; transform: translateY(0) scale(1); }
         }
     </style>
-    
-    <!-- Quest Board & Upcoming Events Section -->
-    <div class="relative w-full max-w-[1200px] mx-auto px-4 mt-20 mb-12">
-        <div class="text-center mb-10">
-            <h2 class="text-3xl md:text-5xl cinzel text-[var(--haki-gold)] mb-2 drop-shadow-[0_0_10px_rgba(212,175,55,0.3)]">Quest-Board</h2>
-            <p class="mono text-[10px] text-white/50 tracking-[0.2em] uppercase">Upcoming Events & Marketplace</p>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Event 1 -->
-            <div class="border border-[var(--haki-gold)]/20 bg-black/60 backdrop-blur-sm p-6 hover:border-[var(--haki-gold)] transition-colors group cursor-pointer" onclick="window.location.href='booking.html'">
-                <div class="text-[#FFAE42] mono text-[10px] mb-2 font-bold tracking-widest">NEXT EVENT</div>
-                <h3 class="cinzel text-xl text-white mb-2 group-hover:text-[var(--haki-gold)] transition-colors">C4C Jamsession</h3>
-                <p class="mono text-xs text-white/60 mb-4 line-clamp-3">
-                    Die nächste Circle 4 Creators Jamsession steht an. Verbinde dich mit anderen Artists, teile deinen Flow und werde Teil der Alliance.
-                </p>
-                <span class="cinzel text-sm text-[var(--haki-gold)] border-b border-[var(--haki-gold)]/30 pb-1">Join the Circle</span>
-            </div>
-            
-            <!-- Marketplace Teaser 1 -->
-            <div class="border border-[var(--haki-gold)]/20 bg-black/60 backdrop-blur-sm p-6 hover:border-[var(--haki-gold)] transition-colors group cursor-pointer" onclick="window.location.href='bazar.html'">
-                <div class="text-[#5A2A84] mono text-[10px] mb-2 font-bold tracking-widest">THE BAZAR</div>
-                <h3 class="cinzel text-xl text-white mb-2 group-hover:text-[var(--haki-gold)] transition-colors">Kreativlon Resin Art</h3>
-                <p class="mono text-xs text-white/60 mb-4 line-clamp-3">
-                    Entdecke handgefertigte Unikate. Jedes Stück trägt die Energie des Erschaffers in sich. Finde dein persönliches Artefakt.
-                </p>
-                <span class="cinzel text-sm text-[var(--haki-gold)] border-b border-[var(--haki-gold)]/30 pb-1">Enter the Forge</span>
-            </div>
-            
-            <!-- Marketplace Teaser 2 -->
-            <div class="border border-[var(--haki-gold)]/20 bg-black/60 backdrop-blur-sm p-6 hover:border-[var(--haki-gold)] transition-colors group cursor-pointer" onclick="window.location.href='bazar.html'">
-                <div class="text-[#5A2A84] mono text-[10px] mb-2 font-bold tracking-widest">THE BAZAR</div>
-                <h3 class="cinzel text-xl text-white mb-2 group-hover:text-[var(--haki-gold)] transition-colors">African Queen Kitchen</h3>
-                <p class="mono text-xs text-white/60 mb-4 line-clamp-3">
-                    Geschmack, der Geschichten erzählt. Authentische Soulfood-Kreationen für dein nächstes Event.
-                </p>
-                <span class="cinzel text-sm text-[var(--haki-gold)] border-b border-[var(--haki-gold)]/30 pb-1">Taste the Flow</span>
-            </div>
-        </div>
-    </div>
     
     <!-- Policy Detailed & Outro -->
     <div class="w-full bg-[#050505] border-t border-white/10 pt-16 pb-24 px-4 text-center">
@@ -1004,31 +1108,31 @@
         <!-- Menu Items (hidden initially) -->
         <div id="radial-menu" class="absolute inset-0 flex items-center justify-center pointer-events-none">
             <!-- Artist Vault -->
-            <button onclick="window.location.href='?cat=Artist'" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="Artist Vault">
+            <button onclick="window.loadCategory('Artist')" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="Artist Vault">
                 <span class="material-symbols-outlined text-[20px]">brush</span>
             </button>
             <!-- Jam Sessions -->
-            <button onclick="window.location.href='?cat=Event'" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="Jam Sessions">
+            <button onclick="window.loadCategory('Event')" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="Jam Sessions">
                 <span class="material-symbols-outlined text-[20px]">music_note</span>
             </button>
             <!-- D Motion -->
-            <button onclick="window.location.href='?cat=Wasser'" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="D Motion">
+            <button onclick="window.loadCategory('Wasser')" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="D Motion">
                 <span class="material-symbols-outlined text-[20px]">movie</span>
             </button>
             <!-- City Vibe -->
-            <button onclick="window.location.href='?cat=Erde'" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="City Vibe">
+            <button onclick="window.loadCategory('Erde')" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="City Vibe">
                 <span class="material-symbols-outlined text-[20px]">location_city</span>
             </button>
             <!-- Animal Life -->
-            <button onclick="window.location.href='?cat=Nature'" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="Animal Life">
+            <button onclick="window.loadCategory('Nature')" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="Animal Life">
                 <span class="material-symbols-outlined text-[20px]">pets</span>
             </button>
             <!-- Behind the Scenes -->
-            <button onclick="window.location.href='?cat=Realm'" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="Behind the Scenes">
+            <button onclick="window.loadCategory('Realm')" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="Behind the Scenes">
                 <span class="material-symbols-outlined text-[20px]">camera_roll</span>
             </button>
             <!-- Brand & Culture -->
-            <button onclick="window.location.href='?cat=Feuer'" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="Brand & Culture">
+            <button onclick="window.loadCategory('Feuer')" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="Brand & Culture">
                 <span class="material-symbols-outlined text-[20px]">local_fire_department</span>
             </button>
         </div>
