@@ -606,42 +606,59 @@
         document.addEventListener('DOMContentLoaded', () => {
             const grid = document.getElementById('portfolio-grid');
             const urlParams = new URLSearchParams(window.location.search);
-            let activeCategory = urlParams.get('cat') || "Events";
-            const categoryMap = {
-                'Portfolio': 'Artist Spotlight',
-                'Bazar': 'The Atelier',
-                'Alliance': 'Soundwaves'
-            };
+            const rings = ['Feuer', 'Wasser', 'Erde', 'Luft', 'Realm', 'Artist', 'Nature', 'Event'];
+            let activeCategory = urlParams.get('cat') || "Feuer";
             
-            let dataCategory = categoryMap[activeCategory] || activeCategory;
+            // Map keywords to our new Rings
+            const keywordMap = {
+                'feuer': ['fire', 'jam', 'red', 'action', 'heat', 'party', 'jamsessions', 'burn', 'energy', 'stage'],
+                'wasser': ['water', 'fluid', 'blue', 'sea', 'river', 'calm', 'flow', 'surf', 'soundwaves', 'ocean', 'wave'],
+                'erde': ['earth', 'ground', 'green', 'tree', 'mountain', 'street', 'city', 'urban', 'castle', 'stone', 'root'],
+                'luft': ['air', 'sky', 'wind', 'cloud', 'jump', 'fly', 'bird', 'high', 'space'],
+                'realm': ['realm', 'void', 'dark', 'studio', 'abstract', 'inside', 'black', 'atelier', 'indoor', 'session'],
+                'artist': ['artist', 'portrait', 'model', 'face', 'people', 'man', 'woman', 'spotlight', 'close', 'person'],
+                'nature': ['nature', 'leaf', 'flower', 'forest', 'wild', 'plant', 'outdoor', 'wood', 'landscape'],
+                'event': ['event', 'crowd', 'live', 'concert', 'gig', 'performance', 'show', 'festival', 'people']
+            };
             
             let assets = [];
             if (window.PortfolioData) {
-                let rawAssets = window.PortfolioData[dataCategory];
-                if (!rawAssets) {
-                    const keys = Object.keys(window.PortfolioData);
-                    const matchedKey = keys.find(k => k.toLowerCase().trim() === dataCategory.toLowerCase().trim());
-                    if (matchedKey) {
-                        rawAssets = window.PortfolioData[matchedKey];
-                        dataCategory = matchedKey;
+                let allAssets = [];
+                Object.values(window.PortfolioData).forEach(arr => {
+                    if (Array.isArray(arr)) {
+                        allAssets.push(...arr);
                     }
+                });
+                
+                // Agent Logic: Search through all assets and match based on keywords
+                const targetKeywords = keywordMap[activeCategory.toLowerCase()] || [activeCategory.toLowerCase()];
+                
+                let matchedAssets = allAssets.filter(item => {
+                    const searchString = `${item.name} ${item.professional_name || ''} ${item.tags ? item.tags.join(' ') : ''}`.toLowerCase();
+                    return targetKeywords.some(kw => searchString.includes(kw));
+                });
+                
+                // Fallback if no exact keyword match: return a random slice or default category match
+                if (matchedAssets.length === 0 && allAssets.length > 0) {
+                    // Pick 10 assets deterministically based on string length to avoid empty pages
+                    let idx = rings.indexOf(activeCategory);
+                    if (idx === -1) idx = 1; else idx += 1;
+                    matchedAssets = allAssets.filter((a, i) => i % idx === 0).slice(0, 15);
                 }
+                
+                if (matchedAssets.length === 0) matchedAssets = allAssets.slice(0, 12);
 
-                // Filter out .NEF files and duplicates to ensure clean categorization!
-                if (rawAssets) {
-                    const uniqueNames = new Set();
-                    assets = rawAssets.filter(item => {
-                        const nameLower = item.name.toLowerCase();
-                        if (nameLower.endsWith('.nef')) return false; // Skip RAW files
-                        
-                        // Use base name without extension for deduping
-                        const baseName = nameLower.split('.').slice(0, -1).join('.') || nameLower;
-                        if (uniqueNames.has(baseName)) return false;
-                        
-                        uniqueNames.add(baseName);
-                        return true;
-                    });
-                }
+                const uniqueNames = new Set();
+                assets = matchedAssets.filter(item => {
+                    const nameLower = item.name.toLowerCase();
+                    if (nameLower.endsWith('.nef')) return false; // Skip RAW files
+                    
+                    const baseName = nameLower.split('.').slice(0, -1).join('.') || nameLower;
+                    if (uniqueNames.has(baseName)) return false;
+                    
+                    uniqueNames.add(baseName);
+                    return true;
+                });
             }
             
             // --- DYNAMIC TABS LOGIC ---
@@ -649,7 +666,7 @@
                 const tabsContainer = document.getElementById('category-tabs');
                 if (!window.PortfolioData || !tabsContainer) return;
                 
-                const categories = Object.keys(window.PortfolioData);
+                const categories = rings;
                 tabsContainer.innerHTML = "";
                 
                 categories.forEach(cat => {
@@ -847,7 +864,7 @@
                 const tabsContainer = document.getElementById('category-tabs');
                 if (!tabsContainer) return;
                 
-                const categories = ['Events', 'Portfolio', 'Bazar', 'Alliance', 'Jamsessions'];
+                const categories = rings;
                 tabsContainer.innerHTML = "";
                 
                 categories.forEach(cat => {
