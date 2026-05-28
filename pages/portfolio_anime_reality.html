@@ -830,6 +830,9 @@
                         this.style.opacity = '0.3';
                         this.style.objectFit = 'contain';
                     };
+                    div.appendChild(img);
+                    masonryGrid.appendChild(div);
+                });
             }
             
             // --- DYNAMIC TABS LOGIC ---
@@ -1139,11 +1142,9 @@
 
     <!-- Core Audio Engine -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
-    <script src="../js/agents/portfolio_audio.js" defer></script>
     
     <!-- External Scripts -->
     <script src="../js/data/portfolio_data.js"></script>
-    <script src="../js/portfolio_anime_reality.js"></script>
     <script src="../js/radial_menu.js" defer></script>
     <script src="../js/agents/agent.js" defer></script>
     <script src="../js/agents/pusher.js" defer></script>

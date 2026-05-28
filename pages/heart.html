@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Heart World - Beta</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <!-- QRCode.js for generating Healing Point QRs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    
+    <style>
+        :root {
+            --haki-gold: #d4af37;
+            --haki-red: #8b0000;
+        }
+        body {
+            background-color: #050505;
+            color: #fff;
+            font-family: 'Space Mono', monospace;
+            overflow-x: hidden;
+        }
+        .cinzel { font-family: 'Cinzel', serif; }
+        .mono { font-family: 'Space Mono', monospace; }
+        .gold-glow { text-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
+        
+        /* Layout */
+        .glass-panel {
+            background: rgba(15, 15, 15, 0.8);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #111; }
+        ::-webkit-scrollbar-thumb { background: var(--haki-gold); border-radius: 3px; }
+
+        /* Timer Circle */
+        .wuwei-timer-circle {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 2px solid rgba(212, 175, 55, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--haki-gold);
+            margin: 0 auto;
+            box-shadow: inset 0 0 20px rgba(212,175,55,0.1), 0 0 20px rgba(212,175,55,0.1);
+            transition: all 0.3s ease;
+        }
+        .wuwei-timer-circle.active {
+            border-color: var(--haki-gold);
+            box-shadow: inset 0 0 40px rgba(212,175,55,0.4), 0 0 40px rgba(212,175,55,0.4);
+            animation: pulse-glow 2s infinite;
+        }
+        @keyframes pulse-glow {
+            0% { box-shadow: inset 0 0 20px rgba(212,175,55,0.2), 0 0 20px rgba(212,175,55,0.2); }
+            50% { box-shadow: inset 0 0 50px rgba(212,175,55,0.6), 0 0 50px rgba(212,175,55,0.6); }
+            100% { box-shadow: inset 0 0 20px rgba(212,175,55,0.2), 0 0 20px rgba(212,175,55,0.2); }
+        }
+
+        /* Ygdrasil Gate Overlay */
+        #ygdrasil-gate {
+            background-image: url('../Assets/images/yggdrasil.png');
+            background-size: cover;
+            background-position: center;
+            background-blend-mode: overlay;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- 1. THE YGDRASIL GATE (Login/Auth) -->
+    <div id="ygdrasil-gate" class="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black/95 backdrop-blur-md px-4 transition-opacity duration-1000">
+        <h1 class="cinzel text-4xl md:text-6xl text-[#d4af37] gold-glow mb-4 text-center">THE YGDRASIL GATE</h1>
+        <p class="mono text-xs text-gray-400 mb-8 max-w-md text-center">Welcome to the Beta. To enter the Heart World, you must speak the master password.</p>
+        
+        <input type="password" id="master-password" class="bg-black/50 border-b-2 border-[#d4af37] text-white px-4 py-2 text-center text-xl mb-6 focus:outline-none focus:border-white transition-colors" placeholder="Enter Password">
+        <button onclick="heartApp.unlockGate()" class="border border-[#d4af37] text-[#d4af37] px-8 py-3 rounded-full hover:bg-[#d4af37] hover:text-black transition-all uppercase tracking-widest text-sm font-bold">Awaken</button>
+        <p id="gate-error" class="text-red-500 text-xs mt-4 hidden">The tree remains silent. Incorrect password.</p>
+    </div>
+
+    <!-- 2. REGISTRATION / ONBOARDING (Hidden initially) -->
+    <div id="onboarding-screen" class="fixed inset-0 z-[90] hidden flex-col items-center justify-center bg-[#050505] px-4">
+        <div class="glass-panel p-8 max-w-md w-full text-center">
+            <h2 class="cinzel text-3xl text-[#d4af37] mb-2">Join the Guilds</h2>
+            <p class="text-xs text-gray-400 mb-6">Forge your identity within the Heart World.</p>
+            
+            <input type="text" id="reg-username" class="w-full bg-black border border-[#d4af37]/50 text-white px-4 py-2 mb-4 focus:outline-none focus:border-[#d4af37]" placeholder="Choose Username">
+            
+            <select id="reg-role" class="w-full bg-black border border-[#d4af37]/50 text-white px-4 py-2 mb-6 focus:outline-none focus:border-[#d4af37]">
+                <option value="" disabled selected>Select Your Role / Guild</option>
+                <option value="Rapper">Rapper</option>
+                <option value="Lyriker">Lyriker</option>
+                <option value="Poet">Poet</option>
+                <option value="Gitarrist">Gitarrist</option>
+                <option value="Creator">Creator</option>
+                <option value="Painter">Painter</option>
+                <option value="Seller">Seller / Merchant</option>
+                <option value="Observer">Observer</option>
+            </select>
+
+            <button onclick="heartApp.completeRegistration()" class="w-full bg-[#d4af37] text-black px-4 py-2 font-bold hover:bg-white transition-all">ENTER THE HEART</button>
+        </div>
+    </div>
+
+    <!-- 3. MAIN DASHBOARD (Hidden initially) -->
+    <div id="main-dashboard" class="hidden flex-col min-h-screen">
+        
+        <!-- Navbar -->
+        <nav class="bg-black/80 backdrop-blur-md border-b border-[#d4af37]/30 p-4 sticky top-0 z-50 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <img src="../Assets/images/KissYourHeartLogo.png" alt="Logo" class="h-8 object-contain">
+                <span class="cinzel text-[#d4af37] font-bold text-lg hidden md:inline">The Heart World</span>
+            </div>
+            
+            <!-- Dynamic Menu -->
+            <div class="flex gap-2 md:gap-4 overflow-x-auto text-[10px] md:text-xs">
+                <button class="hover:text-[#d4af37] uppercase" onclick="heartApp.showSection('activity-board')">Activity</button>
+                <button class="hover:text-[#d4af37] uppercase" onclick="heartApp.showSection('mission-board')">Missions</button>
+                <button class="hover:text-[#d4af37] uppercase" onclick="heartApp.showSection('map-pinning')">Luvo Maps</button>
+                <button class="hover:text-[#d4af37] uppercase" onclick="heartApp.showSection('bazar-upload')">Bazar</button>
+            </div>
+
+            <!-- User Status -->
+            <div class="flex items-center gap-4 text-right">
+                <div class="hidden md:block">
+                    <p id="user-display-name" class="text-sm font-bold text-[#d4af37]">Guest</p>
+                    <p id="user-display-role" class="text-[10px] text-gray-400">No Guild</p>
+                </div>
+                <div class="border border-[#d4af37]/50 rounded-full px-3 py-1 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[14px] text-[#d4af37]">star</span>
+                    <span id="user-points" class="font-bold text-[#d4af37]">0</span> EXP
+                </div>
+            </div>
+        </nav>
+
+        <!-- Content Area -->
+        <main class="flex-grow p-4 md:p-8 max-w-6xl mx-auto w-full relative">
+            
+            <!-- SECTION: ACTIVITY BOARD -->
+            <section id="section-activity-board" class="dashboard-section animate-fade-in">
+                <h2 class="cinzel text-2xl text-[#d4af37] mb-6 border-b border-[#d4af37]/30 pb-2">Activity Board</h2>
+                <p class="text-xs text-gray-400 mb-6">See what creators have forged and created.</p>
+                <div id="activity-feed" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Javascript will inject activity cards here -->
+                </div>
+            </section>
+
+            <!-- SECTION: MISSION BOARD -->
+            <section id="section-mission-board" class="dashboard-section hidden animate-fade-in">
+                <div class="flex justify-between items-center mb-6 border-b border-[#d4af37]/30 pb-2">
+                    <h2 class="cinzel text-2xl text-[#d4af37]">Mission Board</h2>
+                    <button onclick="heartApp.toggleModal('create-mission-modal')" class="bg-[#d4af37] text-black px-4 py-1 text-xs font-bold rounded hover:bg-white transition-all">+ NEW MISSION</button>
+                </div>
+                <div id="mission-feed" class="grid grid-cols-1 gap-4">
+                    <!-- Javascript will inject missions here -->
+                </div>
+            </section>
+
+            <!-- SECTION: LUVO MAP PINNING & QR -->
+            <section id="section-map-pinning" class="dashboard-section hidden animate-fade-in">
+                <h2 class="cinzel text-2xl text-[#d4af37] mb-6 border-b border-[#d4af37]/30 pb-2">Luvo Map Pinning & Healing Points</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Left: Create Pin -->
+                    <div class="glass-panel p-6">
+                        <h3 class="text-lg text-white mb-4">Create a Location Pin</h3>
+                        <p class="text-xs text-gray-400 mb-4">Generate a QR code for a real-world location. Users scan it to earn EXP.</p>
+                        
+                        <input type="text" id="pin-name" class="w-full bg-black/50 border border-gray-700 text-white px-3 py-2 mb-3 text-sm" placeholder="Location Name (e.g. Hidden Garden)">
+                        <select id="pin-timer" class="w-full bg-black/50 border border-gray-700 text-white px-3 py-2 mb-4 text-sm">
+                            <option value="5">5 Minutes (Quick Chill) - 10 EXP</option>
+                            <option value="15">15 Minutes (Deep Rest) - 30 EXP</option>
+                            <option value="30">30 Minutes (Wu Wei Flow) - 75 EXP</option>
+                        </select>
+                        <button onclick="heartApp.generateQRPin()" class="w-full border border-[#d4af37] text-[#d4af37] px-4 py-2 hover:bg-[#d4af37] hover:text-black transition-all">GENERATE QR CODE</button>
+                        
+                        <div id="qr-output-container" class="mt-6 hidden flex-col items-center">
+                            <div id="qrcode" class="bg-white p-4 rounded-lg mb-4"></div>
+                            <p class="text-xs text-center text-gray-400 mb-2">Print this QR code and place it at the location.</p>
+                            <button onclick="window.print()" class="text-[#d4af37] text-xs underline">Print Code</button>
+                        </div>
+                    </div>
+
+                    <!-- Right: The Scanner / Timer -->
+                    <div class="glass-panel p-6 text-center">
+                        <h3 class="text-lg text-white mb-4">The Wu Wei Timer</h3>
+                        <p class="text-xs text-gray-400 mb-8">Scan a Healing Point QR code to activate.</p>
+                        
+                        <div id="wuwei-timer" class="wuwei-timer-circle mb-6">
+                            00:00
+                        </div>
+                        
+                        <button id="btn-scan-qr" onclick="heartApp.simulateQRScan()" class="bg-[#d4af37] text-black px-6 py-2 rounded-full text-sm font-bold hover:bg-white transition-all">SIMULATE SCAN (TESTING)</button>
+                        <p id="timer-status" class="text-xs text-[#d4af37] mt-4 hidden">Timer active. Stay in the zone...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION: BAZAR UPLOAD -->
+            <section id="section-bazar-upload" class="dashboard-section hidden animate-fade-in">
+                <h2 class="cinzel text-2xl text-[#d4af37] mb-6 border-b border-[#d4af37]/30 pb-2">Bazar Upload / The Forge</h2>
+                <div class="glass-panel p-6 max-w-xl mx-auto">
+                    <p class="text-xs text-gray-400 mb-6">Forge items for the marketplace. Earn EXP for sharing your creations.</p>
+                    
+                    <input type="text" id="bazar-title" class="w-full bg-black/50 border border-gray-700 text-white px-3 py-2 mb-3 text-sm" placeholder="Item Name">
+                    <textarea id="bazar-desc" class="w-full bg-black/50 border border-gray-700 text-white px-3 py-2 mb-3 text-sm h-24" placeholder="Description of the artifact..."></textarea>
+                    
+                    <button onclick="heartApp.uploadToBazar()" class="w-full bg-[#d4af37] text-black px-4 py-2 font-bold hover:bg-white transition-all mt-4">FORGE ITEM (+5 EXP)</button>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <!-- Create Mission Modal -->
+    <div id="create-mission-modal" class="fixed inset-0 z-[150] hidden bg-black/90 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="glass-panel p-6 w-full max-w-md relative">
+            <button onclick="heartApp.toggleModal('create-mission-modal')" class="absolute top-2 right-4 text-gray-500 hover:text-white text-2xl">&times;</button>
+            <h3 class="cinzel text-xl text-[#d4af37] mb-4">Create Real-Life Mission</h3>
+            <input type="text" id="mission-title" class="w-full bg-black/50 border border-gray-700 text-white px-3 py-2 mb-3 text-sm" placeholder="Mission Objective">
+            <textarea id="mission-desc" class="w-full bg-black/50 border border-gray-700 text-white px-3 py-2 mb-4 text-sm h-24" placeholder="Mission Details..."></textarea>
+            <button onclick="heartApp.createMission()" class="w-full bg-[#d4af37] text-black px-4 py-2 font-bold hover:bg-white transition-all">POST MISSION</button>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast-notification" class="fixed bottom-4 right-4 z-[200] transform translate-y-20 opacity-0 transition-all duration-300 glass-panel border-l-4 border-[#d4af37] p-4 flex items-center gap-3">
+        <span class="material-symbols-outlined text-[#d4af37]">notifications</span>
+        <div>
+            <h4 id="toast-title" class="text-sm font-bold text-white">Notification</h4>
+            <p id="toast-message" class="text-xs text-gray-400">Message content here.</p>
+        </div>
+    </div>
+
+    <script src="../js/heart.js"></script>
+</body>
+</html>
