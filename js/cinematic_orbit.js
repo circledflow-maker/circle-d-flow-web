@@ -372,12 +372,12 @@ class OrbitEngine {
                 this.runStorySequence();
             } else if(obj.userData.id) {
                 const id = obj.userData.id;
-                if(id === 'visionary') {
-                    // Animatic Transition to Portfolio
+                if(id === 'arcane') {
+                    // Animatic Transition to The Archive (Portfolio)
                     const overlay = document.getElementById('flowee-intro');
                     if(overlay) {
                         overlay.style.display = 'flex';
-                        overlay.innerHTML = "<h2 style='color:var(--haki-gold); font-family:Cinzel; text-align:center'>Entering Portfolio...</h2>";
+                        overlay.innerHTML = "<h2 style='color:var(--haki-gold); font-family:Cinzel; text-align:center'>Entering The Archive...</h2>";
                         gsap.to(overlay, { opacity: 1, duration: 1, onComplete: () => {
                             window.location.href = 'pages/portfolio_anime_reality.html';
                         }});

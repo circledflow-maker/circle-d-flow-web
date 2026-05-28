@@ -94,16 +94,25 @@
             <input type="text" id="reg-username" class="w-full bg-black border border-[#d4af37]/50 text-white px-4 py-2 mb-4 focus:outline-none focus:border-[#d4af37]" placeholder="Choose Username">
             
             <select id="reg-role" class="w-full bg-black border border-[#d4af37]/50 text-white px-4 py-2 mb-6 focus:outline-none focus:border-[#d4af37]">
-                <option value="" disabled selected>Select Your Role / Guild</option>
-                <option value="Rapper">Rapper</option>
-                <option value="Lyriker">Lyriker</option>
-                <option value="Poet">Poet</option>
-                <option value="Gitarrist">Gitarrist</option>
-                <option value="Creator">Creator</option>
-                <option value="Painter">Painter</option>
-                <option value="Seller">Seller / Merchant</option>
-                <option value="Observer">Observer</option>
-            </select>
+                  <option value="" disabled selected>Select Your Role / Guild</option>
+                  <optgroup label="The Guilds (Marketplace)">
+                      <option value="Arts">Arts (Visuals)</option>
+                      <option value="Sounds">Sounds (Audio)</option>
+                      <option value="Skills">Skills (Services)</option>
+                      <option value="Products">Products (Physical)</option>
+                      <option value="Healing">Healing (Wellness)</option>
+                  </optgroup>
+                  <optgroup label="Individual Roles">
+                      <option value="Rapper">Rapper</option>
+                      <option value="Lyriker">Lyriker</option>
+                      <option value="Poet">Poet</option>
+                      <option value="Gitarrist">Gitarrist</option>
+                      <option value="Creator">Creator</option>
+                      <option value="Painter">Painter</option>
+                      <option value="Seller">Seller / Merchant</option>
+                      <option value="Observer">Observer</option>
+                  </optgroup>
+              </select>
 
             <button onclick="heartApp.completeRegistration()" class="w-full bg-[#d4af37] text-black px-4 py-2 font-bold hover:bg-white transition-all">ENTER THE HEART</button>
         </div>
@@ -206,13 +215,62 @@
             <!-- SECTION: BAZAR UPLOAD -->
             <section id="section-bazar-upload" class="dashboard-section hidden animate-fade-in">
                 <h2 class="cinzel text-2xl text-[#d4af37] mb-6 border-b border-[#d4af37]/30 pb-2">Bazar Upload / The Forge</h2>
-                <div class="glass-panel p-6 max-w-xl mx-auto">
-                    <p class="text-xs text-gray-400 mb-6">Forge items for the marketplace. Earn EXP for sharing your creations.</p>
+                <div class="glass-panel p-6 max-w-4xl mx-auto">
+                    <p class="text-xs text-gray-400 mb-6">Forge items for the marketplace. The Grand Bazaar Protocol v4.5.</p>
                     
-                    <input type="text" id="bazar-title" class="w-full bg-black/50 border border-gray-700 text-white px-3 py-2 mb-3 text-sm" placeholder="Item Name">
-                    <textarea id="bazar-desc" class="w-full bg-black/50 border border-gray-700 text-white px-3 py-2 mb-3 text-sm h-24" placeholder="Description of the artifact..."></textarea>
-                    
-                    <button onclick="heartApp.uploadToBazar()" class="w-full bg-[#d4af37] text-black px-4 py-2 font-bold hover:bg-white transition-all mt-4">FORGE ITEM (+5 EXP)</button>
+                    <div class="flex flex-col md:flex-row gap-8">
+                        <!-- Left Column: Image Upload -->
+                        <div class="w-full md:w-1/3 h-64 relative flex flex-col shrink-0">
+                            <div class="w-full h-full bg-black/50 rounded border-2 border-dashed border-[#d4af37]/30 flex flex-col items-center justify-center overflow-hidden relative cursor-pointer hover:bg-black/80 transition-colors" onclick="document.getElementById('bazar-image-upload').click()">
+                                <img id="bazar-preview-img" class="absolute inset-0 w-full h-full object-contain bg-black/90 hidden z-10">
+                                <div class="text-center p-4 z-0">
+                                    <span class="material-symbols-outlined text-[#d4af37] text-4xl mb-2">add_a_photo</span>
+                                    <p class="text-[10px] uppercase font-bold text-[#d4af37] tracking-widest">Upload Visual</p>
+                                </div>
+                                <input type="file" id="bazar-image-upload" accept="image/*" class="hidden" onchange="const reader=new FileReader();reader.onload=e=>{const img=document.getElementById('bazar-preview-img');img.src=e.target.result;img.classList.remove('hidden');};reader.readAsDataURL(this.files[0]);">
+                            </div>
+                        </div>
+
+                        <!-- Right Column: Details & Submit -->
+                        <div class="w-full md:w-2/3 flex flex-col space-y-4">
+                            <div class="relative">
+                                <label class="text-[9px] uppercase font-bold text-[#d4af37]/70 mb-1 block">Artifact Title</label>
+                                <input type="text" id="bazar-title" required placeholder="E.g. Royal Benin Bronze" class="w-full bg-black/50 border border-gray-700 text-white px-3 py-2 text-sm focus:border-[#d4af37] outline-none">
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="relative">
+                                    <label class="text-[9px] uppercase font-bold text-[#d4af37]/70 mb-1 block">Guild Sector</label>
+                                    <select id="bazar-category" class="w-full bg-black/50 border border-gray-700 text-white px-3 py-2 text-sm focus:border-[#d4af37] outline-none">
+                                        <option value="Arts">Arts (Visuals)</option>
+                                        <option value="Sounds">Sounds (Audio)</option>
+                                        <option value="Skills">Skills (Services)</option>
+                                        <option value="Products">Products (Physical)</option>
+                                        <option value="Healing">Healing (Wellness)</option>
+                                    </select>
+                                </div>
+                                <div class="relative">
+                                    <label class="text-[9px] uppercase font-bold text-[#d4af37]/70 mb-1 block">Price (FC)</label>
+                                    <input type="number" id="bazar-price" required placeholder="1000" class="w-full bg-black/50 border border-gray-700 text-white px-3 py-2 text-sm focus:border-[#d4af37] outline-none font-mono">
+                                </div>
+                            </div>
+
+                            <div class="relative">
+                                <label class="text-[9px] uppercase font-bold text-[#d4af37]/70 mb-1 block">Soul Link (Email)</label>
+                                <input type="email" id="bazar-email" required placeholder="your@email.com" class="w-full bg-black/50 border border-gray-700 text-white px-3 py-2 text-sm focus:border-[#d4af37] outline-none font-mono">
+                            </div>
+
+                            <div class="relative flex-grow">
+                                <label class="text-[9px] uppercase font-bold text-[#d4af37]/70 mb-1 block">Description</label>
+                                <textarea id="bazar-desc" required placeholder="Describe the essence of this offering..." class="w-full bg-black/50 border border-gray-700 text-white px-3 py-2 text-sm focus:border-[#d4af37] outline-none h-24 resize-none"></textarea>
+                            </div>
+
+                            <button onclick="heartApp.uploadToBazar()" class="w-full bg-[#d4af37] text-black px-4 py-3 font-bold hover:bg-white transition-all mt-2 cinzel tracking-widest flex items-center justify-center gap-2">
+                                <span class="material-symbols-outlined">seal</span>
+                                FORGE ITEM (+5 EXP)
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </section>
 

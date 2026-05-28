@@ -421,11 +421,78 @@
 
     <!-- Header Section -->
     <div class="pt-[40px] pb-6 text-center px-4 relative z-10 flex-shrink-0">
-        <h1 class="text-3xl md:text-5xl cinzel text-white mb-2 drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]">Living memory</h1>
+        
+        <!-- Manga Cover & Origin Section -->
+        <div class="relative w-full max-w-[1400px] mx-auto px-4 md:px-8 pt-8 pb-16 border-b border-white/10 mb-12">
+            <!-- The Title Area -->
+            <div class="text-center mb-12">
+                <h1 class="text-4xl md:text-6xl lg:text-7xl cinzel text-transparent bg-clip-text bg-gradient-to-r from-[var(--haki-gold)] to-[#FFAE42] drop-shadow-[0_0_15px_rgba(212,175,55,0.4)] font-bold uppercase tracking-widest mb-4">The Will of D</h1>
+                <h2 class="mono text-xs md:text-sm text-white/70 tracking-[0.3em] uppercase">The Archive // About Us</h2>
+            </div>
+
+            <!-- The Manga Origin Panels -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto">
+                <!-- Panel 1: Lomé -->
+                <div class="manga-panel relative group border-2 border-white/20 hover:border-[#FFAE42] p-2 bg-black overflow-hidden transition-all duration-500 transform hover:-translate-y-2">
+                    <div class="absolute top-0 right-0 bg-[#FFAE42] text-black mono text-[9px] font-bold px-2 py-1 z-10 border-b-2 border-l-2 border-black">PANEL 01</div>
+                    <div class="w-full h-48 md:h-64 bg-cover bg-center grayscale group-hover:grayscale-0 transition-all duration-700" style="background-image: url('../assets/images/lome.jpg'); background-color: #333;"></div>
+                    <div class="mt-4 pb-2 border-b-2 border-dashed border-white/20">
+                        <h3 class="cinzel text-xl text-[var(--haki-gold)]">Lomé: The Seed</h3>
+                    </div>
+                    <p class="mono text-[10px] md:text-xs text-white/60 mt-3 leading-relaxed text-left">
+                        Geboren in den pulsierenden Straßen von Lomé. Ein Rhythmus, der in den Adern pulsiert. Die Wurzeln von Circle D Flow, verankert in tiefem, afrikanischem Feuer.
+                    </p>
+                </div>
+                
+                <!-- Panel 2: München -->
+                <div class="manga-panel relative group border-2 border-white/20 hover:border-[#FFAE42] p-2 bg-black overflow-hidden transition-all duration-500 transform hover:translate-y-2 md:mt-12">
+                    <div class="absolute top-0 right-0 bg-[#FFAE42] text-black mono text-[9px] font-bold px-2 py-1 z-10 border-b-2 border-l-2 border-black">PANEL 02</div>
+                    <div class="w-full h-48 md:h-64 bg-cover bg-center grayscale group-hover:grayscale-0 transition-all duration-700" style="background-image: url('../assets/images/munich.jpg'); background-color: #444;"></div>
+                    <div class="mt-4 pb-2 border-b-2 border-dashed border-white/20">
+                        <h3 class="cinzel text-xl text-[var(--haki-gold)]">Munich: The Grind</h3>
+                    </div>
+                    <p class="mono text-[10px] md:text-xs text-white/60 mt-3 leading-relaxed text-left">
+                        Der urbane Dschungel. Technik, Struktur, Disziplin. Die Verschmelzung von ungebändigtem Flow und eiskalter Professionalität. The Wu Wei mastery begins.
+                    </p>
+                </div>
+
+                <!-- Panel 3: Lisbon -->
+                <div class="manga-panel relative group border-2 border-white/20 hover:border-[#FFAE42] p-2 bg-black overflow-hidden transition-all duration-500 transform hover:-translate-y-2">
+                    <div class="absolute top-0 right-0 bg-[#FFAE42] text-black mono text-[9px] font-bold px-2 py-1 z-10 border-b-2 border-l-2 border-black">PANEL 03</div>
+                    <div class="w-full h-48 md:h-64 bg-cover bg-center grayscale group-hover:grayscale-0 transition-all duration-700" style="background-image: url('../assets/images/lisbon.jpg'); background-color: #555;"></div>
+                    <div class="mt-4 pb-2 border-b-2 border-dashed border-white/20">
+                        <h3 class="cinzel text-xl text-[var(--haki-gold)]">Lisbon: The Core</h3>
+                    </div>
+                    <p class="mono text-[10px] md:text-xs text-white/60 mt-3 leading-relaxed text-left">
+                        Die finale Form. Sonne, Ozean und endlose Kreativität. Das Fundament der Heart World steht, und von hier aus breiten sich die Ringe in die Realität aus.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- About Us Empathic Call to Action -->
+            <div class="mt-16 text-center max-w-4xl mx-auto p-8 border border-[var(--haki-gold)]/30 bg-black/40 backdrop-blur-md rounded-xl relative overflow-hidden group">
+                <div class="absolute -inset-1 bg-gradient-to-r from-[#5A2A84] via-[#FFAE42] to-[var(--haki-gold)] opacity-10 group-hover:opacity-30 blur transition-all duration-1000"></div>
+                <h3 class="cinzel text-2xl md:text-3xl text-white mb-6 drop-shadow-md relative z-10">We Are The Architects of Flow</h3>
+                <p class="mono text-xs md:text-sm text-white/80 leading-loose mb-8 relative z-10 max-w-2xl mx-auto">
+                    Dies ist kein einfaches Portfolio. Dies ist <span class="text-[var(--haki-gold)] font-bold">The Archive</span>. Ein lebendiger Organismus, der sich durch Zeit und Raum bewegt. Wir dokumentieren Momente, erschaffen Welten und laden dich ein, Teil unserer Alliance zu werden. Fühle den Vibe, unterstütze unsere Reise oder trete direkt in den Nexus ein.
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center gap-6 relative z-10">
+                    <button class="cinzel bg-[#5A2A84] hover:bg-[#FFAE42] text-white hover:text-black px-8 py-3 font-bold tracking-wider transition-all shadow-[0_0_20px_rgba(90,42,132,0.6)] hover:shadow-[0_0_30px_rgba(255,174,66,0.8)] border border-white/20" onclick="window.location.href='booking.html'">
+                        GIVE LOVE & SUPPORT
+                    </button>
+                    <button class="cinzel bg-transparent border border-[var(--haki-gold)] text-[var(--haki-gold)] hover:bg-[var(--haki-gold)] hover:text-black px-8 py-3 font-bold tracking-wider transition-all shadow-[0_0_20px_rgba(212,175,55,0.2)]" onclick="window.location.href='heart.html'">
+                        ENTER HEART WORLD
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <h1 class="text-3xl md:text-5xl cinzel text-white mb-2 drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]">The Portfolio Archive</h1>
         <p class="text-white/60 max-w-2xl mx-auto mono text-[10px] md:text-xs leading-relaxed tracking-widest uppercase">
             A real-time reflection of the Google Drive master node.<br>
             Current payload calculation...
         </p>
+
         
         <!-- Filter Tabs -->
         <div class="flex justify-center flex-wrap gap-4 mt-4 mx-auto max-w-[1200px]" id="category-tabs">
@@ -859,307 +926,110 @@
                 });
             }
             
-            // --- DYNAMIC TABS LOGIC ---
-            function renderTabs() {
-                const tabsContainer = document.getElementById('category-tabs');
-                if (!tabsContainer) return;
-                
-                const categories = rings;
-                tabsContainer.innerHTML = "";
-                
-                categories.forEach(cat => {
-                    const btn = document.createElement('button');
-                    const isActive = cat.toLowerCase().trim() === activeCategory.toLowerCase().trim();
-                    btn.className = `px-4 py-2 border-b-2 text-white mono text-[10px] tracking-widest hover:text-[var(--haki-gold)] transition-all ${isActive ? 'border-[var(--haki-gold)]' : 'border-transparent opacity-50'}`;
-                    btn.innerText = cat.toUpperCase();
-                    btn.onclick = () => window.location.href = `?cat=${encodeURIComponent(cat)}`;
-                    tabsContainer.appendChild(btn);
-                });
-            }
-            renderTabs();
-
-            // --- WEEKLY FLOW LOGIC ---
-            function updateWeeklyFlowBanner() {
-                const titleEl = document.getElementById('weekly-focus-title');
-                const timerEl = document.getElementById('weekly-countdown');
-                if (!titleEl || !timerEl) return;
-                
-                titleEl.innerText = `Diese Woche im Fokus: ${activeCategory}`;
-                
-                function updateTimer() {
-                    const now = new Date();
-                    const nextMonday = new Date();
-                    nextMonday.setDate(now.getDate() + (1 + 7 - now.getDay()) % 7);
-                    nextMonday.setHours(0, 0, 0, 0);
-                    if (now >= nextMonday) nextMonday.setDate(nextMonday.getDate() + 7);
-                    const diff = nextMonday - now;
-                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                    const secs = Math.floor((diff % (1000 * 60)) / 1000);
-                    timerEl.innerText = `${days.toString().padStart(2, '0')}d : ${hours.toString().padStart(2, '0')}h : ${mins.toString().padStart(2, '0')}m : ${secs.toString().padStart(2, '0')}s`;
-                }
-                updateTimer();
-                setInterval(updateTimer, 1000);
-            }
-            updateWeeklyFlowBanner();
-
-            // Update Page Meta Info
-            const pageCaption2 = document.querySelector('.pt-\\[40px\\] p');
-            if (pageCaption2) {
-                pageCaption2.innerHTML = `
-                    A real-time reflection of the 3D Master Node.<br>
-                    Category: ${activeCategory} | Payload: ${assets ? assets.length : 0} Traces.
-                `;
-            }
             
-            if (!assets || assets.length === 0) {
-                grid.innerHTML = `
-                    <div class="swiper-slide !w-full !max-w-2xl text-center py-20 px-8 bg-transparent border-none shadow-none flex justify-center items-center">
-                        <div>
-                            <div class="mono opacity-50 mb-6 font-bold text-lg">NEURAL CALIBRATION IN PROGRESS</div>
-                            <p class="mono opacity-40 text-xs mb-8">Segment [${activeCategory}] yielded 0 traces.</p>
-                        </div>
-                    </div>
-                `;
-                // Even if empty, start the auto-gatekeeper timer
-                triggerNexusGatekeeper("Noch keine Schätze in dieser Kategorie? <br>Lass uns gemeinsam etwas neues erschaffen.");
-                return;
-            }
-
-            // Clear containers to prevent duplicate rendering
-            grid.innerHTML = "";
-            document.getElementById('photography-masonry').innerHTML = "";
-
-
-            const videos = [];
-            const photos = [];
-            
-            assets.forEach(asset => {
-                const nameLower = asset.name.toLowerCase();
-                const isVideo = nameLower.endsWith('.mp4') || nameLower.endsWith('.mov') || nameLower.endsWith('.xml');
-                if (isVideo) videos.push(asset);
-                else photos.push(asset);
-            });
-
-            // Weekly Flow Constraints: Max 3 Videos, Max 12 Photos
-            const topVideos = videos.slice(0, 3);
-            const topPhotos = photos.slice(0, 12);
-            if (topVideos.length > 0) {
-                document.getElementById('video-carousel').style.display = 'block';
-                topVideos.forEach((asset, index) => {
-                    const isXML = asset.name.toLowerCase().endsWith('.xml');
-                    let thumbnail;
-                    if (isXML) {
-                        thumbnail = "../assets/ui/xml_icon.png";
-                    } else if (asset.thumb_url) {
-                        thumbnail = asset.thumb_url;
-                    } else if (asset.id && (asset.id.startsWith("local_") || asset.id.startsWith("fix_") || asset.id.startsWith("localFile_"))) {
-                        thumbnail = asset.url;
-                    } else if (asset.url && !asset.url.includes("drive.google.com")) {
-                        thumbnail = asset.url;
-                    } else {
-                        thumbnail = asset.id.includes("mock") ? "../Assets/images/Logo.png" : `https://drive.google.com/thumbnail?id=${asset.id}&sz=w800`;
-                    }
-                    const card = document.createElement('div');
-                    card.className = 'swiper-slide asset-card video-card';
-                    card.onclick = () => {
-                        window.CDF_Player.open(asset);
-                        if (!window.agentMuted) {
-                            triggerNexusGatekeeper(isXML ? "Bereit für den finalen Schnitt? Lad dir das Projekt in DaVinci." : "Planst du ein Event oder eine Jam-Session?<br>Lass uns über die visuelle Begleitung sprechen.", false);
-                        }
-                    };
-                    let badgeLabel = isXML ? 'AI PROJECT' : 'CINEMATIC FLOW';
-                    let metaLabel = isXML ? 'AI Timeline Engine' : 'Documentary Fragment';
-
-                    if (activeCategory === "Artist Spotlight") {
-                        badgeLabel = "ARTIST SPOTLIGHT";
-                        metaLabel = "Individual Portrait";
-                    } else if (activeCategory === "Soundwaves") {
-                        badgeLabel = "SOUNDWAVE";
-                        metaLabel = "DJ Performance";
-                    } else if (activeCategory === "The Atelier") {
-                        badgeLabel = "CREATIVE VORTEX";
-                        metaLabel = "Artistic Process";
-                    }
-
-                    const poetCaption = asset.poet_caption ? 
-                        `<div class="poet-desc mt-2 pt-2 border-t border-white/10 italic text-[9px] text-white/50 leading-relaxed whitespace-pre-line">${asset.poet_caption}</div>` : "";
-
-                    const mediaElement = (!isXML && asset.url && (asset.url.toLowerCase().endsWith('.mp4') || asset.url.toLowerCase().endsWith('.mov'))) 
-                        ? `<video src="${asset.url}" class="asset-image" autoplay muted loop playsinline></video>`
-                        : `<img src="${thumbnail}" class="asset-image ${isXML ? '!object-contain p-8' : ''}" onerror="this.src='../Assets/images/Logo.png'">`;
-
-                    card.innerHTML = `
-                        <div class="category-badge border-[#E2725B] text-[#E2725B] shadow-[0_0_15px_rgba(226,114,91,0.4)]">${badgeLabel}</div>
-                        <div class="asset-image-wrapper">
-                            ${mediaElement}
-                        </div>
-                        <div class="play-button" style="border-color: ${isXML ? 'var(--haki-gold)' : '#E2725B'}; background: rgba(${isXML ? '212, 175, 55' : '226, 114, 91'}, 0.1);">
-                            <span class="material-symbols-outlined" style="color: ${isXML ? 'var(--haki-gold)' : '#E2725B'};">${isXML ? 'auto_awesome' : 'play_arrow'}</span>
-                        </div>
-                        <div class="asset-overlay">
-                            <h3 class="cinzel text-xl text-[var(--haki-gold)] mb-1">${asset.professional_name || asset.name}</h3>
-                            <p class="mono text-[10px] text-white/70 tracking-wider">${metaLabel}</p>
-                            ${poetCaption}
-                        </div>
-                    `;
-                    grid.appendChild(card);
-                });
-
-                new Swiper(".mySwiper", {
-                    effect: "coverflow", grabCursor: true, centeredSlides: true, slidesPerView: "auto",
-                    coverflowEffect: { rotate: 20, stretch: 0, depth: 250, modifier: 1, slideShadows: true },
-                    keyboard: { enabled: true },
-                    pagination: { el: ".swiper-pagination", clickable: true, dynamicBullets: true },
-                    navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" }
-                });
-            }
-
-            // Populate Photos (Masonry Grid)
-            const masonry = document.getElementById('photography-masonry');
-            if (topPhotos.length > 0) {
-                topPhotos.forEach((asset, index) => {
-                    let thumbnail;
-                    if (asset.thumb_url) {
-                        thumbnail = asset.thumb_url;
-                    } else if (asset.id && (asset.id.startsWith("local_") || asset.id.startsWith("fix_") || asset.id.startsWith("localFile_"))) {
-                        thumbnail = asset.url;
-                    } else if (asset.url && !asset.url.includes("drive.google.com")) {
-                        thumbnail = asset.url;
-                    } else {
-                        thumbnail = asset.id.includes("mock") ? "../Assets/images/Logo.png" : `https://drive.google.com/thumbnail?id=${asset.id}&sz=w800`;
-                    }
-                    const div = document.createElement('div');
-                    div.className = 'masonry-item';
-                    div.onclick = () => {
-                        window.CDF_Player.open(asset);
-                        if (!window.agentMuted) {
-                            let msg = "Inspiriert von diesem Stil?<br>Sichere dir jetzt einen Slot für 2025/26.";
-                            if (activeCategory.toLowerCase().includes("atelier")) {
-                                msg = "Interesse an einem Unikat oder einer Spezialanfertigung?";
-                            }
-                            triggerNexusGatekeeper(msg, false);
-                        }
-                    };
-                    const img = document.createElement('img');
-                    img.src = thumbnail;
-                    img.alt = asset.professional_name || asset.name;
-                    img.loading = "lazy";
-                    img.onerror = function() {
-                        this.onerror = null;
-                        this.src = '../Assets/images/Logo.png';
-                        this.style.opacity = '0.3';
-                        this.style.objectFit = 'contain';
-                    };
-                    div.appendChild(img);
-                    masonry.appendChild(div);
-                });
-            }
-
-            // Nexus Gatekeeper Analytics Logic (The Booking Agent)
-            var nexusTimer;
-            window.agentMuted = localStorage.getItem('agentMuted') === 'true';
-            
-            window.bgMusic = new Audio('../Music Qter/Hugo Kant - This Old Tune.mp3');
-            window.bgMusic.loop = true;
-            window.bgMusic.volume = 0.3; // Soft background volume
-            window.wasPlayingMusic = false;
-
-            function toggleAgentMute() {
-                window.agentMuted = !window.agentMuted;
-                localStorage.setItem('agentMuted', window.agentMuted);
-                updateMuteUI();
-                if (window.agentMuted) {
-                    document.getElementById('nexus-gatekeeper').classList.remove('visible');
-                    clearTimeout(nexusTimer);
-                    window.bgMusic.pause();
-                } else {
-                    window.bgMusic.play().catch(e => console.log("Autoplay blocked:", e));
-                }
-            }
-
-            // Ensure audio plays on first click if not muted
-            document.body.addEventListener('click', function initAudio() {
-                if (!window.agentMuted && window.bgMusic.paused) {
-                    window.bgMusic.play().catch(e => console.log("Autoplay blocked:", e));
-                }
-                document.body.removeEventListener('click', initAudio);
-            }, { once: true });
-
-            function updateMuteUI() {
-                const btn = document.getElementById('btn-mute-agent');
-                const icon = document.getElementById('mute-icon');
-                const text = btn.querySelector('.mono');
-                if (window.agentMuted) {
-                    icon.innerText = 'notifications_off';
-                    text.innerText = 'AGENT MUTED';
-                    btn.classList.add('opacity-40');
-                } else {
-                    icon.innerText = 'notifications_active';
-                    text.innerText = 'AGENT ACTIVE';
-                    btn.classList.remove('opacity-40');
-                }
-            }
-            updateMuteUI();
-            
-            function triggerNexusGatekeeper(message, immediate = false) {
-                if (window.agentMuted) return;
-                if (document.getElementById('nexus-gatekeeper').classList.contains('visible') && !immediate) return;
-                
-                clearTimeout(nexusTimer);
-                document.getElementById('nexus-message').innerHTML = message;
-                
-                if (immediate) {
-                    document.getElementById('nexus-gatekeeper').classList.add('visible');
-                } else {
-                    // Wait 6 seconds (instead of 10) for a non-blocking experience
-                    nexusTimer = setTimeout(() => {
-                        if (!window.agentMuted) document.getElementById('nexus-gatekeeper').classList.add('visible');
-                    }, 6000); 
-                }
-            }
-
-            // Auto-engage after 15 seconds on page (The "Observation" trigger)
-            setTimeout(() => {
-                triggerNexusGatekeeper("Lust auf einen Deep-Dive in den Flow? <br>Sichere dir jetzt deinen Termin.");
-            }, 15000);
         });
-    </script>
+
+        </script>
     <style>
         @keyframes bounce-in {
             0% { opacity: 0; transform: translateY(30px) scale(0.95); }
             100% { opacity: 1; transform: translateY(0) scale(1); }
         }
     </style>
+    
+    <!-- Quest Board & Upcoming Events Section -->
+    <div class="relative w-full max-w-[1200px] mx-auto px-4 mt-20 mb-12">
+        <div class="text-center mb-10">
+            <h2 class="text-3xl md:text-5xl cinzel text-[var(--haki-gold)] mb-2 drop-shadow-[0_0_10px_rgba(212,175,55,0.3)]">Quest-Board</h2>
+            <p class="mono text-[10px] text-white/50 tracking-[0.2em] uppercase">Upcoming Events & Marketplace</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Event 1 -->
+            <div class="border border-[var(--haki-gold)]/20 bg-black/60 backdrop-blur-sm p-6 hover:border-[var(--haki-gold)] transition-colors group cursor-pointer" onclick="window.location.href='booking.html'">
+                <div class="text-[#FFAE42] mono text-[10px] mb-2 font-bold tracking-widest">NEXT EVENT</div>
+                <h3 class="cinzel text-xl text-white mb-2 group-hover:text-[var(--haki-gold)] transition-colors">C4C Jamsession</h3>
+                <p class="mono text-xs text-white/60 mb-4 line-clamp-3">
+                    Die nächste Circle 4 Creators Jamsession steht an. Verbinde dich mit anderen Artists, teile deinen Flow und werde Teil der Alliance.
+                </p>
+                <span class="cinzel text-sm text-[var(--haki-gold)] border-b border-[var(--haki-gold)]/30 pb-1">Join the Circle</span>
+            </div>
+            
+            <!-- Marketplace Teaser 1 -->
+            <div class="border border-[var(--haki-gold)]/20 bg-black/60 backdrop-blur-sm p-6 hover:border-[var(--haki-gold)] transition-colors group cursor-pointer" onclick="window.location.href='bazar.html'">
+                <div class="text-[#5A2A84] mono text-[10px] mb-2 font-bold tracking-widest">THE BAZAR</div>
+                <h3 class="cinzel text-xl text-white mb-2 group-hover:text-[var(--haki-gold)] transition-colors">Kreativlon Resin Art</h3>
+                <p class="mono text-xs text-white/60 mb-4 line-clamp-3">
+                    Entdecke handgefertigte Unikate. Jedes Stück trägt die Energie des Erschaffers in sich. Finde dein persönliches Artefakt.
+                </p>
+                <span class="cinzel text-sm text-[var(--haki-gold)] border-b border-[var(--haki-gold)]/30 pb-1">Enter the Forge</span>
+            </div>
+            
+            <!-- Marketplace Teaser 2 -->
+            <div class="border border-[var(--haki-gold)]/20 bg-black/60 backdrop-blur-sm p-6 hover:border-[var(--haki-gold)] transition-colors group cursor-pointer" onclick="window.location.href='bazar.html'">
+                <div class="text-[#5A2A84] mono text-[10px] mb-2 font-bold tracking-widest">THE BAZAR</div>
+                <h3 class="cinzel text-xl text-white mb-2 group-hover:text-[var(--haki-gold)] transition-colors">African Queen Kitchen</h3>
+                <p class="mono text-xs text-white/60 mb-4 line-clamp-3">
+                    Geschmack, der Geschichten erzählt. Authentische Soulfood-Kreationen für dein nächstes Event.
+                </p>
+                <span class="cinzel text-sm text-[var(--haki-gold)] border-b border-[var(--haki-gold)]/30 pb-1">Taste the Flow</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Policy Detailed & Outro -->
+    <div class="w-full bg-[#050505] border-t border-white/10 pt-16 pb-24 px-4 text-center">
+        <h2 class="cinzel text-2xl md:text-4xl text-white mb-4">Kiss Your Heart. <span class="text-[var(--haki-gold)]">Free Your Art.</span></h2>
+        <p class="mono text-xs text-white/50 max-w-2xl mx-auto mb-8 leading-relaxed">
+            The Singularity Project is built upon mutual respect, the Wu Wei philosophy, and creative freedom. 
+            By entering the Circle, you agree to our <a href="#" class="text-[var(--haki-gold)] hover:underline">Detailed Policy</a> & Guidelines.
+        </p>
+        <div class="flex justify-center gap-4">
+            <a href="https://instagram.com/circle_d_flow" target="_blank" class="w-10 h-10 border border-white/20 rounded-full flex items-center justify-center hover:border-[var(--haki-gold)] hover:text-[var(--haki-gold)] transition-colors">
+                <span class="material-symbols-outlined text-[18px]">photo_camera</span>
+            </a>
+            <a href="bantaba.html" class="w-10 h-10 border border-white/20 rounded-full flex items-center justify-center hover:border-[var(--haki-gold)] hover:text-[var(--haki-gold)] transition-colors">
+                <span class="material-symbols-outlined text-[18px]">home</span>
+            </a>
+        </div>
+    </div>
+
     <!-- Radial Menu (The Guild Archives) -->
     <div id="radial-container" class="fixed bottom-10 left-1/2 transform -translate-x-1/2 z-[100] flex items-center justify-center">
         <!-- The trigger button -->
         <button id="radial-trigger" class="w-16 h-16 bg-black text-[var(--haki-gold)] border-2 border-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-lg shadow-black/50 hover:shadow-[0_0_15px_var(--haki-gold)] transition-all z-10">
-            <span class="material-symbols-outlined text-[32px]">hub</span>
+            <img src="../assets/images/cqr-logo-gold.png" alt="Circle" class="w-8 h-8 opacity-80" onerror="this.src='../Assets/images/Logo.png'">
         </button>
 
         <!-- Menu Items (hidden initially) -->
         <div id="radial-menu" class="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <!-- Artist Spotlight -->
-            <button onclick="window.location.href='?cat=Artist Spotlight'" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="Artist Spotlight">
-                <span class="material-symbols-outlined text-[20px]">face</span>
+            <!-- Artist Vault -->
+            <button onclick="window.location.href='?cat=Artist'" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="Artist Vault">
+                <span class="material-symbols-outlined text-[20px]">brush</span>
             </button>
-            <!-- Events -->
-            <button onclick="window.location.href='?cat=Events'" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="Events">
-                <span class="material-symbols-outlined text-[20px]">event</span>
-            </button>
-            <!-- Soundwaves -->
-            <button onclick="window.location.href='?cat=Soundwaves'" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="Soundwaves">
-                <span class="material-symbols-outlined text-[20px]">graphic_eq</span>
-            </button>
-            <!-- The Atelier -->
-            <button onclick="window.location.href='?cat=The Atelier'" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="The Atelier">
-                <span class="material-symbols-outlined text-[20px]">palette</span>
-            </button>
-            <!-- Jamsessions -->
-            <button onclick="window.location.href='?cat=Jamsessions'" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="Jamsessions">
+            <!-- Jam Sessions -->
+            <button onclick="window.location.href='?cat=Event'" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="Jam Sessions">
                 <span class="material-symbols-outlined text-[20px]">music_note</span>
+            </button>
+            <!-- D Motion -->
+            <button onclick="window.location.href='?cat=Wasser'" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="D Motion">
+                <span class="material-symbols-outlined text-[20px]">movie</span>
+            </button>
+            <!-- City Vibe -->
+            <button onclick="window.location.href='?cat=Erde'" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="City Vibe">
+                <span class="material-symbols-outlined text-[20px]">location_city</span>
+            </button>
+            <!-- Animal Life -->
+            <button onclick="window.location.href='?cat=Nature'" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="Animal Life">
+                <span class="material-symbols-outlined text-[20px]">pets</span>
+            </button>
+            <!-- Behind the Scenes -->
+            <button onclick="window.location.href='?cat=Realm'" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="Behind the Scenes">
+                <span class="material-symbols-outlined text-[20px]">camera_roll</span>
+            </button>
+            <!-- Brand & Culture -->
+            <button onclick="window.location.href='?cat=Feuer'" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="Brand & Culture">
+                <span class="material-symbols-outlined text-[20px]">local_fire_department</span>
             </button>
         </div>
     </div>
