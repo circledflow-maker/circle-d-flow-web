@@ -27,9 +27,9 @@ const heartApp = {
     },
 
     unlockGate() {
-        const pass = document.getElementById('master-password').value;
+        const pass = document.getElementById('master-password').value.toLowerCase().trim();
         const err = document.getElementById('gate-error');
-        if (pass.toLowerCase() === 'ygdrasil') {
+        if (pass === 'ygdrasil' || pass === 'yggdrasil' || pass === 'yggdrassil' || pass === 'ygdrassil') {
             document.getElementById('ygdrasil-gate').style.opacity = '0';
             setTimeout(() => {
                 document.getElementById('ygdrasil-gate').style.display = 'none';

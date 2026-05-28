@@ -606,17 +606,24 @@
         document.addEventListener('DOMContentLoaded', () => {
             const grid = document.getElementById('portfolio-grid');
             const urlParams = new URLSearchParams(window.location.search);
-            let activeCategory = urlParams.get('cat') || "Urban Adventure";
+            let activeCategory = urlParams.get('cat') || "Events";
+            const categoryMap = {
+                'Portfolio': 'Artist Spotlight',
+                'Bazar': 'The Atelier',
+                'Alliance': 'Soundwaves'
+            };
+            
+            let dataCategory = categoryMap[activeCategory] || activeCategory;
             
             let assets = [];
             if (window.PortfolioData) {
-                let rawAssets = window.PortfolioData[activeCategory];
+                let rawAssets = window.PortfolioData[dataCategory];
                 if (!rawAssets) {
                     const keys = Object.keys(window.PortfolioData);
-                    const matchedKey = keys.find(k => k.toLowerCase().trim() === activeCategory.toLowerCase().trim());
+                    const matchedKey = keys.find(k => k.toLowerCase().trim() === dataCategory.toLowerCase().trim());
                     if (matchedKey) {
                         rawAssets = window.PortfolioData[matchedKey];
-                        activeCategory = matchedKey;
+                        dataCategory = matchedKey;
                     }
                 }
 
@@ -838,9 +845,9 @@
             // --- DYNAMIC TABS LOGIC ---
             function renderTabs() {
                 const tabsContainer = document.getElementById('category-tabs');
-                if (!window.PortfolioData || !tabsContainer) return;
+                if (!tabsContainer) return;
                 
-                const categories = Object.keys(window.PortfolioData);
+                const categories = ['Events', 'Portfolio', 'Bazar', 'Alliance', 'Jamsessions'];
                 tabsContainer.innerHTML = "";
                 
                 categories.forEach(cat => {
@@ -881,9 +888,9 @@
             updateWeeklyFlowBanner();
 
             // Update Page Meta Info
-            const pageCaption = document.querySelector('.pt-\\[40px\\] p');
-            if (pageCaption) {
-                pageCaption.innerHTML = `
+            const pageCaption2 = document.querySelector('.pt-\\[40px\\] p');
+            if (pageCaption2) {
+                pageCaption2.innerHTML = `
                     A real-time reflection of the 3D Master Node.<br>
                     Category: ${activeCategory} | Payload: ${assets ? assets.length : 0} Traces.
                 `;

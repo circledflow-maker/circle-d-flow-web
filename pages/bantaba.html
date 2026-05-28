@@ -374,11 +374,8 @@
             <div class="page-overlay justify-center items-center pointer-events-none pb-6 z-[10] flex flex-col h-full">
                 
                 <!-- Welcome Box -->
-                <div class="interactive-layer bg-black/40 backdrop-blur-sm border-t border-b border-[#d4af37]/20 flex flex-col items-center w-full py-8 text-center shadow-lg">
-                    <h1 class="text-3xl md:text-5xl cinzel text-[#d4af37] gold-glow mb-2" data-i18n="page1_title">Welcome to D. Circle</h1>
-                    <p class="text-gray-300 max-w-lg text-center px-4 italic text-[11px] md:text-sm mb-6" data-i18n="page1_desc">
-                        Dieser Bereich ist Bantaba, der traditionelle Treffpunkt. Ein Safe Space ohne Vorurteile. Hier fließen Schicksal, Kultur und C4C-Philosophie zusammen.
-                    </p>
+                <div class="interactive-layer bg-black/40 backdrop-blur-sm border-t border-b border-[#d4af37]/20 flex flex-col items-center justify-center w-full py-16 text-center shadow-lg h-[40vh] mt-[20vh]">
+                    <h1 class="text-3xl md:text-5xl cinzel text-[#d4af37] gold-glow mb-8" data-i18n="page1_title">Welcome to D. Circle</h1>
                     <button class="border border-[#d4af37] text-[#d4af37] hover:bg-[#d4af37] hover:text-black px-8 py-3 rounded-full uppercase tracking-widest text-sm transition font-bold" onclick="app.turnPage(1)" data-i18n="page1_btn">ENTER BANTABA</button>
                 </div>
             </div>
@@ -400,13 +397,14 @@
 
                 <!-- Navigation Tabs (Golden Panel) just below dialogue -->
                 <div class="interactive-layer bg-black/70 border-t border-b border-[#d4af37]/50 py-4 w-full text-center pointer-events-auto shadow-[0_0_15px_rgba(212,175,55,0.2)]">
-                    <h3 class="text-lg cinzel text-[#d4af37] mb-3">Choose your Path</h3>
-                    <div class="flex flex-wrap justify-center gap-4 mt-6">
-                        <button class="border border-[#d4af37] px-4 py-2 rounded-full text-white mono text-[10px] tracking-widest hover:bg-[#d4af37] hover:text-black transition-all uppercase" onclick="app.switchTab('events'); app.turnPage(2);" data-i18n="tab_events">Events</button>
-                        <button class="border border-[#d4af37] px-4 py-2 rounded-full text-white mono text-[10px] tracking-widest hover:bg-[#d4af37] hover:text-black transition-all uppercase" onclick="window.location.href='portfolio_anime_reality.html'" data-i18n="tab_portfolio">Portfolio</button>
-                        <button class="border border-[#d4af37] px-4 py-2 rounded-full text-white mono text-[10px] tracking-widest hover:bg-[#d4af37] hover:text-black transition-all uppercase" onclick="app.switchTab('bazar'); app.turnPage(2);" data-i18n="tab_bazar">Bazar</button>
-                        <button class="border border-amber-500 px-4 py-2 rounded-full text-white mono text-[10px] tracking-widest hover:bg-amber-500 hover:text-black transition-all uppercase" onclick="app.switchTab('alliance'); app.turnPage(2);">Alliance</button>
-                        <button class="border border-[#d4af37] px-4 py-2 rounded-full text-white mono text-[10px] tracking-widest hover:bg-[#d4af37] hover:text-black transition-all uppercase" onclick="app.switchTab('jamsessions'); app.turnPage(2);" data-i18n="tab_jamsessions">Jamsessions</button>
+                    <button id="open-menu-btn" class="text-lg cinzel text-[#d4af37] px-8 py-2 rounded-full border border-[#d4af37] hover:bg-[#d4af37] hover:text-black transition-all mb-2 shadow-[0_0_10px_rgba(212,175,55,0.5)]" onclick="document.getElementById('griot-menu-selection').classList.toggle('hidden')">Open Paths</button>
+                    
+                    <div id="griot-menu-selection" class="hidden flex-col items-center gap-4 mt-6 pb-2 transition-all">
+                        <button class="w-48 border border-[#d4af37] px-4 py-3 rounded-full text-[#d4af37] mono text-[12px] tracking-widest hover:bg-[#d4af37] hover:text-black transition-all uppercase" onclick="app.switchTab('events'); app.turnPage(3);" data-i18n="tab_events">Events</button>
+                        <button class="w-48 border border-[#d4af37] px-4 py-3 rounded-full text-[#d4af37] mono text-[12px] tracking-widest hover:bg-[#d4af37] hover:text-black transition-all uppercase" onclick="window.location.href='portfolio_anime_reality.html'" data-i18n="tab_portfolio">Portfolio</button>
+                        <button class="w-48 border border-[#d4af37] px-4 py-3 rounded-full text-[#d4af37] mono text-[12px] tracking-widest hover:bg-[#d4af37] hover:text-black transition-all uppercase" onclick="app.switchTab('bazar'); app.turnPage(3);" data-i18n="tab_bazar">Bazar</button>
+                        <button class="w-48 border border-amber-500 px-4 py-3 rounded-full text-amber-500 mono text-[12px] tracking-widest hover:bg-amber-500 hover:text-black transition-all uppercase" onclick="app.switchTab('alliance'); app.turnPage(3);">Alliance</button>
+                        <button class="w-48 border border-[#d4af37] px-4 py-3 rounded-full text-[#d4af37] mono text-[12px] tracking-widest hover:bg-[#d4af37] hover:text-black transition-all uppercase" onclick="app.switchTab('jamsessions'); app.turnPage(3);" data-i18n="tab_jamsessions">Jamsessions</button>
                     </div>
                 </div>
 
