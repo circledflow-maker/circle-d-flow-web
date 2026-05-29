@@ -57,18 +57,21 @@
     <div class="dust-particles"></div>
 
     <!-- Language Selector -->
-    <div class="absolute top-6 right-6 z-[100] group font-mono text-sm">
-        <button class="bg-[#111] border border-[#d4af37]/50 text-[#d4af37] px-3 py-1 rounded hover:bg-white/10 transition flex items-center gap-1">
-            <span id="current-lang-display">DE</span>
-            <span class="text-[10px]">▼</span>
-        </button>
-        <div class="absolute right-0 mt-2 bg-black/90 border border-[#d4af37]/50 rounded shadow-xl hidden group-hover:block w-full text-center divide-y divide-[#d4af37]/20">
-            <button onclick="changeLanguage('en')" class="w-full text-gray-400 hover:text-[#d4af37] py-2 hover:bg-white/5 transition block">EN</button>
-            <button onclick="changeLanguage('de')" class="w-full text-gray-400 hover:text-[#d4af37] py-2 hover:bg-white/5 transition block">DE</button>
-            <button onclick="changeLanguage('fr')" class="w-full text-gray-400 hover:text-[#d4af37] py-2 hover:bg-white/5 transition block">FR</button>
-            <button onclick="changeLanguage('pt')" class="w-full text-gray-400 hover:text-[#d4af37] py-2 hover:bg-white/5 transition block">PT</button>
-        </div>
+    <div class="absolute top-6 right-6 z-[100]">
+        <select onchange="changeLanguage(this.value)" id="lang-select" class="bg-black border border-[#d4af37]/50 text-[#d4af37] px-3 py-1 text-sm cinzel focus:outline-none focus:border-[#d4af37] cursor-pointer">
+            <option value="de">DE</option>
+            <option value="en">EN</option>
+            <option value="fr">FR</option>
+            <option value="pt">PT</option>
+        </select>
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const currentLang = localStorage.getItem('cqr_lang') || 'de';
+            const select = document.getElementById('lang-select');
+            if (select) select.value = currentLang;
+        });
+    </script>
 
     <!-- Hamburger Menu Button -->
     <button id="burger-btn" class="absolute top-6 left-6 z-[100] focus:outline-none flex flex-col gap-1.5 p-2 bg-black/50 border border-[#d4af37]/30 rounded hover:bg-[#d4af37]/10 transition">

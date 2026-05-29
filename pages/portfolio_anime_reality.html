@@ -399,41 +399,21 @@
 <body>
 
     <!-- Language Selector -->
-    <div class="absolute top-6 right-6 z-[100] group font-mono text-sm hidden md:block">
-        <button class="bg-[#111] border border-[#d4af37]/50 text-[#d4af37] px-3 py-1 rounded hover:bg-white/10 transition flex items-center gap-1">
-            <span id="current-lang-display">DE</span>
-            <span class="text-[10px]">▼</span>
-        </button>
-        <div class="absolute right-0 mt-2 bg-black/90 border border-[#d4af37]/50 rounded shadow-xl hidden group-hover:block w-full text-center divide-y divide-[#d4af37]/20">
-            <button onclick="if(window.changeLanguage) changeLanguage('en')" class="w-full text-gray-400 hover:text-[#d4af37] py-2 hover:bg-white/5 transition block">EN</button>
-            <button onclick="if(window.changeLanguage) changeLanguage('de')" class="w-full text-gray-400 hover:text-[#d4af37] py-2 hover:bg-white/5 transition block">DE</button>
-            <button onclick="if(window.changeLanguage) changeLanguage('fr')" class="w-full text-gray-400 hover:text-[#d4af37] py-2 hover:bg-white/5 transition block">FR</button>
-            <button onclick="if(window.changeLanguage) changeLanguage('pt')" class="w-full text-gray-400 hover:text-[#d4af37] py-2 hover:bg-white/5 transition block">PT</button>
-        </div>
+    <div class="absolute top-6 right-6 z-[100]">
+        <select onchange="changeLanguage(this.value)" id="lang-select" class="bg-black border border-[#d4af37]/50 text-[#d4af37] px-3 py-1 text-sm cinzel focus:outline-none focus:border-[#d4af37] cursor-pointer">
+            <option value="de">DE</option>
+            <option value="en">EN</option>
+            <option value="fr">FR</option>
+            <option value="pt">PT</option>
+        </select>
     </div>
-
-    <!-- Hamburger Menu Button -->
-    <button id="burger-btn" class="absolute top-6 left-6 z-[100] focus:outline-none flex flex-col gap-1.5 p-2 bg-black/50 border border-[#d4af37]/30 rounded hover:bg-[#d4af37]/10 transition">
-        <span class="block w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
-        <span class="block w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
-        <span class="block w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
-    </button>
-    
-    <!-- Fullscreen Menu Overlay -->
-    <div id="mobile-menu" class="fixed inset-0 bg-black/95 z-[90] flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 backdrop-blur-md">
-        <nav class="flex flex-col gap-8 text-center">
-            <a href="../index.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition gold-glow" data-i18n="nav_orbit">Return to Orbit</a>
-            <a href="bantaba.html#board" class="cinzel text-2xl text-white hover:text-[#d4af37] transition gold-glow" data-i18n="nav_guild_board">Nach Bantaba</a>
-            <a href="about.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition gold-glow" data-i18n="nav_about">About Us</a>
-        </nav>
-        
-        <div class="mt-12 flex gap-4 md:hidden">
-            <button onclick="if(window.changeLanguage) changeLanguage('en'); document.getElementById('burger-btn').click();" class="text-gray-400 hover:text-[#d4af37]">EN</button>
-            <button onclick="if(window.changeLanguage) changeLanguage('de'); document.getElementById('burger-btn').click();" class="text-gray-400 hover:text-[#d4af37]">DE</button>
-            <button onclick="if(window.changeLanguage) changeLanguage('fr'); document.getElementById('burger-btn').click();" class="text-gray-400 hover:text-[#d4af37]">FR</button>
-            <button onclick="if(window.changeLanguage) changeLanguage('pt'); document.getElementById('burger-btn').click();" class="text-gray-400 hover:text-[#d4af37]">PT</button>
-        </div>
-    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const currentLang = localStorage.getItem('cqr_lang') || 'de';
+            const select = document.getElementById('lang-select');
+            if (select) select.value = currentLang;
+        });
+    </script>
 
 
     <!-- Header Section -->
