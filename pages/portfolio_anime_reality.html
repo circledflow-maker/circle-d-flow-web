@@ -424,7 +424,7 @@
         <nav class="flex flex-col gap-8 text-center">
             <a href="../index.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition gold-glow" data-i18n="nav_orbit">Return to Orbit</a>
             <a href="bantaba.html#board" class="cinzel text-2xl text-white hover:text-[#d4af37] transition gold-glow" data-i18n="nav_guild_board">Nach Bantaba</a>
-            <a href="#about" onclick="document.getElementById('burger-btn').click();" class="cinzel text-2xl text-white hover:text-[#d4af37] transition gold-glow" data-i18n="nav_about">About Us</a>
+            <a href="about.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition gold-glow" data-i18n="nav_about">About Us</a>
         </nav>
         
         <div class="mt-12 flex gap-4 md:hidden">
@@ -821,6 +821,31 @@ function renderGrid() {
     const topVideos = videos.slice(0, 3);
     const topPhotos = photos.slice(0, 12);
     
+    
+    // Update Page Meta Info
+    const pageCaption = document.querySelector('.pt-\\[40px\\] p');
+    if (pageCaption) {
+        pageCaption.innerHTML = `
+            A real-time reflection of the 3D Master Node.<br>
+            Category: ${activeCategory} | Payload: ${assets.length} Traces.
+        `;
+    }
+    
+    if (assets.length === 0) {
+        grid.innerHTML = `
+            <div class="swiper-slide !w-full !max-w-2xl text-center py-20 px-8 bg-transparent border-none shadow-none flex justify-center items-center">
+                <div>
+                    <div class="mono opacity-50 mb-6 font-bold text-lg">NEURAL CALIBRATION IN PROGRESS</div>
+                    <p class="mono opacity-40 text-xs mb-8">Segment [${activeCategory}] yielded 0 traces.</p>
+                </div>
+            </div>
+        `;
+        // Even if empty, start the auto-gatekeeper timer
+        triggerNexusGatekeeper("Noch keine Schätze in dieser Kategorie? <br>Lass uns gemeinsam etwas neues erschaffen.");
+        document.getElementById('video-carousel').style.display = 'none';
+        return;
+    }
+
     if (topVideos.length > 0) {
         document.getElementById('video-carousel').style.display = 'block';
         topVideos.forEach((asset) => {
@@ -951,29 +976,6 @@ function renderGrid() {
             }
             updateWeeklyFlowBanner(); renderGrid();
 
-            // Update Page Meta Info
-            const pageCaption = document.querySelector('.pt-\\[40px\\] p');
-            if (pageCaption) {
-                pageCaption.innerHTML = `
-                    A real-time reflection of the 3D Master Node.<br>
-                    Category: ${activeCategory} | Payload: ${assets ? assets.length : 0} Traces.
-                `;
-            }
-            
-            if (!assets || assets.length === 0) {
-                grid.innerHTML = `
-                    <div class="swiper-slide !w-full !max-w-2xl text-center py-20 px-8 bg-transparent border-none shadow-none flex justify-center items-center">
-                        <div>
-                            <div class="mono opacity-50 mb-6 font-bold text-lg">NEURAL CALIBRATION IN PROGRESS</div>
-                            <p class="mono opacity-40 text-xs mb-8">Segment [${activeCategory}] yielded 0 traces.</p>
-                        </div>
-                    </div>
-                `;
-                // Even if empty, start the auto-gatekeeper timer
-                triggerNexusGatekeeper("Noch keine Schätze in dieser Kategorie? <br>Lass uns gemeinsam etwas neues erschaffen.");
-                return;
-            }
-
             // Clear containers to prevent duplicate rendering
             grid.innerHTML = "";
             document.getElementById('photography-masonry').innerHTML = "";
@@ -992,7 +994,32 @@ function renderGrid() {
             // Weekly Flow Constraints: Max 3 Videos, Max 12 Photos
             const topVideos = videos.slice(0, 3);
             const topPhotos = photos.slice(0, 12);
-            if (topVideos.length > 0) {
+            
+    // Update Page Meta Info
+    const pageCaption = document.querySelector('.pt-\\[40px\\] p');
+    if (pageCaption) {
+        pageCaption.innerHTML = `
+            A real-time reflection of the 3D Master Node.<br>
+            Category: ${activeCategory} | Payload: ${assets.length} Traces.
+        `;
+    }
+    
+    if (assets.length === 0) {
+        grid.innerHTML = `
+            <div class="swiper-slide !w-full !max-w-2xl text-center py-20 px-8 bg-transparent border-none shadow-none flex justify-center items-center">
+                <div>
+                    <div class="mono opacity-50 mb-6 font-bold text-lg">NEURAL CALIBRATION IN PROGRESS</div>
+                    <p class="mono opacity-40 text-xs mb-8">Segment [${activeCategory}] yielded 0 traces.</p>
+                </div>
+            </div>
+        `;
+        // Even if empty, start the auto-gatekeeper timer
+        triggerNexusGatekeeper("Noch keine Schätze in dieser Kategorie? <br>Lass uns gemeinsam etwas neues erschaffen.");
+        document.getElementById('video-carousel').style.display = 'none';
+        return;
+    }
+
+    if (topVideos.length > 0) {
                 document.getElementById('video-carousel').style.display = 'block';
                 topVideos.forEach((asset, index) => {
                     const isXML = asset.name.toLowerCase().endsWith('.xml');
