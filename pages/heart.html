@@ -85,36 +85,50 @@
         <p id="gate-error" class="text-red-500 text-xs mt-4 hidden">The tree remains silent. Incorrect password.</p>
     </div>
 
-    <!-- 2. REGISTRATION / ONBOARDING (Hidden initially) -->
+        <!-- 2. REGISTRATION / LOGIN (Auth) -->
     <div id="onboarding-screen" class="fixed inset-0 z-[90] hidden flex-col items-center justify-center bg-[#050505] px-4">
-        <div class="glass-panel p-8 max-w-md w-full text-center">
-            <h2 class="cinzel text-3xl text-[#d4af37] mb-2">Join the Guilds</h2>
-            <p class="text-xs text-gray-400 mb-6">Forge your identity within the Heart World.</p>
+        <div class="glass-panel p-8 max-w-md w-full relative overflow-hidden">
             
-            <input type="text" id="reg-username" class="w-full bg-black border border-[#d4af37]/50 text-white px-4 py-2 mb-4 focus:outline-none focus:border-[#d4af37]" placeholder="Choose Username">
-            
-            <select id="reg-role" class="w-full bg-black border border-[#d4af37]/50 text-white px-4 py-2 mb-6 focus:outline-none focus:border-[#d4af37]">
-                  <option value="" disabled selected>Select Your Role / Guild</option>
-                  <optgroup label="The Guilds (Marketplace)">
-                      <option value="Arts">Arts (Visuals)</option>
-                      <option value="Sounds">Sounds (Audio)</option>
-                      <option value="Skills">Skills (Services)</option>
-                      <option value="Products">Products (Physical)</option>
-                      <option value="Healing">Healing (Wellness)</option>
-                  </optgroup>
-                  <optgroup label="Individual Roles">
-                      <option value="Rapper">Rapper</option>
-                      <option value="Lyriker">Lyriker</option>
-                      <option value="Poet">Poet</option>
-                      <option value="Gitarrist">Gitarrist</option>
-                      <option value="Creator">Creator</option>
-                      <option value="Painter">Painter</option>
-                      <option value="Seller">Seller / Merchant</option>
-                      <option value="Observer">Observer</option>
-                  </optgroup>
-              </select>
+            <!-- Auth Toggle -->
+            <div class="flex justify-center gap-4 mb-6 border-b border-[#d4af37]/30 pb-2">
+                <button onclick="heartApp.toggleAuthMode('login')" id="btn-tab-login" class="text-[#d4af37] font-bold pb-1 border-b-2 border-[#d4af37]">LOGIN</button>
+                <button onclick="heartApp.toggleAuthMode('register')" id="btn-tab-register" class="text-gray-500 hover:text-white pb-1 border-b-2 border-transparent">REGISTER</button>
+            </div>
 
-            <button onclick="heartApp.completeRegistration()" class="w-full bg-[#d4af37] text-black px-4 py-2 font-bold hover:bg-white transition-all">ENTER THE HEART</button>
+            <!-- LOGIN FORM -->
+            <div id="form-login" class="flex flex-col animate-fade-in">
+                <h2 class="cinzel text-2xl text-[#d4af37] mb-4 text-center">Return to the Heart</h2>
+                <input type="email" id="login-email" class="w-full bg-black border border-[#d4af37]/50 text-white px-4 py-2 mb-4 focus:outline-none focus:border-[#d4af37]" placeholder="Email">
+                <input type="password" id="login-password" class="w-full bg-black border border-[#d4af37]/50 text-white px-4 py-2 mb-6 focus:outline-none focus:border-[#d4af37]" placeholder="Password">
+                <button onclick="heartApp.login()" class="w-full bg-[#d4af37] text-black px-4 py-2 font-bold hover:bg-white transition-all cinzel">LOGIN</button>
+            </div>
+
+            <!-- REGISTER FORM -->
+            <div id="form-register" class="hidden flex-col animate-fade-in">
+                <h2 class="cinzel text-2xl text-[#d4af37] mb-2 text-center">Join the Guilds</h2>
+                <p class="text-[10px] text-gray-400 mb-4 text-center">Forge your identity within the Heart World.</p>
+                
+                <input type="email" id="reg-email" class="w-full bg-black border border-[#d4af37]/50 text-white px-4 py-2 mb-3 text-sm focus:outline-none focus:border-[#d4af37]" placeholder="Email">
+                <input type="text" id="reg-username" class="w-full bg-black border border-[#d4af37]/50 text-white px-4 py-2 mb-3 text-sm focus:outline-none focus:border-[#d4af37]" placeholder="Username">
+                <input type="password" id="reg-password" class="w-full bg-black border border-[#d4af37]/50 text-white px-4 py-2 mb-3 text-sm focus:outline-none focus:border-[#d4af37]" placeholder="Password">
+                
+                <div class="grid grid-cols-2 gap-2 mb-4">
+                    <select id="reg-guild" class="w-full bg-black border border-[#d4af37]/50 text-white px-2 py-2 text-xs focus:outline-none focus:border-[#d4af37]">
+                        <option value="" disabled selected>Select Guild</option>
+                        <option value="Arts">Arts (Visuals)</option>
+                        <option value="Sounds">Sounds (Audio)</option>
+                        <option value="Skills">Skills (Services)</option>
+                        <option value="Products">Products (Physical)</option>
+                        <option value="Healing">Healing (Wellness)</option>
+                        <option value="Community">Community Sphere</option>
+                    </select>
+                    <input type="text" id="reg-role" class="w-full bg-black border border-[#d4af37]/50 text-white px-2 py-2 text-xs focus:outline-none focus:border-[#d4af37]" placeholder="Specific Role (e.g. DJ, Cameraman)">
+                </div>
+                
+                <button onclick="heartApp.register()" class="w-full bg-[#d4af37] text-black px-4 py-2 font-bold hover:bg-white transition-all cinzel">ENTER THE HEART</button>
+            </div>
+            
+            <p id="auth-error" class="text-red-500 text-xs mt-4 text-center hidden"></p>
         </div>
     </div>
 
@@ -131,6 +145,8 @@
             <!-- Dynamic Menu -->
             <div class="flex gap-2 md:gap-4 overflow-x-auto text-[10px] md:text-xs">
                 <button class="hover:text-[#d4af37] uppercase" onclick="heartApp.showSection('activity-board')">Activity</button>
+                <button class="hover:text-[#d4af37] uppercase" onclick="heartApp.showSection('events-board')">Events</button>
+                <button class="hover:text-[#d4af37] uppercase" onclick="heartApp.showSection('projects-board')">Projects</button>
                 <button class="hover:text-[#d4af37] uppercase" onclick="heartApp.showSection('mission-board')">Missions</button>
                 <button class="hover:text-[#d4af37] uppercase" onclick="heartApp.showSection('map-pinning')">Luvo Maps</button>
                 <button class="hover:text-[#d4af37] uppercase" onclick="heartApp.showSection('bazar-upload')">Bazar</button>
@@ -138,7 +154,7 @@
 
             <!-- User Status -->
             <div class="flex items-center gap-4 text-right">
-                <div class="hidden md:block">
+                <div class="hidden md:block cursor-pointer hover:opacity-80" onclick="heartApp.toggleModal(\'profile-modal\')">
                     <p id="user-display-name" class="text-sm font-bold text-[#d4af37]">Guest</p>
                     <p id="user-display-role" class="text-[10px] text-gray-400">No Guild</p>
                 </div>
@@ -161,6 +177,27 @@
                 </div>
             </section>
 
+            <!-- SECTION: EVENTS BOARD -->
+            <section id="section-events-board" class="dashboard-section hidden animate-fade-in">
+                <div class="flex justify-between items-center mb-6 border-b border-[#d4af37]/30 pb-2">
+                    <h2 class="cinzel text-2xl text-[#d4af37]">Community Events & Jams</h2>
+                    <button onclick="heartApp.toggleModal('create-event-modal')" class="bg-[#d4af37] text-black px-4 py-1 text-xs font-bold rounded hover:bg-white transition-all hidden" id="btn-create-event">+ NEW EVENT</button>
+                </div>
+                <div id="events-feed" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Events Injected Here -->
+                </div>
+            </section>
+
+            <!-- SECTION: PROJECTS BOARD -->
+            <section id="section-projects-board" class="dashboard-section hidden animate-fade-in">
+                <div class="flex justify-between items-center mb-6 border-b border-[#d4af37]/30 pb-2">
+                    <h2 class="cinzel text-2xl text-[#d4af37]">Collaborative Projects</h2>
+                    <button onclick="heartApp.toggleModal('create-project-modal')" class="bg-[#d4af37] text-black px-4 py-1 text-xs font-bold rounded hover:bg-white transition-all hidden" id="btn-create-project">+ NEW PROJECT</button>
+                </div>
+                <div id="projects-feed" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Projects Injected Here -->
+                </div>
+            </section>
             <!-- SECTION: MISSION BOARD -->
             <section id="section-mission-board" class="dashboard-section hidden animate-fade-in">
                 <div class="flex justify-between items-center mb-6 border-b border-[#d4af37]/30 pb-2">
@@ -278,6 +315,32 @@
     </div>
 
     <!-- Modals -->
+
+    <!-- Profile Modal -->
+    <div id="profile-modal" class="fixed inset-0 z-[150] hidden bg-black/90 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="glass-panel p-6 w-full max-w-sm relative text-center">
+            <button onclick="heartApp.toggleModal('profile-modal')" class="absolute top-2 right-4 text-gray-500 hover:text-white text-2xl">&times;</button>
+            <div class="w-20 h-20 bg-white/10 rounded-full mx-auto mb-4 flex items-center justify-center border-2 border-[#d4af37]">
+                <span class="material-symbols-outlined text-4xl text-[#d4af37]">person</span>
+            </div>
+            <h3 id="modal-username" class="cinzel text-2xl text-white mb-1">Username</h3>
+            <p id="modal-guild-role" class="text-xs text-[#d4af37] mb-6">Guild • Role</p>
+            
+            <div class="flex justify-around mb-6 border-y border-white/10 py-4">
+                <div>
+                    <p class="text-2xl cinzel text-[#d4af37]" id="modal-exp">0</p>
+                    <p class="text-[10px] text-gray-400 uppercase tracking-widest">EXP</p>
+                </div>
+                <div>
+                    <p class="text-2xl cinzel text-[#d4af37]" id="modal-events">0</p>
+                    <p class="text-[10px] text-gray-400 uppercase tracking-widest">Events</p>
+                </div>
+            </div>
+            
+            <button onclick="heartApp.logout()" class="w-full border border-red-500/50 text-red-500 px-4 py-2 text-sm hover:bg-red-500 hover:text-white transition-all uppercase tracking-widest">Logout</button>
+        </div>
+    </div>
+
     <!-- Create Mission Modal -->
     <div id="create-mission-modal" class="fixed inset-0 z-[150] hidden bg-black/90 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="glass-panel p-6 w-full max-w-md relative">
@@ -298,6 +361,8 @@
         </div>
     </div>
 
-    <script src="../js/heart.js"></script>
+    <script type="module" src="../js/data/supabase_client.js"></script>
+    <script type="module" src="../js/heart.js"></script>
+    <script type="module" src="../js/agents/flowee_2026.js"></script>
 </body>
 </html>

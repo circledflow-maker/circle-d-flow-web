@@ -1,29 +1,37 @@
-// Heart World Frontend Logic
-const heartApp = {
-    user: {
-        username: "Guest",
-        role: "Observer",
-        points: 0,
-        isAuthenticated: false
-    },
-    
-    timerInterval: null,
-    timeRemaining: 0,
+import { supabase, heartData } from './data/supabase_client.js';
 
-    init() {
-        console.log("Heart World Initialized.");
-        // Check if user is already authenticated in session
-        const sessionUser = sessionStorage.getItem('heart_user');
-        if (sessionUser) {
-            this.user = JSON.parse(sessionUser);
-            if (this.user.isAuthenticated) {
-                document.getElementById('ygdrasil-gate').style.display = 'none';
-                document.getElementById('onboarding-screen').style.display = 'none';
-                document.getElementById('main-dashboard').style.display = 'flex';
-                this.updateUI();
-                this.loadMockData();
+// Define the global app variable
+window.heartApp = {
+    user: null,
+    
+    async init() {
+        console.log("Heart World Module Initialized.");
+        
+        // Setup auth state listener
+        supabase.auth.onAuthStateChange((event, session) => {
+            if (session) {
+                this.handleAuthSuccess(session.user);
+            } else {
+                this.user = null;
+                this.showGate();
             }
+        });
+
+        // Check current session
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+            this.handleAuthSuccess(session.user);
+        } else {
+            // First time, show Ygdrasil Gate if not authenticated
+            this.showGate();
         }
+    },
+
+    showGate() {
+        document.getElementById('main-dashboard').style.display = 'none';
+        document.getElementById('onboarding-screen').style.display = 'none';
+        document.getElementById('ygdrasil-gate').style.display = 'flex';
+        document.getElementById('ygdrasil-gate').style.opacity = '1';
     },
 
     unlockGate() {
@@ -34,228 +42,246 @@ const heartApp = {
             setTimeout(() => {
                 document.getElementById('ygdrasil-gate').style.display = 'none';
                 document.getElementById('onboarding-screen').style.display = 'flex';
+                this.toggleAuthMode('login'); // Default to login tab
             }, 1000);
         } else {
             err.style.display = 'block';
+            err.innerText = "The tree remains silent. Incorrect password.";
         }
     },
 
-    completeRegistration() {
+    toggleAuthMode(mode) {
+        const loginForm = document.getElementById('form-login');
+        const registerForm = document.getElementById('form-register');
+        const btnLogin = document.getElementById('btn-tab-login');
+        const btnReg = document.getElementById('btn-tab-register');
+        const err = document.getElementById('auth-error');
+        
+        err.classList.add('hidden');
+        
+        if (mode === 'login') {
+            loginForm.classList.remove('hidden');
+            loginForm.classList.add('flex');
+            registerForm.classList.add('hidden');
+            registerForm.classList.remove('flex');
+            
+            btnLogin.classList.replace('text-gray-500', 'text-[#d4af37]');
+            btnLogin.classList.replace('border-transparent', 'border-[#d4af37]');
+            btnReg.classList.replace('text-[#d4af37]', 'text-gray-500');
+            btnReg.classList.replace('border-[#d4af37]', 'border-transparent');
+        } else {
+            registerForm.classList.remove('hidden');
+            registerForm.classList.add('flex');
+            loginForm.classList.add('hidden');
+            loginForm.classList.remove('flex');
+            
+            btnReg.classList.replace('text-gray-500', 'text-[#d4af37]');
+            btnReg.classList.replace('border-transparent', 'border-[#d4af37]');
+            btnLogin.classList.replace('text-[#d4af37]', 'text-gray-500');
+            btnLogin.classList.replace('border-[#d4af37]', 'border-transparent');
+        }
+    },
+
+    showAuthError(msg) {
+        const err = document.getElementById('auth-error');
+        err.innerText = msg;
+        err.classList.remove('hidden');
+    },
+
+    async login() {
+        const email = document.getElementById('login-email').value;
+        const pass = document.getElementById('login-password').value;
+        
+        if(!email || !pass) return this.showAuthError("Please provide email and password.");
+        
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password: pass });
+        if (error) {
+            this.showAuthError(error.message);
+        }
+    },
+
+    async register() {
+        const email = document.getElementById('reg-email').value;
+        const pass = document.getElementById('reg-password').value;
         const username = document.getElementById('reg-username').value;
+        const guild = document.getElementById('reg-guild').value;
         const role = document.getElementById('reg-role').value;
         
-        if (!username || !role) {
-            this.showToast("Missing Information", "Please enter a username and select a guild.");
-            return;
+        if(!email || !pass || !username || !guild || !role) {
+            return this.showAuthError("Please fill all fields to forge your identity.");
         }
+        
+        // Pass metadata so trigger can create profile
+        const { data, error } = await supabase.auth.signUp({
+            email,
+            password: pass,
+            options: {
+                data: {
+                    username: username,
+                    guild: guild,
+                    role_calling: role
+                }
+            }
+        });
+        
+        if (error) {
+            this.showAuthError(error.message);
+        } else {
+            this.showToast("Registration Complete", "Welcome to the Heart World.");
+            if(data.session) {
+                // Usually sign up logs you in automatically if email conf is disabled
+                // The onAuthStateChange listener will catch it.
+            } else {
+                this.showAuthError("Please check your email for confirmation.");
+            }
+        }
+    },
 
-        this.user = {
-            username: username,
-            role: role,
-            points: 0,
-            isAuthenticated: true
-        };
-        
-        sessionStorage.setItem('heart_user', JSON.stringify(this.user));
-        
+    async logout() {
+        await supabase.auth.signOut();
+        this.toggleModal('profile-modal');
+    },
+
+    async handleAuthSuccess(authUser) {
+        // Hide onboarding, show dashboard
+        document.getElementById('ygdrasil-gate').style.display = 'none';
         document.getElementById('onboarding-screen').style.display = 'none';
         document.getElementById('main-dashboard').style.display = 'flex';
-        this.updateUI();
-        this.showToast("Welcome to the Guild", `Welcome ${username}. Your path as a ${role} begins.`);
         
-        this.loadMockData();
+        // Fetch Profile
+        const profile = await heartData.getProfile(authUser.id);
+        if(profile) {
+            this.user = profile;
+        } else {
+            // Fallback if trigger failed or takes time
+            this.user = {
+                username: authUser.user_metadata?.username || "Seeker",
+                guild: authUser.user_metadata?.guild || "Unknown",
+                role_calling: authUser.user_metadata?.role_calling || "Observer",
+                exp: 0
+            };
+        }
+        
+        this.updateUI();
+        this.loadDashboardData();
     },
 
     updateUI() {
         document.getElementById('user-display-name').innerText = this.user.username;
-        document.getElementById('user-display-role').innerText = this.user.role;
-        document.getElementById('user-points').innerText = this.user.points;
-    },
-
-    addPoints(amount, reason) {
-        this.user.points += amount;
-        this.updateUI();
-        sessionStorage.setItem('heart_user', JSON.stringify(this.user));
-        this.showToast("EXP Gained", `+${amount} EXP: ${reason}`);
+        document.getElementById('user-display-role').innerText = `${this.user.guild} • ${this.user.role_calling}`;
+        document.getElementById('user-points').innerText = this.user.exp;
+        
+        // Update Profile Modal
+        document.getElementById('modal-username').innerText = this.user.username;
+        document.getElementById('modal-guild-role').innerText = `${this.user.guild} • ${this.user.role_calling}`;
+        document.getElementById('modal-exp').innerText = this.user.exp;
+        
+        // Only specific roles can create events/projects
+        const isEventCreator = ['Community', 'Event', 'Arts', 'Sounds'].includes(this.user.guild) || 
+                               ['DJ', 'Rapper', 'Creator', 'Admin'].some(r => this.user.role_calling.toLowerCase().includes(r.toLowerCase()));
+        
+        if (isEventCreator) {
+            const btnE = document.getElementById('btn-create-event');
+            const btnP = document.getElementById('btn-create-project');
+            if(btnE) btnE.classList.remove('hidden');
+            if(btnP) btnP.classList.remove('hidden');
+        }
     },
 
     showSection(sectionId) {
         const sections = document.querySelectorAll('.dashboard-section');
-        sections.forEach(s => s.classList.add('hidden'));
-        document.getElementById('section-' + sectionId).classList.remove('hidden');
+        sections.forEach(s => {
+            s.classList.add('hidden');
+            s.classList.remove('animate-fade-in');
+        });
+        
+        const target = document.getElementById(`section-${sectionId}`);
+        if(target) {
+            target.classList.remove('hidden');
+            // Trigger reflow for animation
+            void target.offsetWidth;
+            target.classList.add('animate-fade-in');
+        }
     },
 
     toggleModal(modalId) {
         const modal = document.getElementById(modalId);
-        if (modal.classList.contains('hidden')) {
+        if(!modal) return;
+        if(modal.classList.contains('hidden')) {
             modal.classList.remove('hidden');
+            modal.classList.add('flex');
         } else {
             modal.classList.add('hidden');
+            modal.classList.remove('flex');
         }
     },
 
-    showToast(title, message) {
-        const toast = document.getElementById('toast-notification');
+    showToast(title, msg) {
+        const t = document.getElementById('toast-notification');
         document.getElementById('toast-title').innerText = title;
-        document.getElementById('toast-message').innerText = message;
+        document.getElementById('toast-message').innerText = msg;
         
-        toast.classList.remove('opacity-0', 'translate-y-20');
+        t.classList.remove('translate-y-20', 'opacity-0');
+        t.classList.add('translate-y-0', 'opacity-100');
         
         setTimeout(() => {
-            toast.classList.add('opacity-0', 'translate-y-20');
+            t.classList.remove('translate-y-0', 'opacity-100');
+            t.classList.add('translate-y-20', 'opacity-0');
         }, 4000);
     },
 
-    // --- ACTIVITY & MISSIONS ---
-    loadMockData() {
-        // Mock Activities
-        const activities = [
-            { user: "C-Riz", action: "Forged a new beat", time: "2h ago", tags: "Audio" },
-            { user: "Lyra", action: "Uploaded poem 'Neon Tears'", time: "4h ago", tags: "Text" },
-            { user: "Jiro", action: "Marked new Healing Point in Alfama", time: "1d ago", tags: "Map" }
-        ];
-        
-        const actFeed = document.getElementById('activity-feed');
-        if (actFeed) {
-            actFeed.innerHTML = activities.map(a => `
-                <div class="glass-panel p-4 flex items-start gap-4 border-l-2 border-[#d4af37]">
-                    <div class="w-10 h-10 rounded-full bg-[#d4af37]/20 flex items-center justify-center text-[#d4af37] font-bold">
-                        ${a.user.charAt(0)}
-                    </div>
-                    <div>
-                        <p class="text-sm text-white"><span class="text-[#d4af37]">${a.user}</span> ${a.action}</p>
-                        <div class="flex justify-between items-center mt-2 w-full">
-                            <span class="text-[10px] text-gray-500">${a.time}</span>
-                            <span class="text-[9px] border border-gray-700 px-2 py-0.5 rounded text-gray-400 uppercase">${a.tags}</span>
+    async loadDashboardData() {
+        // Load Events
+        const events = await heartData.getEvents();
+        const evContainer = document.getElementById('events-feed');
+        if(evContainer) {
+            evContainer.innerHTML = events.length === 0 ? '<p class="text-gray-500 text-xs">No active events.</p>' : '';
+            events.forEach(ev => {
+                const partsStr = ev.event_participants.map(p => `<span class="bg-black/50 px-2 py-1 rounded border border-[#d4af37]/30 text-[10px]">${p.profiles.username} (${p.event_role})</span>`).join('');
+                
+                evContainer.innerHTML += `
+                    <div class="glass-panel p-4 border-l-4 border-[#d4af37] hover:bg-white/5 transition-all">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="cinzel text-lg text-[#d4af37]">${ev.title}</h3>
+                            <span class="text-[10px] text-gray-400 bg-black px-2 py-1">${new Date(ev.event_date).toLocaleDateString()}</span>
+                        </div>
+                        <p class="text-xs text-white/70 mb-3">${ev.description}</p>
+                        <p class="text-[10px] text-gray-400 mb-3"><span class="material-symbols-outlined text-[12px] inline-block align-middle mr-1">location_on</span> ${ev.location}</p>
+                        
+                        <div class="flex flex-wrap gap-2 mt-4">
+                            ${partsStr}
                         </div>
                     </div>
-                </div>
-            `).join('');
+                `;
+            });
         }
 
-        // Mock Missions
-        const missions = [
-            { title: "Find the Yellow Tram", desc: "Locate Tram 28 near Baixa and record 10 seconds of ambient sound.", exp: 20 },
-            { title: "Sunrise Gratitude", desc: "Scan a Healing Point before 8 AM and complete a 15min Wu Wei timer.", exp: 50 }
-        ];
-
-        const missFeed = document.getElementById('mission-feed');
-        if (missFeed) {
-            missFeed.innerHTML = missions.map(m => `
-                <div class="glass-panel p-4 border border-gray-800 hover:border-[#d4af37]/50 transition-colors cursor-pointer">
-                    <div class="flex justify-between items-center mb-2">
-                        <h4 class="text-[#d4af37] font-bold">${m.title}</h4>
-                        <span class="bg-[#d4af37]/10 text-[#d4af37] px-2 py-1 text-[10px] rounded">+${m.exp} EXP</span>
-                    </div>
-                    <p class="text-xs text-gray-400 mb-4">${m.desc}</p>
-                    <button class="text-[10px] border border-[#d4af37] text-[#d4af37] px-3 py-1 hover:bg-[#d4af37] hover:text-black transition-colors" onclick="heartApp.acceptMission(${m.exp})">ACCEPT MISSION</button>
-                </div>
-            `).join('');
-        }
-    },
-
-    createMission() {
-        const title = document.getElementById('mission-title').value;
-        const desc = document.getElementById('mission-desc').value;
-        if(!title || !desc) return;
-        
-        this.toggleModal('create-mission-modal');
-        this.showToast("Mission Forged", "Your real-life mission has been added to the board.");
-        this.addPoints(10, "Creating a Mission");
-        
-        // Clear form
-        document.getElementById('mission-title').value = '';
-        document.getElementById('mission-desc').value = '';
-    },
-
-    acceptMission(exp) {
-        this.showToast("Mission Accepted", "Good luck. Earn " + exp + " EXP upon completion.");
-    },
-
-    uploadToBazar() {
-        const title = document.getElementById('bazar-title').value;
-        if(!title) return;
-        this.addPoints(5, "Bazar Upload");
-        document.getElementById('bazar-title').value = '';
-        document.getElementById('bazar-desc').value = '';
-    },
-
-    // --- QR CODE & HEALING POINTS ---
-    generateQRPin() {
-        const name = document.getElementById('pin-name').value;
-        const timer = document.getElementById('pin-timer').value;
-        
-        if (!name) {
-            this.showToast("Error", "Please provide a location name.");
-            return;
-        }
-
-        const qrContainer = document.getElementById('qrcode');
-        qrContainer.innerHTML = ''; // clear previous
-        
-        // Generate payload for the QR code
-        const payload = JSON.stringify({
-            type: "healing_point",
-            name: name,
-            timer: parseInt(timer)
-        });
-
-        new QRCode(qrContainer, {
-            text: payload,
-            width: 128,
-            height: 128,
-            colorDark : "#000000",
-            colorLight : "#ffffff",
-            correctLevel : QRCode.CorrectLevel.H
-        });
-
-        document.getElementById('qr-output-container').style.display = 'flex';
-        this.addPoints(15, "Forged a new Healing Point");
-    },
-
-    simulateQRScan() {
-        // Simulate scanning a 1-minute test timer instead of 15 min for testing
-        this.startWuWeiTimer(1); 
-    },
-
-    startWuWeiTimer(minutes) {
-        if (this.timerInterval) clearInterval(this.timerInterval);
-        
-        this.timeRemaining = minutes * 60;
-        const timerEl = document.getElementById('wuwei-timer');
-        const statusEl = document.getElementById('timer-status');
-        const btnEl = document.getElementById('btn-scan-qr');
-        
-        timerEl.classList.add('active');
-        statusEl.style.display = 'block';
-        btnEl.style.display = 'none';
-        
-        this.updateTimerDisplay();
-
-        this.timerInterval = setInterval(() => {
-            this.timeRemaining--;
-            this.updateTimerDisplay();
-            
-            if (this.timeRemaining <= 0) {
-                clearInterval(this.timerInterval);
-                this.timerInterval = null;
-                timerEl.classList.remove('active');
-                statusEl.innerText = "Session Complete. Energy restored.";
-                btnEl.style.display = 'inline-block';
-                btnEl.innerText = "SCAN ANOTHER POINT";
+        // Load Projects
+        const projects = await heartData.getProjects();
+        const prjContainer = document.getElementById('projects-feed');
+        if(prjContainer) {
+            prjContainer.innerHTML = projects.length === 0 ? '<p class="text-gray-500 text-xs">No active projects.</p>' : '';
+            projects.forEach(pj => {
+                const partsStr = pj.project_members.map(p => `<span class="bg-black/50 px-2 py-1 rounded border border-[#E2725B]/30 text-[10px]">${p.profiles.username} (${p.project_role})</span>`).join('');
                 
-                // Reward points based on duration
-                const expReward = minutes >= 30 ? 75 : (minutes >= 15 ? 30 : 10);
-                this.addPoints(expReward, `Completed ${minutes}min Wu Wei Session`);
-            }
-        }, 1000);
-    },
-
-    updateTimerDisplay() {
-        const m = Math.floor(this.timeRemaining / 60).toString().padStart(2, '0');
-        const s = (this.timeRemaining % 60).toString().padStart(2, '0');
-        document.getElementById('wuwei-timer').innerText = `${m}:${s}`;
+                prjContainer.innerHTML += `
+                    <div class="glass-panel p-4 border-l-4 border-[#E2725B] hover:bg-white/5 transition-all">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="cinzel text-lg text-[#E2725B]">${pj.title}</h3>
+                            <span class="text-[10px] text-gray-400 bg-black px-2 py-1">${pj.status.toUpperCase()}</span>
+                        </div>
+                        <p class="text-xs text-white/70 mb-3">${pj.description}</p>
+                        <div class="flex flex-wrap gap-2 mt-4">
+                            ${partsStr}
+                        </div>
+                    </div>
+                `;
+            });
+        }
     }
 };
 
-window.onload = () => heartApp.init();
+// Initialize app when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    window.heartApp.init();
+});

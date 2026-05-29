@@ -1,35 +1,68 @@
 import re
 
-with open('D:/circle-d-flow-web/pages/portfolio_anime_reality.html', 'r', encoding='utf-8') as f:
+file_path = r'D:\circle-d-flow-web\pages\portfolio_anime_reality.html'
+
+with open(file_path, 'r', encoding='utf-8') as f:
     content = f.read()
 
-# Find the first // --- DYNAMIC TABS LOGIC ---
-first_tabs_idx = content.find('// --- DYNAMIC TABS LOGIC ---')
-# Find the second one
-second_tabs_idx = content.find('// --- DYNAMIC TABS LOGIC ---', first_tabs_idx + 1)
+# 1. Fix the About Us link in the mobile menu
+content = content.replace('<a href="#about" onclick="document.getElementById(\\\'burger-btn\\\').click();"', '<a href="about.html"')
+content = content.replace('<a href="#about" onclick="document.getElementById(\'burger-btn\').click();"', '<a href="about.html"')
 
-if second_tabs_idx != -1:
-    # Find the end of DOMContentLoaded (the '});' after second_tabs_idx)
-    # The actual end of DOMContentLoaded is just before <!-- Radial Circle Menu (B2B / Archives) -->
-    # Let's just find the closing tag or where radial menu starts
-    end_idx = content.find('<!-- Radial Circle Menu', second_tabs_idx)
-    if end_idx == -1:
-        end_idx = content.find('</script>', second_tabs_idx)
+# 2. Fix the assets reference error. 
+# The problematic code is:
+#             updateWeeklyFlowBanner(); renderGrid();
+# 
+#             // Update Page Meta Info
+#             const pageCaption = document.querySelector('.pt-\\[40px\\] p');
+# ...
+#             if (!assets || assets.length === 0) {
+# ...
+#                 return;
+#             }
+
+error_block_pattern = r"updateWeeklyFlowBanner\(\);\s*renderGrid\(\);\s*// Update Page Meta Info\s*const pageCaption.*?return;\s*\}"
+
+def replace_error_block(match):
+    # We just completely remove this block because it's duplicating logic that should be in renderGrid,
+    # and it causes a ReferenceError.
+    return "updateWeeklyFlowBanner(); renderGrid();"
+
+content = re.sub(error_block_pattern, replace_error_block, content, flags=re.DOTALL)
+
+# And now inject the pageCaption update logic INSIDE renderGrid, right before `if (topVideos.length > 0) {`
+inject_target = "if (topVideos.length > 0) {"
+
+correct_caption_logic = """
+    // Update Page Meta Info
+    const pageCaption = document.querySelector('.pt-\\\\[40px\\\\] p');
+    if (pageCaption) {
+        pageCaption.innerHTML = `
+            A real-time reflection of the 3D Master Node.<br>
+            Category: ${activeCategory} | Payload: ${assets.length} Traces.
+        `;
+    }
     
-    # Actually, we just want to remove from second_tabs_idx up to the closing }); of the DOMContentLoaded.
-    # A safe way is to find the LAST }); before <!-- Radial Circle Menu
-    part1 = content[:second_tabs_idx]
-    
-    # We need to ensure DOMContentLoaded is closed.
-    # The first block probably didn't close it if the duplicate was inside.
-    # Let's just append '});' to part1 and then the rest of the file from end_idx
-    
-    part2 = '\n        });\n\n        ' + content[end_idx:]
-    
-    new_content = part1 + part2
-    
-    with open('D:/circle-d-flow-web/pages/portfolio_anime_reality.html', 'w', encoding='utf-8') as f:
-        f.write(new_content)
-    print('Fixed duplicates.')
-else:
-    print('No duplicates found.')
+    if (assets.length === 0) {
+        grid.innerHTML = `
+            <div class="swiper-slide !w-full !max-w-2xl text-center py-20 px-8 bg-transparent border-none shadow-none flex justify-center items-center">
+                <div>
+                    <div class="mono opacity-50 mb-6 font-bold text-lg">NEURAL CALIBRATION IN PROGRESS</div>
+                    <p class="mono opacity-40 text-xs mb-8">Segment [${activeCategory}] yielded 0 traces.</p>
+                </div>
+            </div>
+        `;
+        // Even if empty, start the auto-gatekeeper timer
+        triggerNexusGatekeeper("Noch keine Schätze in dieser Kategorie? <br>Lass uns gemeinsam etwas neues erschaffen.");
+        document.getElementById('video-carousel').style.display = 'none';
+        return;
+    }
+
+    if (topVideos.length > 0) {"""
+
+content = content.replace(inject_target, correct_caption_logic)
+
+with open(file_path, 'w', encoding='utf-8') as f:
+    f.write(content)
+
+print("Fixed portfolio_anime_reality.html")
