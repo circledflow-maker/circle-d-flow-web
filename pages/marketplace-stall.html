@@ -40,6 +40,28 @@
 </head>
 <body class="theme-tata-somba min-h-screen">
 
+    <!-- Mobile Header & Burger Menu -->
+    <div class="fixed top-6 left-6 z-[100]">
+        <button id="burger-btn" class="w-10 h-10 flex flex-col justify-center items-center gap-1.5 bg-black border border-[#d4af37]/50 rounded cursor-pointer z-[101]">
+            <span class="w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
+            <span class="w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
+            <span class="w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
+        </button>
+    </div>
+
+    <!-- Fullscreen Mobile Menu Overlay -->
+    <div id="mobile-menu" class="fixed inset-0 bg-black/95 z-[90] opacity-0 pointer-events-none transition-opacity duration-300 flex flex-col items-center justify-center">
+        <nav class="flex flex-col gap-6 text-center">
+            <a href="../index.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">Zum Orbit</a>
+            <a href="bantaba.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">Nach Bantaba</a>
+            <a href="about.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">About Us</a>
+            <a href="portfolio_anime_reality.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">Portfolio</a>
+            <a href="heart.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">Heart</a>
+            <a href="luvo.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">Luvo</a>
+        </nav>
+    </div>
+
+
     <!-- NAV (Synchronized Horizon Bar) -->
     <header class="fixed top-0 w-full z-[100] h-16 grid grid-cols-[1fr_2fr_1fr] items-center px-8 bg-black/90 border-b border-[#FFAE42]/20 backdrop-blur-md">
         <div class="flex justify-start">

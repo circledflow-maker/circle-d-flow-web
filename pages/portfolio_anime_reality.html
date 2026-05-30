@@ -398,6 +398,28 @@
 </head>
 <body>
 
+    <!-- Mobile Header & Burger Menu -->
+    <div class="fixed top-6 left-6 z-[100]">
+        <button id="burger-btn" class="w-10 h-10 flex flex-col justify-center items-center gap-1.5 bg-black border border-[#d4af37]/50 rounded cursor-pointer z-[101]">
+            <span class="w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
+            <span class="w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
+            <span class="w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
+        </button>
+    </div>
+
+    <!-- Fullscreen Mobile Menu Overlay -->
+    <div id="mobile-menu" class="fixed inset-0 bg-black/95 z-[90] opacity-0 pointer-events-none transition-opacity duration-300 flex flex-col items-center justify-center">
+        <nav class="flex flex-col gap-6 text-center">
+            <a href="../index.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">Zum Orbit</a>
+            <a href="bantaba.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">Nach Bantaba</a>
+            <a href="about.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">About Us</a>
+            <a href="portfolio_anime_reality.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">Portfolio</a>
+            <a href="heart.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">Heart</a>
+            <a href="luvo.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">Luvo</a>
+        </nav>
+    </div>
+
+
     <!-- Language Selector -->
     <div class="absolute top-6 right-6 z-[100]">
         <select onchange="changeLanguage(this.value)" id="lang-select" class="bg-black border border-[#d4af37]/50 text-[#d4af37] px-3 py-1 text-sm cinzel focus:outline-none focus:border-[#d4af37] cursor-pointer">
@@ -1183,7 +1205,7 @@ function renderGrid() {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
     
     <!-- External Scripts -->
-    <script src="../js/translations.js"></script>
+        <script src="../js/translations.js"></script>
     <script src="../js/data/portfolio_data.js"></script>
     <script src="../js/radial_menu.js" defer></script>
     <script src="../js/agents/agent.js" defer></script>
@@ -1193,57 +1215,33 @@ function renderGrid() {
     <script src="../js/agents/quest_controller.js" defer></script>
     <script src="../js/agents/visual_integrity.js" defer></script>
     <script src="../js/agents/sound_engineer.js" defer></script>
+    <script type="module" src="../js/agents/flowee_2026.js"></script>
 
     <script>
-        // Initialize Translations
-        if (typeof applyTranslations === 'function') {
-            applyTranslations();
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const grid = document.getElementById('portfolio-grid');
-            const masonry = document.getElementById('photography-masonry');
+        document.addEventListener("DOMContentLoaded", () => {
             const urlParams = new URLSearchParams(window.location.search);
-            const rings = ['Feuer', 'Wasser', 'Erde', 'Luft', 'Realm', 'Artist', 'Nature', 'Event'];
             let activeCategory = urlParams.get('cat') || "Feuer";
-            let assets = [];
 
-            window.loadCategory = function(catName) {
-                activeCategory = catName;
-                renderTabs();
-                updateWeeklyFlowBanner();
-                renderGrid();
-                
-                // Smooth scroll to top of grid for mobile
-                const gridEl = document.getElementById('photography-masonry');
-                if(gridEl) {
-                    window.scrollTo({
-                        top: gridEl.offsetTop - 150,
-                        behavior: 'smooth'
-                    });
-                }
-                
-                // Also close the radial menu after clicking
-                const radialMenu = document.getElementById('radial-menu');
-                const triggerBtn = document.getElementById('radial-trigger');
-                if(radialMenu && !radialMenu.classList.contains('pointer-events-none')) {
-                    radialMenu.classList.add('opacity-0', 'scale-0', 'pointer-events-none');
-                    triggerBtn.style.transform = 'rotate(0deg)';
-                }
+            const rings = ['Feuer', 'Wasser', 'Erde', 'Luft', 'Realm', 'Artist', 'Nature', 'Event'];
+            const keywordMap = {
+                'feuer': ['fire', 'jam', 'red', 'action', 'heat', 'party', 'jamsessions', 'burn', 'energy', 'stage'],
+                'wasser': ['water', 'fluid', 'blue', 'sea', 'river', 'calm', 'flow', 'surf', 'soundwaves', 'ocean', 'wave'],
+                'erde': ['earth', 'ground', 'green', 'tree', 'mountain', 'street', 'city', 'urban', 'castle', 'stone', 'root'],
+                'luft': ['air', 'sky', 'wind', 'cloud', 'jump', 'fly', 'bird', 'high', 'space'],
+                'realm': ['realm', 'void', 'dark', 'studio', 'abstract', 'inside', 'black', 'atelier', 'indoor', 'session'],
+                'artist': ['artist', 'portrait', 'model', 'face', 'people', 'man', 'woman', 'spotlight', 'close', 'person'],
+                'nature': ['nature', 'leaf', 'flower', 'forest', 'wild', 'plant', 'outdoor', 'wood', 'landscape'],
+                'event': ['event', 'crowd', 'live', 'concert', 'gig', 'performance', 'show', 'festival', 'people']
             };
 
             function renderTabs() {
                 const tabsContainer = document.getElementById('category-tabs');
-                if (!window.PortfolioData || !tabsContainer) return;
-                
-                const categories = rings;
-                tabsContainer.innerHTML = "";
-                
-                categories.forEach(cat => {
+                if(!tabsContainer) return;
+                tabsContainer.innerHTML = '';
+                rings.forEach(cat => {
                     const btn = document.createElement('button');
-                    const isActive = cat.toLowerCase().trim() === activeCategory.toLowerCase().trim();
-                    btn.className = `px-4 py-2 border-b-2 text-white mono text-[10px] tracking-widest hover:text-[var(--haki-gold)] transition-all ${isActive ? 'border-[var(--haki-gold)]' : 'border-transparent opacity-50'}`;
-                    btn.innerText = cat.toUpperCase();
+                    btn.className = `cinzel px-4 py-2 border rounded transition-all duration-300 ${activeCategory.toLowerCase() === cat.toLowerCase() ? 'bg-[var(--haki-gold)] text-black border-[var(--haki-gold)] font-bold' : 'bg-black text-white/70 border-white/20 hover:border-white/50'}`;
+                    btn.innerText = cat;
                     btn.onclick = () => window.loadCategory(cat);
                     tabsContainer.appendChild(btn);
                 });
@@ -1251,43 +1249,17 @@ function renderGrid() {
 
             function updateWeeklyFlowBanner() {
                 const titleEl = document.getElementById('weekly-focus-title');
-                const timerEl = document.getElementById('weekly-countdown');
-                if (!titleEl || !timerEl) return;
-                
-                titleEl.innerText = `Diese Woche im Fokus: ${activeCategory}`;
-                
-                function updateTimer() {
-                    const now = new Date();
-                    const nextMonday = new Date();
-                    nextMonday.setDate(now.getDate() + (1 + 7 - now.getDay()) % 7);
-                    nextMonday.setHours(0, 0, 0, 0);
-                    if (now >= nextMonday) nextMonday.setDate(nextMonday.getDate() + 7);
-                    const diff = nextMonday - now;
-                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                    const secs = Math.floor((diff % (1000 * 60)) / 1000);
-                    timerEl.innerText = `${days.toString().padStart(2, '0')}d : ${hours.toString().padStart(2, '0')}h : ${mins.toString().padStart(2, '0')}m : ${secs.toString().padStart(2, '0')}s`;
+                if (titleEl) {
+                    titleEl.innerText = `Diese Woche im Fokus: ${activeCategory}`;
                 }
-                updateTimer();
-                setInterval(updateTimer, 1000);
             }
 
             function renderGrid() {
+                const grid = document.getElementById('portfolio-grid');
+                const masonry = document.getElementById('photography-masonry');
                 if (!grid || !masonry) return;
-
-                const keywordMap = {
-                    'feuer': ['fire', 'jam', 'red', 'action', 'heat', 'party', 'jamsessions', 'burn', 'energy', 'stage'],
-                    'wasser': ['water', 'fluid', 'blue', 'sea', 'river', 'calm', 'flow', 'surf', 'soundwaves', 'ocean', 'wave'],
-                    'erde': ['earth', 'ground', 'green', 'tree', 'mountain', 'street', 'city', 'urban', 'castle', 'stone', 'root'],
-                    'luft': ['air', 'sky', 'wind', 'cloud', 'jump', 'fly', 'bird', 'high', 'space'],
-                    'realm': ['realm', 'void', 'dark', 'studio', 'abstract', 'inside', 'black', 'atelier', 'indoor', 'session'],
-                    'artist': ['artist', 'portrait', 'model', 'face', 'people', 'man', 'woman', 'spotlight', 'close', 'person'],
-                    'nature': ['nature', 'leaf', 'flower', 'forest', 'wild', 'plant', 'outdoor', 'wood', 'landscape'],
-                    'event': ['event', 'crowd', 'live', 'concert', 'gig', 'performance', 'show', 'festival', 'people']
-                };
                 
-                assets = [];
+                let assets = [];
                 if (window.PortfolioData) {
                     let allAssets = [];
                     Object.values(window.PortfolioData).forEach(arr => {
@@ -1303,13 +1275,9 @@ function renderGrid() {
                         return targetKeywords.some(kw => searchString.includes(kw));
                     });
                     
-                    if (matchedAssets.length === 0 && allAssets.length > 0) {
-                        let idx = rings.indexOf(activeCategory);
-                        if (idx === -1) idx = 1; else idx += 1;
-                        matchedAssets = allAssets.filter((a, i) => i % idx === 0).slice(0, 15);
+                    if (matchedAssets.length === 0) {
+                        matchedAssets = allAssets.slice(0, 12); // Fallback
                     }
-                    
-                    if (matchedAssets.length === 0) matchedAssets = allAssets.slice(0, 12);
 
                     const uniqueNames = new Set();
                     assets = matchedAssets.filter(item => {
@@ -1324,34 +1292,14 @@ function renderGrid() {
                     });
                 }
 
-                // Update Page Meta Info
-                const pageCaption = document.querySelector('.pt-\\[40px\\] p');
-                if (pageCaption) {
-                    pageCaption.innerHTML = `
-                        A real-time reflection of the 3D Master Node.<br>
-                        Category: ${activeCategory} | Payload: ${assets.length} Traces.
-                    `;
-                }
-
-                if (assets.length === 0) {
-                    grid.innerHTML = `
-                        <div class="swiper-slide !w-full !max-w-2xl text-center py-20 px-8 bg-transparent border-none shadow-none flex justify-center items-center">
-                            <div>
-                                <div class="mono opacity-50 mb-6 font-bold text-lg">NEURAL CALIBRATION IN PROGRESS</div>
-                                <p class="mono opacity-40 text-xs mb-8">Segment [${activeCategory}] yielded 0 traces.</p>
-                            </div>
-                        </div>
-                    `;
-                    if (typeof triggerNexusGatekeeper === 'function') {
-                        triggerNexusGatekeeper("Noch keine Schätze in dieser Kategorie? <br>Lass uns gemeinsam etwas neues erschaffen.");
-                    }
-                    document.getElementById('video-carousel').style.display = 'none';
-                    return;
-                }
-
-                // Clear containers to prevent duplicate rendering
+                // Clear containers
                 grid.innerHTML = "";
                 masonry.innerHTML = "";
+
+                if (assets.length === 0) {
+                    grid.innerHTML = `<div class="text-white">Loading...</div>`;
+                    return;
+                }
 
                 const videos = [];
                 const photos = [];
@@ -1363,165 +1311,155 @@ function renderGrid() {
                     else photos.push(asset);
                 });
 
-                // Weekly Flow Constraints: Max 3 Videos, Max 12 Photos
                 const topVideos = videos.slice(0, 3);
                 const topPhotos = photos.slice(0, 12);
 
                 if (topVideos.length > 0) {
                     document.getElementById('video-carousel').style.display = 'block';
-                    topVideos.forEach((asset, index) => {
+                    topVideos.forEach(asset => {
                         const isXML = asset.name.toLowerCase().endsWith('.xml');
-                        let thumbnail;
-                        if (isXML) {
-                            thumbnail = "../assets/ui/xml_icon.png";
-                        } else if (asset.thumb_url) {
-                            thumbnail = asset.thumb_url;
-                        } else if (asset.id && (asset.id.startsWith("local_") || asset.id.startsWith("fix_") || asset.id.startsWith("localFile_"))) {
-                            thumbnail = asset.url;
-                        } else if (asset.url && !asset.url.includes("drive.google.com")) {
-                            thumbnail = asset.url;
-                        } else {
+                        let thumbnail = asset.thumb_url || asset.url || "../Assets/images/Logo.png";
+                        if (!asset.thumb_url && !asset.url.includes("http")) {
                             thumbnail = asset.id.includes("mock") ? "../Assets/images/Logo.png" : `https://drive.google.com/thumbnail?id=${asset.id}&sz=w800`;
                         }
                         const card = document.createElement('div');
                         card.className = 'swiper-slide asset-card video-card';
                         card.onclick = () => {
                             if(window.CDF_Player) window.CDF_Player.open(asset);
-                            if (typeof triggerNexusGatekeeper === 'function' && !window.agentMuted) {
-                                triggerNexusGatekeeper(isXML ? "Bereit für den finalen Schnitt? Lad dir das Projekt in DaVinci." : "Planst du ein Event oder eine Jam-Session?<br>Lass uns über die visuelle Begleitung sprechen.", false);
-                            }
                         };
-                        let badgeLabel = isXML ? 'AI PROJECT' : 'CINEMATIC FLOW';
-                        let metaLabel = isXML ? 'AI Timeline Engine' : 'Documentary Fragment';
-
-                        if (activeCategory === "Artist Spotlight") {
-                            badgeLabel = "ARTIST SPOTLIGHT";
-                            metaLabel = "Individual Portrait";
-                        } else if (activeCategory === "Soundwaves") {
-                            badgeLabel = "SOUNDWAVE";
-                            metaLabel = "DJ Performance";
-                        } else if (activeCategory === "The Atelier") {
-                            badgeLabel = "CREATIVE VORTEX";
-                            metaLabel = "Artistic Process";
-                        }
-
-                        const poetCaption = asset.poet_caption ? 
-                            `<div class="poet-desc mt-2 pt-2 border-t border-white/10 italic text-[9px] text-white/50 leading-relaxed whitespace-pre-line">${asset.poet_caption}</div>` : "";
-
-                        const mediaElement = (!isXML && asset.url && (asset.url.toLowerCase().endsWith('.mp4') || asset.url.toLowerCase().endsWith('.mov'))) 
-                            ? `<video src="${asset.url}" class="asset-image" autoplay muted loop playsinline></video>`
-                            : `<img src="${thumbnail}" class="asset-image ${isXML ? '!object-contain p-8' : ''}" onerror="this.src='../Assets/images/Logo.png'">`;
-
                         card.innerHTML = `
-                            <div class="category-badge border-[#E2725B] text-[#E2725B] shadow-[0_0_15px_rgba(226,114,91,0.4)]">${badgeLabel}</div>
                             <div class="asset-image-wrapper">
-                                ${mediaElement}
-                            </div>
-                            <div class="play-button" style="border-color: ${isXML ? 'var(--haki-gold)' : '#E2725B'}; background: rgba(${isXML ? '212, 175, 55' : '226, 114, 91'}, 0.1);">
-                                <span class="material-symbols-outlined" style="color: ${isXML ? 'var(--haki-gold)' : '#E2725B'};">${isXML ? 'auto_awesome' : 'play_arrow'}</span>
+                                <img src="${thumbnail}" class="asset-image" loading="lazy" alt="Video Thumbnail">
+                                <div class="play-button"><span class="material-symbols-outlined">play_arrow</span></div>
                             </div>
                             <div class="asset-overlay">
                                 <h3 class="cinzel text-xl text-[var(--haki-gold)] mb-1">${asset.professional_name || asset.name}</h3>
-                                <p class="mono text-[10px] text-white/70 tracking-wider">${metaLabel}</p>
-                                ${poetCaption}
                             </div>
                         `;
                         grid.appendChild(card);
                     });
-                    
-                    // Re-init swiper if needed
-                    if(window.swiperInstance) window.swiperInstance.destroy();
-                    if(window.Swiper) {
-                        window.swiperInstance = new Swiper(".mySwiper", {
-                            effect: "coverflow",
-                            grabCursor: true,
-                            centeredSlides: true,
-                            slidesPerView: "auto",
-                            coverflowEffect: {
-                                rotate: 20,
-                                stretch: 0,
-                                depth: 250,
-                                modifier: 1,
-                                slideShadows: true,
-                            },
-                            keyboard: {
-                                enabled: true,
-                            },
-                            pagination: {
-                                el: ".swiper-pagination",
-                                clickable: true,
-                                dynamicBullets: true
-                            },
-                            navigation: {
-                                nextEl: ".swiper-button-next",
-                                prevEl: ".swiper-button-prev",
-                            }
-                        });
-                    }
                 } else {
                     document.getElementById('video-carousel').style.display = 'none';
                 }
 
-                if (topPhotos.length > 0) {
-                    topPhotos.forEach((asset) => {
-                        let thumbnail = "../Assets/images/Logo.png";
-                        if (asset.thumb_url) thumbnail = asset.thumb_url;
-                        else if (asset.id && (asset.id.startsWith("local_") || asset.id.startsWith("fix_") || asset.id.startsWith("localFile_"))) thumbnail = asset.url;
-                        else if (asset.url && !asset.url.includes("drive.google.com")) thumbnail = asset.url;
-                        else if (!asset.id.includes("mock")) thumbnail = `https://drive.google.com/thumbnail?id=${asset.id}&sz=w800`;
+                topPhotos.forEach((asset, idx) => {
+                    const sizeClass = idx % 5 === 0 ? 'hero' : (idx % 3 === 0 ? 'tall' : (idx % 4 === 0 ? 'wide' : 'standard'));
+                    const card = document.createElement('div');
+                    card.className = `asset-card ${sizeClass}`;
+                    card.onclick = () => {
+                        if(window.CDF_Player) window.CDF_Player.open(asset);
+                    };
+                    
+                    let src = asset.url;
+                    if(!src || (!src.includes("http") && !src.includes("Assets/images/"))) {
+                        src = `https://drive.google.com/thumbnail?id=${asset.id}&sz=w1000`;
+                    }
+                    if(asset.id.startsWith("local_")) {
+                        src = asset.url; // Use local path
+                    }
 
-                        const div = document.createElement('div');
-                        div.className = 'masonry-item group relative overflow-hidden rounded border border-white/5 bg-white/5 hover:border-[#d4af37]/30 transition-all cursor-pointer';
-                        div.onclick = () => {
-                            if(window.CDF_Player) window.CDF_Player.open(asset);
-                        };
-                        const img = document.createElement('img');
-                        img.src = thumbnail;
-                        img.alt = asset.professional_name || asset.name;
-                        img.loading = "lazy";
-                        img.className = "w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-700";
-                        img.onerror = function() {
-                            this.onerror = null;
-                            this.src = '../Assets/images/Logo.png';
-                            this.style.opacity = '0.3';
-                            this.style.objectFit = 'contain';
-                        };
-                        
-                        div.appendChild(img);
-                        masonry.appendChild(div);
-                    });
+                    card.innerHTML = `
+                        <div class="asset-image-wrapper">
+                            <img src="${src}" class="asset-image" loading="lazy" alt="Photo">
+                        </div>
+                        <div class="asset-overlay">
+                            <h3 class="cinzel text-lg text-[var(--haki-gold)] mb-1">${asset.professional_name || asset.name}</h3>
+                        </div>
+                    `;
+                    masonry.appendChild(card);
+                });
+
+                if(window.portfolioSwiper && window.portfolioSwiper.update) {
+                    window.portfolioSwiper.update();
                 }
             }
 
-            // Initial render
+            window.loadCategory = function(catName) {
+                activeCategory = catName;
+                renderTabs();
+                updateWeeklyFlowBanner();
+                renderGrid();
+                
+                const gridEl = document.getElementById('photography-masonry');
+                if(gridEl) {
+                    window.scrollTo({
+                        top: gridEl.offsetTop - 150,
+                        behavior: 'smooth'
+                    });
+                }
+                
+                const radialMenu = document.getElementById('radial-menu');
+                const triggerBtn = document.getElementById('radial-trigger');
+                if(radialMenu && !radialMenu.classList.contains('pointer-events-none') && triggerBtn) {
+                    triggerBtn.click();
+                }
+            };
+
+            // Init
             renderTabs();
             updateWeeklyFlowBanner();
             renderGrid();
+
+            // Swiper init
+            if (typeof Swiper !== 'undefined') {
+                window.portfolioSwiper = new Swiper('.portfolio-swiper', {
+                    effect: 'coverflow',
+                    grabCursor: true,
+                    centeredSlides: true,
+                    slidesPerView: 'auto',
+                    coverflowEffect: {
+                        rotate: 15,
+                        stretch: 0,
+                        depth: 200,
+                        modifier: 1.2,
+                        slideShadows: true,
+                    },
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                    pagination: {
+                        el: '.swiper-pagination',
+                        clickable: true,
+                    },
+                    loop: true,
+                    autoplay: {
+                        delay: 4000,
+                        disableOnInteraction: true,
+                    }
+                });
+            }
+
+            if (typeof applyTranslations === 'function') {
+                applyTranslations();
+            }
         });
 
         // Burger Menu Logic
         const burgerBtn = document.getElementById('burger-btn');
         const mobileMenu = document.getElementById('mobile-menu');
-        const spans = burgerBtn?.querySelectorAll('span');
-        let menuOpen = false;
-
-        if (burgerBtn && spans) {
+        if (burgerBtn && mobileMenu) {
+            const spans = burgerBtn.querySelectorAll('span');
+            let menuOpen = false;
             burgerBtn.addEventListener('click', () => {
                 menuOpen = !menuOpen;
                 if(menuOpen) {
                     mobileMenu.classList.remove('opacity-0', 'pointer-events-none');
-                    spans[0].style.transform = 'translateY(8px) rotate(45deg)';
-                    spans[1].style.opacity = '0';
-                    spans[2].style.transform = 'translateY(-8px) rotate(-45deg)';
+                    if(spans.length >= 3) {
+                        spans[0].style.transform = 'translateY(8px) rotate(45deg)';
+                        spans[1].style.opacity = '0';
+                        spans[2].style.transform = 'translateY(-8px) rotate(-45deg)';
+                    }
                 } else {
                     mobileMenu.classList.add('opacity-0', 'pointer-events-none');
-                    spans[0].style.transform = 'none';
-                    spans[1].style.opacity = '1';
-                    spans[2].style.transform = 'none';
+                    if(spans.length >= 3) {
+                        spans[0].style.transform = 'none';
+                        spans[1].style.opacity = '1';
+                        spans[2].style.transform = 'none';
+                    }
                 }
             });
         }
     </script>
-    <script type="module" src="../js/agents/flowee_2026.js"></script>
 </body>
 </html>

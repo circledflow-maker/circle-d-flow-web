@@ -95,7 +95,7 @@ class HelperAgent extends Agent {
         if(window.Pusher && !this.isSpamming) {
             this.isSpamming = true;
             setTimeout(() => this.isSpamming = false, 2000);
-            window.Pusher.consoleLog(`Glitch Captured: ${type}`);
+            console.log(`Glitch Captured: ${type}`);
         }
     }
 

@@ -16,7 +16,7 @@ class FloweeAgent {
         orb.className = 'fixed bottom-6 right-6 w-16 h-16 rounded-full cursor-pointer z-[1000] shadow-[0_0_20px_rgba(212,175,55,0.6)] flex items-center justify-center transition-transform hover:scale-110';
         orb.style.background = 'linear-gradient(135deg, #000000 0%, #1a1a1a 100%)';
         orb.style.border = '2px solid #d4af37';
-        orb.innerHTML = '<img src="/Assets/images/logo.png" alt="Flowee" class="w-10 h-10 object-contain animate-pulse">';
+        orb.innerHTML = '<img src="/Assets/images/Logo.png" alt="Flowee" class="w-10 h-10 object-contain animate-pulse">';
         orb.onclick = () => this.toggleChat();
         document.body.appendChild(orb);
 
@@ -27,7 +27,7 @@ class FloweeAgent {
         chat.innerHTML = `
             <div class="p-4 border-b border-[#d4af37]/30 flex justify-between items-center bg-gradient-to-r from-black to-[#1a1a1a]">
                 <div class="flex items-center gap-2">
-                    <img src="/Assets/images/logo.png" class="w-6 h-6 object-contain">
+                    <img src="/Assets/images/Logo.png" class="w-6 h-6 object-contain">
                     <span class="cinzel text-[#d4af37] font-bold text-lg">Flowee</span>
                     <span class="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_5px_#22c55e]"></span>
                 </div>
@@ -247,7 +247,7 @@ class FloweeAgent {
                 const widgetHtml = `
                     <div class="mt-2 p-2 bg-black border border-[#d4af37]/30 rounded">
                         <div class="text-[10px] text-[#d4af37] mb-1 cinzel">Luvo Radar</div>
-                        <div class="w-full h-24 bg-[url('/Assets/images/logo.png')] bg-cover bg-center opacity-70 border border-white/10 relative">
+                        <div class="w-full h-24 bg-[url('/Assets/images/Logo.png')] bg-cover bg-center opacity-70 border border-white/10 relative">
                             <div class="absolute top-1/2 left-1/4 w-2 h-2 bg-red-500 rounded-full animate-ping"></div>
                             <div class="absolute top-1/3 right-1/3 w-2 h-2 bg-blue-500 rounded-full animate-ping"></div>
                         </div>
