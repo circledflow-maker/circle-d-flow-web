@@ -7,6 +7,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let isMenuOpen = false;
 
+    if (!radialTrigger) return;
+
     // Toggle Menu
     radialTrigger.addEventListener("click", () => {
         isMenuOpen = !isMenuOpen;
@@ -123,7 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const mediaEl = item.url.toLowerCase().endsWith('.mp4') || item.url.toLowerCase().endsWith('.mov')
                 ? `<video src="${item.url}" class="w-full h-[300px] object-cover transition-transform duration-700 group-hover:scale-105" loop muted playsinline></video>`
-                : `<img src="${item.url}" alt="${item.professional_name}" class="w-full h-[300px] object-cover transition-transform duration-700 group-hover:scale-105" onerror="this.src='../Assets/branding/Logo.png'">`;
+                : `<img src="${item.url}" alt="${item.professional_name}" class="w-full h-[300px] object-cover transition-transform duration-700 group-hover:scale-105" onerror="this.src='../Assets/images/logo.png'">`;
 
             const tagsHtml = item.tags.map(t => `<span class="bg-black/80 px-2 py-1 text-[8px] rounded-sm border border-white/20">${t.toUpperCase()}</span>`).join('');
 
