@@ -20,7 +20,7 @@ export const heartData = {
             if (error) throw error;
             return data;
         } catch (e) {
-            console.error("Error fetching profile:", e);
+            if(!e.message?.includes('fetch')) console.error("Error fetching profile:", e);
             return null;
         }
     },
@@ -38,7 +38,7 @@ export const heartData = {
             if (error) throw error;
             return data;
         } catch (e) {
-            console.error("Error fetching events:", e);
+            if(!e.message?.includes('fetch')) console.error("Error fetching events:", e);
             return [];
         }
     },
@@ -56,7 +56,7 @@ export const heartData = {
             if (error) throw error;
             return data;
         } catch (e) {
-            console.error("Error fetching projects:", e);
+            if(!e.message?.includes('fetch')) console.error("Error fetching projects:", e);
             return [];
         }
     }

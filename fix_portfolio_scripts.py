@@ -1,10 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Photography Archive | Circle D Flow</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+import re
+
+portfolio_path = r'D:\circle-d-flow-web\pages\portfolio_anime_reality.html'
+with open(portfolio_path, 'r', encoding='utf-8') as f:
+    content = f.read()
+
+# Find the start of the first <script> tag at the bottom (usually after </main> or </div> wrapper)
+# We can just look for the first occurrence of <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+# Or even better, just replace everything after <script src="https://cdn.tailwindcss.com"></script> up to </body></html>
+# Let's find <script src="https://cdn.tailwindcss.com"></script>
+
+idx = content.find('<script src="https://cdn.tailwindcss.com"></script>')
+
+if idx != -1:
+    clean_scripts = """<script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
@@ -117,7 +125,7 @@
                 const topVideos = videos.slice(0, 3);
                 const topPhotos = photos.slice(0, 12);
 
-                const pageCaption = document.querySelector('.pt-\\[40px\\] p');
+                const pageCaption = document.querySelector('.pt-\\\\[40px\\\\] p');
                 if (pageCaption) {
                     pageCaption.innerHTML = `
                         A real-time reflection of the 3D Master Node.<br>
@@ -130,7 +138,7 @@
                     topVideos.forEach(asset => {
                         const isXML = asset.name.toLowerCase().endsWith('.xml');
                         let thumbnail = asset.thumb_url || asset.url || "../Assets/images/Logo.png";
-                        if (!asset.thumb_url && !asset.url.includes("http") && !asset.url.includes("Assets/")) {
+                        if (!asset.thumb_url && !asset.url.includes("http")) {
                             thumbnail = asset.id.includes("mock") ? "../Assets/images/Logo.png" : `https://drive.google.com/thumbnail?id=${asset.id}&sz=w800`;
                         }
                         const card = document.createElement('div');
@@ -162,7 +170,7 @@
                     };
                     
                     let src = asset.url;
-                    if(!src || (!src.includes("http") && !src.includes("Assets/"))) {
+                    if(!src || (!src.includes("http") && !src.includes("Assets/images/"))) {
                         src = `https://drive.google.com/thumbnail?id=${asset.id}&sz=w1000`;
                     }
                     if(asset.id.startsWith("local_")) {
@@ -273,4 +281,11 @@
         }
     </script>
 </body>
-</html>
+</html>"""
+    
+    new_content = content[:idx] + clean_scripts
+    with open(portfolio_path, 'w', encoding='utf-8') as f:
+        f.write(new_content)
+    print("Portfolio fixed!")
+else:
+    print("Could not find tailwind script tag.")

@@ -29,6 +29,7 @@ class WhatsAppAgent extends Agent {
 
     async startBridgePolling() {
         const POLL_INTERVAL = 3000; // 3 seconds
+        if (window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1") return;
         const BRIDGE_URL = "http://localhost:3001/poll";
 
         this.log(`📡 Local Bridge Polling started at ${BRIDGE_URL}`);

@@ -879,7 +879,7 @@ class OrbitEngine {
         }
         
         const texture = new THREE.CanvasTexture(canvas);
-        const mat = new THREE.SpriteMaterial({ map: texture, transparent: true, depthCheck: false }); // depthCheck false makes it always draw over geometry
+        const mat = new THREE.SpriteMaterial({ map: texture, transparent: true, depthTest: false });
         const sprite = new THREE.Sprite(mat);
         sprite.scale.set(74, 16, 1); 
         return sprite;
