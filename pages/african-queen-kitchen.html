@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -269,7 +269,7 @@
                         <div class="progress-fill" style="width: 20%;"></div> <!-- 700 / 3500 ~ 20% -->
                         <div class="absolute inset-0 flex items-center justify-between px-4 text-[10px] font-bold text-black/50 uppercase">
                             <span>Start</span>
-                            <span>Goal: 3500€</span>
+                            <span>Goal: 3500�</span>
                         </div>
                     </div>
 
@@ -281,7 +281,7 @@
                                 <span class="material-symbols-outlined text-white font-bold">foundation</span>
                             </div>
                             <div class="text-xs font-bold uppercase tracking-wider text-white">The Foundation</div>
-                            <span class="text-[10px] text-green-400 font-mono">700€ - SECURED</span>
+                            <span class="text-[10px] text-green-400 font-mono">700� - SECURED</span>
                         </div>
                         
                         <!-- Step 2: 2000 -->
@@ -290,7 +290,7 @@
                                 <span class="material-symbols-outlined text-white/50">speaker</span>
                             </div>
                             <div class="text-xs font-bold uppercase tracking-wider text-white/50">The Pulse</div>
-                            <span class="text-[10px] text-white/30 font-mono">2000€</span>
+                            <span class="text-[10px] text-white/30 font-mono">2000�</span>
                         </div>
 
                         <!-- Step 3: 3500 -->
@@ -299,7 +299,7 @@
                                 <span class="material-symbols-outlined text-white/50">local_shipping</span>
                             </div>
                             <div class="text-xs font-bold uppercase tracking-wider text-white/50">The Ignition</div>
-                            <span class="text-[10px] text-white/30 font-mono">3500€</span>
+                            <span class="text-[10px] text-white/30 font-mono">3500�</span>
                         </div>
                     </div>
                 </div>
@@ -307,7 +307,7 @@
             
             <!-- Crowd Stats -->
             <div class="mt-8 pt-6 border-t border-white/5 flex justify-between items-center text-xs font-mono text-white/40">
-                <span>Current Fuel: <b class="text-white">700€</b> (Foundation Set)</span>
+                <span>Current Fuel: <b class="text-white">700�</b> (Foundation Set)</span>
                 <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">group</span> 4 Contributors</span>
             </div>
         </div>
@@ -374,7 +374,7 @@
                         el.innerHTML = `
                             <div class="h-48 rounded-lg bg-gray-900 overflow-hidden relative">
                                 <img src="${item.img || 'https://placehold.co/300x200/333/white?text=Yummy'}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                                <div class="absolute top-2 right-2 bg-black/70 px-2 py-1 rounded text-xs font-bold text-amber border border-amber/30">${item.price}€</div>
+                                <div class="absolute top-2 right-2 bg-black/70 px-2 py-1 rounded text-xs font-bold text-amber border border-amber/30">${item.price}�</div>
                             </div>
                             <div>
                                 <h3 class="font-bold text-lg mb-1">${item.name}</h3>
@@ -527,7 +527,7 @@
                 <!-- Mock Feed -->
                 <div class="mt-6 space-y-3" id="flavor-feed">
                     <div class="flex items-center gap-3 opacity-50">
-                        <div class="w-8 h-8 rounded-full bg-electric/20 flex items-center justify-center text-xs">ðŸ‘«</div>
+                        <div class="w-8 h-8 rounded-full bg-electric/20 flex items-center justify-center text-xs">👫</div>
                         <p class="text-xs text-white/40">"Best Cachupa in town!" - @GhostDog</p>
                     </div>
                 </div>
@@ -568,11 +568,11 @@
             </div>
             <div class="flex justify-between text-white/70 text-sm">
                 <span>Subtotal</span>
-                <span id="cart-total">â‚¬0.00</span>
+                <span id="cart-total">€0.00</span>
             </div>
             <div class="flex justify-between text-amber font-bold text-lg">
                 <span>Total</span>
-                <span id="cart-final">â‚¬0.00</span>
+                <span id="cart-final">€0.00</span>
             </div>
             <div class="bg-electric/20 p-3 rounded-lg flex items-center gap-2 text-xs text-electric">
                 <span class="material-symbols-outlined text-sm">bolt</span>
@@ -706,8 +706,8 @@
 
             if (cart.length === 0) {
                 container.innerHTML = '<p class="text-white/30 text-center mt-10 italic">Your cart is empty.</p>';
-                totalEl.innerText = '€0.00';
-                finalEl.innerText = '€0.00';
+                totalEl.innerText = '�0.00';
+                finalEl.innerText = '�0.00';
                 xpEl.innerText = '0';
                 return;
             }
@@ -716,7 +716,7 @@
                 <div class="flex justify-between items-center bg-white/5 p-3 rounded mb-2">
                     <span class="font-bold text-sm text-white">${item.name}</span>
                     <div class="flex items-center gap-3">
-                        <span class="text-amber text-xs">€${item.price}</span>
+                        <span class="text-amber text-xs">�${item.price}</span>
                         <button onclick="removeFromCart(${index})" class="text-red-500 hover:text-red-400">
                             <span class="material-symbols-outlined text-sm">delete</span>
                         </button>
@@ -725,8 +725,8 @@
             `).join('');
 
             const total = cart.reduce((sum, item) => sum + item.price, 0);
-            totalEl.innerText = `€${total.toFixed(2)}`;
-            finalEl.innerText = `€${total.toFixed(2)}`;
+            totalEl.innerText = `�${total.toFixed(2)}`;
+            finalEl.innerText = `�${total.toFixed(2)}`;
             xpEl.innerText = Math.floor(total * 10); // 10 XP per Euro
         }
 

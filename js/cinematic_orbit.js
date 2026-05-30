@@ -363,7 +363,9 @@ class OrbitEngine {
 
             console.log("🎯 Intersected:", obj.userData.id || obj.userData.doorType || "Source");
             
-            if(obj.userData.doorType) {
+            if(obj.userData.id === 'visionary') {
+                this.transitionToLuvo(obj);
+            } else if(obj.userData.doorType) {
                 this.animateDoorOpen(obj);
                 return;
             }

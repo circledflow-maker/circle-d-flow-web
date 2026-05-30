@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html class="dark" lang="en">
 
 <head>
@@ -276,19 +276,19 @@
                         <div class="fx-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px;">
                             
                             <button class="fx-btn" onclick="playFX('airhorn', this)">
-                                <span style="font-size: 1.5em; display: block; margin-bottom: 5px;">📢</span> AIRHORN
+                                <span style="font-size: 1.5em; display: block; margin-bottom: 5px;">??</span> AIRHORN
                             </button>
                             
                             <button class="fx-btn" onclick="playFX('clap', this)">
-                                <span style="font-size: 1.5em; display: block; margin-bottom: 5px;">👏</span> CYPH CLAP
+                                <span style="font-size: 1.5em; display: block; margin-bottom: 5px;">??</span> CYPH CLAP
                             </button>
                             
                             <button class="fx-btn" onclick="playFX('bassdrop', this)">
-                                <span style="font-size: 1.5em; display: block; margin-bottom: 5px;">💣</span> BASS DROP
+                                <span style="font-size: 1.5em; display: block; margin-bottom: 5px;">??</span> BASS DROP
                             </button>
                             
                             <button class="fx-btn" onclick="playFX('glitch', this)">
-                                <span style="font-size: 1.5em; display: block; margin-bottom: 5px;">⚡</span> GLITCH
+                                <span style="font-size: 1.5em; display: block; margin-bottom: 5px;">?</span> GLITCH
                             </button>
 
                         </div>
@@ -335,7 +335,7 @@
 
                         <!-- FLowee Hint -->
                         <div class="mt-4 pt-4 border-t border-white/5 flex items-center gap-3 opacity-60">
-                            <span class="text-xl">🐦</span>
+                            <span class="text-xl">??</span>
                             <p class="text-[10px] text-white/50 italic">"Only those with true Aura will be chosen by the Council..."</p>
                         </div>
                     </div>
@@ -393,10 +393,10 @@
                     </div>
                 </div>
                 <div class="mt-12 border-t border-primary/20 pt-8 text-center text-sm text-white/50">
-                    <p>© 2024 Circle D Flow. All rights reserved.</p>
+                    <p>� 2024 Circle D Flow. All rights reserved.</p>
                     <a href="https://www.instagram.com/s0u0mario?igsh=dHJ4dWhtN3ZpN3Rx" target="_blank"
                         class="block mt-2 text-mystic-gold hover:text-white transition-colors text-xs font-light">
-                        🎵 Sonic Architecture by Mario
+                        ?? Sonic Architecture by Mario
                     </a>
                 </div>
             </div>
@@ -503,7 +503,7 @@
             
             if(level < 3) {
                 // Deny Access
-                alert(`⛔ ACCESS DENIED\n\nLevel 3 Required to enter the Tournament.\nCurrent Level: ${level}\n\nGo to the Battlefield to train!`);
+                alert(`? ACCESS DENIED\n\nLevel 3 Required to enter the Tournament.\nCurrent Level: ${level}\n\nGo to the Battlefield to train!`);
                 return;
             }
 
@@ -514,18 +514,18 @@
             const btn = document.querySelector('button[onclick="registerChallenger()"]');
             const originalText = btn.innerText;
             
-            btn.innerText = "⏳ TRANSMITTING TO COUNCIL...";
+            btn.innerText = "? TRANSMITTING TO COUNCIL...";
             btn.classList.add('animate-pulse');
             
             setTimeout(() => {
-                btn.innerText = "✅ REGISTRATION CONFIRMED";
+                btn.innerText = "? REGISTRATION CONFIRMED";
                 btn.classList.remove('bg-gradient-to-r', 'from-electric', 'to-purple-600');
                 btn.classList.add('bg-green-600');
                 
                 // Trigger Ticker
                 if(window.DJQter) {
                      // Simulate updated ticker
-                     const event = new CustomEvent('cdf-ticker-update', { detail: { message: `⚔️ NEW CHALLENGER: ${name} has entered the Bracket!` } });
+                     const event = new CustomEvent('cdf-ticker-update', { detail: { message: `?? NEW CHALLENGER: ${name} has entered the Bracket!` } });
                      window.dispatchEvent(event);
                 }
                 
@@ -604,16 +604,16 @@
 
             // Visual Feedback
             const btn = document.querySelector('button[onclick="registerChallenger()"]');
-            btn.innerText = "⏳ TRANSMITTING TO COUNCIL...";
+            btn.innerText = "? TRANSMITTING TO COUNCIL...";
             btn.classList.add('animate-pulse');
             
             setTimeout(() => {
-                btn.innerText = "✅ REGISTRATION CONFIRMED";
+                btn.innerText = "? REGISTRATION CONFIRMED";
                 btn.classList.remove('bg-gradient-to-r', 'from-electric', 'to-purple-600');
                 btn.classList.add('bg-green-600');
                 
                 // Trigger Ticker
-                const event = new CustomEvent('cdf-ticker-update', { detail: { message: `⚔️ NEW CHALLENGER: ${name} (${memberData ? 'Member' : 'Guest'}) has entered the Bracket!` } });
+                const event = new CustomEvent('cdf-ticker-update', { detail: { message: `?? NEW CHALLENGER: ${name} (${memberData ? 'Member' : 'Guest'}) has entered the Bracket!` } });
                 window.dispatchEvent(event);
                 
                 // Add to DJ Qter Dashboard List (Mock)

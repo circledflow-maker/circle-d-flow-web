@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html class="dark" lang="en">
 
 <head>
@@ -168,7 +168,7 @@
 
     <!-- GUEST SOUND WARNING -->
     <div id="guest-sound-warning" style="display: none; background: rgba(255,50,50,0.1); border-bottom: 1px solid #ff3232; padding: 10px; text-align: center; color: #ff3232; font-family: 'Courier New'; font-size: 0.8em; letter-spacing: 1px; position: relative; z-index: 9999;">
-        ⚠️ OBSERVER MODE: Gast-Zugang aktiv. Registriere dich, um Flow Credits zu nutzen und Zugang zum Live Lab zu erhalten.
+        ?? OBSERVER MODE: Gast-Zugang aktiv. Registriere dich, um Flow Credits zu nutzen und Zugang zum Live Lab zu erhalten.
         <a href="../index.html" style="color: #fff; margin-left: 15px; text-decoration: underline;">UPLINK STARTEN</a>
     </div>
 
@@ -446,7 +446,7 @@
                         <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/scanline.png')] opacity-10 pointer-events-none"></div>
                         <div class="flex items-center justify-between mb-4 border-b border-green-500/30 pb-2">
                              <span class="font-bold text-green-400 uppercase tracking-widest">SCOUTER_V.2.0</span>
-                             <span class="animate-pulse">● REC</span>
+                             <span class="animate-pulse">? REC</span>
                         </div>
                         <ul id="scouter-feed" class="space-y-2 h-full overflow-y-auto custom-scrollbar pb-8">
                             <li class="opacity-50">[SYSTEM] Power Levels Scanning...</li>
@@ -508,10 +508,10 @@
                     </div>
                 </div>
                 <div class="mt-12 border-t border-primary/20 pt-8 text-center text-sm text-white/50">
-                    <p>© 2024 Circle D Flow. All rights reserved.</p>
+                    <p>� 2024 Circle D Flow. All rights reserved.</p>
                     <a href="https://www.instagram.com/s0u0mario?igsh=dHJ4dWhtN3ZpN3Rx" target="_blank"
                         class="block mt-2 text-mystic-gold hover:text-white transition-colors text-xs font-light">
-                        🎵 Sonic Architecture by Mario
+                        ?? Sonic Architecture by Mario
                     </a>
                 </div>
             </div>
@@ -619,7 +619,7 @@
             
             if(level < 3) {
                 // Deny Access
-                alert(`⛔ ACCESS DENIED\n\nLevel 3 Required to enter the Tournament.\nCurrent Level: ${level}\n\nGo to the Battlefield to train!`);
+                alert(`? ACCESS DENIED\n\nLevel 3 Required to enter the Tournament.\nCurrent Level: ${level}\n\nGo to the Battlefield to train!`);
                 return;
             }
 
@@ -630,18 +630,18 @@
             const btn = document.querySelector('button[onclick="registerChallenger()"]');
             const originalText = btn.innerText;
             
-            btn.innerText = "⏳ TRANSMITTING TO COUNCIL...";
+            btn.innerText = "? TRANSMITTING TO COUNCIL...";
             btn.classList.add('animate-pulse');
             
             setTimeout(() => {
-                btn.innerText = "✅ REGISTRATION CONFIRMED";
+                btn.innerText = "? REGISTRATION CONFIRMED";
                 btn.classList.remove('bg-gradient-to-r', 'from-electric', 'to-purple-600');
                 btn.classList.add('bg-green-600');
                 
                 // Trigger Ticker
                 if(window.DJQter) {
                      // Simulate updated ticker
-                     const event = new CustomEvent('cdf-ticker-update', { detail: { message: `⚔️ NEW CHALLENGER: ${name} has entered the Bracket!` } });
+                     const event = new CustomEvent('cdf-ticker-update', { detail: { message: `?? NEW CHALLENGER: ${name} has entered the Bracket!` } });
                      window.dispatchEvent(event);
                 }
                 
@@ -681,7 +681,7 @@
 
         <!-- WISDOM RUNE (Imperial Step 3) -->
         <div id="wisdom-rune" class="hidden absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[200] cursor-pointer animate-pulse" onclick="claimWisdomRune()">
-             <div class="text-6xl glow-rune">🕉️</div>
+             <div class="text-6xl glow-rune">???</div>
              <p class="text-mystic-gold text-xs uppercase tracking-widest bg-black/50 px-2 rounded mt-2">Wisdom of the Frequency</p>
         </div>
         <script>
@@ -828,7 +828,7 @@
             window.dispatchEvent(event);
             
             // Visual Feedback
-            alert("📣 Broadcast Sent to Kingdom!");
+            alert("?? Broadcast Sent to Kingdom!");
             document.getElementById('ticker-input').value = '';
         }
 
@@ -875,8 +875,8 @@
         }
         
         function toggleTournamentMode() {
-            alert("⚔️ Tournament Registration is now OPEN in the Live Lab!");
-            document.getElementById('ticker-input').value = "🏆 THE GRAND TOURNAMENT IS OPEN! REGISTER NOW IN THE SOUND HALL!";
+            alert("?? Tournament Registration is now OPEN in the Live Lab!");
+            document.getElementById('ticker-input').value = "?? THE GRAND TOURNAMENT IS OPEN! REGISTER NOW IN THE SOUND HALL!";
             broadcastTicker();
         }
 
@@ -912,17 +912,17 @@
             
             // Visual Feedback
             const btn = document.querySelector('button[onclick="registerChallenger()"]');
-            btn.innerText = "⏳ TRANSMITTING TO COUNCIL...";
+            btn.innerText = "? TRANSMITTING TO COUNCIL...";
             btn.classList.add('animate-pulse');
             
             setTimeout(() => {
-                btn.innerText = "✅ REGISTRATION CONFIRMED";
+                btn.innerText = "? REGISTRATION CONFIRMED";
                 btn.classList.remove('bg-gradient-to-r', 'from-electric', 'to-purple-600');
                 btn.classList.add('bg-green-600');
                 
                 // Trigger Ticker
                 if(window.DJQter) {
-                     const event = new CustomEvent('cdf-ticker-update', { detail: { message: `⚔️ NEW CHALLENGER: ${name} (${memberData ? 'Member' : 'Guest'}) has entered the Bracket!` } });
+                     const event = new CustomEvent('cdf-ticker-update', { detail: { message: `?? NEW CHALLENGER: ${name} (${memberData ? 'Member' : 'Guest'}) has entered the Bracket!` } });
                      window.dispatchEvent(event);
                 }
                 
@@ -969,7 +969,7 @@
 
                 // Change ticket buttons for guests
                 ticketButtons.forEach(btn => {
-                    btn.innerHTML = '🎟️ REQUEST TICKET (FIAT)';
+                    btn.innerHTML = '??? REQUEST TICKET (FIAT)';
                     btn.onclick = (e) => {
                         e.preventDefault();
                         alert("OBSERVER PROTOCOL: Contact our team or register for the credit market.");
@@ -981,7 +981,7 @@
                 ticketButtons.forEach(btn => {
                     // Start Smart Contract Simulation
                     if(btn.innerText.includes('Get Tickets') || btn.innerText.includes('GET TICKETS')) {
-                         btn.innerHTML = '🎟️ USE FLOW CREDITS';
+                         btn.innerHTML = '??? USE FLOW CREDITS';
                          btn.onclick = (e) => {
                              // Preserve link opening behavior for now, but alert first
                              alert("Initiating Smart Contract... 500 Credits authorized.");

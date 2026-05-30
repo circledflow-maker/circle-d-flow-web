@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -24,8 +24,8 @@
         
         /* Adinkra Borders */
         .benin-border { border: 2px solid #CD7F32; position: relative; }
-        .benin-border::before { content: '❄'; position: absolute; top: -10px; left: -10px; color: #CD7F32; background: #050505; padding: 2px; }
-        .benin-border::after { content: '❄'; position: absolute; bottom: -10px; right: -10px; color: #CD7F32; background: #050505; padding: 2px; }
+        .benin-border::before { content: '?'; position: absolute; top: -10px; left: -10px; color: #CD7F32; background: #050505; padding: 2px; }
+        .benin-border::after { content: '?'; position: absolute; bottom: -10px; right: -10px; color: #CD7F32; background: #050505; padding: 2px; }
 
         /* Hall of Echoes Scroll */
         .echo-scroll::-webkit-scrollbar { height: 4px; }
@@ -65,7 +65,7 @@
         <div class="z-10 text-center max-w-4xl px-6 relative">
             <img src="../Assets/images/logo.png" class="w-32 h-32 mx-auto mb-6 lotus-float drop-shadow-[0_0_30px_rgba(205,127,50,0.5)]">
             <h1 class="text-5xl md:text-7xl font-cinzel text-amber-500 mb-4 tracking-widest uppercase">Kiss Your Heart</h1>
-            <p class="text-xl md:text-2xl font-playfair text-white/80 italic mb-8">"Capturing artists, soul & community. Intrinsic Will • Tao • One Piece Energy."</p>
+            <p class="text-xl md:text-2xl font-playfair text-white/80 italic mb-8">"Capturing artists, soul & community. Intrinsic Will � Tao � One Piece Energy."</p>
             
             <div class="flex gap-4 justify-center">
                 <a href="#services" class="px-8 py-3 bg-amber-600/20 border border-amber-500 hover:bg-amber-600 hover:text-white transition-all rounded-full flex items-center gap-2 backdrop-blur-md">
@@ -130,7 +130,7 @@
 
             // Rune Animation
             const rune = document.createElement('div');
-            rune.innerText = '❄'; 
+            rune.innerText = '?'; 
             rune.className = 'absolute text-amber-500 text-4xl animate-ping';
             rune.style.left = '50%'; rune.style.top = '50%';
             runes.appendChild(rune);
@@ -151,7 +151,7 @@
             rune.className = 'absolute text-amber-500 cursor-pointer animate-ping hover:scale-150 transition-transform pointer-events-auto';
             rune.style.top = Math.random() * 80 + '%';
             rune.style.left = Math.random() * 80 + '%';
-            rune.innerHTML = '❄'; // Adinkra Symbol placeholder
+            rune.innerHTML = '?'; // Adinkra Symbol placeholder
             
             rune.onclick = (e) => {
                 e.stopPropagation();
@@ -181,7 +181,7 @@
             <div class="text-center mb-16">
                 <h2 class="text-4xl font-cinzel text-white tracking-widest relative inline-block">
                     The Mirror of Life
-                    <span class="absolute -top-6 -right-6 text-2xl animate-spin-slow">☯️</span>
+                    <span class="absolute -top-6 -right-6 text-2xl animate-spin-slow">??</span>
                 </h2>
                 <p class="text-white/30 mt-2 font-mono text-xs uppercase">Select your resonance</p>
             </div>
@@ -250,12 +250,12 @@
                 <div class="bg-white/5 border border-white/10 p-8 rounded-2xl hover:border-blue-400 transition-colors relative group">
                     <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-black px-4 py-1 border border-blue-500/50 rounded-full text-xs text-blue-400 font-bold uppercase tracking-wider">Tao Flow</div>
                     <h3 class="text-2xl font-cinzel text-white mb-2 text-center">The Whisper</h3>
-                    <div class="text-3xl font-bold text-blue-400 text-center mb-6">€85<span class="text-sm text-white/40 font-normal">/person</span></div>
+                    <div class="text-3xl font-bold text-blue-400 text-center mb-6">�85<span class="text-sm text-white/40 font-normal">/person</span></div>
                     
                     <ul class="space-y-4 text-sm text-white/70 mb-8">
-                        <li class="flex items-center gap-2"><span class="text-blue-500">●</span> 45 Min Session</li>
-                        <li class="flex items-center gap-2"><span class="text-blue-500">●</span> 15 Soul-Siphons</li>
-                        <li class="flex items-center gap-2"><span class="text-blue-500">●</span> Alfama Spot</li>
+                        <li class="flex items-center gap-2"><span class="text-blue-500">?</span> 45 Min Session</li>
+                        <li class="flex items-center gap-2"><span class="text-blue-500">?</span> 15 Soul-Siphons</li>
+                        <li class="flex items-center gap-2"><span class="text-blue-500">?</span> Alfama Spot</li>
                     </ul>
 
                     <button class="w-full py-3 bg-blue-600/20 text-blue-400 hover:bg-blue-600 hover:text-white transition-all rounded-lg font-bold border border-blue-500/30">Book Ritual</button>
@@ -265,13 +265,13 @@
                 <div class="bg-gradient-to-b from-amber-900/20 to-black border border-amber-500 p-8 rounded-2xl transform md:-translate-y-4 relative shadow-[0_0_30px_rgba(245,158,11,0.1)]">
                     <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-amber-500 px-4 py-1 rounded-full text-xs text-black font-bold uppercase tracking-wider shadow-lg">Most Radiant</div>
                     <h3 class="text-2xl font-cinzel text-amber-500 mb-2 text-center">The Navigator</h3>
-                    <div class="text-3xl font-bold text-white text-center mb-6">€125<span class="text-sm text-white/40 font-normal">/person</span></div>
+                    <div class="text-3xl font-bold text-white text-center mb-6">�125<span class="text-sm text-white/40 font-normal">/person</span></div>
                     
                     <ul class="space-y-4 text-sm text-white/80 mb-8">
-                        <li class="flex items-center gap-2"><span class="text-amber-500">✦</span> 2 Hour Experience</li>
-                        <li class="flex items-center gap-2"><span class="text-amber-500">✦</span> 30 Pro Photos</li>
-                        <li class="flex items-center gap-2"><span class="text-amber-500">✦</span> Lisbon Walking Tour</li>
-                        <li class="flex items-center gap-2"><span class="text-amber-500">✦</span> Navigator's Certificate</li>
+                        <li class="flex items-center gap-2"><span class="text-amber-500">?</span> 2 Hour Experience</li>
+                        <li class="flex items-center gap-2"><span class="text-amber-500">?</span> 30 Pro Photos</li>
+                        <li class="flex items-center gap-2"><span class="text-amber-500">?</span> Lisbon Walking Tour</li>
+                        <li class="flex items-center gap-2"><span class="text-amber-500">?</span> Navigator's Certificate</li>
                     </ul>
 
                     <button onclick="window.location.href='booking.html?tier=navigator'" class="w-full py-3 bg-amber-500 text-black hover:bg-white transition-all rounded-lg font-bold shadow-lg shadow-amber-900/20">Sign the Pact</button>
@@ -281,12 +281,12 @@
                 <div class="bg-white/5 border border-white/10 p-8 rounded-2xl hover:border-red-400 transition-colors relative group">
                     <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-black px-4 py-1 border border-red-500/50 rounded-full text-xs text-red-400 font-bold uppercase tracking-wider">Kingdom Energy</div>
                     <h3 class="text-2xl font-cinzel text-white mb-2 text-center">The Golden Hour</h3>
-                    <div class="text-3xl font-bold text-red-400 text-center mb-6">€220<span class="text-sm text-white/40 font-normal">/group</span></div>
+                    <div class="text-3xl font-bold text-red-400 text-center mb-6">�220<span class="text-sm text-white/40 font-normal">/group</span></div>
                     
                     <ul class="space-y-4 text-sm text-white/70 mb-8">
-                        <li class="flex items-center gap-2"><span class="text-red-500">●</span> 90 Min Sunset</li>
-                        <li class="flex items-center gap-2"><span class="text-red-500">●</span> 50 High-Res Photos</li>
-                        <li class="flex items-center gap-2"><span class="text-red-500">●</span> Video Reel (DJ Sync)</li>
+                        <li class="flex items-center gap-2"><span class="text-red-500">?</span> 90 Min Sunset</li>
+                        <li class="flex items-center gap-2"><span class="text-red-500">?</span> 50 High-Res Photos</li>
+                        <li class="flex items-center gap-2"><span class="text-red-500">?</span> Video Reel (DJ Sync)</li>
                     </ul>
 
                     <button class="w-full py-3 bg-red-600/20 text-red-400 hover:bg-red-600 hover:text-white transition-all rounded-lg font-bold border border-red-500/30">Book Ritual</button>
