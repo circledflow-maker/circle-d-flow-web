@@ -838,7 +838,7 @@
                     const targetKeywords = keywordMap[activeCategory.toLowerCase()] || [activeCategory.toLowerCase()];
                     
                     let matchedAssets = allAssets.filter(item => {
-                        const searchString = `${item.name} ${item.professional_name || ''} ${item.tags ? item.tags.join(' ') : ''}`.toLowerCase();
+                        const searchString = `${item.name || ''} ${item.professional_name || ''} ${item.tags ? item.tags.join(' ') : ''}`.toLowerCase();
                         return targetKeywords.some(kw => searchString.includes(kw));
                     });
                     
@@ -848,7 +848,7 @@
 
                     const uniqueNames = new Set();
                     assets = matchedAssets.filter(item => {
-                        const nameLower = item.name.toLowerCase();
+                        const nameLower = (item.name || '').toLowerCase();
                         if (nameLower.endsWith('.nef')) return false; 
                         
                         const baseName = nameLower.split('.').slice(0, -1).join('.') || nameLower;
