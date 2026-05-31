@@ -6,8 +6,8 @@ import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 
 // Using hardcoded fallbacks or window.ENV if provided by a bundler
 // Replaced with a valid dummy URL so the app doesn't crash if ENV is missing
-const supabaseUrl = window.ENV?.SUPABASE_URL || 'https://dummy.supabase.co';
-const supabaseAnonKey = window.ENV?.SUPABASE_ANON_KEY || 'dummy_key';
+const supabaseUrl = window.ENV?.SUPABASE_URL || 'https://agkmbaephgsnunlarntm.supabase.co';
+const supabaseAnonKey = window.ENV?.SUPABASE_ANON_KEY || 'sb_publishable_VwT4qFpNCgNizSXMILBcKQ_aevHvWvM';
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 

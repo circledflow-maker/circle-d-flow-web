@@ -84,7 +84,11 @@ class OrbitEngine {
 
         window.addEventListener('resize', () => this.onResize());
         window.addEventListener('mousemove', (e) => this.onMouseMove(e));
-        window.addEventListener('click', () => this.onClick());
+        window.addEventListener('pointerdown', (e) => {
+            this.mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+            this.mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+            this.onClick();
+        });
 
         // Bind Skip Button
         const skipBtn = document.getElementById('btn-skip');
@@ -363,57 +367,59 @@ class OrbitEngine {
 
             console.log("🎯 Intersected:", obj.userData.id || obj.userData.doorType || "Source");
             
-            if(obj.userData.id === 'visionary') {
+            const id = obj.userData.id;
+            if(id === 'visionary') {
                 this.transitionToLuvo(obj);
             } else if(obj.userData.doorType) {
                 this.animateDoorOpen(obj);
                 return;
+            } else if(id) {
+                this.showWorldOverlay(id);
             }
 
             if(obj === this.sourceAnchor) {
                 this.runStorySequence();
-            } else if(obj.userData.id) {
-                const id = obj.userData.id;
-                if(id === 'arcane') {
-                    // Animatic Transition to The Archive (Portfolio)
-                    const overlay = document.getElementById('flowee-intro');
-                    if(overlay) {
-                        overlay.style.display = 'flex';
-                        overlay.innerHTML = "<h2 style='color:var(--haki-gold); font-family:Cinzel; text-align:center'>Entering The Archive...</h2>";
-                        gsap.to(overlay, { opacity: 1, duration: 1, onComplete: () => {
-                            window.location.href = 'pages/portfolio_anime_reality.html';
-                        }});
-                    } else {
-                        window.location.href = 'pages/portfolio_anime_reality.html';
-                    }
-                } else if(id === 'harmonizer') {
-                    // Animatic Transition to Bantaba
-                    const overlay = document.getElementById('flowee-intro');
-                    if(overlay) {
-                        overlay.style.display = 'flex';
-                        overlay.innerHTML = "<h2 style='color:var(--haki-gold); font-family:Cinzel; text-align:center'>Entering the Bantaba...</h2>";
-                        gsap.to(overlay, { opacity: 1, duration: 1, onComplete: () => {
-                            window.location.href = 'pages/bantaba.html';
-                        }});
-                    } else {
-                        window.location.href = 'pages/bantaba.html';
-                    }
-                } else if(id === 'kinetic') {
-                    // Animatic Transition to Heart World
-                    const overlay = document.getElementById('flowee-intro');
-                    if(overlay) {
-                        overlay.style.display = 'flex';
-                        overlay.innerHTML = "<h2 style='color:#ff5522; font-family:Cinzel; text-align:center'>Entering the Heart...</h2>";
-                        gsap.to(overlay, { opacity: 1, duration: 1, onComplete: () => {
-                            window.location.href = 'pages/heart.html';
-                        }});
-                    } else {
-                        window.location.href = 'pages/heart.html';
-                    }
-                } else {
-                    this.showWorldOverlay(id);
-                }
             }
+        }
+    }
+
+    handleOverlayClick(id) {
+        if(this.isTransitioning) return;
+        this.isTransitioning = true;
+        
+        let targetUrl = '';
+        let overlayMsg = '';
+        let overlayColor = '#fff';
+
+        if(id === 'visionary') {
+            const leaf = this.leaves.find(l => l.userData.id === 'visionary');
+            if(leaf) this.transitionToLuvo(leaf);
+            return;
+        } else if(id === 'arcane') {
+            targetUrl = 'pages/partners.html';
+            overlayMsg = 'Entering The Alliance...';
+            overlayColor = '#00f0ff';
+        } else if(id === 'harmonizer') {
+            targetUrl = 'pages/bantaba.html';
+            overlayMsg = 'Entering the Bantaba...';
+            overlayColor = '#00ff88';
+        } else if(id === 'kinetic') {
+            targetUrl = 'pages/heart.html';
+            overlayMsg = 'Entering the Heart...';
+            overlayColor = '#ff5522';
+        } else {
+            targetUrl = 'index.html';
+        }
+
+        const overlay = document.getElementById('flowee-intro');
+        if(overlay && targetUrl) {
+            overlay.style.display = 'flex';
+            overlay.innerHTML = `<h2 style='color:${overlayColor}; font-family:Cinzel; text-align:center'>${overlayMsg}</h2>`;
+            gsap.to(overlay, { opacity: 1, duration: 1, onComplete: () => {
+                window.location.href = targetUrl;
+            }});
+        } else if(targetUrl) {
+            window.location.href = targetUrl;
         }
     }
 
@@ -716,17 +722,22 @@ class OrbitEngine {
         gsap.to(returnSys.group.position, { y: centerPos.y, duration: 2, ease: "power3.out" });
         gsap.to(initSys.group.position, { y: centerPos.y, duration: 2, ease: "power3.out", delay: 0.3, onComplete: () => { this.isTransitioning = false; } });
         
+        const isMobile = window.innerWidth < 768;
+        const targetX = isMobile ? 35 : 70;
+        const targetY = isMobile ? 7.5 : 15;
+        const targetYPos = isMobile ? centerPos.y + 70 : centerPos.y + 40;
+
         // Massive 3D Global 'Choose Your Path' Hint instead of a CSS toast
         const globalHintText = (window.i18n[lang] && window.i18n[lang].choose_path_hint) ? window.i18n[lang].choose_path_hint : "CHOOSE YOUR PATH";
         const globalHint = this.makeTextSprite(globalHintText, "", 0xd4af37);
         globalHint.scale.set(0, 0, 0);
         // Brought tremendously forward in Z (-20 instead of -60) guarantees it floats in FRONT of the doors
-        globalHint.position.set(centerPos.x, centerPos.y + 40, centerPos.z - 20); 
+        globalHint.position.set(centerPos.x, targetYPos, centerPos.z - 20); 
         globalHint.renderOrder = 999; // Guarantees it draws absolutely last over any geometry
         this.scene.add(globalHint);
         
         // Animate the huge hint text
-        gsap.to(globalHint.scale, { x: 70, y: 15, z: 1, duration: 2, delay: 1.5, ease: "elastic.out(1, 0.5)" });
+        gsap.to(globalHint.scale, { x: targetX, y: targetY, z: 1, duration: 2, delay: 1.5, ease: "elastic.out(1, 0.5)" });
         // Add to doorSystems so it fades logically or just let it live there. It's safe to just let it sit there.
     }
 

@@ -450,6 +450,8 @@
             #flowee-intro-text { font-size: 1rem; padding: 20px; }
             #title-overlay h1 { font-size: 8vw; }
         }
+
+        .group:hover .lang-dropdown { display: block !important; }
     </style>
 </head>
 <body class="notranslate">
@@ -458,15 +460,20 @@
     <div class="top-ui">
         <div style="display: flex; align-items: center; gap: 15px; cursor: pointer;" onclick="window.location.reload();">
             <img src="assets/branding/cqr-logo-gold.png" class="logo-small" onerror="this.style.display='none'">
-            <span style="font-family: 'Cinzel', serif; font-size: 1.2rem; letter-spacing: 4px; color: var(--haki-gold); font-weight: bold; text-shadow: 0 0 10px rgba(212,175,55,0.4);">KYHEARTLX</span>
+            <span style="font-family: 'Cinzel', serif; font-size: 1.2rem; letter-spacing: 4px; color: var(--haki-gold); font-weight: bold; text-shadow: 0 0 10px rgba(212,175,55,0.4);">CDF</span>
         </div>
         
-        <div class="lang-selector" id="lang-menu" style="font-family: 'Montserrat', sans-serif; font-weight: bold; font-size: 0.9rem;">
-            <span onclick="event.stopPropagation(); setLanguage('en')" data-lang="en">E</span>
-            <span onclick="event.stopPropagation(); setLanguage('fr')" data-lang="fr">FR</span>
-            <span onclick="event.stopPropagation(); setLanguage('de')" data-lang="de">DE</span>
-            <span onclick="event.stopPropagation(); setLanguage('it')" data-lang="it">IT</span>
-            <span onclick="event.stopPropagation(); setLanguage('pt')" data-lang="pt">PT</span>
+        <div class="group font-mono text-sm" style="position: relative;">
+            <button class="bg-[#111] border border-[#d4af37]/50 text-[#d4af37] px-3 py-1 rounded hover:bg-white/10 transition flex items-center gap-1" style="background:#111; border:1px solid rgba(212,175,55,0.5); color:#d4af37; padding:4px 12px; border-radius:4px; cursor:pointer;">
+                <span id="current-lang-display">EN</span>
+                <span style="font-size:10px;">▼</span>
+            </button>
+            <div class="lang-dropdown" style="display: none; position: absolute; right: 0; margin-top: 8px; background: rgba(0,0,0,0.9); border: 1px solid rgba(212,175,55,0.5); border-radius: 4px; width: 100%; text-align: center;">
+                <button onclick="setLanguage('en')" style="width:100%; color:#aaa; padding:8px 0; background:none; border:none; cursor:pointer; border-bottom:1px solid rgba(212,175,55,0.2);">EN</button>
+                <button onclick="setLanguage('de')" style="width:100%; color:#aaa; padding:8px 0; background:none; border:none; cursor:pointer; border-bottom:1px solid rgba(212,175,55,0.2);">DE</button>
+                <button onclick="setLanguage('fr')" style="width:100%; color:#aaa; padding:8px 0; background:none; border:none; cursor:pointer; border-bottom:1px solid rgba(212,175,55,0.2);">FR</button>
+                <button onclick="setLanguage('pt')" style="width:100%; color:#aaa; padding:8px 0; background:none; border:none; cursor:pointer;">PT</button>
+            </div>
         </div>
     </div>
 
@@ -491,10 +498,10 @@
     </div>
 
     <!-- Dynamic Focus Overlay for Worlds -->
-    <div id="world-info-overlay" onclick="if(window.OrbitEngine && !window.OrbitEngine.isTransitioning) { const leaf = window.OrbitEngine.leaves.find(l => l.userData.id === document.getElementById('world-title').getAttribute('data-i18n').replace('world_', '').replace('_tit', '')); if(leaf) { window.OrbitEngine.transitionToLuvo(leaf); } else { console.warn('Could not find leaf target.'); } }">
+    <div id="world-info-overlay" onclick="if(window.OrbitEngine && !window.OrbitEngine.isTransitioning) { const leafId = document.getElementById('world-title').getAttribute('data-i18n').replace('world_', '').replace('_tit', ''); window.OrbitEngine.handleOverlayClick(leafId); }">
         <h2 id="world-title" data-i18n="world_visionary_tit">...</h2>
         <p id="world-slogan" data-i18n="world_visionary_desc">...</p>
-        <div class="dive-hint" data-i18n="dive_hint" style="cursor: pointer;">[ CLICK TO INITIATE DIVE ]</div>
+        <div class="dive-hint" data-i18n="dive_hint" style="cursor: pointer;">[ CLICK TO EXPLORE ]</div>
     </div>
 
     <div class="scroll-down" data-i18n="scroll_hint">SCROLL TO NAVIGATE</div>
