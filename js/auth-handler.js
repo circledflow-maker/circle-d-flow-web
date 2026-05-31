@@ -112,7 +112,7 @@ async function handleLogin(argEmail, argPassword) {
                 showFeedback("Access Denied: " + error.message, "error");
             }
         } else {
-            const target = getRedirectPath('master_dashboard.html');
+            const target = 'https://circle-d-flow-web.vercel.app/pages/dashboard';
             localStorage.setItem('cqr_auth_state', 'logged_in'); // PERSIST FOR DASHBOARD SECURITY
             showFeedback(`Identity Confirmed. Calibrating...`, "success");
             waitForSessionAndRedirect(target); // USE NEW HELPER
@@ -156,7 +156,7 @@ async function handleRegister(argEmail, argPassword, argUsername) {
                 return; 
             }
 
-            const target = getRedirectPath('master_dashboard.html');
+            const target = 'https://circle-d-flow-web.vercel.app/pages/dashboard';
             showFeedback(`Profile Created. Initializing...`, "success");
             localStorage.removeItem('seen_command_trinity'); // Force welcome for new users
             localStorage.setItem('cqr_auth_state', 'logged_in'); // PERSIST FOR DASHBOARD SECURITY

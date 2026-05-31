@@ -659,10 +659,10 @@ class FloweeAgent {
             const img = document.createElement('img');
             img.id = 'flowee-visual';
             img.src = `${pathPrefix}flowee_pirate_phoenix.png`;
-            img.style.width = '35px';
-            img.style.height = '35px';
-            img.style.maxWidth = '35px';
-            img.style.maxHeight = '35px';
+            img.style.width = '60px';
+            img.style.height = '60px';
+            img.style.maxWidth = '60px';
+            img.style.maxHeight = '60px';
             img.style.objectFit = 'contain';
             img.style.cursor = 'pointer';
             img.style.pointerEvents = 'auto';
@@ -695,7 +695,7 @@ class FloweeAgent {
             bubble.style.transition = 'all 0.3s';
             bubble.style.transform = 'scale(0.9)';
             bubble.style.transformOrigin = 'bottom right';
-            bubble.innerHTML = `<p>System Online.</p><div style="position:absolute; bottom:-6px; right:0; width:16px; height:16px; background:#fff; transform:rotate(45deg);"></div>`;
+            bubble.innerHTML = `<p>Hallo! Ich bin Flowee.</p><div style="position:absolute; bottom:-6px; right:0; width:16px; height:16px; background:#fff; transform:rotate(45deg);"></div>`;
 
             this.container.appendChild(bubble);
             this.container.appendChild(img);
@@ -748,7 +748,7 @@ class FloweeAgent {
             <!-- Messages Area -->
             <div id="flowee-messages" style="flex: 1; overflow-y: auto; padding: 4px; display: flex; flex-direction: column; gap: 12px; font-size: 0.8rem; color: #eee; scroll-behavior: smooth;">
                 <div style="background: rgba(212,175,55,0.1); border-left: 3px solid var(--haki-gold); padding: 10px; border-radius: 4px; line-height: 1.4;">
-                    Greetings, Creator. The Agentic Bridge is initialized. How shall we proceed with the Flow?
+                    Hi! Ich bin Flowee. Wie kann ich dir heute assistieren?
                 </div>
             </div>
 

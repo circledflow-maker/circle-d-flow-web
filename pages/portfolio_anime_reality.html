@@ -439,7 +439,7 @@
 
 
     <!-- Header Section -->
-    <div class="pt-[40px] pb-6 text-center px-4 relative z-10 flex-shrink-0">
+    <div class="pt-[80px] pb-6 text-center px-4 relative z-10 flex-shrink-0">
         
         <h1 class="text-3xl md:text-5xl cinzel text-white mb-2 drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]">The Portfolio Archive</h1>
         <p class="text-white/60 max-w-2xl mx-auto mono text-[10px] md:text-xs leading-relaxed tracking-widest uppercase">
@@ -881,7 +881,7 @@
                 const topVideos = videos.slice(0, 3);
                 const topPhotos = photos.slice(0, 12);
 
-                const pageCaption = document.querySelector('.pt-\\[40px\\] p');
+                const pageCaption = document.querySelector('.pt-\\[80px\\] p');
                 if (pageCaption) {
                     pageCaption.innerHTML = `
                         A real-time reflection of the 3D Master Node.<br>
@@ -974,6 +974,22 @@
             renderTabs();
             updateWeeklyFlowBanner();
             renderGrid();
+
+            // Fetch dynamic GDrive content for Artists
+            fetch('/api/akademie')
+                .then(res => res.json())
+                .then(data => {
+                    if (data && data.Artist) {
+                        if (!window.PortfolioData) window.PortfolioData = {};
+                        if (!window.PortfolioData["Artist"]) window.PortfolioData["Artist"] = [];
+                        window.PortfolioData["Artist"].push(...data.Artist);
+                        // Re-render if Artist is active
+                        if (activeCategory.toLowerCase() === 'artist') {
+                            renderGrid();
+                        }
+                    }
+                })
+                .catch(err => console.error('Failed to load dynamic artist data', err));
 
             if (typeof applyTranslations === 'function') {
                 applyTranslations();
