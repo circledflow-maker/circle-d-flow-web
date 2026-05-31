@@ -277,3 +277,21 @@ function showFeedback(message, type) {
 }
 
 
+// --- 5. OAUTH LOGIC ---
+async function handleOAuthLogin(provider) {
+    if (!window.supabaseClient) {
+        showFeedback("System Error: Neural Link Offline.", "error");
+        return;
+    }
+    showFeedback("Initiating Neural Link...", "neutral");
+    const { data, error } = await window.supabaseClient.auth.signInWithOAuth({
+        provider: provider,
+        options: {
+            redirectTo: window.location.origin + '/pages/dashboard.html'
+        }
+    });
+    if (error) {
+        showFeedback("OAuth Error: " + error.message, "error");
+    }
+}
+window.handleOAuthLogin = handleOAuthLogin;
