@@ -1,74 +1,81 @@
-const fs = require('fs');
-const path = require('path');
-const { google } = require('googleapis');
-
 module.exports = async function handler(req, res) {
     try {
-        const credentialsPath = path.join(process.cwd(), 'credentials.json');
-        const tokenPath = path.join(process.cwd(), 'token.json');
+        const client_id = process.env.GDRIVE_CLIENT_ID;
+        const client_secret = process.env.GDRIVE_CLIENT_SECRET;
+        const refresh_token = process.env.GDRIVE_REFRESH_TOKEN;
 
-        if (!fs.existsSync(credentialsPath) || !fs.existsSync(tokenPath)) {
-            return res.status(500).json({ error: "Google Drive Credentials not found." });
+        // Fallback for local development if env vars are missing (optional)
+        if (!client_id || !client_secret || !refresh_token) {
+            return res.status(500).json({ 
+                error: "Google Drive Credentials missing.",
+                details: "Please add GDRIVE_CLIENT_ID, GDRIVE_CLIENT_SECRET, and GDRIVE_REFRESH_TOKEN to Vercel Environment Variables." 
+            });
         }
 
-        const credentials = JSON.parse(fs.readFileSync(credentialsPath));
-        const token = JSON.parse(fs.readFileSync(tokenPath));
-
-        const { client_secret, client_id, redirect_uris } = credentials.installed || credentials.web;
-        const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
-        oAuth2Client.setCredentials(token);
-
-        const drive = google.drive({ version: 'v3', auth: oAuth2Client });
-
-        // Find "Akademie" folder
-        const folderResponse = await drive.files.list({
-            q: "name='Akademie' and mimeType='application/vnd.google-apps.folder' and trashed=false",
-            fields: 'files(id, name)',
-            spaces: 'drive'
+        // 1. Get Access Token
+        const tokenResponse = await fetch("https://oauth2.googleapis.com/token", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams({
+                client_id,
+                client_secret,
+                refresh_token,
+                grant_type: "refresh_token"
+            })
         });
+        
+        const tokenData = await tokenResponse.json();
+        if (!tokenResponse.ok) {
+            throw new Error(`Failed to get access token: ${tokenData.error_description || tokenData.error}`);
+        }
+        
+        const accessToken = tokenData.access_token;
 
-        if (folderResponse.data.files.length === 0) {
+        // Helper function for Drive API
+        const driveFetch = async (url) => {
+            const resp = await fetch(url, {
+                headers: { Authorization: `Bearer ${accessToken}` }
+            });
+            if (!resp.ok) throw new Error(`Drive API Error: ${resp.statusText}`);
+            return await resp.json();
+        };
+
+        // 2. Find "Akademie" folder
+        const qFolder = encodeURIComponent("name='Akademie' and mimeType='application/vnd.google-apps.folder' and trashed=false");
+        const folderResponse = await driveFetch(`https://www.googleapis.com/drive/v3/files?q=${qFolder}&fields=files(id,name)&spaces=drive`);
+
+        if (!folderResponse.files || folderResponse.files.length === 0) {
             return res.status(404).json({ error: "Akademie folder not found in Google Drive." });
         }
 
-        const akademieFolderId = folderResponse.data.files[0].id;
+        const akademieFolderId = folderResponse.files[0].id;
 
-        // Find all artist subfolders
-        const subfoldersResponse = await drive.files.list({
-            q: `'${akademieFolderId}' in parents and mimeType='application/vnd.google-apps.folder' and trashed=false`,
-            fields: 'files(id, name)',
-            spaces: 'drive'
-        });
+        // 3. Find all artist subfolders
+        const qSubfolders = encodeURIComponent(`'${akademieFolderId}' in parents and mimeType='application/vnd.google-apps.folder' and trashed=false`);
+        const subfoldersResponse = await driveFetch(`https://www.googleapis.com/drive/v3/files?q=${qSubfolders}&fields=files(id,name)&spaces=drive`);
 
-        const artists = subfoldersResponse.data.files;
+        const artists = subfoldersResponse.files || [];
         const result = {
             "Artist": []
         };
 
-        // For each artist, find images
-        // To avoid Vercel timeouts, we'll run these in parallel with Promise.all
+        // 4. For each artist, find images (Parallel)
         const fetchPromises = artists.map(async (artist) => {
-            const imagesResponse = await drive.files.list({
-                q: `'${artist.id}' in parents and (mimeType contains 'image/' or mimeType contains 'video/') and trashed=false`,
-                fields: 'files(id, name, mimeType, webContentLink, webViewLink)',
-                spaces: 'drive'
-            });
-
+            const qImages = encodeURIComponent(`'${artist.id}' in parents and (mimeType contains 'image/' or mimeType contains 'video/') and trashed=false`);
+            const imagesResponse = await driveFetch(`https://www.googleapis.com/drive/v3/files?q=${qImages}&fields=files(id,name,mimeType,webContentLink,webViewLink)&spaces=drive`);
             return {
                 artistName: artist.name,
-                files: imagesResponse.data.files
+                files: imagesResponse.files || []
             };
         });
 
         const artistFolders = await Promise.all(fetchPromises);
 
-        // Map to Portfolio format
+        // 5. Map to Portfolio format
         let idCounter = 0;
         for (const folder of artistFolders) {
             for (const file of folder.files) {
-                // webContentLink allows direct download, but to view without proxy, we can use uc?id=
                 const directUrl = `https://drive.google.com/uc?id=${file.id}`;
-                
                 result["Artist"].push({
                     id: `gdrive_artist_${idCounter++}`,
                     name: file.name,
