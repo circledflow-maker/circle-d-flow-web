@@ -338,60 +338,86 @@ class LanguageMatrix {
     }
 
     injectStyles() {
-        const style = document.createElement('style');
-        style.textContent = `
-            .lang-switcher {
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                z-index: 20000; /* Ensure it's above everything */
-                display: flex;
-                gap: 8px;
-                background: rgba(0,0,0,0.6);
-                padding: 8px 12px;
-                border-radius: 99px;
-                backdrop-filter: blur(8px);
-                border: 1px solid rgba(255, 215, 0, 0.2); /* Gold tint */
-                box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-                transition: all 0.3s ease;
-            }
-            .lang-switcher:hover {
-                background: rgba(0,0,0,0.8);
-                border-color: rgba(255, 215, 0, 0.5);
-            }
-            .lang-btn {
-                cursor: pointer;
-                font-size: 0.9rem;
-                font-family: 'Montserrat', 'Inter', sans-serif;
-                font-weight: bold;
-                color: white;
-                opacity: 0.6;
-                transition: all 0.2s;
-            }
-            .lang-btn:hover, .lang-btn.active {
-                opacity: 1;
-                color: #d4af37; /* Gold */
-                transform: scale(1.1);
-            }
-        `;
-        document.head.appendChild(style);
-    }
+    const style = document.createElement('style');
+    style.textContent = `
+        .lang-switcher {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 20000;
+            font-family: 'Space Mono', monospace;
+            font-size: 14px;
+        }
+        .lang-dropdown-btn {
+            background: #111;
+            border: 1px solid rgba(212,175,55,0.5);
+            color: #d4af37;
+            padding: 4px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: bold;
+        }
+        .lang-dropdown-btn:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        .lang-dropdown-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            margin-top: 8px;
+            background: rgba(0,0,0,0.9);
+            border: 1px solid rgba(212,175,55,0.5);
+            border-radius: 4px;
+            width: 100%;
+            text-align: center;
+            flex-direction: column;
+        }
+        .lang-switcher:hover .lang-dropdown-menu {
+            display: flex;
+        }
+        .lang-dropdown-menu button {
+            width: 100%;
+            color: #aaa;
+            padding: 8px 0;
+            background: none;
+            border: none;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(212,175,55,0.2);
+        }
+        .lang-dropdown-menu button:last-child {
+            border-bottom: none;
+        }
+        .lang-dropdown-menu button:hover, .lang-dropdown-menu button.active {
+            color: #d4af37;
+            background: rgba(255,255,255,0.05);
+        }
+    `;
+    document.head.appendChild(style);
+}
 
     injectSwitcher() {
-        // Avoid duplicates
-        if (document.querySelector('.lang-switcher')) return;
+    if (document.querySelector('.lang-switcher')) return;
 
-        const switcher = document.createElement('div');
-        switcher.className = 'lang-switcher';
-        switcher.innerHTML = `
-            <span class="lang-btn" onclick="LanguageMatrix.setLanguage('en')" title="English">E</span>
-            <span class="lang-btn" onclick="LanguageMatrix.setLanguage('fr')" title="Français">FR</span>
-            <span class="lang-btn" onclick="LanguageMatrix.setLanguage('de')" title="Deutsch">DE</span>
-            <span class="lang-btn" onclick="LanguageMatrix.setLanguage('it')" title="Italiano">IT</span>
-            <span class="lang-btn" onclick="LanguageMatrix.setLanguage('pt')" title="Português">PT</span>
-        `;
-        document.body.appendChild(switcher);
-    }
+    const switcher = document.createElement('div');
+    switcher.className = 'lang-switcher';
+    switcher.innerHTML = `
+        <button class="lang-dropdown-btn">
+            <span id="current-lang-display">EN</span>
+            <span style="font-size:10px;">▼</span>
+        </button>
+        <div class="lang-dropdown-menu">
+            <button onclick="LanguageMatrix.setLanguage('en')" data-lang="en">EN</button>
+            <button onclick="LanguageMatrix.setLanguage('fr')" data-lang="fr">FR</button>
+            <button onclick="LanguageMatrix.setLanguage('de')" data-lang="de">DE</button>
+            <button onclick="LanguageMatrix.setLanguage('it')" data-lang="it">IT</button>
+            <button onclick="LanguageMatrix.setLanguage('pt')" data-lang="pt">PT</button>
+        </div>
+    `;
+    document.body.appendChild(switcher);
+}
 
     setLanguage(lang) {
         localStorage.setItem('cqr_lang', lang);
@@ -410,13 +436,16 @@ class LanguageMatrix {
         });
 
         // Update Active Button State
-        document.querySelectorAll('.lang-btn').forEach(btn => {
-            btn.classList.remove('active');
-            // Check if this button corresponds to current lang (simple text check or proper attribute)
-            if (btn.getAttribute('onclick').includes(`('${lang}')`)) {
-                btn.classList.add('active');
-            }
-        });
+        
+    const display = document.getElementById('current-lang-display');
+    if (display) display.textContent = lang.toUpperCase();
+
+    document.querySelectorAll('.lang-dropdown-menu button').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.getAttribute('data-lang') === lang) {
+            btn.classList.add('active');
+        }
+    });
         
         console.log(`[${this.name}] Language set to: ${lang.toUpperCase()}`);
         
