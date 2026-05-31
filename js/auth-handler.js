@@ -67,6 +67,11 @@ async function waitForSessionAndRedirect(target) {
         
         if (session && token) {
             console.log("✅ Session persisted. Redirecting.");
+            const username = session.user?.user_metadata?.username || session.user?.email?.split('@')[0] || "Flow_Initiate";
+            localStorage.setItem('cdf_user_username', username);
+            if (!localStorage.getItem('cdf_balance')) {
+                localStorage.setItem('cdf_balance', 0);
+            }
             window.location.replace(target);
         } else {
             retries++;
@@ -226,6 +231,14 @@ async function checkUserSession() {
         return;
     }
     const { data: { session } } = await window.supabaseClient.auth.getSession();
+    
+    if (session) {
+        const username = session.user?.user_metadata?.username || session.user?.email?.split('@')[0] || "Flow_Initiate";
+        localStorage.setItem('cdf_user_username', username);
+        if (!localStorage.getItem('cdf_balance')) {
+            localStorage.setItem('cdf_balance', 0);
+        }
+    }
     
     // Check if handling a password reset flow
     // Supabase redirects with #access_token=...&type=recovery

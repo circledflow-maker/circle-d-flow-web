@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { google } = require('googleapis');
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
     try {
         const credentialsPath = path.join(process.cwd(), 'credentials.json');
         const tokenPath = path.join(process.cwd(), 'token.json');
