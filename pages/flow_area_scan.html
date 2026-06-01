@@ -25,7 +25,7 @@
     </script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../js/supabase_client.js"></script>
+    <script src="../js/agents/supabase_client.js"></script>
 
     <style>
         body { background-color: #050505; color: #fff; font-family: 'Space Mono', monospace; overflow: hidden; }
@@ -122,8 +122,13 @@
         let areaData = null;
         
         document.getElementById('start-flow-btn').addEventListener('click', async () => {
+            if (!window.supabaseClient) {
+                alert("Database connection not ready. Please wait.");
+                return;
+            }
+            
             // Check auth first
-            const session = await cdf_supabase.auth.getSession();
+            const session = await window.supabaseClient.auth.getSession();
             if(!session.data.session) {
                 alert("You must be logged in to sync with the Flow Area.");
                 return;
@@ -136,7 +141,7 @@
             
             // Verify Area
             try {
-                const { data, error } = await cdf_supabase.from('flow_areas').select('*').eq('id', areaId).single();
+                const { data, error } = await window.supabaseClient.from('flow_areas').select('*').eq('id', areaId).single();
                 if(error) throw error;
                 areaData = data;
                 document.getElementById('area-name-display').innerText = areaData.name;
@@ -206,10 +211,10 @@
             // Grant Rewards
             try {
                 // 1. Increment Area Scan Count
-                await cdf_supabase.rpc('increment_scan_count', { area_id: areaId });
+                await window.supabaseClient.rpc('increment_scan_count', { area_id: areaId });
                 // Note: If RPC doesn't exist, we fallback to frontend update (not secure, but works for prototype)
                 if(!window.Gamification) {
-                    await cdf_supabase.from('flow_areas').update({ scan_count: (areaData.scan_count || 0) + 1 }).eq('id', areaId);
+                    await window.supabaseClient.from('flow_areas').update({ scan_count: (areaData.scan_count || 0) + 1 }).eq('id', areaId);
                 }
                 
                 // 2. Grant Local Gamification Points

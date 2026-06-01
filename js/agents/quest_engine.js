@@ -825,8 +825,10 @@ QuestEngine.prototype.establishUplink = async function(questId) {
         if(window.Pusher) window.Pusher.showToast("UPLINK SECURED", "success");
 
         document.getElementById('uplink-stage-1').style.display = 'none';
-        document.getElementById('uplink-stage-2').style.display = 'block';
-
+        const modal = document.getElementById('protocol-modal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
     } catch(e) {
         console.error("Uplink Error:", e);
         alert("SIGNAL LOST. RETRYING...");
