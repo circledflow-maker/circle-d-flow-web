@@ -607,203 +607,33 @@ window.PortfolioData = {
     ],
     "Artist": [
         {
-            "id": "artist_1",
-            "name": "artist_1.jpg",
-            "professional_name": "Artist Collection",
-            "url": "../Assets/Portfolio/Artist/artist_1.jpg",
+            "id": "gdrive_criz_0",
+            "name": "C-Riz Image 1",
+            "professional_name": "C-Riz",
+            "url": "https://drive.google.com/uc?export=view&id=15uz3yZYpc_ZrcWweedLGtZA1dECCjrgQ",
             "tags": [
                 "artist",
-                "portfolio"
+                "flow"
             ]
         },
         {
-            "id": "artist_2",
-            "name": "artist_2.jpg",
-            "professional_name": "Artist Collection",
-            "url": "../Assets/Portfolio/Artist/artist_2.jpg",
+            "id": "gdrive_criz_1",
+            "name": "C-Riz Image 2",
+            "professional_name": "C-Riz",
+            "url": "https://drive.google.com/uc?export=view&id=1HwhdGHKXVswUt0EuEj0usSjyYUZbwwDO",
             "tags": [
                 "artist",
-                "portfolio"
+                "flow"
             ]
         },
         {
-            "id": "artist_3",
-            "name": "artist_3.jpg",
-            "professional_name": "Artist Collection",
-            "url": "../Assets/Portfolio/Artist/artist_3.jpg",
+            "id": "gdrive_criz_2",
+            "name": "C-Riz Image 3",
+            "professional_name": "C-Riz",
+            "url": "https://drive.google.com/uc?export=view&id=1FQItgHRVSUoI3-iVzbobksPlmBZgK6sL",
             "tags": [
                 "artist",
-                "portfolio"
-            ]
-        },
-        {
-            "id": "artist_4",
-            "name": "artist_4.jpg",
-            "professional_name": "Artist Collection",
-            "url": "../Assets/Portfolio/Artist/artist_4.jpg",
-            "tags": [
-                "artist",
-                "portfolio"
-            ]
-        },
-        {
-            "id": "artist_5",
-            "name": "artist_5.jpg",
-            "professional_name": "Artist Collection",
-            "url": "../Assets/Portfolio/Artist/artist_5.jpg",
-            "tags": [
-                "artist",
-                "portfolio"
-            ]
-        },
-        {
-            "id": "artist_6",
-            "name": "artist_6.jpg",
-            "professional_name": "Artist Collection",
-            "url": "../Assets/Portfolio/Artist/artist_6.jpg",
-            "tags": [
-                "artist",
-                "portfolio"
-            ]
-        },
-        {
-            "id": "artist_7",
-            "name": "artist_7.jpg",
-            "professional_name": "Artist Collection",
-            "url": "../Assets/Portfolio/Artist/artist_7.jpg",
-            "tags": [
-                "artist",
-                "portfolio"
-            ]
-        },
-        {
-            "id": "artist_8",
-            "name": "artist_8.jpg",
-            "professional_name": "Artist Collection",
-            "url": "../Assets/Portfolio/Artist/artist_8.jpg",
-            "tags": [
-                "artist",
-                "portfolio"
-            ]
-        },
-        {
-            "id": "artist_9",
-            "name": "artist_9.jpg",
-            "professional_name": "Artist Collection",
-            "url": "../Assets/Portfolio/Artist/artist_9.jpg",
-            "tags": [
-                "artist",
-                "portfolio"
-            ]
-        },
-        {
-            "id": "artist_10",
-            "name": "artist_10.jpg",
-            "professional_name": "Artist Collection",
-            "url": "../Assets/Portfolio/Artist/artist_10.jpg",
-            "tags": [
-                "artist",
-                "portfolio"
-            ]
-        },
-        {
-            "id": "artist_11",
-            "name": "artist_11.jpg",
-            "professional_name": "Artist Collection",
-            "url": "../Assets/Portfolio/Artist/artist_11.jpg",
-            "tags": [
-                "artist",
-                "portfolio"
-            ]
-        },
-        {
-            "id": "artist_12",
-            "name": "artist_12.jpg",
-            "professional_name": "Artist Collection",
-            "url": "../Assets/Portfolio/Artist/artist_12.jpg",
-            "tags": [
-                "artist",
-                "portfolio"
-            ]
-        },
-        {
-            "id": "artist_13",
-            "name": "artist_13.jpg",
-            "professional_name": "Artist Collection",
-            "url": "../Assets/Portfolio/Artist/artist_13.jpg",
-            "tags": [
-                "artist",
-                "portfolio"
-            ]
-        },
-        {
-            "id": "artist_14",
-            "name": "artist_14.jpg",
-            "professional_name": "Artist Collection",
-            "url": "../Assets/Portfolio/Artist/artist_14.jpg",
-            "tags": [
-                "artist",
-                "portfolio"
-            ]
-        },
-        {
-            "id": "artist_15",
-            "name": "artist_15.jpg",
-            "professional_name": "Artist Collection",
-            "url": "../Assets/Portfolio/Artist/artist_15.jpg",
-            "tags": [
-                "artist",
-                "portfolio"
-            ]
-        },
-        {
-            "id": "artist_16",
-            "name": "artist_16.jpg",
-            "professional_name": "Artist Collection",
-            "url": "../Assets/Portfolio/Artist/artist_16.jpg",
-            "tags": [
-                "artist",
-                "portfolio"
-            ]
-        },
-        {
-            "id": "artist_17",
-            "name": "artist_17.jpg",
-            "professional_name": "Artist Collection",
-            "url": "../Assets/Portfolio/Artist/artist_17.jpg",
-            "tags": [
-                "artist",
-                "portfolio"
-            ]
-        },
-        {
-            "id": "artist_18",
-            "name": "artist_18.jpg",
-            "professional_name": "Artist Collection",
-            "url": "../Assets/Portfolio/Artist/artist_18.jpg",
-            "tags": [
-                "artist",
-                "portfolio"
-            ]
-        },
-        {
-            "id": "artist_19",
-            "name": "artist_19.jpg",
-            "professional_name": "Artist Collection",
-            "url": "../Assets/Portfolio/Artist/artist_19.jpg",
-            "tags": [
-                "artist",
-                "portfolio"
-            ]
-        },
-        {
-            "id": "artist_20",
-            "name": "artist_20.jpg",
-            "professional_name": "Artist Collection",
-            "url": "../Assets/Portfolio/Artist/artist_20.jpg",
-            "tags": [
-                "artist",
-                "portfolio"
+                "flow"
             ]
         }
     ]
