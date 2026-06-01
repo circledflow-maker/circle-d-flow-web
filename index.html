@@ -552,7 +552,7 @@
                 <span style="color: #666; font-size: 0.7rem; letter-spacing: 1px;">OR</span>
                 <hr style="flex: 1; border-color: rgba(212,175,55,0.2);">
             </div>
-            <button onclick="if(window.supabaseClient) window.supabaseClient.auth.signInWithOAuth({ provider: 'google' })" style="width: 100%; padding: 12px; background: white; color: #333; border: 1px solid #ccc; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;">
+            <button onclick="if(window.handleOAuthLogin) window.handleOAuthLogin('google')" style="width: 100%; padding: 12px; background: white; color: #333; border: 1px solid #ccc; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;">
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" style="width: 18px; height: 18px;">
                 CONTINUE WITH GOOGLE
             </button>

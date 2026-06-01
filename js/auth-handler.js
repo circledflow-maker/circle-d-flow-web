@@ -284,6 +284,10 @@ async function handleOAuthLogin(provider) {
         return;
     }
     showFeedback("Initiating Neural Link...", "neutral");
+    
+    // PERSIST FOR DASHBOARD SECURITY BEFORE REDIRECT
+    localStorage.setItem('cqr_auth_state', 'logged_in');
+    
     const { data, error } = await window.supabaseClient.auth.signInWithOAuth({
         provider: provider,
         options: {
@@ -292,6 +296,7 @@ async function handleOAuthLogin(provider) {
     });
     if (error) {
         showFeedback("OAuth Error: " + error.message, "error");
+        localStorage.removeItem('cqr_auth_state'); // Revert on failure
     }
 }
 window.handleOAuthLogin = handleOAuthLogin;
