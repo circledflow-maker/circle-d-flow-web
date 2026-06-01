@@ -6,7 +6,7 @@
 function getRedirectPath(target) {
     const isPages = window.location.pathname.includes('/pages/');
     
-    // Scenario 1: Target is in Root (e.g. master_dashboard.html)
+    // Scenario 1: Target is in Root (e.g. /pages/dashboard.html)
     if (!target.includes('/')) {
         return isPages ? '../' + target : target;
     }

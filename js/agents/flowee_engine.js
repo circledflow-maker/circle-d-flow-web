@@ -7,7 +7,7 @@ const TutorialQuests = [
     {
         id: 0,
         titleKey: "quest_initi_title", // Initiation
-        location: "master_dashboard.html",
+        location: "/pages/dashboard.html",
         textKey: "quest_initi_text", 
         actionBtnKey: "quest_initi_btn",
         targetUrl: "marketplace.html"

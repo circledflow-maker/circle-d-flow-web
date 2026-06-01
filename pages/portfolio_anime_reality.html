@@ -829,22 +829,18 @@
                 
                 let assets = [];
                 if (window.PortfolioData) {
-                    let allAssets = [];
-                    Object.values(window.PortfolioData).forEach(arr => {
-                        if (Array.isArray(arr)) {
-                            allAssets.push(...arr);
+                    let matchedAssets = [];
+                    // Try exact match or case-insensitive match
+                    if (window.PortfolioData[activeCategory]) {
+                        matchedAssets = window.PortfolioData[activeCategory];
+                    } else {
+                        const catLower = activeCategory.toLowerCase();
+                        const exactKey = Object.keys(window.PortfolioData).find(k => k.toLowerCase() === catLower);
+                        if (exactKey) {
+                            matchedAssets = window.PortfolioData[exactKey];
+                        } else {
+                            matchedAssets = window.PortfolioData["Feuer"] || [];
                         }
-                    });
-                    
-                    const targetKeywords = keywordMap[activeCategory.toLowerCase()] || [activeCategory.toLowerCase()];
-                    
-                    let matchedAssets = allAssets.filter(item => {
-                        const searchString = `${item.name || ''} ${item.professional_name || ''} ${item.tags ? item.tags.join(' ') : ''}`.toLowerCase();
-                        return targetKeywords.some(kw => searchString.includes(kw));
-                    });
-                    
-                    if (matchedAssets.length === 0) {
-                        matchedAssets = allAssets.slice(0, 12); // Fallback
                     }
 
                     const uniqueNames = new Set();

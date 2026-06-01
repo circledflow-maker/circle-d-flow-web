@@ -9,7 +9,7 @@ const SystemConfig = {
     // Automatic Tour Points for this version
     newFeatures: [
         {
-            targetUrl: "master_dashboard.html",
+            targetUrl: "/pages/dashboard.html",
             elementId: "#trinity-resonance-wrap", 
             text: "new_feature_trinity", // Key for i18n
             exp: 50

@@ -257,8 +257,13 @@
             <div class="bg-black/50 p-6 border border-[#d4af37]/30 mb-8 rounded text-left">
                 <h4 class="font-mono text-[#d4af37] mb-2" data-i18n="lb_teaser_title">Line-Up & Teaser</h4>
                 <p id="info-lb-teaser" class="text-sm text-gray-400">Teaser text...</p>
+                <button id="info-lb-more-btn" onclick="document.getElementById('info-lb-program').classList.toggle('hidden')" class="text-xs text-[#d4af37] underline mt-2">Mehr anzeigen</button>
+                <div id="info-lb-program" class="hidden mt-4 pt-4 border-t border-gray-700 text-sm text-gray-300">
+                    <!-- Program text will be injected here -->
+                </div>
             </div>
 
+            <button class="w-full text-center border border-[#d4af37] text-[#d4af37] py-2 mb-3 hover:bg-[#d4af37] hover:text-black transition" id="info-lb-dartist-btn" onclick="window.location.href='portfolio_anime_reality.html?cat=artist'" style="display:none;">More about DArtist</button>
             <button class="btn-gold w-full text-center" id="info-lb-ticket-btn" data-i18n="btn_ticket_small" onclick="app.closeInfoLightbox(); app.openLightbox(app.currentEventId);">[ LET'S SUPPORT ]</button>
         </div>
     </div>
@@ -404,11 +409,11 @@
                     <button id="open-menu-btn" class="text-lg cinzel text-[#d4af37] px-8 py-2 rounded-full border border-[#d4af37] hover:bg-[#d4af37] hover:text-black transition-all mb-2 shadow-[0_0_10px_rgba(212,175,55,0.5)]" onclick="document.getElementById('griot-menu-selection').classList.toggle('hidden')">Open Paths</button>
                     
                     <div id="griot-menu-selection" class="hidden flex-col items-center gap-4 mt-6 pb-2 transition-all">
-                        <button class="w-48 border border-[#d4af37] px-4 py-3 rounded-full text-[#d4af37] mono text-[12px] tracking-widest hover:bg-[#d4af37] hover:text-black transition-all uppercase" onclick="app.switchTab('events'); app.turnPage(3);" data-i18n="tab_events">Events</button>
+                        <button class="w-48 border border-[#d4af37] px-4 py-3 rounded-full text-[#d4af37] mono text-[12px] tracking-widest hover:bg-[#d4af37] hover:text-black transition-all uppercase" onclick="window.location.href='events.html'" data-i18n="tab_events">Events</button>
                         <button class="w-48 border border-[#d4af37] px-4 py-3 rounded-full text-[#d4af37] mono text-[12px] tracking-widest hover:bg-[#d4af37] hover:text-black transition-all uppercase" onclick="window.location.href='portfolio_anime_reality.html'" data-i18n="tab_portfolio">Portfolio</button>
-                        <button class="w-48 border border-[#d4af37] px-4 py-3 rounded-full text-[#d4af37] mono text-[12px] tracking-widest hover:bg-[#d4af37] hover:text-black transition-all uppercase" onclick="app.switchTab('bazar'); app.turnPage(3);" data-i18n="tab_bazar">Bazar</button>
-                        <button class="w-48 border border-amber-500 px-4 py-3 rounded-full text-amber-500 mono text-[12px] tracking-widest hover:bg-amber-500 hover:text-black transition-all uppercase" onclick="app.switchTab('alliance'); app.turnPage(3);">Alliance</button>
-                        <button class="w-48 border border-[#d4af37] px-4 py-3 rounded-full text-[#d4af37] mono text-[12px] tracking-widest hover:bg-[#d4af37] hover:text-black transition-all uppercase" onclick="app.switchTab('jamsessions'); app.turnPage(3);" data-i18n="tab_jamsessions">Jamsessions</button>
+                        <button class="w-48 border border-[#d4af37] px-4 py-3 rounded-full text-[#d4af37] mono text-[12px] tracking-widest hover:bg-[#d4af37] hover:text-black transition-all uppercase" onclick="app.switchTab('bazar'); app.turnPage(2);" data-i18n="tab_bazar">Bazar</button>
+                        <button class="w-48 border border-amber-500 px-4 py-3 rounded-full text-amber-500 mono text-[12px] tracking-widest hover:bg-amber-500 hover:text-black transition-all uppercase" onclick="window.location.href='membership.html'">Alliance</button>
+                        <button class="w-48 border border-[#d4af37] px-4 py-3 rounded-full text-[#d4af37] mono text-[12px] tracking-widest hover:bg-[#d4af37] hover:text-black transition-all uppercase" onclick="app.switchTab('jamsessions'); app.turnPage(2);" data-i18n="tab_jamsessions">Jamsessions</button>
                     </div>
                 </div>
 
@@ -437,10 +442,10 @@
                 <!-- Category Menu on the Board -->
                 <div class="w-full bg-black/60 backdrop-blur border-b border-[#d4af37]/20 py-3 mb-6 px-2 sticky top-[76px] md:top-[88px] z-40 shadow-md pointer-events-auto">
                     <div class="flex justify-center flex-wrap gap-2 md:gap-4 w-full">
-                        <button id="tab-events" class="border border-[#d4af37] bg-[#d4af37] text-black px-3 py-1.5 md:px-4 md:py-2 rounded-full mono text-[10px] tracking-widest transition-all uppercase" onclick="app.switchTab('events')" data-i18n="tab_events">Events</button>
+                        <button id="tab-events" class="border border-[#d4af37] bg-[#d4af37] text-black px-3 py-1.5 md:px-4 md:py-2 rounded-full mono text-[10px] tracking-widest transition-all uppercase" onclick="window.location.href='events.html'" data-i18n="tab_events">Events</button>
                         <button id="tab-portfolio" class="border border-[#d4af37]/50 text-white px-3 py-1.5 md:px-4 md:py-2 rounded-full mono text-[10px] tracking-widest hover:border-[#d4af37] hover:text-[#d4af37] transition-all uppercase" onclick="window.location.href='portfolio_anime_reality.html'" data-i18n="tab_portfolio">Portfolio</button>
                         <button id="tab-bazar" class="border border-[#d4af37]/50 text-white px-3 py-1.5 md:px-4 md:py-2 rounded-full mono text-[10px] tracking-widest hover:border-[#d4af37] hover:text-[#d4af37] transition-all uppercase" onclick="app.switchTab('bazar')" data-i18n="tab_bazar">Bazar</button>
-                        <button id="tab-alliance" class="border border-amber-500/50 text-white px-3 py-1.5 md:px-4 md:py-2 rounded-full mono text-[10px] tracking-widest hover:border-amber-500 hover:text-amber-500 transition-all uppercase" onclick="app.switchTab('alliance')">Alliance</button>
+                        <button id="tab-alliance" class="border border-amber-500/50 text-white px-3 py-1.5 md:px-4 md:py-2 rounded-full mono text-[10px] tracking-widest hover:border-amber-500 hover:text-amber-500 transition-all uppercase" onclick="window.location.href='membership.html'">Alliance</button>
                         <button id="tab-jamsessions" class="border border-[#d4af37]/50 text-white px-3 py-1.5 md:px-4 md:py-2 rounded-full mono text-[10px] tracking-widest hover:border-[#d4af37] hover:text-[#d4af37] transition-all uppercase" onclick="app.switchTab('jamsessions')" data-i18n="tab_jamsessions">Jamsessions</button>
                     </div>
                 </div>
@@ -462,7 +467,7 @@
                                 <button class="text-gray-400 font-mono text-sm hover:text-white transition" onclick="app.openInfoLightbox('criz')" data-i18n="btn_info_small">[ INFO ]</button>
                                 <div class="flex gap-4">
                                     <button class="text-amber-500 font-mono text-sm hover:underline transition" onclick="app.openSupportLightbox('criz')" data-i18n="btn_support_small">[ GIVE LOVE & SUPPORT ]</button>
-                                    <button class="text-emerald-500 font-mono text-sm hover:underline transition" onclick="app.goToCheckout('criz')"  data-i18n="btn_ticket_small">[ LET'S SUPPORT ]</button>
+                                    <button class="text-emerald-500 font-mono text-sm hover:underline transition" onclick="window.location.href='events.html'"  data-i18n="btn_ticket_small">[ GO TO EVENT PAGE ]</button>
                                 </div>
                             </div>
                         </div>
@@ -479,7 +484,7 @@
                                 <button class="text-gray-400 font-mono text-sm hover:text-white transition" onclick="app.openInfoLightbox('circledflow')" data-i18n="btn_info_small">[ INFO ]</button>
                                 <div class="flex gap-4">
                                     <button class="text-amber-500 font-mono text-sm hover:underline transition" onclick="app.openSupportLightbox('circledflow')" data-i18n="btn_support_small">[ GIVE LOVE & SUPPORT ]</button>
-                                    <button class="text-emerald-500 font-mono text-sm hover:underline transition" onclick="app.goToCheckout('circledflow')"  data-i18n="btn_ticket_small">[ LET'S SUPPORT ]</button>
+                                    <button class="text-emerald-500 font-mono text-sm hover:underline transition" onclick="window.location.href='events.html'"  data-i18n="btn_ticket_small">[ GO TO EVENT PAGE ]</button>
                                 </div>
                             </div>
                         </div>

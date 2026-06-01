@@ -456,25 +456,45 @@
 </head>
 <body class="notranslate">
 
-    <!-- UI Overlay: Top Bar -->
-    <div class="top-ui">
-        <div style="display: flex; align-items: center; gap: 15px; cursor: pointer;" onclick="window.location.reload();">
-            <img src="assets/branding/cqr-logo-gold.png" class="logo-small" onerror="this.style.display='none'">
-            <span style="font-family: 'Cinzel', serif; font-size: 1.2rem; letter-spacing: 4px; color: var(--haki-gold); font-weight: bold; text-shadow: 0 0 10px rgba(212,175,55,0.4);">CDF</span>
+    <!-- Standardized Header: Burger, Logo, Language -->
+    <div class="fixed top-6 left-6 z-[1002]">
+        <button id="burger-btn" class="w-10 h-10 flex flex-col justify-center items-center gap-1.5 bg-black border border-[#d4af37]/50 rounded cursor-pointer z-[101]">
+            <span class="w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
+            <span class="w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
+            <span class="w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
+        </button>
+    </div>
+
+    <!-- Center Logo -->
+    <div class="fixed top-6 left-1/2 -translate-x-1/2 z-[1002] cursor-pointer" onclick="window.location.reload();">
+        <div class="flex items-center gap-3">
+            <img src="assets/branding/cqr-logo-gold.png" class="h-10 drop-shadow-[0_0_10px_#d4af37]" onerror="this.style.display='none'">
+            <span class="cinzel text-xl tracking-widest text-[#d4af37] font-bold drop-shadow-[0_0_10px_rgba(212,175,55,0.4)]">CDF</span>
         </div>
-        
-        <div class="group font-mono text-sm" style="position: relative;">
-            <button class="bg-[#111] border border-[#d4af37]/50 text-[#d4af37] px-3 py-1 rounded hover:bg-white/10 transition flex items-center gap-1" style="background:#111; border:1px solid rgba(212,175,55,0.5); color:#d4af37; padding:4px 12px; border-radius:4px; cursor:pointer;">
-                <span id="current-lang-display">EN</span>
-                <span style="font-size:10px;">▼</span>
-            </button>
-            <div class="lang-dropdown" style="display: none; position: absolute; right: 0; margin-top: 8px; background: rgba(0,0,0,0.9); border: 1px solid rgba(212,175,55,0.5); border-radius: 4px; width: 100%; text-align: center;">
-                <button onclick="setLanguage('en')" style="width:100%; color:#aaa; padding:8px 0; background:none; border:none; cursor:pointer; border-bottom:1px solid rgba(212,175,55,0.2);">EN</button>
-                <button onclick="setLanguage('de')" style="width:100%; color:#aaa; padding:8px 0; background:none; border:none; cursor:pointer; border-bottom:1px solid rgba(212,175,55,0.2);">DE</button>
-                <button onclick="setLanguage('fr')" style="width:100%; color:#aaa; padding:8px 0; background:none; border:none; cursor:pointer; border-bottom:1px solid rgba(212,175,55,0.2);">FR</button>
-                <button onclick="setLanguage('pt')" style="width:100%; color:#aaa; padding:8px 0; background:none; border:none; cursor:pointer;">PT</button>
-            </div>
+    </div>
+
+    <!-- Language Selector -->
+    <div class="fixed top-6 right-6 z-[1002] group font-mono text-sm">
+        <button class="bg-[#111] border border-[#d4af37]/50 text-[#d4af37] px-3 py-1 rounded hover:bg-white/10 transition flex items-center gap-1">
+            <span id="current-lang-display">EN</span>
+            <span class="text-[10px]">▼</span>
+        </button>
+        <div class="hidden group-hover:block absolute right-0 mt-2 w-24 bg-black/90 border border-[#d4af37]/30 rounded overflow-hidden">
+            <button onclick="setLanguage('en')" class="w-full text-gray-400 hover:text-[#d4af37] py-2 hover:bg-white/5 transition block">EN</button>
+            <button onclick="setLanguage('de')" class="w-full text-gray-400 hover:text-[#d4af37] py-2 hover:bg-white/5 transition block">DE</button>
+            <button onclick="setLanguage('fr')" class="w-full text-gray-400 hover:text-[#d4af37] py-2 hover:bg-white/5 transition block">FR</button>
+            <button onclick="setLanguage('pt')" class="w-full text-gray-400 hover:text-[#d4af37] py-2 hover:bg-white/5 transition block">PT</button>
         </div>
+    </div>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu" class="fixed inset-0 bg-black/95 z-[90] opacity-0 pointer-events-none transition-opacity duration-300 flex flex-col items-center justify-center">
+        <nav class="flex flex-col gap-6 text-center">
+            <a href="pages/bantaba.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">Bantaba</a>
+            <a href="pages/about.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">About Us</a>
+            <a href="pages/portfolio_anime_reality.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">Portfolio</a>
+            <a href="pages/membership.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">Alliance</a>
+        </nav>
     </div>
 
     <!-- Flowee Director Intro -->
@@ -526,6 +546,16 @@
             
             <button class="auth-btn" data-i18n="btn_login" onclick="handleLogin()">CONFIRM IDENTITY</button>
             <div id="auth-status"></div>
+            
+            <div style="margin-top: 15px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                <hr style="flex: 1; border-color: rgba(212,175,55,0.2);">
+                <span style="color: #666; font-size: 0.7rem; letter-spacing: 1px;">OR</span>
+                <hr style="flex: 1; border-color: rgba(212,175,55,0.2);">
+            </div>
+            <button onclick="if(window.supabaseClient) window.supabaseClient.auth.signInWithOAuth({ provider: 'google' })" style="width: 100%; padding: 12px; background: white; color: #333; border: 1px solid #ccc; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" style="width: 18px; height: 18px;">
+                CONTINUE WITH GOOGLE
+            </button>
             
             <div style="margin-top: 20px; font-size: 0.7rem; color: #666; letter-spacing: 1px;">
                 LOST YOUR CIPHER? <a href="#" onclick="handlePasswordReset(); return false;" style="color: var(--haki-gold);">RESET SIGNAL</a>
@@ -706,6 +736,33 @@
         document.addEventListener('DOMContentLoaded', () => {
             const savedLang = localStorage.getItem('cqr_lang') || 'en';
             setLanguage(savedLang);
+        });
+    </script>
+    <script>
+        // Burger Menu Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const burgerBtn = document.getElementById('burger-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (burgerBtn && mobileMenu) {
+                const spans = burgerBtn.querySelectorAll('span');
+                let menuOpen = false;
+                burgerBtn.addEventListener('click', () => {
+                    menuOpen = !menuOpen;
+                    if(menuOpen) {
+                        mobileMenu.classList.remove('opacity-0', 'pointer-events-none');
+                        mobileMenu.classList.add('opacity-100', 'pointer-events-auto');
+                        spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+                        spans[1].style.opacity = '0';
+                        spans[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
+                    } else {
+                        mobileMenu.classList.remove('opacity-100', 'pointer-events-auto');
+                        mobileMenu.classList.add('opacity-0', 'pointer-events-none');
+                        spans[0].style.transform = 'none';
+                        spans[1].style.opacity = '1';
+                        spans[2].style.transform = 'none';
+                    }
+                });
+            }
         });
     </script>
 </body>

@@ -255,14 +255,6 @@ class BantabaApp {
         setTimeout(() => lb.classList.add('hidden'), 300);
     }
 
-    closeLightbox() {
-        const lb = document.getElementById('event-lightbox');
-        gsap.to(lb, { opacity: 0, duration: 0.3, onComplete: () => {
-            lb.classList.add('hidden');
-            lb.classList.remove('flex');
-        }});
-    }
-
     openInfoLightbox(eventId) {
         const lb = document.getElementById('info-lightbox');
         const title = document.getElementById('info-lb-title');
@@ -272,6 +264,14 @@ class BantabaApp {
         const desc = document.getElementById('info-lb-desc');
         const teaser = document.getElementById('info-lb-teaser');
         const ticketBtn = document.getElementById('info-lb-ticket-btn');
+        const programContainer = document.getElementById('info-lb-program');
+        const dArtistBtn = document.getElementById('info-lb-dartist-btn');
+        const moreBtn = document.getElementById('info-lb-more-btn');
+
+        // Reset toggles
+        if(programContainer) programContainer.classList.add('hidden');
+        if(dArtistBtn) dArtistBtn.style.display = 'none';
+        if(moreBtn) moreBtn.style.display = 'none';
 
         const lang = localStorage.getItem('cqr_lang') || 'de';
         const t = translations[lang] || translations['en'];
@@ -281,15 +281,25 @@ class BantabaApp {
             date.innerText = t['criz_date'] || "DATUM: 02. JUNI 2026";
             time.innerText = t['criz_time'] || "ZEIT: 18:00 - 23:00";
             loc.innerText = t['criz_location'] || "ORT: HEMPY ROOTS, Raum Köln";
-            desc.innerHTML = (t['criz_desc'] || "Die Entstehung der neuen Welle. Exklusive Preview des Albums in der Matrix.<br><br><b>Der Künstler:</b> C-RIZ bringt mystische Beats und spirituelle Tiefe zusammen.<br><a href='#' class='text-[#d4af37] hover:underline'>[+] Mehr über C-RIZ lesen</a>") + "<br><br>" + "Location: Hempy Roots ist ein sicherer Raum für Kreativität und Verbindung.";
-            teaser.innerHTML = t['criz_teaser'] || "<b>PROGRAMM:</b><br><span class='text-gray-300'>18:00</span> - Einlass & Ambient Flow<br><span class='text-gray-300'>19:00</span> - C-RIZ Live Session<br><span class='text-gray-300'>21:00</span> - Secret Guest Performance<br><span class='text-gray-300'>22:00</span> - Open Jam & Networking<br><br><i>TBA Catering.</i>";
+            desc.innerHTML = (t['criz_desc'] || "Die Entstehung der neuen Welle. Exklusive Preview des Albums in der Matrix.") + "<br><br>" + "Location: Hempy Roots ist ein sicherer Raum für Kreativität und Verbindung.";
+            teaser.innerHTML = t['criz_teaser'] || "DJ Set by C-RIZ, Secret Guests.";
+            
+            if(programContainer) {
+                programContainer.innerHTML = "<b>PROGRAMM:</b><br><span class='text-[#d4af37]'>18:00</span> - Einlass & Ambient Flow<br><span class='text-[#d4af37]'>19:00</span> - C-RIZ Live Session<br><span class='text-[#d4af37]'>21:00</span> - Secret Guest Performance<br><span class='text-[#d4af37]'>22:00</span> - Open Jam & Networking";
+            }
+            if(moreBtn) moreBtn.style.display = 'block';
+            if(dArtistBtn) dArtistBtn.style.display = 'block';
         } else if(eventId === 'circledflow') {
             title.innerText = t['cdf_title'] || "CIRCLE D FLOW : THE AWAKENING";
             date.innerText = t['cdf_date'] || "DATUM: 27. JUNI 2026";
-            time.innerText = t['cdf_time'] || "ZEIT: 16:00 - Open End";
+            time.innerText = t['cdf_time'] || "ZEIT: 16:00 - 02:00";
             loc.innerText = t['cdf_location'] || "ORT: SECRET GARDEN LX";
-            desc.innerHTML = (t['cdf_desc'] || "Tritt in die heiligen Hallen ein. Erlebe die Verschmelzung von Musik, Kunst und Spiritualität.<br><br><b>Die Vision:</b> Eine Feier des Lebens und der Kreation im Verborgenen.<br><a href='#' class='text-[#d4af37] hover:underline'>[+] Mehr über das Kollektiv erfahren</a>");
-            teaser.innerHTML = t['cdf_teaser'] || "<b>PROGRAMM:</b><br><span class='text-gray-300'>16:00</span> - Arrival & Meditation<br><span class='text-gray-300'>18:00</span> - Live Acts (Circle D Flow)<br><span class='text-gray-300'>22:00</span> - DJ Sets & Dance<br><br><i>Location Details werden nach Ticket-Kauf gesendet.</i>";
+            desc.innerHTML = t['cdf_desc'] || "Tritt in die heiligen Hallen ein. Erlebe das exklusive Line-up. Nimm die Schicksalsprüfung an.";
+            teaser.innerHTML = t['cdf_teaser'] || "Circle D Flow Live, DJ Sets & Dance.";
+            if(programContainer) {
+                programContainer.innerHTML = "<b>PROGRAMM:</b><br><span class='text-[#d4af37]'>16:00</span> - Arrival & Meditation<br><span class='text-[#d4af37]'>18:00</span> - Live Acts (Circle D Flow)<br><span class='text-[#d4af37]'>22:00</span> - DJ Sets & Dance<br><br><i>Location Details werden nach Ticket-Kauf gesendet.</i>";
+            }
+            if(moreBtn) moreBtn.style.display = 'block';
         }
         
         ticketBtn.onclick = () => {

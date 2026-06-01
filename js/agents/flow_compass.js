@@ -241,7 +241,7 @@ class FlowCompassAgent {
             { id: 'Connection', icon: 'hub', angle: 216, label: 'Connection', color: '#ec4899', options: [{l:'RESONANCE BAR', u: prefix + 'pages/coop.html'}, {l:'THE SANCTUARY', u: prefix + 'pages/chat.html'}, {l:'FLOW FINDER', u: prefix + 'pages/partner-scanner.html'}] },
             { id: 'Quest', icon: 'explore', angle: 288, label: 'Quest Log', color: '#94a3b8', options: [
                 {l:'QUEST BOARD', u: prefix + 'pages/quest_board.html'}, 
-                {l:'MAP', u: prefix + 'master_dashboard.html'},
+                {l:'MAP', u: prefix + '/pages/dashboard.html'},
                 {l:'CALENDAR', u: prefix + 'calendar.html'}
             ] }
         ];
@@ -285,7 +285,7 @@ class FlowCompassAgent {
 
 
         if(this[`${planetId.toLowerCase()}Clicks`] >= 3) {
-            if(['Vision','Core','Quest'].includes(planetId)) window.location.href = 'master_dashboard.html';
+            if(['Vision','Core','Quest'].includes(planetId)) window.location.href = '/pages/dashboard.html';
             if(planetId === 'Sound') this.showPasswordGate();
             if(planetId === 'Taste') window.location.href = 'kitchen-dashboard.html';
             if(planetId === 'Calendar') window.location.href = 'calendar.html';

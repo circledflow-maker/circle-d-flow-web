@@ -159,7 +159,7 @@ class FloweeAgent {
             { id: 4, page: "african-queen-kitchen.html", text: "Fuel for the Soul. Check the Jamtruck Progress and simulate an order.", target: "#jamtruck-slider", check: () => localStorage.getItem('cdf_initiation_kitchen_visited') },
             { id: 5, page: "dashboard.html", text: "The Mission Board. Open your Quests to see your path.", target: "#quest-log-btn", check: () => localStorage.getItem('cdf_initiation_quests_viewed') },
             { id: 6, page: "dashboard.html", text: "Psst... This is not for everyone. 3 clicks on the Vision-Icon... only for the Architect.", target: "#planet-Vision", check: () => localStorage.getItem('cdf_initiation_vision_found') },
-            { id: 7, page: "master_dashboard.html", text: "The Captain's Eye. Toggle the 'Flow Sync' lever to master the system.", target: "#flow-sync-toggle", check: () => localStorage.getItem('cdf_artifact_genesis') }
+            { id: 7, page: "/pages/dashboard.html", text: "The Captain's Eye. Toggle the 'Flow Sync' lever to master the system.", target: "#flow-sync-toggle", check: () => localStorage.getItem('cdf_artifact_genesis') }
         ];
 
         // --- COMMUNITY CONNECTION MATRIX ---
@@ -640,9 +640,10 @@ class FloweeAgent {
         // pointer-events-auto on children re-enables clicking Flowee
         // FIX: Increased bottom margin to avoid overlapping with Footer Banners (was bottom-4)
         // FIX: Z-Index 10000 to beat Overlay
+        const isMobile = window.innerWidth < 768;
         container.style.position = 'fixed';
-        container.style.bottom = '100px';
-        container.style.right = '40px';
+        container.style.bottom = isMobile ? '120px' : '40px';
+        container.style.right = isMobile ? '20px' : '40px';
         container.style.zIndex = '999999';
         container.style.display = 'flex';
         container.style.flexDirection = 'column';
@@ -659,10 +660,10 @@ class FloweeAgent {
             const img = document.createElement('img');
             img.id = 'flowee-visual';
             img.src = `${pathPrefix}flowee_pirate_phoenix.png`;
-            img.style.width = '60px';
-            img.style.height = '60px';
-            img.style.maxWidth = '60px';
-            img.style.maxHeight = '60px';
+            img.style.width = isMobile ? '80px' : '60px';
+            img.style.height = isMobile ? '80px' : '60px';
+            img.style.maxWidth = '100px';
+            img.style.maxHeight = '100px';
             img.style.objectFit = 'contain';
             img.style.cursor = 'pointer';
             img.style.pointerEvents = 'auto';
@@ -695,7 +696,7 @@ class FloweeAgent {
             bubble.style.transition = 'all 0.3s';
             bubble.style.transform = 'scale(0.9)';
             bubble.style.transformOrigin = 'bottom right';
-            bubble.innerHTML = `<p>Hallo! Ich bin Flowee.</p><div style="position:absolute; bottom:-6px; right:0; width:16px; height:16px; background:#fff; transform:rotate(45deg);"></div>`;
+            bubble.innerHTML = `<p>Hallo! Ich bin Flowee, dein Navigator. Wie darf ich dir heute assistieren?</p><div style="position:absolute; bottom:-6px; right:0; width:16px; height:16px; background:#fff; transform:rotate(45deg);"></div>`;
 
             this.container.appendChild(bubble);
             this.container.appendChild(img);
@@ -748,7 +749,7 @@ class FloweeAgent {
             <!-- Messages Area -->
             <div id="flowee-messages" style="flex: 1; overflow-y: auto; padding: 4px; display: flex; flex-direction: column; gap: 12px; font-size: 0.8rem; color: #eee; scroll-behavior: smooth;">
                 <div style="background: rgba(212,175,55,0.1); border-left: 3px solid var(--haki-gold); padding: 10px; border-radius: 4px; line-height: 1.4;">
-                    Hi! Ich bin Flowee. Wie kann ich dir heute assistieren?
+                    Hallo! Ich bin Flowee, dein Navigator. Wie darf ich dir heute assistieren?
                 </div>
             </div>
 

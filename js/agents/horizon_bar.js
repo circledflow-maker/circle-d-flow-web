@@ -59,7 +59,7 @@ class HorizonBarAgent {
 
             <!-- Right: Fast Travel Links (Replaces Icons) -->
             <div class="flex items-center gap-2 flex-shrink-0 z-50">
-                <a href="master_dashboard.html" class="text-white/50 hover:text-amber-500 transition-colors text-[10px] uppercase font-mono tracking-widest flex items-center gap-1.5 border border-white/10 bg-black/40 px-3 py-1.5 rounded-full hover:border-amber-500/50 hidden md:flex">
+                <a href="/pages/dashboard.html" class="text-white/50 hover:text-amber-500 transition-colors text-[10px] uppercase font-mono tracking-widest flex items-center gap-1.5 border border-white/10 bg-black/40 px-3 py-1.5 rounded-full hover:border-amber-500/50 hidden md:flex">
                     <span class="material-symbols-outlined text-[14px]">grid_view</span> Dashboard
                 </a>
                 <a href="coop.html" class="text-white/50 hover:text-amber-500 transition-colors text-[10px] uppercase font-mono tracking-widest flex items-center gap-1.5 border border-white/10 bg-black/40 px-3 py-1.5 rounded-full hover:border-amber-500/50">

@@ -86,7 +86,7 @@ class GatekeeperAgent {
     enterCore() {
         // Visual transition could go here
         const isPages = window.location.pathname.includes('/pages/');
-        window.location.href = isPages ? '../master_dashboard.html' : 'master_dashboard.html';
+        window.location.href = isPages ? '/pages/dashboard.html' : '/pages/dashboard.html';
     }
 
     openLoginModal() {

@@ -268,7 +268,7 @@ const Genesis = {
         // 2. Redirect to Dashboard (The Standard Hub)
         setTimeout(() => {
             console.log("🚀 [Genesis] Jumping to Dashboard.");
-            window.location.href = 'master_dashboard.html';
+            window.location.href = '/pages/dashboard.html';
         }, 2000); 
     }
 };
