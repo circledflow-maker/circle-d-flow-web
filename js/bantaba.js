@@ -15,9 +15,12 @@ class BantabaApp {
             }
         }, 1500);
 
-        // Hash routing for Checkout (Magic Link Return)
+        // Hash routing for Checkout (Magic Link Return) and Events tab
         setTimeout(() => {
-            if (window.location.hash.includes('#checkout')) {
+            if (window.location.hash.includes('#events') || window.location.hash.includes('#board')) {
+                this.turnPage(2);
+                this.switchTab('events');
+            } else if (window.location.hash.includes('#checkout')) {
                 // If returning from Auth to checkout, grab the event ID and jump to dice page
                 const savedEvent = localStorage.getItem('last_event_id');
                 if (savedEvent) {
