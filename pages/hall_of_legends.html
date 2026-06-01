@@ -270,6 +270,13 @@
                  if(window.userProfile && window.userProfile.avatar_url) {
                      document.getElementById('my-avatar').src = window.userProfile.avatar_url;
                  }
+                 
+                 // Fallback if loadBrotherhoodStatus is slow
+                 if(window.userProfile) {
+                     document.getElementById('my-codename').innerText = window.userProfile.username || 'UNKNOWN';
+                     document.getElementById('my-codename').setAttribute('data-text', window.userProfile.username || 'UNKNOWN');
+                     document.getElementById('my-exp').innerText = window.userProfile.exp || 0;
+                 }
              } else {
                  document.getElementById('leaderboard-list').innerHTML = "<div class='text-red-500 text-center'>OFFLINE MODE</div>";
              }
@@ -286,11 +293,27 @@
             // 1. Prüfe das Profil des Agenten
             const { data: profile } = await window.supabaseClient
                 .from('profiles')
-                .select('guild_id, username, level')
+                .select('guild_id, username, level, exp, karma')
                 .eq('id', user.id)
                 .single();
 
             if (!profile) return;
+            
+            // Update Dossier UI
+            document.getElementById('my-codename').innerText = profile.username || 'UNKNOWN';
+            document.getElementById('my-codename').setAttribute('data-text', profile.username || 'UNKNOWN');
+            document.getElementById('my-exp').innerText = profile.exp || 0;
+            
+            // Calc Rank Progress (Mock logic)
+            const levelReq = profile.level * 1000;
+            const progress = Math.min(100, Math.floor(((profile.exp || 0) / levelReq) * 100));
+            document.getElementById('rank-progress-bar').style.width = progress + '%';
+            document.getElementById('my-sync').innerText = progress + '%';
+            
+            let rankName = 'INITIATE';
+            if(profile.level >= 2) rankName = 'OPERATIVE';
+            if(profile.level >= 4) rankName = 'WARLORD';
+            document.getElementById('my-rank-label').innerText = rankName;
 
             // Nur Agenten ab Level 4 dürfen Crews gründen!
             if (profile.level < 4 && !profile.guild_id) {
@@ -472,6 +495,8 @@
         }
 
         async function loadPendingInvites(myUsername) {
+            if(!myUsername) return; // Prevent 400 Bad Request
+            
             const { data: invites } = await window.supabaseClient
                 .from('guild_invites')
                 .select('id, guild_id, guilds(name, tag)')

@@ -295,12 +295,32 @@
         function openFullMedia(srcUrl, previewUrl, fileType, event) {
             if (event) event.stopPropagation();
             
-            const fileIdMatch = previewUrl.match(/\/d\/([a-zA-Z0-9_-]+)\//);
-            const fileId = fileIdMatch ? fileIdMatch[1] : '';
-            const directLink = fileId ? `https://drive.google.com/file/d/${fileId}/view` : previewUrl;
+            const overlay = document.getElementById('full-image-overlay');
+            const container = document.getElementById('full-media-container');
             
-            // Redirect to Google Drive directly to avoid iframe blocking
-            window.open(directLink, '_blank');
+            // Check if it's a video based on type or fallback to string matching
+            const isVideo = fileType.includes('video') || fileType === 'video';
+            
+            if (isVideo) {
+                // If it's a video, attempt to use HTML5 video with the export link
+                // We use pointer-events-auto so the controls can be clicked
+                container.innerHTML = `
+                    <video controls autoplay class="max-w-full max-h-full rounded shadow-2xl pointer-events-auto" style="max-height: 85vh;">
+                        <source src="${srcUrl}" type="${fileType !== 'unknown' ? fileType : 'video/mp4'}">
+                        Your browser does not support the video tag.
+                        <a href="${srcUrl}" class="text-electric block mt-4" target="_blank">Download Video</a>
+                    </video>
+                `;
+            } else {
+                // Image
+                container.innerHTML = `
+                    <img src="${srcUrl}" class="max-w-full max-h-full object-contain rounded shadow-2xl pointer-events-auto" style="max-height: 85vh;" alt="Media View">
+                `;
+            }
+            
+            overlay.classList.remove('hidden');
+            overlay.classList.add('flex');
+            document.body.style.overflow = 'hidden';
         }
 
         function closeFullImage() {

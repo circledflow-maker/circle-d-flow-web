@@ -236,9 +236,12 @@
                 document.getElementById('loading-panel').classList.add('hidden');
                 document.getElementById('success-panel').classList.remove('hidden');
                 
-                // 5. Render QR Code
+                // 5. Render Custom QR Code
                 const qrContainer = document.getElementById('qrcode');
-                new QRCode(qrContainer, {
+                qrContainer.innerHTML = '<p class="text-electric animate-pulse">Forging Visual Anchor...</p>';
+                
+                const tempDiv = document.createElement('div');
+                new QRCode(tempDiv, {
                     text: scanUrl,
                     width: 256,
                     height: 256,
@@ -246,6 +249,61 @@
                     colorLight : "#ffffff",
                     correctLevel : QRCode.CorrectLevel.H
                 });
+                
+                setTimeout(() => {
+                    const rawCanvas = tempDiv.querySelector('canvas');
+                    if(rawCanvas) {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = 640;
+                        canvas.height = 360;
+                        const ctx = canvas.getContext('2d');
+                        
+                        // Dark Background
+                        ctx.fillStyle = '#0a0a0a';
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+                        
+                        // Border
+                        ctx.strokeStyle = '#d4af37';
+                        ctx.lineWidth = 4;
+                        ctx.strokeRect(2, 2, canvas.width - 4, canvas.height - 4);
+                        
+                        // Text Title
+                        ctx.fillStyle = '#d4af37';
+                        ctx.font = 'bold 32px "Cinzel", serif, Arial';
+                        ctx.textAlign = 'center';
+                        ctx.fillText('FLOW AREA', 320, 50);
+                        
+                        // Subtitle
+                        ctx.fillStyle = '#ffffff';
+                        ctx.font = '16px "Space Mono", monospace, Arial';
+                        ctx.fillText('Scan to enter the Zone', 320, 75);
+                        
+                        // Draw QR Code on Right
+                        ctx.drawImage(rawCanvas, 350, 90, 240, 240);
+                        
+                        // Draw Logo on Left
+                        const logo = new Image();
+                        logo.crossOrigin = "Anonymous";
+                        logo.onload = () => {
+                            ctx.drawImage(logo, 50, 90, 240, 240);
+                            finishRender();
+                        };
+                        logo.onerror = () => finishRender(); // Fallback if no logo
+                        logo.src = '../assets/images/logo.png';
+                        
+                        function finishRender() {
+                            const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+                            window.generatedQRData = dataUrl;
+                            
+                            qrContainer.innerHTML = '';
+                            const img = document.createElement('img');
+                            img.src = dataUrl;
+                            img.className = 'w-full h-auto rounded';
+                            qrContainer.appendChild(img);
+                            qrContainer.classList.remove('p-4', 'bg-white'); // Remove old styling
+                        }
+                    }
+                }, 200);
                 
             } catch(err) {
                 console.error(err);
@@ -257,21 +315,13 @@
         });
         
         function downloadQR() {
-            const canvas = document.querySelector('#qrcode canvas');
-            if(canvas) {
+            if(window.generatedQRData) {
                 const link = document.createElement('a');
-                link.download = 'FlowArea_QRCode.jpg';
-                link.href = canvas.toDataURL('image/jpeg', 1.0);
+                link.download = 'CircleDFlow_Area.jpg';
+                link.href = window.generatedQRData;
                 link.click();
             } else {
-                // If it rendered as an image instead of canvas
-                const img = document.querySelector('#qrcode img');
-                if(img && img.src) {
-                    const link = document.createElement('a');
-                    link.download = 'FlowArea_QRCode.jpg';
-                    link.href = img.src;
-                    link.click();
-                }
+                alert('QR Code not ready yet.');
             }
         }
 

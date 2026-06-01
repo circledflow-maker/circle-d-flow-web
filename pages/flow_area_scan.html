@@ -57,69 +57,66 @@
 </head>
 <body class="min-h-screen bg-[url('../assets/textures/noise.png')] flex items-center justify-center relative">
     
-    <!-- Audio Element (OutbreakTunes) -->
-    <!-- Assuming we have a loop, otherwise using a placeholder -->
-    <audio id="flow-audio" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+    <!-- Audio Element -->
+    <audio id="flow-audio" loop src="https://cdn.pixabay.com/download/audio/2022/05/16/audio_0574167df3.mp3?filename=african-woodwind-110051.mp3"></audio>
 
     <div class="pulse-ring"></div>
     <div class="pulse-ring" style="animation-delay: 2s;"></div>
 
-    <div class="glass-panel p-10 rounded-2xl shadow-2xl relative z-10 max-w-lg w-full text-center border-t-4 border-electric">
+    <div class="glass-panel p-10 rounded-2xl shadow-2xl relative z-10 max-w-lg w-full text-center border-t-4 border-electric flex flex-col max-h-[90vh]">
         
-        <div id="init-view">
+        <div id="init-view" class="overflow-y-auto">
             <h1 class="text-3xl font-cinzel font-bold text-electric mb-4 uppercase text-glow">Entering the Zone</h1>
             <p class="text-sm text-white/70 mb-6 leading-relaxed">
                 You have arrived. To anchor your presence, you must remain in the Wu-Wei state for 25 minutes.<br><br>
-                <span class="text-electric font-bold">Rule:</span> Turn your phone screen down or keep this tab open. If you leave or switch apps, the Flow breaks.
+                <span class="text-electric font-bold">Rule:</span> Your device's screen can be turned off or you can switch apps. Just remain at this physical location.
             </p>
             <button id="start-flow-btn" class="px-8 py-3 bg-gradient-to-r from-electric to-yellow-600 text-black font-cinzel font-bold uppercase tracking-widest rounded shadow-[0_0_20px_rgba(212,175,55,0.4)] hover:scale-105 transition-transform">
                 Begin Flow
             </button>
         </div>
 
-        <div id="timer-view" class="hidden">
-            <h2 id="area-name-display" class="text-xl font-cinzel text-electric/80 mb-2 uppercase">Unknown Location</h2>
-            <p class="text-xs text-white/40 mb-8 uppercase tracking-widest">Resonance Audio Engaged</p>
+        <div id="timer-view" class="hidden flex-col h-full overflow-hidden">
+            <div class="flex-shrink-0">
+                <h2 id="area-name-display" class="text-xl font-cinzel text-electric/80 mb-1 uppercase">Unknown Location</h2>
+                <p id="area-creator-display" class="text-xs text-white/50 mb-2 font-mono">Forged by: Unknown</p>
+                <p class="text-xs text-white/40 mb-4 uppercase tracking-widest">Resonance Audio Engaged</p>
+                
+                <div id="timer-display" class="text-electric font-bold text-glow mb-4">25:00</div>
+                <p class="text-sm text-white/60 mb-6">Enjoy the African Jazz. The timer continues in the background.</p>
+            </div>
             
-            <div id="timer-display" class="text-electric font-bold text-glow mb-4">25:00</div>
-            
-            <p class="text-sm text-white/60 mb-2">Do not close or switch away.</p>
-            
-            <!-- Adinkra Symbol Placeholder -->
-            <div class="mt-8 opacity-50 flex justify-center">
-                <svg width="60" height="60" viewBox="0 0 100 100" fill="none" stroke="#d4af37" stroke-width="2">
-                    <circle cx="50" cy="50" r="40" />
-                    <path d="M 50 10 L 50 90 M 10 50 L 90 50" />
-                    <circle cx="50" cy="50" r="20" />
-                </svg>
+            <!-- Comments Section -->
+            <div class="flex-grow overflow-y-auto bg-black/50 border border-[#333] rounded p-4 text-left mb-4 mt-2">
+                <h3 class="text-electric text-sm font-bold uppercase tracking-widest mb-3 border-b border-[#333] pb-1">Area Chronicles</h3>
+                <div id="comments-list" class="space-y-3 mb-4 max-h-[150px] overflow-y-auto">
+                    <p class="text-xs text-white/40 italic">Loading chronicles...</p>
+                </div>
+                <div class="flex gap-2">
+                    <input type="text" id="comment-input" class="flex-grow bg-black border border-[#333] p-2 text-xs text-white rounded" placeholder="Leave a mark...">
+                    <button onclick="postComment()" class="px-3 bg-electric text-black font-bold text-xs rounded">POST</button>
+                </div>
             </div>
         </div>
 
-        <div id="success-view" class="hidden">
+        <div id="success-view" class="hidden overflow-y-auto">
             <h2 class="text-3xl font-cinzel font-bold text-green-500 mb-4 uppercase text-glow">Flow Achieved</h2>
-            <p class="text-sm text-white/80 mb-6">You have mastered the Zone. +100 XP and Karma have been awarded to you and the creator.</p>
+            <p class="text-sm text-white/80 mb-6">You have mastered the Zone.<br><br>Flowee awaits you at the Dashboard to grant your <b>100 XP</b>, <b>Karma</b>, and your first <b>Museum Emblem</b>!</p>
             
             <a href="dashboard.html" class="inline-block px-8 py-3 border border-electric text-electric hover:bg-electric hover:text-black font-cinzel font-bold uppercase tracking-widest rounded transition-colors">
                 Return to Matrix
             </a>
-        </div>
-        
-        <div id="fail-view" class="hidden">
-            <h2 class="text-3xl font-cinzel font-bold text-red-500 mb-4 uppercase">Flow Broken</h2>
-            <p class="text-sm text-white/80 mb-6">You lost focus. The connection to the Zone has been severed.</p>
-            
-            <button onclick="location.reload()" class="px-8 py-3 border border-electric text-electric hover:bg-electric hover:text-black font-cinzel font-bold uppercase tracking-widest rounded transition-colors">
-                Try Again
-            </button>
         </div>
     </div>
 
     <script>
         const TOTAL_SECONDS = 25 * 60; // 25 minutes
         let remainingSeconds = TOTAL_SECONDS;
+        let endTime = null;
         let timerInterval = null;
         let areaId = new URLSearchParams(window.location.search).get('id');
         let areaData = null;
+        let sessionUser = null;
         
         document.getElementById('start-flow-btn').addEventListener('click', async () => {
             if (!window.supabaseClient) {
@@ -133,6 +130,7 @@
                 alert("You must be logged in to sync with the Flow Area.");
                 return;
             }
+            sessionUser = session.data.session.user;
             
             if(!areaId) {
                 alert("No Flow Area ID detected in the URL.");
@@ -144,7 +142,8 @@
                 const { data, error } = await window.supabaseClient.from('flow_areas').select('*').eq('id', areaId).single();
                 if(error) throw error;
                 areaData = data;
-                document.getElementById('area-name-display').innerText = areaData.name;
+                document.getElementById('area-name-display').innerText = areaData.name || "Flow Area";
+                document.getElementById('area-creator-display').innerText = `Forged by: ${areaData.creator_name || "Unknown Voyager"}`;
             } catch(e) {
                 console.error(e);
                 alert("Flow Area not found.");
@@ -156,24 +155,21 @@
             audio.volume = 0.5;
             audio.play().catch(e => console.log("Audio autoplay blocked", e));
             
+            // Load Comments
+            loadComments();
+            
             // Switch UI
             document.getElementById('init-view').classList.add('hidden');
             document.getElementById('timer-view').classList.remove('hidden');
             
             startTimer();
-            
-            // Request WakeLock to keep screen on if possible
-            if ('wakeLock' in navigator) {
-                try {
-                    await navigator.wakeLock.request('screen');
-                } catch (err) {}
-            }
         });
         
         function startTimer() {
+            endTime = Date.now() + (TOTAL_SECONDS * 1000);
             updateDisplay();
             timerInterval = setInterval(() => {
-                remainingSeconds--;
+                remainingSeconds = Math.max(0, Math.floor((endTime - Date.now()) / 1000));
                 updateDisplay();
                 
                 if(remainingSeconds <= 0) {
@@ -189,18 +185,54 @@
                 `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
         }
         
-        // Wu-Wei Visibility Rule
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden && timerInterval !== null) {
-                // Flow Broken!
-                clearInterval(timerInterval);
-                timerInterval = null;
-                document.getElementById('flow-audio').pause();
+        // Removed visibilitychange logic entirely to allow background timing
+        
+        async function loadComments() {
+            try {
+                const { data, error } = await window.supabaseClient.from('flow_comments').select('*').eq('area_id', areaId).order('created_at', {ascending: false});
+                const list = document.getElementById('comments-list');
+                if(error) {
+                    list.innerHTML = `<p class="text-xs text-white/40 italic">Unable to load chronicles.</p>`;
+                    return;
+                }
+                if(data.length === 0) {
+                    list.innerHTML = `<p class="text-xs text-white/40 italic">No chronicles yet. Be the first.</p>`;
+                    return;
+                }
                 
-                document.getElementById('timer-view').classList.add('hidden');
-                document.getElementById('fail-view').classList.remove('hidden');
+                list.innerHTML = data.map(c => `
+                    <div class="border-b border-[#222] pb-2">
+                        <span class="text-electric font-bold text-xs">${c.user_name}</span>
+                        <p class="text-white/80 text-xs mt-1">${c.comment}</p>
+                    </div>
+                `).join('');
+            } catch(e) { console.error(e); }
+        }
+        
+        async function postComment() {
+            const input = document.getElementById('comment-input');
+            const text = input.value.trim();
+            if(!text) return;
+            
+            input.value = 'Posting...';
+            input.disabled = true;
+            
+            try {
+                const userName = localStorage.getItem('userName') || "Voyager";
+                await window.supabaseClient.from('flow_comments').insert([{
+                    area_id: areaId,
+                    user_name: userName,
+                    comment: text
+                }]);
+                input.value = '';
+                loadComments();
+            } catch(e) {
+                console.error("Failed to post", e);
+                alert("Failed to post comment.");
+            } finally {
+                input.disabled = false;
             }
-        });
+        }
         
         async function completeFlow() {
             clearInterval(timerInterval);
@@ -208,19 +240,26 @@
             document.getElementById('timer-view').classList.add('hidden');
             document.getElementById('success-view').classList.remove('hidden');
             
-            // Grant Rewards
+            // Set flag for Flowee Dashboard logic
+            localStorage.setItem('flowee_reward_pending', '100');
+            localStorage.setItem('flowee_reward_emblem', 'true');
+            
+            // Grant Rewards to Creator and Self
             try {
                 // 1. Increment Area Scan Count
                 await window.supabaseClient.rpc('increment_scan_count', { area_id: areaId });
-                // Note: If RPC doesn't exist, we fallback to frontend update (not secure, but works for prototype)
-                if(!window.Gamification) {
-                    await window.supabaseClient.from('flow_areas').update({ scan_count: (areaData.scan_count || 0) + 1 }).eq('id', areaId);
-                }
+                // Note: Fallback frontend update
+                await window.supabaseClient.from('flow_areas').update({ scan_count: (areaData.scan_count || 0) + 1 }).eq('id', areaId);
                 
-                // 2. Grant Local Gamification Points
-                if(window.Gamification) {
-                    window.Gamification.addXP(100, "Flow Area Meditation");
-                    window.Gamification.addKarma(50, "Flow Area Synchronization");
+                // Add points to self directly to profile (so it's recorded)
+                if(sessionUser) {
+                    const { data: profile } = await window.supabaseClient.from('profiles').select('exp, karma').eq('id', sessionUser.id).single();
+                    if(profile) {
+                        await window.supabaseClient.from('profiles').update({ 
+                            exp: profile.exp + 100,
+                            karma: profile.karma + 10
+                        }).eq('id', sessionUser.id);
+                    }
                 }
             } catch(e) {
                 console.error("Reward error", e);
