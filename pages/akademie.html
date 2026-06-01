@@ -215,7 +215,59 @@
             document.body.style.overflow = '';
         }
 
-        function openFullMedia(srcUrl, previewUrl, event) {
+        function renderArtist(artistId) {
+            const artist = AkademieData.find(a => a.id === artistId);
+            const contentGrid = document.getElementById('artist-images-grid');
+            if (!artist) return;
+            
+            // Generate grid
+            let imagesHTML = '';
+            
+            if (!artist.files || artist.files.length === 0) {
+                imagesHTML = '<div class="col-span-full text-center text-gray-400 py-12"><p class="font-mono">Kein Content vorhanden.</p></div>';
+            } else {
+                // Determine whether files is an array of strings (old) or array of objects (new)
+                artist.files.forEach(fileItem => {
+                    let fileId = '';
+                    let fileType = 'unknown';
+                    
+                    if (typeof fileItem === 'string') {
+                        fileId = fileItem;
+                    } else {
+                        fileId = fileItem.id;
+                        fileType = fileItem.type;
+                    }
+                    
+                    const srcUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=w600-h600`;
+                    const previewUrl = `https://drive.google.com/file/d/${fileId}/preview`;
+                    
+                    // Add video play icon if type is video
+                    const playIconHTML = fileType === 'video' ? `
+                        <div class="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/50 transition-colors">
+                            <span class="material-symbols-outlined text-white text-5xl opacity-80 group-hover:opacity-100 transition-opacity drop-shadow-lg">play_circle</span>
+                        </div>
+                    ` : '';
+                    
+                    imagesHTML += `<div class="grid-item group relative" onclick="openFullMedia('${srcUrl}', '${previewUrl}', '${fileType}', event)">
+                        <img src="${srcUrl}" 
+                             alt="Portfolio item" 
+                             class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                             loading="lazy"
+                             onerror="this.onerror=null; this.src='../Assets/images/logo.png'; this.classList.add('p-8', 'opacity-20');">
+                        ${playIconHTML}
+                    </div>`;
+                });
+            }
+            
+            contentGrid.innerHTML = imagesHTML;
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (mobileMenu) {
+                mobileMenu.classList.add('hidden');
+            }
+        }
+
+        // --- FULL SCREEN OVERLAY ---
+        function openFullMedia(srcUrl, previewUrl, fileType, event) {
             event.stopPropagation(); // prevent triggering parent clicks
             const overlay = document.getElementById('full-image-overlay');
             const container = document.getElementById('full-media-container');
@@ -225,16 +277,25 @@
             const fileId = fileIdMatch ? fileIdMatch[1] : '';
             const directLink = fileId ? `https://drive.google.com/file/d/${fileId}/view` : previewUrl;
             
-            // For Google drive, use iframe preview to handle both images and videos natively
-            container.innerHTML = `
-                <div class="relative w-full h-[85vh] flex flex-col items-center">
-                    <iframe src="${previewUrl}" class="w-full flex-grow border-0 rounded-lg pointer-events-auto bg-black" allowfullscreen></iframe>
-                    <a href="${directLink}" target="_blank" class="mt-4 px-6 py-2 bg-[#d4af37] text-black font-semibold rounded-full hover:bg-white transition pointer-events-auto flex items-center gap-2">
-                        <span class="material-symbols-outlined text-xl">open_in_new</span>
-                        Auf Google Drive ansehen (falls Preview nicht lädt)
-                    </a>
-                </div>
-            `;
+            if (fileType === 'image') {
+                // For images, load the full size thumbnail, avoiding iframe completely!
+                const fullImageUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=w2000-h2000`;
+                container.innerHTML = `
+                    <img src="${fullImageUrl}" class="max-w-full max-h-[85vh] object-contain rounded-lg pointer-events-auto" alt="Full Image"
+                         onerror="this.onerror=null; this.src='../Assets/images/logo.png';">
+                `;
+            } else {
+                // For videos (or unknown), use iframe preview
+                container.innerHTML = `
+                    <div class="relative w-full h-[85vh] flex flex-col items-center">
+                        <iframe src="${previewUrl}" class="w-full flex-grow border-0 rounded-lg pointer-events-auto bg-black" allowfullscreen></iframe>
+                        <a href="${directLink}" target="_blank" class="mt-4 px-6 py-2 bg-[#d4af37] text-black font-semibold rounded-full hover:bg-white transition pointer-events-auto flex items-center gap-2">
+                            <span class="material-symbols-outlined text-xl">open_in_new</span>
+                            Auf Google Drive ansehen (falls Preview nicht lädt)
+                        </a>
+                    </div>
+                `;
+            }
             
             overlay.classList.remove('hidden');
             overlay.classList.add('flex');
