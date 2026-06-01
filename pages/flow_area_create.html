@@ -25,7 +25,7 @@
     </script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../js/supabase_client.js"></script>
+    <script src="../js/agents/supabase_client.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
     <style>
@@ -128,13 +128,17 @@
     <script>
         let qrDataURL = "";
         
-        document.getElementById('flow-area-form').addEventListener('submit', async (e) => {
+        document.getElementById('flow-area-form').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            // Check auth
-            const session = await cdf_supabase.auth.getSession();
-            if(!session.data.session) {
-                alert("You must be logged in to create a Flow Area.");
+            if(!window.supabaseClient) {
+                alert("Database connection not ready. Please wait.");
+                return;
+            }
+            
+            const sessionData = await window.supabaseClient.auth.getSession();
+            if(!sessionData.data.session) {
+                alert("You must be logged in to Forge an area.");
                 return;
             }
             
@@ -149,22 +153,37 @@
                 const address = document.getElementById('area-address').value;
                 const imageUrl = document.getElementById('area-image-base64').value; // Base64 string
                 
-                // Get current GPS location
                 let lat = 38.7223; // Lisbon default
                 let lng = -9.1393;
                 
                 try {
-                    const pos = await new Promise((resolve, reject) => {
-                        navigator.geolocation.getCurrentPosition(resolve, reject, {timeout: 5000});
-                    });
-                    lat = pos.coords.latitude;
-                    lng = pos.coords.longitude;
-                } catch(geoErr) {
-                    console.warn("Could not get GPS, using default Lisbon coords", geoErr);
+                    if (address && address.trim().length > 3) {
+                        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`);
+                        const locData = await res.json();
+                        if(locData && locData.length > 0) {
+                            lat = parseFloat(locData[0].lat);
+                            lng = parseFloat(locData[0].lon);
+                        } else {
+                            throw new Error("Address not found, falling back to GPS");
+                        }
+                    } else {
+                        throw new Error("No address provided, using GPS");
+                    }
+                } catch(addrErr) {
+                    console.warn(addrErr.message);
+                    try {
+                        const pos = await new Promise((resolve, reject) => {
+                            navigator.geolocation.getCurrentPosition(resolve, reject, {timeout: 5000});
+                        });
+                        lat = pos.coords.latitude;
+                        lng = pos.coords.longitude;
+                    } catch(geoErr) {
+                        console.warn("Could not get GPS, using default Lisbon coords", geoErr);
+                    }
                 }
                 
                 // 1. Insert into Supabase
-                const { data, error } = await cdf_supabase
+                const { data, error } = await window.supabaseClient
                     .from('flow_areas')
                     .insert([
                         { 
@@ -173,7 +192,7 @@
                             image_url: imageUrl,
                             lat: lat,
                             lng: lng,
-                            creator_id: session.data.session.user.id,
+                            creator_id: sessionData.data.session.user.id,
                             creator_name: localStorage.getItem('userName') || "Unknown Voyager"
                         }
                     ])
@@ -189,7 +208,7 @@
                 const scanUrl = `${baseUrl}/pages/flow_area_scan.html?id=${areaId}`;
                 
                 // Update Supabase with qr_code_data
-                await cdf_supabase.from('flow_areas').update({ qr_code_data: scanUrl }).eq('id', areaId);
+                await window.supabaseClient.from('flow_areas').update({ qr_code_data: scanUrl }).eq('id', areaId);
                 
                 // 3. Show Loading Panel and simulate time
                 document.getElementById('creation-panel').classList.add('hidden');

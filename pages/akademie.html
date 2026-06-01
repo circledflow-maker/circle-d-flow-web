@@ -206,7 +206,7 @@
             if (artist.files && artist.files.length > 0) {
                 // If we successfully scraped their files
                 artist.files.forEach((fileId, i) => {
-                    const srcUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=w600-h600`;
+                    const srcUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
                     const previewUrl = `https://drive.google.com/file/d/${fileId}/preview`;
                     
                     // We load as image first. If it's a video, user clicks it and the full view can use iframe preview
@@ -261,7 +261,7 @@
                         fileType = fileItem.type;
                     }
                     
-                    const srcUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=w600-h600`;
+                    const srcUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
                     const previewUrl = `https://drive.google.com/file/d/${fileId}/preview`;
                     
                     // Add video play icon if type is video
@@ -291,37 +291,14 @@
 
         // --- FULL SCREEN OVERLAY ---
         function openFullMedia(srcUrl, previewUrl, fileType, event) {
-            if (event) event.stopPropagation(); // prevent triggering parent clicks
-            const overlay = document.getElementById('full-image-overlay');
-            const container = document.getElementById('full-media-container');
+            if (event) event.stopPropagation();
             
-            // Extract file ID to create a direct link
             const fileIdMatch = previewUrl.match(/\/d\/([a-zA-Z0-9_-]+)\//);
             const fileId = fileIdMatch ? fileIdMatch[1] : '';
             const directLink = fileId ? `https://drive.google.com/file/d/${fileId}/view` : previewUrl;
             
-            if (fileType === 'image') {
-                // For images, load the full size thumbnail, avoiding iframe completely!
-                const fullImageUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=w2000-h2000`;
-                container.innerHTML = `
-                    <img src="${fullImageUrl}" class="max-w-full max-h-[85vh] object-contain rounded-lg pointer-events-auto" alt="Full Image"
-                         onerror="this.onerror=null; this.src='../Assets/images/logo.png';">
-                `;
-            } else {
-                // For videos (or unknown), use iframe preview
-                container.innerHTML = `
-                    <div class="relative w-full h-[85vh] flex flex-col items-center">
-                        <iframe src="${previewUrl}" class="w-full flex-grow border-0 rounded-lg pointer-events-auto bg-black" allowfullscreen></iframe>
-                        <a href="${directLink}" target="_blank" class="mt-4 px-6 py-2 bg-[#d4af37] text-black font-semibold rounded-full hover:bg-white transition pointer-events-auto flex items-center gap-2">
-                            <span class="material-symbols-outlined text-xl">open_in_new</span>
-                            Auf Google Drive ansehen (falls Preview nicht lädt)
-                        </a>
-                    </div>
-                `;
-            }
-            
-            overlay.classList.remove('hidden');
-            overlay.classList.add('flex');
+            // Redirect to Google Drive directly to avoid iframe blocking
+            window.open(directLink, '_blank');
         }
 
         function closeFullImage() {
