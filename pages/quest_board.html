@@ -343,7 +343,7 @@
                 const { data: { session } } = await window.supabaseClient.auth.getSession();
                 if(!session) throw new Error("No session");
                 
-                const { data, error } = await window.cdf_supabase.from('quests').insert([{
+                const { data, error } = await window.supabaseClient.from('quests').insert([{
                     title: title,
                     description: desc,
                     type: 'custom',
@@ -365,7 +365,7 @@
                 document.getElementById('new-desc').value = '';
             } catch(e) {
                 console.error(e);
-                alert("Upload failed.");
+                alert("Upload failed: " + (e.message || e));
             } finally {
                 btn.innerText = "UPLOAD SEQUENCE";
                 btn.disabled = false;
@@ -570,9 +570,9 @@
         };
         
         async function loadUserQuests() {
-            if(!window.cdf_supabase) return;
+            if(!window.supabaseClient) return;
             try {
-                const { data, error } = await window.cdf_supabase.from('quests').select('*').order('created_at', { ascending: false });
+                const { data, error } = await window.supabaseClient.from('quests').select('*').order('created_at', { ascending: false });
                 if(error) throw error;
                 
                 const list = document.getElementById('user-quests-list');

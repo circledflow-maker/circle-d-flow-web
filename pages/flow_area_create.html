@@ -52,6 +52,11 @@
 
     <div class="container mx-auto px-4 py-12 max-w-2xl relative z-10">
         
+        <!-- Back Button -->
+        <button onclick="window.location.href='dashboard.html'" class="mb-6 flex items-center gap-2 text-electric hover:text-white transition-colors border border-electric px-4 py-2 rounded text-sm font-cinzel uppercase tracking-widest hover:bg-electric hover:text-black self-start w-max">
+            <span>◀ BACK</span>
+        </button>
+
         <!-- Header -->
         <div class="text-center mb-12">
             <h1 class="text-4xl font-cinzel font-bold text-electric mb-2 gold-glow uppercase">Forge a Flow Area</h1>
@@ -87,6 +92,19 @@
                     </button>
                 </div>
             </form>
+        </div>
+
+        <!-- Loading / Matrix Sync Panel -->
+        <div id="loading-panel" class="hidden glass-panel p-8 rounded-lg shadow-2xl text-center w-full max-w-md">
+            <h2 class="text-2xl font-cinzel text-electric mb-4 animate-pulse">Syncing Matrix...</h2>
+            <p class="text-white/70 text-xs mb-6">Uploading coordinates and generating your physical anchor point.</p>
+            
+            <!-- Progress Bar -->
+            <div class="w-full bg-black border border-[#333] rounded-full h-4 mb-4 relative overflow-hidden">
+                <div id="progress-bar" class="bg-gradient-to-r from-electric to-yellow-600 h-4 rounded-full w-0 transition-all duration-[3000ms] ease-out"></div>
+            </div>
+            
+            <p id="progress-text" class="font-mono text-xs text-electric">0% COMPLETE</p>
         </div>
 
         <!-- Success / QR Panel (Hidden by default) -->
@@ -173,11 +191,33 @@
                 // Update Supabase with qr_code_data
                 await cdf_supabase.from('flow_areas').update({ qr_code_data: scanUrl }).eq('id', areaId);
                 
-                // 3. Show Success Panel
+                // 3. Show Loading Panel and simulate time
                 document.getElementById('creation-panel').classList.add('hidden');
+                document.getElementById('loading-panel').classList.remove('hidden');
+                
+                const progressBar = document.getElementById('progress-bar');
+                const progressText = document.getElementById('progress-text');
+                
+                // Start animation
+                setTimeout(() => {
+                    progressBar.style.width = "100%";
+                }, 100);
+                
+                let percent = 0;
+                const interval = setInterval(() => {
+                    percent += 1;
+                    if(percent >= 100) percent = 100;
+                    progressText.innerText = percent + "% COMPLETE";
+                }, 30);
+                
+                await new Promise(resolve => setTimeout(resolve, 3000));
+                clearInterval(interval);
+                
+                // 4. Show Success Panel
+                document.getElementById('loading-panel').classList.add('hidden');
                 document.getElementById('success-panel').classList.remove('hidden');
                 
-                // 4. Render QR Code
+                // 5. Render QR Code
                 const qrContainer = document.getElementById('qrcode');
                 new QRCode(qrContainer, {
                     text: scanUrl,
@@ -213,6 +253,7 @@
                     link.href = img.src;
                     link.click();
                 }
+            }
         }
 
         // Image Compression Logic
