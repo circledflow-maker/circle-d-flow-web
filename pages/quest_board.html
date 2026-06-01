@@ -446,7 +446,7 @@
             if(!activeUser) { window.location.href = '../index.html'; return; } 
 
             const { data: profile } = await window.supabaseClient.from('profiles').select('level').eq('id', user.id).single();
-            const userLevel = profile.level || 1;
+            const userLevel = profile?.level || 1;
             console.log("Current Level:", userLevel);
 
             // 309: Unlock Logic (Visuals & Ghost Support)

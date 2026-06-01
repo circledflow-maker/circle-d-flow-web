@@ -241,8 +241,8 @@ class FlowCompassAgent {
             { id: 'Connection', icon: 'hub', angle: 216, label: 'Connection', color: '#ec4899', options: [{l:'RESONANCE BAR', u: prefix + 'pages/coop.html'}, {l:'THE SANCTUARY', u: prefix + 'pages/chat.html'}, {l:'FLOW FINDER', u: prefix + 'pages/partner-scanner.html'}] },
             { id: 'Quest', icon: 'explore', angle: 288, label: 'Quest Log', color: '#94a3b8', options: [
                 {l:'QUEST BOARD', u: prefix + 'pages/quest_board.html'}, 
-                {l:'MAP', u: prefix + '/pages/dashboard.html'},
-                {l:'CALENDAR', u: prefix + 'calendar.html'}
+                {l:'MAP', u: prefix + 'pages/quest_map.html'},
+                {l:'CALENDAR', u: prefix + 'pages/calendar.html'}
             ] }
         ];
 
