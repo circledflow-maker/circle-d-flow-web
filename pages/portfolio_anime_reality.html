@@ -738,32 +738,24 @@
 
         <!-- Menu Items (hidden initially) -->
         <div id="radial-menu" class="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <!-- Artist Vault -->
-            <button onclick="window.loadCategory('Artist')" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="Artist Vault">
-                <span class="material-symbols-outlined text-[20px]">brush</span>
+            <!-- Akademie -->
+            <button onclick="window.location.href='akademie.html'" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="Akademie">
+                <span class="material-symbols-outlined text-[20px]">school</span>
             </button>
-            <!-- Jam Sessions -->
-            <button onclick="window.loadCategory('Event')" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="Jam Sessions">
-                <span class="material-symbols-outlined text-[20px]">music_note</span>
+            <!-- Luft -->
+            <button onclick="window.loadCategory('Luft')" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="Luft">
+                <span class="material-symbols-outlined text-[20px]">air</span>
             </button>
-            <!-- D Motion -->
-            <button onclick="window.loadCategory('Wasser')" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="D Motion">
-                <span class="material-symbols-outlined text-[20px]">movie</span>
+            <!-- Wasser -->
+            <button onclick="window.loadCategory('Wasser')" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="Wasser">
+                <span class="material-symbols-outlined text-[20px]">water_drop</span>
             </button>
-            <!-- City Vibe -->
-            <button onclick="window.loadCategory('Erde')" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="City Vibe">
-                <span class="material-symbols-outlined text-[20px]">location_city</span>
+            <!-- Erde -->
+            <button onclick="window.loadCategory('Erde')" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="Erde">
+                <span class="material-symbols-outlined text-[20px]">landscape</span>
             </button>
-            <!-- Animal Life -->
-            <button onclick="window.loadCategory('Nature')" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="Animal Life">
-                <span class="material-symbols-outlined text-[20px]">pets</span>
-            </button>
-            <!-- Behind the Scenes -->
-            <button onclick="window.loadCategory('Realm')" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="Behind the Scenes">
-                <span class="material-symbols-outlined text-[20px]">camera_roll</span>
-            </button>
-            <!-- Brand & Culture -->
-            <button onclick="window.loadCategory('Feuer')" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="Brand & Culture">
+            <!-- Feuer -->
+            <button onclick="window.loadCategory('Feuer')" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="Feuer">
                 <span class="material-symbols-outlined text-[20px]">local_fire_department</span>
             </button>
         </div>
@@ -790,16 +782,13 @@
             const urlParams = new URLSearchParams(window.location.search);
             let activeCategory = urlParams.get('cat') || "Feuer";
 
-            const rings = ['Feuer', 'Wasser', 'Erde', 'Luft', 'Realm', 'Artist', 'Nature', 'Event'];
+            const rings = ['Feuer', 'Wasser', 'Erde', 'Luft', 'Akademie'];
             const keywordMap = {
                 'feuer': ['fire', 'jam', 'red', 'action', 'heat', 'party', 'jamsessions', 'burn', 'energy', 'stage'],
                 'wasser': ['water', 'fluid', 'blue', 'sea', 'river', 'calm', 'flow', 'surf', 'soundwaves', 'ocean', 'wave'],
                 'erde': ['earth', 'ground', 'green', 'tree', 'mountain', 'street', 'city', 'urban', 'castle', 'stone', 'root'],
                 'luft': ['air', 'sky', 'wind', 'cloud', 'jump', 'fly', 'bird', 'high', 'space'],
-                'realm': ['realm', 'void', 'dark', 'studio', 'abstract', 'inside', 'black', 'atelier', 'indoor', 'session'],
-                'artist': ['artist', 'portrait', 'model', 'face', 'people', 'man', 'woman', 'spotlight', 'close', 'person'],
-                'nature': ['nature', 'leaf', 'flower', 'forest', 'wild', 'plant', 'outdoor', 'wood', 'landscape'],
-                'event': ['event', 'crowd', 'live', 'concert', 'gig', 'performance', 'show', 'festival', 'people']
+                'akademie': []
             };
 
             function renderTabs() {
@@ -810,7 +799,11 @@
                     const btn = document.createElement('button');
                     btn.className = `cinzel px-4 py-2 border rounded transition-all duration-300 ${activeCategory.toLowerCase() === cat.toLowerCase() ? 'bg-[var(--haki-gold)] text-black border-[var(--haki-gold)] font-bold' : 'bg-black text-white/70 border-white/20 hover:border-white/50'}`;
                     btn.innerText = cat;
-                    btn.onclick = () => window.loadCategory(cat);
+                    if(cat === 'Akademie') {
+                        btn.onclick = () => window.location.href = 'akademie.html';
+                    } else {
+                        btn.onclick = () => window.loadCategory(cat);
+                    }
                     tabsContainer.appendChild(btn);
                 });
             }

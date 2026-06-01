@@ -188,7 +188,7 @@
                     
                     // We load as image first. If it's a video, user clicks it and the full view can use iframe preview
                     imagesHTML += `
-                        <div class="grid-item" onclick="openFullMedia('${srcUrl}', '${previewUrl}', event)">
+                        <div class="grid-item" onclick="openFullMedia('${srcUrl}', '${previewUrl}', 'unknown', event)">
                             <!-- Try loading as image, fallback to a video icon if it fails to load image -->
                             <img src="${srcUrl}" onerror="this.onerror=null; this.src='../Assets/images/logo.png'; this.style.opacity='0.2'; this.parentElement.innerHTML += '<span class=\\'material-symbols-outlined absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-4xl\\'>play_circle</span>';" alt="${artist.name} Item ${i}">
                         </div>
@@ -268,7 +268,7 @@
 
         // --- FULL SCREEN OVERLAY ---
         function openFullMedia(srcUrl, previewUrl, fileType, event) {
-            event.stopPropagation(); // prevent triggering parent clicks
+            if (event) event.stopPropagation(); // prevent triggering parent clicks
             const overlay = document.getElementById('full-image-overlay');
             const container = document.getElementById('full-media-container');
             

@@ -610,7 +610,7 @@ window.PortfolioData = {
             "id": "gdrive_criz_0",
             "name": "C-Riz Image 1",
             "professional_name": "C-Riz",
-            "url": "https://drive.google.com/uc?export=view&id=15uz3yZYpc_ZrcWweedLGtZA1dECCjrgQ",
+            "url": "https://drive.google.com/thumbnail?id=15uz3yZYpc_ZrcWweedLGtZA1dECCjrgQ&sz=w2000-h2000",
             "tags": [
                 "artist",
                 "flow"
@@ -620,7 +620,7 @@ window.PortfolioData = {
             "id": "gdrive_criz_1",
             "name": "C-Riz Image 2",
             "professional_name": "C-Riz",
-            "url": "https://drive.google.com/uc?export=view&id=1HwhdGHKXVswUt0EuEj0usSjyYUZbwwDO",
+            "url": "https://drive.google.com/thumbnail?id=1HwhdGHKXVswUt0EuEj0usSjyYUZbwwDO&sz=w2000-h2000",
             "tags": [
                 "artist",
                 "flow"
@@ -630,7 +630,7 @@ window.PortfolioData = {
             "id": "gdrive_criz_2",
             "name": "C-Riz Image 3",
             "professional_name": "C-Riz",
-            "url": "https://drive.google.com/uc?export=view&id=1FQItgHRVSUoI3-iVzbobksPlmBZgK6sL",
+            "url": "https://drive.google.com/thumbnail?id=1FQItgHRVSUoI3-iVzbobksPlmBZgK6sL&sz=w2000-h2000",
             "tags": [
                 "artist",
                 "flow"
