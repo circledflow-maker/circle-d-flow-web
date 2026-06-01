@@ -69,22 +69,20 @@ for gid in gdrive_ids:
         # We need a robust ID for the HTML
         clean_id = re.sub(r'[^a-zA-Z0-9]', '_', folder_name).lower()
         
-        akademie_data.append({
-            "name": folder_name,
-            "id": clean_id,
-            "gdriveFolder": gid,
-            "files": selected_files
-        })
-        print(f"  -> Found {len(selected_files)} valid media files.")
+        if len(selected_files) > 0:
+            akademie_data.append({
+                "name": folder_name,
+                "id": clean_id,
+                "gdriveFolder": gid,
+                "files": selected_files
+            })
+            print(f"  -> Found {len(selected_files)} valid media files. Added.")
+        else:
+            print(f"  -> Found 0 valid media files. SKIPPING folder.")
     except Exception as e:
         print(f"  -> Failed: {str(e)}")
-        clean_id = re.sub(r'[^a-zA-Z0-9]', '_', folder_name).lower()
-        akademie_data.append({
-            "name": folder_name,
-            "id": clean_id,
-            "gdriveFolder": gid,
-            "files": []
-        })
+        # Do not append empty folders on failure
+        pass
 
 js_content = f"const AkademieData = {json.dumps(akademie_data, indent=4)};\n\nif (typeof window !== 'undefined') {{\n    window.AkademieData = AkademieData;\n}}\nif (typeof module !== 'undefined' && module.exports) {{\n    module.exports = AkademieData;\n}}\n"
 

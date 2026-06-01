@@ -101,12 +101,6 @@ const AkademieData = [
         ]
     },
     {
-        "name": "Felipe Saxophone",
-        "id": "felipe_saxophone",
-        "gdriveFolder": "1TBAiImBCui1VHSft2JAodvcXoqCAKoYO",
-        "files": []
-    },
-    {
         "name": "Irene 25 Birthday",
         "id": "irene_25_birthday",
         "gdriveFolder": "1kGdpPY1uulIgkN9q8gI0VhYHeamjrWZo",
@@ -188,7 +182,12 @@ const AkademieData = [
         "name": "OG Flow",
         "id": "og_flow",
         "gdriveFolder": "1i06xuswoy75Hhqgg2BhNmLyD0jKT6YKH",
-        "files": []
+        "files": [
+            {
+                "id": "1_a78fv-2cIgIXN-AMCHjLuCcSSuaVrVu",
+                "type": "video"
+            }
+        ]
     },
     {
         "name": "Alen",
@@ -285,12 +284,6 @@ const AkademieData = [
                 "type": "video"
             }
         ]
-    },
-    {
-        "name": "KreativlonArt",
-        "id": "kreativlonart",
-        "gdriveFolder": "1oqp9ZjJ851X8KzWEtsb3md5JM4dIuNqd",
-        "files": []
     },
     {
         "name": "NewDart",
@@ -599,12 +592,6 @@ const AkademieData = [
         ]
     },
     {
-        "name": "Odis",
-        "id": "odis",
-        "gdriveFolder": "1zZMuDk_yi0J6GDHXID7bhT4GQiKhdqGR",
-        "files": []
-    },
-    {
         "name": "Rebelroots",
         "id": "rebelroots",
         "gdriveFolder": "1gry2WEiLBXWFOMxFyS3CuqFv2UvJas45",
@@ -654,12 +641,6 @@ const AkademieData = [
                 "type": "video"
             }
         ]
-    },
-    {
-        "name": "soqhiejewels",
-        "id": "soqhiejewels",
-        "gdriveFolder": "1noZs793lQIPZk540TkwY47fGcyrA8-Ly",
-        "files": []
     }
 ];
 
