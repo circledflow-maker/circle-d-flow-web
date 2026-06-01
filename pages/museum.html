@@ -94,6 +94,17 @@
             </div>
 
         </div>
+
+        <!-- MY ANCHORS SECTION -->
+        <div class="mt-24">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-serif italic font-bold text-electric mb-2">My Flow Anchors</h2>
+                <p class="text-white/60 text-sm uppercase tracking-wider">The zones you have manifested.</p>
+            </div>
+            <div id="museum-anchors-list" class="grid md:grid-cols-4 gap-6">
+                <!-- JS Populates this -->
+            </div>
+        </div>
     </main>
     
     <script src="../js/agents/cortex.js"></script>
@@ -147,7 +158,63 @@
                      container.appendChild(div);
                  });
              }
+
+             // Load My Anchors
+             loadMuseumAnchors();
         });
+
+        async function loadMuseumAnchors() {
+            if(!window.cdf_supabase) return;
+            const { data: { user } } = await window.cdf_supabase.auth.getUser();
+            if(!user) return;
+
+            const { data: areas } = await window.cdf_supabase.from('flow_areas').select('*').eq('creator_id', user.id);
+            if(areas && areas.length > 0) {
+                const list = document.getElementById('museum-anchors-list');
+                list.innerHTML = '';
+                areas.forEach(area => {
+                    const img = area.image_url ? `<img src="${area.image_url}" class="w-full h-40 object-cover opacity-80 group-hover:opacity-100 transition-opacity">` : '<div class="w-full h-40 bg-gray-800"></div>';
+                    
+                    list.innerHTML += `
+                        <div class="group relative bg-white/5 rounded-xl overflow-hidden border border-white/10 hover:border-electric/50 transition-all text-center">
+                            ${img}
+                            <div class="p-4">
+                                <h3 class="text-xl font-serif font-bold text-electric mb-1">${area.name}</h3>
+                                <p class="text-xs text-white/50 mb-3">Scans: ${area.scan_count || 0}</p>
+                                <button onclick="downloadMuseumQR('${area.qr_code_data}', '${area.name}')" class="px-4 py-2 bg-transparent border border-electric text-electric text-xs font-bold uppercase hover:bg-electric hover:text-black transition-colors w-full rounded">
+                                    Download QR
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+        }
+
+        function downloadMuseumQR(qrUrl, areaName) {
+            if(!window.QRCode) {
+                const script = document.createElement('script');
+                script.src = "https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js";
+                script.onload = () => generateMuseumQR(qrUrl, areaName);
+                document.head.appendChild(script);
+            } else {
+                generateMuseumQR(qrUrl, areaName);
+            }
+        }
+
+        function generateMuseumQR(qrUrl, areaName) {
+            const tempDiv = document.createElement('div');
+            new QRCode(tempDiv, { text: qrUrl, width: 256, height: 256 });
+            setTimeout(() => {
+                const canvas = tempDiv.querySelector('canvas');
+                if(canvas) {
+                    const link = document.createElement('a');
+                    link.download = `${areaName.replace(/\s+/g, '_')}_QR.jpg`;
+                    link.href = canvas.toDataURL('image/jpeg');
+                    link.click();
+                }
+            }, 300);
+        }
     </script>
 
     <!-- AUTOMATED AGENT INJECTION -->

@@ -73,9 +73,11 @@
                 </div>
                 
                 <div>
-                    <label class="block text-electric text-xs uppercase tracking-widest mb-2">Image URL (Optional)</label>
-                    <input type="url" id="area-image" class="w-full p-3 rounded text-sm placeholder-white/30 transition-all" placeholder="https://...">
-                    <p class="text-[10px] text-white/40 mt-1">Provide an atmospheric photo to represent this vibe.</p>
+                    <label class="block text-electric text-xs uppercase tracking-widest mb-2">Image Upload (Optional)</label>
+                    <input type="file" id="area-image-file" accept="image/*" class="w-full p-3 rounded text-sm transition-all" style="background: rgba(0,0,0,0.5); border: 1px solid rgba(212, 175, 55, 0.3);">
+                    <p class="text-[10px] text-white/40 mt-1">Upload an atmospheric photo to represent this vibe (max 2MB).</p>
+                    <input type="hidden" id="area-image-base64">
+                    <img id="image-preview" src="" style="display:none; width: 100%; max-height: 200px; object-fit: cover; border-radius: 8px; margin-top: 10px; border: 1px solid #d4af37;">
                 </div>
 
                 <div class="pt-4">
@@ -127,11 +129,21 @@
             try {
                 const name = document.getElementById('area-name').value;
                 const address = document.getElementById('area-address').value;
-                const imageUrl = document.getElementById('area-image').value;
+                const imageUrl = document.getElementById('area-image-base64').value; // Base64 string
                 
-                // Get current GPS location (simulated for now, would use navigator.geolocation in prod)
+                // Get current GPS location
                 let lat = 38.7223; // Lisbon default
                 let lng = -9.1393;
+                
+                try {
+                    const pos = await new Promise((resolve, reject) => {
+                        navigator.geolocation.getCurrentPosition(resolve, reject, {timeout: 5000});
+                    });
+                    lat = pos.coords.latitude;
+                    lng = pos.coords.longitude;
+                } catch(geoErr) {
+                    console.warn("Could not get GPS, using default Lisbon coords", geoErr);
+                }
                 
                 // 1. Insert into Supabase
                 const { data, error } = await cdf_supabase
@@ -201,8 +213,49 @@
                     link.href = img.src;
                     link.click();
                 }
-            }
         }
+
+        // Image Compression Logic
+        document.getElementById('area-image-file').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if(!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+                    const max_size = 800; // Resize to max 800px width/height
+
+                    if (width > height) {
+                        if (width > max_size) {
+                            height *= max_size / width;
+                            width = max_size;
+                        }
+                    } else {
+                        if (height > max_size) {
+                            width *= max_size / height;
+                            height = max_size;
+                        }
+                    }
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    const dataUrl = canvas.toDataURL('image/jpeg', 0.7); // 70% quality
+                    document.getElementById('area-image-base64').value = dataUrl;
+                    
+                    const preview = document.getElementById('image-preview');
+                    preview.src = dataUrl;
+                    preview.style.display = 'block';
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
     </script>
 </body>
 </html>

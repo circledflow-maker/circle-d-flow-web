@@ -122,6 +122,20 @@
         }
         </style>
 
+        <!-- MY ANCHORS (FLOW AREAS) -->
+        <div id="my-anchors-ui" style="margin-bottom: 40px; background: rgba(10,10,10,0.8); border: 1px solid #d4af37; padding: 30px; border-radius: 4px;">
+            <h3 class="font-tech" style="color: #d4af37; margin-top: 0; font-size: 1.5em; text-transform: uppercase;">My Flow Anchors</h3>
+            <p style="color: #ccc; font-size: 0.9em; margin-bottom: 20px;">Locations you have manifested in the physical matrix.</p>
+            
+            <div id="anchors-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px;">
+                <!-- JS populates this -->
+            </div>
+            
+            <button onclick="window.location.href='flow_area_create.html'" style="margin-top: 20px; width: 100%; background: transparent; color: #d4af37; padding: 15px; border: 1px solid #d4af37; font-weight: bold; font-family: 'Orbitron'; cursor: pointer; transition: 0.3s; text-transform: uppercase;">
+                + FORGE NEW AREA
+            </button>
+        </div>
+
         <!-- BROTHERHOOD HUB (GUILD INTERFACE) -->
         <div id="brotherhood-hub" style="margin-bottom: 40px;">
             
@@ -285,10 +299,7 @@
                     <h3 class="font-tech" style="color: #ff3232;">ACCESS DENIED</h3>
                     <p style="color: #aaa;">Current Rank: ${profile.level}. Syndicate formation requires Rank 4 (Warlord). <br>Complete Protocols in the Codex.</p>
                 `;
-                return;
-            }
-
-            if (!profile.guild_id) {
+            } else if (!profile.guild_id) {
                 // LONE WOLF
                 document.getElementById('lone-wolf-ui').style.display = 'block';
                 document.getElementById('crew-hq-ui').style.display = 'none';
@@ -311,12 +322,6 @@
                     const list = document.getElementById('crew-members-list');
                     list.innerHTML = '';
                     members.forEach(m => {
-                        const isLeader = (m.username === crew.leader_id) ? '👑 ' : ''; // (Simple logic, ideally check IDs)
-                        // Note: crew.leader_id is UUID, username is string. Logic mismatch? 
-                        // Actually leader_id in guilds is UUID. m.username is string. 
-                        // Real Leader Check:
-                        // We need leader UUID to compare. But here we iterate profiles. 
-                        // Let's just list them for now.
                         list.innerHTML += `<li style="padding: 10px; background: rgba(255,255,255,0.05); margin-bottom: 5px; border-left: 2px solid #00f0ff;">
                             <strong style="color: #fff;">${m.username}</strong> 
                             <span style="color: gold; font-size: 0.8em; float: right;">LVL ${m.level} | ${m.flow_class || 'Recruit'}</span>
@@ -324,6 +329,62 @@
                     });
                 }
             }
+
+            // LOAD MY FLOW AREAS
+            try {
+                const { data: areas, error } = await window.supabaseClient.from('flow_areas').select('*').eq('creator_id', user.id);
+                if (areas) {
+                    document.getElementById('my-qr-created').innerText = areas.length;
+                    
+                    let totalScans = 0;
+                    const list = document.getElementById('anchors-list');
+                    list.innerHTML = '';
+                    
+                    if(areas.length === 0) {
+                        list.innerHTML = `<p style="color:#666; font-size:0.8em;">No anchors forged yet.</p>`;
+                    } else {
+                        areas.forEach(area => {
+                            totalScans += (area.scan_count || 0);
+                            
+                            const img = area.image_url ? `<img src="${area.image_url}" style="width:100%; height:100px; object-fit:cover; margin-bottom:10px; border:1px solid #d4af37;">` : '';
+                            
+                            list.innerHTML += `
+                            <div style="background: rgba(0,0,0,0.6); border: 1px solid #444; padding: 15px; border-radius: 4px; text-align:center;">
+                                ${img}
+                                <h4 style="color:#d4af37; margin:0 0 5px 0;">${area.name}</h4>
+                                <p style="font-size:0.7em; color:#aaa; margin:0 0 10px 0;">Scans: ${area.scan_count || 0}</p>
+                                <button onclick="downloadQRImage('${area.qr_code_data}', '${area.name}')" style="background:#222; border:1px solid #d4af37; color:#d4af37; padding:5px 10px; font-size:0.7em; cursor:pointer; width:100%;">DOWNLOAD QR</button>
+                            </div>
+                            `;
+                        });
+                    }
+                }
+            } catch(e) { console.error("Flow areas fetch error", e); }
+        }
+
+        function downloadQRImage(qrUrl, areaName) {
+            if(!window.QRCode) {
+                const script = document.createElement('script');
+                script.src = "https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js";
+                script.onload = () => generateAndDownloadQR(qrUrl, areaName);
+                document.head.appendChild(script);
+            } else {
+                generateAndDownloadQR(qrUrl, areaName);
+            }
+        }
+
+        function generateAndDownloadQR(qrUrl, areaName) {
+            const tempDiv = document.createElement('div');
+            new QRCode(tempDiv, { text: qrUrl, width: 256, height: 256 });
+            setTimeout(() => {
+                const canvas = tempDiv.querySelector('canvas');
+                if(canvas) {
+                    const link = document.createElement('a');
+                    link.download = `${areaName.replace(/\s+/g, '_')}_QR.jpg`;
+                    link.href = canvas.toDataURL('image/jpeg');
+                    link.click();
+                }
+            }, 300);
         }
 
         async function createCrew() {
