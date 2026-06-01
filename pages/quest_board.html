@@ -115,6 +115,11 @@
                             <p style="color: #888; font-size: 0.8em; margin: 0;">Activates Weapon Systems for Lisbon.</p>
                         </li>
                     </ul>
+                    
+                    <h3 style="color:#d4af37; border-bottom:1px solid #333; padding-bottom:10px; margin-bottom:15px; margin-top:30px; font-size:0.9em;">COMMUNITY FORGE</h3>
+                    <ul id="user-quests-list" class="codex-list" style="list-style: none; padding: 0; margin: 0;">
+                        <!-- Fetched from Supabase -->
+                    </ul>
                 </div>
 
                 <!-- DETAIL COLUMN (LORE TERMINAL) -->
@@ -455,8 +460,78 @@
             // Call Agent safely
             window.QuestEngine.executeProtocolUplink(activeProtocolId, 'proto-action-btn');
         };
+        
+        async function loadUserQuests() {
+            if(!window.cdf_supabase) return;
+            try {
+                const { data, error } = await window.cdf_supabase.from('quests').select('*').order('created_at', { ascending: false });
+                if(error) throw error;
+                
+                const list = document.getElementById('user-quests-list');
+                list.innerHTML = '';
+                
+                window.userQuestsData = data; // store globally for detail view
+                
+                if(data.length === 0) {
+                    list.innerHTML = '<li style="padding:15px; color:#666; font-size:0.8em; text-align:center;">No signals found.</li>';
+                    return;
+                }
+                
+                data.forEach(q => {
+                    const li = document.createElement('li');
+                    li.className = "quest-item";
+                    li.style.padding = "15px";
+                    li.style.borderBottom = "1px solid #333";
+                    li.style.cursor = "pointer";
+                    li.onclick = () => openUserQuest(q.id);
+                    
+                    li.innerHTML = `
+                        <span style="color: #d4af37; font-size: 0.7em; letter-spacing: 2px;">▶ SIGNAL: ${q.type.toUpperCase()}</span>
+                        <h4 class="font-tech" style="color: #fff; margin: 5px 0;">${q.title}</h4>
+                        <p style="color: #888; font-size: 0.8em; margin: 0;">By: ${q.creator_name || 'Unknown'}</p>
+                    `;
+                    list.appendChild(li);
+                });
+            } catch(e) {
+                console.error("Failed to load user quests:", e);
+            }
+        }
+        
+        window.openUserQuest = function(id) {
+            const q = window.userQuestsData.find(x => x.id === id);
+            if(!q) return;
+            
+            document.getElementById('protocol-empty').style.display = 'none';
+            document.getElementById('protocol-display').style.display = 'flex';
+            
+            document.getElementById('proto-title').innerText = q.title;
+            
+            let textHtml = `<p style="margin-bottom:15px; color:#aaa;"><strong>Author:</strong> ${q.creator_name}</p>`;
+            textHtml += `<p style="margin-bottom:15px;">${q.description || 'No description provided.'}</p>`;
+            textHtml += `<ul style="list-style:square; padding-left:20px; color:#888;">`;
+            if(q.address) textHtml += `<li><strong>Location:</strong> ${q.address}</li>`;
+            textHtml += `<li><strong>Reward:</strong> ${q.reward_karma} Karma / ${q.reward_trust} Trust</li>`;
+            textHtml += `</ul>`;
+            
+            if (q.qr_code_data) {
+                textHtml += `<div style="margin-top:20px; border-top:1px solid #333; padding-top:15px;">`;
+                textHtml += `<p style="color:#d4af37; font-size:0.8em; margin-bottom:10px;">SCAN TO ACCEPT QUEST:</p>`;
+                textHtml += `<a href="${q.qr_code_data}" target="_blank" style="display:inline-block; padding:10px; background:#d4af37; color:#000; text-decoration:none; font-weight:bold; font-size:0.9em; border-radius:2px;">[ VIEW QUEST SIGNAL ]</a>`;
+                textHtml += `</div>`;
+            }
+            
+            document.getElementById('proto-text').innerHTML = textHtml;
+            
+            const btn = document.getElementById('proto-action-btn');
+            btn.innerText = "[ SIGNAL ACQUIRED ]";
+            btn.style.color = "#d4af37";
+            btn.onclick = () => alert("Quest acknowledged! Navigate to the location to begin.");
+        };
 
-        window.addEventListener('DOMContentLoaded', checkProtocolStatus);
+        window.addEventListener('DOMContentLoaded', async () => {
+            await checkProtocolStatus();
+            await loadUserQuests();
+        });
     </script>
 </body>
 </html>

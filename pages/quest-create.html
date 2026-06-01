@@ -72,6 +72,9 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase_client.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 
 <body class="bg-tao-void text-white min-h-screen relative overflow-x-hidden">
@@ -276,7 +279,14 @@
             <span class="material-symbols-outlined text-tao-fire text-6xl mb-4 relative z-10">check_circle</span>
             <h2 class="text-2xl font-display text-white mb-2 relative z-10">Event Forged</h2>
             <p class="text-sm text-white/60 mb-6 relative z-10">The signal has been cast into the Resonance Bar. Nakamas can now connect to your open positions.</p>
-            <button onclick="window.location.href='coop.html'" class="px-6 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded font-mono text-sm uppercase tracking-widest relative z-10 transition-colors">
+            
+            <div id="qrcode-container" class="relative z-10 mb-4 flex flex-col items-center justify-center bg-white p-4 rounded-lg hidden"></div>
+            
+            <button id="download-qr-btn" onclick="downloadQuestQR()" class="hidden px-6 py-2 bg-tao-fire hover:bg-[#E58C4F] text-black font-mono text-sm uppercase tracking-widest relative z-10 transition-colors mb-4 mx-auto block rounded font-bold w-full">
+                Download QR Code
+            </button>
+
+            <button onclick="window.location.href='coop.html'" class="px-6 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded font-mono text-sm uppercase tracking-widest relative z-10 transition-colors w-full">
                 Return to Bar
             </button>
         </div>
@@ -325,7 +335,18 @@
 
         document.getElementById('event-title').addEventListener('input', updateSignalTags);
 
-        function manifestEvent() {
+        async function manifestEvent() {
+            if(!window.cdf_supabase) {
+                alert("Database connection offline.");
+                return;
+            }
+            
+            const session = await window.cdf_supabase.auth.getSession();
+            if(!session.data.session) {
+                alert("You must be logged in to create a quest.");
+                return;
+            }
+
             const title = document.getElementById('event-title').value;
             if(!title) {
                 alert("The forge requires a title to cast a signal.");
@@ -344,14 +365,7 @@
 
             const address = document.getElementById('event-location') ? document.getElementById('event-location').value : '';
             const date = document.getElementById('event-date') ? document.getElementById('event-date').value : '';
-
-            const locationChecks = [];
-            // Assuming location checkboxes are checked (hardcoded selector as they don't have IDs)
-            document.querySelectorAll('input[type="checkbox"]').forEach(c => {
-                if (c.checked && c.nextElementSibling && c.nextElementSibling.innerText !== 'Clear out kitchen (Assigned: Will)') { // avoid the tasks ones
-                     locationChecks.push(c.nextElementSibling.innerText);
-                }
-            });
+            const desc = document.getElementById('event-description') ? document.getElementById('event-description').value : '';
 
             const eventData = {
                  title: title,
@@ -359,26 +373,81 @@
                  date: date || 'TBA',
                  economy: eco,
                  needs: needs,
-                 locationChecks: locationChecks,
                  address: address || 'ClimaLabs' // fallback
             };
-            localStorage.setItem('cdf_latest_event', JSON.stringify(eventData));
+            
+            try {
+                // Save to Supabase
+                const { data, error } = await window.cdf_supabase.from('quests').insert([{
+                    title: title,
+                    description: desc,
+                    type: type,
+                    reward_karma: 100, // default
+                    reward_trust: 50, // default
+                    status: 'open',
+                    creator_id: session.data.session.user.id,
+                    creator_name: localStorage.getItem('userName') || "Anonymous Voyager"
+                }]).select();
+                
+                if (error) throw error;
+                
+                const questId = data[0].id;
+                const qrUrl = window.location.origin + "/pages/flavor_quest.html?id=" + questId;
+                
+                // Update QR data
+                await window.cdf_supabase.from('quests').update({ qr_code_data: qrUrl }).eq('id', questId);
+                
+                // Backup for local features
+                localStorage.setItem('cdf_latest_event', JSON.stringify(eventData));
 
-            // Advancing the tutorial state to Step 3
-            if (parseInt(localStorage.getItem('cdf_connection_tour_step') || 1) <= 2) {
-                 localStorage.setItem('cdf_connection_tour_step', 3);
+                // Global Notification Broadcast
+                if (window.Pusher) {
+                     window.Pusher.showToast(`BROADCAST: New Signal emitted from The Forge: ${title}`, 'success');
+                }
+
+                // Show Success
+                const modal = document.getElementById('success-modal');
+                modal.classList.remove('hidden');
+                setTimeout(() => { modal.classList.remove('opacity-0'); }, 10);
+                
+                // Generate QR Code
+                const qrContainer = document.getElementById('qrcode-container');
+                qrContainer.classList.remove('hidden');
+                qrContainer.innerHTML = ''; // clear previous
+                new QRCode(qrContainer, {
+                    text: qrUrl,
+                    width: 200,
+                    height: 200,
+                    colorDark : "#0a0a0a",
+                    colorLight : "#ffffff",
+                    correctLevel : QRCode.CorrectLevel.H
+                });
+                
+                document.getElementById('download-qr-btn').classList.remove('hidden');
+                document.getElementById('download-qr-btn').classList.add('block');
+                
+            } catch (err) {
+                console.error("Error forging quest:", err);
+                alert("Failed to manifest event in the database.");
             }
-
-            // Global Notification Broadcast
-            if (window.Pusher) {
-                 window.Pusher.showToast(`BROADCAST: New Signal emitted from The Forge: ${title}`, 'success');
+        }
+        
+        function downloadQuestQR() {
+            const canvas = document.querySelector('#qrcode-container canvas');
+            if(canvas) {
+                const link = document.createElement('a');
+                link.download = 'Quest_QRCode.jpg';
+                link.href = canvas.toDataURL('image/jpeg', 1.0);
+                link.click();
+            } else {
+                const img = document.querySelector('#qrcode-container img');
+                if(img && img.src) {
+                    const link = document.createElement('a');
+                    link.download = 'Quest_QRCode.jpg';
+                    link.href = img.src;
+                    link.click();
+                }
             }
-
-            // Show Success
-            const modal = document.getElementById('success-modal');
-            modal.classList.remove('hidden');
-            // small delay to let display:block apply before opacity fade
-            setTimeout(() => { modal.classList.remove('opacity-0'); }, 10);
         }
 
         // Initialize Live Tags

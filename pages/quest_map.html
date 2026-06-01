@@ -571,6 +571,9 @@
 
                  // Load Community Forge Event
                  loadActiveCommunityEvent();
+                 
+                 // Load Flow Areas (New Feature)
+                 loadFlowAreas();
             } else {
                 console.warn("QuestEngine not found on load.");
             }
@@ -612,6 +615,48 @@
              } catch(e) {
                  console.error("Failed to load community event on map:", e);
              }
+        }
+        
+        // --- 6. LOGIC: FLOW AREAS (ADINKRA SYMBOLS) ---
+        async function loadFlowAreas() {
+            try {
+                if(!window.cdf_supabase) return;
+                const { data, error } = await window.cdf_supabase.from('flow_areas').select('*');
+                if(error) throw error;
+                if(!data) return;
+                
+                data.forEach(area => {
+                    if(!area.lat || !area.lng) return;
+                    
+                    // Adinkra Style Icon (Simplified SVG placeholder)
+                    const adinkraIcon = L.divIcon({
+                        className: 'custom-div-icon adinkra-icon',
+                        html: `<svg width="40" height="40" viewBox="0 0 100 100" fill="none" stroke="#d4af37" stroke-width="4" style="background:rgba(10,10,10,0.8); border-radius:50%; box-shadow:0 0 15px rgba(212,175,55,0.8);">
+                            <circle cx="50" cy="50" r="40" />
+                            <path d="M 50 10 L 50 90 M 10 50 L 90 50" />
+                            <circle cx="50" cy="50" r="20" />
+                        </svg>`,
+                        iconSize: [40, 40],
+                        iconAnchor: [20, 20]
+                    });
+                    
+                    const marker = L.marker([area.lat, area.lng], { icon: adinkraIcon }).addTo(map);
+                    
+                    const imgHtml = area.image_url ? `<img src="${area.image_url}" style="width:100%; height:100px; object-fit:cover; margin-bottom:10px; border:1px solid #d4af37; border-radius:4px;">` : '';
+                    
+                    marker.bindPopup(`
+                        <div style="font-family:monospace; color:#fff; background:#0a0a0a; border:2px solid #d4af37; padding:15px; text-align:center; min-width:200px;">
+                            ${imgHtml}
+                            <h3 style="color:#d4af37; font-weight:bold; margin:0 0 5px 0; font-family:'Cinzel', serif;">${area.name}</h3>
+                            <p style="font-size:0.8em; color:#aaa; margin:0 0 10px 0;">${area.address}</p>
+                            <p style="font-size:0.8em; color:#8b5cf6; margin:0 0 10px 0;">Scans: ${area.scan_count || 0}</p>
+                            <a href="${area.qr_code_data}" target="_blank" style="display:block; padding:8px; background:#d4af37; color:#000; text-decoration:none; font-weight:bold; border-radius:2px;">ENTER THE ZONE</a>
+                        </div>
+                    `);
+                });
+            } catch(e) {
+                console.error("Failed to load Flow Areas:", e);
+            }
         }
     </script>
 </body>

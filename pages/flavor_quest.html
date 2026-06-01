@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flavor Quest - African Queen Kitchen</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
-
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase_client.js"></script>
     <style>
         body {
             background-color: #050505;
@@ -109,11 +110,32 @@
             { id: 4, title: "The Regular", desc: "Order 3 times in one week.", xp: 500, status: 'locked' }
         ];
 
-        function renderQuests() {
+        async function renderQuests() {
             const grid = document.getElementById('quest-grid');
             grid.innerHTML = '';
             
-            quests.forEach(q => {
+            // Fetch dynamic quest if ID in URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const dynamicId = urlParams.get('id');
+            
+            let allQuests = [...quests];
+            
+            if(dynamicId && window.cdf_supabase) {
+                try {
+                    const { data, error } = await window.cdf_supabase.from('quests').select('*').eq('id', dynamicId).single();
+                    if(!error && data) {
+                        allQuests.unshift({
+                            id: data.id,
+                            title: "[SCANNED] " + data.title,
+                            desc: data.description || "Community Quest. Type: " + data.type,
+                            xp: data.reward_karma || 100,
+                            status: 'claimable'
+                        });
+                    }
+                } catch(e) { console.error("Error loading scanned quest", e); }
+            }
+            
+            allQuests.forEach(q => {
                 let actionBtn = '';
                 if(q.status === 'claimable') {
                     actionBtn = `<button onclick="claimReward(${q.id}, ${q.xp})" class="mt-4 w-full py-2 bg-[#00ff00] text-black font-bold uppercase text-xs hover:bg-white transition-colors">Claim ${q.xp} XP</button>`;
@@ -147,6 +169,13 @@
             if(window.Pusher) {
                 window.Pusher.showToast(`Quest Completed! +${xp} XP`, 'xp');
                 window.Pusher.broadcast('XP_GAIN', { amount: xp });
+            }
+            
+            // Add to Supabase Gamification if it's a dynamic quest (uuid vs number)
+            if(typeof id === 'string' && window.cdf_supabase) {
+                 window.cdf_supabase.from('quests').update({ status: 'completed' }).eq('id', id).then(() => {
+                     console.log("Dynamic quest completed");
+                 });
             }
             
             renderQuests();

@@ -815,10 +815,6 @@ class FloweeAgent {
             const answer = this.findAnswer(text);
             this.addChatMessage(answer.text, 'ai', answer.link);
             
-            if(answer.link) {
-                // NEW: 3-Second Countdown Rule
-                this.startCountdownAndNavigate(answer.link, answer.text);
-            }
             if(answer.action) answer.action(); 
         }, 600);
     }

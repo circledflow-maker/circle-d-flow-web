@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circle D Flow - The Zone</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        dark: '#0a0a0a',
+                        primary: { 500: '#8b5cf6' },
+                        electric: '#d4af37'
+                    },
+                    fontFamily: {
+                        mono: ['"Space Mono"', 'monospace'],
+                        cinzel: ['"Cinzel"', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase_client.js"></script>
+
+    <style>
+        body { background-color: #050505; color: #fff; font-family: 'Space Mono', monospace; overflow: hidden; }
+        .glass-panel {
+            background: rgba(10, 10, 10, 0.85);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            backdrop-filter: blur(20px);
+        }
+        .pulse-ring {
+            position: absolute;
+            top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 300px; height: 300px;
+            border-radius: 50%;
+            border: 1px solid rgba(212, 175, 55, 0.5);
+            animation: pulse-out 4s infinite ease-out;
+            pointer-events: none;
+        }
+        @keyframes pulse-out {
+            0% { transform: translate(-50%, -50%) scale(0.8); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+        }
+        .text-glow { text-shadow: 0 0 15px rgba(212, 175, 55, 0.8); }
+        
+        #timer-display {
+            font-size: 4rem;
+            font-family: 'Cinzel', serif;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-[url('../assets/textures/noise.png')] flex items-center justify-center relative">
+    
+    <!-- Audio Element (OutbreakTunes) -->
+    <!-- Assuming we have a loop, otherwise using a placeholder -->
+    <audio id="flow-audio" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+
+    <div class="pulse-ring"></div>
+    <div class="pulse-ring" style="animation-delay: 2s;"></div>
+
+    <div class="glass-panel p-10 rounded-2xl shadow-2xl relative z-10 max-w-lg w-full text-center border-t-4 border-electric">
+        
+        <div id="init-view">
+            <h1 class="text-3xl font-cinzel font-bold text-electric mb-4 uppercase text-glow">Entering the Zone</h1>
+            <p class="text-sm text-white/70 mb-6 leading-relaxed">
+                You have arrived. To anchor your presence, you must remain in the Wu-Wei state for 25 minutes.<br><br>
+                <span class="text-electric font-bold">Rule:</span> Turn your phone screen down or keep this tab open. If you leave or switch apps, the Flow breaks.
+            </p>
+            <button id="start-flow-btn" class="px-8 py-3 bg-gradient-to-r from-electric to-yellow-600 text-black font-cinzel font-bold uppercase tracking-widest rounded shadow-[0_0_20px_rgba(212,175,55,0.4)] hover:scale-105 transition-transform">
+                Begin Flow
+            </button>
+        </div>
+
+        <div id="timer-view" class="hidden">
+            <h2 id="area-name-display" class="text-xl font-cinzel text-electric/80 mb-2 uppercase">Unknown Location</h2>
+            <p class="text-xs text-white/40 mb-8 uppercase tracking-widest">Resonance Audio Engaged</p>
+            
+            <div id="timer-display" class="text-electric font-bold text-glow mb-4">25:00</div>
+            
+            <p class="text-sm text-white/60 mb-2">Do not close or switch away.</p>
+            
+            <!-- Adinkra Symbol Placeholder -->
+            <div class="mt-8 opacity-50 flex justify-center">
+                <svg width="60" height="60" viewBox="0 0 100 100" fill="none" stroke="#d4af37" stroke-width="2">
+                    <circle cx="50" cy="50" r="40" />
+                    <path d="M 50 10 L 50 90 M 10 50 L 90 50" />
+                    <circle cx="50" cy="50" r="20" />
+                </svg>
+            </div>
+        </div>
+
+        <div id="success-view" class="hidden">
+            <h2 class="text-3xl font-cinzel font-bold text-green-500 mb-4 uppercase text-glow">Flow Achieved</h2>
+            <p class="text-sm text-white/80 mb-6">You have mastered the Zone. +100 XP and Karma have been awarded to you and the creator.</p>
+            
+            <a href="dashboard.html" class="inline-block px-8 py-3 border border-electric text-electric hover:bg-electric hover:text-black font-cinzel font-bold uppercase tracking-widest rounded transition-colors">
+                Return to Matrix
+            </a>
+        </div>
+        
+        <div id="fail-view" class="hidden">
+            <h2 class="text-3xl font-cinzel font-bold text-red-500 mb-4 uppercase">Flow Broken</h2>
+            <p class="text-sm text-white/80 mb-6">You lost focus. The connection to the Zone has been severed.</p>
+            
+            <button onclick="location.reload()" class="px-8 py-3 border border-electric text-electric hover:bg-electric hover:text-black font-cinzel font-bold uppercase tracking-widest rounded transition-colors">
+                Try Again
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const TOTAL_SECONDS = 25 * 60; // 25 minutes
+        let remainingSeconds = TOTAL_SECONDS;
+        let timerInterval = null;
+        let areaId = new URLSearchParams(window.location.search).get('id');
+        let areaData = null;
+        
+        document.getElementById('start-flow-btn').addEventListener('click', async () => {
+            // Check auth first
+            const session = await cdf_supabase.auth.getSession();
+            if(!session.data.session) {
+                alert("You must be logged in to sync with the Flow Area.");
+                return;
+            }
+            
+            if(!areaId) {
+                alert("No Flow Area ID detected in the URL.");
+                return;
+            }
+            
+            // Verify Area
+            try {
+                const { data, error } = await cdf_supabase.from('flow_areas').select('*').eq('id', areaId).single();
+                if(error) throw error;
+                areaData = data;
+                document.getElementById('area-name-display').innerText = areaData.name;
+            } catch(e) {
+                console.error(e);
+                alert("Flow Area not found.");
+                return;
+            }
+            
+            // Start Audio
+            const audio = document.getElementById('flow-audio');
+            audio.volume = 0.5;
+            audio.play().catch(e => console.log("Audio autoplay blocked", e));
+            
+            // Switch UI
+            document.getElementById('init-view').classList.add('hidden');
+            document.getElementById('timer-view').classList.remove('hidden');
+            
+            startTimer();
+            
+            // Request WakeLock to keep screen on if possible
+            if ('wakeLock' in navigator) {
+                try {
+                    await navigator.wakeLock.request('screen');
+                } catch (err) {}
+            }
+        });
+        
+        function startTimer() {
+            updateDisplay();
+            timerInterval = setInterval(() => {
+                remainingSeconds--;
+                updateDisplay();
+                
+                if(remainingSeconds <= 0) {
+                    completeFlow();
+                }
+            }, 1000);
+        }
+        
+        function updateDisplay() {
+            const m = Math.floor(remainingSeconds / 60);
+            const s = remainingSeconds % 60;
+            document.getElementById('timer-display').innerText = 
+                `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        }
+        
+        // Wu-Wei Visibility Rule
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden && timerInterval !== null) {
+                // Flow Broken!
+                clearInterval(timerInterval);
+                timerInterval = null;
+                document.getElementById('flow-audio').pause();
+                
+                document.getElementById('timer-view').classList.add('hidden');
+                document.getElementById('fail-view').classList.remove('hidden');
+            }
+        });
+        
+        async function completeFlow() {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            document.getElementById('timer-view').classList.add('hidden');
+            document.getElementById('success-view').classList.remove('hidden');
+            
+            // Grant Rewards
+            try {
+                // 1. Increment Area Scan Count
+                await cdf_supabase.rpc('increment_scan_count', { area_id: areaId });
+                // Note: If RPC doesn't exist, we fallback to frontend update (not secure, but works for prototype)
+                if(!window.Gamification) {
+                    await cdf_supabase.from('flow_areas').update({ scan_count: (areaData.scan_count || 0) + 1 }).eq('id', areaId);
+                }
+                
+                // 2. Grant Local Gamification Points
+                if(window.Gamification) {
+                    window.Gamification.addXP(100, "Flow Area Meditation");
+                    window.Gamification.addKarma(50, "Flow Area Synchronization");
+                }
+            } catch(e) {
+                console.error("Reward error", e);
+            }
+        }
+    </script>
+</body>
+</html>
