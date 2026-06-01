@@ -51,8 +51,8 @@ const AkademieData = [
         ]
     },
     {
-        "name": "Alen",
-        "id": "alen",
+        "name": "AnnaLubbingeArt",
+        "id": "annalubbingeart",
         "gdriveFolder": "1Pf6Fp6LF63nuBTB0wv3qH9EQzPS4AUWF",
         "files": [
             {
@@ -70,10 +70,26 @@ const AkademieData = [
         ]
     },
     {
-        "name": "Alterlife",
-        "id": "alterlife",
+        "name": "Diasmarcall",
+        "id": "diasmarcall",
         "gdriveFolder": "18XtQbCY1pyYVANRqf2OX4-ODi4rJXr9k",
         "files": [
+            {
+                "id": "1bN_TGMSSd0n1dXbVcU-J-2qMdJDhQZzR",
+                "type": "video"
+            },
+            {
+                "id": "13z0EHWhljg_KvwpfNXJKt73RUbIl9_22",
+                "type": "video"
+            },
+            {
+                "id": "1az2WFL_LzOWMD6ZBWHMftQDTkK0WoXHf",
+                "type": "video"
+            },
+            {
+                "id": "16noMk6AsB7_cyuXlx73ZhL3I9y8kO1mZ",
+                "type": "video"
+            },
             {
                 "id": "1GbfKtwWdTU09Z-jUIgJo8Lg6JxasN_AD",
                 "type": "image"
@@ -85,110 +101,14 @@ const AkademieData = [
         ]
     },
     {
-        "name": "AnnaLubbingeArt",
-        "id": "annalubbingeart",
-        "gdriveFolder": "1pgpFcKB5Jv9fb8R3iFE5IOpV-uyou5gz",
-        "files": [
-            {
-                "id": "1AAtGU294ODDZq0eph2VCDw_vFZAQd39_",
-                "type": "image"
-            }
-        ]
-    },
-    {
-        "name": "Bantaba",
-        "id": "bantaba",
-        "gdriveFolder": "1gntd-LvGXMN3jOsiifqPzdfCVGKhsGzs",
-        "files": [
-            {
-                "id": "1cwMdpzXEv276qnB4CZITARC6QArXliwr",
-                "type": "video"
-            },
-            {
-                "id": "1v2a3ro3lEPmG7WuA7WkRywBkbTdUQ91x",
-                "type": "video"
-            },
-            {
-                "id": "1ADRHn4mGI27M_yfOLpRrkqegNBGDXgb5",
-                "type": "video"
-            },
-            {
-                "id": "1FzVTLxmSEDBTYad9oHdXApOwDxeEYfpG",
-                "type": "image"
-            },
-            {
-                "id": "1s2YC3KrVulwGGBRA8BKIaFjYvNVbCgoE",
-                "type": "image"
-            },
-            {
-                "id": "1vunZUYyzCJpA-IOMG2UZGazWFP1H6lg8",
-                "type": "image"
-            },
-            {
-                "id": "1Vb7tNntqkrO8yMjHmn726Teke7NVF8q1",
-                "type": "image"
-            },
-            {
-                "id": "1xqRiS9Wco9MzKqwdIQ9X_-djiKZ1woxp",
-                "type": "image"
-            },
-            {
-                "id": "1dvEEeYdhCnMsmaEfuisDCdFj0d-12poe",
-                "type": "image"
-            },
-            {
-                "id": "1kcSYlgfcuVJ8J9oh8jBxzZJqZbJJEbqJ",
-                "type": "image"
-            },
-            {
-                "id": "1HuIRldAcL4Sy-NhKaKsJvFWumm2nA3fY",
-                "type": "image"
-            }
-        ]
-    },
-    {
-        "name": "C-Riz",
-        "id": "c-riz",
-        "gdriveFolder": "186A9Wuqq9-DfADfWQtLp4Cih2FEWWGmY",
-        "files": [
-            {
-                "id": "1ovORnGru3r1-1CGHO1MrjVriNPoVx2tX",
-                "type": "video"
-            },
-            {
-                "id": "172-M61iVhFxs4ZfCo9p1gIQzY7MrQjdz",
-                "type": "image"
-            },
-            {
-                "id": "1cUwEDFYUZaoOtiQeoVVvEed84cW17bST",
-                "type": "image"
-            }
-        ]
-    },
-    {
-        "name": "Diasmarcall",
-        "id": "diasmarcall",
+        "name": "Felipe Saxophone",
+        "id": "felipe_saxophone",
         "gdriveFolder": "1TBAiImBCui1VHSft2JAodvcXoqCAKoYO",
         "files": []
     },
     {
-        "name": "DJ Qter",
-        "id": "dj_qter",
-        "gdriveFolder": "17vW_TYS4wthvPQJkzcfBbC7MmDz7FSF-",
-        "files": [
-            {
-                "id": "1pev-YTbPq37VnIHuC_rTRMuPbUTtotC8",
-                "type": "image"
-            },
-            {
-                "id": "1ytA4fEcfgdy2SMOYa1D7c8Ir9NKxfEt7",
-                "type": "video"
-            }
-        ]
-    },
-    {
-        "name": "Enock",
-        "id": "enock",
+        "name": "Irene 25 Birthday",
+        "id": "irene_25_birthday",
         "gdriveFolder": "1kGdpPY1uulIgkN9q8gI0VhYHeamjrWZo",
         "files": [
             {
@@ -238,14 +158,294 @@ const AkademieData = [
         ]
     },
     {
-        "name": "Equipe Jovem",
-        "id": "equipe_jovem",
+        "name": "Natalia",
+        "id": "natalia",
+        "gdriveFolder": "1PQX3fASvyMeeaqZX1SZovluFRRTqRyYw",
+        "files": [
+            {
+                "id": "1CrCoR0xroL7aMjD5i9MDIX21EZAYQHLf",
+                "type": "image"
+            },
+            {
+                "id": "1cBdS-2P_dM2cxEOVCqePoI9EpEzL3mwr",
+                "type": "image"
+            },
+            {
+                "id": "1c7LOHe8jjhs_u0Jwbcq0JL26Xov8ceM-",
+                "type": "image"
+            },
+            {
+                "id": "17p9Ie48VXPPknKumAQrjIPs_rI23Wu2l",
+                "type": "image"
+            },
+            {
+                "id": "1OyyPsl-CQHqUCgzRIVGvQvZxZEvqzoSc",
+                "type": "video"
+            }
+        ]
+    },
+    {
+        "name": "OG Flow",
+        "id": "og_flow",
+        "gdriveFolder": "1i06xuswoy75Hhqgg2BhNmLyD0jKT6YKH",
+        "files": []
+    },
+    {
+        "name": "Alen",
+        "id": "alen",
+        "gdriveFolder": "1pgpFcKB5Jv9fb8R3iFE5IOpV-uyou5gz",
+        "files": [
+            {
+                "id": "1AAtGU294ODDZq0eph2VCDw_vFZAQd39_",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "name": "C Riz",
+        "id": "c_riz",
+        "gdriveFolder": "1gntd-LvGXMN3jOsiifqPzdfCVGKhsGzs",
+        "files": [
+            {
+                "id": "1cwMdpzXEv276qnB4CZITARC6QArXliwr",
+                "type": "video"
+            },
+            {
+                "id": "1v2a3ro3lEPmG7WuA7WkRywBkbTdUQ91x",
+                "type": "video"
+            },
+            {
+                "id": "1ADRHn4mGI27M_yfOLpRrkqegNBGDXgb5",
+                "type": "video"
+            },
+            {
+                "id": "1FzVTLxmSEDBTYad9oHdXApOwDxeEYfpG",
+                "type": "image"
+            },
+            {
+                "id": "1s2YC3KrVulwGGBRA8BKIaFjYvNVbCgoE",
+                "type": "image"
+            },
+            {
+                "id": "1vunZUYyzCJpA-IOMG2UZGazWFP1H6lg8",
+                "type": "image"
+            },
+            {
+                "id": "1Vb7tNntqkrO8yMjHmn726Teke7NVF8q1",
+                "type": "image"
+            },
+            {
+                "id": "1xqRiS9Wco9MzKqwdIQ9X_-djiKZ1woxp",
+                "type": "image"
+            },
+            {
+                "id": "1dvEEeYdhCnMsmaEfuisDCdFj0d-12poe",
+                "type": "image"
+            },
+            {
+                "id": "1kcSYlgfcuVJ8J9oh8jBxzZJqZbJJEbqJ",
+                "type": "image"
+            },
+            {
+                "id": "1HuIRldAcL4Sy-NhKaKsJvFWumm2nA3fY",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "name": "DJ Qter",
+        "id": "dj_qter",
+        "gdriveFolder": "186A9Wuqq9-DfADfWQtLp4Cih2FEWWGmY",
+        "files": [
+            {
+                "id": "1ovORnGru3r1-1CGHO1MrjVriNPoVx2tX",
+                "type": "video"
+            },
+            {
+                "id": "172-M61iVhFxs4ZfCo9p1gIQzY7MrQjdz",
+                "type": "image"
+            },
+            {
+                "id": "1cUwEDFYUZaoOtiQeoVVvEed84cW17bST",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "name": "GemsbyKimbo",
+        "id": "gemsbykimbo",
+        "gdriveFolder": "17vW_TYS4wthvPQJkzcfBbC7MmDz7FSF-",
+        "files": [
+            {
+                "id": "1pev-YTbPq37VnIHuC_rTRMuPbUTtotC8",
+                "type": "image"
+            },
+            {
+                "id": "1ytA4fEcfgdy2SMOYa1D7c8Ir9NKxfEt7",
+                "type": "video"
+            }
+        ]
+    },
+    {
+        "name": "KreativlonArt",
+        "id": "kreativlonart",
         "gdriveFolder": "1oqp9ZjJ851X8KzWEtsb3md5JM4dIuNqd",
         "files": []
     },
     {
-        "name": "Ewa",
-        "id": "ewa",
+        "name": "NewDart",
+        "id": "newdart",
+        "gdriveFolder": "1XKU7lVBpozSlWsT3JAMUP6VS2vnUYVZH",
+        "files": [
+            {
+                "id": "19QVewNk3T78EH2AtibM6unJypQnmttvF",
+                "type": "image"
+            },
+            {
+                "id": "19eIRZfgvLNMJ-N1aJVxOncxenzhNmF24",
+                "type": "image"
+            },
+            {
+                "id": "1dZpMxK0kl1Biqnp9AegEPLCbYjNieDer",
+                "type": "image"
+            },
+            {
+                "id": "1ypo-tPaRCUchbKwa3pnoSr7jKXgm91Tl",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "name": "Rayan",
+        "id": "rayan",
+        "gdriveFolder": "1zQirr9syKBRZRz7pOB4Bk2V6M5VddkmH",
+        "files": [
+            {
+                "id": "1fZaXOtfP2OhbYetaprcmYl9PofOA_dtK",
+                "type": "image"
+            },
+            {
+                "id": "1FIb275xID-IwaWRotOWaEbjrutKzM_pY",
+                "type": "image"
+            },
+            {
+                "id": "1_Sfs0FGeD_Rw5EHtMre0py7m9mcDPdc4",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "name": "Ricky Secret Garden LX",
+        "id": "ricky_secret_garden_lx",
+        "gdriveFolder": "1xvfdDsUA8s8C_J0iHiPfuaPfvUqt5UlJ",
+        "files": [
+            {
+                "id": "1pdStNjGt_LswS84LGgX1WU3svsPexmUp",
+                "type": "image"
+            },
+            {
+                "id": "1Jk-dIBgxEG7O8QnX4xEIDWilQOdSxj3h",
+                "type": "image"
+            },
+            {
+                "id": "1VV-iKXZCvjUsk3LUHdTbt9ITmKj2mFmJ",
+                "type": "image"
+            },
+            {
+                "id": "1A4l-uzy4rQHoJ4YBch0Z6QTOoNT53trR",
+                "type": "image"
+            },
+            {
+                "id": "1xhPJGNjv6loGe19NdXJ63CSfVGG1RJ0W",
+                "type": "image"
+            },
+            {
+                "id": "1V6E4VyJqUcGTvNG_5hJMSaMAorBOWd83",
+                "type": "image"
+            },
+            {
+                "id": "1DRglK_h7AU0PTmQApG6sMV4pklNWqeWm",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "name": "Sandu",
+        "id": "sandu",
+        "gdriveFolder": "1iLgoxnGgjy3VAkU1DD1gVZcpPwFLGzWB",
+        "files": [
+            {
+                "id": "1iM9KWuk1uNfqyhh7_sQMWOo0RAWFBh6B",
+                "type": "image"
+            },
+            {
+                "id": "1kV8idHroliscEWGgDrV3P_I2mHzpj1vo",
+                "type": "image"
+            },
+            {
+                "id": "1kOuhK5miyP2lQOmb03f0FUWX3VfR29T8",
+                "type": "image"
+            },
+            {
+                "id": "1kOEkrVtz1uccC-neBYMpEh8f7kayXjeL",
+                "type": "image"
+            },
+            {
+                "id": "1kN8-5CUpE56SSgHAupwnuY5l89o6cI4q",
+                "type": "image"
+            },
+            {
+                "id": "16cug7kUq0hdGurp8XLpzNKzZ9KIUBJVg",
+                "type": "video"
+            },
+            {
+                "id": "1lgb2eFtbaM8shwejPtbDOOHGk-K_Tl9S",
+                "type": "video"
+            },
+            {
+                "id": "1lZx2DwjiOerUtb7mvBwT5OFX3kPgrgD3",
+                "type": "video"
+            },
+            {
+                "id": "1kVVrD7m-n5eSn5eqPBJydXodlqUw-7yW",
+                "type": "video"
+            },
+            {
+                "id": "1l_xHwHGeg1ndPnjg-9XRth4Gihx21slJ",
+                "type": "video"
+            },
+            {
+                "id": "1kYm1t4VsIu9bUOyjujcf0avY9dW_7cYM",
+                "type": "video"
+            }
+        ]
+    },
+    {
+        "name": "Tiago Silver",
+        "id": "tiago_silver",
+        "gdriveFolder": "1h3rkbrzvz_bMdNknX3rfxo1ElRP870eg",
+        "files": [
+            {
+                "id": "1ioaqVbBEsI7GzaRdcdBgn2c3GzflDJKC",
+                "type": "image"
+            },
+            {
+                "id": "1IZjs7-3rLGxvOT-KCcqC160Ddcu5il3e",
+                "type": "image"
+            },
+            {
+                "id": "1rp_6urMYDFU2JLLZV8vXmWJXWXhlhyAF",
+                "type": "image"
+            },
+            {
+                "id": "1hGE9bPHEBMMEsZuSzP7ygq8ncxd22MLB",
+                "type": "image"
+            }
+        ]
+    },
+    {
+        "name": "Alterlife",
+        "id": "alterlife",
         "gdriveFolder": "1tqqsLvCDCqTopZZXCI5Sz_EA_IOucZQ_",
         "files": [
             {
@@ -295,8 +495,8 @@ const AkademieData = [
         ]
     },
     {
-        "name": "Ily",
-        "id": "ily",
+        "name": "Circle D Flow Clips",
+        "id": "circle_d_flow_clips",
         "gdriveFolder": "1sqF3XgJsgIeimREnm5eblsKC_tRwsq0S",
         "files": [
             {
@@ -310,28 +510,42 @@ const AkademieData = [
         ]
     },
     {
-        "name": "Irene",
-        "id": "irene",
-        "gdriveFolder": "1Pj-kH2K0qT6oXqS4h9FIf1jL-E4P-jYq",
-        "files": []
+        "name": "Enock",
+        "id": "enock",
+        "gdriveFolder": "10AReatvo2twiQrfJm_MQ9LaDTiBlNpH_",
+        "files": [
+            {
+                "id": "1oGQxPqkQFjVAre10nGi-G1MLjtYD-SJM",
+                "type": "image"
+            },
+            {
+                "id": "1589o22IoLiRSBhgyTTou7TU5wDlnqUWY",
+                "type": "image"
+            },
+            {
+                "id": "1lPzg6K-ls2C2Axjo6OyDlZe0F2BuOH_k",
+                "type": "image"
+            },
+            {
+                "id": "1-ojkGIy5MyHR2Lm7ZpyH4SSpjHwa5piA",
+                "type": "video"
+            }
+        ]
     },
     {
-        "name": "Joao L. T.",
-        "id": "joao_l_t",
-        "gdriveFolder": "1P9N0T4oV5s2H-zK7N7k1UqjQ-Knj-Rk5",
-        "files": []
-    },
-    {
-        "name": "Laetitia",
-        "id": "laetitia",
-        "gdriveFolder": "1-UjY0J_gVfQO3G-2w3w88d_F2kS2sM-x",
-        "files": []
-    },
-    {
-        "name": "Musa",
-        "id": "musa",
-        "gdriveFolder": "1jB40RjMofL-60s4o4F5Z-6YfJvBw4mE-",
-        "files": []
+        "name": "Ingrid",
+        "id": "ingrid",
+        "gdriveFolder": "1IJccVePiniN1YP0znpH_XT0i0eqyASk-",
+        "files": [
+            {
+                "id": "1k_L_QotnjiNE0Qtl8iDtC1dg19ksYNel",
+                "type": "image"
+            },
+            {
+                "id": "1Mebl56S4AWJ4x8rPzyx8RfKkx-LDH3pj",
+                "type": "image"
+            }
+        ]
     },
     {
         "name": "Naru the Token",
@@ -385,117 +599,73 @@ const AkademieData = [
         ]
     },
     {
-        "name": "Oussama",
-        "id": "oussama",
-        "gdriveFolder": "1L84m40G_kLqU4s5S-xRAl7N4Y99-PzX2",
+        "name": "Odis",
+        "id": "odis",
+        "gdriveFolder": "1zZMuDk_yi0J6GDHXID7bhT4GQiKhdqGR",
         "files": []
     },
     {
-        "name": "Pascale",
-        "id": "pascale",
-        "gdriveFolder": "1-0N4PjA2Xv8gG8yWz6T7B056WwP3d3zM",
-        "files": []
-    },
-    {
-        "name": "Rui",
-        "id": "rui",
-        "gdriveFolder": "1jU0c9R4U36Xk6w_wXW_YwAOFDft2J94e",
-        "files": []
-    },
-    {
-        "name": "Rz Ramy",
-        "id": "rz_ramy",
-        "gdriveFolder": "1G4j_g4Jm6KDEl_m2L8XN3Zz1n_9X6zY_",
-        "files": []
-    },
-    {
-        "name": "Stela",
-        "id": "stela",
-        "gdriveFolder": "1Uqt5UlJ",
-        "files": []
-    },
-    {
-        "name": "Tio Rans",
-        "id": "tio_rans",
-        "gdriveFolder": "1iLgoxnGgjy3VAkU1DD1gVZcpPwFLGzWB",
+        "name": "Rebelroots",
+        "id": "rebelroots",
+        "gdriveFolder": "1gry2WEiLBXWFOMxFyS3CuqFv2UvJas45",
         "files": [
             {
-                "id": "1iM9KWuk1uNfqyhh7_sQMWOo0RAWFBh6B",
+                "id": "1h0My3NkaupNK0fNw7f6Tn1txxYfaUAc1",
                 "type": "image"
             },
             {
-                "id": "1kV8idHroliscEWGgDrV3P_I2mHzpj1vo",
+                "id": "1hU6t7UdOL4S7xcN4w9ZwMMaTgUq8Y0jd",
                 "type": "image"
             },
             {
-                "id": "1kOuhK5miyP2lQOmb03f0FUWX3VfR29T8",
+                "id": "1h7tOgz_Avcg7Gknvnnr3DJTboD5qoSQk",
                 "type": "image"
             },
             {
-                "id": "1kOEkrVtz1uccC-neBYMpEh8f7kayXjeL",
+                "id": "1h5gGBReM7uka5HCLQBG-yOJP3ai1vcjp",
                 "type": "image"
             },
             {
-                "id": "1kN8-5CUpE56SSgHAupwnuY5l89o6cI4q",
+                "id": "1h2XtjqqVWlpdw-OrlJfiu3oGfxusvU_7",
                 "type": "image"
             },
             {
-                "id": "16cug7kUq0hdGurp8XLpzNKzZ9KIUBJVg",
+                "id": "1i3t6ZMaaF2PnkbVL3YdsD758bfS4qa2b",
+                "type": "image"
+            },
+            {
+                "id": "1hzF7QXDl9fzw2k9CnkLL0JEb20KHPMjf",
+                "type": "image"
+            },
+            {
+                "id": "1hqPaV-R1c8FrnUOSsbobFuOskHyceYKR",
+                "type": "image"
+            },
+            {
+                "id": "1hg5t92i6N07hjpQhshQ370KHRSbhJHW-",
+                "type": "image"
+            },
+            {
+                "id": "1iMhPIPdIQjIX_VchF9HslvZJxGyh0sJy",
                 "type": "video"
             },
             {
-                "id": "1lgb2eFtbaM8shwejPtbDOOHGk-K_Tl9S",
-                "type": "video"
-            },
-            {
-                "id": "1lZx2DwjiOerUtb7mvBwT5OFX3kPgrgD3",
-                "type": "video"
-            },
-            {
-                "id": "1kVVrD7m-n5eSn5eqPBJydXodlqUw-7yW",
-                "type": "video"
-            },
-            {
-                "id": "1l_xHwHGeg1ndPnjg-9XRth4Gihx21slJ",
-                "type": "video"
-            },
-            {
-                "id": "1kYm1t4VsIu9bUOyjujcf0avY9dW_7cYM",
+                "id": "1ifYjRyM6Voz5F6qRvdf332C1Wf85wY4c",
                 "type": "video"
             }
         ]
     },
     {
-        "name": "Tony",
-        "id": "tony",
+        "name": "soqhiejewels",
+        "id": "soqhiejewels",
         "gdriveFolder": "1noZs793lQIPZk540TkwY47fGcyrA8-Ly",
         "files": []
-    },
-    {
-        "name": "Uma",
-        "id": "uma",
-        "gdriveFolder": "1h3rkbrzvz_bMdNknX3rfxo1ElRP870eg",
-        "files": [
-            {
-                "id": "1ioaqVbBEsI7GzaRdcdBgn2c3GzflDJKC",
-                "type": "image"
-            },
-            {
-                "id": "1IZjs7-3rLGxvOT-KCcqC160Ddcu5il3e",
-                "type": "image"
-            },
-            {
-                "id": "1rp_6urMYDFU2JLLZV8vXmWJXWXhlhyAF",
-                "type": "image"
-            },
-            {
-                "id": "1hGE9bPHEBMMEsZuSzP7ygq8ncxd22MLB",
-                "type": "image"
-            }
-        ]
     }
 ];
 
+if (typeof window !== 'undefined') {
+    window.AkademieData = AkademieData;
+}
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = AkademieData;
 }
