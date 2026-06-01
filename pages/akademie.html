@@ -148,7 +148,30 @@
     <script src="../js/data/akademie_data.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            renderFolders();
+            const container = document.getElementById('folders-container');
+            container.innerHTML = '<p class="text-[#d4af37] text-center w-full cinzel animate-pulse">Loading Akademie Data...</p>';
+            
+            fetch('/api/akademie')
+                .then(res => res.json())
+                .then(data => {
+                    if (data && data.Artist && data.Artist.length > 0) {
+                        const foldersMap = {};
+                        data.Artist.forEach(item => {
+                            const folderName = item.professional_name;
+                            if (!foldersMap[folderName]) foldersMap[folderName] = { name: folderName, files: [] };
+                            const idMatch = item.url.match(/id=([^&]+)/);
+                            if (idMatch) {
+                                foldersMap[folderName].files.push(idMatch[1]);
+                            }
+                        });
+                        window.AkademieData = Object.values(foldersMap);
+                    }
+                    renderFolders();
+                })
+                .catch(err => {
+                    console.error("Failed to load /api/akademie, using fallback", err);
+                    renderFolders(); // fallback to local script data
+                });
         });
 
         function renderFolders() {

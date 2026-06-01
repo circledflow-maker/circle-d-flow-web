@@ -102,21 +102,24 @@
                         </li>
 
                         <!-- PROTOCOL 2 -->
-                        <li id="quest-protocol-2" class="quest-item locked-quest" onclick="openProtocol(2)" style="padding: 15px; border-bottom: 1px solid #333; cursor: pointer; transition: 0.3s; opacity: 0.5;">
-                            <span style="color: #00f0ff; font-size: 0.7em; letter-spacing: 2px;">▶ ENCRYPTED</span>
+                        <li id="quest-protocol-2" class="quest-item active-quest" onclick="openProtocol(2)" style="padding: 15px; border-bottom: 1px solid #333; cursor: pointer; transition: 0.3s; opacity: 1;">
+                            <span style="color: #00f0ff; font-size: 0.7em; letter-spacing: 2px;">- ACTIVE</span>
                             <h4 class="font-tech" style="color: #fff; margin: 5px 0;">PROTOCOL 2: THE MERCHANT</h4>
                             <p style="color: #888; font-size: 0.8em; margin: 0;">Decrypts the High Palace Market.</p>
                         </li>
 
                         <!-- PROTOCOL 3 -->
-                        <li id="quest-protocol-3" class="quest-item locked-quest" onclick="openProtocol(3)" style="padding: 15px; border-bottom: 1px solid #333; cursor: pointer; transition: 0.3s; opacity: 0.5;">
-                            <span style="color: #ff3232; font-size: 0.7em; letter-spacing: 2px;">▶ ENCRYPTED</span>
+                        <li id="quest-protocol-3" class="quest-item active-quest" onclick="openProtocol(3)" style="padding: 15px; border-bottom: 1px solid #333; cursor: pointer; transition: 0.3s; opacity: 1;">
+                            <span style="color: #ff3232; font-size: 0.7em; letter-spacing: 2px;">- ACTIVE</span>
                             <h4 class="font-tech" style="color: #fff; margin: 5px 0;">PROTOCOL 3: TURF WARS</h4>
                             <p style="color: #888; font-size: 0.8em; margin: 0;">Activates Weapon Systems for Lisbon.</p>
                         </li>
                     </ul>
                     
-                    <h3 style="color:#d4af37; border-bottom:1px solid #333; padding-bottom:10px; margin-bottom:15px; margin-top:30px; font-size:0.9em;">COMMUNITY FORGE</h3>
+                    <div style="display: flex; justify-content: space-between; align-items: baseline; border-bottom:1px solid #333; padding-bottom:10px; margin-bottom:15px; margin-top:30px;">
+                        <h3 style="color:#d4af37; margin: 0; font-size:0.9em;">COMMUNITY FORGE</h3>
+                        <a href="flow_area_create.html" style="color:#00f0ff; font-size: 0.7em; text-decoration: none; border: 1px solid #00f0ff; padding: 2px 5px;">+ CREATE AREA</a>
+                    </div>
                     <ul id="user-quests-list" class="codex-list" style="list-style: none; padding: 0; margin: 0;">
                         <!-- Fetched from Supabase -->
                     </ul>

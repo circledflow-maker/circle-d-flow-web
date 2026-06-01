@@ -291,7 +291,7 @@ async function handleOAuthLogin(provider) {
     const { data, error } = await window.supabaseClient.auth.signInWithOAuth({
         provider: provider,
         options: {
-            redirectTo: window.location.origin + '/pages/dashboard.html'
+            redirectTo: window.location.origin + '/pages/master_dashboard.html'
         }
     });
     if (error) {
