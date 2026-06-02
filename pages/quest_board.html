@@ -603,7 +603,8 @@
         async function loadUserQuests() {
             if(!window.supabaseClient) return;
             try {
-                const { data, error } = await window.supabaseClient.from('quests').select('*').order('created_at', { ascending: false });
+                // Fetch from user_quests so map beacons appear in the codex
+                const { data, error } = await window.supabaseClient.from('user_quests').select('*').order('created_at', { ascending: false });
                 if(error) throw error;
                 
                 const list = document.getElementById('user-quests-list');
@@ -625,9 +626,9 @@
                     li.onclick = () => openUserQuest(q.id);
                     
                     li.innerHTML = `
-                        <span style="color: #d4af37; font-size: 0.7em; letter-spacing: 2px;">▶ SIGNAL: ${q.type.toUpperCase()}</span>
+                        <span style="color: #d4af37; font-size: 0.7em; letter-spacing: 2px;">▶ SIGNAL: ${q.type ? q.type.toUpperCase() : 'BEACON'}</span>
                         <h4 class="font-tech" style="color: #fff; margin: 5px 0;">${q.title}</h4>
-                        <p style="color: #888; font-size: 0.8em; margin: 0;">By: ${q.creator_name || 'Unknown'}</p>
+                        <p style="color: #888; font-size: 0.8em; margin: 0;">Reward: ${q.reward_exp || 50} XP</p>
                     `;
                     list.appendChild(li);
                 });
@@ -645,19 +646,19 @@
             
             document.getElementById('proto-title').innerText = q.title;
             
-            let textHtml = `<p style="margin-bottom:15px; color:#aaa;"><strong>Author:</strong> ${q.creator_name}</p>`;
+            let textHtml = `<p style="margin-bottom:15px; color:#aaa;"><strong>Author:</strong> ${q.creator_name || 'Unknown Voyager'}</p>`;
             textHtml += `<p style="margin-bottom:15px;">${q.description || 'No description provided.'}</p>`;
             textHtml += `<ul style="list-style:square; padding-left:20px; color:#888;">`;
             if(q.address) textHtml += `<li><strong>Location:</strong> ${q.address}</li>`;
-            textHtml += `<li><strong>Reward:</strong> ${q.reward_karma} Karma / ${q.reward_trust} Trust</li>`;
+            else textHtml += `<li><strong>Coordinates:</strong> ${q.latitude.toFixed(4)}, ${q.longitude.toFixed(4)}</li>`;
+            textHtml += `<li><strong>Reward:</strong> ${q.reward_exp || 50} EXP</li>`;
             textHtml += `</ul>`;
             
-            if (q.qr_code_data) {
-                textHtml += `<div style="margin-top:20px; border-top:1px solid #333; padding-top:15px;">`;
-                textHtml += `<p style="color:#d4af37; font-size:0.8em; margin-bottom:10px;">SCAN TO ACCEPT QUEST:</p>`;
-                textHtml += `<a href="${q.qr_code_data}" target="_blank" style="display:inline-block; padding:10px; background:#d4af37; color:#000; text-decoration:none; font-weight:bold; font-size:0.9em; border-radius:2px;">[ VIEW QUEST SIGNAL ]</a>`;
-                textHtml += `</div>`;
-            }
+            // Map link
+            textHtml += `<div style="margin-top:20px; border-top:1px solid #333; padding-top:15px;">`;
+            textHtml += `<p style="color:#d4af37; font-size:0.8em; margin-bottom:10px;">SCAN TO ACCEPT QUEST:</p>`;
+            textHtml += `<a href="/pages/quest_map.html?lat=${q.latitude}&lng=${q.longitude}" target="_blank" style="display:inline-block; padding:10px; background:#d4af37; color:#000; text-decoration:none; font-weight:bold; font-size:0.9em; border-radius:2px;">[ VIEW QUEST SIGNAL ]</a>`;
+            textHtml += `</div>`;
             
             document.getElementById('proto-text').innerHTML = textHtml;
             

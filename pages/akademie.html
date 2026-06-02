@@ -211,11 +211,12 @@
                     const srcUrl = `https://drive.google.com/uc?export=view&id=${id}`;
                     const previewUrl = `https://drive.google.com/file/d/${id}/preview`;
                     
+                    const thumbUrl = `https://drive.google.com/thumbnail?id=${id}&sz=w600`;
+                    
                     // We load as image first. If it's a video, user clicks it and the full view can use iframe preview
                     imagesHTML += `
-                        <div class="grid-item" onclick="openFullMedia('${srcUrl}', '${previewUrl}', '${type}', event)">
-                            <!-- Try loading as image, fallback to a video icon if it fails to load image -->
-                            <img src="${srcUrl}" onerror="this.onerror=null; this.src='../Assets/images/logo.png'; this.style.opacity='0.2'; this.parentElement.innerHTML += '<span class=\\'material-symbols-outlined absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-4xl\\'>play_circle</span>';" alt="${artist.name} Item ${i}">
+                        <div class="grid-item group relative" onclick="openFullMedia('${srcUrl}', '${previewUrl}', '${type}', event)">
+                            <img src="${thumbUrl}" class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" loading="lazy" onerror="this.onerror=null; this.src='../Assets/images/logo.png'; this.style.opacity='0.2'; this.parentElement.innerHTML += '<span class=\\'material-symbols-outlined absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-4xl\\'>play_circle</span>';" alt="${artist.name} Item ${i}">
                         </div>
                     `;
                 });
@@ -266,6 +267,8 @@
                     const srcUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
                     const previewUrl = `https://drive.google.com/file/d/${fileId}/preview`;
                     
+                    const thumbUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=w600`;
+                    
                     // Add video play icon if type is video
                     const playIconHTML = fileType === 'video' ? `
                         <div class="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/50 transition-colors">
@@ -274,7 +277,7 @@
                     ` : '';
                     
                     imagesHTML += `<div class="grid-item group relative" onclick="openFullMedia('${srcUrl}', '${previewUrl}', '${fileType}', event)">
-                        <img src="${srcUrl}" 
+                        <img src="${thumbUrl}" 
                              alt="Portfolio item" 
                              class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                              loading="lazy"

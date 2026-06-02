@@ -4,33 +4,13 @@ import requests
 import re
 import html
 
-# The 25 IDs provided by the user
+# The 5 IDs provided by the user
 gdrive_ids = [
-    "1crgVRzjOIedbtf1RrgFCRzQaYMIciCv5",
-    "1Pf6Fp6LF63nuBTB0wv3qH9EQzPS4AUWF",
-    "18XtQbCY1pyYVANRqf2OX4-ODi4rJXr9k",
-    "1TBAiImBCui1VHSft2JAodvcXoqCAKoYO",
-    "1kGdpPY1uulIgkN9q8gI0VhYHeamjrWZo",
-    "1PQX3fASvyMeeaqZX1SZovluFRRTqRyYw",
-    "1i06xuswoy75Hhqgg2BhNmLyD0jKT6YKH",
-    "1pgpFcKB5Jv9fb8R3iFE5IOpV-uyou5gz",
-    "1gntd-LvGXMN3jOsiifqPzdfCVGKhsGzs",
-    "186A9Wuqq9-DfADfWQtLp4Cih2FEWWGmY",
-    "17vW_TYS4wthvPQJkzcfBbC7MmDz7FSF-",
-    "1oqp9ZjJ851X8KzWEtsb3md5JM4dIuNqd",
-    "1XKU7lVBpozSlWsT3JAMUP6VS2vnUYVZH",
-    "1zQirr9syKBRZRz7pOB4Bk2V6M5VddkmH",
-    "1xvfdDsUA8s8C_J0iHiPfuaPfvUqt5UlJ",
-    "1iLgoxnGgjy3VAkU1DD1gVZcpPwFLGzWB",
     "1h3rkbrzvz_bMdNknX3rfxo1ElRP870eg",
-    "1tqqsLvCDCqTopZZXCI5Sz_EA_IOucZQ_",
-    "1sqF3XgJsgIeimREnm5eblsKC_tRwsq0S",
-    "10AReatvo2twiQrfJm_MQ9LaDTiBlNpH_",
-    "1IJccVePiniN1YP0znpH_XT0i0eqyASk-",
-    "11Wr8HkAXSHewNxfsoclMCrOQHgANuQ-l",
-    "1zZMuDk_yi0J6GDHXID7bhT4GQiKhdqGR",
-    "1gry2WEiLBXWFOMxFyS3CuqFv2UvJas45",
-    "1noZs793lQIPZk540TkwY47fGcyrA8-Ly"
+    "1noZs793lQIPZk540TkwY47fGcyrA8-Ly",
+    "1iLgoxnGgjy3VAkU1DD1gVZcpPwFLGzWB",
+    "1kGdpPY1uulIgkN9q8gI0VhYHeamjrWZo",
+    "1oqp9ZjJ851X8KzWEtsb3md5JM4dIuNqd"
 ]
 
 valid_exts = ['.jpg', '.jpeg', '.png', '.mp4', '.mov']

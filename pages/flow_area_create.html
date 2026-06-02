@@ -48,7 +48,7 @@
         }
     </style>
 </head>
-<body class="min-h-screen bg-[url('../assets/textures/noise.png')]">
+<body class="min-h-screen bg-[url('../Assets/textures/noise.png')]">
 
     <div class="container mx-auto px-4 py-12 max-w-2xl relative z-10">
         
@@ -289,7 +289,7 @@
                             finishRender();
                         };
                         logo.onerror = () => finishRender(); // Fallback if no logo
-                        logo.src = '../assets/images/cqr-logo-gold.png';
+                        logo.src = '../Assets/images/cqr-logo-gold.png';
                         
                         function finishRender() {
                             const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
