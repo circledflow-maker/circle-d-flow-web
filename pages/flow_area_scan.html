@@ -84,7 +84,7 @@
                 <!-- System Video Player -->
                 <div class="bg-black/80 rounded border border-[#d4af37]/30 p-2 mb-4">
                     <p class="text-xs text-[#d4af37] uppercase tracking-widest mb-2">Jam Session (May)</p>
-                    <video id="jam-player" controls class="w-full rounded h-[180px] bg-black" playsinline></video>
+                    <iframe id="jam-player" class="w-full rounded h-[180px] bg-black border-0" allowfullscreen></iframe>
                     <div class="flex justify-between mt-2">
                         <button onclick="playNextVideo(-1)" class="text-xs border border-white/20 px-2 py-1 hover:bg-white/10 rounded">Previous</button>
                         <button onclick="playNextVideo(1)" class="text-xs border border-white/20 px-2 py-1 hover:bg-white/10 rounded">Next</button>
@@ -137,11 +137,11 @@
             
             // Check auth first
             const session = await window.supabaseClient.auth.getSession();
-            if(!session.data.session) {
-                alert("You must be logged in to sync with the Flow Area.");
-                return;
+            if(session && session.data && session.data.session) {
+                sessionUser = session.data.session.user;
+            } else {
+                console.log("Guest Voyager detected.");
             }
-            sessionUser = session.data.session.user;
             
             if(!areaId) {
                 alert("No Flow Area ID detected in the URL.");
@@ -165,10 +165,6 @@
             currentVideoIdx = Math.floor(Math.random() * jamVideos.length);
             loadJamVideo(currentVideoIdx);
             
-            // Auto-play next video when current one ends
-            const player = document.getElementById('jam-player');
-            player.addEventListener('ended', () => { playNextVideo(1); });
-            
             // Load Comments
             loadComments();
             
@@ -186,9 +182,8 @@
             
             const vidId = jamVideos[currentVideoIdx];
             const player = document.getElementById('jam-player');
-            // Using uc?export=download works perfectly for native <video> tag
-            player.src = `https://drive.google.com/uc?export=download&id=${vidId}`;
-            player.play().catch(e => console.log("Video autoplay blocked", e));
+            // Using /preview iframe for Google Drive large files to avoid virus-scan HTML intercepts
+            player.src = `https://drive.google.com/file/d/${vidId}/preview`;
         }
         
         function playNextVideo(dir) {
