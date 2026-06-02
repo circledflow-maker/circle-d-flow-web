@@ -5,11 +5,11 @@ const AkademieData = [
         "gdriveFolder": "1h3rkbrzvz_bMdNknX3rfxo1ElRP870eg",
         "files": [
             {
-                "id": "1ioaqVbBEsI7GzaRdcdBgn2c3GzflDJKC",
+                "id": "1hGE9bPHEBMMEsZuSzP7ygq8ncxd22MLB",
                 "type": "image"
             },
             {
-                "id": "1IZjs7-3rLGxvOT-KCcqC160Ddcu5il3e",
+                "id": "1ioaqVbBEsI7GzaRdcdBgn2c3GzflDJKC",
                 "type": "image"
             },
             {
@@ -17,7 +17,7 @@ const AkademieData = [
                 "type": "image"
             },
             {
-                "id": "1hGE9bPHEBMMEsZuSzP7ygq8ncxd22MLB",
+                "id": "1IZjs7-3rLGxvOT-KCcqC160Ddcu5il3e",
                 "type": "image"
             }
         ]
@@ -28,15 +28,15 @@ const AkademieData = [
         "gdriveFolder": "1iLgoxnGgjy3VAkU1DD1gVZcpPwFLGzWB",
         "files": [
             {
-                "id": "1iM9KWuk1uNfqyhh7_sQMWOo0RAWFBh6B",
-                "type": "image"
-            },
-            {
-                "id": "1kV8idHroliscEWGgDrV3P_I2mHzpj1vo",
-                "type": "image"
-            },
-            {
                 "id": "1kOuhK5miyP2lQOmb03f0FUWX3VfR29T8",
+                "type": "image"
+            },
+            {
+                "id": "1lZx2DwjiOerUtb7mvBwT5OFX3kPgrgD3",
+                "type": "video"
+            },
+            {
+                "id": "1iM9KWuk1uNfqyhh7_sQMWOo0RAWFBh6B",
                 "type": "image"
             },
             {
@@ -48,18 +48,6 @@ const AkademieData = [
                 "type": "image"
             },
             {
-                "id": "16cug7kUq0hdGurp8XLpzNKzZ9KIUBJVg",
-                "type": "video"
-            },
-            {
-                "id": "1lgb2eFtbaM8shwejPtbDOOHGk-K_Tl9S",
-                "type": "video"
-            },
-            {
-                "id": "1lZx2DwjiOerUtb7mvBwT5OFX3kPgrgD3",
-                "type": "video"
-            },
-            {
                 "id": "1kVVrD7m-n5eSn5eqPBJydXodlqUw-7yW",
                 "type": "video"
             },
@@ -68,7 +56,23 @@ const AkademieData = [
                 "type": "video"
             },
             {
+                "id": "1kaJ_tW2zmg4GfCzzXVrqN_uTfWwW6M0N",
+                "type": "video"
+            },
+            {
                 "id": "1kYm1t4VsIu9bUOyjujcf0avY9dW_7cYM",
+                "type": "video"
+            },
+            {
+                "id": "1kV8idHroliscEWGgDrV3P_I2mHzpj1vo",
+                "type": "image"
+            },
+            {
+                "id": "1lgb2eFtbaM8shwejPtbDOOHGk-K_Tl9S",
+                "type": "video"
+            },
+            {
+                "id": "16cug7kUq0hdGurp8XLpzNKzZ9KIUBJVg",
                 "type": "video"
             }
         ]
@@ -79,99 +83,115 @@ const AkademieData = [
         "gdriveFolder": "1kGdpPY1uulIgkN9q8gI0VhYHeamjrWZo",
         "files": [
             {
-                "id": "1FKt2C124ZjUJ9MXg8MBJU8b23VFZB0Kp",
+                "id": "1II5WCOfCEPNlvWbWfrW9UELSpXjOauwy",
                 "type": "image"
             },
             {
-                "id": "1BdzXuofr6c-w3SP3ur4CPfoFMNepnxsL",
+                "id": "1sv_ojBHYyJL2dE9jX31GzUxNSGmtCyQq",
                 "type": "image"
             },
             {
-                "id": "1VaEqeFoe-kkDZ5r6KS1Atn9Qb35NgPtr",
+                "id": "1rDQtmHUj-rEHaqrf5naxIGqtZRgXtNUf",
                 "type": "image"
             },
             {
-                "id": "12e_tKfHMAOQtVsCGGHMc_hvqItwSnYK7",
+                "id": "1XnW7uIsMYM9qfsj2S9QUDYS7lNNrRbFs",
                 "type": "image"
             },
             {
-                "id": "1KteyOyXr1seiIweYgg7ugsP9UnbrrOhj",
+                "id": "1U6sXDKo3PJBBBBUxYBupTk6QEOwUQadr",
                 "type": "image"
             },
             {
-                "id": "1Dbd0Joq-oeEpgkPiYTE8KSQxStcyGFbh",
+                "id": "1t1UC-PwK6Odfq_dIwbVYk0FWkGM7sUks",
                 "type": "image"
             },
             {
-                "id": "13K0McdcgveGlIE0pprugDtw7VZNDRBl0",
+                "id": "1LLKqRUfc_ZZrTmLFXFGA4KM91nko10n6",
                 "type": "image"
             },
             {
-                "id": "10aGFLB8wZQ-C7ntpdykEJw10hhGc8fL6",
+                "id": "1xON6jX0T6toyQYsnJ9xOzpA9ekh5ts1o",
                 "type": "image"
             },
             {
-                "id": "1j5yqEdl84at123Arrx17PTPe3qxMJ0Jq",
+                "id": "1gpZIb8XNJ_fvgyqhxpISRH4oHIUu3dZg",
                 "type": "image"
             },
             {
-                "id": "1X0ZEpVkYMKA-0bV_zCYIp5n_KHaihJQN",
+                "id": "1jBT1pPLJaKRjKpX9ulg8VeyDpkXcOVAG",
                 "type": "image"
             },
             {
-                "id": "1G8kS22xxJFz-c0-X8z7ZESWBppffWXW4",
+                "id": "1naCwP5RDoHL6PxzFL_sRs4ku8uXQLNQ4",
+                "type": "image"
+            },
+            {
+                "id": "1PBo7KPgiDXu0BBbYivJCtLRQT1_tAfLz",
+                "type": "image"
+            },
+            {
+                "id": "1rHRE_-sAAHwG8UYaFELCswheAKuDj1vC",
                 "type": "image"
             }
         ]
     },
     {
-        "name": "16 May",
-        "id": "16_may",
+        "name": "C-Riz",
+        "id": "c_riz",
         "gdriveFolder": "1FQItgHRVSUoI3-iVzbobksPlmBZgK6sL",
         "files": [
             {
-                "id": "1Hao8mBHhg_9kAC4xM4DQen3h6Ya3gD8B",
+                "id": "1Pq8fOjsEuMD45GMxO2LTBHTqd54JbiE2",
                 "type": "image"
             },
             {
-                "id": "1TOwCwN_OHZr9JUCZgtBZGTpLFCIOVZhU",
+                "id": "1L7x9wXe-YZMIYr69ljuLc7j8k94oP0NS",
                 "type": "image"
             },
             {
-                "id": "193dm2s-BlVAM4Lw7I9OylG2-y4UXvBiz",
+                "id": "1PpCZXxJW01J1GxFbLAI37S6e02DzxEt1",
                 "type": "image"
             },
             {
-                "id": "1jakLUzpL4cDpr_2TlpzlihDdFH7fzxY7",
-                "type": "image"
-            },
-            {
-                "id": "1g88nuJKVaWVvYL-VlxaKUqq0nKrwSztW",
-                "type": "image"
-            },
-            {
-                "id": "1AnrFEl1iFaTyWzlGG8hOLfo0If6TA_Wj",
-                "type": "image"
-            },
-            {
-                "id": "1MERbdyTFkzxFrWuX0xJAR-Pi82yfJXm7",
+                "id": "1zwh2JUFbJm9qpGb7i1NcSP8bzoNElQaI",
                 "type": "video"
             },
             {
-                "id": "1t8r7UcqzD2r9LQPcrlwpbzqZP9HEHoo-",
+                "id": "1BNu-qq20ufjbZfKenNmqchswpWeB1xdE",
                 "type": "image"
             },
             {
-                "id": "1HtWmK7AI7gFTGzKNdfhaqdpZLb_bHiMq",
+                "id": "1376BSIqE1HHhjk33QSKmxZCqSy8n9i34",
                 "type": "image"
             },
             {
-                "id": "1Thu9mA2z-lIM9iH5d1TrFcZ9cQM3p4kn",
-                "type": "video"
+                "id": "1lfTnTwzd9ktvm4NGMz-NrGq0BZmxKkFF",
+                "type": "image"
             },
             {
-                "id": "1NkthYm7qw_gJJh1KFV6vnPJx1h0W-o2w",
-                "type": "video"
+                "id": "1pAvTYC75puEtZ9DPEJCAiERqlF8zXBfW",
+                "type": "image"
+            },
+            {
+                "id": "1zIsx8V51-fVwukQSCGc1jYwFi0DpQ1_p",
+                "type": "image"
+            },
+            {
+                "id": "1COHssCTejMhtUAJi_u-VvIZrqhYyUYNk",
+                "type": "image"
+            },
+            {
+                "id": "1N327NYTYnIvCVUfl6soS2gajZS2-rr4L",
+                "type": "image"
+            },
+            {
+                "id": "14dZjUK6im1jvoBiZ_CNsI7g8CZTft37D",
+                "type": "image"
+            },
+            {
+                "id": "1xqlM2sW3ShQn_B268sJcQObFrHGjmXxW",
+                "type": "image"
             }
         ]
     },
@@ -181,39 +201,43 @@ const AkademieData = [
         "gdriveFolder": "1V3okQhtQgswdLz5zXtteC_qMo4wSH0Jc",
         "files": [
             {
-                "id": "1QdEqchtLVoTpFkIAAP-JLooGN7IyS1Jd",
-                "type": "video"
-            },
-            {
-                "id": "1St4IQZgLwumJF9GnLD5zWgTTDdrq0qU4",
-                "type": "video"
-            },
-            {
                 "id": "1dVBnvMd399zap8TozEDgGHIWqFbdUBEJ",
                 "type": "video"
             },
             {
-                "id": "1F33DHahRM344IZwDKX-nYEPEn-aJw8Aq",
-                "type": "video"
-            },
-            {
-                "id": "1U3bFTcNozuO8GByHJlGhv7MWnljB8BrA",
+                "id": "1CWGGN7DphBOr55x6hnNRmgIyxNs-Vo19",
                 "type": "image"
             },
             {
-                "id": "1axW-4D1bXAiaVkSg7vHN48u5KXh5ppTS",
+                "id": "1hqptCSpJmREoOcH-NWzN7nxk8T3J4zFc",
                 "type": "image"
             },
             {
-                "id": "1NvU-BRky5nxS9u8bTLa4e73HYX7tyd3i",
+                "id": "1rwE3NzGpuRGt7_Ze1A4gparAfAbser6H",
                 "type": "image"
             },
             {
-                "id": "1wz0GP6A7-9PYVepvVcsz7i7JnhQdqeyR",
+                "id": "1gzj4xTcJlvfcOGqD8rFLmFSXk_6Z3YCl",
                 "type": "image"
             },
             {
-                "id": "1s4gMoRCuyFjAn471cUZYgvJfHpUYBqj8",
+                "id": "1MfrwzXDylHqhn0CsOSXdsLumQLUVf4A0",
+                "type": "image"
+            },
+            {
+                "id": "1xkDEVeWB9twFkH4SaNzC48Fy4SyAZSRo",
+                "type": "image"
+            },
+            {
+                "id": "1OOImRKsT_jWICFabg7QPFJ267HQFIUkN",
+                "type": "image"
+            },
+            {
+                "id": "18sBTjHJNTUgkSp7QnXxhnha2WqpJR5am",
+                "type": "image"
+            },
+            {
+                "id": "1FDjBUtx6Y118SKJ4qbnVJaxmpZ_ye4FW",
                 "type": "image"
             },
             {
@@ -221,7 +245,11 @@ const AkademieData = [
                 "type": "image"
             },
             {
-                "id": "14sfmuEU8v6aH8yzSXCViN_nFA_qpImvU",
+                "id": "1DqO_w2VHkrgRfdlpiKyAt5CEH2tzX5u0",
+                "type": "image"
+            },
+            {
+                "id": "10H2KBj3gheS5lTIudChC5PtnyC1tUmYc",
                 "type": "image"
             }
         ]

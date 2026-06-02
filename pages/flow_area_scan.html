@@ -55,11 +55,8 @@
         }
     </style>
 </head>
-<body class="min-h-screen bg-[url('../assets/textures/noise.png')] flex items-center justify-center relative">
+<body class="min-h-screen flex items-center justify-center relative">
     
-    <!-- Audio Element -->
-    <audio id="flow-audio" loop src="https://cdn.pixabay.com/download/audio/2022/05/16/audio_0574167df3.mp3?filename=african-woodwind-110051.mp3"></audio>
-
     <div class="pulse-ring"></div>
     <div class="pulse-ring" style="animation-delay: 2s;"></div>
 
@@ -80,10 +77,19 @@
             <div class="flex-shrink-0">
                 <h2 id="area-name-display" class="text-xl font-cinzel text-electric/80 mb-1 uppercase">Unknown Location</h2>
                 <p id="area-creator-display" class="text-xs text-white/50 mb-2 font-mono">Forged by: Unknown</p>
-                <p class="text-xs text-white/40 mb-4 uppercase tracking-widest">Resonance Audio Engaged</p>
                 
-                <div id="timer-display" class="text-electric font-bold text-glow mb-4">25:00</div>
-                <p class="text-sm text-white/60 mb-6">Enjoy the African Jazz. The timer continues in the background.</p>
+                <div id="timer-display" class="text-electric font-bold text-glow mb-2">25:00</div>
+                <p class="text-xs text-white/60 mb-2">The timer continues in the background.</p>
+
+                <!-- System Video Player -->
+                <div class="bg-black/80 rounded border border-[#d4af37]/30 p-2 mb-4">
+                    <p class="text-xs text-[#d4af37] uppercase tracking-widest mb-2">Jam Session (May)</p>
+                    <video id="jam-player" controls class="w-full rounded h-[180px] bg-black" playsinline></video>
+                    <div class="flex justify-between mt-2">
+                        <button onclick="playNextVideo(-1)" class="text-xs border border-white/20 px-2 py-1 hover:bg-white/10 rounded">Previous</button>
+                        <button onclick="playNextVideo(1)" class="text-xs border border-white/20 px-2 py-1 hover:bg-white/10 rounded">Next</button>
+                    </div>
+                </div>
             </div>
             
             <!-- Comments Section -->
@@ -118,6 +124,11 @@
         let areaData = null;
         let sessionUser = null;
         
+        const jamVideos = [
+            '1SQ2rjsuGxgUTa8I8ymeA0O19atFjuXnI', '15uTmpZh0BFTB2MnP0G4NInuDIeTQweEj', '1O3FGJVwUYln_MsK_YiXI1vJFftVSgsen', '1N5QmLzHQj_aV5kj3FawO_UnixDQu7LMz', '1VVuJN_ZCoXSdeBpqUK_iHbtUo4fOtc4p', '1j7KH03BY1ex4hFhUgExIkDuXKjywfobt', '1KMR_NvoqYExC-lFWyn2RLEEF_RVcNjr7', '15g1XvtdM-eUC99OpPNMyZfBe0UnfV1uP', '1FLbH3bD_WqJILn3AU698oJc0WnqqPmD6', '1jM3BUFa6ilw9KNv6yQvBUXDux6hvFlEu', '1LrTIjZCGJ1CV6a72Kk4IsL-o0Bg71qkW', '1yUFkoIHHlGFxOIgBWMnfvUR-aoGDw1R3', '1n1KJUjjDMzjUNLZXHkmjCxvGv5lNbii8', '1JZbhzHC7NQhUIs0yDIpL6XNHGzRQMSo0', '1L3mqdt-EPJIw858RQeMos1ZT1SbPUBT-'
+        ];
+        let currentVideoIdx = 0;
+
         document.getElementById('start-flow-btn').addEventListener('click', async () => {
             if (!window.supabaseClient) {
                 alert("Database connection not ready. Please wait.");
@@ -149,11 +160,14 @@
                 alert("Flow Area not found.");
                 return;
             }
+
+            // Start Video
+            currentVideoIdx = Math.floor(Math.random() * jamVideos.length);
+            loadJamVideo(currentVideoIdx);
             
-            // Start Audio
-            const audio = document.getElementById('flow-audio');
-            audio.volume = 0.5;
-            audio.play().catch(e => console.log("Audio autoplay blocked", e));
+            // Auto-play next video when current one ends
+            const player = document.getElementById('jam-player');
+            player.addEventListener('ended', () => { playNextVideo(1); });
             
             // Load Comments
             loadComments();
@@ -164,6 +178,22 @@
             
             startTimer();
         });
+        
+        function loadJamVideo(idx) {
+            if(idx < 0) idx = jamVideos.length - 1;
+            if(idx >= jamVideos.length) idx = 0;
+            currentVideoIdx = idx;
+            
+            const vidId = jamVideos[currentVideoIdx];
+            const player = document.getElementById('jam-player');
+            // Using uc?export=download works perfectly for native <video> tag
+            player.src = `https://drive.google.com/uc?export=download&id=${vidId}`;
+            player.play().catch(e => console.log("Video autoplay blocked", e));
+        }
+        
+        function playNextVideo(dir) {
+            loadJamVideo(currentVideoIdx + dir);
+        }
         
         function startTimer() {
             endTime = Date.now() + (TOTAL_SECONDS * 1000);

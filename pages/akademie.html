@@ -137,41 +137,33 @@
 
     <!-- Full Image View Overlay -->
     <div id="full-image-overlay" class="fixed inset-0 bg-black/90 z-[110] hidden flex-col items-center justify-center" onclick="closeFullImage()">
-        <button onclick="closeFullImage()" class="absolute top-6 right-6 text-white hover:text-[#d4af37] transition z-[120]">
-            <span class="material-symbols-outlined text-4xl">close</span>
+        <button onclick="closeFullImage()" class="absolute top-6 right-6 text-white hover:text-[#d4af37] transition z-[120] bg-black/50 rounded-full p-2">
+            <span class="material-symbols-outlined text-3xl">close</span>
         </button>
-        <div id="full-media-container" class="w-full h-full p-4 flex items-center justify-center pointer-events-none">
-            <!-- Populated with img or iframe -->
+        
+        <button onclick="navigateMedia(-1, event)" class="absolute left-4 top-1/2 transform -translate-y-1/2 text-white hover:text-[#d4af37] transition z-[120] bg-black/50 rounded-full p-2">
+            <span class="material-symbols-outlined text-4xl">chevron_left</span>
+        </button>
+        
+        <button onclick="navigateMedia(1, event)" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-white hover:text-[#d4af37] transition z-[120] bg-black/50 rounded-full p-2">
+            <span class="material-symbols-outlined text-4xl">chevron_right</span>
+        </button>
+
+        <div id="full-media-container" class="w-full max-w-5xl px-12 relative z-[115]" onclick="event.stopPropagation()">
+            <!-- Media goes here -->
         </div>
+
     </div>
 
     <script src="../js/data/akademie_data.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const container = document.getElementById('folders-container');
-            container.innerHTML = '<p class="text-[#d4af37] text-center w-full cinzel animate-pulse">Loading Akademie Data...</p>';
-            
-            fetch('/api/akademie')
-                .then(res => res.json())
-                .then(data => {
-                    if (data && data.Artist && data.Artist.length > 0) {
-                        const foldersMap = {};
-                        data.Artist.forEach(item => {
-                            const folderName = item.professional_name;
-                            if (!foldersMap[folderName]) foldersMap[folderName] = { name: folderName, files: [] };
-                            const idMatch = item.url.match(/id=([^&]+)/);
-                            if (idMatch) {
-                                foldersMap[folderName].files.push(idMatch[1]);
-                            }
-                        });
-                        window.AkademieData = Object.values(foldersMap);
-                    }
-                    renderFolders();
-                })
-                .catch(err => {
-                    console.error("Failed to load /api/akademie, using fallback", err);
-                    renderFolders(); // fallback to local script data
-                });
+            if (window.AkademieData && window.AkademieData.length > 0) {
+                renderFolders();
+            } else {
+                const container = document.getElementById('folders-container');
+                container.innerHTML = '<p class="text-red-500 text-center w-full">Error loading Akademie Data. Please check your data file.</p>';
+            }
         });
 
         function renderFolders() {
@@ -196,6 +188,18 @@
             `}).join('');
         }
 
+        let currentArtistIdx = -1;
+        let currentFileIdx = -1;
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        function renderArtist(artistId) {
+            const artistIndex = AkademieData.findIndex(a => a.id === artistId);
+            if (artistIndex !== -1) {
+                openArtistLightbox(artistIndex);
+            }
+        }
+
         function openArtistLightbox(artistIndex) {
             const artist = window.AkademieData[artistIndex];
             document.getElementById('artist-title').textContent = artist.name;
@@ -204,34 +208,39 @@
             let imagesHTML = '';
             
             if (artist.files && artist.files.length > 0) {
-                // If we successfully scraped their files
                 artist.files.forEach((fileItem, i) => {
                     let id = typeof fileItem === 'string' ? fileItem : fileItem.id;
                     let type = typeof fileItem === 'string' ? 'unknown' : (fileItem.type || 'unknown');
-                    const srcUrl = `https://drive.google.com/uc?export=view&id=${id}`;
-                    const previewUrl = `https://drive.google.com/file/d/${id}/preview`;
-                    
                     const thumbUrl = `https://drive.google.com/thumbnail?id=${id}&sz=w600`;
                     
-                    // We load as image first. If it's a video, user clicks it and the full view can use iframe preview
+                    const playIconHTML = type === 'video' ? `
+                        <div class="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/50 transition-colors">
+                            <span class="material-symbols-outlined text-white text-5xl opacity-80 group-hover:opacity-100 transition-opacity drop-shadow-lg">play_circle</span>
+                        </div>
+                    ` : '';
+                    
                     imagesHTML += `
-                        <div class="grid-item group relative" onclick="openFullMedia('${srcUrl}', '${previewUrl}', '${type}', event)">
+                        <div class="grid-item group relative" onclick="openFullMedia(${artistIndex}, ${i}, event)">
                             <img src="${thumbUrl}" class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" loading="lazy" onerror="this.onerror=null; this.src='../Assets/images/logo.png'; this.style.opacity='0.2'; this.parentElement.innerHTML += '<span class=\\'material-symbols-outlined absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-4xl\\'>play_circle</span>';" alt="${artist.name} Item ${i}">
+                            ${playIconHTML}
                         </div>
                     `;
                 });
             } else {
-                // Fallback if scraping failed or didn't run
                 imagesHTML = `<p class="text-gray-400 font-mono col-span-full text-center py-10">Kein Content vorhanden.</p>`;
             }
             
             grid.innerHTML = imagesHTML;
             
-            // Show lightbox
             const lightbox = document.getElementById('artist-lightbox');
             lightbox.classList.remove('hidden');
             lightbox.classList.add('flex');
             document.body.style.overflow = 'hidden';
+            
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (mobileMenu) {
+                mobileMenu.classList.add('hidden');
+            }
         }
 
         function closeArtistLightbox() {
@@ -241,75 +250,34 @@
             document.body.style.overflow = '';
         }
 
-        function renderArtist(artistId) {
-            const artist = AkademieData.find(a => a.id === artistId);
-            const contentGrid = document.getElementById('artist-images-grid');
-            if (!artist) return;
-            
-            // Generate grid
-            let imagesHTML = '';
-            
-            if (!artist.files || artist.files.length === 0) {
-                imagesHTML = '<div class="col-span-full text-center text-gray-400 py-12"><p class="font-mono">Kein Content vorhanden.</p></div>';
-            } else {
-                // Determine whether files is an array of strings (old) or array of objects (new)
-                artist.files.forEach(fileItem => {
-                    let fileId = '';
-                    let fileType = 'unknown';
-                    
-                    if (typeof fileItem === 'string') {
-                        fileId = fileItem;
-                    } else {
-                        fileId = fileItem.id;
-                        fileType = fileItem.type;
-                    }
-                    
-                    const srcUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
-                    const previewUrl = `https://drive.google.com/file/d/${fileId}/preview`;
-                    
-                    const thumbUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=w600`;
-                    
-                    // Add video play icon if type is video
-                    const playIconHTML = fileType === 'video' ? `
-                        <div class="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/50 transition-colors">
-                            <span class="material-symbols-outlined text-white text-5xl opacity-80 group-hover:opacity-100 transition-opacity drop-shadow-lg">play_circle</span>
-                        </div>
-                    ` : '';
-                    
-                    imagesHTML += `<div class="grid-item group relative" onclick="openFullMedia('${srcUrl}', '${previewUrl}', '${fileType}', event)">
-                        <img src="${thumbUrl}" 
-                             alt="Portfolio item" 
-                             class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                             loading="lazy"
-                             onerror="this.onerror=null; this.src='../Assets/images/logo.png'; this.classList.add('p-8', 'opacity-20');">
-                        ${playIconHTML}
-                    </div>`;
-                });
-            }
-            
-            contentGrid.innerHTML = imagesHTML;
-            const mobileMenu = document.getElementById('mobile-menu');
-            if (mobileMenu) {
-                mobileMenu.classList.add('hidden');
-            }
-        }
-
         // --- FULL SCREEN OVERLAY ---
-        function openFullMedia(srcUrl, previewUrl, fileType, event) {
+        function openFullMedia(artistIndex, fileIndex, event) {
             if (event) event.stopPropagation();
+            
+            currentArtistIdx = artistIndex;
+            currentFileIdx = fileIndex;
+            
+            const artist = window.AkademieData[artistIndex];
+            const fileItem = artist.files[fileIndex];
+            
+            let id = typeof fileItem === 'string' ? fileItem : fileItem.id;
+            let type = typeof fileItem === 'string' ? 'unknown' : (fileItem.type || 'unknown');
+            const previewUrl = `https://drive.google.com/file/d/${id}/preview`;
             
             const overlay = document.getElementById('full-image-overlay');
             const container = document.getElementById('full-media-container');
             
-            // For Google Drive, the most robust way to show both videos and images
-            // without CORS/Download issues is to embed the previewUrl in an iframe.
             container.innerHTML = `
                 <iframe src="${previewUrl}" class="w-full h-full border-0 rounded shadow-2xl pointer-events-auto" style="min-height: 80vh;" allow="autoplay"></iframe>
             `;
             
+            // Add swipe event listeners to the overlay
+            overlay.addEventListener('touchstart', handleTouchStart, {passive: true});
+            overlay.addEventListener('touchend', handleTouchEnd, {passive: true});
+            
             overlay.classList.remove('hidden');
             overlay.classList.add('flex');
-            document.body.style.overflow = 'hidden';
+            // Keep body overflow hidden
         }
 
         function closeFullImage() {
@@ -317,6 +285,44 @@
             overlay.classList.add('hidden');
             overlay.classList.remove('flex');
             document.getElementById('full-media-container').innerHTML = '';
+            
+            overlay.removeEventListener('touchstart', handleTouchStart);
+            overlay.removeEventListener('touchend', handleTouchEnd);
+        }
+        
+        function navigateMedia(direction, event) {
+            if (event) event.stopPropagation();
+            if (currentArtistIdx === -1 || currentFileIdx === -1) return;
+            
+            const artist = window.AkademieData[currentArtistIdx];
+            if (!artist || !artist.files) return;
+            
+            currentFileIdx += direction;
+            if (currentFileIdx < 0) currentFileIdx = artist.files.length - 1;
+            if (currentFileIdx >= artist.files.length) currentFileIdx = 0;
+            
+            openFullMedia(currentArtistIdx, currentFileIdx, null);
+        }
+        
+        function handleTouchStart(e) {
+            touchStartX = e.changedTouches[0].screenX;
+        }
+
+        function handleTouchEnd(e) {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            if (touchEndX < touchStartX - swipeThreshold) {
+                // Swiped Left - Next
+                navigateMedia(1);
+            }
+            if (touchEndX > touchStartX + swipeThreshold) {
+                // Swiped Right - Previous
+                navigateMedia(-1);
+            }
         }
     </script>
 </body>

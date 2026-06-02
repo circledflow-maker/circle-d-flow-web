@@ -3,6 +3,7 @@ import json
 import requests
 import re
 import html
+import random
 
 # The 7 IDs provided by the user
 gdrive_ids = [
@@ -46,7 +47,9 @@ for gid in gdrive_ids:
             elif lower_path.endswith('.mp4') or lower_path.endswith('.mov'):
                 files.append({"id": f.id, "type": "video"})
         
-        selected_files = files[:11]
+        # Randomize files and pick 13 to avoid similarities
+        random.shuffle(files)
+        selected_files = files[:13]
         
         # We need a robust ID for the HTML
         clean_id = re.sub(r'[^a-zA-Z0-9]', '_', folder_name).lower()
