@@ -165,12 +165,12 @@
     <!-- PAGE INIT -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Check Access
-            if(!window.PalastAgent.checkGateAccess('museum')) {
-                window.PalastAgent.triggerGateSequence('museum');
-            } else {
+            // Check Access (Bypassed by User Request)
+            // if(!window.PalastAgent.checkGateAccess('museum')) {
+            //    window.PalastAgent.triggerGateSequence('museum');
+            // } else {
                 if(window.Flowee) window.Flowee.talk(true, "The air here is thin... Breathe in the history.");
-            }
+            // }
         });
     </script>
 </body>

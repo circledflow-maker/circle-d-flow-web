@@ -353,17 +353,14 @@
                 const { data: { session } } = await window.supabaseClient.auth.getSession();
                 if(!session) throw new Error("No session");
                 
-                const { data, error } = await window.supabaseClient.from('quests').insert([{
+                const { data, error } = await window.supabaseClient.from('user_quests').insert([{
                     title: title,
                     description: desc,
                     type: 'custom',
                     latitude: parseFloat(lat) || 0,
                     longitude: parseFloat(lng) || 0,
-                    reward_karma: parseInt(xp),
-                    reward_trust: parseInt(xp) / 2,
-                    creator_id: session.user.id,
-                    creator_name: localStorage.getItem('userName') || "Unknown Voyager",
-                    qr_code_data: window.location.origin + "/pages/quest_map.html"
+                    reward_exp: parseInt(xp),
+                    creator_id: session.user.id
                 }]);
                 if(error) throw error;
                 
