@@ -396,8 +396,8 @@ class OrbitEngine {
             if(leaf) this.transitionToLuvo(leaf);
             return;
         } else if(id === 'arcane') {
-            targetUrl = 'pages/partners.html';
-            overlayMsg = 'Entering The Alliance...';
+            targetUrl = 'pages/archive.html';
+            overlayMsg = 'Entering The Archive...';
             overlayColor = '#00f0ff';
         } else if(id === 'harmonizer') {
             targetUrl = 'pages/bantaba.html';

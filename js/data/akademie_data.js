@@ -123,6 +123,108 @@ const AkademieData = [
                 "type": "image"
             }
         ]
+    },
+    {
+        "name": "16 May",
+        "id": "16_may",
+        "gdriveFolder": "1FQItgHRVSUoI3-iVzbobksPlmBZgK6sL",
+        "files": [
+            {
+                "id": "1Hao8mBHhg_9kAC4xM4DQen3h6Ya3gD8B",
+                "type": "image"
+            },
+            {
+                "id": "1TOwCwN_OHZr9JUCZgtBZGTpLFCIOVZhU",
+                "type": "image"
+            },
+            {
+                "id": "193dm2s-BlVAM4Lw7I9OylG2-y4UXvBiz",
+                "type": "image"
+            },
+            {
+                "id": "1jakLUzpL4cDpr_2TlpzlihDdFH7fzxY7",
+                "type": "image"
+            },
+            {
+                "id": "1g88nuJKVaWVvYL-VlxaKUqq0nKrwSztW",
+                "type": "image"
+            },
+            {
+                "id": "1AnrFEl1iFaTyWzlGG8hOLfo0If6TA_Wj",
+                "type": "image"
+            },
+            {
+                "id": "1MERbdyTFkzxFrWuX0xJAR-Pi82yfJXm7",
+                "type": "video"
+            },
+            {
+                "id": "1t8r7UcqzD2r9LQPcrlwpbzqZP9HEHoo-",
+                "type": "image"
+            },
+            {
+                "id": "1HtWmK7AI7gFTGzKNdfhaqdpZLb_bHiMq",
+                "type": "image"
+            },
+            {
+                "id": "1Thu9mA2z-lIM9iH5d1TrFcZ9cQM3p4kn",
+                "type": "video"
+            },
+            {
+                "id": "1NkthYm7qw_gJJh1KFV6vnPJx1h0W-o2w",
+                "type": "video"
+            }
+        ]
+    },
+    {
+        "name": "NarutheToken",
+        "id": "naruthetoken",
+        "gdriveFolder": "1V3okQhtQgswdLz5zXtteC_qMo4wSH0Jc",
+        "files": [
+            {
+                "id": "1QdEqchtLVoTpFkIAAP-JLooGN7IyS1Jd",
+                "type": "video"
+            },
+            {
+                "id": "1St4IQZgLwumJF9GnLD5zWgTTDdrq0qU4",
+                "type": "video"
+            },
+            {
+                "id": "1dVBnvMd399zap8TozEDgGHIWqFbdUBEJ",
+                "type": "video"
+            },
+            {
+                "id": "1F33DHahRM344IZwDKX-nYEPEn-aJw8Aq",
+                "type": "video"
+            },
+            {
+                "id": "1U3bFTcNozuO8GByHJlGhv7MWnljB8BrA",
+                "type": "image"
+            },
+            {
+                "id": "1axW-4D1bXAiaVkSg7vHN48u5KXh5ppTS",
+                "type": "image"
+            },
+            {
+                "id": "1NvU-BRky5nxS9u8bTLa4e73HYX7tyd3i",
+                "type": "image"
+            },
+            {
+                "id": "1wz0GP6A7-9PYVepvVcsz7i7JnhQdqeyR",
+                "type": "image"
+            },
+            {
+                "id": "1s4gMoRCuyFjAn471cUZYgvJfHpUYBqj8",
+                "type": "image"
+            },
+            {
+                "id": "10gAkThX8hcf9bDTOM3YuyQFuyNLScpHL",
+                "type": "image"
+            },
+            {
+                "id": "14sfmuEU8v6aH8yzSXCViN_nFA_qpImvU",
+                "type": "image"
+            }
+        ]
     }
 ];
 

@@ -4,13 +4,15 @@ import requests
 import re
 import html
 
-# The 5 IDs provided by the user
+# The 7 IDs provided by the user
 gdrive_ids = [
-    "1h3rkbrzvz_bMdNknX3rfxo1ElRP870eg",
-    "1noZs793lQIPZk540TkwY47fGcyrA8-Ly",
-    "1iLgoxnGgjy3VAkU1DD1gVZcpPwFLGzWB",
-    "1kGdpPY1uulIgkN9q8gI0VhYHeamjrWZo",
-    "1oqp9ZjJ851X8KzWEtsb3md5JM4dIuNqd"
+    "1h3rkbrzvz_bMdNknX3rfxo1ElRP870eg", # Tiago Silver
+    "1noZs793lQIPZk540TkwY47fGcyrA8-Ly", # soqhiejewels
+    "1iLgoxnGgjy3VAkU1DD1gVZcpPwFLGzWB", # Sandu
+    "1kGdpPY1uulIgkN9q8gI0VhYHeamjrWZo", # Irene 25 Birthday
+    "1oqp9ZjJ851X8KzWEtsb3md5JM4dIuNqd", # KreativlonArt
+    "1FQItgHRVSUoI3-iVzbobksPlmBZgK6sL", # C-Riz
+    "1V3okQhtQgswdLz5zXtteC_qMo4wSH0Jc"  # naru the token
 ]
 
 valid_exts = ['.jpg', '.jpeg', '.png', '.mp4', '.mov']
