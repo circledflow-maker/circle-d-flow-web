@@ -243,7 +243,7 @@
             input.disabled = true;
             
             try {
-                const userName = localStorage.getItem('userName') || "Voyager";
+                const userName = localStorage.getItem('cdf_user_username') || "Voyager";
                 await window.supabaseClient.from('flow_comments').insert([{
                     area_id: areaId,
                     user_name: userName,

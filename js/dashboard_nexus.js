@@ -856,11 +856,21 @@ window.ApexNexus = {
         modal.showModal();
     },
 
-    editName: function() {
+    editName: async function() {
         const current = localStorage.getItem('cdf_user_username') || '';
         const newName = prompt("Enter your Identity Alias:", current);
         if(newName && newName.trim() !== '') {
             localStorage.setItem('cdf_user_username', newName.trim());
+            
+            // Sync with Supabase profiles table
+            if(window.supabaseClient) {
+                const session = await window.supabaseClient.auth.getSession();
+                if(session && session.data && session.data.session) {
+                    const userId = session.data.session.user.id;
+                    await window.supabaseClient.from('profiles').update({ username: newName.trim() }).eq('id', userId);
+                }
+            }
+
             // Update Modal Immediately
             const display = document.getElementById('profile-name-display');
             if(display) display.innerText = newName.trim();

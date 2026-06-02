@@ -386,7 +386,7 @@
                     reward_trust: 50, // default
                     status: 'open',
                     creator_id: session.data.session.user.id,
-                    creator_name: localStorage.getItem('userName') || "Anonymous Voyager"
+                    creator_name: localStorage.getItem('cdf_user_username') || "Anonymous Voyager"
                 }]).select();
                 
                 if (error) throw error;
