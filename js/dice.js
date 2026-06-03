@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
         cube.classList.add('spinning');
 
         try {
-            const response = await fetch('http://localhost:3002/roll', {
+            const response = await fetch('/api/roll', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

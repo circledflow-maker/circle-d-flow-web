@@ -60,31 +60,44 @@
     <div class="pulse-ring"></div>
     <div class="pulse-ring" style="animation-delay: 2s;"></div>
 
-    <div class="glass-panel p-10 rounded-2xl shadow-2xl relative z-10 max-w-lg w-full text-center border-t-4 border-electric flex flex-col max-h-[90vh]">
+    <div class="glass-panel p-6 md:p-10 rounded-2xl shadow-2xl relative z-10 max-w-lg w-full text-center border-t-4 border-electric flex flex-col max-h-[90vh]">
         
-        <div id="init-view" class="overflow-y-auto">
+        <!-- Close Button -->
+        <button onclick="window.location.href='quest_map.html'" class="absolute top-4 right-4 text-white/50 hover:text-white transition-colors z-50 text-xl font-bold">
+            &times;
+        </button>
+
+        <div id="init-view" class="overflow-y-auto flex-grow">
             <h1 class="text-3xl font-cinzel font-bold text-electric mb-4 uppercase text-glow">Entering the Zone</h1>
             <p class="text-sm text-white/70 mb-6 leading-relaxed">
                 You have arrived. To anchor your presence, you must remain in the Wu-Wei state for 25 minutes.<br><br>
                 <span class="text-electric font-bold">Rule:</span> Your device's screen can be turned off or you can switch apps. Just remain at this physical location.
             </p>
-            <button id="start-flow-btn" class="px-8 py-3 bg-gradient-to-r from-electric to-yellow-600 text-black font-cinzel font-bold uppercase tracking-widest rounded shadow-[0_0_20px_rgba(212,175,55,0.4)] hover:scale-105 transition-transform">
+            <button id="start-flow-btn" class="px-8 py-3 bg-gradient-to-r from-electric to-yellow-600 text-black font-cinzel font-bold uppercase tracking-widest rounded shadow-[0_0_20px_rgba(212,175,55,0.4)] hover:scale-105 transition-transform mt-4">
                 Begin Flow
+            </button>
+            <p class="text-xs text-yellow-500 mt-4 italic">Note: XP and Karma points are only granted if you are physically at this location (within 150m). You can still view and leave chronicles if you are off-site.</p>
+            <button id="delete-node-btn" onclick="deleteNode()" class="hidden mt-6 px-4 py-2 border border-red-500 text-red-500 hover:bg-red-500 hover:text-white text-xs font-bold uppercase tracking-widest rounded transition-colors mx-auto">
+                Delete Node
             </button>
         </div>
 
-        <div id="timer-view" class="hidden flex-col h-full overflow-hidden">
+        <div id="timer-view" class="hidden flex-col h-full overflow-y-auto w-full">
             <div class="flex-shrink-0">
                 <h2 id="area-name-display" class="text-xl font-cinzel text-electric/80 mb-1 uppercase">Unknown Location</h2>
                 <p id="area-creator-display" class="text-xs text-white/50 mb-2 font-mono">Forged by: Unknown</p>
+                <div id="gps-status" class="text-xs mb-3 p-1 inline-block rounded font-bold uppercase tracking-widest bg-yellow-500/20 text-yellow-500 border border-yellow-500/50">Off-Site (Chronicles Only)</div>
                 
-                <div id="timer-display" class="text-electric font-bold text-glow mb-2">25:00</div>
+                <div id="timer-display" class="text-electric font-bold text-glow mb-2 mt-2">25:00</div>
                 <p class="text-xs text-white/60 mb-2">The timer continues in the background.</p>
 
                 <!-- System Video Player -->
                 <div class="bg-black/80 rounded border border-[#d4af37]/30 p-2 mb-4">
                     <p class="text-xs text-[#d4af37] uppercase tracking-widest mb-2">Jam Session (May)</p>
-                    <iframe id="jam-player" class="w-full rounded h-[180px] bg-black border-0" allowfullscreen></iframe>
+                    <a id="jam-player-link" href="#" target="_blank" class="flex flex-col items-center justify-center w-full rounded h-[120px] bg-[#111] border border-[#333] hover:border-[#d4af37] transition group">
+                        <span class="text-2xl mb-1 group-hover:scale-110 transition-transform">▶</span>
+                        <span class="text-xs text-white/50 group-hover:text-[#d4af37] uppercase tracking-widest">Watch Jam Session</span>
+                    </a>
                     <div class="flex justify-between mt-2">
                         <button onclick="playNextVideo(-1)" class="text-xs border border-white/20 px-2 py-1 hover:bg-white/10 rounded">Previous</button>
                         <button onclick="playNextVideo(1)" class="text-xs border border-white/20 px-2 py-1 hover:bg-white/10 rounded">Next</button>
@@ -154,6 +167,11 @@
                 areaData = data;
                 document.getElementById('area-name-display').innerText = areaData.name || "Flow Area";
                 document.getElementById('area-creator-display').innerText = `Forged by: ${areaData.creator_name || "Unknown Voyager"}`;
+                
+                // Show delete button if owner
+                if(sessionUser && areaData.creator_id === sessionUser.id) {
+                    document.getElementById('delete-node-btn').classList.remove('hidden');
+                }
             } catch(e) {
                 console.error(e);
                 alert("Flow Area not found.");
@@ -163,11 +181,15 @@
             if(navigator.geolocation && areaData.latitude && areaData.longitude) {
                 navigator.geolocation.getCurrentPosition((pos) => {
                     const dist = getDistance(pos.coords.latitude, pos.coords.longitude, areaData.latitude, areaData.longitude);
+                    const gpsStatus = document.getElementById('gps-status');
                     if(dist <= 150) { 
                         inZone = true;
                         console.log("User is in zone.");
+                        gpsStatus.innerText = "GPS: On-Site Verified";
+                        gpsStatus.className = "text-xs mb-3 p-1 inline-block rounded font-bold uppercase tracking-widest bg-green-500/20 text-green-500 border border-green-500/50";
                     } else {
                         console.log(`User too far (${dist}m) for points.`);
+                        gpsStatus.innerText = `GPS: Off-Site (${Math.round(dist)}m)`;
                     }
                 }, (err) => {
                     console.warn("GPS error:", err);
@@ -190,8 +212,8 @@
             currentVideoIdx = idx;
             
             const vidId = jamVideos[currentVideoIdx];
-            const player = document.getElementById('jam-player');
-            player.src = `https://drive.google.com/file/d/${vidId}/preview`;
+            const link = document.getElementById('jam-player-link');
+            link.href = `https://drive.google.com/file/d/${vidId}/preview`;
         }
         
         function playNextVideo(dir) {

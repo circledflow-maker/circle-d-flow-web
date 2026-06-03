@@ -564,7 +564,6 @@
                         <p style="color:#666;margin-bottom:30px;">NEURAL LINK SEVERED (NO SESSION)</p>
                         <div style="display:flex;gap:20px;flex-wrap:wrap;justify-content:center;">
                             <button onclick="window.location.reload()" style="padding:10px 20px;border:1px solid gold;background:transparent;color:gold;cursor:pointer;font-weight:bold;">RETRY CONNECTION</button>
-                            <button onclick="document.getElementById('auth-overlay').remove(); if(window.QuestEngine) { window.QuestEngine.isOfflineMode = true; console.log('👻 Ghost Protocol Active'); } if(document.getElementById('protocol-modal')) document.getElementById('protocol-modal').style.display='flex';" style="padding:10px 20px;border:1px solid #333;background:rgba(255,255,255,0.05);color:#aaa;cursor:pointer;">GHOST PROTOCOL (DEV)</button>
                             <button onclick="window.location.href='../index.html'" style="padding:10px 20px;border:1px solid #444;background:transparent;color:#888;cursor:pointer;">RETURN TO GATEWAY</button>
                         </div>
                      </div>`;
@@ -596,8 +595,8 @@
                      }
                  }, 1500); // Wait for pins/auth
 
-                 // Load Turf Wars
-                 loadBattlefieldNodes();
+                 // Load Turf Wars (Disabled to remove blue mockups)
+                 // loadBattlefieldNodes();
 
                  // Load Community Forge Event
                  loadActiveCommunityEvent();
