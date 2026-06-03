@@ -193,8 +193,8 @@
             </p>
             
             <div id="uplink-stage-1">
-                <button onclick="window.QuestEngine.establishUplink('Q-PROTO-01')" style="padding:15px 30px; background:#8b4513; color:#f0e6d2; border:2px solid #5c4033; font-weight:bold; font-family:'Cinzel', serif; cursor:pointer; transition:all 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
-                    ✍️ ESTABLISH UPLINK (+100 XP)
+                <button onclick="localStorage.setItem('cqr_uplink_established', 'true'); document.getElementById('protocol-modal').style.display='none'; window.QuestEngine.establishUplink('Q-PROTO-01')" style="padding:15px 30px; background:#8b4513; color:#f0e6d2; border:2px solid #5c4033; font-weight:bold; font-family:'Cinzel', serif; cursor:pointer; transition:all 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+                    🗺️ ESTABLISH UPLINK (+100 XP)
                 </button>
             </div>
 
@@ -584,7 +584,7 @@
                      const engine = window.QuestEngine;
                      if(engine && (engine.user || engine.isOfflineMode)) {
                          // Default to showing if not blocked
-                         if(document.getElementById('protocol-modal') && !localStorage.getItem('cqr_uplink_established')) {
+                         if(document.getElementById('protocol-modal') && localStorage.getItem('cqr_uplink_established') !== 'true') {
                              document.getElementById('protocol-modal').style.display = 'flex';
                          } else {
                              // If already established, start locating user

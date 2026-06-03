@@ -93,11 +93,8 @@
 
                 <!-- System Video Player -->
                 <div class="bg-black/80 rounded border border-[#d4af37]/30 p-2 mb-4">
-                    <p class="text-xs text-[#d4af37] uppercase tracking-widest mb-2">Jam Session (May)</p>
-                    <a id="jam-player-link" href="#" target="_blank" class="flex flex-col items-center justify-center w-full rounded h-[120px] bg-[#111] border border-[#333] hover:border-[#d4af37] transition group">
-                        <span class="text-2xl mb-1 group-hover:scale-110 transition-transform">▶</span>
-                        <span class="text-xs text-white/50 group-hover:text-[#d4af37] uppercase tracking-widest">Watch Jam Session</span>
-                    </a>
+                    <p class="text-xs text-[#d4af37] uppercase tracking-widest mb-2">Protocol Preview</p>
+                    <video id="jam-player-vid" controls playsinline class="w-full rounded h-[180px] bg-black border border-[#333]"></video>
                     <div class="flex justify-between mt-2">
                         <button onclick="playNextVideo(-1)" class="text-xs border border-white/20 px-2 py-1 hover:bg-white/10 rounded">Previous</button>
                         <button onclick="playNextVideo(1)" class="text-xs border border-white/20 px-2 py-1 hover:bg-white/10 rounded">Next</button>
@@ -168,8 +165,9 @@
                 document.getElementById('area-name-display').innerText = areaData.name || "Flow Area";
                 document.getElementById('area-creator-display').innerText = `Forged by: ${areaData.creator_name || "Unknown Voyager"}`;
                 
-                // Show delete button if owner
-                if(sessionUser && areaData.creator_id === sessionUser.id) {
+                // Show delete button if owner (checking by ID or by matching specific username)
+                const localUser = localStorage.getItem('cdf_user_username');
+                if((sessionUser && areaData.creator_id === sessionUser.id) || (localUser && localUser !== 'Voyager' && areaData.creator_name === localUser)) {
                     document.getElementById('delete-node-btn').classList.remove('hidden');
                 }
             } catch(e) {
@@ -212,8 +210,10 @@
             currentVideoIdx = idx;
             
             const vidId = jamVideos[currentVideoIdx];
-            const link = document.getElementById('jam-player-link');
-            link.href = `https://drive.google.com/file/d/${vidId}/preview`;
+            const player = document.getElementById('jam-player-vid');
+            // Using Drive download endpoint for native <video> playback
+            player.src = `https://drive.google.com/uc?export=download&id=${vidId}`;
+            player.play().catch(e => console.log("Autoplay prevented:", e));
         }
         
         function playNextVideo(dir) {
