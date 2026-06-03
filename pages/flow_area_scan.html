@@ -135,7 +135,10 @@
         let sessionUser = null;
         
         const jamVideos = [
-            '1SQ2rjsuGxgUTa8I8ymeA0O19atFjuXnI', '15uTmpZh0BFTB2MnP0G4NInuDIeTQweEj', '1O3FGJVwUYln_MsK_YiXI1vJFftVSgsen', '1N5QmLzHQj_aV5kj3FawO_UnixDQu7LMz', '1VVuJN_ZCoXSdeBpqUK_iHbtUo4fOtc4p', '1j7KH03BY1ex4hFhUgExIkDuXKjywfobt', '1KMR_NvoqYExC-lFWyn2RLEEF_RVcNjr7', '15g1XvtdM-eUC99OpPNMyZfBe0UnfV1uP', '1FLbH3bD_WqJILn3AU698oJc0WnqqPmD6', '1jM3BUFa6ilw9KNv6yQvBUXDux6hvFlEu', '1LrTIjZCGJ1CV6a72Kk4IsL-o0Bg71qkW', '1yUFkoIHHlGFxOIgBWMnfvUR-aoGDw1R3', '1n1KJUjjDMzjUNLZXHkmjCxvGv5lNbii8', '1JZbhzHC7NQhUIs0yDIpL6XNHGzRQMSo0', '1L3mqdt-EPJIw858RQeMos1ZT1SbPUBT-'
+            '../Assets/images/circle-d-flow-reel.mp4',
+            '../Assets/Community_Vibe_Reel.mp4',
+            '../Assets/local_archives/Session_Graca_Street_Art.mp4',
+            '../Flow in Lisbon/FlowInHempyroots/VID_20260131_215823.mp4'
         ];
         let currentVideoIdx = 0;
 
@@ -209,10 +212,10 @@
             if(idx >= jamVideos.length) idx = 0;
             currentVideoIdx = idx;
             
-            const vidId = jamVideos[currentVideoIdx];
+            const vidUrl = jamVideos[currentVideoIdx];
             const player = document.getElementById('jam-player-vid');
-            // Using Drive download endpoint for native <video> playback
-            player.src = `https://drive.google.com/uc?export=download&id=${vidId}`;
+            // Using local video assets for reliable native playback
+            player.src = vidUrl;
             player.play().catch(e => console.log("Autoplay prevented:", e));
         }
         

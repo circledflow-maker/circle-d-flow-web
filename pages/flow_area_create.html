@@ -126,6 +126,16 @@
     </div>
 
     <script>
+        // If in iframe, hide back button and adjust padding
+        if (window !== window.top) {
+            document.addEventListener('DOMContentLoaded', () => {
+                const backBtn = document.querySelector('button[onclick="window.location.href=\'dashboard.html\'"]');
+                if (backBtn) backBtn.style.display = 'none';
+                document.body.style.backgroundColor = 'transparent';
+                document.querySelector('.container').style.paddingTop = '10px';
+            });
+        }
+
         let qrDataURL = "";
         
         document.getElementById('flow-area-form').addEventListener('submit', async function(e) {

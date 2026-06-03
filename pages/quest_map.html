@@ -583,21 +583,26 @@
                  setTimeout(() => {
                      const engine = window.QuestEngine;
                      if(engine && (engine.user || engine.isOfflineMode)) {
-                         // Default to showing if not blocked
-                         if(document.getElementById('protocol-modal') && localStorage.getItem('cqr_uplink_established') !== 'true') {
+                         // CHECK IF ALREADY COMPLETED (DB OR GHOST)
+                         let isCompleted = false;
+                         if (engine.profile?.completed_quests?.includes('Q-PROTO-01')) isCompleted = true;
+                         if (JSON.parse(sessionStorage.getItem('ghost_progress') || '[]').includes('Q-PROTO-01')) isCompleted = true;
+                         
+                         // Default to showing if not blocked and NOT completed
+                         if(document.getElementById('protocol-modal') && localStorage.getItem('cqr_uplink_established') !== 'true' && !isCompleted) {
                              document.getElementById('protocol-modal').style.display = 'flex';
                          } else {
                              // If already established, start locating user
-                             if (localStorage.getItem('cqr_uplink_established') === 'true') {
+                             if (localStorage.getItem('cqr_uplink_established') === 'true' || isCompleted) {
                                  map.locate({setView: true, maxZoom: 16, watch: true});
                              }
                          }
                      }
-                 }, 1500); // Wait for pins/auth
+                 }, 1000);
 
                  // Load Turf Wars (Disabled to remove blue mockups)
                  // loadBattlefieldNodes();
-
+                 
                  // Load Community Forge Event
                  loadActiveCommunityEvent();
                  
