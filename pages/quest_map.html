@@ -162,7 +162,8 @@
     <script>
         // --- 1. SETUP MAP ---
         // Default View: Lisbon
-        const map = L.map('quest-map', {zoomControl: false}).setView([38.7223, -9.1393], 13);
+        window.map = L.map('quest-map', {zoomControl: false}).setView([38.7223, -9.1393], 13);
+        const map = window.map;
         
         L.control.zoom({ position: 'bottomright' }).addTo(map);
 
@@ -343,16 +344,40 @@
             map.locate({setView: true, maxZoom: 16});
         }
 
+        let userMarker = null;
+        let userAccuracy = null;
         map.on('locationfound', function(e) {
-            // User Dot
-            L.circleMarker(e.latlng, {
-                color: 'gold', fillColor: '#f03', fillOpacity: 0.8, radius: 8
-            }).addTo(map);
+            // Energy Ball / Soul CSS
+            const soulIcon = L.divIcon({
+                className: 'soul-marker',
+                html: '<div style="width: 24px; height: 24px; background: radial-gradient(circle, rgba(0,255,255,1) 0%, rgba(0,255,255,0.4) 50%, transparent 100%); border-radius: 50%; box-shadow: 0 0 15px 5px rgba(0,255,255,0.6); animation: floatPulse 2s infinite alternate;"></div>',
+                iconSize: [24, 24],
+                iconAnchor: [12, 12]
+            });
             
-            // Accuracy Circle
-            L.circle(e.latlng, {
-                color: 'gold', fillColor: '#f03', fillOpacity: 0.1, radius: e.accuracy / 2
-            }).addTo(map);
+            // Inject animation if not exists
+            if (!document.getElementById('soul-styles')) {
+                const style = document.createElement('style');
+                style.id = 'soul-styles';
+                style.innerHTML = `
+                    @keyframes floatPulse {
+                        0% { transform: translateY(0px) scale(0.9); opacity: 0.8; }
+                        100% { transform: translateY(-10px) scale(1.1); opacity: 1; }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+
+            if (userMarker) {
+                userMarker.setLatLng(e.latlng);
+                userAccuracy.setLatLng(e.latlng);
+                userAccuracy.setRadius(e.accuracy / 2);
+            } else {
+                userMarker = L.marker(e.latlng, { icon: soulIcon }).addTo(map);
+                userAccuracy = L.circle(e.latlng, {
+                    color: '#00ffff', fillColor: '#00ffff', fillOpacity: 0.1, radius: e.accuracy / 2
+                }).addTo(map);
+            }
         });
         
         map.on('locationerror', function(e) {
@@ -560,8 +585,13 @@
                      const engine = window.QuestEngine;
                      if(engine && (engine.user || engine.isOfflineMode)) {
                          // Default to showing if not blocked
-                         if(document.getElementById('protocol-modal')) {
+                         if(document.getElementById('protocol-modal') && !localStorage.getItem('cqr_uplink_established')) {
                              document.getElementById('protocol-modal').style.display = 'flex';
+                         } else {
+                             // If already established, start locating user
+                             if (localStorage.getItem('cqr_uplink_established') === 'true') {
+                                 map.locate({setView: true, maxZoom: 16, watch: true});
+                             }
                          }
                      }
                  }, 1500); // Wait for pins/auth
@@ -620,8 +650,8 @@
         // --- 6. LOGIC: FLOW AREAS (ADINKRA SYMBOLS) ---
         async function loadFlowAreas() {
             try {
-                if(!window.cdf_supabase) return;
-                const { data, error } = await window.cdf_supabase.from('flow_areas').select('*');
+                if(!window.supabaseClient) return;
+                const { data, error } = await window.supabaseClient.from('flow_areas').select('*');
                 if(error) throw error;
                 if(!data) return;
                 
@@ -650,7 +680,7 @@
                             <h3 style="color:#d4af37; font-weight:bold; margin:0 0 5px 0; font-family:'Cinzel', serif;">${area.name}</h3>
                             <p style="font-size:0.8em; color:#aaa; margin:0 0 10px 0;">${area.address}</p>
                             <p style="font-size:0.8em; color:#8b5cf6; margin:0 0 10px 0;">Scans: ${area.scan_count || 0}</p>
-                            <a href="${area.qr_code_data}" target="_blank" style="display:block; padding:8px; background:#d4af37; color:#000; text-decoration:none; font-weight:bold; border-radius:2px;">ENTER THE ZONE</a>
+                            <a href="flow_area_scan.html?id=${area.id}" style="display:block; padding:8px; background:#d4af37; color:#000; text-decoration:none; font-weight:bold; border-radius:2px;">ENTER THE ZONE</a>
                         </div>
                     `);
                 });

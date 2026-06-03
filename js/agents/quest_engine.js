@@ -824,6 +824,13 @@ QuestEngine.prototype.establishUplink = async function(questId) {
         if(window.SoundEngineer) window.SoundEngineer.playSFX('success_chime');
         if(window.Pusher) window.Pusher.showToast("UPLINK SECURED", "success");
 
+        // Save state to not show modal again
+        localStorage.setItem('cqr_uplink_established', 'true');
+        // If map exists, trigger location
+        if (window.map) {
+            window.map.locate({setView: true, maxZoom: 16, watch: true});
+        }
+
         document.getElementById('uplink-stage-1').style.display = 'none';
         const modal = document.getElementById('protocol-modal');
         if (modal) {

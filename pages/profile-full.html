@@ -185,6 +185,8 @@
     </div>
 
     <!-- Agents -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/agents/supabase_client.js?v=3.2"></script>
     <script src="../js/agents/pusher.js"></script>
     <script src="../js/agents/helper.js"></script>
     <script>
@@ -242,7 +244,7 @@
             input.focus();
         }
 
-        function saveNameEdit() {
+        async function saveNameEdit() {
             const nameDisplay = document.getElementById('name-display-container');
             const editContainer = document.getElementById('name-edit-container');
             const input = document.getElementById('name-input');
@@ -251,6 +253,25 @@
             if(newName) {
                 document.getElementById('profile-name').innerText = newName;
                 localStorage.setItem('cdf_name', newName); // Save identity
+                localStorage.setItem('cdf_user_username', newName); // Save global identity
+                
+                // Sync with Backend
+                if(window.supabaseClient) {
+                    const { data: { user } } = await window.supabaseClient.auth.getUser();
+                    if(user) {
+                        try {
+                            const { error } = await window.supabaseClient.from('profiles').update({username: newName}).eq('id', user.id);
+                            if(error) console.error("Error updating username on server", error);
+                            
+                            // Update author name on previous creations
+                            await window.supabaseClient.from('flow_areas').update({creator_name: newName}).eq('creator_id', user.id);
+                            
+                            // If there are other tables like quests or missions that store creator_name, they could be updated here as well
+                        } catch(e) {
+                            console.error(e);
+                        }
+                    }
+                }
             }
             
             editContainer.classList.add('hidden');
