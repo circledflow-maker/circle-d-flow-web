@@ -359,7 +359,6 @@
                 <a href="marketplace-stall.html" class="px-3 py-1.5 border border-[#5A2A84] text-[#FFAE42] text-[9px] font-bold uppercase rounded hover:bg-[#5A2A84]/20 transition-all">STALL</a>
                 <a href="marketplace-upload.html" class="px-3 py-1.5 bg-[#FFAE42]/20 border border-[#FFAE42] text-[#FFAE42] text-[9px] font-bold uppercase rounded shadow-[0_0_10px_rgba(255,174,64,0.3)] hover:bg-[#FFAE42] hover:text-black transition-all">FORGE</a>
             </div>
-            <div id="language-selector-container" class="ml-4"></div>
         </div>
     </header>
 
@@ -810,8 +809,21 @@
             // Map Integrations
             window.MarketplaceCore = {
                 enterGild: (gild) => {
-                    filterMarket(gild.charAt(0).toUpperCase() + gild.slice(1));
-                    document.getElementById('market-feed-section').scrollIntoView({ behavior: 'smooth' });
+                    const pages = {
+                        'arts': 'arts_stall.html',
+                        'skills': 'skills_stall.html',
+                        'sounds': 'sound_stall.html',
+                        'healing': 'healing_stall.html',
+                        'products': 'product_stall.html',
+                        'services': 'services_stall.html'
+                    };
+                    if (pages[gild]) {
+                        window.location.href = pages[gild];
+                    } else {
+                        // Fallback logic
+                        filterMarket(gild.charAt(0).toUpperCase() + gild.slice(1));
+                        document.getElementById('market-feed-section').scrollIntoView({ behavior: 'smooth' });
+                    }
                 }
             };
 
