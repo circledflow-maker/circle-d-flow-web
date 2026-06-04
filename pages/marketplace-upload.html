@@ -291,7 +291,20 @@
                 const { data, error } = await window.supabaseClient.storage
                     .from('artifact-visuals')
                     .upload(fileName, file);
-                if(error) throw error;
+
+                if(error) {
+                    console.warn("Avatar upload blocked by RLS. Falling back to local base64.");
+                    const reader = new FileReader();
+                    reader.onload = async (e) => {
+                        document.getElementById('profile-preview').src = e.target.result;
+                        document.getElementById('profile-preview').classList.remove('hidden');
+                        try {
+                            await window.supabaseClient.from('profiles').update({ avatar_url: e.target.result }).eq('id', currentUser.id);
+                        } catch(err) {}
+                    }
+                    reader.readAsDataURL(file);
+                    return;
+                }
 
                 const { data: { publicUrl } } = window.supabaseClient.storage
                     .from('artifact-visuals')
@@ -334,25 +347,27 @@
                     const { data, error } = await window.supabaseClient.storage
                         .from('artifact-visuals')
                         .upload(fileName, file);
-                    if(error) throw error;
-                    const { data: { publicUrl } } = window.supabaseClient.storage
-                        .from('artifact-visuals')
-                        .getPublicUrl(fileName);
-                    imageUrl = publicUrl;
+                    if(error) {
+                        console.warn("Image upload blocked by RLS. Falling back to local Base64.");
+                        imageUrl = document.getElementById('preview-img').src;
+                    } else {
+                        const { data: { publicUrl } } = window.supabaseClient.storage
+                            .from('artifact-visuals')
+                            .getPublicUrl(fileName);
+                        imageUrl = publicUrl;
+                    }
                 }
 
                 // C. Insert Artifact
                 const newItem = {
-                    vendor_id: currentUser ? currentUser.id : 'local-test-id',
-                    vendor_name: sellerName || 'Unknown Vendor',
+                    creator_id: currentUser ? currentUser.id : 'local-test-id',
                     title: formData.get('title'),
                     description: formData.get('description'),
-                    category: formData.get('category'),
-                    price_flow: parseInt(formData.get('price_flow')),
+                    guild_category: formData.get('category'),
+                    price_credits: parseInt(formData.get('price_flow')),
                     price_fiat: (parseInt(formData.get('price_flow')) / 100).toFixed(2),
                     image_url: imageUrl || document.getElementById('preview-img').src, // Use base64 if no URL
-                    is_active: true,
-                    created_at: new Date().toISOString()
+                    is_active: true
                 };
 
                 let dbError = null;

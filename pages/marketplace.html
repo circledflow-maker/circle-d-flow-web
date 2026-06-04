@@ -646,7 +646,12 @@
             try {
                 const offlineItems = JSON.parse(localStorage.getItem('cqr_offline_items') || '[]');
                 if(offlineItems.length > 0) {
-                    allMarketItems = [...offlineItems, ...allMarketItems];
+                    const mappedLocal = offlineItems.map(item => ({
+                        ...item,
+                        category: item.guild_category || item.category,
+                        price_flow: item.price_credits || item.price_flow
+                    }));
+                    allMarketItems = [...mappedLocal, ...allMarketItems];
                 }
             } catch(e) { console.warn("Failed to load offline items", e); }
 

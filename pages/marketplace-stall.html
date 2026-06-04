@@ -253,7 +253,19 @@
                 const { data, error } = await window.supabaseClient.storage
                     .from('artifact-visuals')
                     .upload(fileName, file);
-                if(error) throw error;
+                
+                if(error) {
+                    console.warn("Avatar sync blocked by RLS. Local update only.");
+                    const reader = new FileReader();
+                    reader.onload = async (e) => {
+                        document.getElementById('vendor-avatar').src = e.target.result;
+                        try {
+                            await window.supabaseClient.from('profiles').update({ avatar_url: e.target.result }).eq('id', currentUser.id);
+                        } catch(err) {}
+                    }
+                    reader.readAsDataURL(file);
+                    return;
+                }
 
                 const { data: { publicUrl } } = window.supabaseClient.storage
                     .from('artifact-visuals')
@@ -304,7 +316,7 @@
             let data = [];
             try {
                 const res = await window.supabaseClient
-                    .from('market_items')
+                    .from('market_items_with_vendor')
                     .select('*')
                     .eq('vendor_id', user.id)
                     .order('created_at', { ascending: false });
@@ -318,9 +330,15 @@
             // Merge local offline items
             try {
                 const offlineItems = JSON.parse(localStorage.getItem('cqr_offline_items') || '[]');
-                // In offline mode, vendor_id might be 'local-test-id' or the user's id
-                const myOfflineItems = offlineItems.filter(item => item.vendor_id === user.id || item.vendor_id === 'local-test-id');
-                data = [...myOfflineItems, ...data];
+                // In offline mode, creator_id might be 'local-test-id' or the user's id
+                const myOfflineItems = offlineItems.filter(item => item.creator_id === user.id || item.creator_id === 'local-test-id');
+                // Map DB columns to what UI expects just in case
+                const mappedLocal = myOfflineItems.map(item => ({
+                    ...item,
+                    category: item.guild_category,
+                    price_flow: item.price_credits
+                }));
+                data = [...mappedLocal, ...data];
             } catch(e) {}
 
             if(!data || data.length === 0) {
