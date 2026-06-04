@@ -196,6 +196,48 @@
             font-family: 'Courier New', monospace;
             color: #CD7F32;
         }
+
+        /* MOBILE RESPONSIVE FIXES */
+        @media (max-width: 768px) {
+            .bazaar-map {
+                grid-template-areas: 
+                    "center center"
+                    "arts skills"
+                    "sounds healing"
+                    "products services";
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: auto;
+                height: auto;
+                padding-top: 120px;
+                gap: 15px;
+                padding-bottom: 60px;
+                overflow-x: hidden;
+            }
+            .gild-island {
+                width: 130px;
+                height: 110px;
+            }
+            .gild-island::after {
+                width: 80px;
+                bottom: -15px;
+            }
+            .totem-icon {
+                font-size: 2rem;
+            }
+            .gild-title {
+                font-size: 0.6rem;
+            }
+            .center-hub {
+                margin: 0 0 20px 0;
+                padding: 20px;
+                background: radial-gradient(circle, rgba(90, 42, 132, 0.4) 0%, rgba(0,0,0,0) 80%);
+            }
+            /* Make header buttons smaller on mobile */
+            header.fixed .flex.items-center.justify-end.gap-2 a {
+                padding: 4px 8px;
+                font-size: 8px;
+            }
+        }
     </style>
 </head>
 
@@ -634,13 +676,7 @@
                 allMarketItems = data || [];
             } catch (err) {
                 console.warn("[Marketplace] Matrix Error - Falling back to local offline items:", err);
-                // Inject dummy items for offline access
-                allMarketItems = [
-                    { id: 1, title: 'Neon Soul Pack', category: 'Sounds', price_flow: 5274, price_fiat: 50, vendor_name: 'BeatMaker30', image_url: 'https://pub-24ba376bfccb446996666eaff4dbae12.r2.dev/grid.png' },
-                    { id: 2, title: 'Ancient Rune', category: 'Arts', price_flow: 32247, price_fiat: 300, vendor_name: 'CryptoSage', image_url: 'https://pub-24ba376bfccb446996666eaff4dbae12.r2.dev/grid.png' },
-                    { id: 3, title: 'TukTuk Ride (Alfama)', category: 'Services', price_flow: 1267, price_fiat: 15, vendor_name: 'AlfamaKing', image_url: 'https://placehold.co/400x300/111/fdfbf7?text=TukTuk' },
-                    { id: 4, title: 'Code Refactor', category: 'Skills', price_flow: 8500, price_fiat: 80, vendor_name: 'ByteMage', image_url: 'https://placehold.co/400x300/111/fdfbf7?text=Code' }
-                ];
+                allMarketItems = [];
             }
             // Load offline injected items
             try {
