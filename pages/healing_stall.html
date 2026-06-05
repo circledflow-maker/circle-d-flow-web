@@ -148,6 +148,7 @@
         .inventory-side::-webkit-scrollbar { width: 6px; }
         .inventory-side::-webkit-scrollbar-thumb { background: #22c55e; border-radius: 10px; }
     </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 </head>
 <body>
 
@@ -213,9 +214,10 @@
                 <p class="text-sm text-white/40 uppercase tracking-widest">Restore Your Flow with Ancestral Wisdom</p>
             </div>
 
-            <div id="healing-grid" class="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-20">
+            <div class="swiper healingSwiper w-full pb-10" style="overflow: hidden;">
+                <div id="healing-grid" class="swiper-wrapper">
                 <!-- ITEMS INJECTED HERE -->
-                <div class="col-span-full py-20 text-center animate-pulse opacity-30">
+                <div class="swiper-slide clay-slab text-center p-10 opacity-50 w-full flex items-center justify-center">
                     <span class="material-symbols-outlined text-6xl">spa</span>
                     <p class="mt-4 uppercase tracking-[0.5em]">Gathering Herbs...</p>
                 </div>
@@ -224,6 +226,7 @@
     </div>
 
     <!-- SCRIPTS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/agents/supabase_client.js"></script>
     <script>

@@ -149,6 +149,7 @@
         .inventory-side::-webkit-scrollbar { width: 6px; }
         .inventory-side::-webkit-scrollbar-thumb { background: #8A2BE2; border-radius: 10px; }
     </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 </head>
 <body>
 
@@ -214,9 +215,10 @@
                 <p class="text-sm text-white/40 uppercase tracking-widest">Connect with Experts & Builders</p>
             </div>
 
-            <div id="services-grid" class="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-20">
+            <div class="swiper servicesSwiper w-full pb-10" style="overflow: hidden;">
+                <div id="services-grid" class="swiper-wrapper">
                 <!-- ITEMS INJECTED HERE -->
-                <div class="col-span-full py-20 text-center animate-pulse opacity-30">
+                <div class="swiper-slide clay-slab text-center p-10 opacity-50 w-full flex items-center justify-center">
                     <span class="material-symbols-outlined text-6xl">settings_input_component</span>
                     <p class="mt-4 uppercase tracking-[0.5em]">Linking Nodes...</p>
                 </div>
@@ -225,6 +227,7 @@
     </div>
 
     <!-- SCRIPTS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/agents/supabase_client.js"></script>
     <script>
