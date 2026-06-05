@@ -115,6 +115,8 @@
                     <video id="jam-player-vid" controls playsinline class="w-full rounded h-[180px] bg-black border border-[#333] hidden" oncanplay="document.getElementById('vid-loader').style.display='none'" onwaiting="document.getElementById('vid-loader').style.display='block'"></video>
                     <!-- Google Drive iframe Player -->
                     <iframe id="jam-player-iframe" class="w-full rounded h-[180px] bg-black border border-[#333] hidden" allowfullscreen onload="document.getElementById('vid-loader').style.display='none'"></iframe>
+                    <!-- Image Viewer -->
+                    <img id="jam-player-img" class="w-full rounded h-[180px] bg-black border border-[#333] hidden object-contain" onload="document.getElementById('vid-loader').style.display='none'">
                     
                     <div class="flex justify-between mt-2">
                         <button onclick="playNextVideo(-1)" class="text-xs border border-white/20 min-h-[44px] min-w-[44px] px-3 py-2 hover:bg-white/10 rounded flex items-center justify-center">Previous</button>
@@ -134,7 +136,9 @@
                 <div id="comments-list" class="space-y-3 mt-4 h-48 overflow-y-auto mb-4 border border-white/10 p-2 rounded">
                     <p class="text-xs text-white/40 italic">Loading chronicles...</p>
                 </div>
-                <div class="flex flex-col gap-2 relative">
+                
+                <!-- Comment Input (Hidden for guests) -->
+                <div id="comment-input-section" class="flex flex-col gap-2 relative hidden">
                     <textarea id="comment-input" rows="2" class="w-full bg-black/50 border border-white/20 rounded p-2 text-sm text-white focus:outline-none focus:border-electric transition-colors" placeholder="Leave a mark..."></textarea>
                     
                     <div class="flex justify-between items-center">
@@ -147,6 +151,12 @@
                         </div>
                         <button onclick="postComment()" class="bg-electric text-black font-bold px-4 py-2 rounded text-xs hover:bg-[#b08d29] transition-colors">POST</button>
                     </div>
+                </div>
+                
+                <!-- Guest View -->
+                <div id="guest-action-section" class="flex flex-col items-center justify-center py-4 hidden border border-white/10 rounded bg-black/50 mt-2">
+                    <p class="text-xs text-white/60 mb-3 text-center px-4">The Chronicles are sealed. Only forged souls may leave their mark.</p>
+                    <button onclick="window.location.href='auth.html'" class="bg-electric text-black font-cinzel font-bold px-6 py-2 rounded text-sm hover:bg-[#b08d29] shadow-[0_0_15px_rgba(212,175,55,0.4)] transition-all">Become Active Soul</button>
                 </div>
             </div>
         </div>
@@ -180,23 +190,30 @@
         let currentVideoIdx = 0;
 
         function loadVideoMedia(url) {
+            if(!url) return;
             const vidPlayer = document.getElementById('jam-player-vid');
             const iframePlayer = document.getElementById('jam-player-iframe');
+            const imgPlayer = document.getElementById('jam-player-img');
             const loader = document.getElementById('vid-loader');
             
             loader.style.display = 'block';
             
+            // Hide all
+            vidPlayer.classList.add('hidden');
+            iframePlayer.classList.add('hidden');
+            imgPlayer.classList.add('hidden');
+            vidPlayer.pause();
+            iframePlayer.src = '';
+            imgPlayer.src = '';
+            
             if (url.includes('drive.google.com')) {
                 const previewUrl = url.replace(/\/view.*$/, '/preview');
-                vidPlayer.classList.add('hidden');
-                vidPlayer.pause();
-                
                 iframePlayer.src = previewUrl;
                 iframePlayer.classList.remove('hidden');
+            } else if (url.match(/\.(jpeg|jpg|gif|png|webp)$/i)) {
+                imgPlayer.src = url;
+                imgPlayer.classList.remove('hidden');
             } else {
-                iframePlayer.classList.add('hidden');
-                iframePlayer.src = '';
-                
                 vidPlayer.src = url;
                 vidPlayer.classList.remove('hidden');
                 vidPlayer.play().catch(e => console.log('Autoplay prevented:', e));
@@ -221,8 +238,14 @@
             }
             
             if(!areaId) {
-                alert("No Flow Area ID detected in the URL.");
+                alert("Invalid Area ID.");
                 return;
+            }
+            
+            if(sessionUser) {
+                document.getElementById('comment-input-section').classList.remove('hidden');
+            } else {
+                document.getElementById('guest-action-section').classList.remove('hidden');
             }
             
             try {
@@ -311,9 +334,25 @@
             try {
                 const { data, error } = await window.supabaseClient.from('chronicles').select('*').eq('area_id', areaId).order('created_at', {ascending: false});
                 const list = document.getElementById('comments-list');
-                if(error || data.length === 0) {
+                if(error || !data || data.length === 0) {
                     list.innerHTML = `<p class="text-xs text-white/40 italic">No chronicles yet. Be the first.</p>`;
                     return;
+                }
+                
+                // Extract uploaded media and insert into jamVideos so the main player shows them!
+                const userMediaUrls = data.filter(c => c.media_url).map(c => c.media_url);
+                if(userMediaUrls.length > 0) {
+                    // Combine area default videos with user uploaded media (newest first)
+                    const baseVideos = areaData && areaData.media_urls ? areaData.media_urls : [
+                        '../Assets/images/circle-d-flow-reel.mp4',
+                        '../Assets/Community_Vibe_Reel.mp4',
+                        '../Assets/local_archives/Session_Graca_Street_Art.mp4'
+                    ];
+                    jamVideos = [...userMediaUrls, ...baseVideos];
+                    // If we haven't manually switched videos yet, show the newest upload
+                    if(currentVideoIdx === 0) {
+                        loadVideoMedia(jamVideos[0]);
+                    }
                 }
                 
                 list.innerHTML = data.map(c => {
