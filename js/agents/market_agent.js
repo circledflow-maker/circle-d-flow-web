@@ -35,26 +35,9 @@ window.MarketAgent = {
         const nextCycle = (cycle + 1) * this.ROTATION_INTERVAL;
         const diff = nextCycle - now;
 
-        // Format Time
-        const hrs = Math.floor(diff / (1000 * 60 * 60));
-        const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const secs = Math.floor((diff % (1000 * 60)) / 1000);
-
-        // Update DOM if exists
-        const timerEl = document.getElementById('market-timer');
-        if(timerEl) {
-            timerEl.innerText = `${hrs}h ${mins}m ${secs}s`;
-        }
-
         // Trigger Shuffle visuals if close to 0 (mock)
         if(diff < 2000 && diff > 1000) {
             this.triggerShuffleVisuals();
-        }
-        
-        // Mock Ticker Update based on "Who is Winning" the rotation
-        const ticker = document.getElementById('imperial-ticker-text');
-        if(ticker && Math.random() > 0.99) { // Low freq update
-             ticker.innerText = `+++ MARKET CYCLE ENDING ${hrs}:${mins} +++ SOVEREIGNS DOMINATING ARTS SECTOR +++ ${Math.floor(Math.random()*5000)} FC TRADED LAST HOUR +++`;
         }
     },
 
@@ -87,7 +70,6 @@ window.MarketAgent = {
     
     // --- FILTERING ---
     enterGild: function(guild) {
-        // Just visual feedback for now, would route to refined guild page or filter grid
         console.log(`[${this.name}] Entering Guild: ${guild}`);
         if(window.SoundEngineer) window.SoundEngineer.playSFX('ui_click_hover');
         
@@ -96,10 +78,10 @@ window.MarketAgent = {
         const active = document.querySelector(`.gild-island[onclick*="${guild}"]`);
         if(active) active.style.opacity = '1';
         
-        // Reset after 1s (Mock navigation)
+        // Redirect to the Hut
         setTimeout(() => {
-             document.querySelectorAll('.gild-island').forEach(el => el.style.opacity = '1');
-        }, 1000);
+            window.location.href = `marketplace-hut.html?guild=${guild}`;
+        }, 800);
     },
     
     // --- 2. THE PIT TICKER (Live Auction) ---
@@ -108,29 +90,25 @@ window.MarketAgent = {
         const tickerEl = document.getElementById('pit-ticker-content');
         if(!tickerEl) return;
 
-        const items = [
-            { name: "Obsidian Dagger", price: 12500, user: "SovereignX" },
-            { name: "Neon Soul Pack", price: 4500, user: "BeatMaker99" },
-            { name: "Golden TukTuk Ride", price: 800, user: "AlfamaKing" },
-            { name: "Ancient Rune", price: 32000, user: "CryptoSage" },
-            { name: "Voice of the Void", price: 1500, user: "Unknown" }
-        ];
-
-        let index = 0;
-        setInterval(() => {
-            const item = items[index];
-            // Update Price (Simulation)
-            item.price += Math.floor(Math.random() * 100); 
-            
-            tickerEl.innerHTML = `
-                <span class="text-red-500 font-bold text-xs uppercase tracking-widest animate-pulse">● LIVE AUCTION:</span>
-                <span class="text-xs text-white/70 ml-2 font-mono">${item.name}</span>
-                <span class="text-[#CD7F32] font-bold text-xs ml-2">${item.price} FC</span>
-                <span class="text-[9px] text-white/30 ml-2">by ${item.user}</span>
-            `;
-
-            index = (index + 1) % items.length;
-        }, 4000); // 4s Item Change
+        // Fetch real data from supabase instead of mock data
+        if(window.supabaseClient) {
+            window.supabaseClient.from('market_items').select('*').limit(5).then(({data, error}) => {
+                if(!error && data && data.length > 0) {
+                    let index = 0;
+                    setInterval(() => {
+                        const item = data[index];
+                        tickerEl.innerHTML = `
+                            <span class="text-green-500 font-bold text-xs uppercase tracking-widest animate-pulse">● TRADE LOG:</span>
+                            <span class="text-xs text-white/70 ml-2 font-mono">${item.title || item.name || 'Artifact'}</span>
+                            <span class="text-[#CD7F32] font-bold text-xs ml-2">${item.price} FC</span>
+                        `;
+                        index = (index + 1) % data.length;
+                    }, 4000);
+                } else {
+                    tickerEl.innerHTML = `<span class="text-xs text-white/30 truncate">No recent trades found.</span>`;
+                }
+            });
+        }
     },
 
 

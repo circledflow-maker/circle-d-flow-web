@@ -267,9 +267,22 @@
             const overlay = document.getElementById('full-image-overlay');
             const container = document.getElementById('full-media-container');
             
-            container.innerHTML = `
-                <iframe src="${previewUrl}" class="w-full h-full border-0 rounded shadow-2xl pointer-events-auto" style="min-height: 80vh;" allow="autoplay"></iframe>
-            `;
+            if (type === 'video') {
+                const videoSrc = `https://drive.google.com/uc?export=download&id=${id}`;
+                container.innerHTML = `
+                    <video src="${videoSrc}" controls autoplay playsinline class="w-full h-full border-0 rounded shadow-2xl pointer-events-auto" style="max-height: 80vh; background: black;"></video>
+                `;
+            } else if (type === 'image') {
+                const imgSrc = `https://drive.google.com/uc?export=download&id=${id}`;
+                container.innerHTML = `
+                    <img src="${imgSrc}" class="w-full h-full object-contain border-0 rounded shadow-2xl pointer-events-auto" style="max-height: 80vh;" />
+                `;
+            } else {
+                // Fallback for unknown types (e.g. PDFs)
+                container.innerHTML = `
+                    <iframe src="${previewUrl}" class="w-full h-full border-0 rounded shadow-2xl pointer-events-auto" style="min-height: 80vh;" allow="autoplay"></iframe>
+                `;
+            }
             
             // Add swipe event listeners to the overlay
             overlay.addEventListener('touchstart', handleTouchStart, {passive: true});

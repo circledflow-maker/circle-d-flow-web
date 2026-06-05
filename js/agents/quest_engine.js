@@ -843,35 +843,6 @@ QuestEngine.prototype.establishUplink = async function(questId) {
     }
 };
 
-// Check if we need to show the modal on load
-window.addEventListener('load', () => {
-    // If we are on quest_map and came from Protocol 1 (or just check if it's done?)
-    // For simplicity, if we are in Ghost Mode or Session exists, check if Quest 1 is done?
-    // Let's just show it if the URL or Session Storage says so?
-    // OR: Just show it if we are on quest_map.html and it's not done.
-    
-    setTimeout(() => {
-        // Logic: If user has NOT completed Q-PROTO-01, show modal.
-        // For prototype/walkthrough, let's show it if NO pins are loaded locally? 
-        // Or better: Checking Profile requires async.
-        
-        if(document.getElementById('protocol-modal')) {
-             // We can expose a method to check status
-             // For now, let's force it open if we detect we are in "Tutorial Mode" or just arrived.
-             // Simplest: If sessionStorage has 'target_quest_id' === 'Q-PROTO-01' ? No, that was for map target.
-             // Let's check profile.
-             
-             const engine = window.QuestEngine;
-             if(engine && (engine.user || engine.isOfflineMode)) {
-                 // Check if incomplete
-                 // Mock check for now: always show if not explicitly done this session?
-                 // Real check:
-                 // if(!engine.profile?.completed_quests?.includes('Q-PROTO-01')) {
-                     document.getElementById('protocol-modal').style.display = 'flex';
-                 // }
-             }
-        }
-    }, 1000);
-});
+// Removed redundant load listener for protocol-modal
 
 // End of Valid File Content

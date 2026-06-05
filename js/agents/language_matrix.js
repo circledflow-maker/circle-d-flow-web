@@ -399,25 +399,8 @@ class LanguageMatrix {
 }
 
     injectSwitcher() {
-    if (document.querySelector('.lang-switcher')) return;
-
-    const switcher = document.createElement('div');
-    switcher.className = 'lang-switcher';
-    switcher.innerHTML = `
-        <button class="lang-dropdown-btn">
-            <span id="current-lang-display">EN</span>
-            <span style="font-size:10px;">▼</span>
-        </button>
-        <div class="lang-dropdown-menu">
-            <button onclick="LanguageMatrix.setLanguage('en')" data-lang="en">EN</button>
-            <button onclick="LanguageMatrix.setLanguage('fr')" data-lang="fr">FR</button>
-            <button onclick="LanguageMatrix.setLanguage('de')" data-lang="de">DE</button>
-            <button onclick="LanguageMatrix.setLanguage('it')" data-lang="it">IT</button>
-            <button onclick="LanguageMatrix.setLanguage('pt')" data-lang="pt">PT</button>
-        </div>
-    `;
-    document.body.appendChild(switcher);
-}
+        // Disabled: Language is determined by user profile card globally.
+    }
 
     setLanguage(lang) {
         localStorage.setItem('cqr_lang', lang);

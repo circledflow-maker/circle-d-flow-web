@@ -243,15 +243,6 @@
 
 <body>
 
-    <!-- Mobile Header & Burger Menu -->
-    <div class="fixed top-6 left-6 z-[100]">
-        <button id="burger-btn" class="w-10 h-10 flex flex-col justify-center items-center gap-1.5 bg-black border border-[#d4af37]/50 rounded cursor-pointer z-[101]">
-            <span class="w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
-            <span class="w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
-            <span class="w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
-        </button>
-    </div>
-
     <!-- Fullscreen Mobile Menu Overlay -->
     <div id="mobile-menu" class="fixed inset-0 bg-black/95 z-[90] opacity-0 pointer-events-none transition-opacity duration-300 flex flex-col items-center justify-center">
         <nav class="flex flex-col gap-6 text-center">
@@ -264,23 +255,7 @@
         </nav>
     </div>
 
-    <!-- IMPERIAL TICKER (News Tape) -->
-    <div class="fixed top-16 left-0 w-full h-6 bg-black/40 border-b border-[#5A2A84]/20 z-40 overflow-hidden pointer-events-none">
-        <div class="whitespace-nowrap animate-ticker text-[9px] font-mono text-[#FFAE42]/80 tracking-widest leading-6 no-overflow-check" id="imperial-ticker-text">
-            +++ WELCOME TO THE GRAND BAZAAR +++ SOVEREIGN "IRON_LION" JUST LISTED "AETHER BLADE" +++ TUKTUK FLEET ACTIVE IN ALFAMA +++
-        </div>
-    </div>
     <style>
-        @keyframes ticker {
-            0% { transform: translate3d(0, 0, 0); }
-            100% { transform: translate3d(-100%, 0, 0); }
-        }
-        .animate-ticker {
-            animation: ticker 30s linear infinite;
-            display: inline-block;
-            padding-left: 100%;
-            will-change: transform;
-        }
         
         html, body {
             margin: 0; padding: 0;
@@ -341,23 +316,28 @@
     <canvas id="market-3d-canvas"></canvas>
 
     <!-- NAV (Synchronized Horizon Bar) -->
-    <header class="fixed top-0 w-full z-[100] h-16 flex items-center justify-between px-4 lg:px-8 bg-black/90 border-b border-[#FFAE42]/20 backdrop-blur-md">
-        <div class="flex items-center">
+    <header class="fixed top-0 w-full z-[100] h-16 flex items-center justify-between px-2 lg:px-8 bg-black/90 border-b border-[#FFAE42]/20 backdrop-blur-md">
+        <div class="flex items-center gap-2">
+            <!-- Mobile Burger Menu Button moved into Header -->
+            <button id="burger-btn" class="w-8 h-8 flex flex-col justify-center items-center gap-1 bg-black border border-[#d4af37]/50 rounded cursor-pointer lg:hidden">
+                <span class="w-4 h-[2px] bg-[#d4af37] transition-all duration-300"></span>
+                <span class="w-4 h-[2px] bg-[#d4af37] transition-all duration-300"></span>
+                <span class="w-4 h-[2px] bg-[#d4af37] transition-all duration-300"></span>
+            </button>
             <a href="dashboard.html" class="flex items-center gap-1 text-white/70 hover:text-[#FFAE42] transition-colors">
                 <span class="material-symbols-outlined text-lg">arrow_back</span>
-                <span class="text-[9px] font-bold uppercase tracking-tighter">Empire Orbit</span>
+                <span class="text-[9px] font-bold uppercase tracking-tighter hidden sm:inline">Orbit</span>
             </a>
         </div>
 
-        <div class="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center justify-center">
-            <h1 class="font-cinzel font-bold text-lg tracking-[0.4em] text-[#FFAE42] m-0 text-center whitespace-nowrap">THE BAZAAR</h1>
+        <div class="absolute left-1/2 -translate-x-1/2 items-center justify-center pointer-events-none">
+            <h1 class="font-cinzel font-bold text-sm lg:text-lg tracking-[0.2em] lg:tracking-[0.4em] text-[#FFAE42] m-0 text-center whitespace-nowrap">BAZAAR</h1>
         </div>
 
-        <div class="flex items-center justify-end gap-2">
-            <div id="market-timer" class="hidden lg:block font-mono text-[9px] text-white/50 mr-4">00:00:00</div>
-            <div class="flex gap-2 items-center">
-                <a href="marketplace-stall.html" class="px-3 py-1.5 border border-[#5A2A84] text-[#FFAE42] text-[9px] font-bold uppercase rounded hover:bg-[#5A2A84]/20 transition-all">STALL</a>
-                <a href="marketplace-upload.html" class="px-3 py-1.5 bg-[#FFAE42]/20 border border-[#FFAE42] text-[#FFAE42] text-[9px] font-bold uppercase rounded shadow-[0_0_10px_rgba(255,174,64,0.3)] hover:bg-[#FFAE42] hover:text-black transition-all">FORGE</a>
+        <div class="flex items-center justify-end gap-1 lg:gap-2">
+            <div class="flex gap-1 lg:gap-2 items-center">
+                <a href="marketplace-stall.html" class="px-2 py-1 lg:px-3 lg:py-1.5 border border-[#5A2A84] text-[#FFAE42] text-[8px] lg:text-[9px] font-bold uppercase rounded hover:bg-[#5A2A84]/20 transition-all">STALL</a>
+                <a href="marketplace-upload.html" class="px-2 py-1 lg:px-3 lg:py-1.5 bg-[#FFAE42]/20 border border-[#FFAE42] text-[#FFAE42] text-[8px] lg:text-[9px] font-bold uppercase rounded shadow-[0_0_10px_rgba(255,174,64,0.3)] hover:bg-[#FFAE42] hover:text-black transition-all">FORGE</a>
             </div>
         </div>
     </header>
@@ -386,17 +366,9 @@
             <span class="text-[9px] text-white/30 mt-1">Beats & Audio</span>
         </div>
 
-        <!-- CENTER: THE HUB & AUCTION PIT -->
-        <div class="center-hub">
-            <div class="text-center">
-                <h2 class="text-3xl font-serif text-[#FFAE42] mb-2 font-bold drop-shadow-[0_0_10px_rgba(255,174,66,0.8)]">THE PIT</h2>
-                <p class="text-[10px] uppercase tracking-[0.3em] text-[#5A2A84] font-bold drop-shadow-[0_0_5px_rgba(90,42,132,0.8)]">Live Auctions</p>
-            </div>
-            
-            <!-- Live Ticker / Featured -->
-            <div id="pit-ticker-content" class="mt-8 bg-black/50 px-6 py-3 rounded-full border border-white/5 backdrop-blur-sm min-w-[300px] text-center">
-                <span class="text-xs text-white/30 truncate">Loading Market Data...</span>
-            </div>
+        <!-- CENTER: THE HUB -->
+        <div class="center-hub flex flex-col items-center justify-center h-full">
+            <img src="../logo.png" alt="Circle D Flow" style="width: 120px; filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.5));" />
         </div>
 
         <!-- MIDDLE RIGHT: HEALING -->

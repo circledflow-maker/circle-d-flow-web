@@ -62,6 +62,22 @@
 
     <div class="glass-panel p-6 md:p-10 rounded-2xl shadow-2xl relative z-10 max-w-lg w-full text-center border-t-4 border-electric flex flex-col max-h-[90vh]">
         
+        <!-- KH Loader Style -->
+        <style>
+            .kh-loader {
+                position: absolute;
+                top: 50%; left: 50%; transform: translate(-50%, -50%);
+                width: 40px; height: 40px;
+                border: 3px solid rgba(212, 175, 55, 0.2);
+                border-top: 3px solid #d4af37;
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+                pointer-events: none;
+                z-index: 20;
+            }
+            @keyframes spin { 0% { transform: translate(-50%, -50%) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotate(360deg); } }
+        </style>
+
         <!-- Close Button -->
         <button onclick="window.location.href='quest_map.html'" class="absolute top-4 right-4 text-white/50 hover:text-white transition-colors z-50 text-xl font-bold">
             &times;
@@ -92,14 +108,20 @@
                 <p class="text-xs text-white/60 mb-2">The timer continues in the background.</p>
 
                 <!-- System Video Player -->
-                <div class="bg-black/80 rounded border border-[#d4af37]/30 p-2 mb-4">
+                <div class="bg-black/80 rounded border border-[#d4af37]/30 p-2 mb-4 relative">
                     <p class="text-xs text-[#d4af37] uppercase tracking-widest mb-2">Protocol Preview</p>
-                    <video id="jam-player-vid" controls playsinline class="w-full rounded h-[180px] bg-black border border-[#333]"></video>
+                    <div id="vid-loader" class="kh-loader"></div>
+                    <video id="jam-player-vid" controls playsinline class="w-full rounded h-[180px] bg-black border border-[#333]" oncanplay="document.getElementById('vid-loader').style.display='none'" onwaiting="document.getElementById('vid-loader').style.display='block'"></video>
                     <div class="flex justify-between mt-2">
-                        <button onclick="playNextVideo(-1)" class="text-xs border border-white/20 px-2 py-1 hover:bg-white/10 rounded">Previous</button>
-                        <button onclick="playNextVideo(1)" class="text-xs border border-white/20 px-2 py-1 hover:bg-white/10 rounded">Next</button>
+                        <button onclick="playNextVideo(-1)" class="text-xs border border-white/20 min-h-[44px] min-w-[44px] px-3 py-2 hover:bg-white/10 rounded flex items-center justify-center">Previous</button>
+                        <button onclick="playNextVideo(1)" class="text-xs border border-white/20 min-h-[44px] min-w-[44px] px-3 py-2 hover:bg-white/10 rounded flex items-center justify-center">Next</button>
                     </div>
                 </div>
+                
+                <!-- Portfolio FAB -->
+                <button onclick="window.location.href='akademie.html'" class="w-full mb-4 bg-gradient-to-r from-[#2a1a3a] to-[#1a1a2e] border border-electric/50 text-electric min-h-[44px] rounded shadow-[0_0_15px_rgba(212,175,55,0.2)] font-bold uppercase tracking-widest text-xs hover:scale-[1.02] transition-transform flex items-center justify-center gap-2">
+                    Enter the Portfolio
+                </button>
             </div>
             
             <!-- Comments Section -->
@@ -138,7 +160,7 @@
             '../Assets/images/circle-d-flow-reel.mp4',
             '../Assets/Community_Vibe_Reel.mp4',
             '../Assets/local_archives/Session_Graca_Street_Art.mp4',
-            '../Flow in Lisbon/FlowInHempyroots/VID_20260131_215823.mp4'
+            '../Flow_in_Lisbon/FlowInHempyroots/VID_20260131_215823.mp4'
         ];
         let currentVideoIdx = 0;
 
@@ -204,6 +226,15 @@
             document.getElementById('init-view').classList.add('hidden');
             document.getElementById('timer-view').classList.remove('hidden');
             
+            // Setup Realtime Chronicles Subscription
+            window.supabaseClient
+                .channel('public:chronicles')
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'chronicles', filter: `area_id=eq.${areaId}` }, payload => {
+                    console.log('Realtime Chronicle:', payload);
+                    loadComments();
+                })
+                .subscribe();
+
             startTimer();
         });
         
@@ -245,7 +276,7 @@
         
         async function loadComments() {
             try {
-                const { data, error } = await window.supabaseClient.from('flow_comments').select('*').eq('area_id', areaId).order('created_at', {ascending: false});
+                const { data, error } = await window.supabaseClient.from('chronicles').select('*').eq('area_id', areaId).order('created_at', {ascending: false});
                 const list = document.getElementById('comments-list');
                 if(error) {
                     list.innerHTML = `<p class="text-xs text-white/40 italic">Unable to load chronicles.</p>`;
@@ -275,7 +306,7 @@
                     return `
                     <div class="border-b border-[#222] pb-2">
                         <span class="text-electric font-bold text-xs">${c.user_name}</span>
-                        <p class="text-white/80 text-xs mt-1">${c.comment}</p>
+                        <p class="text-white/80 text-xs mt-1">${c.content}</p>
                         ${mediaHtml}
                     </div>
                 `}).join('');
@@ -284,33 +315,43 @@
         
         async function postComment() {
             const input = document.getElementById('comment-input');
-            const mediaInput = document.getElementById('media-input');
             let text = input.value.trim();
-            if(!text && !mediaInput.value.trim()) return;
-            
-            if(mediaInput.value.trim()) {
-                text += `\n[Media]: ${mediaInput.value.trim()}`;
-            }
+            if(!text) return;
 
             input.value = 'Posting...';
             input.disabled = true;
-            mediaInput.disabled = true;
             
             try {
                 const userName = localStorage.getItem('cdf_user_username') || "Voyager";
-                await window.supabaseClient.from('flow_comments').insert([{
+                const { error } = await window.supabaseClient.from('chronicles').insert([{
                     area_id: areaId,
+                    user_id: sessionUser ? sessionUser.id : null,
                     user_name: userName,
-                    comment: text
+                    content: text
                 }]);
+                if (error) throw error;
+                
                 input.value = '';
-                loadComments();
+                // No need to loadComments() here because realtime subscription will catch it
             } catch(e) {
                 console.error("Failed to post", e);
                 alert("Failed to post comment.");
             } finally {
                 input.disabled = false;
-                mediaInput.disabled = false;
+            }
+        }
+        
+        async function deleteNode() {
+            if(!confirm("Are you sure you want to permanently vanish this Flow Area?")) return;
+            try {
+                // We assume 'user_quests' is the table storing areas, as RLS is set there
+                const { error } = await window.supabaseClient.from('user_quests').delete().eq('id', areaId);
+                if(error) throw error;
+                alert("Area vanished into the void.");
+                window.location.href = "quest_map.html";
+            } catch(err) {
+                alert("Failed to delete Area. Check console.");
+                console.error(err);
             }
         }
         

@@ -29,6 +29,28 @@
             grid-template-columns: 450px 1fr;
             height: 100vh;
             padding-top: 64px;
+            overflow: hidden;
+        }
+
+        @media (max-width: 768px) {
+            .shop-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 1fr;
+                overflow-y: auto;
+            }
+            .merchant-side {
+                height: 50vh;
+                min-height: 400px;
+                border-right: none;
+                border-bottom: 1px solid rgba(255, 174, 66, 0.2);
+            }
+            .inventory-side {
+                padding: 20px;
+                overflow-y: visible;
+            }
+            body {
+                overflow-y: auto;
+            }
         }
 
         .merchant-side {
@@ -130,7 +152,7 @@
 <body>
 
     <!-- Mobile Header & Burger Menu -->
-    <div class="fixed top-6 left-6 z-[100]">
+    <div class="fixed top-4 left-4 lg:top-6 lg:left-6 z-[101]">
         <button id="burger-btn" class="w-10 h-10 flex flex-col justify-center items-center gap-1.5 bg-black border border-[#d4af37]/50 rounded cursor-pointer z-[101]">
             <span class="w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
             <span class="w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
@@ -152,18 +174,18 @@
 
 
     <!-- HORIZON BAR -->
-    <header class="fixed top-0 w-full z-[100] h-16 grid grid-cols-[1fr_2fr_1fr] items-center px-8 bg-black/90 border-b border-[#22c55e]/20">
-        <div class="flex justify-start">
+    <header class="fixed top-0 w-full z-[100] h-16 flex lg:grid lg:grid-cols-[1fr_2fr_1fr] items-center px-4 lg:px-8 bg-black/90 border-b border-[#22c55e]/20 justify-between lg:justify-start">
+        <div class="hidden lg:flex justify-start">
             <a href="marketplace.html" class="flex items-center gap-2 text-[#22c55e]/70 hover:text-[#22c55e] transition-colors">
-                <span class="material-symbols-outlined">arrow_back</span>
-                <span class="text-[10px] font-bold uppercase tracking-widest">Back to Village</span>
+                <span class="material-symbols-outlined text-sm group-hover:-translate-x-1 transition-transform">arrow_back</span>
+                <span class="text-[10px] font-bold uppercase tracking-widest">Back</span>
             </a>
         </div>
-        <div class="flex justify-center">
-            <h1 class="font-cinzel font-bold text-lg tracking-[0.4em] text-[#22c55e]">HEALING SANCTUARY</h1>
+        <div class="flex justify-center ml-12 lg:ml-0">
+            <h1 class="font-cinzel font-bold text-base lg:text-lg tracking-[0.4em] text-[#22c55e]">HEALING SANCTUARY</h1>
         </div>
-        <div class="flex justify-end gap-6 items-center">
-             <div class="text-right">
+        <div class="flex justify-end gap-2 lg:gap-6 items-center">
+             <div class="text-right hidden sm:block">
                 <div class="text-[8px] text-[#22c55e]/50 uppercase">Spirit Vitality</div>
                 <div class="text-white font-bold text-sm">98%</div>
              </div>

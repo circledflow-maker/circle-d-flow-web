@@ -579,24 +579,22 @@
                      await window.loadMapPins(map); 
                  }
                  
-                 // Modal Check (Logged In)
+                 // Auto-Locate and Auto-Uplink
                  setTimeout(() => {
                      const engine = window.QuestEngine;
                      if(engine && (engine.user || engine.isOfflineMode)) {
-                         // CHECK IF ALREADY COMPLETED (DB OR GHOST)
                          let isCompleted = false;
                          if (engine.profile?.completed_quests?.includes('Q-PROTO-01')) isCompleted = true;
                          if (JSON.parse(sessionStorage.getItem('ghost_progress') || '[]').includes('Q-PROTO-01')) isCompleted = true;
                          
-                         // Default to showing if not blocked and NOT completed
-                         if(document.getElementById('protocol-modal') && localStorage.getItem('cqr_uplink_established') !== 'true' && !isCompleted) {
-                             document.getElementById('protocol-modal').style.display = 'flex';
-                         } else {
-                             // If already established, start locating user
-                             if (localStorage.getItem('cqr_uplink_established') === 'true' || isCompleted) {
-                                 map.locate({setView: true, maxZoom: 16, watch: true});
-                             }
+                         // Auto-complete the uplink quest silently if not done
+                         if(!isCompleted) {
+                             localStorage.setItem('cqr_uplink_established', 'true');
+                             try { engine.establishUplink('Q-PROTO-01'); } catch(e){}
                          }
+                         
+                         // Always start locating user automatically
+                         map.locate({setView: true, maxZoom: 16, watch: true});
                      }
                  }, 1000);
 

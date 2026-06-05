@@ -41,7 +41,7 @@
 <body class="theme-tata-somba min-h-screen">
 
     <!-- Mobile Header & Burger Menu -->
-    <div class="fixed top-6 left-6 z-[100]">
+    <div class="fixed top-4 left-4 lg:top-6 lg:left-6 z-[101]">
         <button id="burger-btn" class="w-10 h-10 flex flex-col justify-center items-center gap-1.5 bg-black border border-[#d4af37]/50 rounded cursor-pointer z-[101]">
             <span class="w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
             <span class="w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
@@ -61,25 +61,24 @@
         </nav>
     </div>
 
-
     <!-- NAV (Synchronized Horizon Bar) -->
-    <header class="fixed top-0 w-full z-[100] h-16 grid grid-cols-[1fr_2fr_1fr] items-center px-8 bg-black/90 border-b border-[#FFAE42]/20 backdrop-blur-md">
-        <div class="flex justify-start">
+    <header class="fixed top-0 w-full z-[100] h-16 flex lg:grid lg:grid-cols-[1fr_2fr_1fr] items-center px-4 lg:px-8 bg-black/90 border-b border-[#FFAE42]/20 backdrop-blur-md justify-between lg:justify-start">
+        <div class="hidden lg:flex justify-start">
             <a href="marketplace.html" class="flex items-center gap-2 text-[#FFAE42]/70 hover:text-[#FFAE42] transition-colors group">
                 <span class="material-symbols-outlined text-sm group-hover:-translate-x-1 transition-transform">arrow_back</span>
-                <span class="text-[10px] font-bold uppercase tracking-widest">Back to Village</span>
+                <span class="text-[10px] font-bold uppercase tracking-widest">Back</span>
             </a>
         </div>
 
-        <div class="flex justify-center">
-            <h1 class="font-cinzel font-bold text-lg tracking-[0.4em] text-[#FFAE42] drop-shadow-lg">STALL MANAGEMENT</h1>
+        <div class="flex justify-center ml-12 lg:ml-0">
+            <h1 class="font-cinzel font-bold text-base lg:text-lg tracking-[0.2em] lg:tracking-[0.4em] text-[#FFAE42] drop-shadow-lg">STALL MGT</h1>
         </div>
 
-        <div class="flex justify-end gap-4 items-center">
-            <a href="marketplace-upload.html" class="px-4 py-1.5 border border-[#FFAE42]/50 text-[#FFAE42] text-[10px] font-bold uppercase rounded hover:bg-[#FFAE42] hover:text-black transition-all flex items-center gap-2">
-                <span class="material-symbols-outlined text-sm">auto_fix</span> FORGE
+        <div class="flex justify-end gap-2 lg:gap-4 items-center">
+            <a href="marketplace-upload.html" class="px-2 lg:px-4 py-1.5 border border-[#FFAE42]/50 text-[#FFAE42] text-[10px] font-bold uppercase rounded hover:bg-[#FFAE42] hover:text-black transition-all flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">auto_fix</span> <span class="hidden lg:inline">FORGE</span>
             </a>
-            <a href="dashboard.html" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:border-[#FFAE42] transition-colors overflow-hidden">
+            <a href="dashboard.html" class="w-8 h-8 lg:w-10 lg:h-10 rounded-full border border-white/10 flex items-center justify-center hover:border-[#FFAE42] transition-colors overflow-hidden">
                 <img id="header-avatar" src="https://placehold.co/100x100/120818/FFAE42?text=V" class="w-full h-full object-cover">
             </a>
         </div>
@@ -150,12 +149,65 @@
                 </div>
                 <div>
                     <label class="text-[10px] uppercase text-[#FFAE42]/60 block mb-1">Buyer (Username/Code)</label>
-                    <input type="text" name="buyer_name" required placeholder="User to bill..." class="w-full bg-[#120818]/80 border border-[#5A2A84] rounded p-3 text-white focus:border-[#FFAE42] outline-none">
+                    <input type="text" id="deal-buyer" required class="w-full bg-[#120818]/80 border border-[#5A2A84] rounded p-3 text-white focus:border-[#FFAE42] outline-none">
+                </div>
+                <button type="submit" class="w-full py-4 bg-[#FFAE42] text-black rounded font-bold uppercase tracking-widest hover:bg-white transition-all shadow-[0_0_20px_rgba(255,174,66,0.3)]">Confirm Deal</button>
+            </form>
+        </div>
+    </dialog>
+
+    <!-- EDIT ITEM MODAL -->
+    <dialog id="edit-item-modal" class="bg-transparent p-0 backdrop:bg-[#120818]/90 p-4 w-full">
+        <div class="bg-gradient-to-b from-[#3E2723] to-[#21110E] border-2 border-[#FFAE42] p-6 lg:p-8 max-w-lg mx-auto w-full rounded-2xl relative shadow-[0_0_40px_rgba(90,42,132,0.4)] text-white">
+            <button type="button" onclick="document.getElementById('edit-item-modal').close()" class="absolute top-4 right-4 text-[#FFAE42]/50 hover:text-[#FFAE42] material-symbols-outlined">close</button>
+            <h2 class="text-xl lg:text-2xl font-cinzel font-bold text-[#FFAE42] mb-6 border-b border-[#5A2A84] pb-2">Edit Artifact</h2>
+            
+            <form id="edit-item-form" class="space-y-4">
+                <input type="hidden" id="edit-item-id">
+                <div>
+                    <label class="text-[10px] uppercase text-[#FFAE42]/60 block mb-1">Title</label>
+                    <input type="text" id="edit-item-title" required class="w-full bg-[#120818]/80 border border-[#5A2A84] rounded p-3 text-white focus:border-[#FFAE42] outline-none">
+                </div>
+                <div>
+                    <label class="text-[10px] uppercase text-[#FFAE42]/60 block mb-1">Description</label>
+                    <textarea id="edit-item-desc" rows="3" class="w-full bg-[#120818]/80 border border-[#5A2A84] rounded p-3 text-white focus:border-[#FFAE42] outline-none"></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-[10px] uppercase text-[#FFAE42]/60 block mb-1">Price (FC)</label>
+                        <input type="number" id="edit-item-price" required class="w-full bg-[#120818]/80 border border-[#5A2A84] rounded p-3 text-white focus:border-[#FFAE42] outline-none">
+                    </div>
+                    <div>
+                        <label class="text-[10px] uppercase text-[#FFAE42]/60 block mb-1">Category</label>
+                        <select id="edit-item-category" class="w-full bg-[#120818]/80 border border-[#5A2A84] rounded p-3 text-white focus:border-[#FFAE42] outline-none">
+                            <option value="Arts">Arts</option>
+                            <option value="Skills">Skills</option>
+                            <option value="Sounds">Sounds</option>
+                            <option value="Healing">Healing</option>
+                            <option value="Products">Products</option>
+                            <option value="Services">Services</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-[10px] uppercase text-[#FFAE42]/60 block mb-1">Stock Amount</label>
+                        <input type="number" id="edit-item-stock" min="0" value="1" class="w-full bg-[#120818]/80 border border-[#5A2A84] rounded p-3 text-white focus:border-[#FFAE42] outline-none">
+                    </div>
+                    <div class="flex items-center gap-2 mt-6">
+                        <input type="checkbox" id="edit-item-active" class="w-4 h-4 accent-[#FFAE42]">
+                        <label for="edit-item-active" class="text-sm">Available (Active)</label>
+                    </div>
                 </div>
                 
-                <button type="submit" class="w-full py-4 mt-4 bg-[#FFAE42] text-[#120818] font-bold uppercase tracking-widest hover:bg-white transition-colors shadow-lg rounded">
-                    Initiate AFC Handshake
-                </button>
+                <div class="flex justify-between pt-6 mt-6 border-t border-[#5A2A84]">
+                    <button type="button" onclick="deleteItem()" class="px-4 py-2 bg-red-900/50 text-red-500 border border-red-900 rounded hover:bg-red-600 hover:text-white font-bold uppercase transition-all text-xs">
+                        Delete
+                    </button>
+                    <button type="submit" class="px-6 py-2 bg-[#FFAE42] text-black rounded font-bold uppercase hover:bg-white transition-all shadow-[0_0_15px_rgba(255,174,66,0.4)] text-xs">
+                        Save Changes
+                    </button>
+                </div>
             </form>
         </div>
     </dialog>
@@ -330,9 +382,7 @@
             // Merge local offline items
             try {
                 const offlineItems = JSON.parse(localStorage.getItem('cqr_offline_items') || '[]');
-                // In offline mode, creator_id might be 'local-test-id' or the user's id
                 const myOfflineItems = offlineItems.filter(item => item.creator_id === user.id || item.creator_id === 'local-test-id');
-                // Map DB columns to what UI expects just in case
                 const mappedLocal = myOfflineItems.map(item => ({
                     ...item,
                     category: item.guild_category,
@@ -341,33 +391,37 @@
                 data = [...mappedLocal, ...data];
             } catch(e) {}
 
+            myItems = data;
             if(!data || data.length === 0) {
                 grid.innerHTML = `<div class="col-span-full text-center py-20 text-white/30">Your stall is empty. Forge an artifact to begin.</div>`;
                 return;
             }
-
-            myItems = data; // Cache for deals
-
-            grid.innerHTML = data.map(item => `
-                <div class="item-card bg-[#1A1622] rounded-xl overflow-hidden border border-white/5 group relative">
+            
+            grid.innerHTML = '';
+            data.forEach(item => {
+                const isOut = item.stock_count <= 0;
+                const div = document.createElement('div');
+                div.className = `relative item-card bg-black/40 border border-white/5 rounded-lg overflow-hidden group ${!item.is_active || isOut ? 'opacity-50 grayscale' : ''}`;
+                div.innerHTML = `
                     <div class="h-48 overflow-hidden relative">
-                        <img src="${item.image_url || 'https://placehold.co/400x300/111/CD7F32?text=Artifact'}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
-                        <div class="absolute top-2 right-2 px-2 py-1 bg-black/60 backdrop-blur rounded text-[9px] font-bold uppercase text-gold border border-gold/30">
-                            ${item.category}
+                        <img src="${item.image_url || 'https://placehold.co/400x300/120818/FFAE42?text=Artifact'}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        ${!item.is_active ? '<div class="absolute top-2 right-2 bg-black/80 text-red-500 text-[10px] px-2 py-1 rounded font-bold uppercase">HIDDEN</div>' : ''}
+                        ${isOut ? '<div class="absolute top-2 right-2 bg-black/80 text-orange-500 text-[10px] px-2 py-1 rounded font-bold uppercase">OUT OF STOCK</div>' : ''}
+                    </div>
+                    <div class="p-4">
+                        <div class="text-[9px] text-[#FFAE42] uppercase tracking-widest mb-1">${item.category || item.guild_category || 'Artifact'}</div>
+                        <h3 class="font-bold text-lg text-white mb-2 line-clamp-1">${item.title}</h3>
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="font-mono text-[#5A2A84] font-bold">${item.price_flow} FC</span>
+                            <span class="text-xs text-white/40 border border-white/10 px-2 py-0.5 rounded">Stock: ${item.stock_count !== undefined ? item.stock_count : 1}</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="openEditModal('${item.id}')" class="flex-1 py-2 bg-white/5 hover:bg-[#FFAE42]/20 text-white hover:text-[#FFAE42] border border-white/10 hover:border-[#FFAE42] rounded text-[10px] font-bold uppercase tracking-widest transition-all">Edit</button>
                         </div>
                     </div>
-                    <div class="p-6">
-                        <h3 class="font-cinzel font-bold text-lg text-white mb-1 truncate">${item.title}</h3>
-                        <div class="text-xs text-white/50 mb-4">${item.is_active ? '🟢 Visible' : '🔴 Hidden'}</div>
-                        <div class="flex justify-between items-end">
-                            <div class="text-gold font-mono">${item.price_flow} FC</div>
-                            <button onclick="toggleVisibility('${item.id}', ${!item.is_active})" class="text-[10px] uppercase font-bold text-white/40 hover:text-white border-b border-transparent hover:border-white transition-all">
-                                ${item.is_active ? 'Hide' : 'Show'}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
+                `;
+                grid.appendChild(div);
+            });
             
             // Update Stats
             updateStats(data.length);
@@ -386,6 +440,71 @@
         // DEALS
         async function loadDeals() {
             // TODO: Fetch Deals
+        }
+
+        // --- EDIT MODAL LOGIC ---
+        function openEditModal(id) {
+            const item = myItems.find(i => i.id === id);
+            if(!item) return;
+            
+            document.getElementById('edit-item-id').value = item.id;
+            document.getElementById('edit-item-title').value = item.title || '';
+            document.getElementById('edit-item-desc').value = item.description || '';
+            document.getElementById('edit-item-price').value = item.price_flow || item.price_credits || 0;
+            document.getElementById('edit-item-category').value = item.category || item.guild_category || 'Products';
+            document.getElementById('edit-item-stock').value = item.stock_count !== null ? item.stock_count : 1;
+            document.getElementById('edit-item-active').checked = item.is_active !== false;
+
+            document.getElementById('edit-item-modal').showModal();
+        }
+
+        document.getElementById('edit-item-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if(!window.supabaseClient) return;
+            
+            const id = document.getElementById('edit-item-id').value;
+            const title = document.getElementById('edit-item-title').value;
+            const desc = document.getElementById('edit-item-desc').value;
+            const price = document.getElementById('edit-item-price').value;
+            const category = document.getElementById('edit-item-category').value;
+            const stock = document.getElementById('edit-item-stock').value;
+            const active = document.getElementById('edit-item-active').checked;
+
+            try {
+                const { error } = await window.supabaseClient.from('market_items')
+                    .update({
+                        title: title,
+                        description: desc,
+                        price_fc: parseInt(price),
+                        category: category,
+                        stock_count: parseInt(stock),
+                        is_active: active
+                    })
+                    .eq('id', id);
+
+                if (error) throw error;
+                
+                document.getElementById('edit-item-modal').close();
+                await loadInventory();
+            } catch (err) {
+                alert("Error saving item: " + err.message);
+            }
+        });
+
+        async function deleteItem() {
+            if(!window.supabaseClient) return;
+            if(!confirm("Are you sure you want to permanently delete this artifact?")) return;
+            
+            const id = document.getElementById('edit-item-id').value;
+            try {
+                const { error } = await window.supabaseClient.from('market_items').delete().eq('id', id);
+                if (error) throw error;
+                
+                document.getElementById('edit-item-modal').close();
+                await loadInventory();
+            } catch (err) {
+                alert("Error deleting item: " + err.message);
+            }
         }
 
         function openDealModal() {
