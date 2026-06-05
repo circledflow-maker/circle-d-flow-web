@@ -32,6 +32,7 @@
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/agents/supabase_client.js?v=3.2"></script>
+    <script src="../js/data/akademie_data.js"></script>
 
     <style>
         body { background-color: #0a0a0a; color: white; overflow-x: hidden; font-family: 'Courier New', monospace; }
@@ -180,6 +181,18 @@
                 // Fetch Areas
                 const { data: areas } = await window.supabaseClient.from('flow_areas').select('*');
                 allAreas = areas || [];
+                
+                // Add Google Drive Artists
+                if (window.AkademieData) {
+                    window.AkademieData.forEach(artist => {
+                        allAreas.push({
+                            id: artist.id,
+                            name: artist.name,
+                            is_gdrive: true,
+                            data: artist
+                        });
+                    });
+                }
 
                 // Fetch Live Chronicles (To be "Current Volume")
                 const { data: chronicles } = await window.supabaseClient.from('chronicles').select('*').order('created_at', { ascending: true });
@@ -206,22 +219,29 @@
             }
 
             allAreas.forEach(area => {
-                // Check if area has ANY content (live or archived)
+                // Check if area has ANY content (live or archived) or is GDrive
                 const hasLive = allLiveChronicles.some(c => c.area_id === area.id);
                 const hasArchived = allArchives.some(a => a.area_id === area.id);
                 
-                if (!hasLive && !hasArchived) return; // Skip empty areas
+                if (!hasLive && !hasArchived && !area.is_gdrive) return; // Skip empty areas
 
-                const coverImg = area.image_url || '../Assets/images/logo.png';
+                let coverImg = area.image_url || '../Assets/images/logo.png';
+                let seriesType = area.is_gdrive ? 'Artist Series' : 'Flow Series';
+                
+                if (area.is_gdrive && area.data.files && area.data.files.length > 0) {
+                     coverImg = `https://drive.google.com/thumbnail?id=${area.data.files[0].id}&sz=w600`;
+                } else if (area.is_gdrive && area.data.chapters && area.data.chapters.length > 0 && area.data.chapters[0].files.length > 0) {
+                     coverImg = `https://drive.google.com/thumbnail?id=${area.data.chapters[0].files[0].id}&sz=w600`;
+                }
                 
                 shelf.innerHTML += `
                     <div class="book-container" onclick="openSeries('${area.id}')">
                         <div class="book">
                             <div class="book-front">
-                                <img src="${coverImg}" alt="Cover">
+                                <img src="${coverImg}" alt="Cover" onerror="this.src='../Assets/images/logo.png'">
                                 <div class="p-3 text-left flex-1 flex flex-col justify-between">
                                     <h3 class="cinzel text-xs text-white font-bold truncate">${area.name}</h3>
-                                    <p class="text-[10px] text-haki-gold mt-2">Flow Series</p>
+                                    <p class="text-[10px] text-haki-gold mt-2">${seriesType}</p>
                                 </div>
                             </div>
                         </div>
@@ -241,33 +261,61 @@
             const list = document.getElementById('volumes-list');
             list.innerHTML = '';
 
-            // Render Archived Volumes
-            const areaArchives = allArchives.filter(a => a.area_id === areaId);
-            areaArchives.forEach((archive, idx) => {
-                const date = new Date(archive.archive_month).toLocaleDateString('de-DE', { month: 'long', year: 'numeric' });
-                list.innerHTML += `
-                    <div onclick="openReader('archive', '${archive.id}')" class="bg-black/60 border border-haki-gold/40 p-4 rounded cursor-pointer hover:bg-white/5 transition flex justify-between items-center group">
-                        <div>
-                            <h4 class="text-lg cinzel text-haki-gold">Vol. ${areaArchives.length - idx}</h4>
-                            <p class="text-xs text-gray-400">${date}</p>
+            if (currentSelectedArea.is_gdrive) {
+                // GDrive Artist Series
+                if (currentSelectedArea.data.chapters) {
+                    currentSelectedArea.data.chapters.forEach((chapter, idx) => {
+                        list.innerHTML += `
+                            <div onclick="openReader('gdrive', '${idx}')" class="bg-black/60 border border-haki-gold/40 p-4 rounded cursor-pointer hover:bg-white/5 transition flex justify-between items-center group">
+                                <div>
+                                    <h4 class="text-lg cinzel text-haki-gold">${chapter.title}</h4>
+                                    <p class="text-xs text-gray-400">Google Drive Archive</p>
+                                </div>
+                                <span class="material-symbols-outlined text-white/30 group-hover:text-haki-gold transition">auto_stories</span>
+                            </div>
+                        `;
+                    });
+                } else {
+                    list.innerHTML += `
+                        <div onclick="openReader('gdrive', '0')" class="bg-black/60 border border-haki-gold/40 p-4 rounded cursor-pointer hover:bg-white/5 transition flex justify-between items-center group">
+                            <div>
+                                <h4 class="text-lg cinzel text-haki-gold">Full Portfolio</h4>
+                                <p class="text-xs text-gray-400">Google Drive Archive</p>
+                            </div>
+                            <span class="material-symbols-outlined text-white/30 group-hover:text-haki-gold transition">auto_stories</span>
                         </div>
-                        <span class="material-symbols-outlined text-white/30 group-hover:text-haki-gold transition">auto_stories</span>
-                    </div>
-                `;
-            });
+                    `;
+                }
+            } else {
+                // Flow Area Series
+                // Render Archived Volumes
+                const areaArchives = allArchives.filter(a => a.area_id === areaId);
+                areaArchives.forEach((archive, idx) => {
+                    const date = new Date(archive.archive_month).toLocaleDateString('de-DE', { month: 'long', year: 'numeric' });
+                    list.innerHTML += `
+                        <div onclick="openReader('archive', '${archive.id}')" class="bg-black/60 border border-haki-gold/40 p-4 rounded cursor-pointer hover:bg-white/5 transition flex justify-between items-center group">
+                            <div>
+                                <h4 class="text-lg cinzel text-haki-gold">Vol. ${areaArchives.length - idx}</h4>
+                                <p class="text-xs text-gray-400">${date}</p>
+                            </div>
+                            <span class="material-symbols-outlined text-white/30 group-hover:text-haki-gold transition">auto_stories</span>
+                        </div>
+                    `;
+                });
 
-            // Render Live Chronicles (Current Work in Progress)
-            const areaLive = allLiveChronicles.filter(c => c.area_id === areaId);
-            if (areaLive.length > 0) {
-                list.innerHTML += `
-                    <div onclick="openReader('live', '${areaId}')" class="bg-[#111] border border-electric/50 p-4 rounded cursor-pointer hover:bg-electric/10 transition flex justify-between items-center shadow-[0_0_15px_rgba(0,240,255,0.1)] group">
-                        <div>
-                            <h4 class="text-lg cinzel text-electric">Current Chapter (Live)</h4>
-                            <p class="text-xs text-gray-400">Unbound Chronicles</p>
+                // Render Live Chronicles (Current Work in Progress)
+                const areaLive = allLiveChronicles.filter(c => c.area_id === areaId);
+                if (areaLive.length > 0) {
+                    list.innerHTML += `
+                        <div onclick="openReader('live', '${areaId}')" class="bg-[#111] border border-electric/50 p-4 rounded cursor-pointer hover:bg-electric/10 transition flex justify-between items-center shadow-[0_0_15px_rgba(0,240,255,0.1)] group">
+                            <div>
+                                <h4 class="text-lg cinzel text-electric">Current Chapter (Live)</h4>
+                                <p class="text-xs text-gray-400">Unbound Chronicles</p>
+                            </div>
+                            <span class="material-symbols-outlined text-electric/50 group-hover:text-electric transition">edit_document</span>
                         </div>
-                        <span class="material-symbols-outlined text-electric/50 group-hover:text-electric transition">edit_document</span>
-                    </div>
-                `;
+                    `;
+                }
             }
         }
 
@@ -290,6 +338,25 @@
                     pages = JSON.parse(archive.content_dump);
                 } catch(e) {
                     console.error("Failed to parse archive dump", e);
+                }
+            } else if (type === 'gdrive') {
+                let chapterIdx = parseInt(id);
+                if (currentSelectedArea.data.chapters) {
+                    title = currentSelectedArea.data.chapters[chapterIdx].title;
+                    let gfiles = currentSelectedArea.data.chapters[chapterIdx].files;
+                    pages = gfiles.map(f => ({
+                        content: "",
+                        user_name: currentSelectedArea.name,
+                        media_url: f.type === 'video' ? `https://drive.google.com/file/d/${f.id}/preview` : `https://drive.google.com/uc?export=download&id=${f.id}`
+                    }));
+                } else {
+                    title = "Full Portfolio";
+                    let gfiles = currentSelectedArea.data.files || [];
+                    pages = gfiles.map(f => ({
+                        content: "",
+                        user_name: currentSelectedArea.name,
+                        media_url: f.type === 'video' ? `https://drive.google.com/file/d/${f.id}/preview` : `https://drive.google.com/uc?export=download&id=${f.id}`
+                    }));
                 }
             }
 

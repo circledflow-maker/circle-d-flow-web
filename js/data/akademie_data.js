@@ -140,58 +140,33 @@ const AkademieData = [
         "name": "C-Riz",
         "id": "c_riz",
         "gdriveFolder": "1FQItgHRVSUoI3-iVzbobksPlmBZgK6sL",
-        "files": [
+        "chapters": [
             {
-                "id": "1Pq8fOjsEuMD45GMxO2LTBHTqd54JbiE2",
-                "type": "image"
+                "title": "Chapter 1: Content",
+                "files": [
+                    { "id": "1Pq8fOjsEuMD45GMxO2LTBHTqd54JbiE2", "type": "image" },
+                    { "id": "1L7x9wXe-YZMIYr69ljuLc7j8k94oP0NS", "type": "image" },
+                    { "id": "1PpCZXxJW01J1GxFbLAI37S6e02DzxEt1", "type": "image" }
+                ]
             },
             {
-                "id": "1L7x9wXe-YZMIYr69ljuLc7j8k94oP0NS",
-                "type": "image"
+                "title": "Chapter 2: Event Folder",
+                "files": [
+                    { "id": "1zwh2JUFbJm9qpGb7i1NcSP8bzoNElQaI", "type": "video" },
+                    { "id": "1BNu-qq20ufjbZfKenNmqchswpWeB1xdE", "type": "image" },
+                    { "id": "1376BSIqE1HHhjk33QSKmxZCqSy8n9i34", "type": "image" }
+                ]
             },
             {
-                "id": "1PpCZXxJW01J1GxFbLAI37S6e02DzxEt1",
-                "type": "image"
-            },
-            {
-                "id": "1zwh2JUFbJm9qpGb7i1NcSP8bzoNElQaI",
-                "type": "video"
-            },
-            {
-                "id": "1BNu-qq20ufjbZfKenNmqchswpWeB1xdE",
-                "type": "image"
-            },
-            {
-                "id": "1376BSIqE1HHhjk33QSKmxZCqSy8n9i34",
-                "type": "image"
-            },
-            {
-                "id": "1lfTnTwzd9ktvm4NGMz-NrGq0BZmxKkFF",
-                "type": "image"
-            },
-            {
-                "id": "1pAvTYC75puEtZ9DPEJCAiERqlF8zXBfW",
-                "type": "image"
-            },
-            {
-                "id": "1zIsx8V51-fVwukQSCGc1jYwFi0DpQ1_p",
-                "type": "image"
-            },
-            {
-                "id": "1COHssCTejMhtUAJi_u-VvIZrqhYyUYNk",
-                "type": "image"
-            },
-            {
-                "id": "1N327NYTYnIvCVUfl6soS2gajZS2-rr4L",
-                "type": "image"
-            },
-            {
-                "id": "14dZjUK6im1jvoBiZ_CNsI7g8CZTft37D",
-                "type": "image"
-            },
-            {
-                "id": "1xqlM2sW3ShQn_B268sJcQObFrHGjmXxW",
-                "type": "image"
+                "title": "Chapter 3: German Version & Grafik",
+                "files": [
+                    { "id": "1lfTnTwzd9ktvm4NGMz-NrGq0BZmxKkFF", "type": "image" },
+                    { "id": "1pAvTYC75puEtZ9DPEJCAiERqlF8zXBfW", "type": "image" },
+                    { "id": "1zIsx8V51-fVwukQSCGc1jYwFi0DpQ1_p", "type": "image" },
+                    { "id": "1COHssCTejMhtUAJi_u-VvIZrqhYyUYNk", "type": "image" },
+                    { "id": "1N327NYTYnIvCVUfl6soS2gajZS2-rr4L", "type": "image" },
+                    { "id": "14dZjUK6im1jvoBiZ_CNsI7g8CZTft37D", "type": "image" }
+                ]
             }
         ]
     },
