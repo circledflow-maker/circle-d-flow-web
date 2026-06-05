@@ -353,6 +353,7 @@
                     pages = gfiles.map(f => ({
                         content: "",
                         user_name: currentSelectedArea.name,
+                        media_type: f.type,
                         media_url: f.type === 'video' ? `https://drive.google.com/file/d/${f.id}/preview` : `https://drive.google.com/uc?export=download&id=${f.id}`
                     }));
                 } else {
@@ -361,6 +362,7 @@
                     pages = gfiles.map(f => ({
                         content: "",
                         user_name: currentSelectedArea.name,
+                        media_type: f.type,
                         media_url: f.type === 'video' ? `https://drive.google.com/file/d/${f.id}/preview` : `https://drive.google.com/uc?export=download&id=${f.id}`
                     }));
                 }
@@ -387,8 +389,8 @@
                         if (p.media_url.includes('drive.google.com/file/d/')) {
                              const preview = p.media_url.replace(/\/view.*$/, '/preview');
                              mediaHtml = `<iframe src="${preview}" class="w-full h-[40vh] md:w-[80%] md:h-[60vh] mx-auto border border-[#333] mb-4"></iframe>`;
-                        } else if (p.media_url.match(/\.(jpeg|jpg|gif|png|webp)$/i)) {
-                             mediaHtml = `<img src="${p.media_url}" class="mb-4 object-contain">`;
+                        } else if (p.media_type === 'image' || p.media_url.match(/\.(jpeg|jpg|gif|png|webp)$/i) || p.media_url.includes('uc?export=download')) {
+                             mediaHtml = `<img src="${p.media_url}" class="mb-4 object-contain max-h-[60vh] max-w-full mx-auto border border-[#333]">`;
                         } else {
                              mediaHtml = `<video src="${p.media_url}" controls class="max-h-[60vh] max-w-full mx-auto mb-4 border border-[#333]"></video>`;
                         }
