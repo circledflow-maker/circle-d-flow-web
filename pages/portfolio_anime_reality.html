@@ -606,6 +606,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="../js/data/akademie_data.js"></script>
     <script src="../js/data/portfolio_data.js?v=flow_matrix_v3"></script>
 
     <script>
@@ -739,23 +740,23 @@
         <!-- Menu Items (hidden initially) -->
         <div id="radial-menu" class="absolute inset-0 flex items-center justify-center pointer-events-none">
             <!-- Akademie -->
-            <button onclick="window.location.href='akademie.html'" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="Akademie">
+            <button onclick="window.location.href='akademie.html'" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="Academy">
                 <span class="material-symbols-outlined text-[20px]">school</span>
             </button>
             <!-- Luft -->
-            <button onclick="window.loadCategory('Luft')" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="Luft">
+            <button onclick="window.loadCategory('Luft')" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="Air">
                 <span class="material-symbols-outlined text-[20px]">air</span>
             </button>
             <!-- Wasser -->
-            <button onclick="window.loadCategory('Wasser')" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="Wasser">
+            <button onclick="window.loadCategory('Wasser')" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="Water">
                 <span class="material-symbols-outlined text-[20px]">water_drop</span>
             </button>
             <!-- Erde -->
-            <button onclick="window.loadCategory('Erde')" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="Erde">
+            <button onclick="window.loadCategory('Erde')" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="Earth">
                 <span class="material-symbols-outlined text-[20px]">landscape</span>
             </button>
             <!-- Feuer -->
-            <button onclick="window.loadCategory('Feuer')" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="Feuer">
+            <button onclick="window.loadCategory('Feuer')" class="radial-item absolute w-12 h-12 bg-black border border-[var(--haki-gold)] text-[var(--haki-gold)] rounded-full flex items-center justify-center shadow-md hover:bg-[var(--haki-gold)] hover:text-black transition-colors opacity-0 scale-0 pointer-events-auto" title="Fire">
                 <span class="material-symbols-outlined text-[20px]">local_fire_department</span>
             </button>
         </div>
@@ -766,6 +767,7 @@
     
         <!-- External Scripts -->
     <script src="../js/translations.js"></script>
+    <script src="../js/data/akademie_data.js"></script>
     <script src="../js/data/portfolio_data.js"></script>
     <script src="../js/radial_menu.js" defer></script>
     <script src="../js/agents/agent.js" defer></script>
@@ -811,7 +813,7 @@
             function updateWeeklyFlowBanner() {
                 const titleEl = document.getElementById('weekly-focus-title');
                 if (titleEl) {
-                    titleEl.innerText = `Diese Woche im Fokus: ${activeCategory}`;
+                    titleEl.innerText = `This Week in Focus: ${activeCategory}`;
                 }
             }
 
