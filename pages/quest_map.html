@@ -137,10 +137,9 @@
             width: 200px; padding: 15px; display: none; pointer-events: auto;
         }
         
-        /* Mobile fixes */
         @media (max-width: 768px) {
             #legend-panel { top: auto; bottom: 150px; left: 10px; right: 10px; width: auto; }
-            .animus-global-nav { padding-bottom: 15px; padding-bottom: env(safe-area-inset-bottom); }
+            .animus-global-nav { bottom: 40px !important; transform: translateX(-50%) scale(0.95); width: 95%; max-width: 400px; justify-content: space-evenly; }
         }
     </style>
 </head>
@@ -197,14 +196,14 @@
     <div id="legend-panel" class="adinkra-panel">
         <h3 style="margin: 0 0 15px 0; color: var(--color-gold); border-bottom: 1px solid var(--color-terracotta); padding-bottom: 5px;">THE 8 PILLARS</h3>
         <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.85em; display: flex; flex-direction: column; gap: 8px;">
-            <li><span style="color: var(--color-terracotta);">●</span> Visuals (Visio)</li>
-            <li><span style="color: var(--color-terracotta);">●</span> Sound (Frequency)</li>
-            <li><span style="color: var(--color-terracotta);">●</span> Taste (Culinary)</li>
-            <li><span style="color: var(--color-terracotta);">●</span> Style (Aesthetics)</li>
-            <li><span style="color: var(--color-terracotta);">●</span> Knowledge (Gnosis)</li>
-            <li><span style="color: var(--color-terracotta);">●</span> Space (Connection)</li>
-            <li><span style="color: var(--color-terracotta);">●</span> Spirit (Mindfulness)</li>
-            <li><span style="color: var(--color-gold);">★</span> Hub (Nexus)</li>
+            <li onclick="window.location.href='vision_oasis.html'" style="cursor: pointer; padding: 5px; border-radius: 4px; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent'"><span style="color: var(--color-terracotta);">●</span> Visuals (Visio)</li>
+            <li onclick="window.location.href='sound_dashboard.html'" style="cursor: pointer; padding: 5px; border-radius: 4px; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent'"><span style="color: var(--color-terracotta);">●</span> Sound (Frequency)</li>
+            <li onclick="window.location.href='under-construction.html'" style="cursor: pointer; padding: 5px; border-radius: 4px; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent'"><span style="color: var(--color-terracotta);">●</span> Taste (Culinary)</li>
+            <li onclick="window.location.href='portfolio_anime_reality.html'" style="cursor: pointer; padding: 5px; border-radius: 4px; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent'"><span style="color: var(--color-terracotta);">●</span> Style (Aesthetics)</li>
+            <li onclick="window.location.href='akademie.html'" style="cursor: pointer; padding: 5px; border-radius: 4px; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent'"><span style="color: var(--color-terracotta);">●</span> Knowledge (Gnosis)</li>
+            <li onclick="window.location.href='bantaba.html'" style="cursor: pointer; padding: 5px; border-radius: 4px; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent'"><span style="color: var(--color-terracotta);">●</span> Space (Connection)</li>
+            <li onclick="window.location.href='mindfulness.html'" style="cursor: pointer; padding: 5px; border-radius: 4px; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent'"><span style="color: var(--color-terracotta);">●</span> Spirit (Mindfulness)</li>
+            <li onclick="window.location.href='dashboard.html'" style="cursor: pointer; padding: 5px; border-radius: 4px; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent'"><span style="color: var(--color-gold);">★</span> Hub (Nexus)</li>
         </ul>
     </div>
 
