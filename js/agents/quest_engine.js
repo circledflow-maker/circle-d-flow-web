@@ -160,8 +160,8 @@ class QuestEngine {
         let iconUrl = '../assets/images/beacon-blue.png'; 
         let className = 'glow-blue';
         
-        if (isMine) { iconUrl = '../assets/images/cqr-logo-gold.png'; className = 'glow-gold'; }
-        if (isStory) { iconUrl = '../assets/images/cqr-logo-gold.png'; className = 'animate-pulse-slow glow-gold'; }
+        if (isMine) { iconUrl = '../Assets/images/cqr-logo-gold.png'; className = 'glow-gold'; }
+        if (isStory) { iconUrl = '../Assets/images/cqr-logo-gold.png'; className = 'animate-pulse-slow glow-gold'; }
 
         const icon = L.icon({ iconUrl, iconSize: [30, 30], className });
 

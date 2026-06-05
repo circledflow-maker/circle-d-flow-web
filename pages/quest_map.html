@@ -65,7 +65,7 @@
     </div>
 
     <!-- Controls -->
-    <div style="position: absolute; bottom: 30px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px;">
+    <div style="position: absolute; bottom: 80px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px;">
         <button onclick="toggleCreatorMode()" id="creator-btn" style="background: rgba(0,0,0,0.8); color: white; border: 1px solid white; padding: 15px; cursor: pointer; font-family: monospace; transition: all 0.3s;">
             📍 DROP BEACON (CREATE)
         </button>
@@ -75,7 +75,7 @@
     </div>
 
     <!-- SEARCH BAR (BETA) -->
-    <div id="map-search-container" style="position: absolute; top: 100px; left: 50%; transform: translateX(-50%); z-index: 10000; display: flex; gap: 10px; width: 90%; max-width: 400px; transition: all 0.3s;">
+    <div id="map-search-container" style="position: absolute; top: 130px; left: 50%; transform: translateX(-50%); z-index: 10000; display: flex; gap: 10px; width: 90%; max-width: 400px; transition: all 0.3s;">
         <input type="text" id="map-search-input" placeholder="SEARCH SECTOR / ADDRESS..." 
             onkeypress="if(event.key === 'Enter') searchLocation()"
             style="flex: 1; padding: 12px; background: rgba(0,0,0,0.85); border: 1px solid gold; color: white; font-family: monospace; border-radius: 0; box-shadow: 0 0 15px rgba(255,215,0,0.2);">

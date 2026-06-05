@@ -394,7 +394,7 @@ window.ApexNexus = {
                     
                     <!-- 3D Floating Heart Logo -->
                     <div class="absolute inset-0 flex items-center justify-center pointer-events-none" style="transform: translateZ(-50px);">
-                         <img src="../assets/images/cqr-logo-gold.png" class="w-[450px] opacity-15 drop-shadow-[0_0_30px_rgba(212,175,55,0.8)] animate-pulse" />
+                         <img src="../Assets/images/cqr-logo-gold.png" class="w-[450px] opacity-15 drop-shadow-[0_0_30px_rgba(212,175,55,0.8)] animate-pulse" />
                     </div>
 
                     <h2 class="text-4xl font-serif font-bold text-[#d4af37] uppercase tracking-widest mb-4" style="transform: translateZ(30px); text-shadow: 0 0 15px rgba(212,175,55,0.8), 2px 2px 4px rgba(0,0,0,0.8);">Greetings, Flow Creator.</h2>
