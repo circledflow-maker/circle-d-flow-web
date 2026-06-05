@@ -183,8 +183,8 @@
                 allAreas = areas || [];
                 
                 // Add Google Drive Artists
-                if (window.AkademieData) {
-                    window.AkademieData.forEach(artist => {
+                if (typeof AkademieData !== 'undefined') {
+                    AkademieData.forEach(artist => {
                         allAreas.push({
                             id: artist.id,
                             name: artist.name,
