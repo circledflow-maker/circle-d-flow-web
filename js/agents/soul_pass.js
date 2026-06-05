@@ -24,9 +24,27 @@ class SoulPassAgent {
         this.init();
     }
 
-    init() {
+    async init() {
         console.log(`[${this.name}] Forging the Soul Pass Artifact...`);
         this.injectStyles();
+        
+        if (!this.userData.preferred_contact_method) {
+            this.userData.preferred_contact_method = 'system_chat';
+            this.userData.contact_details = '{}';
+        }
+
+        if(window.supabaseClient) {
+            const { data: { user } } = await window.supabaseClient.auth.getUser();
+            if(user) {
+                this.userData.userId = user.id;
+                const { data: profile } = await window.supabaseClient.from('profiles').select('*').eq('id', user.id).single();
+                if(profile) {
+                    this.userData.name = profile.full_name || this.userData.name;
+                    this.userData.preferred_contact_method = profile.preferred_contact_method || 'system_chat';
+                    this.userData.contact_details = typeof profile.contact_details === 'string' ? profile.contact_details : JSON.stringify(profile.contact_details || {});
+                }
+            }
+        }
     }
 
     injectStyles() {
@@ -136,27 +154,25 @@ class SoulPassAgent {
                 margin: 20px 0;
             }
             
-            /* Avatar / Class 3D Core */
+            /* Floating Soul Sphere Avatar */
             .sp-core-crystal {
                 width: 120px;
                 height: 120px;
-                background: radial-gradient(circle, rgba(154, 77, 255, 0.4), transparent);
-                border: 1px solid rgba(154, 77, 255, 0.8);
+                background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.9), rgba(154, 77, 255, 0.6) 40%, rgba(10, 0, 30, 0.8) 90%);
+                border: 1px solid rgba(255, 255, 255, 0.3);
                 border-radius: 50%;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                box-shadow: 0 0 30px rgba(154, 77, 255, 0.3);
+                box-shadow: 0 0 40px rgba(154, 77, 255, 0.6), inset 0 0 20px rgba(255,255,255,0.5);
                 transition: transform 0.5s;
                 position: relative;
+                animation: soulBreathe 4s infinite ease-in-out;
             }
-            .sp-core-crystal:hover { transform: scale(1.05) rotate(15deg); }
-            /* Mocking a 3D Class Model */
-            .sp-core-crystal::after {
-                content: '👁️'; 
-                font-size: 40px;
-                animation: float 4s ease-in-out infinite;
-                filter: drop-shadow(0 0 10px #9A4DFF);
+            .sp-core-crystal:hover { transform: scale(1.1) translateY(-5px); box-shadow: 0 0 60px rgba(154, 77, 255, 0.9), inset 0 0 30px rgba(255,255,255,0.8); }
+            @keyframes soulBreathe {
+                0%, 100% { transform: scale(1) translateY(0); }
+                50% { transform: scale(1.03) translateY(-8px); }
             }
 
             .sp-user-identity {
@@ -474,19 +490,16 @@ class SoulPassAgent {
                 </div>
 
                 <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 20px; position: relative; z-index: 50;">
-                    <!-- Social Knospen -->
-                    <div class="sp-social-tree" style="padding-top: 0; gap: 15px; position: relative; z-index: 50;">
-                        <div class="sp-social-node insta connected" onclick="SoulPass.initiateSocialSync('instagram')" title="Instagram Link (OAuth)">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg" alt="IG">
-                        </div>
-                        <div class="sp-social-node wa connected" onclick="SoulPass.initiateSocialSync('whatsapp')" title="WhatsApp Comm Link (Bridge)">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/WhatsApp_icon.png" alt="WA">
-                        </div>
-                        <div class="sp-social-node" onclick="SoulPass.initiateSocialSync('tiktok')" title="TikTok Link (Webhook)">
-                            <img src="https://upload.wikimedia.org/wikipedia/en/a/a9/TikTok_logo.svg" alt="TT">
-                        </div>
-                        <div class="sp-social-node yt connected" onclick="SoulPass.initiateSocialSync('youtube')" title="YouTube Archive (Google OAuth)">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/4/42/YouTube_icon_%282013-2017%29.png" alt="YT">
+                    <!-- Comms Protocol -->
+                    <div class="sp-settings-group" style="flex: 1; margin: 0; display: flex; flex-direction: column; justify-content: center; position: relative; z-index: 50;">
+                        <div class="sp-setting-row" style="flex-direction: column; align-items: stretch; border: none;">
+                            <span class="sp-set-label" style="margin-bottom: 8px; color: #d4af37; text-transform: uppercase; letter-spacing: 1px;">Comms Protocol</span>
+                            <select class="sp-select" id="sp-comms-method" style="width: 100%; margin-bottom: 10px;" onchange="SoulPass.updateCommsMethod(this.value)">
+                                <option value="system_chat">System Chat (Default)</option>
+                                <option value="whatsapp">WhatsApp Bridge</option>
+                                <option value="instagram">Instagram Sync</option>
+                            </select>
+                            <input type="text" id="sp-comms-details" class="sp-pswd-input" style="width: 100%; max-width: 100%; display: none;" placeholder="Enter details..." onchange="SoulPass.saveCommsDetails(this.value)">
                         </div>
                     </div>
 
@@ -530,9 +543,81 @@ class SoulPassAgent {
             if(localStorage.getItem('cdf_2fa') === 'true') {
                 document.getElementById('sp-2fa-toggle').classList.add('on');
             }
+
+            // Hydrate Comms Protocol
+            const methodSelect = document.getElementById('sp-comms-method');
+            if(methodSelect && this.userData.preferred_contact_method) {
+                methodSelect.value = this.userData.preferred_contact_method;
+                this.updateCommsMethod(this.userData.preferred_contact_method, false);
+            }
+            
+            // Add Swipe Listener for Mobile
+            this.addSwipeListeners(card);
         }, 50);
 
         return overlay;
+    }
+
+    async updateCommsMethod(method, saveToDb = true) {
+        this.userData.preferred_contact_method = method;
+        const detailsInput = document.getElementById('sp-comms-details');
+        
+        let details = {};
+        try { details = JSON.parse(this.userData.contact_details || '{}'); } catch(e) {}
+
+        if (method === 'whatsapp') {
+            detailsInput.style.display = 'block';
+            detailsInput.placeholder = "Phone Number (e.g., +49...)";
+            detailsInput.value = details.whatsapp || '';
+        } else if (method === 'instagram') {
+            detailsInput.style.display = 'block';
+            detailsInput.placeholder = "Instagram Handle (e.g., @user)";
+            detailsInput.value = details.instagram || '';
+        } else {
+            detailsInput.style.display = 'none';
+        }
+
+        if(saveToDb && window.supabaseClient && this.userData.userId) {
+            await window.supabaseClient.from('profiles').update({ preferred_contact_method: method }).eq('id', this.userData.userId);
+            this.pulseFeedback();
+        }
+    }
+
+    async saveCommsDetails(val) {
+        const method = this.userData.preferred_contact_method;
+        let details = {};
+        try { details = JSON.parse(this.userData.contact_details || '{}'); } catch(e) {}
+        
+        if (method === 'whatsapp') details.whatsapp = val;
+        else if (method === 'instagram') details.instagram = val;
+        
+        this.userData.contact_details = JSON.stringify(details);
+
+        if(window.supabaseClient && this.userData.userId) {
+            await window.supabaseClient.from('profiles').update({ contact_details: details }).eq('id', this.userData.userId);
+            this.pulseFeedback();
+        }
+    }
+
+    addSwipeListeners(card) {
+        let touchstartX = 0;
+        let touchendX = 0;
+        
+        card.addEventListener('touchstart', e => {
+            touchstartX = e.changedTouches[0].screenX;
+        }, {passive: true});
+
+        card.addEventListener('touchend', e => {
+            touchendX = e.changedTouches[0].screenX;
+            if (touchendX < touchstartX - 50) {
+                // Swiped Left
+                document.getElementById('sp-scene').classList.add('flipped');
+            }
+            if (touchendX > touchstartX + 50) {
+                // Swiped Right
+                document.getElementById('sp-scene').classList.remove('flipped');
+            }
+        }, {passive: true});
     }
 
     // A small haptic/visual pulse for checking logic visually 

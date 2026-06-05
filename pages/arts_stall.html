@@ -215,9 +215,9 @@
                 <p class="text-sm text-white/40 uppercase tracking-widest">Handcrafted Treasures & Visual Wonders</p>
             </div>
 
-            <div id="arts-grid" class="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-20">
+            <div id="arts-grid" class="flex lg:grid lg:grid-cols-2 gap-6 pb-20 overflow-x-auto snap-x snap-mandatory lg:overflow-visible lg:snap-none scroll-smooth" style="-webkit-overflow-scrolling: touch; scrollbar-width: none;">
                 <!-- ITEMS INJECTED HERE -->
-                <div class="col-span-full py-20 text-center animate-pulse opacity-30">
+                <div class="col-span-full py-20 text-center animate-pulse opacity-30 w-full min-w-[85vw] lg:min-w-0 snap-center">
                     <span class="material-symbols-outlined text-6xl">draw</span>
                     <p class="mt-4 uppercase tracking-[0.5em]">Curating Gallery...</p>
                 </div>
@@ -233,13 +233,13 @@
             const grid = document.getElementById('arts-grid');
             const { data, error } = await window.supabaseClient
                 .from('market_items')
-                .select('*')
+                .select('*, profiles(full_name, preferred_contact_method, contact_details)')
                 .eq('category', 'Arts')
                 .eq('is_active', true);
 
             if (error || !data || data.length === 0) {
                 grid.innerHTML = `
-                    <div class="col-span-full clay-slab text-center p-10 opacity-50">
+                    <div class="col-span-full clay-slab text-center p-10 opacity-50 w-full min-w-[85vw] lg:min-w-0 snap-center">
                         <p>The Gallery is currently empty. Check back after the next forge.</p>
                     </div>
                 `;
@@ -248,18 +248,40 @@
 
             grid.innerHTML = '';
             data.forEach(item => {
+                const seller = item.profiles || {};
+                let contactBtn = `<button class="buy-btn text-[10px]" onclick="alert('Initiating System Chat Protocol...')">Contact</button>`;
+                
+                if (seller.preferred_contact_method === 'whatsapp') {
+                    let details = {};
+                    try { details = typeof seller.contact_details === 'string' ? JSON.parse(seller.contact_details) : seller.contact_details; } catch(e){}
+                    if(details.whatsapp) {
+                        const num = details.whatsapp.replace(/[^0-9]/g, '');
+                        contactBtn = `<a href="https://wa.me/${num}?text=Hi%20${seller.full_name},%20I'm%20interested%20in%20${item.title}" target="_blank" class="buy-btn text-[10px]" style="background:#25D366; text-decoration:none;">WhatsApp</a>`;
+                    }
+                } else if (seller.preferred_contact_method === 'instagram') {
+                    let details = {};
+                    try { details = typeof seller.contact_details === 'string' ? JSON.parse(seller.contact_details) : seller.contact_details; } catch(e){}
+                    if(details.instagram) {
+                        const handle = details.instagram.replace('@', '');
+                        contactBtn = `<a href="https://ig.me/m/${handle}" target="_blank" class="buy-btn text-[10px]" style="background:#E1306C; text-decoration:none;">Instagram</a>`;
+                    }
+                }
+
                 const div = document.createElement('div');
-                div.className = 'clay-slab flex gap-6 items-center';
+                div.className = 'clay-slab flex flex-col sm:flex-row gap-6 items-center min-w-[85vw] lg:min-w-0 snap-center';
                 div.innerHTML = `
-                    <div class="w-24 h-24 rounded bg-black/40 overflow-hidden flex-shrink-0">
+                    <div class="w-full sm:w-24 h-40 sm:h-24 rounded bg-black/40 overflow-hidden flex-shrink-0">
                         <img src="${item.image_url || '../Assets/images/default_artifact.png'}" class="w-full h-full object-cover">
                     </div>
-                    <div class="flex-1">
-                        <h4 class="text-lg font-bold text-white mb-1">${item.name}</h4>
-                        <p class="text-xs text-white/40 mb-3 line-clamp-1">${item.description}</p>
-                        <div class="flex justify-between items-center">
-                            <div class="price-tag">${item.price_fc} FC</div>
-                            <button class="buy-btn text-[10px]">Collect</button>
+                    <div class="flex-1 w-full">
+                        <div class="flex justify-between items-start mb-1">
+                            <h4 class="text-lg font-bold text-white">${item.title || item.name}</h4>
+                            <span class="text-[8px] uppercase tracking-widest text-[#228B22]/70">${seller.full_name || 'Unknown'}</span>
+                        </div>
+                        <p class="text-xs text-white/40 mb-3 line-clamp-2">${item.description}</p>
+                        <div class="flex justify-between items-center mt-auto">
+                            <div class="price-tag">${item.price_credits || item.price_fc} FC</div>
+                            ${contactBtn}
                         </div>
                     </div>
                 `;
