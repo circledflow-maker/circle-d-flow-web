@@ -107,7 +107,9 @@ class QuestEngine {
     }
 
     async loadProfile() {
+        if (!this.user || !this.user.id) return;
         const { data } = await this.supabase.from('profiles').select('*').eq('id', this.user.id).single();
+        if (!data) return;
         this.profile = data;
         window.userProfile = data; 
         console.log(`[QuestEngine] Profil Sync: ${data.username} | ${data.exp} XP | ${data.karma} Karma`);
