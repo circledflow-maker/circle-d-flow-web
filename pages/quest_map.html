@@ -48,7 +48,8 @@
         /* Map Container with Sepia/Terracotta Filter */
         #quest-map {
             width: 100vw;
-            height: 100vh;
+            height: 100dvh; /* Use dynamic viewport height for mobile */
+            height: -webkit-fill-available; /* iOS fallback */
             z-index: 1;
             filter: sepia(60%) hue-rotate(340deg) contrast(120%);
             background: #000;
@@ -127,18 +128,19 @@
 
         /* UI Overlays */
         #hud-top {
-            position: absolute; top: 80px; left: 20px; right: 20px; z-index: 1000;
+            position: absolute; top: 100px; left: 20px; right: 20px; z-index: 1000;
             pointer-events: none;
         }
         
         #legend-panel {
-            position: absolute; top: 180px; left: 20px; z-index: 1000;
+            position: absolute; top: 200px; left: 20px; z-index: 1000;
             width: 200px; padding: 15px; display: none; pointer-events: auto;
         }
         
         /* Mobile fixes */
         @media (max-width: 768px) {
-            #legend-panel { top: auto; bottom: 120px; left: 10px; right: 10px; width: auto; }
+            #legend-panel { top: auto; bottom: 150px; left: 10px; right: 10px; width: auto; }
+            .animus-global-nav { padding-bottom: 15px; padding-bottom: env(safe-area-inset-bottom); }
         }
     </style>
 </head>
@@ -168,7 +170,7 @@
     <div id="hud-top">
         <div style="display: flex; justify-content: space-between; align-items: flex-start;">
             <div>
-                <h2 class="cinzel text-2xl md:text-4xl drop-shadow-md" style="color: var(--color-gold); margin:0; font-weight: bold;">LISBON ATLAS</h2>
+                <h2 class="cinzel text-xl md:text-4xl drop-shadow-md" style="color: var(--color-gold); margin:0; font-weight: bold;">LISBON ATLAS</h2>
                 <div class="adinkra-panel" style="padding: 5px 10px; display: inline-block; margin-top: 10px; font-size: 0.8em;">
                     <span style="color: #aaa;">STATUS:</span> <span id="sync-status" style="color: #0f0; font-weight: bold;">ONLINE</span>
                 </div>
@@ -207,7 +209,7 @@
     </div>
 
     <!-- FLOATING CONTROLS (BOTTOM RIGHT) -->
-    <div style="position: absolute; bottom: 100px; right: 20px; z-index: 1000; display: flex; flex-direction: column; gap: 15px;">
+    <div style="position: absolute; bottom: 120px; right: 20px; z-index: 1000; display: flex; flex-direction: column; gap: 15px;">
         <button onclick="toggleCreatorMode()" id="creator-btn" class="fab" style="width: 50px; height: 50px;" title="Drop Beacon">
             📍
         </button>
@@ -316,7 +318,10 @@
             try {
                 if(!window.supabaseClient) return;
                 const { data, error } = await window.supabaseClient.from('flow_areas').select('*');
-                if(error) throw error;
+                if(error) {
+                    console.warn("Table flow_areas not found or RLS error. Proceeding silently.", error);
+                    return;
+                }
                 if(!data) return;
                 
                 activeMissions = data.filter(area => area.lat && area.lng);

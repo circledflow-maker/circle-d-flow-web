@@ -20,14 +20,29 @@ const drive = google.drive({ version: 'v3', auth });
 async function sync() {
   console.log("Starting Google Drive Sync...");
   try {
-    // 1. Find all top-level folders shared with the bot (The Artists)
+    // 1. Find all top-level folders shared with the bot
     const res = await drive.files.list({
       q: "mimeType='application/vnd.google-apps.folder' and sharedWithMe=true",
       fields: 'files(id, name)',
     });
 
-    const artists = res.data.files;
-    console.log(`Found ${artists.length} shared folders (Artists).`);
+    let sharedFolders = res.data.files;
+    let artists = [];
+
+    const akademieFolder = sharedFolders.find(f => f.name.toLowerCase() === 'akademie');
+    if (akademieFolder) {
+      console.log("Found 'Akademie' root folder. Fetching artists inside it...");
+      const subRes = await drive.files.list({
+        q: `'${akademieFolder.id}' in parents and mimeType='application/vnd.google-apps.folder'`,
+        fields: 'files(id, name)',
+        orderBy: 'name'
+      });
+      artists = subRes.data.files;
+    } else {
+      artists = sharedFolders;
+    }
+
+    console.log(`Found ${artists.length} Artist folders.`);
 
     let akademieData = [];
 
