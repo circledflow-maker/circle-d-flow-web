@@ -269,53 +269,36 @@ class FlowCompassAgent {
     }
 
     toggleMenu(planetId, options = []) {
-        this[`${planetId.toLowerCase()}Clicks`] = (this[`${planetId.toLowerCase()}Clicks`] || 0) + 1;
-        clearTimeout(this[`${planetId.toLowerCase()}Timer`]);
-        this[`${planetId.toLowerCase()}Timer`] = setTimeout(() => { this[`${planetId.toLowerCase()}Clicks`] = 0; }, 5000);
+        // Immediate Transitions for all 8 Worlds
+        const urlMap = {
+            'HighPalast': 'akademie.html',
+            'Bazaar': 'marketplace.html',
+            'Battle': 'colosseum.html',
+            'Vision': 'vision_oasis.html',
+            'Sound': 'sound_dashboard.html',
+            'Taste': 'under-construction.html',
+            'Connection': 'bantaba.html',
+            'Quest': 'quest_map.html',
+            'Core': null // Core stays on dashboard
+        };
 
-        // Immediate Transitions (No Menu)
-        if (planetId === 'Vision') {
-            this.triggerVisionOasis('vision_sanctuary.html');
-            return;
-        }
-        if (planetId === 'Connection') {
-            this.beamTo('coop.html');
-            return;
-        }
-
-
-        if(this[`${planetId.toLowerCase()}Clicks`] >= 3) {
-            if(['Vision','Core','Quest'].includes(planetId)) window.location.href = '/pages/dashboard.html';
-            if(planetId === 'Sound') this.showPasswordGate();
-            if(planetId === 'Taste') window.location.href = 'kitchen-dashboard.html';
-            if(planetId === 'Calendar') window.location.href = 'calendar.html';
-            return;
-        }
-
-        if (this.activePlanet === planetId) { this.resetFocus(); return; }
-        this.resetFocus();
-        this.activePlanet = planetId;
-        
         if (planetId === 'Core') {
+            if (this.activePlanet === 'Core') { this.resetFocus(); return; }
+            this.resetFocus();
+            this.activePlanet = 'Core';
             if (window.SoulPass) { document.querySelector('.orrery-container').classList.add('master-active'); window.SoulPass.open(); this.updateFlowee('Core'); }
             return;
         }
 
-        document.querySelector('.orrery-container').classList.add('focus-mode');
-        const node = document.getElementById(`planet-${planetId}`);
-        if(node) node.classList.add('focused');
+        const isSubDir = window.location.pathname.includes('/pages/');
+        const prefix = isSubDir ? '' : 'pages/';
+        const targetUrl = prefix + urlMap[planetId];
 
-        const menu = document.createElement('div'); menu.className = 'beaming-menu active';
-        options.forEach((opt, index) => {
-            const btn = document.createElement('div'); btn.className = 'beam-option'; btn.innerText = opt.l.toUpperCase();
-            btn.onclick = (e) => { e.stopPropagation(); this.beamTo(opt.u); };
-            if (index === 0) { btn.style.top = '-10%'; btn.style.left = '50%'; btn.style.transform = 'translateX(-50%)'; }
-            if (index === 1) { btn.style.bottom = '15%'; btn.style.left = '-12%'; }
-            if (index === 2) { btn.style.bottom = '15%'; btn.style.right = '-12%'; }
-            menu.appendChild(btn);
-        });
-        node.appendChild(menu);
-        this.updateFlowee(planetId);
+        if (planetId === 'Vision') {
+            this.triggerVisionOasis(targetUrl);
+        } else {
+            this.beamTo(targetUrl);
+        }
     }
 
     resetFocus() {
