@@ -200,22 +200,28 @@
         /* MOBILE RESPONSIVE FIXES */
         @media (max-width: 768px) {
             .bazaar-map {
+                display: grid !important;
                 grid-template-areas: 
-                    "center center"
                     "arts skills"
+                    "center center"
                     "sounds healing"
                     "products services" !important;
                 grid-template-columns: 1fr 1fr !important;
                 grid-template-rows: auto !important;
                 height: auto !important;
-                padding-top: 120px !important;
-                gap: 15px !important;
+                min-height: 100vh;
+                padding-top: 80px !important;
+                gap: 10px !important;
                 padding-bottom: 60px !important;
                 overflow-x: hidden !important;
+                overflow-y: auto !important;
+                align-items: center;
+                justify-items: center;
             }
             .gild-island {
-                width: 130px;
-                height: 110px;
+                width: 140px;
+                height: 120px;
+                margin: 0 auto;
             }
             .gild-island::after {
                 width: 80px;
@@ -228,8 +234,8 @@
                 font-size: 0.6rem;
             }
             .center-hub {
-                margin: 0 0 20px 0;
-                padding: 20px;
+                margin: 10px 0;
+                padding: 10px;
                 background: radial-gradient(circle, rgba(90, 42, 132, 0.4) 0%, rgba(0,0,0,0) 80%);
             }
             /* Make header buttons smaller on mobile */
@@ -244,7 +250,10 @@
 <body>
 
     <!-- Fullscreen Mobile Menu Overlay -->
-    <div id="mobile-menu" class="fixed inset-0 bg-black/95 z-[90] opacity-0 pointer-events-none transition-opacity duration-300 flex flex-col items-center justify-center">
+    <div id="mobile-menu" class="fixed inset-0 bg-black/95 z-[1000] opacity-0 pointer-events-none transition-opacity duration-300 flex flex-col items-center justify-center">
+        <button id="close-menu-btn" class="absolute top-6 left-6 text-[#d4af37] border border-[#d4af37]/50 rounded p-1">
+            <span class="material-symbols-outlined text-3xl">close</span>
+        </button>
         <nav class="flex flex-col gap-6 text-center">
             <a href="../index.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">Zum Orbit</a>
             <a href="bantaba.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">Nach Bantaba</a>
@@ -319,7 +328,7 @@
     <header class="fixed top-0 w-full z-[100] h-16 flex items-center justify-between px-2 lg:px-8 bg-black/90 border-b border-[#FFAE42]/20 backdrop-blur-md">
         <div class="flex items-center gap-2">
             <!-- Mobile Burger Menu Button moved into Header -->
-            <button id="burger-btn" class="w-8 h-8 flex flex-col justify-center items-center gap-1 bg-black border border-[#d4af37]/50 rounded cursor-pointer lg:hidden">
+            <button id="burger-btn" class="w-8 h-8 flex flex-col justify-center items-center gap-1 bg-black border border-[#d4af37]/50 rounded cursor-pointer lg:hidden relative z-[1001]">
                 <span class="w-4 h-[2px] bg-[#d4af37] transition-all duration-300"></span>
                 <span class="w-4 h-[2px] bg-[#d4af37] transition-all duration-300"></span>
                 <span class="w-4 h-[2px] bg-[#d4af37] transition-all duration-300"></span>
@@ -789,15 +798,54 @@
                         'products': 'product_stall.html',
                         'services': 'services_stall.html'
                     };
-                    if (pages[gild]) {
-                        window.location.href = pages[gild];
-                    } else {
-                        // Fallback logic
-                        filterMarket(gild.charAt(0).toUpperCase() + gild.slice(1));
-                        document.getElementById('market-feed-section').scrollIntoView({ behavior: 'smooth' });
+                    
+                    // Fade out the 2D HTML Bazaar Map for cinematic effect
+                    const bazaarMap = document.querySelector('.bazaar-map');
+                    if (bazaarMap) {
+                        bazaarMap.style.transition = 'opacity 0.8s ease';
+                        bazaarMap.style.opacity = '0';
+                        bazaarMap.style.pointerEvents = 'none';
                     }
+
+                    if (window.Marketplace3D && window.Marketplace3D.isInitialized) {
+                        const targetNode = window.Marketplace3D.nodes.find(n => n.userData.guild && n.userData.guild.toLowerCase() === gild.toLowerCase());
+                        if (targetNode) {
+                            window.Marketplace3D.isZooming = true;
+                            window.Marketplace3D.zoomProgress = 0;
+                            window.Marketplace3D.targetNode = targetNode;
+                            if(window.SoundEngineer) window.SoundEngineer.playSFX('ui_click_hover');
+                            return; // Navigation will be handled by the 3D animation loop
+                        }
+                    }
+
+                    // Fallback to direct navigation if 3D isn't ready
+                    setTimeout(() => {
+                        if (pages[gild]) {
+                            window.location.href = pages[gild];
+                        } else {
+                            // Fallback logic
+                            filterMarket(gild.charAt(0).toUpperCase() + gild.slice(1));
+                            document.getElementById('market-feed-section').scrollIntoView({ behavior: 'smooth' });
+                        }
+                    }, 500);
                 }
             };
+
+            // BURGER MENU LOGIC
+            const burgerBtn = document.getElementById('burger-btn');
+            const closeMenuBtn = document.getElementById('close-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            if (burgerBtn && mobileMenu) {
+                burgerBtn.addEventListener('click', () => {
+                    mobileMenu.classList.remove('opacity-0', 'pointer-events-none');
+                });
+            }
+            if (closeMenuBtn && mobileMenu) {
+                closeMenuBtn.addEventListener('click', () => {
+                    mobileMenu.classList.add('opacity-0', 'pointer-events-none');
+                });
+            }
 
             // Tutorial Check
             const urlParams = new URLSearchParams(window.location.search);

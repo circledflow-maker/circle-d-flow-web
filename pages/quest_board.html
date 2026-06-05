@@ -197,6 +197,31 @@
                     <div style="display:flex; align-items:center; justify-content:space-between; border-top:1px solid #333; padding-top:20px;">
                         <div>
                             <label style="color:#666; font-size:0.8em;">DIFFICULTY (XP REWARD)</label>
+                            
+                            <!-- Area Assignment -->
+                            <div class="mb-4">
+                                <label class="block text-[#d4af37] cinzel text-sm mb-2">Flow Area (Optional)</label>
+                                <select id="new-quest-area" class="w-full bg-black/50 border border-[#333] rounded p-2 text-white font-mono focus:border-[#d4af37] outline-none">
+                                    <option value="">-- No Area --</option>
+                                    <!-- Dynamic areas -->
+                                </select>
+                            </div>
+                            
+                            <!-- Guild Assignment -->
+                            <div class="mb-6">
+                                <label class="block text-[#d4af37] cinzel text-sm mb-2">Associated Guild (Optional)</label>
+                                <select id="new-quest-guild" class="w-full bg-black/50 border border-[#333] rounded p-2 text-white font-mono focus:border-[#d4af37] outline-none">
+                                    <option value="">-- No Guild --</option>
+                                    <option value="arts">Guild of Arts</option>
+                                    <option value="skills">Guild of Skills</option>
+                                    <option value="sounds">Guild of Sounds</option>
+                                    <option value="healing">Guild of Healing</option>
+                                    <option value="products">Guild of Products</option>
+                                    <option value="services">Guild of Services</option>
+                                    <option value="taste">Guild of Taste</option>
+                                </select>
+                            </div>
+
                             <select id="new-exp" style="background:black; color:white; border:1px solid #444; padding:5px;">
                                 <option value="50">Easy (50 XP)</option>
                                 <option value="100">Medium (100 XP)</option>
@@ -359,11 +384,14 @@
             btn.innerText = "UPLOADING...";
             btn.disabled = true;
             
+            const areaId = document.getElementById('new-quest-area').value;
+            const guildCategory = document.getElementById('new-quest-guild').value;
+            
             try {
                 const { data: { session } } = await window.supabaseClient.auth.getSession();
                 if(!session) throw new Error("No session");
                 
-                const { data, error } = await window.supabaseClient.from('user_quests').insert([{
+                const payload = {
                     title: title,
                     description: desc,
                     type: 'custom',
@@ -371,7 +399,12 @@
                     longitude: parseFloat(lng) || 0,
                     reward_exp: parseInt(xp),
                     creator_id: session.user.id
-                }]);
+                };
+                
+                if (areaId) payload.area_id = areaId;
+                if (guildCategory) payload.guild_category = guildCategory;
+                
+                const { data, error } = await window.supabaseClient.from('user_quests').insert([payload]);
                 if(error) throw error;
                 
                 alert("Sequence Uploaded!");

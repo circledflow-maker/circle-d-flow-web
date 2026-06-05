@@ -42,7 +42,7 @@ class VisualIntegrityAgent {
                 // Check if element is significantly outside right edge (allow small margin for sub-pixel rendering)
                 if (rect.right > docWidth + 1) {
                     // Ignore elements explicitly meant to be wider (like mobile drawer if handled correctly)
-                    if (el.id === 'mobile-drawer' || el.classList.contains('no-overflow-check')) continue;
+                    if (el.id === 'mobile-drawer' || el.classList.contains('no-overflow-check') || el.classList.contains('cdf-star') || el.tagName.toLowerCase() === 'svg') continue;
                     
                     console.log(`[${this.name}] Culprit found:`, el);
                     culprit = el;

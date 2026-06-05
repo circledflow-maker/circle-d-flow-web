@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&family=Cinzel:wght@700&family=Space+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <style>
         body {
             background: #08040a url('../benin_bg.png') no-repeat center center fixed;
@@ -215,17 +216,20 @@
                 <p class="text-sm text-white/40 uppercase tracking-widest">Handcrafted Treasures & Visual Wonders</p>
             </div>
 
-            <div id="arts-grid" class="flex lg:grid lg:grid-cols-2 gap-6 pb-20 overflow-x-auto snap-x snap-mandatory lg:overflow-visible lg:snap-none scroll-smooth" style="-webkit-overflow-scrolling: touch; scrollbar-width: none;">
-                <!-- ITEMS INJECTED HERE -->
-                <div class="col-span-full py-20 text-center animate-pulse opacity-30 w-full min-w-[85vw] lg:min-w-0 snap-center">
-                    <span class="material-symbols-outlined text-6xl">draw</span>
-                    <p class="mt-4 uppercase tracking-[0.5em]">Curating Gallery...</p>
+            <div class="swiper artsSwiper w-full pb-10" style="overflow: hidden;">
+                <div id="arts-grid" class="swiper-wrapper">
+                    <!-- ITEMS INJECTED HERE -->
+                    <div class="swiper-slide py-20 text-center animate-pulse opacity-30 w-full flex flex-col items-center justify-center">
+                        <span class="material-symbols-outlined text-6xl">draw</span>
+                        <p class="mt-4 uppercase tracking-[0.5em]">Curating Gallery...</p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- SCRIPTS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/agents/supabase_client.js"></script>
     <script>
@@ -239,7 +243,7 @@
 
             if (error || !data || data.length === 0) {
                 grid.innerHTML = `
-                    <div class="col-span-full clay-slab text-center p-10 opacity-50 w-full min-w-[85vw] lg:min-w-0 snap-center">
+                    <div class="swiper-slide clay-slab text-center p-10 opacity-50 w-full flex items-center justify-center">
                         <p>The Gallery is currently empty. Check back after the next forge.</p>
                     </div>
                 `;
@@ -268,12 +272,12 @@
                 }
 
                 const div = document.createElement('div');
-                div.className = 'clay-slab flex flex-col sm:flex-row gap-6 items-center min-w-[85vw] lg:min-w-0 snap-center';
+                div.className = 'swiper-slide clay-slab flex flex-col sm:flex-row gap-6 items-center h-auto';
                 div.innerHTML = `
                     <div class="w-full sm:w-24 h-40 sm:h-24 rounded bg-black/40 overflow-hidden flex-shrink-0">
                         <img src="${item.image_url || '../Assets/images/default_artifact.png'}" class="w-full h-full object-cover">
                     </div>
-                    <div class="flex-1 w-full">
+                    <div class="flex-1 w-full flex flex-col h-full">
                         <div class="flex justify-between items-start mb-1">
                             <h4 class="text-lg font-bold text-white">${item.title || item.name}</h4>
                             <span class="text-[8px] uppercase tracking-widest text-[#228B22]/70">${seller.full_name || 'Unknown'}</span>
@@ -286,6 +290,18 @@
                     </div>
                 `;
                 grid.appendChild(div);
+            });
+
+            // Init Swiper after injection
+            new Swiper('.artsSwiper', {
+                slidesPerView: 1.1,
+                spaceBetween: 16,
+                breakpoints: {
+                    1024: {
+                        slidesPerView: 2,
+                        spaceBetween: 24,
+                    }
+                }
             });
         }
 

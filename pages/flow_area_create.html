@@ -73,8 +73,27 @@
                 </div>
 
                 <div>
-                    <label class="block text-electric text-xs uppercase tracking-widest mb-2">Address / Description</label>
-                    <textarea id="area-address" required rows="3" class="w-full p-3 rounded text-sm placeholder-white/30 transition-all" placeholder="Full address or descriptive location..."></textarea>
+                    <label class="block text-electric text-xs uppercase tracking-widest mb-2">Description</label>
+                    <textarea id="area-desc" required rows="2" class="w-full p-3 rounded text-sm placeholder-white/30 transition-all" placeholder="Short description..."></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-electric text-xs uppercase tracking-widest mb-2">Address</label>
+                    <textarea id="area-address" required rows="2" class="w-full p-3 rounded text-sm placeholder-white/30 transition-all" placeholder="Full address..."></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-electric text-xs uppercase tracking-widest mb-2">Ruling Guild (Optional)</label>
+                    <select id="area-guild" class="w-full p-3 rounded text-sm transition-all">
+                        <option value="">-- No Guild --</option>
+                        <option value="arts">Guild of Arts</option>
+                        <option value="skills">Guild of Skills</option>
+                        <option value="sounds">Guild of Sounds</option>
+                        <option value="healing">Guild of Healing</option>
+                        <option value="products">Guild of Products</option>
+                        <option value="services">Guild of Services</option>
+                        <option value="taste">Guild of Taste</option>
+                    </select>
                 </div>
                 
                 <div>
@@ -160,8 +179,10 @@
             
             try {
                 const name = document.getElementById('area-name').value;
+                const desc = document.getElementById('area-desc').value;
                 const address = document.getElementById('area-address').value;
-                const imageUrl = document.getElementById('area-image-base64').value; // Base64 string
+                const guildCategory = document.getElementById('area-guild').value;
+                const imageUrl = document.getElementById('area-image-base64').value;
                 
                 let lat = 38.7223; // Lisbon default
                 let lng = -9.1393;
@@ -193,19 +214,21 @@
                 }
                 
                 // 1. Insert into Supabase
+                const payload = { 
+                    name: name,
+                    description: desc,
+                    address: address,
+                    image_url: imageUrl,
+                    lat: lat,
+                    lng: lng,
+                    creator_id: sessionData.data.session.user.id,
+                    creator_name: localStorage.getItem('cdf_user_username') || "Unknown Voyager"
+                };
+                if (guildCategory) payload.guild_category = guildCategory;
+
                 const { data, error } = await window.supabaseClient
                     .from('flow_areas')
-                    .insert([
-                        { 
-                            name: name,
-                            address: address,
-                            image_url: imageUrl,
-                            lat: lat,
-                            lng: lng,
-                            creator_id: sessionData.data.session.user.id,
-                            creator_name: localStorage.getItem('cdf_user_username') || "Unknown Voyager"
-                        }
-                    ])
+                    .insert([payload])
                     .select();
                     
                 if(error) throw error;

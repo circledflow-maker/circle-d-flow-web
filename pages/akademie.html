@@ -235,9 +235,9 @@
                 let seriesType = area.is_gdrive ? 'Artist Series' : 'Flow Series';
                 
                 if (area.is_gdrive && area.data.files && area.data.files.length > 0) {
-                     coverImg = `https://drive.google.com/thumbnail?id=${area.data.files[0].id}&sz=w600`;
+                     coverImg = `https://lh3.googleusercontent.com/d/${area.data.files[0].id}=w600`;
                 } else if (area.is_gdrive && area.data.chapters && area.data.chapters.length > 0 && area.data.chapters[0].files.length > 0) {
-                     coverImg = `https://drive.google.com/thumbnail?id=${area.data.chapters[0].files[0].id}&sz=w600`;
+                     coverImg = `https://lh3.googleusercontent.com/d/${area.data.chapters[0].files[0].id}=w600`;
                 }
                 
                 shelf.innerHTML += `
@@ -354,7 +354,7 @@
                         content: "",
                         user_name: currentSelectedArea.name,
                         media_type: f.type,
-                        media_url: f.type === 'video' ? `https://drive.google.com/file/d/${f.id}/preview` : `https://drive.google.com/uc?export=download&id=${f.id}`
+                        media_url: f.type === 'video' ? `https://drive.google.com/file/d/${f.id}/preview` : `https://lh3.googleusercontent.com/d/${f.id}=w1200`
                     }));
                 } else {
                     title = "Full Portfolio";
@@ -363,7 +363,7 @@
                         content: "",
                         user_name: currentSelectedArea.name,
                         media_type: f.type,
-                        media_url: f.type === 'video' ? `https://drive.google.com/file/d/${f.id}/preview` : `https://drive.google.com/uc?export=download&id=${f.id}`
+                        media_url: f.type === 'video' ? `https://drive.google.com/file/d/${f.id}/preview` : `https://lh3.googleusercontent.com/d/${f.id}=w1200`
                     }));
                 }
             }

@@ -1,7 +1,7 @@
 /**
- * Agent: SoulPass (The Seelen-Pass)
- * Purpose: Replaces CaptainsLog. A 3D interactive, holographic ID artifact 
- * tracking Flow-Siegels (Chakras), Profile, and Settings/Social integration.
+ * Agent: SoulPass (The Seelen-Pass / Soul Nexus)
+ * Purpose: A 3D interactive, holographic ID artifact tracking Flow-Siegels (Chakras), Profile, and Settings/Social integration.
+ * Functions as the Command Center when the center node of the orbital navigation is clicked.
  */
 
 class SoulPassAgent {
@@ -25,7 +25,7 @@ class SoulPassAgent {
     }
 
     async init() {
-        console.log(`[${this.name}] Forging the Soul Pass Artifact...`);
+        console.log(`[${this.name}] Forging the Soul Nexus...`);
         this.injectStyles();
         
         if (!this.userData.preferred_contact_method) {
@@ -40,6 +40,7 @@ class SoulPassAgent {
                 const { data: profile } = await window.supabaseClient.from('profiles').select('*').eq('id', user.id).single();
                 if(profile) {
                     this.userData.name = profile.full_name || this.userData.name;
+                    this.userData.guild = profile.guild || '';
                     this.userData.preferred_contact_method = profile.preferred_contact_method || 'system_chat';
                     this.userData.contact_details = typeof profile.contact_details === 'string' ? profile.contact_details : JSON.stringify(profile.contact_details || {});
                 }
@@ -48,331 +49,123 @@ class SoulPassAgent {
     }
 
     injectStyles() {
-        if(document.getElementById('soul-pass-styles')) return;
+        if(document.getElementById('soul-nexus-styles')) return;
 
         const style = document.createElement('style');
-        style.id = 'soul-pass-styles';
+        style.id = 'soul-nexus-styles';
         style.textContent = `
-            /* Overlay */
-            .soul-pass-overlay {
-                position: fixed;
-                top: 0; left: 0; width: 100%; height: 100%;
-                background: rgba(0, 0, 0, 0.9);
-                backdrop-filter: blur(15px);
-                z-index: 100000;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                opacity: 0;
-                pointer-events: none;
-                transition: opacity 0.5s ease;
+            .sn-overlay {
+                position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(15px);
+                z-index: 100000; display: flex; align-items: center; justify-content: center;
+                opacity: 0; pointer-events: none; transition: opacity 0.5s ease;
             }
-            .soul-pass-overlay.active {
-                opacity: 1;
-                pointer-events: auto;
+            .sn-overlay.active { opacity: 1; pointer-events: auto; }
+
+            .sn-modal {
+                width: 95vw; max-width: 1000px; height: 85vh; max-height: 750px;
+                background: linear-gradient(135deg, rgba(10,10,10,0.95), rgba(20,20,20,0.95));
+                border: 1px solid rgba(212,175,55,0.3); border-radius: 20px;
+                box-shadow: 0 0 50px rgba(0,0,0,0.8), 0 0 30px rgba(212,175,55,0.1);
+                display: flex; flex-direction: column; overflow: hidden;
+                transform: scale(0.95) translateY(20px); transition: all 0.5s cubic-bezier(0.16,1,0.3,1);
+            }
+            .sn-overlay.active .sn-modal { transform: scale(1) translateY(0); }
+
+            /* Header */
+            .sn-header {
+                display: flex; justify-content: space-between; align-items: center;
+                padding: 20px 30px; border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(0,0,0,0.4);
+            }
+            .sn-title { font-family: 'Cinzel', serif; color: #d4af37; font-size: 1.5rem; letter-spacing: 4px; text-shadow: 0 0 10px rgba(212,175,55,0.4); }
+            .sn-close { 
+                width: 40px; height: 40px; border-radius: 50%; border: 1px solid #d4af37; color: #d4af37;
+                display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s;
+                font-family: monospace; font-size: 1.2rem;
+            }
+            .sn-close:hover { background: #d4af37; color: #000; box-shadow: 0 0 15px #d4af37; transform: rotate(90deg); }
+
+            /* Body & Layout */
+            .sn-body { display: flex; flex: 1; overflow: hidden; flex-direction: row; }
+            @media (max-width: 768px) {
+                .sn-body { flex-direction: column; }
+                .sn-sidebar { width: 100% !important; border-right: none !important; border-bottom: 1px solid rgba(255,255,255,0.05); flex-direction: row !important; overflow-x: auto; padding: 10px !important; }
+                .sn-tab { padding: 10px 15px !important; border-left: none !important; border-bottom: 3px solid transparent; }
+                .sn-tab.active { border-left-color: transparent !important; border-bottom-color: #d4af37 !important; }
             }
 
-            /* 3D Scene / Wrapper */
-            .sp-scene {
-                width: min(650px, 90vw);
-                height: min(420px, 85vh);
-                perspective: 1500px;
-                position: relative;
+            .sn-sidebar {
+                width: 250px; background: rgba(0,0,0,0.6); border-right: 1px solid rgba(255,255,255,0.05);
+                display: flex; flex-direction: column; gap: 5px; padding: 20px 0;
             }
+            .sn-tab {
+                padding: 15px 30px; color: #aaa; font-family: 'Space Mono', monospace; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;
+                cursor: pointer; transition: 0.3s; border-left: 3px solid transparent; display: flex; align-items: center; gap: 10px;
+            }
+            .sn-tab:hover { background: rgba(212,175,55,0.05); color: #fff; }
+            .sn-tab.active { border-left-color: #d4af37; background: rgba(212,175,55,0.1); color: #d4af37; text-shadow: 0 0 10px rgba(212,175,55,0.5); }
             
-            /* Responsive resizing for mobile */
-            @media (max-width: 500px) {
-                .sp-scene { transform: scale(0.85); top: -20px; }
-            }
+            .sn-content-area { flex: 1; padding: 30px; overflow-y: auto; position: relative; }
+            .sn-content-area::-webkit-scrollbar { width: 6px; }
+            .sn-content-area::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
+            .sn-content-area::-webkit-scrollbar-thumb { background: #d4af37; border-radius: 3px; }
 
-            /* The Flipping Artifact */
-            .sp-card {
-                width: 100%;
-                height: 100%;
-                position: relative;
-                transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-                transform-style: preserve-3d;
-                cursor: grab;
-            }
-            .sp-scene.flipped .sp-card {
-                transform: rotateY(180deg);
-            }
-            .sp-card:active { cursor: grabbing; }
+            .sn-pane { display: none; animation: snFadeIn 0.4s ease-out; }
+            .sn-pane.active { display: block; }
+            @keyframes snFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-            /* Faces (Front/Back shared) */
-            .sp-face {
-                position: absolute;
-                width: 100%;
-                height: 100%;
-                backface-visibility: hidden;
-                border-radius: 20px;
-                /* Ancient Obsidian Stone Texture */
-                background: linear-gradient(135deg, #111 0%, #1a1a1a 100%);
-                border: 2px solid rgba(212, 175, 55, 0.3);
-                box-shadow: 
-                    inset 0 0 50px rgba(0,0,0,0.8),
-                    0 20px 50px rgba(0,0,0,0.8),
-                    0 0 20px rgba(212, 175, 55, 0.1);
-                overflow: hidden;
+            /* Soul Pass Specifics */
+            .sp-crystal {
+                width: 150px; height: 150px; margin: 0 auto 20px;
+                background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.9), rgba(154,77,255,0.6) 40%, rgba(10,0,30,0.8) 90%);
+                border: 2px solid rgba(255,255,255,0.3); border-radius: 50%;
+                box-shadow: 0 0 50px rgba(154,77,255,0.4), inset 0 0 30px rgba(255,255,255,0.5);
+                animation: snBreathe 4s infinite ease-in-out;
             }
-
-            /* Golden Ader-Network (Background) */
-            .sp-face::before {
-                content: '';
-                position: absolute;
-                inset: 0;
-                background-image: 
-                    radial-gradient(circle at 20% 30%, rgba(212,175,55,0.05) 0%, transparent 40%),
-                    radial-gradient(circle at 80% 70%, rgba(212,175,55,0.05) 0%, transparent 40%);
-                opacity: 0.8;
-                pointer-events: none;
-            }
-
-            /* ---------------- FRONT FACE (Profile Matrix) ---------------- */
-            .sp-front {
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-                padding: 30px;
-            }
-            .sp-scene.flipped .sp-front { pointer-events: none; }
-
-            .sp-header {
-                display: flex;
-                justify-content: space-between;
-                align-items: flex-start;
-                transform: translateZ(30px); /* Hologram pop */
-            }
-            .sp-title { font-family: 'Cinzel', serif; color: #d4af37; font-size: 1.2rem; letter-spacing: 3px; }
-            .sp-hash { font-family: 'Space Mono', monospace; color: rgba(255,255,255,0.4); font-size: 0.7rem; margin-right: 60px; margin-top: 5px; }
-
-            .sp-center-holo {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                transform: translateZ(50px);
-                margin: 20px 0;
-            }
+            @keyframes snBreathe { 0%, 100% { transform: scale(1) translateY(0); } 50% { transform: scale(1.05) translateY(-10px); box-shadow: 0 0 70px rgba(154,77,255,0.6), inset 0 0 40px rgba(255,255,255,0.8); } }
             
-            /* Floating Soul Sphere Avatar */
-            .sp-core-crystal {
-                width: 120px;
-                height: 120px;
-                background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.9), rgba(154, 77, 255, 0.6) 40%, rgba(10, 0, 30, 0.8) 90%);
-                border: 1px solid rgba(255, 255, 255, 0.3);
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                box-shadow: 0 0 40px rgba(154, 77, 255, 0.6), inset 0 0 20px rgba(255,255,255,0.5);
-                transition: transform 0.5s;
-                position: relative;
-                animation: soulBreathe 4s infinite ease-in-out;
-            }
-            .sp-core-crystal:hover { transform: scale(1.1) translateY(-5px); box-shadow: 0 0 60px rgba(154, 77, 255, 0.9), inset 0 0 30px rgba(255,255,255,0.8); }
-            @keyframes soulBreathe {
-                0%, 100% { transform: scale(1) translateY(0); }
-                50% { transform: scale(1.03) translateY(-8px); }
-            }
+            .sp-stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin: 30px 0; }
+            .sp-stat-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 15px; text-align: center; }
+            .sp-stat-val { font-size: 1.5rem; color: #d4af37; font-family: 'Space Mono', monospace; font-weight: bold; margin-top: 5px; }
+            .sp-stat-label { font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 1px; }
 
-            .sp-user-identity {
-                text-align: center;
-                margin-top: 15px;
-            }
-            .sp-name { font-family: 'Cinzel', serif; color: white; font-size: 1.8rem; text-shadow: 0 0 10px rgba(255,255,255,0.3); }
-            .sp-rank { font-family: 'Space Mono', monospace; color: #d4af37; font-size: 0.9rem; text-transform: uppercase; }
-
-            /* Stats Grid */
-            .sp-stats {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 15px;
-                transform: translateZ(20px);
-                margin-bottom: 20px;
-            }
-            .sp-stat-box {
-                background: rgba(255,255,255,0.03);
-                border: 1px solid rgba(255,255,255,0.1);
-                padding: 10px;
-                border-radius: 8px;
-                text-align: center;
-            }
-            .sp-stat-label { font-size: 0.6rem; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1px; }
-            .sp-stat-value { font-size: 1.1rem; color: #d4af37; font-family: 'Space Mono', monospace; font-weight: bold; }
-
-            /* Flow Siegls (Bottom) */
-            .sp-seals-container {
-                border-top: 1px solid rgba(212, 175, 55, 0.2);
-                padding-top: 20px;
-                text-align: center;
-                transform: translateZ(10px);
-            }
-            .sp-seals-title { font-size: 0.7rem; color: #d4af37; letter-spacing: 2px; margin-bottom: 15px; }
+            .sp-seals { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-top: 20px; }
+            .sp-seal { width: 45px; height: 45px; border-radius: 8px; background: #111; border: 2px solid #222; transform: rotate(45deg); display: flex; align-items: center; justify-content: center; transition: 0.3s; cursor: pointer; box-shadow: inset 0 0 10px #000; }
+            .sp-seal span { transform: rotate(-45deg); font-family: 'Cinzel', serif; font-size: 1.2rem; color: rgba(255,255,255,0.2); transition: 0.3s; }
+            .sp-seal:hover { transform: rotate(45deg) scale(1.1); border-color: #555; }
             
-            .sp-seals {
-                display: flex;
-                justify-content: center;
-                gap: 10px;
-                flex-wrap: wrap;
-            }
+            .sp-seal.active.root { background: radial-gradient(circle, #ff4b4b, #8b0000); border-color: #ffb3b3; box-shadow: 0 0 20px rgba(255,0,0,0.5); }
+            .sp-seal.active.sacral { background: radial-gradient(circle, #ffa500, #b35900); border-color: #ffe6b3; box-shadow: 0 0 20px rgba(255,165,0,0.5); }
+            .sp-seal.active.solar { background: radial-gradient(circle, #ffd700, #b8860b); border-color: #fffaca; box-shadow: 0 0 20px rgba(255,215,0,0.5); }
+            .sp-seal.active span { color: #fff; text-shadow: 0 0 5px #fff; }
 
-            /* Ancient Gems instead of neon */
-            .sp-seal {
-                width: 35px; height: 35px;
-                border-radius: 5px; /* Diamond/Square mock */
-                background: #2a2a2a; 
-                border: 2px solid #111;
-                box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
-                transition: 0.4s;
-                transform: rotate(45deg); /* Diamond shape */
-                cursor: pointer;
-                position: relative;
-            }
-            /* Internal Icon counter-rotation */
-            .sp-seal > span {
-                display: block;
-                transform: rotate(-45deg);
-                text-align: center;
-                line-height: 31px; /* Center icon */
-                font-size: 14px;
-                opacity: 0.2;
-                color: white;
-                transition: opacity 0.4s;
-            }
+            /* Synapse Specifics */
+            .sy-group { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+            .sy-group-title { font-family: 'Cinzel', serif; color: #fff; font-size: 1.1rem; border-bottom: 1px solid rgba(212,175,55,0.3); padding-bottom: 10px; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; }
+            .sy-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+            .sy-row:last-child { margin-bottom: 0; }
             
-            /* Activated States */
-            .sp-seal.root.active {
-                background: radial-gradient(circle at 30% 30%, #ff4b4b, #8b0000);
-                border-color: #ffb3b3;
-                box-shadow: inset 0 0 5px #fff, 0 0 15px rgba(255, 0, 0, 0.5);
-            }
-            .sp-seal.sacral.active {
-                background: radial-gradient(circle at 30% 30%, #ffa500, #b35900);
-                border-color: #ffe6b3;
-                box-shadow: inset 0 0 5px #fff, 0 0 15px rgba(255, 165, 0, 0.5);
-            }
-            .sp-seal.solar.active {
-                background: radial-gradient(circle at 30% 30%, #ffd700, #b8860b);
-                border-color: #fffaca;
-                box-shadow: inset 0 0 5px #fff, 0 0 15px rgba(255, 215, 0, 0.5);
-            }
-            /* More active states... */
-            .sp-seal.active > span { opacity: 1; text-shadow: 0 0 5px white; }
-
-            .sp-seal:hover { transform: rotate(45deg) scale(1.1); }
+            .sy-label { color: #ccc; font-family: 'Space Mono', monospace; font-size: 0.85rem; }
+            .sy-input { background: #0a0a0a; border: 1px solid #333; color: #d4af37; padding: 8px 12px; border-radius: 6px; font-family: monospace; outline: none; transition: 0.3s; }
+            .sy-input:focus { border-color: #d4af37; box-shadow: 0 0 10px rgba(212,175,55,0.2); }
             
-
-            /* ---------------- BACK FACE (The Synapse) ---------------- */
-            .sp-back {
-                transform: rotateY(180deg);
-                display: flex;
-                flex-direction: column;
-                padding: 30px;
-                background: url('data:image/svg+xml;utf8,<svg width="400" height="650" xmlns="http://www.w3.org/2000/svg"><path d="M200 650 Q200 400 100 200 M200 650 Q200 300 300 150 M200 650 Q200 500 250 350 M200 650 Q200 450 150 250 M195 650 L195 0 M205 650 L205 0" stroke="rgba(212,175,55,0.05)" stroke-width="2" fill="none"/></svg>') 
-                            linear-gradient(135deg, #0f172a 0%, #020617 100%);
-            }
-            .sp-scene:not(.flipped) .sp-back { pointer-events: none; }
-
-            .sp-back-h { text-align: center; font-family: 'Cinzel', serif; color: #d4af37; font-size: 1.5rem; letter-spacing: 2px; margin-bottom: 25px; transform: translateZ(20px); }
-
-            /* Settings Block */
-            .sp-settings-group {
-                background: rgba(255,255,255,0.02);
-                border: 1px solid rgba(255,255,255,0.05);
-                border-radius: 12px;
-                padding: 15px;
-                transform: translateZ(10px);
-                margin-bottom: 20px;
-            }
-            .sp-setting-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-            .sp-setting-row:last-child { border: none; }
-            .sp-set-label { font-size: 0.8rem; color: #ccc; }
+            .sy-toggle { width: 44px; height: 24px; background: #333; border-radius: 12px; position: relative; cursor: pointer; transition: 0.3s; }
+            .sy-toggle.on { background: #10b981; box-shadow: 0 0 15px rgba(16,185,129,0.3); }
+            .sy-toggle-knob { width: 18px; height: 18px; background: #fff; border-radius: 50%; position: absolute; top: 3px; left: 3px; transition: 0.3s; }
+            .sy-toggle.on .sy-toggle-knob { left: 23px; }
             
-            /* UI Controls */
-            .sp-select { background: #000; border: 1px solid #d4af37; color: #d4af37; outline: none; padding: 4px; font-size: 0.7rem; font-family: monospace; border-radius: 4px; }
-            .sp-toggle { width: 36px; height: 18px; background: #333; border-radius: 9px; position: relative; cursor: pointer; transition: 0.3s; }
-            .sp-toggle.on { background: #10b981; box-shadow: 0 0 10px rgba(16,185,129,0.3); }
-            .sp-toggle-knob { width: 14px; height: 14px; background: white; border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: 0.3s; }
-            .sp-toggle.on .sp-toggle-knob { left: 20px; }
+            .sy-btn { background: transparent; border: 1px solid #d4af37; color: #d4af37; padding: 10px 20px; border-radius: 6px; cursor: pointer; transition: 0.3s; font-family: 'Space Mono', monospace; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; }
+            .sy-btn:hover { background: rgba(212,175,55,0.1); box-shadow: 0 0 15px rgba(212,175,55,0.3); }
+            .sy-btn.focus { border-color: #9A4DFF; color: #9A4DFF; }
+            .sy-btn.focus:hover { background: rgba(154,77,255,0.1); box-shadow: 0 0 15px rgba(154,77,255,0.3); }
+            .sy-btn.danger { border-color: #ef4444; color: #ef4444; }
+            .sy-btn.danger:hover { background: rgba(239,68,68,0.1); box-shadow: 0 0 15px rgba(239,68,68,0.3); }
 
-            /* Focus Mode Button */
-            .sp-focus-btn {
-                background: transparent; border: 1px solid #9A4DFF; color: #9A4DFF;
-                padding: 10px; width: 100%; border-radius: 8px; text-transform: uppercase;
-                letter-spacing: 2px; font-size: 0.8rem; font-weight: bold; cursor: pointer;
-                transition: 0.3s; margin-top: 10px; text-shadow: 0 0 5px rgba(154,77,255,0.5);
-            }
-            .sp-focus-btn:hover { background: rgba(154,77,255,0.2); }
-
-            /* Social Networking Nodes (Fruits of Yggdrasil) */
-            .sp-social-tree {
-                flex: 1;
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: space-evenly;
-                align-items: center;
-                padding-top: 20px;
-                transform: translateZ(15px);
-            }
-            .sp-social-node {
-                width: 45px; height: 45px;
-                border-radius: 50%;
-                background: #111;
-                border: 1px solid rgba(255,255,255,0.1);
-                display: flex; align-items: center; justify-content: center;
-                cursor: pointer; transition: 0.4s;
-                position: relative;
-            }
-            .sp-social-node img { border-radius: 50%; width: 100%; height: 100%; object-fit: cover; opacity: 0.5; transition: 0.4s; }
-            .sp-social-node:hover img { opacity: 1; filter: drop-shadow(0 0 5px var(--col)); }
-
-            /* Password Modal Layer */
-            .sp-modal-overlay {
-                position: absolute; inset: 0; background: rgba(5,5,5,0.98);
-                display: flex; flex-direction: column; justify-content: center; align-items: center;
-                z-index: 1000; padding: 20px;
-                opacity: 0; pointer-events: none; transition: 0.3s;
-                border-radius: 20px; border: 1px solid #d4af37;
-            }
-            .sp-modal-overlay.active { opacity: 1; pointer-events: auto; }
-            .sp-modal-h { font-family: 'Cinzel', serif; color: #d4af37; margin-bottom: 20px; text-transform: uppercase; font-size: 1.2rem; text-shadow: 0 0 10px rgba(212,175,55,0.3); }
-            .sp-pswd-input { width: 100%; max-width: 250px; background: #0a0a0a; border: 1px solid #333; color: white; padding: 10px; margin-bottom: 15px; border-radius: 5px; outline: none; font-family: monospace; font-size: 0.8rem; }
-            .sp-pswd-input:focus { border-color: #f59e0b; box-shadow: 0 0 10px rgba(245,158,11,0.2); }
-            .sp-modal-btns { display: flex; gap: 10px; width: 100%; max-width: 250px; }
-            .sp-modal-btn { flex: 1; padding: 10px; border-radius: 5px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 0.7rem; border: 1px solid #555; background: #111; color: #ccc; transition: 0.3s; }
-            .sp-modal-btn:hover { background: #222; }
-            .sp-modal-btn.confirm { border-color: #10b981; color: #10b981; }
-            .sp-modal-btn.confirm:hover { background: rgba(16,185,129,0.1); }
-            .sp-forgot-link { margin-top: 15px; font-size: 0.65rem; color: rgba(255,255,255,0.4); text-decoration: underline; cursor: pointer; transition: 0.3s; }
-            .sp-forgot-link:hover { color: white; }
-            
-            /* Connected / Blooming States */
-            .sp-social-node.insta.connected { border-color: #E1306C; background: radial-gradient(circle, rgba(225,48,108,0.2), #111); box-shadow: 0 0 15px rgba(225,48,108,0.4); }
-            .sp-social-node.wa.connected { border-color: #25D366; background: radial-gradient(circle, rgba(37,211,102,0.2), #111); box-shadow: 0 0 15px rgba(37,211,102,0.4); }
-            .sp-social-node.yt.connected { border-color: #FF0000; background: radial-gradient(circle, rgba(255,0,0,0.2), #111); box-shadow: 0 0 15px rgba(255,0,0,0.4); }
-            .sp-social-node.connected img { opacity: 1; filter: grayscale(0%); }
-
-            .sp-social-node:hover { transform: scale(1.1) translateY(-5px); }
-
-            /* Flip Help Text */
-            .sp-flip-hint {
-                position: absolute; bottom: 10px; width: 100%; text-align: center;
-                font-size: 0.6rem; color: rgba(255,255,255,0.3); font-family: monospace; letter-spacing: 1px;
-                transform: translateZ(10px); cursor: pointer;
-            }
-            .sp-flip-hint:hover { color: #d4af37; }
-
-            /* UI Action Close */
-            /* Close button fixing the overflow clip */
-            .sp-close-cross {
-                position: absolute; top: 15px; right: 15px;
-                width: 40px; height: 40px; border-radius: 50%;
-                background: #0a0a0a; border: 2px solid #d4af37; color: #d4af37;
-                display: flex; align-items: center; justify-content: center; cursor: pointer;
-                transition: 0.3s; z-index: 50; transform: translateZ(30px);
-            }
-            .sp-close-cross:hover { background: #d4af37; color: #000; box-shadow: 0 0 15px #d4af37; transform: translateZ(30px) rotate(90deg); }
-
+            .sy-social-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px; }
+            .sy-social-card { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 15px; text-align: center; cursor: pointer; transition: 0.3s; }
+            .sy-social-card:hover { transform: translateY(-5px); border-color: rgba(255,255,255,0.3); }
+            .sy-social-card.connected { border-color: #10b981; background: rgba(16,185,129,0.05); }
+            .sy-social-icon { font-size: 2rem; margin-bottom: 10px; opacity: 0.6; }
+            .sy-social-card.connected .sy-social-icon { opacity: 1; text-shadow: 0 0 15px currentColor; }
         `;
         document.head.appendChild(style);
     }
@@ -380,187 +173,258 @@ class SoulPassAgent {
     renderArtifact() {
         const overlay = document.createElement('div');
         overlay.id = 'sp-root-overlay';
-        overlay.className = 'soul-pass-overlay';
+        overlay.className = 'sn-overlay';
+        overlay.onclick = (e) => { if(e.target === overlay) this.close(); }
 
-        // Close on background click
-        overlay.onclick = (e) => {
-            if(e.target === overlay) this.close();
-        }
-
-        const scene = document.createElement('div');
-        scene.id = 'sp-scene';
-        scene.className = 'sp-scene';
-        scene.style.width = 'min(90vw, 400px)';
-
-        // Card Container
-        const card = document.createElement('div');
-        card.className = 'sp-card';
+        const modal = document.createElement('div');
+        modal.className = 'sn-modal';
         
-        // --- 1. FRONT FACE ---
-        const front = document.createElement('div');
-        front.className = 'sp-face sp-front';
+        // Header
+        const header = document.createElement('div');
+        header.className = 'sn-header';
+        header.innerHTML = \`
+            <div class="sn-title">SOUL NEXUS</div>
+            <div class="sn-close" onclick="SoulPass.close()">✕</div>
+        \`;
+
+        // Body
+        const body = document.createElement('div');
+        body.className = 'sn-body';
+
+        // Sidebar
+        const sidebar = document.createElement('div');
+        sidebar.className = 'sn-sidebar';
+        sidebar.innerHTML = \`
+            <div class="sn-tab active" onclick="SoulPass.switchTab('pane-identity', this)">
+                <span class="material-symbols-outlined">badge</span> Identity
+            </div>
+            <div class="sn-tab" onclick="SoulPass.switchTab('pane-synapse', this)">
+                <span class="material-symbols-outlined">settings_input_component</span> The Synapse
+            </div>
+            <div class="sn-tab" onclick="SoulPass.switchTab('pane-network', this)">
+                <span class="material-symbols-outlined">hub</span> Network
+            </div>
+        \`;
+
+        // Content Area
+        const content = document.createElement('div');
+        content.className = 'sn-content-area';
         
-        front.innerHTML = `
-            <div class="sp-close-cross" onclick="SoulPass.close()">✕</div>
+        // Pane: Identity (Soul Pass)
+        const paneIdentity = document.createElement('div');
+        paneIdentity.id = 'pane-identity';
+        paneIdentity.className = 'sn-pane active';
+        paneIdentity.innerHTML = \`
+            <div class="sp-crystal-container">
+                <div class="sp-crystal"></div>
+                <h2 style="font-family: 'Cinzel', serif; font-size: 2.5rem; color: #fff; text-shadow: 0 0 15px rgba(255,255,255,0.3); margin-top: 20px;" id="sn-display-name">\${this.userData.name.toUpperCase()}</h2>
+                <p style="font-family: 'Space Mono', monospace; color: #d4af37; letter-spacing: 2px;">\${this.userData.hashId}</p>
+            </div>
             
-            <div class="sp-header">
-                <span class="sp-title">SOUL PASS</span>
-                <span class="sp-hash">${this.userData.hashId}</span>
-            </div>
-
-            <div style="display: flex; flex: 1; align-items: center; justify-content: space-around; transform: translateZ(40px);">
-                <div class="sp-center-holo" onclick="document.getElementById('sp-scene').classList.toggle('flipped');" style="margin:0; transform: translateZ(20px);">
-                    <div class="sp-core-crystal" title="Tap to flip!"></div>
-                    <div class="sp-user-identity" style="margin-top: 10px;">
-                        <h2 class="sp-name" style="font-size: 1.5rem;">${this.userData.name}</h2>
-                        <div class="sp-rank">Level ${Math.floor(this.userData.xp/100) || 12}: <span class="text-white">${this.userData.rank}</span></div>
-                    </div>
+            <div class="sp-stats-grid">
+                <div class="sp-stat-card">
+                    <div class="sp-stat-label">Current Rank</div>
+                    <div class="sp-stat-val text-white">\${this.userData.rank}</div>
                 </div>
-
-                <div style="display: flex; flex-direction: column; justify-content: center; transform: translateZ(10px);">
-                    <div class="sp-stats" style="margin-bottom: 10px; display: flex; flex-direction: column; gap: 15px;">
-                        <div class="sp-stat-box" style="padding: 10px 30px;">
-                            <div class="sp-stat-label">Flow Tokens</div>
-                            <div class="sp-stat-value">${this.userData.tokens}</div>
-                        </div>
-                        <div class="sp-stat-box" style="padding: 10px 30px;">
-                            <div class="sp-stat-label">Time In Zone</div>
-                            <div class="sp-stat-value">${this.userData.timeInZone}</div>
-                        </div>
-                    </div>
+                <div class="sp-stat-card">
+                    <div class="sp-stat-label">Allegiance</div>
+                    <div class="sp-stat-val text-haki-gold" id="sn-display-guild">\${this.userData.guild ? "Guild of " + this.userData.guild.charAt(0).toUpperCase() + this.userData.guild.slice(1) : "None"}</div>
+                </div>
+                <div class="sp-stat-card">
+                    <div class="sp-stat-label">Flow Tokens</div>
+                    <div class="sp-stat-val">\${this.userData.tokens}</div>
+                </div>
+                <div class="sp-stat-card">
+                    <div class="sp-stat-label">Zone Immersion</div>
+                    <div class="sp-stat-val">\${this.userData.timeInZone}</div>
                 </div>
             </div>
 
-            <div class="sp-seals-container" style="padding-top: 15px; margin-top: auto;">
-                <div class="sp-seals-title" style="margin-bottom: 10px;">THE CHAKRAS</div>
-                <div class="sp-seals" style="gap: 15px;">
-                    <!-- Badges (First 3 active for demo) -->
-                    <div class="sp-seal root active" title="Muladhara: Code Grounding"><span>1</span></div>
-                    <div class="sp-seal sacral active" title="Svadhisthana: Creative Flow"><span>2</span></div>
-                    <div class="sp-seal solar active" title="Manipura: Willpower"><span>3</span></div>
-                    <div class="sp-seal heart" title="Anahata: Community Resonance"><span>4</span></div>
-                    <div class="sp-seal throat" title="Vishuddha: Truth & Expression"><span>5</span></div>
-                    <div class="sp-seal third-eye" title="Ajna: Intuition"><span>6</span></div>
-                    <div class="sp-seal crown" title="Sahasrara: Enlightenment"><span>7</span></div>
+            <div class="sy-group" style="background: transparent; border: none;">
+                <div class="sy-group-title" style="text-align: center; border: none;">Flow Seals (Chakras)</div>
+                <div class="sp-seals">
+                    <div class="sp-seal active root" title="Muladhara: Grounding"><span>1</span></div>
+                    <div class="sp-seal active sacral" title="Svadhisthana: Creativity"><span>2</span></div>
+                    <div class="sp-seal active solar" title="Manipura: Willpower"><span>3</span></div>
+                    <div class="sp-seal" title="Anahata: Heart"><span>4</span></div>
+                    <div class="sp-seal" title="Vishuddha: Truth"><span>5</span></div>
+                    <div class="sp-seal" title="Ajna: Intuition"><span>6</span></div>
+                    <div class="sp-seal" title="Sahasrara: Enlightenment"><span>7</span></div>
+                </div>
+            </div>
+        \`;
+
+        // Pane: The Synapse (Settings)
+        const paneSynapse = document.createElement('div');
+        paneSynapse.id = 'pane-synapse';
+        paneSynapse.className = 'sn-pane';
+        paneSynapse.innerHTML = \`
+            <div class="sy-group">
+                <div class="sy-group-title">Core Preferences</div>
+                <div class="sy-row">
+                    <span class="sy-label">Profile Name</span>
+                    <input type="text" id="sy-name-input" class="sy-input" style="text-transform: uppercase;" value="\${this.userData.name}" onchange="SoulPass.updateName(this.value)">
+                </div>
+                <div class="sy-row">
+                    <span class="sy-label">Guild Allegiance</span>
+                    <select class="sy-input" id="sy-guild-select" onchange="SoulPass.updateGuild(this.value)">
+                        <option value="">-- No Guild --</option>
+                        <option value="arts">Guild of Arts</option>
+                        <option value="skills">Guild of Skills</option>
+                        <option value="sounds">Guild of Sounds</option>
+                        <option value="healing">Guild of Healing</option>
+                        <option value="products">Guild of Products</option>
+                        <option value="services">Guild of Services</option>
+                        <option value="taste">Guild of Taste</option>
+                    </select>
+                </div>
+                <div class="sy-row">
+                    <span class="sy-label">Linguistic Matrix (Language)</span>
+                    <select class="sy-input" id="sy-lang-select" onchange="localStorage.setItem('cdf_language', this.value); SoulPass.pulseFeedback();">
+                        <option value="EN">EN - English</option>
+                        <option value="PT">PT - Portuguese</option>
+                        <option value="DE">DE - German</option>
+                    </select>
+                </div>
+                <div class="sy-row">
+                    <span class="sy-label">Profile Visibility</span>
+                    <select class="sy-input" id="sy-vis-select" onchange="localStorage.setItem('cdf_visibility', this.value); SoulPass.pulseFeedback();">
+                        <option value="Public">Public (Visible to all)</option>
+                        <option value="Private">Private (Hidden)</option>
+                    </select>
                 </div>
             </div>
 
-            <div class="sp-flip-hint" onclick="document.getElementById('sp-scene').classList.toggle('flipped');" style="position:relative; margin-top: 15px; bottom: 0;">Tapping Core Flips Artifact</div>
-        `;
-
-        // --- 2. BACK FACE ---
-        const back = document.createElement('div');
-        back.className = 'sp-face sp-back';
-
-        back.innerHTML = `
-            <div class="sp-close-cross" onclick="SoulPass.close()">✕</div>
-            <div style="position: absolute; top: 20px; right: 65px; font-family: 'Space Mono', monospace; font-size: 0.7rem; color: rgba(255,255,255,0.4); z-index: 10;">${this.userData.userId || 'D-1094-FLOW'}</div>
-            
-            <div class="sp-back-h" style="margin-bottom: 20px; position: relative; z-index: 10;">THE SYNAPSE</div>
-            
-            <div style="display: flex; gap: 30px; flex: 1; position: relative; z-index: 50;">
-                <div class="sp-settings-group" style="flex: 1; margin: 0; display: flex; flex-direction: column; justify-content: center; position: relative; z-index: 50;">
-                    <div class="sp-setting-row">
-                        <span class="sp-set-label">Linguistic Matrix (Language)</span>
-                        <select class="sp-select" id="sp-lang-select" onchange="localStorage.setItem('cdf_language', this.value); SoulPass.pulseFeedback();">
-                            <option value="EN">EN</option>
-                            <option value="PT">PT</option>
-                            <option value="DE">DE</option>
-                            <option value="FR">FR</option>
-                            <option value="IT">IT</option>
-                        </select>
-                    </div>
-                    <div class="sp-setting-row">
-                        <span class="sp-set-label">Quantum Lock (2FA)</span>
-                        <div class="sp-toggle" id="sp-2fa-toggle" onclick="this.classList.toggle('on'); localStorage.setItem('cdf_2fa', this.classList.contains('on')); SoulPass.pulseFeedback();">
-                            <div class="sp-toggle-knob"></div>
-                        </div>
-                    </div>
-                    <div class="sp-setting-row">
-                        <span class="sp-set-label">Profile Visibility</span>
-                        <select class="sp-select" id="sp-vis-select" style="width: 80px;" onchange="localStorage.setItem('cdf_visibility', this.value); SoulPass.pulseFeedback();">
-                            <option value="Public">Public</option>
-                            <option value="Private">Private</option>
-                        </select>
-                    </div>
-                    <div class="sp-setting-row">
-                        <span class="sp-set-label">Profile Name</span>
-                        <input type="text" id="sp-name-input" class="sp-select" style="width: 80px; text-transform: uppercase;" value="${this.userData.name}" onchange="localStorage.setItem('cdf_user_username', this.value); document.getElementById('sp-name-display').innerText = this.value.toUpperCase(); if(window.Pusher) window.Pusher.showToast('Profile Updated', 'success'); SoulPass.pulseFeedback();">
+            <div class="sy-group">
+                <div class="sy-group-title">Security & Operations</div>
+                <div class="sy-row">
+                    <span class="sy-label">Quantum Lock (2FA)</span>
+                    <div class="sy-toggle" id="sy-2fa-toggle" onclick="this.classList.toggle('on'); localStorage.setItem('cdf_2fa', this.classList.contains('on')); SoulPass.pulseFeedback();">
+                        <div class="sy-toggle-knob"></div>
                     </div>
                 </div>
+                <div class="sy-row" style="margin-top: 25px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px;">
+                    <button class="sy-btn focus" onclick="SoulPass.enterDeepFocus()" style="width: 100%;">Initiate Deep Focus</button>
+                </div>
+            </div>
+        \`;
 
-                <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 20px; position: relative; z-index: 50;">
-                    <!-- Comms Protocol -->
-                    <div class="sp-settings-group" style="flex: 1; margin: 0; display: flex; flex-direction: column; justify-content: center; position: relative; z-index: 50;">
-                        <div class="sp-setting-row" style="flex-direction: column; align-items: stretch; border: none;">
-                            <span class="sp-set-label" style="margin-bottom: 8px; color: #d4af37; text-transform: uppercase; letter-spacing: 1px;">Comms Protocol</span>
-                            <select class="sp-select" id="sp-comms-method" style="width: 100%; margin-bottom: 10px;" onchange="SoulPass.updateCommsMethod(this.value)">
-                                <option value="system_chat">System Chat (Default)</option>
-                                <option value="whatsapp">WhatsApp Bridge</option>
-                                <option value="instagram">Instagram Sync</option>
-                            </select>
-                            <input type="text" id="sp-comms-details" class="sp-pswd-input" style="width: 100%; max-width: 100%; display: none;" placeholder="Enter details..." onchange="SoulPass.saveCommsDetails(this.value)">
-                        </div>
-                    </div>
-
-                    <div style="display: flex; gap: 10px; margin-top: auto;">
-                        <button class="sp-focus-btn" onclick="SoulPass.enterDeepFocus()" style="flex: 1; margin: 0; position: relative; z-index: 50; padding: 10px 5px; font-size: 0.65rem;">DEEP FOCUS</button>
-                        <button class="sp-focus-btn" onclick="SoulPass.triggerPasswordWalkthrough()" style="flex: 1; margin: 0; position: relative; z-index: 50; padding: 10px 5px; font-size: 0.65rem; border-color: #f59e0b; color: #f59e0b;">UPDATE PSWD</button>
-                    </div>
+        // Pane: Network (Social Connections)
+        const paneNetwork = document.createElement('div');
+        paneNetwork.id = 'pane-network';
+        paneNetwork.className = 'sn-pane';
+        paneNetwork.innerHTML = \`
+            <div class="sy-group">
+                <div class="sy-group-title">Primary Comms Protocol</div>
+                <div class="sy-row" style="flex-direction: column; align-items: stretch; gap: 15px;">
+                    <select class="sy-input" id="sy-comms-method" onchange="SoulPass.updateCommsMethod(this.value)">
+                        <option value="system_chat">System Chat (Default)</option>
+                        <option value="whatsapp">WhatsApp Bridge</option>
+                        <option value="instagram">Instagram Sync</option>
+                    </select>
+                    <input type="text" id="sy-comms-details" class="sy-input" style="display: none;" placeholder="Enter details..." onchange="SoulPass.saveCommsDetails(this.value)">
                 </div>
             </div>
 
-            <div class="sp-flip-hint" onclick="document.getElementById('sp-scene').classList.toggle('flipped');" style="position:relative; margin-top: 15px; bottom: 0;">Tap background to return to Identity</div>
-            
-            <div class="sp-modal-overlay" id="sp-pswd-modal">
-                <div class="sp-modal-h">Quantum Key Update</div>
-                <input type="password" class="sp-pswd-input" id="sp-current-pswd" placeholder="Current Key">
-                <input type="password" class="sp-pswd-input" id="sp-new-pswd" placeholder="New Key">
-                <input type="password" class="sp-pswd-input" id="sp-confirm-pswd" placeholder="Confirm New Key">
-                <div class="sp-modal-btns">
-                    <button class="sp-modal-btn" onclick="document.getElementById('sp-pswd-modal').classList.remove('active')">Cancel</button>
-                    <button class="sp-modal-btn confirm" onclick="SoulPass.submitPasswordUpdate()">SAVE</button>
+            <div class="sy-group">
+                <div class="sy-group-title">External Bridges</div>
+                <div class="sy-social-grid">
+                    <div class="sy-social-card" onclick="SoulPass.initiateSocialSync('whatsapp')">
+                        <div class="sy-social-icon text-green-500">💬</div>
+                        <div class="sy-label text-center">WhatsApp</div>
+                    </div>
+                    <div class="sy-social-card" onclick="SoulPass.initiateSocialSync('instagram')">
+                        <div class="sy-social-icon text-pink-500">📸</div>
+                        <div class="sy-label text-center">Instagram</div>
+                    </div>
+                    <div class="sy-social-card" onclick="SoulPass.initiateSocialSync('youtube')">
+                        <div class="sy-social-icon text-red-500">▶️</div>
+                        <div class="sy-label text-center">YouTube</div>
+                    </div>
+                    <div class="sy-social-card" onclick="SoulPass.initiateSocialSync('tiktok')">
+                        <div class="sy-social-icon text-white">🎵</div>
+                        <div class="sy-label text-center">TikTok</div>
+                    </div>
                 </div>
-                <div class="sp-forgot-link" onclick="SoulPass.triggerForgotPassword()">Forgotten Key Recovery</div>
             </div>
-        `;
+        \`;
 
-        card.appendChild(front);
-        card.appendChild(back);
-        scene.appendChild(card);
-        overlay.appendChild(scene);
+        content.appendChild(paneIdentity);
+        content.appendChild(paneSynapse);
+        content.appendChild(paneNetwork);
+        
+        body.appendChild(sidebar);
+        body.appendChild(content);
+
+        modal.appendChild(header);
+        modal.appendChild(body);
+        overlay.appendChild(modal);
 
         document.body.appendChild(overlay);
 
-        // Hydrate Settings from Storage
+        // Hydrate Settings
         setTimeout(() => {
             const lang = localStorage.getItem('cdf_language');
-            if(lang) document.getElementById('sp-lang-select').value = lang;
+            if(lang) document.getElementById('sy-lang-select').value = lang;
             
             const vis = localStorage.getItem('cdf_visibility');
-            if(vis) document.getElementById('sp-vis-select').value = vis;
+            if(vis) document.getElementById('sy-vis-select').value = vis;
             
             if(localStorage.getItem('cdf_2fa') === 'true') {
-                document.getElementById('sp-2fa-toggle').classList.add('on');
+                document.getElementById('sy-2fa-toggle').classList.add('on');
             }
 
-            // Hydrate Comms Protocol
-            const methodSelect = document.getElementById('sp-comms-method');
+            const methodSelect = document.getElementById('sy-comms-method');
             if(methodSelect && this.userData.preferred_contact_method) {
                 methodSelect.value = this.userData.preferred_contact_method;
                 this.updateCommsMethod(this.userData.preferred_contact_method, false);
             }
-            
-            // Add Swipe Listener for Mobile
-            this.addSwipeListeners(card);
+            const guildSelect = document.getElementById('sy-guild-select');
+            if(guildSelect && this.userData.guild) {
+                guildSelect.value = this.userData.guild;
+            }
         }, 50);
 
         return overlay;
     }
 
+    switchTab(paneId, tabEl) {
+        document.querySelectorAll('.sn-pane').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.sn-tab').forEach(el => el.classList.remove('active'));
+        
+        document.getElementById(paneId).classList.add('active');
+        if(tabEl) tabEl.classList.add('active');
+        
+        if(window.SoundEngineer) window.SoundEngineer.playSFX('ui_click');
+    }
+
+    updateName(newVal) {
+        newVal = newVal.trim();
+        if(!newVal) return;
+        localStorage.setItem('cdf_user_username', newVal);
+        this.userData.name = newVal;
+        const nameDisp = document.getElementById('sn-display-name');
+        if(nameDisp) nameDisp.innerText = newVal.toUpperCase();
+        if(window.Pusher) window.Pusher.showToast('Profile Updated', 'success');
+        this.pulseFeedback();
+    }
+
+    async updateGuild(newGuild) {
+        this.userData.guild = newGuild;
+        const guildDisp = document.getElementById('sn-display-guild');
+        if(guildDisp) {
+            guildDisp.innerText = newGuild ? "Guild of " + newGuild.charAt(0).toUpperCase() + newGuild.slice(1) : "None";
+        }
+        
+        if(window.supabaseClient && this.userData.userId) {
+            await window.supabaseClient.from('profiles').update({ guild: newGuild }).eq('id', this.userData.userId);
+            this.pulseFeedback();
+        }
+    }
+
     async updateCommsMethod(method, saveToDb = true) {
         this.userData.preferred_contact_method = method;
-        const detailsInput = document.getElementById('sp-comms-details');
+        const detailsInput = document.getElementById('sy-comms-details');
         
         let details = {};
         try { details = JSON.parse(this.userData.contact_details || '{}'); } catch(e) {}
@@ -599,61 +463,29 @@ class SoulPassAgent {
         }
     }
 
-    addSwipeListeners(card) {
-        let touchstartX = 0;
-        let touchendX = 0;
-        
-        card.addEventListener('touchstart', e => {
-            touchstartX = e.changedTouches[0].screenX;
-        }, {passive: true});
-
-        card.addEventListener('touchend', e => {
-            touchendX = e.changedTouches[0].screenX;
-            if (touchendX < touchstartX - 50) {
-                // Swiped Left
-                document.getElementById('sp-scene').classList.add('flipped');
-            }
-            if (touchendX > touchstartX + 50) {
-                // Swiped Right
-                document.getElementById('sp-scene').classList.remove('flipped');
-            }
-        }, {passive: true});
-    }
-
-    // A small haptic/visual pulse for checking logic visually 
     pulseFeedback() {
-        const item = document.getElementById('sp-scene');
-        if(item) {
-            item.style.transform = "scale(0.95)";
-            setTimeout(() => item.style.transform = "scale(1)", 150);
-        }
         if(window.Pusher) window.Pusher.showToast("System State Configured.", "success");
+        if(window.SoundEngineer) window.SoundEngineer.playSFX('ui_click');
     }
 
     enterDeepFocus() {
         this.pulseFeedback();
         this.close();
         
-        // Hide Imperial HUD Ticker
         const hud = document.getElementById('imperial-hud-root');
         if (hud) {
              hud.dataset.originalDisplay = hud.style.display || 'flex';
              hud.style.display = 'none';
         }
         
-        // Try to trigger native fullscreen
         try {
             if (document.documentElement.requestFullscreen) {
                 document.documentElement.requestFullscreen();
             }
-        } catch (e) {
-            console.error(e);
-        }
+        } catch (e) { console.error(e); }
 
         if(window.Pusher) window.Pusher.showToast("Deep Focus Protocol Activated. Press ESC to return.", "success");
-        else alert("Entering Deep Focus (Fullscreen Mode). Press ESC to abort.");
         
-        // Restore HUD on exiting fullscreen
         if(!this.fsListenerBound) {
             document.addEventListener('fullscreenchange', () => {
                 const h = document.getElementById('imperial-hud-root');
@@ -666,177 +498,73 @@ class SoulPassAgent {
         }
     }
 
-    triggerPasswordWalkthrough() {
-        this.pulseFeedback();
-        document.getElementById('sp-pswd-modal').classList.add('active');
-    }
-
-    triggerForgotPassword() {
-        document.getElementById('sp-pswd-modal').classList.remove('active');
-        if(window.Pusher) {
-            window.Pusher.showToast("Recovery protocol initiated.", "info");
-            setTimeout(() => window.Pusher.showToast("Retrieval link dispatched to your registered comms (email).", "success"), 1500);
-        } else {
-            alert("Recovery protocol initiated. Check email.");
-        }
-    }
-
-    submitPasswordUpdate() {
-        const c = document.getElementById('sp-current-pswd').value;
-        const n = document.getElementById('sp-new-pswd').value;
-        const cn = document.getElementById('sp-confirm-pswd').value;
-        
-        if(!c || !n || !cn) {
-            if(window.Pusher) window.Pusher.showToast("All key metrics required.", "error");
-            return;
-        }
-        if(n !== cn) {
-            if(window.Pusher) window.Pusher.showToast("New key resonance mismatch. Re-verify.", "error");
-            return;
-        }
-        
-        // Simulating backend update
-        this.pulseFeedback();
-        document.getElementById('sp-pswd-modal').classList.remove('active');
-        if(window.Pusher) {
-            window.Pusher.showToast("Encrypting New Quantum Key...", "info");
-            setTimeout(() => window.Pusher.showToast("Quantum Key Successfully Updated.", "success"), 1500);
-        } else {
-            alert("Password updated successfully.");
-        }
-        
-        // Clear fields
-        document.getElementById('sp-current-pswd').value = "";
-        document.getElementById('sp-new-pswd').value = "";
-        document.getElementById('sp-confirm-pswd').value = "";
-    }
-
-    // --- REAL INTEGRATION ---
     async initiateSocialSync(platform) {
         this.pulseFeedback();
-        console.log(`[SoulPass] Initiating Synapse Connection for: ${platform}`);
+        
+        // Find clicked card and toggle connected
+        const cards = document.querySelectorAll('.sy-social-card');
+        let targetCard = null;
+        cards.forEach(c => {
+            if(c.innerText.toLowerCase().includes(platform)) targetCard = c;
+        });
 
-        switch(platform) {
-            case 'whatsapp':
-                // 1. Prompt for phone number
-                const phone = prompt("Verify your Phone Number for the Bridge (e.g., +49...):", localStorage.getItem('cdf_user_phone') || "");
-                if (phone) {
-                    localStorage.setItem('cdf_user_phone', phone);
-                    
-                    // 2. Trigger WhatsApp Agent Template
-                    if (window.WhatsApp) {
-                        const success = await window.WhatsApp.sendTemplateMessage('hello_world', phone);
-                        if (success) {
-                            alert("Verification Signal Sent via Meta API! Opening Chat...");
-                        } else {
-                            alert("Warning: Signal failed to send. Ensure number is in Meta Sandbox.");
-                        }
-                    } else {
-                        alert("The WhatsApp Agent is currently offline. Redirecting...");
-                    }
-                    
-                    // 3. Open Direct Master Chat
-                    window.open('https://wa.me/351912828940', '_blank');
+        if(platform === 'whatsapp') {
+            const phone = prompt("Verify Phone Number for Bridge (e.g., +49...):", localStorage.getItem('cdf_user_phone') || "");
+            if (phone) {
+                localStorage.setItem('cdf_user_phone', phone);
+                if (window.WhatsApp) {
+                    const success = await window.WhatsApp.sendTemplateMessage('hello_world', phone);
+                    if(success) alert("Signal Sent via Meta API!");
                 }
-                break;
-                
-            case 'instagram':
-                // Supabase Native OAuth provider
-                if (window.supabaseClient) {
-                    try {
-                        const { data, error } = await window.supabaseClient.auth.signInWithOAuth({
-                            provider: 'instagram',
-                            options: { redirectTo: window.location.origin + '/pages/dashboard.html' }
-                        });
-                        if (error) {
-                            // GRACEFUL FALLBACK: If provider isn't enabled, use the Agentic Webhook
-                            const handle = prompt("Direct OAuth unavailable. Fallback: Enter your Instagram @handle to connect via Synapse:");
-                            if (handle) {
-                                alert(`Synapse Connected to ${handle}!`);
-                                document.querySelector('.sp-social-node.insta').classList.add('connected');
-                            }
-                        }
-                    } catch (e) {
-                         const handle = prompt("Direct OAuth unavailable. Fallback: Enter your Instagram @handle to connect via Synapse:");
-                         if (handle) document.querySelector('.sp-social-node.insta').classList.add('connected');
-                    }
-                }
-                break;
-
-            case 'youtube':
-                // Supabase Google Provider
-                if (window.supabaseClient) {
-                    try {
-                        const { data, error } = await window.supabaseClient.auth.signInWithOAuth({
-                            provider: 'google',
-                            options: {
-                                queryParams: { access_type: 'offline', prompt: 'consent' },
-                                scopes: 'https://www.googleapis.com/auth/youtube.readonly',
-                                redirectTo: window.location.origin + '/pages/dashboard.html'
-                            }
-                        });
-                        if (error) {
-                             // GRACEFUL FALLBACK:
-                             const handle = prompt("Direct OAuth unavailable. Fallback: Enter your YouTube Channel Name or URL to connect via Synapse:");
-                             if (handle) {
-                                  alert(`Synapse Archive Connected to ${handle}!`);
-                                  document.querySelector('.sp-social-node.yt').classList.add('connected');
-                             }
-                        }
-                    } catch (e) {
-                         const handle = prompt("Direct OAuth unavailable. Fallback: Enter your YouTube Channel Name or URL to connect via Synapse:");
-                         if (handle) document.querySelector('.sp-social-node.yt').classList.add('connected');
-                    }
-                }
-                break;
-
-            case 'tiktok':
-                // Simulated Agentic Hook (No easy out-of-the-box Supabase provider)
-                const handle = prompt("Enter your TikTok handle (@username) to connect via Webhook:");
-                if (handle) {
-                    alert(`Synapse Connected to ${handle}! Agentic Webhook tracking initiated in background...`);
-                    // Find DOM node and toggle bloom
-                    const nodes = document.querySelectorAll('.sp-social-node');
-                    nodes.forEach(n => {
-                        if (n.innerHTML.includes('TT')) n.classList.add('connected');
-                    });
-                }
-                break;
+                window.open('https://wa.me/351912828940', '_blank');
+                if(targetCard) targetCard.classList.add('connected');
+            }
+        } else {
+            const handle = prompt(\`Enter \${platform.toUpperCase()} Handle/URL to sync with Synapse:\`);
+            if (handle) {
+                alert(\`Synapse Connected to \${handle}!\`);
+                if(targetCard) targetCard.classList.add('connected');
+            }
         }
     }
 
     open() {
-        console.log(`[${this.name}] Constructing Artifact UI...`);
+        this.init(); // Refresh data just in case
         let overlay = document.getElementById('sp-root-overlay');
-        if(!overlay) {
-            overlay = this.renderArtifact();
-        }
+        if (!overlay) overlay = this.renderArtifact();
         
-        // Use timeout to allow safe injection then CSS transition
-        setTimeout(() => {
+        // Use requestAnimationFrame for smooth transition
+        requestAnimationFrame(() => {
             overlay.classList.add('active');
-            this.isOpen = true;
-        }, 10);
+        });
+        this.isOpen = true;
+        if(window.SoundEngineer) window.SoundEngineer.playSFX('menu_open');
+        console.log(`[SoulPass] Soul Nexus Opened.`);
     }
 
     close() {
-        console.log(`[${this.name}] Dispersing Artifact UI...`);
         const overlay = document.getElementById('sp-root-overlay');
-        if(overlay) {
+        if (overlay) {
             overlay.classList.remove('active');
-            this.isOpen = false;
-            // Delay removal for out-animation
-            setTimeout(() => {
-                overlay.remove();
-                // Ensure card resets to front for next instantiation
-                const scene = document.getElementById('sp-scene');
-                if(scene) scene.classList.remove('flipped');
-            }, 600);
+            // Allow animation to finish before hiding/removing if necessary
         }
+        this.isOpen = false;
+        
+        const orreryContainer = document.querySelector('.orrery-container');
+        if (orreryContainer) {
+            orreryContainer.classList.remove('master-active');
+        }
+
+        if(window.FlowCompass) {
+            window.FlowCompass.updateFlowee('Zone');
+        }
+
+        if(window.SoundEngineer) window.SoundEngineer.playSFX('menu_close');
+        console.log(`[SoulPass] Soul Nexus Closed.`);
     }
 }
 
-// Auto-Instantiate (if it's not replacing an old variable check immediately)
-document.addEventListener('DOMContentLoaded', () => {
+// Auto-Instantiate if not existing
+if (!window.SoulPass) {
     new SoulPassAgent();
-});
+}

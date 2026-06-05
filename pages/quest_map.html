@@ -29,6 +29,7 @@
     <script src="../js/agents/flowee.js?v=3.2"></script>
     <script src="../js/agents/supabase_client.js?v=3.2"></script>
     <script src="../js/agents/quest_engine.js?v=3.5"></script>
+    <script src="../js/data/akademie_data.js"></script>
     
     <style>
         /* Togo / West African Aesthetic Base */
@@ -139,28 +140,14 @@
         
         @media (max-width: 768px) {
             #legend-panel { top: auto; bottom: 150px; left: 10px; right: 10px; width: auto; }
-            .animus-global-nav { bottom: 40px !important; transform: translateX(-50%) scale(0.95); width: 95%; max-width: 400px; justify-content: space-evenly; }
+            .animus-global-nav { bottom: 20px !important; transform: translateX(-50%); width: 95%; max-width: 400px; justify-content: space-between; padding: 10px 5px !important; gap: 2px !important; }
+            .animus-global-nav .nav-btn { min-width: unset; font-size: 0.55em; padding: 5px; }
+            .animus-global-nav .nav-btn .icon { font-size: 1.5em; margin-bottom: 4px; }
         }
     </style>
 </head>
 <body>
-    <!-- Burger Menu (Preserved) -->
-    <div class="fixed top-6 left-6 z-[100]">
-        <button id="burger-btn" class="w-10 h-10 flex flex-col justify-center items-center gap-1.5 bg-black border border-[#d4af37]/50 rounded cursor-pointer z-[101]">
-            <span class="w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
-            <span class="w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
-            <span class="w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
-        </button>
-    </div>
-
-    <div id="mobile-menu" class="fixed inset-0 bg-black/95 z-[90] opacity-0 pointer-events-none transition-opacity duration-300 flex flex-col items-center justify-center">
-        <nav class="flex flex-col gap-6 text-center">
-            <a href="../index.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">Zum Orbit</a>
-            <a href="bantaba.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">Nach Bantaba</a>
-            <a href="dashboard.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">Dashboard</a>
-            <a href="portfolio_anime_reality.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">Portfolio</a>
-        </nav>
-    </div>
+    <!-- Burger menu removed for map -->
 
     <!-- MAP CONTAINER -->
     <div id="quest-map"></div>
@@ -325,20 +312,72 @@
                 
                 activeMissions = data.filter(area => area.lat && area.lng);
                 
+                // --- INJECT AKADEMIE MANGAS AS FLOW AREAS ---
+                if (typeof AkademieData !== 'undefined') {
+                    const baseLat = 38.705;
+                    const baseLng = -9.145;
+                    AkademieData.forEach((artist, index) => {
+                        // Deterministic spread in a spiral
+                        const angle = index * 0.8;
+                        const radius = 0.01 + (index * 0.002);
+                        const offsetLat = Math.sin(angle) * radius;
+                        const offsetLng = Math.cos(angle) * radius;
+                        
+                        activeMissions.push({
+                            id: 'akademie_' + index,
+                            name: 'Akademie: ' + (artist.title || artist.name),
+                            lat: baseLat + offsetLat,
+                            lng: baseLng + offsetLng,
+                            isAkademie: true,
+                            scan_count: artist.files ? artist.files.length : (artist.chapters ? artist.chapters.length : 0),
+                            address: 'Akademie Archives (Google Drive)',
+                            link: 'akademie.html' // Clicking directs to akademie
+                        });
+                    });
+                }
+                
                 // Render initial state
                 activeMissions.forEach(area => {
                     // Adinkra Style Icon SVG
-                    const adinkraHtml = `
-                        <svg width="40" height="40" viewBox="0 0 100 100" fill="none" stroke="#E2725B" stroke-width="4" style="background:rgba(26,26,26,0.9); border-radius:50%; box-shadow:0 0 15px rgba(226,114,91,0.5);">
-                            <circle cx="50" cy="50" r="40" />
-                            <path d="M 50 10 L 50 90 M 10 50 L 90 50" />
-                            <circle cx="50" cy="50" r="15" fill="#D4AF37" stroke="none"/>
-                        </svg>
-                    `;
+                    let iconHtml = '';
+                    if (area.isAkademie) {
+                        iconHtml = `
+                            <svg width="40" height="40" viewBox="0 0 100 100" fill="none" stroke="#00f0ff" stroke-width="4" style="background:rgba(26,26,26,0.9); border-radius:10%; box-shadow:0 0 15px rgba(0,240,255,0.5);">
+                                <rect x="20" y="10" width="60" height="80" rx="5" />
+                                <line x1="30" y1="30" x2="70" y2="30" />
+                                <line x1="30" y1="50" x2="70" y2="50" />
+                                <line x1="30" y1="70" x2="50" y2="70" />
+                            </svg>
+                        `;
+                    } else {
+                        // Default flow area icon
+                        let color = "#E2725B";
+                        let inner = `<circle cx="50" cy="50" r="15" fill="#D4AF37" stroke="none"/>`;
+                        
+                        if (area.guild_category) {
+                            switch(area.guild_category) {
+                                case 'arts': color = '#FF00FF'; inner = `<path d="M 30 70 L 50 30 L 70 70 Z" fill="${color}" />`; break; // Triangle
+                                case 'skills': color = '#FFAE42'; inner = `<rect x="35" y="35" width="30" height="30" fill="${color}" />`; break; // Square
+                                case 'sounds': color = '#00f0ff'; inner = `<path d="M 40 40 A 10 10 0 0 1 60 40 A 10 10 0 0 1 40 40 Z" fill="${color}" /><path d="M 30 60 Q 50 20 70 60" stroke="${color}" stroke-width="4" fill="none"/>`; break; // Music-ish
+                                case 'healing': color = '#00FF00'; inner = `<path d="M 45 35 L 55 35 L 55 45 L 65 45 L 65 55 L 55 55 L 55 65 L 45 65 L 45 55 L 35 55 L 35 45 L 45 45 Z" fill="${color}" />`; break; // Cross
+                                case 'products': color = '#FFFF00'; inner = `<polygon points="50,25 75,75 25,75" fill="${color}" />`; break;
+                                case 'services': color = '#FFFFFF'; inner = `<circle cx="50" cy="50" r="15" fill="${color}" />`; break;
+                                case 'taste': color = '#ff6b6b'; inner = `<path d="M 30 40 Q 50 70 70 40" stroke="${color}" stroke-width="6" fill="none"/><line x1="50" y1="70" x2="50" y2="90" stroke="${color}" stroke-width="4"/><line x1="30" y1="90" x2="70" y2="90" stroke="${color}" stroke-width="4"/>`; break; // Cup/Chalice
+                            }
+                        }
+
+                        iconHtml = `
+                            <svg width="40" height="40" viewBox="0 0 100 100" fill="none" stroke="${color}" stroke-width="4" style="background:rgba(26,26,26,0.9); border-radius:50%; box-shadow:0 0 15px ${color}80;">
+                                <circle cx="50" cy="50" r="40" />
+                                <path d="M 50 10 L 50 90 M 10 50 L 90 50" />
+                                ${inner}
+                            </svg>
+                        `;
+                    }
                     
                     const icon = L.divIcon({
                         className: 'custom-mission-wrapper',
-                        html: adinkraHtml,
+                        html: iconHtml,
                         iconSize: [40, 40],
                         iconAnchor: [20, 20]
                     });
@@ -346,12 +385,63 @@
                     const marker = L.marker([area.lat, area.lng], { icon: icon }).addTo(map);
                     missionMarkers[area.id] = { marker: marker, data: area };
                     
-                    updatePopupContent(area.id, false, 999); // Initial closed state
+                    if (area.isAkademie) {
+                        marker.bindPopup(`
+                            <div class="adinkra-panel" style="padding:15px; text-align:center; min-width:220px; font-family: 'Courier New', monospace; border: 2px solid #00f0ff;">
+                                <h3 style="color:#00f0ff; font-weight:bold; margin:0 0 5px 0; font-size: 1.1em;">${area.name}</h3>
+                                <p style="font-size:0.8em; color:#ccc; margin:0 0 10px 0;">Pages/Files: ${area.scan_count}</p>
+                                <a href="akademie.html" style="display:block; padding:10px; background:#00f0ff; color:#000; text-decoration:none; font-weight:bold; border-radius:4px; margin-top:15px; animation: floatPulse 2s infinite alternate;">📖 READ IN AKADEMIE</a>
+                            </div>
+                        `);
+                    } else {
+                        updatePopupContent(area.id, false, 999); // Initial closed state
+                    }
                 });
                 
             } catch(e) {
                 console.error("Failed to load Flow Areas:", e);
             }
+            
+            // Hardcoded 8 Pillars / Worlds
+            const eightPillars = [
+                { name: "Visuals (Visio)", lat: 38.725, lng: -9.145, link: "vision_oasis.html" },
+                { name: "Sound (Frequency)", lat: 38.718, lng: -9.135, link: "sound_dashboard.html" },
+                { name: "Taste (Culinary)", lat: 38.712, lng: -9.140, link: "under-construction.html" },
+                { name: "Style (Aesthetics)", lat: 38.720, lng: -9.150, link: "portfolio_anime_reality.html" },
+                { name: "Knowledge (Gnosis)", lat: 38.730, lng: -9.142, link: "akademie.html" },
+                { name: "Space (Connection)", lat: 38.715, lng: -9.130, link: "bantaba.html" },
+                { name: "Spirit (Mindfulness)", lat: 38.735, lng: -9.155, link: "mindfulness.html" },
+                { name: "Bazar (Marketplace)", lat: 38.722, lng: -9.139, link: "marketplace.html" }
+            ];
+
+            eightPillars.forEach(pillar => {
+                const pillarIconHtml = `
+                    <svg width="50" height="50" viewBox="0 0 100 100" fill="none" stroke="#D4AF37" stroke-width="3" style="background:rgba(26,26,26,0.9); border-radius:50%; box-shadow:0 0 15px rgba(212,175,55,0.8);">
+                        <circle cx="50" cy="50" r="45" stroke="#D4AF37" stroke-dasharray="5,5"/>
+                        <circle cx="50" cy="50" r="20" fill="#E2725B"/>
+                    </svg>
+                `;
+                const icon = L.divIcon({
+                    className: 'custom-mission-wrapper',
+                    html: pillarIconHtml,
+                    iconSize: [50, 50],
+                    iconAnchor: [25, 25]
+                });
+                
+                const marker = L.marker([pillar.lat, pillar.lng], { icon: icon }).addTo(map);
+                marker.bindPopup(`
+                    <div class="adinkra-panel" style="padding:15px; text-align:center; min-width:200px; border:none;">
+                        <h3 style="color:var(--color-gold); font-weight:bold; margin:0 0 10px 0;">${pillar.name}</h3>
+                        <a href="${pillar.link}" style="display:block; padding:10px; background:var(--color-gold); color:#000; text-decoration:none; font-weight:bold; border-radius:4px; margin-top:10px;">🌌 ENTER WORLD</a>
+                    </div>
+                `);
+                
+                // Also redirect on click directly? Wait, popup is better for mobile so they don't misclick.
+                // Or maybe the user means "wenn ich drauf drücke momentan passiert nichts", so directly open:
+                marker.on('click', () => {
+                    window.location.href = pillar.link;
+                });
+            });
         }
 
         function checkMissionProximity(userLat, userLng) {
@@ -359,7 +449,9 @@
                 const distance = calculateDistance(userLat, userLng, mission.lat, mission.lng);
                 const isNear = distance <= 50; // 50 meters trigger
                 
-                updatePopupContent(mission.id, isNear, distance);
+                if (!mission.isAkademie) {
+                    updatePopupContent(mission.id, isNear, distance);
+                }
                 
                 // Toggle pulsing animation class
                 const mObj = missionMarkers[mission.id];
@@ -468,15 +560,7 @@
             } catch(e) { console.error(e); }
         }
 
-        // Burger Menu logic inside script
-        const burgerBtn = document.getElementById('burger-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-        if(burgerBtn) {
-            burgerBtn.addEventListener('click', () => {
-                mobileMenu.classList.toggle('opacity-0');
-                mobileMenu.classList.toggle('pointer-events-none');
-            });
-        }
+        // Burger Menu logic removed
 
         // INIT
         window.addEventListener('load', async () => {

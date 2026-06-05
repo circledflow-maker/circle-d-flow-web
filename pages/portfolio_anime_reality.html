@@ -645,7 +645,7 @@
                         }
                         container.innerHTML = `<video id="player-content" style="max-width: 80vw; max-height: 60vh; border: 2px solid var(--haki-gold); box-shadow: 0 0 30px rgba(212,175,55,0.2);" src="${videoSrc}" controls autoplay muted loop playsinline></video>`;
                     } else {
-                        const imageUrl = asset.url || (asset.id ? `https://drive.google.com/thumbnail?id=${asset.id}&sz=w1000` : '../Assets/images/logo.png');
+                        const imageUrl = asset.url || (asset.id ? `https://lh3.googleusercontent.com/d/${asset.id}=w1000` : '../Assets/images/logo.png');
                         container.innerHTML = `<img id="player-content" src="${imageUrl}" style="max-width: 80vw; max-height: 70vh; border: 2px solid var(--haki-gold); box-shadow: 0 0 30px rgba(212,175,55,0.2);" alt="Media Resource" onerror="this.src='../Assets/images/logo.png'">`;
                     }
                     
@@ -896,7 +896,7 @@
                         const isXML = asset.name.toLowerCase().endsWith('.xml');
                         let thumbnail = asset.thumb_url || asset.url || "../Assets/images/logo.png";
                         if (!asset.thumb_url && !asset.url.includes("http") && !asset.url.includes("Assets/")) {
-                            thumbnail = asset.id.includes("mock") ? "../Assets/images/logo.png" : `https://drive.google.com/thumbnail?id=${asset.id}&sz=w800`;
+                            thumbnail = asset.id.includes("mock") ? "../Assets/images/logo.png" : `https://lh3.googleusercontent.com/d/${asset.id}=w800`;
                         }
                         const card = document.createElement('div');
                         card.className = 'swiper-slide asset-card video-card';
@@ -928,7 +928,7 @@
                     
                     let src = asset.url;
                     if(!src || (!src.includes("http") && !src.includes("Assets/"))) {
-                        src = `https://drive.google.com/thumbnail?id=${asset.id}&sz=w1000`;
+                        src = `https://lh3.googleusercontent.com/d/${asset.id}=w1000`;
                     }
                     if(asset.id.startsWith("local_")) {
                         src = asset.url; // Use local path

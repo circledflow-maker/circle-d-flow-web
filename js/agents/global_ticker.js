@@ -22,22 +22,13 @@ class GlobalTicker {
         }
     }
 
-    init() {
-        if(document.getElementById('cdf-global-ticker')) return; 
-
-        this.injectStyles();
-        this.renderTicker();
-        this.listenForBroadcasts();
-        
-        // Initial State
-        this.updateLayer('SYSTEM', this.defaultMsg);
-
-        // Expose Global Helper
-        window.pushTickerMessage = (msg, layer = 'SYSTEM') => {
-            this.updateLayer(layer, msg);
-        };
+    listenForBroadcasts() {
+        document.addEventListener('cdf-ticker-broadcast', (e) => {
+            if(e.detail && e.detail.msg) {
+                this.updateLayer(e.detail.layer || 'SYSTEM', e.detail.msg);
+            }
+        });
     }
-
     injectStyles() {
         const style = document.createElement('style');
         style.innerHTML = `
