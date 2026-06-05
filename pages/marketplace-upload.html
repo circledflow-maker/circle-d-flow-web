@@ -82,6 +82,7 @@
             position: relative;
         }
     </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 </head>
 
 <body class="min-h-screen relative overflow-x-hidden">
@@ -408,6 +409,16 @@
         });
 
         window.addEventListener('load', loadProfile);
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        if(window.innerWidth < 768) {
+            new Swiper(".uploadSwiper", {
+                slidesPerView: 1,
+                spaceBetween: 30,
+                pagination: { el: ".swiper-pagination", clickable: true }
+            });
+        }
     </script>
 </body>
 </html>
