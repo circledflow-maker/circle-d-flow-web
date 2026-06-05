@@ -23,7 +23,7 @@ class FloweeAgent {
         // Create Chat UI
         const chat = document.createElement('div');
         chat.id = 'flowee-chat-ui';
-        chat.className = 'fixed bottom-24 right-6 w-80 h-[500px] max-h-[80vh] bg-black/95 backdrop-blur-xl border border-[#d4af37]/50 rounded-xl z-[1000] flex flex-col hidden shadow-[0_0_30px_rgba(0,0,0,0.8)] overflow-hidden transition-all duration-300';
+        chat.className = 'fixed bottom-24 right-2 sm:right-6 w-[calc(100vw-1rem)] sm:w-80 h-[500px] max-h-[75vh] bg-black/95 backdrop-blur-xl border border-[#d4af37]/50 rounded-xl z-[1000] flex flex-col hidden shadow-[0_0_30px_rgba(0,0,0,0.8)] overflow-hidden transition-all duration-300';
         chat.innerHTML = `
             <div class="p-4 border-b border-[#d4af37]/30 flex justify-between items-center bg-gradient-to-r from-black to-[#1a1a1a]">
                 <div class="flex items-center gap-2">

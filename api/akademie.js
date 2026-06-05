@@ -59,30 +59,47 @@ module.exports = async function handler(req, res) {
             "Artist": []
         };
 
-        // 4. For each artist, find images (Parallel)
-        const fetchPromises = artists.map(async (artist) => {
-            const qImages = encodeURIComponent(`'${artist.id}' in parents and (mimeType contains 'image/' or mimeType contains 'video/') and trashed=false`);
-            const imagesResponse = await driveFetch(`https://www.googleapis.com/drive/v3/files?q=${qImages}&fields=files(id,name,mimeType,webContentLink,webViewLink)&spaces=drive`);
-            return {
-                artistName: artist.name,
-                files: imagesResponse.files || []
-            };
-        });
-
-        const artistFolders = await Promise.all(fetchPromises);
-
-        // 5. Map to Portfolio format
         let idCounter = 0;
-        for (const folder of artistFolders) {
-            for (const file of folder.files) {
+
+        for (const artist of artists) {
+            // Find everything directly under this Artist folder
+            const qContents = encodeURIComponent(`'${artist.id}' in parents and trashed=false`);
+            const contentsResponse = await driveFetch(`https://www.googleapis.com/drive/v3/files?q=${qContents}&fields=files(id,name,mimeType)&spaces=drive`);
+            const contents = contentsResponse.files || [];
+
+            const directFiles = contents.filter(f => f.mimeType.includes('image/') || f.mimeType.includes('video/'));
+            const chapterFolders = contents.filter(f => f.mimeType === 'application/vnd.google-apps.folder');
+
+            // 1. Add direct files as "Full Portfolio" chapter
+            for (const file of directFiles) {
                 const directUrl = `https://drive.google.com/uc?id=${file.id}`;
                 result["Artist"].push({
                     id: `gdrive_artist_${idCounter++}`,
                     name: file.name,
-                    professional_name: folder.artistName,
+                    professional_name: artist.name,
+                    chapter_name: "Full Portfolio",
                     url: directUrl,
-                    tags: [folder.artistName.toLowerCase().replace(/\s+/g, '_'), "artist", "akademie"]
+                    tags: [artist.name.toLowerCase().replace(/\s+/g, '_'), "artist", "akademie"]
                 });
+            }
+
+            // 2. Add files from subfolders as their specific chapters
+            for (const chapterFolder of chapterFolders) {
+                const qChapterFiles = encodeURIComponent(`'${chapterFolder.id}' in parents and (mimeType contains 'image/' or mimeType contains 'video/') and trashed=false`);
+                const chapterFilesResponse = await driveFetch(`https://www.googleapis.com/drive/v3/files?q=${qChapterFiles}&fields=files(id,name,mimeType)&spaces=drive`);
+                const chapterFiles = chapterFilesResponse.files || [];
+                
+                for (const file of chapterFiles) {
+                    const directUrl = `https://drive.google.com/uc?id=${file.id}`;
+                    result["Artist"].push({
+                        id: `gdrive_artist_${idCounter++}`,
+                        name: file.name,
+                        professional_name: artist.name,
+                        chapter_name: chapterFolder.name,
+                        url: directUrl,
+                        tags: [artist.name.toLowerCase().replace(/\s+/g, '_'), "artist", "akademie"]
+                    });
+                }
             }
         }
 
