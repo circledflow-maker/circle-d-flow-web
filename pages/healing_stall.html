@@ -80,20 +80,21 @@
         }
 
         .dialogue-bubble {
-            background: rgba(62, 39, 35, 0.95);
-            border: 2px solid #FFAE42;
-            padding: 10px 15px;
-            border-radius: 15px;
+            background: rgba(20, 20, 20, 0.95);
+            border: 1px solid #4ade80;
+            padding: 12px 20px;
+            border-radius: 10px;
             position: absolute;
-            top: 10%;
+            bottom: -10px;
             left: 50%;
             transform: translateX(-50%);
-            width: 85%;
-            max-width: 380px;
-            z-index: 10;
-            font-size: 0.9rem;
+            width: 90%;
+            max-width: 400px;
+            z-index: 30;
+            font-size: 0.85rem;
             text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.8);
+            color: #ddd;
         }
 
         @keyframes popIn {
@@ -165,7 +166,14 @@
             </a>
         </div>
         <div class="flex justify-center ml-12 lg:ml-0">
-            <h1 class="font-cinzel font-bold text-base lg:text-lg tracking-[0.4em] text-[#22c55e]">HEALING SANCTUARY</h1>
+            <h1 class="font-cinzel font-bold text-base lg:text-lg tracking-[0.4em] text-[#22c55e]">HEALING SANCTUARY</h1> 
+        <div class="relative ml-4">
+            <select onchange="window.location.href=this.value" class="bg-black/50 border border-[#4ade80]/30 text-[#4ade80] text-xs py-1 px-2 rounded outline-none cursor-pointer appearance-none">
+                <option value="arts_stall.html" >Arts Guild</option>\n<option value="healing_stall.html" selected>Healing Guild</option>\n<option value="product_stall.html" >Products Guild</option>\n<option value="services_stall.html" >Services Guild</option>\n<option value="skills_stall.html" >Skills Guild</option>\n<option value="sound_stall.html" >Sound Guild</option>
+            </select>
+            <span class="material-symbols-outlined absolute right-1 top-1/2 -translate-y-1/2 text-[10px] pointer-events-none text-[#4ade80]">expand_more</span>
+        </div>
+    
         </div>
         <div class="flex justify-end gap-2 lg:gap-6 items-center">
              <div class="text-right hidden sm:block">
@@ -183,7 +191,7 @@
                 "Breathe in the essence of the Forest. Your spirit is a garden; we are here to help it bloom."
             </div>
             <img src="../Assets/images/healing_oracle.png" class="merchant-img" alt="Healing Oracle">
-            <div class="absolute bottom-10 left-1/2 -translate-x-1/2 text-center">
+            <div class="absolute bottom-20 left-1/2 -translate-x-1/2 text-center">
                 <h3 class="text-2xl font-cinzel text-[#22c55e] glow-orange">THE ORACLE</h3>
                 <p class="text-[10px] uppercase tracking-[0.3em] opacity-50">Guardian of the Sacred Root</p>
             </div>

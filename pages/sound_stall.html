@@ -80,20 +80,21 @@
         }
 
         .dialogue-bubble {
-            background: rgba(62, 39, 35, 0.95);
-            border: 2px solid #FFAE42;
-            padding: 10px 15px;
-            border-radius: 15px;
+            background: rgba(20, 20, 20, 0.95);
+            border: 1px solid #FFAE42;
+            padding: 12px 20px;
+            border-radius: 10px;
             position: absolute;
-            top: 10%;
+            bottom: -10px;
             left: 50%;
             transform: translateX(-50%);
-            width: 85%;
-            max-width: 380px;
-            z-index: 10;
-            font-size: 0.9rem;
+            width: 90%;
+            max-width: 400px;
+            z-index: 30;
+            font-size: 0.85rem;
             text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.8);
+            color: #ddd;
         }
 
         @keyframes popIn {
@@ -165,7 +166,14 @@
             </a>
         </div>
         <div class="flex justify-center ml-12 lg:ml-0">
-            <h1 class="font-cinzel font-bold text-base lg:text-lg tracking-[0.4em] text-[#FFAE42]">SOUND ATELIER</h1>
+            <h1 class="font-cinzel font-bold text-base lg:text-lg tracking-[0.4em] text-[#FFAE42]">SOUND ATELIER</h1> 
+        <div class="relative ml-4">
+            <select onchange="window.location.href=this.value" class="bg-black/50 border border-[#FFAE42]/30 text-[#FFAE42] text-xs py-1 px-2 rounded outline-none cursor-pointer appearance-none">
+                <option value="arts_stall.html" >Arts Guild</option>\n<option value="healing_stall.html" >Healing Guild</option>\n<option value="product_stall.html" >Products Guild</option>\n<option value="services_stall.html" >Services Guild</option>\n<option value="skills_stall.html" >Skills Guild</option>\n<option value="sound_stall.html" selected>Sound Guild</option>
+            </select>
+            <span class="material-symbols-outlined absolute right-1 top-1/2 -translate-y-1/2 text-[10px] pointer-events-none text-[#FFAE42]">expand_more</span>
+        </div>
+    
         </div>
         <div class="flex justify-end gap-2 lg:gap-6 items-center">
              <div class="text-right hidden sm:block">
@@ -183,7 +191,7 @@
                 "Welcome, Traveler. Can you feel the frequency? These beats are forged in the heart of the Kingdom."
             </div>
             <img src="../Assets/images/dj_qter_merchant.png" class="merchant-img" alt="DJ Qter">
-            <div class="absolute bottom-10 left-1/2 -translate-x-1/2 text-center w-full">
+            <div class="absolute bottom-20 left-1/2 -translate-x-1/2 text-center w-full">
                 <b class="text-3xl font-cinzel text-[#FFAE42] glow-orange block mb-1">DJ QTER</b>
                 <p class="text-[10px] uppercase tracking-[0.3em] opacity-50 mb-2">Master Sound Engineer</p>
                 <a href="https://outbreaktunesrecords.bandcamp.com/" target="_blank" class="text-[9px] text-[#FFAE42] hover:text-white transition-all uppercase tracking-widest border border-[#FFAE42]/30 px-3 py-1 rounded-full bg-black/40">
