@@ -3,7 +3,6 @@ const fs = require('fs');
 const path = require('path');
 
 const PARENT_FOLDER_ID = '1dvi9DrFVVqfT8wBA13e4u8D1V-0TtdUo';
-const CREDENTIALS_PATH = path.join(__dirname, 'credentials.json');
 const OUTPUT_FILE = path.join(__dirname, 'js', 'data', 'akademie_data.js');
 
 async function syncDrive() {
@@ -18,7 +17,6 @@ async function syncDrive() {
       "client_id": "104605514427070743760"
     };
 
-    // Authenticate
     const auth = new google.auth.GoogleAuth({
         credentials,
         scopes: ['https://www.googleapis.com/auth/drive.readonly'],
@@ -27,7 +25,6 @@ async function syncDrive() {
     const drive = google.drive({ version: 'v3', auth });
     
     try {
-        // 1. Get subfolders in the parent folder
         const foldersRes = await drive.files.list({
             q: `'${PARENT_FOLDER_ID}' in parents and mimeType='application/vnd.google-apps.folder' and trashed=false`,
             fields: 'files(id, name)',
@@ -35,61 +32,73 @@ async function syncDrive() {
         });
         
         const folders = foldersRes.data.files;
-        if (!folders || folders.length === 0) {
-            console.log("No subfolders found in the target directory.");
-            return;
-        }
+        if (!folders || folders.length === 0) return;
         
-        console.log(`Found ${folders.length} subfolders.`);
         const akademieData = [];
         
-        // 2. Iterate each folder and get files
         for (const folder of folders) {
-            console.log(`Scanning folder: ${folder.name}...`);
+            console.log(`Scanning Artist: ${folder.name}...`);
+            let chapters = [];
             
-            // Only images and videos
-            const filesRes = await drive.files.list({
+            // 1. Check for files directly in the artist folder (treat as Chapter 1)
+            const directFilesRes = await drive.files.list({
                 q: `'${folder.id}' in parents and (mimeType contains 'image/' or mimeType contains 'video/') and trashed=false`,
                 fields: 'files(id, name, mimeType)',
-                orderBy: 'name' // or createdTime
+                orderBy: 'name'
             });
+            const directFiles = directFilesRes.data.files || [];
+            if (directFiles.length > 0) {
+                chapters.push({
+                    title: "Main Portfolio",
+                    files: directFiles.map(f => ({
+                        id: f.id,
+                        type: f.mimeType.startsWith('video/') ? 'video' : 'image'
+                    }))
+                });
+            }
             
-            const files = filesRes.data.files || [];
-            
-            const mappedFiles = files.map(f => {
-                let type = 'unknown';
-                if (f.mimeType.startsWith('image/')) type = 'image';
-                if (f.mimeType.startsWith('video/')) type = 'video';
-                return {
-                    id: f.id,
-                    type: type
-                };
+            // 2. Check for subfolders (each subfolder is a chapter)
+            const subfoldersRes = await drive.files.list({
+                q: `'${folder.id}' in parents and mimeType='application/vnd.google-apps.folder' and trashed=false`,
+                fields: 'files(id, name)',
+                orderBy: 'name'
             });
+            const subfolders = subfoldersRes.data.files || [];
             
-            // Create a chapter inside the folder object
-            // The structure is: { name: "Folder Name", id: "folder_id", chapters: [{ title: "Main", files: [] }] }
-            // Wait, looking at the previous structure, it was:
-            // { name: "...", id: "...", files: [ ... ] } OR { name: "...", id: "...", chapters: [ { title: "...", files: [...] } ] }
-            // Since it's a folder, we can map it as an area.
+            for (const subfolder of subfolders) {
+                const subFilesRes = await drive.files.list({
+                    q: `'${subfolder.id}' in parents and (mimeType contains 'image/' or mimeType contains 'video/') and trashed=false`,
+                    fields: 'files(id, name, mimeType)',
+                    orderBy: 'name'
+                });
+                const subFiles = subFilesRes.data.files || [];
+                if (subFiles.length > 0) {
+                    chapters.push({
+                        title: subfolder.name,
+                        files: subFiles.map(f => ({
+                            id: f.id,
+                            type: f.mimeType.startsWith('video/') ? 'video' : 'image'
+                        }))
+                    });
+                }
+            }
             
-            akademieData.push({
-                name: folder.name,
-                id: folder.id,
-                chapters: [
-                    {
-                        title: folder.name + " - Volume 1",
-                        files: mappedFiles
-                    }
-                ]
-            });
-            console.log(` -> Found ${mappedFiles.length} files.`);
+            if (chapters.length > 0) {
+                akademieData.push({
+                    name: folder.name,
+                    id: folder.id,
+                    chapters: chapters
+                });
+                console.log(` -> Found ${chapters.length} chapters for ${folder.name}`);
+            } else {
+                console.log(` -> Folder ${folder.name} is completely empty! Skipping.`);
+            }
         }
         
-        // 3. Write to akademie_data.js
         const jsContent = `const AkademieData = ${JSON.stringify(akademieData, null, 4)};\n`;
         fs.writeFileSync(OUTPUT_FILE, jsContent);
         
-        console.log("✅ Successfully generated akademie_data.js");
+        console.log("Successfully generated akademie_data.js");
         
     } catch (err) {
         console.error("Error during sync:", err.message);
