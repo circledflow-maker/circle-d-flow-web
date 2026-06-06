@@ -312,29 +312,7 @@
                 
                 activeMissions = data.filter(area => area.lat && area.lng);
                 
-                // --- INJECT AKADEMIE MANGAS AS FLOW AREAS ---
-                if (typeof AkademieData !== 'undefined') {
-                    const baseLat = 38.705;
-                    const baseLng = -9.145;
-                    AkademieData.forEach((artist, index) => {
-                        // Deterministic spread in a spiral
-                        const angle = index * 0.8;
-                        const radius = 0.01 + (index * 0.002);
-                        const offsetLat = Math.sin(angle) * radius;
-                        const offsetLng = Math.cos(angle) * radius;
-                        
-                        activeMissions.push({
-                            id: 'akademie_' + index,
-                            name: 'Akademie: ' + (artist.title || artist.name),
-                            lat: baseLat + offsetLat,
-                            lng: baseLng + offsetLng,
-                            isAkademie: true,
-                            scan_count: artist.files ? artist.files.length : (artist.chapters ? artist.chapters.length : 0),
-                            address: 'Akademie Archives (Google Drive)',
-                            link: 'akademie.html' // Clicking directs to akademie
-                        });
-                    });
-                }
+                // --- AKADEMIE MANGAS INJECTION REMOVED ---
                 
                 // Render initial state
                 activeMissions.forEach(area => {
