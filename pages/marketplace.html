@@ -170,7 +170,7 @@
 
         <!-- CENTER: THE HUB -->
         <div class="center-hub flex flex-col items-center justify-center h-full">
-            <img src="../logo.png" alt="Circle D Flow" style="width: 120px; filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.5));" />
+            <img src="../Assets/images/logo.png" alt="Circle D Flow" style="width: 120px; filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.5));" />
         </div>
 
         <!-- MIDDLE RIGHT: HEALING -->
@@ -417,7 +417,7 @@
     
     <!-- INDIVIDUAL AGENTS -->
     <script src="../js/agents/market_agent.js?v=5.0"></script>
-    <script src="../js/agents/marketplace_3d.js?v=5.0"></script>
+
     <script src="../js/agents/sound_engineer.js?v=5.0"></script>
     <script src="../js/agents/tutorial_core.js?v=5.0" defer></script>
     <script src="../js/agents/quest_controller.js?v=5.0" defer></script>
@@ -648,28 +648,6 @@
                 document.getElementById('hud-text').innerText = "Mission: Click a Guild Filter button above.";
             }
         });
-
-        // EMERGENCY AUTO-INIT TIMER
-        (function() {
-            console.log("[Emergency] Setting up fail-safe for 3D Village...");
-            let attempts = 0;
-            const forceInit = setInterval(() => {
-                attempts++;
-                if (window.Marketplace3D && window.THREE) {
-                    if (!window.Marketplace3D.isInitialized) {
-                        console.log(`[Emergency] Attempt ${attempts}: Forcing 3D Village Start...`);
-                        window.Marketplace3D.init();
-                    } else {
-                        console.log("[Emergency] 3D Village is active. Fail-safe terminated.");
-                        clearInterval(forceInit);
-                    }
-                }
-                if (attempts > 30) {
-                    console.error("[Emergency] Failed to initialize 3D Village after 30 seconds.");
-                    clearInterval(forceInit); 
-                }
-            }, 1000);
-        })();
     </script>
     <style>
         html, body {

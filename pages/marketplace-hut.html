@@ -132,7 +132,7 @@
         <div class="vendor-counter">
             
             <div class="avatar-container">
-                <img id="vendor-img" src="../logo.png" class="vendor-avatar" alt="Vendor" />
+                <img id="vendor-img" src="../Assets/images/logo.png" class="vendor-avatar" alt="Vendor" />
                 <div class="flex-1">
                     <h2 id="vendor-name" class="text-xl font-cinzel text-[#FFAE42] mb-1">Guild Master</h2>
                     <p id="vendor-greeting" class="text-sm text-white/80 italic font-serif leading-relaxed">"Welcome, traveler. Step up to the counter and behold our finest wares."</p>
@@ -218,7 +218,7 @@
 
                     const itemHtml = `
                         <div class="item-card relative ${!isAvailable ? 'opacity-60 grayscale' : ''}">
-                            <img src="${item.media_url || '../logo.png'}" class="item-image" alt="${item.title}" onerror="this.src='../logo.png'">
+                            <img src="${item.media_url || '../Assets/images/logo.png'}" class="item-image" alt="${item.title}" onerror="this.src='../Assets/images/logo.png'">
                             <div class="p-4 flex flex-col flex-1">
                                 <div class="flex justify-between items-start mb-2">
                                     <h4 class="font-cinzel text-[#FFAE42] text-sm font-bold line-clamp-1">${item.title}</h4>

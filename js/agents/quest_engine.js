@@ -557,7 +557,7 @@ class QuestEngine {
         // 1. Pending Requests (I am receiver)
         const { data: requests } = await this.supabase
             .from('brotherhood_links')
-            .select('*, profiles!requester_id(username)')
+            .select('*')
             .eq('receiver_id', this.user.id)
             .eq('status', 'pending');
             
@@ -582,15 +582,9 @@ class QuestEngine {
             }
         }
 
-        // 2. Active Friends (Network)
         const { data: friends } = await this.supabase
             .from('brotherhood_links')
-            .select(`
-                id, 
-                requester_id, receiver_id,
-                p1:profiles!requester_id(username, id),
-                p2:profiles!receiver_id(username, id)
-            `)
+            .select('*')
             .or(`requester_id.eq.${this.user.id},receiver_id.eq.${this.user.id}`)
             .eq('status', 'active');
             
