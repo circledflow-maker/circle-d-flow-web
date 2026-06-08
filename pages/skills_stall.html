@@ -84,10 +84,7 @@
             border: 1px solid #fcd34d;
             padding: 12px 20px;
             border-radius: 10px;
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
+            margin: 10px auto;
             width: 90%;
             max-width: 400px;
             z-index: 30;
@@ -192,13 +189,23 @@
     <div class="shop-container">
         <!-- MERCHANT -->
         <div class="merchant-side">
+            
+            <img src="../Assets/images/skills_mentor.png" class="merchant-img" alt="Skills Mentor">
+            <div class="relative mt-4 mx-auto text-center">
+                <h3 class="text-2xl font-cinzel text-[#00FFD4] glow-orange">THE MENTOR</h3>
+                <p class="text-[10px] uppercase tracking-[0.3em] opacity-50">Grandmaster of the Mesh</p>
+            </div>
             <div class="dialogue-bubble">
                 "Knowledge is the only currency that increases when spent. What skill do you seek to master today?"
             </div>
-            <img src="../Assets/images/skills_mentor.png" class="merchant-img" alt="Skills Mentor">
-            <div class="absolute bottom-20 left-1/2 -translate-x-1/2 text-center">
-                <h3 class="text-2xl font-cinzel text-[#00FFD4] glow-orange">THE MENTOR</h3>
-                <p class="text-[10px] uppercase tracking-[0.3em] opacity-50">Grandmaster of the Mesh</p>
+            <!-- Merchant Switcher Swiper -->
+            <div class="w-full max-w-md mx-auto mt-4 mb-2">
+                <p class="text-[10px] text-white/40 uppercase tracking-widest text-center mb-2">Other Guild Merchants</p>
+                <div class="swiper merchantSwitcherSwiper w-full h-20">
+                    <div class="swiper-wrapper">
+                        <!-- Items injected by JS -->
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -230,7 +237,7 @@
             const { data, error } = await window.supabaseClient
                 .from('market_items')
                 .select('*')
-                .eq('category', 'Skills')
+                .eq('guild_category', 'Skills')
                 .eq('is_active', true);
 
             if (error || !data || data.length === 0) {
@@ -251,10 +258,10 @@
                         <img src="${item.image_url || '../Assets/images/default_artifact.png'}" class="w-full h-full object-cover">
                     </div>
                     <div class="flex-1">
-                        <h4 class="text-lg font-bold text-white mb-1">${item.name}</h4>
+                        <h4 class="text-lg font-bold text-white mb-1">${item.title || item.name || 'Unknown Artifact'}</h4>
                         <p class="text-xs text-white/40 mb-3 line-clamp-1">${item.description}</p>
                         <div class="flex justify-between items-center">
-                            <div class="price-tag">${item.price_fc} FC</div>
+                            <div class="price-tag">${item.price_credits || item.price_fc || 0} FC</div>
                             <button class="buy-btn text-[10px]">Enroll</button>
                         </div>
                     </div>
@@ -265,5 +272,48 @@
 
         window.onload = loadSkills;
     </script>
+    <script>
+        const merchants = [
+            { id: 'sound', name: 'DJ QTER', file: 'sound_stall.html', img: '../Assets/images/dj_qter_merchant.png' },
+            { id: 'product', name: 'SARAH', file: 'product_stall.html', img: '../Assets/images/sarah_bazaar_merchant.png' },
+            { id: 'arts', name: 'SECRET GARDEN', file: 'arts_stall.html', img: '../Assets/images/secret_garden_merchant.png' },
+            { id: 'healing', name: 'THE ORACLE', file: 'healing_stall.html', img: '../Assets/images/healing_oracle.png' },
+            { id: 'services', name: 'THE COORDINATOR', file: 'services_stall.html', img: '../Assets/images/services_coordinator.png' },
+            { id: 'skills', name: 'THE MENTOR', file: 'skills_stall.html', img: '../Assets/images/skills_mentor.png' }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const swiperWrapper = document.querySelector('.merchantSwitcherSwiper .swiper-wrapper');
+            if (swiperWrapper) {
+                merchants.forEach(m => {
+                    const slide = document.createElement('div');
+                    slide.className = 'swiper-slide flex justify-center items-center cursor-pointer opacity-50 hover:opacity-100 transition-opacity';
+                    slide.innerHTML = <img src=" + m.img + " class="h-16 w-16 object-cover rounded-full border-2 border-transparent hover:border-[#d4af37]" alt=" + m.name + " title=" + m.name + ">;
+                    slide.onclick = () => window.location.href = m.file;
+                    
+                    // Highlight current
+                    if (window.location.pathname.includes(m.file)) {
+                        slide.classList.remove('opacity-50');
+                        slide.querySelector('img').classList.add('border-[#d4af37]', 'shadow-[0_0_10px_#d4af37]');
+                    }
+                    
+                    swiperWrapper.appendChild(slide);
+                });
+
+                new Swiper('.merchantSwitcherSwiper', {
+                    slidesPerView: 4,
+                    spaceBetween: 10,
+                    freeMode: true,
+                    breakpoints: {
+                        320: { slidesPerView: 3 },
+                        480: { slidesPerView: 4 }
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>
+
+
+

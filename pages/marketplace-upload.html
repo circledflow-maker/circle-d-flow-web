@@ -370,13 +370,19 @@
                 }
 
                 // C. Insert Artifact
+                if (!currentUser) {
+                    alert("Du musst eingeloggt sein, um etwas anzubieten.");
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    return;
+                }
                 const newItem = {
-                    creator_id: currentUser ? currentUser.id : 'local-test-id',
+                    creator_id: currentUser.id,
                     title: formData.get('title'),
                     description: formData.get('description'),
                     guild_category: formData.get('category'),
                     price_credits: parseInt(formData.get('price_flow')),
-                    price_fiat: (parseInt(formData.get('price_flow')) / 100).toFixed(2),
+                    price_fiat: parseFloat((parseInt(formData.get('price_flow')) / 100).toFixed(2)),
                     image_url: imageUrl || document.getElementById('preview-img').src, // Use base64 if no URL
                     is_active: true
                 };

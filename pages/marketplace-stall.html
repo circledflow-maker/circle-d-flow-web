@@ -553,5 +553,48 @@
     <script src="../js/agents/visual_integrity.js" defer></script>
     <script src="../js/agents/sound_engineer.js" defer></script>
     <script src="../js/agents/flowee.js" defer></script>
+    <script>
+        const merchants = [
+            { id: 'sound', name: 'DJ QTER', file: 'sound_stall.html', img: '../Assets/images/dj_qter_merchant.png' },
+            { id: 'product', name: 'SARAH', file: 'product_stall.html', img: '../Assets/images/sarah_bazaar_merchant.png' },
+            { id: 'arts', name: 'SECRET GARDEN', file: 'arts_stall.html', img: '../Assets/images/secret_garden_merchant.png' },
+            { id: 'healing', name: 'THE ORACLE', file: 'healing_stall.html', img: '../Assets/images/healing_oracle.png' },
+            { id: 'services', name: 'THE COORDINATOR', file: 'services_stall.html', img: '../Assets/images/services_coordinator.png' },
+            { id: 'skills', name: 'THE MENTOR', file: 'skills_stall.html', img: '../Assets/images/skills_mentor.png' }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const swiperWrapper = document.querySelector('.merchantSwitcherSwiper .swiper-wrapper');
+            if (swiperWrapper) {
+                merchants.forEach(m => {
+                    const slide = document.createElement('div');
+                    slide.className = 'swiper-slide flex justify-center items-center cursor-pointer opacity-50 hover:opacity-100 transition-opacity';
+                    slide.innerHTML = <img src=" + m.img + " class="h-16 w-16 object-cover rounded-full border-2 border-transparent hover:border-[#d4af37]" alt=" + m.name + " title=" + m.name + ">;
+                    slide.onclick = () => window.location.href = m.file;
+                    
+                    // Highlight current
+                    if (window.location.pathname.includes(m.file)) {
+                        slide.classList.remove('opacity-50');
+                        slide.querySelector('img').classList.add('border-[#d4af37]', 'shadow-[0_0_10px_#d4af37]');
+                    }
+                    
+                    swiperWrapper.appendChild(slide);
+                });
+
+                new Swiper('.merchantSwitcherSwiper', {
+                    slidesPerView: 4,
+                    spaceBetween: 10,
+                    freeMode: true,
+                    breakpoints: {
+                        320: { slidesPerView: 3 },
+                        480: { slidesPerView: 4 }
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>
+
+
+

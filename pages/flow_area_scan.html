@@ -341,18 +341,30 @@
                 
                 // Extract uploaded media and insert into jamVideos so the main player shows them!
                 const userMediaUrls = data.filter(c => c.media_url).map(c => c.media_url);
-                if(userMediaUrls.length > 0) {
-                    // Combine area default videos with user uploaded media (newest first)
-                    const baseVideos = areaData && areaData.media_urls ? areaData.media_urls : [
+                
+                const isSpecialArea = areaData && areaData.name && (areaData.name.toLowerCase().includes('hempyroots') || areaData.name.toLowerCase().includes('mobbeat'));
+                
+                let baseVideos = [];
+                if (areaData && areaData.media_urls && areaData.media_urls.length > 0) {
+                    baseVideos = areaData.media_urls;
+                } else if (isSpecialArea) {
+                    baseVideos = [
                         '../Assets/images/circle-d-flow-reel.mp4',
                         '../Assets/Community_Vibe_Reel.mp4',
                         '../Assets/local_archives/Session_Graca_Street_Art.mp4'
                     ];
-                    jamVideos = [...userMediaUrls, ...baseVideos];
+                }
+                
+                jamVideos = [...userMediaUrls, ...baseVideos];
+                
+                if (jamVideos.length > 0) {
                     // If we haven't manually switched videos yet, show the newest upload
                     if(currentVideoIdx === 0) {
                         loadVideoMedia(jamVideos[0]);
                     }
+                } else {
+                    document.getElementById('jam-player-vid').classList.add('hidden');
+                    document.getElementById('vid-loader').style.display = 'none';
                 }
                 
                 list.innerHTML = data.map(c => {
