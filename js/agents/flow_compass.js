@@ -277,7 +277,7 @@ class FlowCompassAgent {
             'Vision': 'vision_oasis.html',
             'Sound': 'sound_dashboard.html',
             'Taste': 'under-construction.html',
-            'Connection': 'bantaba.html',
+            'Connection': 'modal',
             'Quest': 'quest_map.html',
             'Core': null // Core stays on dashboard
         };
@@ -357,3 +357,4 @@ class FlowCompassAgent {
 }
 
 new FlowCompassAgent();
+

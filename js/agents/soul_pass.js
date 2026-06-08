@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Agent: SoulPass (The Seelen-Pass / Soul Nexus)
  * Purpose: A 3D interactive, holographic ID artifact tracking Flow-Siegels (Chakras), Profile, and Settings/Social integration.
  * Functions as the Command Center when the center node of the orbital navigation is clicked.
@@ -184,7 +184,7 @@ class SoulPassAgent {
         header.className = 'sn-header';
         header.innerHTML = \`
             <div class="sn-title">SOUL NEXUS</div>
-            <div class="sn-close" onclick="SoulPass.close()">✕</div>
+            <div class="sn-close" onclick="SoulPass.close()">X</div>
         \`;
 
         // Body
@@ -330,19 +330,19 @@ class SoulPassAgent {
                 <div class="sy-group-title">External Bridges</div>
                 <div class="sy-social-grid">
                     <div class="sy-social-card" onclick="SoulPass.initiateSocialSync('whatsapp')">
-                        <div class="sy-social-icon text-green-500">💬</div>
+                        <div class="sy-social-icon text-green-500">ðŸ’¬</div>
                         <div class="sy-label text-center">WhatsApp</div>
                     </div>
                     <div class="sy-social-card" onclick="SoulPass.initiateSocialSync('instagram')">
-                        <div class="sy-social-icon text-pink-500">📸</div>
+                        <div class="sy-social-icon text-pink-500">ðŸ“¸</div>
                         <div class="sy-label text-center">Instagram</div>
                     </div>
                     <div class="sy-social-card" onclick="SoulPass.initiateSocialSync('youtube')">
-                        <div class="sy-social-icon text-red-500">▶️</div>
+                        <div class="sy-social-icon text-red-500">â–¶ï¸</div>
                         <div class="sy-label text-center">YouTube</div>
                     </div>
                     <div class="sy-social-card" onclick="SoulPass.initiateSocialSync('tiktok')">
-                        <div class="sy-social-icon text-white">🎵</div>
+                        <div class="sy-social-icon text-white">ðŸŽµ</div>
                         <div class="sy-label text-center">TikTok</div>
                     </div>
                 </div>
@@ -568,3 +568,4 @@ class SoulPassAgent {
 if (!window.SoulPass) {
     new SoulPassAgent();
 }
+
