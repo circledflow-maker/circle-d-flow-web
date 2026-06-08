@@ -289,7 +289,7 @@
                 merchants.forEach(m => {
                     const slide = document.createElement('div');
                     slide.className = 'swiper-slide flex justify-center items-center cursor-pointer opacity-50 hover:opacity-100 transition-opacity';
-                    slide.innerHTML = <img src=" + m.img + " class="h-16 w-16 object-cover rounded-full border-2 border-transparent hover:border-[#d4af37]" alt=" + m.name + " title=" + m.name + ">;
+                    slide.innerHTML = `<img src="${m.img}" class="h-16 w-16 object-cover rounded-full border-2 border-transparent hover:border-[#d4af37]" alt="${m.name}" title="${m.name}">`;
                     slide.onclick = () => window.location.href = m.file;
                     
                     // Highlight current
@@ -313,8 +313,11 @@
             }
         });
     </script>
+<script src="../js/order_modal.js"></script>
 </body>
 </html>
+
+
 
 
 

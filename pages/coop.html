@@ -249,6 +249,26 @@
 
     </main>
 
+            <!-- EVENT LEDGER / GAMIFICATION HYBRID -->
+        <div class="mt-12 nature-border rounded-3xl p-8 relative overflow-hidden">
+            <div class="flex justify-between items-start mb-6">
+                <div>
+                    <h2 class="text-2xl font-display text-white tracking-wide flex items-center gap-3">
+                        <span class="material-symbols-outlined text-[#d4af37] text-3xl">assignment</span> 
+                        The Event Ledger
+                    </h2>
+                    <p class="text-xs text-white/40 mt-1 max-w-xl">Command Center: Assign tasks to human collaborators and digital AI agents (Automated Reel Production, etc.).</p>
+                </div>
+                <button onclick="alert('Module loading...')" class="px-4 py-2 bg-black/40 border border-[#d4af37]/30 hover:bg-[#d4af37]/20 text-[#d4af37] rounded transition-colors text-xs font-mono uppercase tracking-widest flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm">add</span> Add Quest
+                </button>
+            </div>
+            
+            <div id="quest-board-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Quests rendered by GamificationEngine -->
+            </div>
+        </div>
+
     <!-- AGENTS -->
     <script src="../js/agents/imperial_hud.js"></script>
     <script src="../js/agents/pusher.js"></script>
@@ -313,5 +333,7 @@
             }
         });
     </script>
+    <script src="../js/gamification_engine.js"></script>
 </body>
 </html>
+

@@ -400,7 +400,12 @@ class OrbitEngine {
             overlayMsg = 'Entering The Archive...';
             overlayColor = '#00f0ff';
         } else if(id === 'harmonizer') {
-            targetUrl = 'pages/bantaba.html';
+            const modal = document.getElementById('connection-modal');
+            if (modal) {
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                return;
+            }
+            targetUrl = 'pages/coop.html';
             overlayMsg = 'Entering the Bantaba...';
             overlayColor = '#00ff88';
         } else if(id === 'kinetic') {
@@ -902,3 +907,4 @@ class OrbitEngine {
 
 // Global Mount
 window.OrbitEngine = new OrbitEngine();
+
