@@ -290,9 +290,18 @@ class FlowCompassAgent {
             return;
         }
 
-        const isSubDir = window.location.pathname.includes('/pages/');
-        const prefix = isSubDir ? '' : 'pages/';
-        const targetUrl = prefix + urlMap[planetId];
+          if (planetId === 'Connection') {
+              const modal = document.getElementById('connection-modal');
+              if (modal) {
+                  modal.classList.remove('opacity-0', 'pointer-events-none');
+                  this.resetFocus();
+              }
+              return;
+          }
+
+          const isSubDir = window.location.pathname.includes('/pages/');
+          const prefix = isSubDir ? '' : 'pages/';
+          const targetUrl = prefix + urlMap[planetId];
 
         if (planetId === 'Vision') {
             this.triggerVisionOasis(targetUrl);
