@@ -269,7 +269,8 @@
                         </div>
                     </div>
                 `;
-                grid.appendChild(div);
+                  div.querySelector('.buy-btn').onclick = () => openOrderModal(encodeURIComponent(JSON.stringify(item)));
+                  grid.appendChild(div);
             });
         }
 
@@ -318,6 +319,7 @@
 <script src="../js/order_modal.js"></script>
 </body>
 </html>
+
 
 
 
