@@ -238,7 +238,93 @@
     <canvas id="bg-canvas" style="position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1; pointer-events:none; opacity:0.35; mix-blend-mode: screen;"></canvas>
 
     <main class="relative z-10 w-full flex flex-col items-center">        <!-- WELCOME / LOCKDOWN OVERLAY REMOVED FOR DIRECT ACCESS -->
-        <div id="system-offline-overlay" style="display:none;"></div>div>
+        <div id="system-offline-overlay" style="display:none;"></div>
+
+        <!-- USER PROFILE & UPCOMING QUESTS HUD -->
+        <div id="kylar-hud" class="absolute top-4 left-4 z-50 bg-black/80 border border-white/10 rounded-xl p-4 w-72 backdrop-blur-md hidden">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center border border-gold">
+                    <span class="material-symbols-outlined text-gold">person</span>
+                </div>
+                <div>
+                    <h3 id="hud-username" class="text-xs font-bold text-white uppercase tracking-widest">Loading...</h3>
+                    <p class="text-[10px] text-white/50 font-mono">Resonance Level: <span id="hud-exp" class="text-gold">...</span></p>
+                </div>
+            </div>
+            
+            <div class="h-px w-full bg-white/10 mb-4"></div>
+            
+            <h4 class="text-[10px] uppercase text-white/60 tracking-widest mb-2 font-mono">My Hosted Events</h4>
+            <div id="hud-events-container" class="flex flex-col gap-2 mb-4">
+                <div class="text-[10px] text-white/40 italic">Scanning matrix...</div>
+            </div>
+
+            <button onclick="window.location.href='artifact_vault.html'" class="w-full py-2 bg-white/5 hover:bg-white/10 border border-white/20 text-white text-[10px] uppercase tracking-widest font-bold rounded transition-colors flex justify-center items-center gap-2">
+                <span class="material-symbols-outlined text-[14px]">auto_stories</span>
+                The Bookshelf
+            </button>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', async () => {
+                const hud = document.getElementById('kylar-hud');
+                const usernameEl = document.getElementById('hud-username');
+                const expEl = document.getElementById('hud-exp');
+                const eventsContainer = document.getElementById('hud-events-container');
+
+                // Wait for Supabase to be ready
+                setTimeout(async () => {
+                    if (!window.supabaseClient) return;
+                    
+                    const { data: { session } } = await window.supabaseClient.auth.getSession();
+                    if (!session) return; // User not logged in, but we might be in mock mode
+                    
+                    hud.classList.remove('hidden');
+
+                    // Fetch Profile
+                    const { data: profile } = await window.supabaseClient
+                        .from('profiles')
+                        .select('*')
+                        .eq('id', session.user.id)
+                        .single();
+                    
+                    if (profile) {
+                        usernameEl.innerText = profile.username || 'Kylar'; // Default fallback based on prompt
+                        expEl.innerText = profile.exp || '0';
+                    } else {
+                        usernameEl.innerText = 'Kylar (Offline Mode)';
+                    }
+
+                    // Fetch Quests (Events) where user is host
+                    const { data: quests } = await window.supabaseClient
+                        .from('quests')
+                        .select('id, title, flyer_url')
+                        .eq('creator_id', session.user.id);
+                        
+                    if (quests && quests.length > 0) {
+                        eventsContainer.innerHTML = '';
+                        quests.forEach(quest => {
+                            const eventCard = document.createElement('div');
+                            eventCard.className = "bg-white/5 border border-white/10 p-2 rounded cursor-pointer hover:bg-white/10 transition-colors flex justify-between items-center";
+                            eventCard.onclick = () => window.location.href = `event_sanctuary.html?id=${quest.id}`;
+                            eventCard.innerHTML = `
+                                <span class="text-[10px] text-white font-bold">${quest.title}</span>
+                                <span class="material-symbols-outlined text-[12px] text-white/50">arrow_forward</span>
+                            `;
+                            eventsContainer.appendChild(eventCard);
+                        });
+                    } else {
+                        // Mock the C4C event if DB is empty for demonstration
+                        eventsContainer.innerHTML = `
+                            <div class="bg-white/5 border border-white/10 p-2 rounded cursor-pointer hover:bg-white/10 transition-colors flex justify-between items-center" onclick="window.location.href='event_sanctuary.html?mock=c4c'">
+                                <span class="text-[10px] text-gold font-bold">C4C Event (Mock)</span>
+                                <span class="material-symbols-outlined text-[12px] text-white/50">arrow_forward</span>
+                            </div>
+                        `;
+                    }
+                }, 2500);
+            });
+        </script>
 
         <!-- SECTION 1: THE FLOW COMPASS (Mandala Navigation) -->
         <section

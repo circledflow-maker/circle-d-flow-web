@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>The Bookshelf | Artifact Vault</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;600&family=Space+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/agents/supabase_client.js"></script>
+
+    <style>
+        body {
+            background-color: #050505;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        .gold-accent { color: #d4af37; }
+        .gold-border { border-color: #d4af37; }
+
+        /* 3D Swipe Carousel */
+        .vault-carousel {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            padding: 2rem 1rem;
+            gap: 1.5rem;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none; /* Firefox */
+        }
+        
+        .vault-carousel::-webkit-scrollbar {
+            display: none; /* Safari/Chrome */
+        }
+
+        .artifact-card {
+            min-width: 80vw;
+            height: 60vh;
+            scroll-snap-align: center;
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.4s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            background: #111;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .artifact-card.active {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(212,175,55,0.3);
+            border-color: rgba(212,175,55,0.5);
+            z-index: 10;
+        }
+
+        .artifact-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+
+        .artifact-card.active .artifact-img {
+            opacity: 1;
+        }
+
+        .artifact-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.5rem;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            transform: translateY(10px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .artifact-card.active .artifact-overlay {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="font-mono">
+
+    <!-- Top Navigation -->
+    <header class="fixed top-0 w-full z-50 p-4 flex justify-between items-center bg-black/80 backdrop-blur-md border-b border-white/5">
+        <button onclick="window.location.href='dashboard.html'" class="w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition">
+            <span class="material-symbols-outlined text-white">arrow_back</span>
+        </button>
+        <h1 class="text-sm font-cinzel tracking-widest uppercase text-white glow-gold">The Bookshelf</h1>
+        <div class="w-10 h-10"></div> <!-- Balancer -->
+    </header>
+
+    <main class="pt-24 pb-12 min-h-screen flex flex-col">
+        <div class="px-6 mb-4">
+            <p class="text-xs text-white/50 uppercase tracking-widest mb-1">Your Artifact Vault</p>
+            <h2 class="text-xl font-cinzel text-white">Stored Echoes</h2>
+        </div>
+
+        <div id="loading-state" class="flex-1 flex flex-col justify-center items-center">
+            <span class="material-symbols-outlined text-4xl gold-accent animate-spin mb-4">sync</span>
+            <p class="text-xs text-white/50">Scanning vault dimensions...</p>
+        </div>
+
+        <!-- Carousel Container -->
+        <div id="vault-carousel" class="vault-carousel hidden">
+            <!-- Artifacts injected here by JS -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="empty-state" class="hidden flex-1 flex flex-col justify-center items-center px-6 text-center">
+            <span class="material-symbols-outlined text-6xl text-white/10 mb-4">auto_stories</span>
+            <h3 class="text-lg font-cinzel text-white/50 mb-2">Vault is Empty</h3>
+            <p class="text-xs text-white/30 max-w-xs mb-6">No artifacts have been forged or uploaded to your collection yet.</p>
+            <button onclick="window.location.href='dashboard.html'" class="px-6 py-3 border border-white/20 rounded text-xs uppercase tracking-widest hover:bg-white/5 transition">Return to Dashboard</button>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const loading = document.getElementById('loading-state');
+            const carousel = document.getElementById('vault-carousel');
+            const emptyState = document.getElementById('empty-state');
+
+            // Wait briefly to let supabase initialize
+            setTimeout(async () => {
+                if (!window.supabaseClient) {
+                    loading.innerHTML = '<p class="text-red-500">System Offline. Cannot fetch artifacts.</p>';
+                    return;
+                }
+
+                const { data: { session } } = await window.supabaseClient.auth.getSession();
+                
+                if (!session) {
+                    window.location.href = '../index.html';
+                    return;
+                }
+
+                const { data: artifacts, error } = await window.supabaseClient
+                    .from('user_artifacts')
+                    .select('*')
+                    .eq('user_id', session.user.id)
+                    .order('created_at', { ascending: false });
+
+                loading.classList.add('hidden');
+
+                if (error || !artifacts || artifacts.length === 0) {
+                    emptyState.classList.remove('hidden');
+                    emptyState.classList.add('flex');
+                } else {
+                    carousel.classList.remove('hidden');
+                    
+                    artifacts.forEach((art, idx) => {
+                        const date = new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).format(new Date(art.created_at));
+                        const typeLabel = art.generation_type === 'ai_generated' ? `Forged: ${art.prompt_style || 'Surrealist'}` : 'Custom Upload';
+                        const icon = art.generation_type === 'ai_generated' ? 'auto_awesome' : 'upload';
+
+                        const card = document.createElement('div');
+                        card.className = `artifact-card ${idx === 0 ? 'active' : ''}`;
+                        card.innerHTML = `
+                            <img src="${art.image_url}" class="artifact-img" alt="Artifact">
+                            <div class="artifact-overlay">
+                                <div class="flex justify-between items-end">
+                                    <div>
+                                        <p class="text-[10px] text-white/70 font-mono mb-1 flex items-center gap-1">
+                                            <span class="material-symbols-outlined text-[12px]">${icon}</span> ${typeLabel}
+                                        </p>
+                                        <p class="text-xs gold-accent font-bold">${date}</p>
+                                    </div>
+                                    <button onclick="window.open('${art.image_url}', '_blank')" class="w-10 h-10 rounded-full bg-white text-black flex items-center justify-center hover:scale-110 transition-transform">
+                                        <span class="material-symbols-outlined text-sm">download</span>
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                        carousel.appendChild(card);
+                    });
+
+                    // Scroll Spy to set active card
+                    carousel.addEventListener('scroll', () => {
+                        const cards = document.querySelectorAll('.artifact-card');
+                        const scrollLeft = carousel.scrollLeft;
+                        const cardWidth = cards[0].offsetWidth + 24; // width + gap
+                        const activeIndex = Math.round(scrollLeft / cardWidth);
+                        
+                        cards.forEach((c, i) => {
+                            if(i === activeIndex) c.classList.add('active');
+                            else c.classList.remove('active');
+                        });
+                    });
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

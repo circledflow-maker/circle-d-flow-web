@@ -141,12 +141,13 @@
                 <!-- Image would go here -->
             </div>
             
-            <div class="w-full max-w-sm space-y-4">
-                <button onclick="simulateUpload()" class="w-full py-4 bg-white/5 border gold-border text-white rounded-lg hover:bg-white/10 transition flex items-center justify-center gap-2">
+            <div class="w-full max-w-sm space-y-4 relative">
+                <input type="file" id="artifact-upload" accept="image/*" class="hidden" onchange="handleFileUpload(event)">
+                <button onclick="document.getElementById('artifact-upload').click()" class="w-full py-4 bg-white/5 border gold-border text-white rounded-lg hover:bg-white/10 transition flex items-center justify-center gap-2">
                     <span class="material-symbols-outlined gold-accent">upload</span>
                     Upload Custom Artifact <span class="text-xs gold-accent">(+50 EXP)</span>
                 </button>
-                <button onclick="simulateForge()" class="w-full py-4 bg-black border border-white/20 text-white/70 rounded-lg hover:bg-white/5 transition flex items-center justify-center gap-2">
+                <button onclick="openForgeModal()" class="w-full py-4 bg-black border border-white/20 text-white/70 rounded-lg hover:bg-white/5 transition flex items-center justify-center gap-2">
                     <span class="material-symbols-outlined">auto_awesome</span>
                     Auto-Generate via Forge <span class="text-xs text-white/40">(+20 EXP)</span>
                 </button>
@@ -277,7 +278,65 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/api_config.js"></script>
     <script src="../js/agents/supabase_client.js"></script>
+        <!-- Forge Modal -->
+        <div id="forge-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[100] hidden flex items-center justify-center">
+            <div class="bg-[#0a0a0f] border border-[#00f0ff]/30 p-6 rounded-2xl w-[90%] max-w-sm">
+                <h3 class="text-lg font-cinzel text-white mb-4 tracking-widest uppercase">The Forge</h3>
+                <p class="text-xs text-white/60 font-mono mb-4">Select an artistic lens for your event artifact:</p>
+                
+                <div class="flex flex-col gap-3 mb-6">
+                    <button onclick="selectForgeStyle('Surrealist', this)" class="forge-style-btn py-3 px-4 bg-white/5 border border-white/10 rounded text-sm text-left hover:border-[#00f0ff] transition-colors focus:border-[#00f0ff] focus:bg-[#00f0ff]/10">Surrealist Dream</button>
+                    <button onclick="selectForgeStyle('Hip-Hop', this)" class="forge-style-btn py-3 px-4 bg-white/5 border border-white/10 rounded text-sm text-left hover:border-[#00f0ff] transition-colors focus:border-[#00f0ff] focus:bg-[#00f0ff]/10">Urban Hip-Hop</button>
+                    <button onclick="selectForgeStyle('Manga/Anime', this)" class="forge-style-btn py-3 px-4 bg-white/5 border border-white/10 rounded text-sm text-left hover:border-[#00f0ff] transition-colors focus:border-[#00f0ff] focus:bg-[#00f0ff]/10">Manga / Anime</button>
+                </div>
+
+                <div class="flex gap-3">
+                    <button onclick="executeForge()" class="flex-1 bg-[#00f0ff]/20 border border-[#00f0ff]/50 text-[#00f0ff] py-2 rounded font-bold uppercase tracking-widest text-xs hover:bg-[#00f0ff]/40 transition">Generate</button>
+                    <button onclick="closeForgeModal()" class="px-4 py-2 bg-white/5 text-white/60 rounded text-xs hover:text-white transition">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/agents/supabase_client.js?v=4.1"></script>
+    
     <script>
+        let currentEventId = null;
+        let selectedStyle = 'Surrealist';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Check URL for event ID
+            const urlParams = new URLSearchParams(window.location.search);
+            currentEventId = urlParams.get('id');
+            const isMock = urlParams.get('mock');
+
+            if (currentEventId && window.supabaseClient) {
+                // Fetch dynamic event data
+                const { data: event } = await window.supabaseClient
+                    .from('quests')
+                    .select('*')
+                    .eq('id', currentEventId)
+                    .single();
+                
+                if (event) {
+                    document.querySelector('h1').innerText = event.title.toUpperCase();
+                    if (event.flyer_url) {
+                        setCanvasImage(event.flyer_url);
+                    }
+                }
+            } else if (isMock === 'c4c') {
+                document.querySelector('h1').innerText = "C4C EVENT";
+            }
+        });
+
+        function setCanvasImage(url) {
+            const canvasDiv = document.querySelector('.aspect-\\[4\\/5\\]');
+            canvasDiv.innerHTML = `
+                <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('${url}');"></div>
+                <div class="absolute inset-0 border-2 border-gold-accent opacity-50"></div>
+            `;
+        }
+
         const container = document.getElementById('main-swipe');
         const pills = document.querySelectorAll('.nav-pill');
         
@@ -304,37 +363,135 @@
             });
         }
         
-        function simulateUpload() {
+        async function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if(!file) return;
+
             const canvasDiv = document.querySelector('.aspect-\\[4\\/5\\]');
             canvasDiv.innerHTML = `
                 <div class="absolute inset-0 bg-black/80 flex items-center justify-center z-10 flex-col">
                     <span class="material-symbols-outlined text-4xl text-white animate-spin mb-2">sync</span>
-                    <p class="text-sm gold-accent animate-pulse">Uploading Artifact...</p>
+                    <p class="text-sm gold-accent animate-pulse">Uploading Artifact to Supabase...</p>
                 </div>
             `;
-            setTimeout(() => {
+
+            try {
+                if(!window.supabaseClient) throw new Error("Supabase client not loaded");
+                
+                const { data: { session } } = await window.supabaseClient.auth.getSession();
+                if(!session) throw new Error("Not logged in");
+
+                const fileExt = file.name.split('.').pop();
+                const fileName = `${session.user.id}-${Date.now()}.${fileExt}`;
+                
+                // Upload to Storage
+                const { data: uploadData, error: uploadError } = await window.supabaseClient
+                    .storage
+                    .from('artifacts')
+                    .upload(fileName, file);
+                    
+                if (uploadError) throw uploadError;
+
+                const { data: publicUrlData } = window.supabaseClient
+                    .storage
+                    .from('artifacts')
+                    .getPublicUrl(fileName);
+
+                const publicUrl = publicUrlData.publicUrl;
+
+                // Save to user_artifacts
+                await window.supabaseClient.from('user_artifacts').insert({
+                    user_id: session.user.id,
+                    event_id: currentEventId,
+                    image_url: publicUrl,
+                    generation_type: 'upload'
+                });
+
+                // Update Quest if we have an event ID
+                if(currentEventId) {
+                    await window.supabaseClient.from('quests').update({ flyer_url: publicUrl }).eq('id', currentEventId);
+                }
+
+                setCanvasImage(publicUrl);
+                
+                // EXP Grant UI overlay
+                const expEl = document.createElement('div');
+                expEl.className = "absolute bottom-4 right-4 bg-black/60 px-2 py-1 rounded text-xs gold-accent font-bold border border-gold-accent backdrop-blur-sm z-20";
+                expEl.innerText = "+50 EXP GRANTED";
+                canvasDiv.appendChild(expEl);
+                
+            } catch(e) {
+                console.error("Upload error:", e);
                 canvasDiv.innerHTML = `
-                    <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=600&auto=format&fit=crop');"></div>
-                    <div class="absolute bottom-4 right-4 bg-black/60 px-2 py-1 rounded text-xs gold-accent font-bold border border-gold-accent backdrop-blur-sm">+50 EXP GRANTED</div>
+                    <div class="absolute inset-0 bg-red-900/50 flex flex-col items-center justify-center z-10 p-4 text-center">
+                        <span class="material-symbols-outlined text-4xl text-white mb-2">error</span>
+                        <p class="text-sm text-white">Upload Failed: ${e.message || 'Check storage bucket permissions'}</p>
+                        <button onclick="location.reload()" class="mt-4 px-4 py-2 border border-white/20 rounded">Reset</button>
+                    </div>
                 `;
-                // Check off a fictional quest in ledger?
-            }, 2000);
+            }
         }
 
-        function simulateForge() {
+        function openForgeModal() {
+            document.getElementById('forge-modal').classList.remove('hidden');
+        }
+
+        function closeForgeModal() {
+            document.getElementById('forge-modal').classList.add('hidden');
+        }
+
+        function selectForgeStyle(style, btnEl) {
+            selectedStyle = style;
+            document.querySelectorAll('.forge-style-btn').forEach(b => {
+                b.classList.remove('border-[#00f0ff]', 'bg-[#00f0ff]/10');
+            });
+            btnEl.classList.add('border-[#00f0ff]', 'bg-[#00f0ff]/10');
+        }
+
+        async function executeForge() {
+            closeForgeModal();
             const canvasDiv = document.querySelector('.aspect-\\[4\\/5\\]');
             canvasDiv.innerHTML = `
                 <div class="absolute inset-0 bg-black/80 flex items-center justify-center z-10 flex-col">
                     <span class="material-symbols-outlined text-4xl text-[#00f0ff] animate-pulse mb-2">auto_awesome</span>
-                    <p class="text-sm text-[#00f0ff] animate-pulse">Forge is weaving...</p>
+                    <p class="text-sm text-[#00f0ff] animate-pulse">Forge is weaving... (${selectedStyle})</p>
+                    <p class="text-[10px] text-white/40 mt-2 font-mono">Mocking AI API Call...</p>
                 </div>
             `;
-            setTimeout(() => {
-                canvasDiv.innerHTML = `
-                    <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1540039155732-d6812b186b5b?q=80&w=600&auto=format&fit=crop');"></div>
-                    <div class="absolute bottom-4 right-4 bg-black/60 px-2 py-1 rounded text-xs text-[#00f0ff] font-bold border border-[#00f0ff] backdrop-blur-sm">+20 EXP GRANTED</div>
-                `;
-            }, 2000);
+            
+            // Mock API delay
+            setTimeout(async () => {
+                const mockImages = {
+                    'Hip-Hop': 'https://images.unsplash.com/photo-1542382156909-9ae37b3f56fd?q=80&w=600&auto=format&fit=crop',
+                    'Manga/Anime': 'https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=600&auto=format&fit=crop',
+                    'Surrealist': 'https://images.unsplash.com/photo-1540039155732-d6812b186b5b?q=80&w=600&auto=format&fit=crop'
+                };
+                
+                const finalUrl = mockImages[selectedStyle] || mockImages['Surrealist'];
+
+                if(window.supabaseClient) {
+                    const { data: { session } } = await window.supabaseClient.auth.getSession();
+                    if(session) {
+                        await window.supabaseClient.from('user_artifacts').insert({
+                            user_id: session.user.id,
+                            event_id: currentEventId,
+                            image_url: finalUrl,
+                            generation_type: 'ai_generated',
+                            prompt_style: selectedStyle
+                        });
+                        
+                        if(currentEventId) {
+                            await window.supabaseClient.from('quests').update({ flyer_url: finalUrl }).eq('id', currentEventId);
+                        }
+                    }
+                }
+
+                setCanvasImage(finalUrl);
+                const expEl = document.createElement('div');
+                expEl.className = "absolute bottom-4 right-4 bg-black/60 px-2 py-1 rounded text-xs text-[#00f0ff] font-bold border border-[#00f0ff] backdrop-blur-sm z-20";
+                expEl.innerText = "+20 EXP GRANTED";
+                canvasDiv.appendChild(expEl);
+            }, 3000);
         }
     </script>
 </body>

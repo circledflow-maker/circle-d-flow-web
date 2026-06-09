@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html class="dark" lang="en">
 <head>
     <meta charset="UTF-8">
@@ -171,12 +171,12 @@
             <!-- RIGHT PANEL: CALENDAR GRID -->
             <div class="lg:col-span-2 nature-border rounded-3xl p-8 relative overflow-hidden flex flex-col">
                 <div class="flex justify-between items-center mb-8">
-                    <h2 class="text-xl font-display text-white tracking-wide">JUNE 2026</h2>
+                    <h2 id="calendar-month-title" class="text-xl font-display text-white tracking-wide">JUNE 2026</h2>
                     <div class="flex gap-2">
-                        <button class="w-8 h-8 rounded bg-white/5 hover:bg-white/10 flex items-center justify-center border border-white/10 transition-colors">
+                        <button onclick="changeMonth(-1)" class="w-8 h-8 rounded bg-white/5 hover:bg-white/10 flex items-center justify-center border border-white/10 transition-colors">
                             <span class="material-symbols-outlined text-sm">chevron_left</span>
                         </button>
-                        <button class="w-8 h-8 rounded bg-white/5 hover:bg-white/10 flex items-center justify-center border border-white/10 transition-colors">
+                        <button onclick="changeMonth(1)" class="w-8 h-8 rounded bg-white/5 hover:bg-white/10 flex items-center justify-center border border-white/10 transition-colors">
                             <span class="material-symbols-outlined text-sm">chevron_right</span>
                         </button>
                     </div>
@@ -191,45 +191,9 @@
                     <div class="text-center text-[10px] text-white/40 font-mono uppercase">Fri</div>
                     <div class="text-center text-[10px] text-white/40 font-mono uppercase">Sat</div>
                     <div class="text-center text-[10px] text-white/40 font-mono uppercase">Sun</div>
-                </div>
-
-                <!-- Calendar Grid -->
-                <div class="calendar-grid flex-1">
-                    <!-- Blank days for start of month -->
-                    <div class="day-cell opacity-0 pointer-events-none"></div>
-                    <div class="day-cell opacity-0 pointer-events-none"></div>
-                    
-                    <!-- Days -->
-                    <div class="day-cell"><span class="text-xs text-white/60">1</span></div>
-                    <div class="day-cell"><span class="text-xs text-white/60">2</span></div>
-                    <div class="day-cell"><span class="text-xs text-white/60">3</span></div>
-                    <div class="day-cell"><span class="text-xs text-white/60">4</span></div>
-                    <div class="day-cell"><span class="text-xs text-white/60">5</span></div>
-                    <div class="day-cell"><span class="text-xs text-white/60">6</span></div>
-                    <div class="day-cell"><span class="text-xs text-white/60">7</span></div>
-                    <div class="day-cell"><span class="text-xs text-white/60">8</span></div>
-                    <div class="day-cell"><span class="text-xs text-white/60">9</span></div>
-                    <div class="day-cell"><span class="text-xs text-white/60">10</span></div>
-                    <div class="day-cell"><span class="text-xs text-white/60">11</span></div>
-                    <div class="day-cell"><span class="text-xs text-white/60">12</span></div>
-                    <div class="day-cell"><span class="text-xs text-white/60">13</span></div>
-                    <div class="day-cell"><span class="text-xs text-white/60">14</span></div>
-                    <div class="day-cell"><span class="text-xs text-white/60">15</span></div>
-                    <div class="day-cell"><span class="text-xs text-white/60">16</span></div>
-                    <div class="day-cell"><span class="text-xs text-white/60">17</span></div>
-                    <div class="day-cell"><span class="text-xs text-white/60">18</span></div>
-                    <div class="day-cell"><span class="text-xs text-white/60">19</span></div>
-                    <div class="day-cell"><span class="text-xs text-white/60">20</span></div>
-                    <div class="day-cell"><span class="text-xs text-white/60">21</span></div>
-                    <div class="day-cell"><span class="text-xs text-white/60">22</span></div>
-                    <div class="day-cell"><span class="text-xs text-white/60">23</span></div>
-                    <div class="day-cell active has-event" title="C-Riz Release Party"><span class="text-xs text-white font-bold">24</span></div>
-                    <div class="day-cell"><span class="text-xs text-white/60">25</span></div>
-                    <div class="day-cell"><span class="text-xs text-white/60">26</span></div>
-                    <div class="day-cell"><span class="text-xs text-white/60">27</span></div>
-                    <div class="day-cell has-event" title="Secret Garden Jam"><span class="text-xs text-white/60">28</span></div>
-                    <div class="day-cell"><span class="text-xs text-white/60">29</span></div>
-                    <div class="day-cell"><span class="text-xs text-white/60">30</span></div>
+                </div>                <!-- Calendar Grid -->
+                <div id="dynamic-calendar-grid" class="calendar-grid flex-1">
+                    <!-- JS will populate this -->
                 </div>
             </div>
             
@@ -237,6 +201,57 @@
     </main>
 
     <script>
+        let currentMonthDate = new Date(2026, 5, 1); // Starts at June 2026
+        const c4cEventDate = new Date(2026, 5, 27); // June 27, 2026
+        
+        function changeMonth(delta) {
+            currentMonthDate.setMonth(currentMonthDate.getMonth() + delta);
+            renderCalendar();
+        }
+
+        function renderCalendar() {
+            const grid = document.getElementById('dynamic-calendar-grid');
+            const title = document.getElementById('calendar-month-title');
+            grid.innerHTML = '';
+            
+            // Format title
+            const titleFormatter = new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' });
+            title.innerText = titleFormatter.format(currentMonthDate).toUpperCase();
+            
+            const year = currentMonthDate.getFullYear();
+            const month = currentMonthDate.getMonth();
+            
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            
+            // Adjust for Monday start (0=Sun -> 6=Sat)
+            let startOffset = firstDay - 1;
+            if (startOffset === -1) startOffset = 6;
+            
+            // Blank days
+            for(let i = 0; i < startOffset; i++) {
+                grid.innerHTML += `<div class="day-cell opacity-0 pointer-events-none"></div>`;
+            }
+            
+            const dateFormatter = new Intl.DateTimeFormat('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+
+            // Days
+            for(let day = 1; day <= daysInMonth; day++) {
+                const isC4C = (year === 2026 && month === 5 && day === 27);
+                if (isC4C) {
+                    const formattedDate = dateFormatter.format(c4cEventDate);
+                    grid.innerHTML += `<div class="day-cell active has-event cursor-pointer" title="C4C Event - ${formattedDate}" onclick="window.location.href='event_sanctuary.html'"><span class="text-xs text-white font-bold">${day}</span></div>`;
+                } else {
+                    grid.innerHTML += `<div class="day-cell"><span class="text-xs text-white/60">${day}</span></div>`;
+                }
+            }
+        }
+
+        // Initialize Calendar
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCalendar();
+        });
+
         function syncCalendar() {
             const statusEl = document.getElementById('sync-status');
             statusEl.classList.remove('hidden');
