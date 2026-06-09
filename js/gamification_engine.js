@@ -79,9 +79,9 @@ const GamificationEngine = {
 
             // Notify UI
             if (window.FloweeAgent) {
-                window.FloweeAgent.speak(Quest completed: $. Resonance expanded.);
+                window.FloweeAgent.speak(`Quest completed: ${id}. Resonance expanded.`);
             } else {
-                alert(Quest Completed! +$ EXP);
+                alert(`Quest Completed! +${quest.reward || 50} EXP`);
             }
 
             // Sync with Supabase if online
@@ -157,24 +157,24 @@ const GamificationEngine = {
             
             let btnHTML = '';
             if (!isCompleted) {
-                btnHTML = <button onclick="GamificationEngine.completeQuest('$')" class="px-3 py-1 bg-white/10 hover:bg-white/20 text-white text-xs uppercase tracking-widest rounded border border-white/20 transition-all shadow-[0_0_10px_rgba(255,255,255,0.1)] hover:shadow-[0_0_15px_rgba(255,255,255,0.3)]">Complete</button>;
+                btnHTML = `<button onclick="GamificationEngine.completeQuest('${quest.id}')" class="px-3 py-1 bg-white/10 hover:bg-white/20 text-white text-xs uppercase tracking-widest rounded border border-white/20 transition-all shadow-[0_0_10px_rgba(255,255,255,0.1)] hover:shadow-[0_0_15px_rgba(255,255,255,0.3)]">Complete</button>`;
             } else {
-                btnHTML = <span class="text-[10px] text-white/50 uppercase tracking-widest font-mono">Completed</span>;
+                btnHTML = `<span class="text-[10px] text-white/50 uppercase tracking-widest font-mono">Completed</span>`;
             }
 
-            questEl.innerHTML = 
+            questEl.innerHTML = `
                 <div class="flex items-center gap-3">
-                    <span class="material-symbols-outlined">$</span>
+                    <span class="material-symbols-outlined">${icon}</span>
                     <div>
-                        <h4 class="font-bold text-sm tracking-wide text-white">$</h4>
+                        <h4 class="font-bold text-sm tracking-wide text-white">${quest.title}</h4>
                         <div class="flex gap-2 text-[10px] mt-1 font-mono uppercase">
-                            <span class="text-[#d4af37]">Reward: +$ EXP</span>
-                            <span class="text-white/40">| Assigned: $</span>
+                            <span class="text-[#d4af37]">Reward: +${quest.reward} EXP</span>
+                            <span class="text-white/40">| Assigned: ${quest.assignee}</span>
                         </div>
                     </div>
                 </div>
-                <div>$</div>
-            ;
+                <div>${btnHTML}</div>
+            `;
             container.appendChild(questEl);
         });
     },

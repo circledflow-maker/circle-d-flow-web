@@ -24,6 +24,11 @@ const API_CONFIG = {
     },
     
     // n8n PikaPod (Weltenbaum-Reaktor)
+    google: {
+        clientId: 'YOUR_GOOGLE_CLIENT_ID',
+        apiKey: 'YOUR_GOOGLE_API_KEY',
+        appId: 'YOUR_GOOGLE_APP_ID'
+    },
     n8n: {
         baseUrl: "https://feathered-swan.pikapod.net",
         webhookUrl: "https://feathered-swan.pikapod.net/webhook/agentic-sync",
@@ -32,3 +37,4 @@ const API_CONFIG = {
 };
 
 window.API_CONFIG = API_CONFIG;
+

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html class="dark" lang="en">
 <head>
     <meta charset="UTF-8">
@@ -271,6 +271,7 @@
         </div>
 
     <!-- AGENTS -->
+    <script src="../js/agents/agent.js"></script>
     <script src="../js/agents/imperial_hud.js"></script>
     <script src="../js/agents/pusher.js"></script>
     <script src="../js/agents/helper.js"></script>
@@ -290,36 +291,61 @@
     <script src="../js/agents/flowee.js"></script>
     
     <script>
-        // Init Mock Data for Dashboard
-        document.addEventListener('DOMContentLoaded', () => {
-            // Init Identity from Partner Scanner (circle_partner_details)
-            let username = "Initiate";
-            let role = "Visual Flow";
-            
-            // Check legacy names first
-            const savedName = localStorage.getItem('cdf_name') || localStorage.getItem('cdf_user_username');
-            if(savedName) username = savedName;
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Load Base Profile (Fallback)
+            let name = localStorage.getItem('cdf_user_username') || 'Kylar';
+            let role = localStorage.getItem('cdf_user_role') || 'Visual Flow';
+            const tp = localStorage.getItem('cdf_trust_points') || '100';
+            const exp = localStorage.getItem('cdf_xp') || '0';
 
-            // Override with new partner details if available (higher priority)
+            const savedName = localStorage.getItem('cdf_name');
+            if(savedName) name = savedName;
+
             const partnerDataStr = localStorage.getItem('circle_partner_details');
             if(partnerDataStr) {
                 try {
                     const pd = JSON.parse(partnerDataStr);
-                    if(pd.email) username = pd.email.split('@')[0];
+                    if(pd.email) name = pd.email.split('@')[0];
                     if(pd.role) role = pd.role;
                 } catch(e) {}
             }
-
-            document.getElementById('res-bar-name').innerText = username;
+            
+            document.getElementById('res-bar-name').innerText = name;
             document.getElementById('res-bar-role').innerText = role;
-
-            // TP & EXP Logic
-            const tp = localStorage.getItem('cdf_trust_points') || 100;
-            const exp = localStorage.getItem('cdf_xp') || 0;
-
             document.getElementById('res-bar-tp').innerText = tp;
             document.getElementById('res-bar-exp').innerText = exp;
-            
+
+            // Sync with C4C Event (Dashboard Data override)
+            if (window.supabaseClient) {
+                const { data: { session } } = await window.supabaseClient.auth.getSession();
+                if (session) {
+                    const { data: quests } = await window.supabaseClient
+                        .from('quests')
+                        .select('*')
+                        .eq('creator_id', session.user.id)
+                        .eq('title', 'C4C Event (Community for Community)');
+                    
+                    if (quests && quests.length > 0) {
+                        const c4c = quests[0];
+                        document.getElementById('res-bar-name').innerText = c4c.title;
+                        document.getElementById('res-bar-role').innerText = 'Event Details';
+                        document.getElementById('res-bar-tp').innerText = c4c.reward_amount || '100'; // Mocking guests/reward
+                        document.getElementById('res-bar-exp').innerText = c4c.status.toUpperCase();
+                        
+                        document.getElementById('res-bar-tags').innerHTML = `
+                            <span class="text-[10px] px-2 py-1 rounded bg-tao-water/20 border border-tao-water/30 text-white/80">${c4c.quest_type}</span>
+                            <span class="text-[10px] px-2 py-1 rounded bg-tao-fire/20 border border-tao-fire/30 text-white/80">Location: ${c4c.location || 'Secret Garden LX'}</span>
+                        `;
+
+                        if(c4c.flyer_url) {
+                            document.getElementById('res-bar-avatar').src = c4c.flyer_url;
+                        } else {
+                            document.getElementById('res-bar-avatar').src = 'https://images.unsplash.com/photo-1542382156909-9ae37b3f56fd?q=80&w=200&auto=format&fit=crop';
+                        }
+                    }
+                }
+            }
+
             // Dynamic Main Focus Event (circle_selected_event)
             const latestEventString = localStorage.getItem('circle_selected_event');
             if(latestEventString) {
