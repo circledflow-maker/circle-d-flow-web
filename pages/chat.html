@@ -62,26 +62,111 @@
 </head>
 <body class="bg-tao-void text-white min-h-screen font-body overflow-hidden flex flex-col relative">
 
-    <!-- Mobile Header & Burger Menu -->
-    <div class="fixed top-6 left-6 z-[100]">
-        <button id="burger-btn" class="w-10 h-10 flex flex-col justify-center items-center gap-1.5 bg-black border border-[#d4af37]/50 rounded cursor-pointer z-[101]">
-            <span class="w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
-            <span class="w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
-            <span class="w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
+    <!-- Header Actions (Replaces Burger Menu) -->
+    <div class="fixed top-6 left-6 z-[100] flex gap-3">
+        <button onclick="toggleOnlinePanel()" class="w-10 h-10 md:w-auto md:px-4 md:py-2 bg-black/80 border border-[#d4af37]/50 text-[#d4af37] rounded-lg cursor-pointer flex items-center justify-center gap-2 hover:bg-[#d4af37]/20 transition-all shadow-[0_0_10px_rgba(212,175,55,0.2)]">
+            <span class="material-symbols-outlined text-xl md:text-sm">group</span>
+            <span class="font-mono text-xs uppercase tracking-widest hidden md:inline">Online Souls</span>
+        </button>
+        <button onclick="alert('Soul Invitation Link Copied to Clipboard!')" class="w-10 h-10 md:w-auto md:px-4 md:py-2 bg-[#d4af37]/20 border border-[#d4af37] text-white rounded-lg cursor-pointer flex items-center justify-center gap-2 hover:bg-[#d4af37]/40 transition-all shadow-[0_0_15px_rgba(212,175,55,0.4)]">
+            <span class="material-symbols-outlined text-xl md:text-sm">person_add</span>
+            <span class="font-mono text-xs uppercase tracking-widest hidden md:inline">Invite Soul</span>
         </button>
     </div>
 
-    <!-- Fullscreen Mobile Menu Overlay -->
-    <div id="mobile-menu" class="fixed inset-0 bg-black/95 z-[90] opacity-0 pointer-events-none transition-opacity duration-300 flex flex-col items-center justify-center">
-        <nav class="flex flex-col gap-6 text-center">
-            <a href="../index.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">Zum Orbit</a>
-            <a href="bantaba.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">Nach Bantaba</a>
-            <a href="about.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">About Us</a>
-            <a href="portfolio_anime_reality.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">Portfolio</a>
-            <a href="heart.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">Heart</a>
-            <a href="luvo.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">Luvo</a>
-        </nav>
+    <!-- Side Panel for Online Users (Swipeable) -->
+    <div id="online-panel" class="fixed inset-y-0 left-0 w-[85vw] md:w-80 bg-black/95 backdrop-blur-xl border-r border-[#d4af37]/30 z-[110] transform -translate-x-full transition-transform duration-300 flex flex-col shadow-[20px_0_50px_rgba(0,0,0,0.8)]">
+        <div class="p-6 border-b border-[#d4af37]/20 flex justify-between items-center bg-gradient-to-b from-black to-transparent">
+            <h2 class="font-display text-[#d4af37] text-xl tracking-wider flex items-center gap-3">
+                <span class="material-symbols-outlined">cell_tower</span> The Network
+            </h2>
+            <button onclick="toggleOnlinePanel()" class="text-white/50 hover:text-white transition-colors w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <div class="flex-1 overflow-y-auto p-4 custom-scroller">
+            <div class="text-xs font-mono text-white/40 uppercase tracking-widest mb-4">Active Souls (4)</div>
+            
+            <div class="flex items-center gap-4 p-3 rounded-xl hover:bg-white/5 transition-colors cursor-pointer border border-transparent hover:border-white/10 mb-2">
+                <div class="w-10 h-10 rounded-full border border-green-500/50 relative">
+                    <img src="../Assets/images/logo.png" class="w-full h-full object-cover rounded-full opacity-80">
+                    <span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border border-black shadow-[0_0_5px_rgba(34,197,94,0.8)]"></span>
+                </div>
+                <div>
+                    <div class="font-bold text-sm text-white">Elias</div>
+                    <div class="text-[10px] font-mono text-tao-fire">Master Flow</div>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4 p-3 rounded-xl hover:bg-white/5 transition-colors cursor-pointer border border-transparent hover:border-white/10 mb-2">
+                <div class="w-10 h-10 rounded-full border border-green-500/50 relative">
+                    <img src="../Assets/images/logo.png" class="w-full h-full object-cover rounded-full opacity-80">
+                    <span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border border-black shadow-[0_0_5px_rgba(34,197,94,0.8)]"></span>
+                </div>
+                <div>
+                    <div class="font-bold text-sm text-white">Lina</div>
+                    <div class="text-[10px] font-mono text-tao-water">Visual Flow</div>
+                </div>
+            </div>
+            
+            <div class="text-xs font-mono text-white/40 uppercase tracking-widest mb-4 mt-8">Dormant Souls (12)</div>
+            
+            <div class="flex items-center gap-4 p-3 rounded-xl hover:bg-white/5 transition-colors cursor-pointer border border-transparent hover:border-white/10 mb-2 opacity-50">
+                <div class="w-10 h-10 rounded-full border border-white/20 relative">
+                    <div class="w-full h-full rounded-full bg-white/5 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-white/30 text-sm">person</span>
+                    </div>
+                    <span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-gray-500 rounded-full border border-black"></span>
+                </div>
+                <div>
+                    <div class="font-bold text-sm text-white">Julian</div>
+                    <div class="text-[10px] font-mono text-white/50">Healing Flow</div>
+                </div>
+            </div>
+        </div>
+        <div class="p-6 border-t border-white/10 bg-black/50">
+            <button onclick="alert('Soul Invitation Link Copied to Clipboard!')" class="w-full py-3 bg-[#d4af37]/20 border border-[#d4af37] text-white rounded-lg cursor-pointer flex items-center justify-center gap-2 hover:bg-[#d4af37]/40 transition-all shadow-[0_0_15px_rgba(212,175,55,0.4)]">
+                <span class="material-symbols-outlined text-sm">person_add</span>
+                <span class="font-mono text-xs uppercase tracking-widest">Invite New Soul</span>
+            </button>
+        </div>
     </div>
+
+    <!-- Overlay for Panel -->
+    <div id="online-overlay" onclick="toggleOnlinePanel()" class="fixed inset-0 bg-black/80 z-[105] opacity-0 pointer-events-none transition-opacity duration-300 backdrop-blur-sm"></div>
+
+    <script>
+        function toggleOnlinePanel() {
+            const panel = document.getElementById('online-panel');
+            const overlay = document.getElementById('online-overlay');
+            if (panel.classList.contains('-translate-x-full')) {
+                panel.classList.remove('-translate-x-full');
+                overlay.classList.remove('opacity-0', 'pointer-events-none');
+                overlay.classList.add('opacity-100', 'pointer-events-auto');
+            } else {
+                panel.classList.add('-translate-x-full');
+                overlay.classList.add('opacity-0', 'pointer-events-none');
+                overlay.classList.remove('opacity-100', 'pointer-events-auto');
+            }
+        }
+        
+        let swipeStartX = 0;
+        document.addEventListener('DOMContentLoaded', () => {
+            const panel = document.getElementById('online-panel');
+            if(panel) {
+                panel.addEventListener('touchstart', e => {
+                    swipeStartX = e.changedTouches[0].screenX;
+                }, {passive: true});
+                
+                panel.addEventListener('touchend', e => {
+                    let swipeEndX = e.changedTouches[0].screenX;
+                    if (swipeEndX < swipeStartX - 50) { // Swiped left
+                        toggleOnlinePanel();
+                    }
+                }, {passive: true});
+            }
+        });
+    </script>
 
 
     <!-- Atmospheric Organic Background -->
