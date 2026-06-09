@@ -333,25 +333,38 @@
                         eventsContainer.innerHTML = '';
                         quests.forEach(quest => {
                             const eventCard = document.createElement('div');
-                            eventCard.className = "bg-white/5 border border-white/10 p-2 rounded cursor-pointer hover:bg-white/10 transition-colors flex justify-between items-center";
-                            eventCard.onclick = () => window.location.href = `event_sanctuary.html?id=${quest.id}`;
+                            eventCard.className = "bg-white/5 border border-white/10 p-2 rounded hover:bg-white/10 transition-colors flex justify-between items-center group";
                             eventCard.innerHTML = `
-                                <span class="text-[10px] text-white font-bold">${quest.title}</span>
-                                <span class="material-symbols-outlined text-[12px] text-white/50">arrow_forward</span>
+                                <div class="flex-1 cursor-pointer flex justify-between items-center pr-2" onclick="window.location.href='event_sanctuary.html?id=${quest.id}'">
+                                    <span class="text-[10px] text-white font-bold truncate">${quest.title}</span>
+                                    <span class="material-symbols-outlined text-[12px] text-white/50">arrow_forward</span>
+                                </div>
+                                <button onclick="deleteQuest('${quest.id}')" title="Delete Event" class="text-red-500/50 hover:text-red-500 transition-colors p-1 opacity-0 group-hover:opacity-100">
+                                    <span class="material-symbols-outlined text-[12px]">delete</span>
+                                </button>
                             `;
                             eventsContainer.appendChild(eventCard);
                         });
                     } else {
-                        // Mock the C4C event if DB is empty for demonstration
                         eventsContainer.innerHTML = `
-                            <div class="bg-white/5 border border-white/10 p-2 rounded cursor-pointer hover:bg-white/10 transition-colors flex justify-between items-center" onclick="window.location.href='event_sanctuary.html?mock=c4c'">
-                                <span class="text-[10px] text-gold font-bold">C4C Event (Mock)</span>
-                                <span class="material-symbols-outlined text-[12px] text-white/50">arrow_forward</span>
-                            </div>
+                            <div class="text-[10px] text-white/40 italic text-center py-2">No hosted events found.</div>
                         `;
                     }
                 }, 2500);
             });
+            
+            async function deleteQuest(id) {
+                if(!confirm("Are you sure you want to delete this event?")) return;
+                try {
+                    const { error } = await window.supabaseClient.from('quests').delete().eq('id', id);
+                    if(error) throw error;
+                    alert("Event deleted successfully.");
+                    window.location.reload();
+                } catch(err) {
+                    console.error("Error deleting:", err);
+                    alert("Failed to delete event.");
+                }
+            }
         </script>
 
         <!-- SECTION 1: THE FLOW COMPASS (Mandala Navigation) -->

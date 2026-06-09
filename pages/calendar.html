@@ -230,6 +230,9 @@
             }
             
             sidebar.innerHTML = '';
+            const { data: { session } } = await window.supabaseClient.auth.getSession();
+            const currentUserId = session ? session.user.id : null;
+
             calendarEvents.slice(0, 3).forEach(event => { // Show up to 3 upcoming
                 // Parsing logic (event.event_date is a string like "2026-06-27" from input[type="date"] usually)
                 let dText = 'TBA';
@@ -242,13 +245,23 @@
                     } catch(e){}
                 }
                 
+                let deleteBtnHtml = '';
+                if (currentUserId && event.creator_id === currentUserId) {
+                    deleteBtnHtml = `
+                        <button onclick="deleteQuest('${event.id}', event)" class="absolute top-2 left-[-25px] text-red-500/50 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <span class="material-symbols-outlined text-[14px]">delete</span>
+                        </button>
+                    `;
+                }
+
                 sidebar.innerHTML += `
-                    <div class="bg-black/40 border border-white/5 rounded p-3 cursor-pointer hover:border-white/20 transition-all" onclick="localStorage.setItem('currentEventId', '${event.id}'); window.location.href='event_sanctuary.html'">
-                        <div class="flex justify-between items-start">
-                            <h4 class="text-xs font-bold text-white">${event.title || 'Unknown Quest'}</h4>
+                    <div class="bg-black/40 border border-white/5 rounded p-3 hover:border-white/20 transition-all group relative">
+                        ${deleteBtnHtml}
+                        <div class="flex justify-between items-start cursor-pointer" onclick="localStorage.setItem('currentEventId', '${event.id}'); window.location.href='event_sanctuary.html'">
+                            <h4 class="text-xs font-bold text-white truncate max-w-[150px]">${event.title || 'Unknown Quest'}</h4>
                             <span class="text-[9px] text-[#d4af37] font-mono border border-[#d4af37]/30 px-1 rounded">${dText}</span>
                         </div>
-                        <p class="text-[10px] text-white/40 mt-1">${event.address || 'Unknown Location'}</p>
+                        <p class="text-[10px] text-white/40 mt-1 cursor-pointer" onclick="localStorage.setItem('currentEventId', '${event.id}'); window.location.href='event_sanctuary.html'">${event.address || 'Unknown Location'}</p>
                     </div>
                 `;
             });
@@ -332,6 +345,22 @@
                     }
                 }, 1500);
             }, 1000);
+        }
+
+        async function deleteQuest(id, eventObj) {
+            if (eventObj) {
+                eventObj.stopPropagation(); // Prevent clicking through to the event sanctuary
+            }
+            if(!confirm("Are you sure you want to delete this event?")) return;
+            try {
+                const { error } = await window.supabaseClient.from('quests').delete().eq('id', id);
+                if(error) throw error;
+                alert("Event deleted successfully.");
+                window.location.reload();
+            } catch(err) {
+                console.error("Error deleting:", err);
+                alert("Failed to delete event.");
+            }
         }
     </script>
     <script src="../js/agents/flowee.js"></script>
