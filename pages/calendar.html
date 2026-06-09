@@ -219,10 +219,10 @@
                 console.error("Failed to load events", err);
             }
             renderCalendar();
-            renderSidebarEvents();
+            await renderSidebarEvents();
         }
 
-        function renderSidebarEvents() {
+        async function renderSidebarEvents() {
             const sidebar = document.getElementById('calendar-sidebar-events');
             if (calendarEvents.length === 0) {
                 sidebar.innerHTML = '<div class="text-xs text-white/40 italic">No events found in the matrix.</div>';
