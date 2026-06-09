@@ -12,9 +12,7 @@
     <!-- Supabase integration -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/api_config.js"></script>
-    <script>
-        window.supabaseClient = supabase.createClient(supabaseUrl, supabaseAnonKey);
-    </script>
+    <script src="../js/agents/supabase_client.js"></script>
     
     <script id="tailwind-config">
         tailwind.config = {
@@ -144,8 +142,13 @@
                     </div>
                     <h3 class="text-lg font-display text-white mb-2">Google Calendar</h3>
                     <p class="text-xs text-white/50 mb-6">Connect your personal timeline with the Circle D Flow network.</p>
-                    <button onclick="syncCalendar()" class="w-full bg-blue-600/20 hover:bg-blue-600/40 border border-blue-500/50 text-blue-400 py-3 rounded-lg font-bold tracking-[0.2em] uppercase transition-all shadow-[0_0_15px_rgba(59,130,246,0.2)]">
+                    <button onclick="syncCalendar()" class="w-full bg-blue-600/20 hover:bg-blue-600/40 border border-blue-500/50 text-blue-400 py-3 rounded-lg font-bold tracking-[0.2em] uppercase transition-all shadow-[0_0_15px_rgba(59,130,246,0.2)] mb-4">
                         Initialize Sync
+                    </button>
+                    
+                    <button onclick="window.location.href='artifact_vault.html'" class="w-full bg-white/5 hover:bg-white/10 border border-white/20 text-white py-2 rounded-lg font-mono text-[10px] tracking-widest uppercase transition-all flex justify-center items-center gap-2">
+                        <span class="material-symbols-outlined text-sm">auto_stories</span>
+                        The Bookshelf
                     </button>
                     <p id="sync-status" class="text-[10px] text-white/30 mt-3 font-mono hidden">Authenticating via OAuth...</p>
                 </div>
@@ -207,6 +210,7 @@
 
         async function fetchEvents() {
             try {
+                if(!window.supabaseClient) return;
                 const { data, error } = await window.supabaseClient.from('quests').select('*').order('created_at', { ascending: false });
                 if (!error && data) {
                     calendarEvents = data;
@@ -304,7 +308,10 @@
 
         // Initialize Calendar
         document.addEventListener('DOMContentLoaded', () => {
-            fetchEvents();
+            // Give supabase client time to initialize
+            setTimeout(() => {
+                fetchEvents();
+            }, 500);
         });
 
         function syncCalendar() {
