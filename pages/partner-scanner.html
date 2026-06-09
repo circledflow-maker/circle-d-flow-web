@@ -8,6 +8,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;600&family=Space+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link rel="stylesheet" href="../css/styles.css">
+    
+    <!-- Supabase integration -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/api_config.js"></script>
+    <script>
+        window.supabaseClient = supabase.createClient(supabaseUrl, supabaseAnonKey);
+    </script>
+    
     <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
@@ -280,76 +288,7 @@
 
             <!-- Matches Grid -->
             <div id="match-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                
-                <!-- Match Card 1 -->
-                <div class="finder-panel rounded-2xl p-5 relative overflow-hidden group">
-                    <div class="absolute inset-0 bg-tao-water/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    
-                    <div class="flex items-start justify-between mb-4 relative z-10">
-                        <div class="flex items-center gap-3">
-                            <div class="w-12 h-12 rounded-full border border-tao-water bg-tao-water/20 flex items-center justify-center font-display font-bold">W</div>
-                            <div>
-                                <h3 class="font-bold text-white text-lg">Will</h3>
-                                <span class="text-[10px] bg-tao-earth/20 border border-tao-earth/30 text-white/70 px-2 py-0.5 rounded font-mono uppercase">Space-Provider</span>
-                            </div>
-                        </div>
-                        <div class="text-center">
-                            <div class="font-bold text-tao-metal">350</div>
-                            <div class="text-[8px] uppercase tracking-widest text-white/40">Trust</div>
-                        </div>
-                    </div>
-                    
-                    <div class="mb-5 relative z-10">
-                        <div class="text-xs text-white/40 mb-2 font-mono uppercase">Vibes</div>
-                        <div class="flex flex-wrap gap-1">
-                            <span class="text-[10px] border border-white/10 rounded px-2 py-0.5">ClimaLabs</span>
-                            <span class="text-[10px] border border-white/10 rounded px-2 py-0.5">Spiritual</span>
-                        </div>
-                    </div>
-
-                    <div class="border-t border-white/10 pt-4 relative z-10 flex justify-between items-center">
-                        <button class="text-xs text-tao-water hover:text-white uppercase tracking-widest font-bold">View Log</button>
-                        <button class="w-8 h-8 rounded-full bg-white/5 hover:bg-tao-water hover:text-black flex items-center justify-center transition-colors">
-                            <span class="material-symbols-outlined text-sm">handshake</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Match Card 2 -->
-                <div class="finder-panel rounded-2xl p-5 relative overflow-hidden group border border-tao-fire/30 shadow-[0_0_15px_rgba(212,126,61,0.1)]">
-                    <div class="absolute absolute top-0 left-1/2 -translate-x-1/2 bg-tao-fire text-black text-[9px] font-bold uppercase tracking-widest px-3 py-0.5 rounded-b">Flow Match</div>
-                    <div class="absolute inset-0 bg-tao-fire/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    
-                    <div class="flex items-start justify-between mb-4 relative z-10 mt-2">
-                        <div class="flex items-center gap-3">
-                            <div class="w-12 h-12 rounded-full border border-tao-fire bg-tao-fire/20 flex items-center justify-center font-display font-bold">C</div>
-                            <div>
-                                <h3 class="font-bold text-white text-lg">C-Riz</h3>
-                                <span class="text-[10px] bg-tao-water/20 border border-tao-water/30 text-white/70 px-2 py-0.5 rounded font-mono uppercase">Audio-Flow</span>
-                            </div>
-                        </div>
-                        <div class="text-center">
-                            <div class="font-bold text-tao-fire">520</div>
-                            <div class="text-[8px] uppercase tracking-widest text-white/40">Trust</div>
-                        </div>
-                    </div>
-                    
-                    <div class="mb-5 relative z-10">
-                        <div class="text-xs text-white/40 mb-2 font-mono uppercase">Vibes</div>
-                        <div class="flex flex-wrap gap-1">
-                            <span class="text-[10px] border border-white/10 rounded px-2 py-0.5">Hip-Hop</span>
-                            <span class="text-[10px] border border-white/10 rounded px-2 py-0.5">Underground</span>
-                        </div>
-                    </div>
-
-                    <div class="border-t border-white/10 pt-4 relative z-10 flex justify-between items-center">
-                        <button class="text-xs text-tao-fire hover:text-white uppercase tracking-widest font-bold">View Log</button>
-                        <button class="w-8 h-8 rounded-full bg-white/5 hover:bg-tao-fire hover:text-black flex items-center justify-center transition-colors">
-                            <span class="material-symbols-outlined text-sm">handshake</span>
-                        </button>
-                    </div>
-                </div>
-
+                <!-- JS will populate this with profiles -->
             </div>
         </div>
     </main>
@@ -466,6 +405,70 @@
                     `;
                     grid.prepend(selfCard); // Add to the front!
                 }
+            }
+            
+            // Sync roles with Supabase
+            syncProfilesFromSupabase();
+        }
+
+        async function syncProfilesFromSupabase() {
+            try {
+                const { data, error } = await window.supabaseClient.from('profiles').select('*');
+                if (error) throw error;
+                
+                const grid = document.getElementById('match-grid');
+                if (data && data.length > 0) {
+                    data.forEach(profile => {
+                        // Avoid duplicating self if logged in
+                        if (userDetails && userDetails.email && profile.username && userDetails.email.includes(profile.username)) {
+                            return;
+                        }
+                        
+                        const role = profile.role_calling || 'Explorer';
+                        const username = profile.username || 'Anonymous';
+                        const initial = username.charAt(0).toUpperCase();
+                        const colorClass = role === 'Audio-Flow' ? 'tao-water' : (role === 'Visual-Flow' ? 'tao-fire' : 'tao-metal');
+                        
+                        const card = document.createElement('div');
+                        card.className = `finder-panel rounded-2xl p-5 relative overflow-hidden group border border-${colorClass}/30`;
+                        card.innerHTML = `
+                            <div class="absolute inset-0 bg-${colorClass}/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                            
+                            <div class="flex items-start justify-between mb-4 relative z-10 mt-2">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-12 h-12 rounded-full border border-${colorClass} bg-${colorClass}/20 flex items-center justify-center font-display font-bold text-white">
+                                        ${profile.avatar_url ? `<img src="${profile.avatar_url}" class="w-full h-full rounded-full object-cover">` : initial}
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-white text-lg">${username}</h3>
+                                        <span class="text-[10px] bg-white/10 border border-white/20 text-white/70 px-2 py-0.5 rounded font-mono uppercase">${role}</span>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="font-bold text-${colorClass}">${Math.floor(Math.random() * 500) + 100}</div>
+                                    <div class="text-[8px] uppercase tracking-widest text-white/40">Trust</div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-5 relative z-10">
+                                <div class="text-xs text-white/40 mb-2 font-mono uppercase">Guild</div>
+                                <div class="flex flex-wrap gap-1">
+                                    <span class="text-[10px] border border-white/10 rounded px-2 py-0.5">${profile.guild || 'Freelancer'}</span>
+                                </div>
+                            </div>
+
+                            <div class="border-t border-white/10 pt-4 relative z-10 flex justify-between items-center">
+                                <button class="text-xs text-${colorClass} hover:text-white uppercase tracking-widest font-bold">View Log</button>
+                                <button class="w-8 h-8 rounded-full bg-white/5 hover:bg-${colorClass} hover:text-black flex items-center justify-center transition-colors">
+                                    <span class="material-symbols-outlined text-sm">handshake</span>
+                                </button>
+                            </div>
+                        `;
+                        grid.appendChild(card);
+                    });
+                }
+            } catch (err) {
+                console.error("Failed to sync profiles from Supabase", err);
             }
         }
     </script>

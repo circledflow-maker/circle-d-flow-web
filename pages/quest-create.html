@@ -156,6 +156,9 @@
                                 <div class="select-chip px-4 py-2 rounded-full text-sm font-bold" onclick="toggleChip(this, 'type')">Concert</div>
                                 <div class="select-chip px-4 py-2 rounded-full text-sm font-bold" onclick="toggleChip(this, 'type')">Jam Session</div>
                                 <div class="select-chip px-4 py-2 rounded-full text-sm font-bold" onclick="toggleChip(this, 'type')">Workshop</div>
+                                <div class="select-chip px-4 py-2 rounded-full text-sm font-bold" onclick="toggleChip(this, 'type')" title="Festival aus Arts music, paint, dance, art market selling, workshops">Art Jam</div>
+                                <div class="select-chip px-4 py-2 rounded-full text-sm font-bold" onclick="toggleChip(this, 'type')" title="Sell your art work">Art Market</div>
+                                <div class="select-chip px-4 py-2 rounded-full text-sm font-bold" onclick="toggleChip(this, 'type')" title="Interview">Podcast</div>
                             </div>
                         </div>
 
@@ -330,22 +333,14 @@
         }
 
         function toggleChip(element, group) {
-            if (group === 'type') {
-                // Single select for type
-                const chips = element.parentElement.querySelectorAll('.select-chip');
-                chips.forEach(c => c.classList.remove('active'));
-                element.classList.add('active');
-            } else {
-                // Multi select for needs
-                element.classList.toggle('active');
-            }
+            element.classList.toggle('active');
             updateSignalTags();
         }
 
         function updateSignalTags() {
             const title = document.getElementById('event-title').value || "EMPTY_SIGNAL";
-            const typeChip = document.querySelector('#type-selector .active');
-            const type = typeChip ? typeChip.innerText.toUpperCase() : "UNKNOWN";
+            const typeChips = document.querySelectorAll('#type-selector .active');
+            const type = Array.from(typeChips).map(c => c.innerText.toUpperCase()).join(", ") || "UNKNOWN";
             
             const ecoRadio = document.querySelector('input[name="economy"]:checked');
             const eco = ecoRadio ? ecoRadio.value.toUpperCase() : 'FREE';
@@ -378,8 +373,8 @@
             }
             
             // Gather dynamic data
-            const typeChip = document.querySelector('#type-selector .active');
-            const type = typeChip ? typeChip.innerText : "Gathering";
+            const typeChips = document.querySelectorAll('#type-selector .active');
+            const type = Array.from(typeChips).map(c => c.innerText).join(", ") || "Gathering";
             
             const ecoRadio = document.querySelector('input[name="economy"]:checked');
             const eco = ecoRadio ? ecoRadio.value : 'free';
@@ -406,9 +401,15 @@
                     title: title,
                     description: desc,
                     type: type,
-                    reward_karma: 100, // default
-                    reward_trust: 50, // default
+                    reward_xp: 100, // matched schema
+                    reward_points: 50, // matched schema
+                    reward_karma: 100, // legacy/optional
+                    reward_trust: 50, // legacy/optional
                     status: 'open',
+                    economy: eco,
+                    needs: needs, // Array of strings will be stored as JSONB by Supabase
+                    address: address || 'ClimaLabs',
+                    event_date: date || 'TBA',
                     creator_id: session.data.session.user.id,
                     creator_name: localStorage.getItem('cdf_user_username') || "Anonymous Voyager"
                 }]).select();
@@ -452,7 +453,7 @@
                 
             } catch (err) {
                 console.error("Error forging quest:", err);
-                alert("Failed to manifest event in the database.");
+                alert("Failed to manifest event in the database: " + (err.message || err));
             }
         }
         

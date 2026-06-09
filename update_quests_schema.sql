@@ -1,0 +1,11 @@
+-- Add missing columns to quests table for Event Manifestation
+ALTER TABLE public.quests
+ADD COLUMN IF NOT EXISTS type TEXT,
+ADD COLUMN IF NOT EXISTS status TEXT,
+ADD COLUMN IF NOT EXISTS reward_karma INTEGER,
+ADD COLUMN IF NOT EXISTS reward_trust INTEGER,
+ADD COLUMN IF NOT EXISTS economy TEXT,
+ADD COLUMN IF NOT EXISTS needs JSONB,
+ADD COLUMN IF NOT EXISTS address TEXT,
+ADD COLUMN IF NOT EXISTS event_date TEXT,
+ADD COLUMN IF NOT EXISTS flyer_url TEXT;
