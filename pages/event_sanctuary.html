@@ -472,8 +472,10 @@
         }
 
         function createPicker() {
-            const view = new google.picker.DocsView(google.picker.ViewId.DOCS);
-            view.setMimeTypes("image/png,image/jpeg,image/jpg");
+            const docsView = new google.picker.DocsView(google.picker.ViewId.DOCS);
+            docsView.setMimeTypes("image/png,image/jpeg,image/jpg");
+
+            const photosView = new google.picker.DocsView(google.picker.ViewId.PHOTOS);
             
             const picker = new google.picker.PickerBuilder()
                 .enableFeature(google.picker.Feature.NAV_HIDDEN)
@@ -481,7 +483,8 @@
                 .setDeveloperKey(window.API_CONFIG.google.apiKey)
                 .setAppId(window.API_CONFIG.google.appId)
                 .setOAuthToken(oauthToken)
-                .addView(view)
+                .addView(docsView)
+                .addView(photosView)
                 .setCallback(pickerCallback)
                 .build();
             picker.setVisible(true);
