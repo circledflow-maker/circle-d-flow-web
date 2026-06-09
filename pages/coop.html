@@ -190,11 +190,11 @@
                     </div>
                 </div>
 
-                <!-- 3-Slot Visual Area -->
-                <div class="flex-1 min-h-[350px] relative bg-black/20 rounded-2xl border border-white/5 p-6 flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16">
+                <!-- 3-Slot Visual Area (Swipeable on Mobile) -->
+                <div class="flex-1 min-h-[350px] relative bg-black/20 rounded-2xl border border-white/5 py-6 px-4 flex flex-row overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-8 md:gap-16 items-center lg:justify-center">
                     
                     <!-- Collaboration Lantern 1 (Slot 2) -->
-                    <div class="flex flex-col items-center gap-4 group cursor-pointer" onclick="window.location.href='chat.html'">
+                    <div class="snap-center shrink-0 flex flex-col items-center gap-4 group cursor-pointer" onclick="window.location.href='chat.html'">
                         <div class="w-16 h-16 rounded-full bg-tao-wood/20 border border-tao-wood/40 flex items-center justify-center float-organic transition-all group-hover:border-tao-water group-hover:bg-tao-water/20">
                              <span class="material-symbols-outlined text-tao-wood/60 group-hover:text-tao-water text-2xl">wb_incandescent</span>
                         </div>
@@ -205,7 +205,7 @@
                     </div>
 
                     <!-- The Campfire (Primary Focus Slot 1) -->
-                    <div class="flex flex-col items-center gap-5 relative group cursor-pointer" onclick="window.location.href='chat.html'">
+                    <div class="snap-center shrink-0 flex flex-col items-center gap-5 relative group cursor-pointer" onclick="window.location.href='chat.html'">
                         <div class="w-32 h-32 rounded-full bg-tao-fire/10 border border-tao-fire/30 flex items-center justify-center pulse-fire relative z-10 transition-all group-hover:bg-tao-fire/20">
                             <!-- Simulated Fire Graphic -->
                             <span class="material-symbols-outlined text-tao-fire text-5xl">local_fire_department</span>
@@ -216,13 +216,13 @@
                             </div>
                         </div>
                         <div class="text-center mt-2">
-                            <div id="coop-focus-title" class="text-sm font-display font-bold text-white">C-Riz Release Party</div>
-                            <div id="coop-focus-subtitle" class="text-[10px] text-white/50 font-mono mt-1">ClimaLabs • April 24</div>
+                            <div id="coop-focus-title" class="text-sm font-display font-bold text-white">Loading...</div>
+                            <div id="coop-focus-subtitle" class="text-[10px] text-white/50 font-mono mt-1">Checking matrix...</div>
                         </div>
                     </div>
 
                     <!-- Collaboration Lantern 2 (Slot 3) -->
-                    <div class="flex flex-col items-center gap-4 group cursor-pointer">
+                    <div class="snap-center shrink-0 flex flex-col items-center gap-4 group cursor-pointer">
                         <div class="w-16 h-16 rounded-full bg-black/40 border border-white/10 border-dashed flex items-center justify-center float-organic transition-all group-hover:border-white/30">
                              <span class="material-symbols-outlined text-white/20 text-xl group-hover:text-white/40">add</span>
                         </div>
@@ -315,51 +315,61 @@
             document.getElementById('res-bar-tp').innerText = tp;
             document.getElementById('res-bar-exp').innerText = exp;
 
-            // Sync with C4C Event (Dashboard Data override)
+            // Load Profile and Dynamic Focus Event
             if (window.supabaseClient) {
                 const { data: { session } } = await window.supabaseClient.auth.getSession();
                 if (session) {
-                    const { data: quests } = await window.supabaseClient
+                    // Fetch real profile data
+                    const { data: profile } = await window.supabaseClient
+                        .from('profiles')
+                        .select('*')
+                        .eq('id', session.user.id)
+                        .single();
+                        
+                    if (profile) {
+                        document.getElementById('res-bar-name').innerText = profile.username || 'Initiate';
+                        document.getElementById('res-bar-role').innerText = profile.role_calling || 'Visual Flow';
+                        document.getElementById('res-bar-exp').innerText = profile.exp || '0';
+                        document.getElementById('res-bar-tp').innerText = profile.trust_points || '100';
+                        
+                        if (profile.avatar_url) {
+                            document.getElementById('res-bar-avatar').src = profile.avatar_url;
+                        }
+                    }
+
+                    // Fetch latest event hosted by user
+                    const { data: quests, error } = await window.supabaseClient
                         .from('quests')
                         .select('*')
                         .eq('creator_id', session.user.id)
-                        .eq('title', 'C4C Event (Community for Community)');
+                        .order('created_at', { ascending: false })
+                        .limit(1);
                     
                     if (quests && quests.length > 0) {
-                        const c4c = quests[0];
-                        document.getElementById('res-bar-name').innerText = c4c.title;
-                        document.getElementById('res-bar-role').innerText = 'Event Details';
-                        document.getElementById('res-bar-tp').innerText = c4c.reward_amount || '100'; // Mocking guests/reward
-                        document.getElementById('res-bar-exp').innerText = c4c.status.toUpperCase();
-                        
-                        document.getElementById('res-bar-tags').innerHTML = `
-                            <span class="text-[10px] px-2 py-1 rounded bg-tao-water/20 border border-tao-water/30 text-white/80">${c4c.quest_type}</span>
-                            <span class="text-[10px] px-2 py-1 rounded bg-tao-fire/20 border border-tao-fire/30 text-white/80">Location: ${c4c.location || 'Secret Garden LX'}</span>
-                        `;
-
-                        if(c4c.flyer_url) {
-                            document.getElementById('res-bar-avatar').src = c4c.flyer_url;
-                        } else {
-                            document.getElementById('res-bar-avatar').src = 'https://images.unsplash.com/photo-1542382156909-9ae37b3f56fd?q=80&w=200&auto=format&fit=crop';
-                        }
+                        const evt = quests[0];
+                        document.getElementById('coop-focus-title').innerText = evt.title;
+                        document.getElementById('coop-focus-subtitle').innerText = `${evt.address || 'Matrix'} • ${evt.event_date || 'TBA'}`;
+                    } else {
+                        document.getElementById('coop-focus-title').innerText = "No Active Focus";
+                        document.getElementById('coop-focus-subtitle').innerText = "Awaiting Orders";
                     }
                 }
-            }
-
-            // Dynamic Main Focus Event (circle_selected_event)
-            const latestEventString = localStorage.getItem('circle_selected_event');
-            if(latestEventString) {
-                try {
-                    const evt = JSON.parse(latestEventString);
-                    document.getElementById('coop-focus-title').innerText = evt.title;
-                    document.getElementById('coop-focus-subtitle').innerText = evt.date || 'TBA';
-                } catch(e) {}
             } else {
-                document.getElementById('coop-focus-title').innerText = "No Active Focus";
-                document.getElementById('coop-focus-subtitle').innerText = "Awaiting Orders";
+                // Fallback UI
+                document.getElementById('coop-focus-title').innerText = "System Offline";
+                document.getElementById('coop-focus-subtitle').innerText = "Reconnect to Matrix";
             }
         });
     </script>
+    <style>
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
     <script src="../js/gamification_engine.js"></script>
 </body>
 </html>
