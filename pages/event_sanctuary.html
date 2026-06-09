@@ -142,11 +142,11 @@
             </div>
             
             <div class="w-full max-w-sm space-y-4">
-                <button class="w-full py-4 bg-white/5 border gold-border text-white rounded-lg hover:bg-white/10 transition flex items-center justify-center gap-2">
+                <button onclick="simulateUpload()" class="w-full py-4 bg-white/5 border gold-border text-white rounded-lg hover:bg-white/10 transition flex items-center justify-center gap-2">
                     <span class="material-symbols-outlined gold-accent">upload</span>
                     Upload Custom Artifact <span class="text-xs gold-accent">(+50 EXP)</span>
                 </button>
-                <button class="w-full py-4 bg-black border border-white/20 text-white/70 rounded-lg hover:bg-white/5 transition flex items-center justify-center gap-2">
+                <button onclick="simulateForge()" class="w-full py-4 bg-black border border-white/20 text-white/70 rounded-lg hover:bg-white/5 transition flex items-center justify-center gap-2">
                     <span class="material-symbols-outlined">auto_awesome</span>
                     Auto-Generate via Forge <span class="text-xs text-white/40">(+20 EXP)</span>
                 </button>
@@ -302,6 +302,39 @@
                 if(i === index) p.classList.add('active');
                 else p.classList.remove('active');
             });
+        }
+        
+        function simulateUpload() {
+            const canvasDiv = document.querySelector('.aspect-\\[4\\/5\\]');
+            canvasDiv.innerHTML = `
+                <div class="absolute inset-0 bg-black/80 flex items-center justify-center z-10 flex-col">
+                    <span class="material-symbols-outlined text-4xl text-white animate-spin mb-2">sync</span>
+                    <p class="text-sm gold-accent animate-pulse">Uploading Artifact...</p>
+                </div>
+            `;
+            setTimeout(() => {
+                canvasDiv.innerHTML = `
+                    <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=600&auto=format&fit=crop');"></div>
+                    <div class="absolute bottom-4 right-4 bg-black/60 px-2 py-1 rounded text-xs gold-accent font-bold border border-gold-accent backdrop-blur-sm">+50 EXP GRANTED</div>
+                `;
+                // Check off a fictional quest in ledger?
+            }, 2000);
+        }
+
+        function simulateForge() {
+            const canvasDiv = document.querySelector('.aspect-\\[4\\/5\\]');
+            canvasDiv.innerHTML = `
+                <div class="absolute inset-0 bg-black/80 flex items-center justify-center z-10 flex-col">
+                    <span class="material-symbols-outlined text-4xl text-[#00f0ff] animate-pulse mb-2">auto_awesome</span>
+                    <p class="text-sm text-[#00f0ff] animate-pulse">Forge is weaving...</p>
+                </div>
+            `;
+            setTimeout(() => {
+                canvasDiv.innerHTML = `
+                    <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1540039155732-d6812b186b5b?q=80&w=600&auto=format&fit=crop');"></div>
+                    <div class="absolute bottom-4 right-4 bg-black/60 px-2 py-1 rounded text-xs text-[#00f0ff] font-bold border border-[#00f0ff] backdrop-blur-sm">+20 EXP GRANTED</div>
+                `;
+            }, 2000);
         }
     </script>
 </body>
