@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" class="dark">
 
 <head>
@@ -213,20 +213,44 @@
                         <span class="material-symbols-outlined">currency_exchange</span> 3. Economy (Value Transfer)
                     </h2>
                     
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         <label class="relative flex cursor-pointer rounded-lg border bg-black/30 p-4 shadow-sm focus:outline-none border-tao-fire bg-tao-fire/10 economy-card" onclick="selectEconomy(this)">
                             <input type="radio" name="economy" value="free" class="sr-only" checked>
                             <div class="flex flex-col">
                                 <span class="block text-sm font-bold text-white mb-1"><span class="text-tao-fire">Free Flow</span> (Donation) </span>
-                                <span class="block text-xs text-white/50">Open access. Guests pay what they feel or use the 3-Dice system at the door.</span>
+                                <span class="block text-xs text-white/50">Open access. Guests pay what they feel at the door.</span>
                             </div>
                         </label>
 
                         <label class="relative flex cursor-pointer rounded-lg border border-white/10 bg-black/30 p-4 shadow-sm focus:outline-none hover:border-white/30 economy-card transition-colors" onclick="selectEconomy(this)">
                             <input type="radio" name="economy" value="fixed" class="sr-only">
                             <div class="flex flex-col">
-                                <span class="block text-sm font-bold text-white mb-1">Fixed Ticket</span>
-                                <span class="block text-xs text-white/50">Set price for entry. Guaranteed value exchange upfront.</span>
+                                <span class="block text-sm font-bold text-white mb-1">Fixed Tiers (5€/10€/15€)</span>
+                                <span class="block text-xs text-white/50">Guaranteed value exchange upfront via system.</span>
+                            </div>
+                        </label>
+                        
+                        <label class="relative flex cursor-pointer rounded-lg border border-white/10 bg-black/30 p-4 shadow-sm focus:outline-none hover:border-white/30 economy-card transition-colors" onclick="selectEconomy(this)">
+                            <input type="radio" name="economy" value="dice" class="sr-only">
+                            <div class="flex flex-col">
+                                <span class="block text-sm font-bold text-white mb-1">Dice Your Flow (1-6€)</span>
+                                <span class="block text-xs text-white/50">The magic 'Pay what you roll' system.</span>
+                            </div>
+                        </label>
+                        
+                        <label class="relative flex cursor-pointer rounded-lg border border-white/10 bg-black/30 p-4 shadow-sm focus:outline-none hover:border-white/30 economy-card transition-colors" onclick="selectEconomy(this)">
+                            <input type="radio" name="economy" value="external" class="sr-only">
+                            <div class="flex flex-col">
+                                <span class="block text-sm font-bold text-white mb-1">External Portal</span>
+                                <span class="block text-xs text-white/50">Provide link to Shotgun or other ticket portal.</span>
+                            </div>
+                        </label>
+                        
+                        <label class="relative flex cursor-pointer rounded-lg border border-white/10 bg-black/30 p-4 shadow-sm focus:outline-none hover:border-white/30 economy-card transition-colors" onclick="selectEconomy(this)">
+                            <input type="radio" name="economy" value="custom" class="sr-only">
+                            <div class="flex flex-col">
+                                <span class="block text-sm font-bold text-white mb-1">Custom Value</span>
+                                <span class="block text-xs text-white/50">Specific amount or item trade.</span>
                             </div>
                         </label>
                     </div>
@@ -324,7 +348,7 @@
             const type = typeChip ? typeChip.innerText.toUpperCase() : "UNKNOWN";
             
             const ecoRadio = document.querySelector('input[name="economy"]:checked');
-            const eco = ecoRadio ? (ecoRadio.value === 'free' ? 'FREE_FLOW' : 'FIXED') : 'FREE_FLOW';
+            const eco = ecoRadio ? ecoRadio.value.toUpperCase() : 'FREE';
 
             const needChips = document.querySelectorAll('#needs-selector .active');
             const needs = Array.from(needChips).map(c => c.innerText.toUpperCase()).join(", ") || "NONE";
@@ -358,7 +382,7 @@
             const type = typeChip ? typeChip.innerText : "Gathering";
             
             const ecoRadio = document.querySelector('input[name="economy"]:checked');
-            const eco = ecoRadio ? (ecoRadio.value === 'free' ? 'Free Flow' : 'Fixed Ticket') : 'Free Flow';
+            const eco = ecoRadio ? ecoRadio.value : 'free';
 
             const needChips = document.querySelectorAll('#needs-selector .active');
             const needs = Array.from(needChips).map(c => c.innerText);

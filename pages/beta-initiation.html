@@ -120,9 +120,11 @@
             <p class="text-sm text-white/60 mb-8 italic" id="flowee-msg-1">"Who knocks at the roots? Use your seal or carve your data below..."</p>
             
             <!-- Social Login Buttons (Floating in 3D too, but accessible here) -->
-            <div class="flex gap-4 justify-center mb-8">
-                <button onclick="window.handleOAuthLogin('google')" class="px-6 py-3 bg-white text-black font-bold rounded-lg hover:scale-105 transition-transform uppercase text-xs">Google Account</button>
-                <button onclick="window.handleOAuthLogin('apple')" class="px-6 py-3 bg-white/10 border border-white/20 text-white font-bold rounded-lg hover:scale-105 transition-transform uppercase text-xs">Apple / Samsung</button>
+            <div class="flex gap-4 justify-center mb-8 flex-wrap">
+                  <button onclick="window.handleOAuthLogin('google')" class="px-6 py-3 bg-white text-black font-bold rounded-lg hover:scale-105 transition-transform uppercase text-xs w-[45%]">Google Account</button>
+                  <button onclick="window.handleOAuthLogin('apple')" class="px-6 py-3 bg-white/10 border border-white/20 text-white font-bold rounded-lg hover:scale-105 transition-transform uppercase text-xs w-[45%]">Apple / Samsung</button>
+                  <button onclick="window.handleOAuthLogin('instagram')" class="px-6 py-3 bg-gradient-to-r from-[#f09433] via-[#dc2743] to-[#bc1888] text-white font-bold rounded-lg hover:scale-105 transition-transform uppercase text-xs w-[45%]">Instagram</button>
+                  <button onclick="window.handleOAuthLogin('discord')" class="px-6 py-3 bg-[#5865F2] text-white font-bold rounded-lg hover:scale-105 transition-transform uppercase text-xs w-[45%]">Discord</button>
             </div>
             
             <div class="h-px w-full bg-white/10 mb-8"></div>

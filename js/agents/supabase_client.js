@@ -1,4 +1,4 @@
-
+﻿
 /**
  * SUPABASE CLIENT INITIALIZATION
  * Connects to the Circle D Flow backend.
@@ -31,4 +31,65 @@ if(window.supabase) {
     }
 } else {
     console.error("[Supabase] Critical: Library not loaded.");
+}
+
+// --- OAUTH LOGIC (THE SYNAPSE GATE) ---
+window.handleOAuthLogin = async function(provider) {
+    if(!window.supabaseClient) {
+        alert('Backend disconnected.');
+        return;
+    }
+    
+    // Disable UI temporarily or show loading
+    const btn = event.target;
+    const oldText = btn.innerHTML;
+    btn.innerHTML = 'Connecting...';
+    
+    try {
+        const { data, error } = await window.supabaseClient.auth.signInWithOAuth({
+            provider: provider,
+            options: {
+                redirectTo: window.location.origin + '/pages/dashboard.html'
+            }
+        });
+        if (error) throw error;
+    } catch(err) {
+        console.error('OAuth Error:', err);
+        alert('Authentication failed: ' + err.message);
+        btn.innerHTML = oldText;
+    }
+};
+
+// --- IDENTITY MERGE (SHADOW PROFILES) ---
+if(window.supabaseClient) {
+    window.supabaseClient.auth.onAuthStateChange(async (event, session) => {
+        if (event === 'SIGNED_IN' && session) {
+            console.log('[Supabase] Auth state changed to SIGNED_IN');
+            
+            // Extract Instagram/Discord handle from metadata if available
+            const metadata = session.user.user_metadata;
+            const igHandle = metadata.preferred_username || metadata.user_name || null;
+            
+            // Only attempt merge if we have a handle
+            if (igHandle && window.localStorage.getItem('cdf_merged_' + session.user.id) !== 'true') {
+                try {
+                    // Call the RPC function we defined in Supabase
+                    const { data, error } = await window.supabaseClient.rpc('merge_shadow_profile', {
+                        p_auth_user_id: session.user.id,
+                        p_instagram_handle: igHandle
+                    });
+                    
+                    if (!error && data && data.merged) {
+                        console.log('Identity Merged!', data.message);
+                        alert(data.message); // Temporary UI feedback
+                    }
+                    
+                    // Mark as merged locally so we don't spam RPC calls on every refresh
+                    window.localStorage.setItem('cdf_merged_' + session.user.id, 'true');
+                } catch(e) {
+                    console.error('Merge Error:', e);
+                }
+            }
+        }
+    });
 }
