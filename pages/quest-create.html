@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" class="dark">
 
 <head>
@@ -73,7 +73,7 @@
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../js/supabase_client.js"></script>
+    <script src="../js/agents/supabase_client.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 
@@ -336,12 +336,12 @@
         document.getElementById('event-title').addEventListener('input', updateSignalTags);
 
         async function manifestEvent() {
-            if(!window.cdf_supabase) {
+            if(!window.supabaseClient) {
                 alert("Database connection offline.");
                 return;
             }
             
-            const session = await window.cdf_supabase.auth.getSession();
+            const session = await window.supabaseClient.auth.getSession();
             if(!session.data.session) {
                 alert("You must be logged in to create a quest.");
                 return;
@@ -378,7 +378,7 @@
             
             try {
                 // Save to Supabase
-                const { data, error } = await window.cdf_supabase.from('quests').insert([{
+                const { data, error } = await window.supabaseClient.from('quests').insert([{
                     title: title,
                     description: desc,
                     type: type,
@@ -395,7 +395,7 @@
                 const qrUrl = window.location.origin + "/pages/flavor_quest.html?id=" + questId;
                 
                 // Update QR data
-                await window.cdf_supabase.from('quests').update({ qr_code_data: qrUrl }).eq('id', questId);
+                await window.supabaseClient.from('quests').update({ qr_code_data: qrUrl }).eq('id', questId);
                 
                 // Backup for local features
                 localStorage.setItem('cdf_latest_event', JSON.stringify(eventData));
@@ -471,3 +471,4 @@
     <script src="../js/agents/flowee.js"></script>
 </body>
 </html>
+
