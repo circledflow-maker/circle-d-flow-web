@@ -16,6 +16,15 @@
     background: #5A2A84;
 }
 
+/* Hide scrollbar for touch swiping */
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+.hide-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
 /* Smooth Scroll Behavior & Mobile/Overflow Fixes */
 html,
 body {

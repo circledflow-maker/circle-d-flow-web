@@ -337,16 +337,15 @@
                         }
                     }
 
-                    // Fetch latest event hosted by user
+                    // Fetch latest event hosted by user without relying on created_at column to avoid 400 errors
                     const { data: quests, error } = await window.supabaseClient
                         .from('quests')
                         .select('*')
-                        .eq('creator_id', session.user.id)
-                        .order('created_at', { ascending: false })
-                        .limit(1);
+                        .eq('creator_id', session.user.id);
                     
                     if (quests && quests.length > 0) {
-                        const evt = quests[0];
+                        // Pick the last one created (highest index) as the latest
+                        const evt = quests[quests.length - 1];
                         document.getElementById('coop-focus-title').innerText = evt.title;
                         document.getElementById('coop-focus-subtitle').innerText = `${evt.address || 'Matrix'} • ${evt.event_date || 'TBA'}`;
                     } else {
