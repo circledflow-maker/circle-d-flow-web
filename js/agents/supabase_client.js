@@ -1,4 +1,4 @@
-﻿
+
 /**
  * SUPABASE CLIENT INITIALIZATION
  * Connects to the Circle D Flow backend.
@@ -66,17 +66,17 @@ if(window.supabaseClient) {
         if (event === 'SIGNED_IN' && session) {
             console.log('[Supabase] Auth state changed to SIGNED_IN');
             
-            // Extract Instagram/Discord handle from metadata if available
+            // Extract Discord handle from metadata if available
             const metadata = session.user.user_metadata;
-            const igHandle = metadata.preferred_username || metadata.user_name || null;
+            const socialHandle = metadata.preferred_username || metadata.user_name || null;
             
             // Only attempt merge if we have a handle
-            if (igHandle && window.localStorage.getItem('cdf_merged_' + session.user.id) !== 'true') {
+            if (socialHandle && window.localStorage.getItem('cdf_merged_' + session.user.id) !== 'true') {
                 try {
                     // Call the RPC function we defined in Supabase
                     const { data, error } = await window.supabaseClient.rpc('merge_shadow_profile', {
                         p_auth_user_id: session.user.id,
-                        p_instagram_handle: igHandle
+                        p_discord_handle: socialHandle
                     });
                     
                     if (!error && data && data.merged) {
