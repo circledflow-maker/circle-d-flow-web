@@ -130,9 +130,15 @@
         }
         @media (min-width: 768px) { .overlay-card { border-radius: 24px; transform: scale(1); } }
         .flowee-header { display: flex; gap: 16px; align-items: center; margin-bottom: 20px; }
-        .flowee-avatar-container { position: relative; width: 50px; height: 50px; }
-        .flowee-avatar { width: 100%; height: 100%; border-radius: 50%; border: 2px solid #00ffcc; background: black; }
-        .flowee-pulse { position: absolute; width: 100%; height: 100%; border-radius: 50%; background: rgba(0, 255, 204, 0.4); animation: pulse 2s infinite; }
+        .flowee-avatar-container { position: relative; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; }
+        .fairy-orb { width: 20px; height: 20px; border-radius: 50%; background: #00ffcc; box-shadow: 0 0 15px #00ffcc, 0 0 30px #00ffcc; animation: pulse 2s infinite; }
+        .fairy-wing { position: absolute; top: 10px; width: 15px; height: 25px; background: rgba(0, 255, 204, 0.5); border-radius: 50% 50% 0 50%; transform-origin: bottom right; }
+        .fairy-wing.left { left: 8px; animation: flap-left 0.15s infinite alternate; }
+        .fairy-wing.right { right: 8px; transform-origin: bottom left; border-radius: 50% 50% 50% 0; animation: flap-right 0.15s infinite alternate; }
+        @keyframes flap-left { from { transform: rotate(-10deg); } to { transform: rotate(-50deg); } }
+        @keyframes flap-right { from { transform: rotate(10deg); } to { transform: rotate(50deg); } }
+        
+        .flowee-pulse { position: absolute; width: 100%; height: 100%; border-radius: 50%; background: rgba(0, 255, 204, 0.4); animation: pulse-out 2s infinite; }
         .flowee-bubble { background: rgba(255, 255, 255, 0.1); padding: 12px 16px; border-radius: 16px; border-bottom-left-radius: 4px; color: #fff; font-size: 0.95rem; }
         
         .status-orb { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-left: 8px; box-shadow: 0 0 8px currentColor; }
@@ -150,7 +156,8 @@
         .hidden-input-group.open { max-height: 60px; }
         .hidden-input-group input { flex: 1; background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.2); padding: 10px; border-radius: 8px; color: white; }
         
-        @keyframes pulse { 0% { transform: scale(0.95); opacity: 0.5; } 70% { transform: scale(1.2); opacity: 0; } 100% { transform: scale(0.95); opacity: 0; } }
+        @keyframes pulse-out { 0% { transform: scale(0.95); opacity: 0.5; } 70% { transform: scale(1.2); opacity: 0; } 100% { transform: scale(0.95); opacity: 0; } }
+        @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(0.9); } }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
@@ -196,7 +203,7 @@
                 <!-- Image would go here -->
             </div>
             
-            <div class="w-full max-w-sm space-y-4 relative">
+            <div class="w-full max-w-sm space-y-4 relative mt-4">
                 <input type="file" id="artifact-upload" accept="image/*" class="hidden" onchange="handleFileUpload(event)">
                 <button onclick="document.getElementById('artifact-upload').click()" class="w-full py-4 bg-white/5 border gold-border text-white rounded-lg hover:bg-white/10 transition flex items-center justify-center gap-2">
                     <span class="material-symbols-outlined gold-accent">upload_file</span>
@@ -211,42 +218,24 @@
                     Auto-Generate via Forge <span class="text-xs text-white/40">(+20 EXP)</span>
                 </button>
             </div>
+            
+            <div class="w-full max-w-sm mt-8 text-left bg-black/40 p-4 rounded-xl border border-[#00ffcc]/30 shadow-[0_0_15px_rgba(0,255,204,0.1)]">
+                <h3 class="text-xs uppercase tracking-widest text-[#00ffcc] font-bold mb-2 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm">visibility</span> The Vision
+                </h3>
+                <p id="event-vision-display" class="text-sm italic text-white/80 font-serif leading-relaxed">
+                    "Loading the soul of the event..."
+                </p>
+            </div>
+            <div class="h-20"></div>
         </div>
 
         <!-- SECTION 2: THE BLUEPRINT -->
         <div class="swipe-section">
-            <h2 class="font-serif text-2xl gold-accent mb-6 uppercase tracking-widest text-center mt-4">Flow Curve</h2>
+            <h2 class="font-serif text-2xl gold-accent mb-6 uppercase tracking-widest text-center mt-4">Sync Matrix</h2>
             
-            <div class="max-w-md mx-auto">
-                <div class="timeline-node active">
-                    <div class="timeline-orb"></div>
-                    <h3 class="font-bold text-lg">15:00 - The Gather</h3>
-                    <p class="text-sm text-white/60">African Queen Kitchen & Art Market open. The baseline frequency is established.</p>
-                </div>
-                
-                <div class="timeline-node">
-                    <div class="timeline-orb"></div>
-                    <h3 class="font-bold text-lg">17:00 - The Build-up</h3>
-                    <p class="text-sm text-white/60">Cipher Contest & Freestyle Sessions. Energy rises.</p>
-                </div>
-                
-                <div class="timeline-node">
-                    <div class="timeline-orb"></div>
-                    <h3 class="font-bold text-lg">18:30 - The Peak</h3>
-                    <p class="text-sm text-white/60">Live Concerts: Rui, George, Naru. Deep Immersion.</p>
-                </div>
-                
-                <div class="timeline-node">
-                    <div class="timeline-orb"></div>
-                    <h3 class="font-bold text-lg">21:00 - The Cool Down</h3>
-                    <p class="text-sm text-white/60">Music ends. Connection Time. Presenting upcoming projects.</p>
-                </div>
-                
-                <div class="timeline-node">
-                    <div class="timeline-orb"></div>
-                    <h3 class="font-bold text-lg">22:00 - Closing</h3>
-                    <p class="text-sm text-white/60">Final clear out. Equipment breakdown.</p>
-                </div>
+            <div class="max-w-md mx-auto" id="sync-matrix-container">
+                <p class="text-white/50 text-center text-sm italic">Loading the timeline...</p>
             </div>
         </div>
 
@@ -395,11 +384,15 @@
                 
                 if (event) {
                     document.querySelector('h1').innerText = event.title.toUpperCase();
+                    if (event.description) {
+                        document.getElementById('event-vision-display').innerText = `"${event.description}"`;
+                    }
                     if (event.flyer_url) {
                         setCanvasImage(event.flyer_url);
                     }
                     populateMangaShare(event);
                     renderTeamChecklist(event);
+                    renderSyncMatrix(event);
                 }
                 
                 // Load user's created events for the switcher
@@ -830,6 +823,38 @@
             });
         }
         
+        // --- Sync Matrix Logic ---
+        function renderSyncMatrix(event) {
+            const container = document.getElementById('sync-matrix-container');
+            if(!event.needs || !event.needs.syncMatrix || !Array.isArray(event.needs.syncMatrix) || event.needs.syncMatrix.length === 0) {
+                container.innerHTML = `<p class="text-white/50 text-center text-sm italic">No timeline data found. Sync Matrix is empty.</p>`;
+                return;
+            }
+            
+            container.innerHTML = '';
+            event.needs.syncMatrix.forEach((m, idx) => {
+                const isActive = idx === 0 ? 'active' : ''; // Just for visual demo
+                let artistBadge = '';
+                let artistDesc = 'Open Phase';
+                
+                if(m.artistId && event.needs.team) {
+                    const artist = event.needs.team.find(a => a.id === m.artistId);
+                    if(artist) {
+                        artistBadge = `<span class="inline-block px-2 py-0.5 bg-[#d4af37]/20 text-[#d4af37] border border-[#d4af37]/30 rounded text-[10px] ml-2 uppercase font-bold tracking-widest">${artist.name}</span>`;
+                        artistDesc = `Led by ${artist.name} (${artist.role})`;
+                    }
+                }
+
+                container.innerHTML += `
+                    <div class="timeline-node ${isActive}">
+                        <div class="timeline-orb"></div>
+                        <h3 class="font-bold text-lg flex items-center">${m.time} - ${m.label} ${artistBadge}</h3>
+                        <p class="text-sm text-white/60">${artistDesc}</p>
+                    </div>
+                `;
+            });
+        }
+        
         let activeArtistData = null;
 
         function openFloweeOverlay(artistId, artistName, role, currentStatus, existingDriveLink = "") {
@@ -846,15 +871,15 @@
             document.getElementById('drive-link-input-container').classList.remove('open');
 
             if (currentStatus === 'red') {
-                speechBubble.innerHTML = `Yo! <strong>${artistName}</strong> wurde noch nicht kontaktiert. Sollen wir direkt die Einladung raushauen?`;
+                speechBubble.innerHTML = `Yo! <strong>${artistName}</strong> hasn't been contacted yet. Should we beam out the invite right now?`;
                 orb.className = "status-orb red";
                 textStatus.innerText = "Not Contacted";
             } else if (currentStatus === 'orange') {
-                speechBubble.innerHTML = `Wir warten noch auf die Zusage von <strong>${artistName}</strong>. Zeit für einen netten WhatsApp-Push?`;
+                speechBubble.innerHTML = `We are still waiting for <strong>${artistName}</strong> to confirm. Time for a quick WhatsApp push?`;
                 orb.className = "status-orb orange";
                 textStatus.innerText = "Waiting Confirmation";
             } else {
-                speechBubble.innerHTML = `Boom! <strong>${artistName}</strong> ist am Start! Alle Orbs leuchten grün. Material im Drive gesichert?`;
+                speechBubble.innerHTML = `Boom! <strong>${artistName}</strong> is fully synced! All orbs are green. Got their material in the Drive?`;
                 orb.className = "status-orb green";
                 textStatus.innerText = "Confirmed";
             }
@@ -873,22 +898,22 @@
 
         async function saveDriveLink() {
             const url = document.getElementById('drive-folder-url').value;
-            if (!url) return alert("Bitte gib einen gültigen Link ein.");
+            if (!url) return alert("Please enter a valid link.");
 
-            document.getElementById('flowee-speech').innerHTML = `Perfekt! Der Drive-Ordner für <strong>${activeArtistData.name}</strong> ist jetzt verknüpft.`;
+            document.getElementById('flowee-speech').innerHTML = `Perfect! The Drive folder for <strong>${activeArtistData.name}</strong> is now synced.`;
             activeArtistData.link = url;
             
             await updateArtistStatusInDb(activeArtistData.id, 'orange', url); 
         }
 
         function sendWhatsAppReminder() {
-            const eventTitle = document.querySelector('h1').innerText || "unserem Flow Event";
+            const eventTitle = document.querySelector('h1').innerText || "our Flow Event";
             let message = "";
             if (activeArtistData.status === 'red') {
-                message = `Hey ${activeArtistData.name}! Flowee von KyheartLx hier. ✨ Wir würden dich mega gerne als ${activeArtistData.role} dabei haben bei "${eventTitle}". Hast du Bock?`;
+                message = `Hey ${activeArtistData.name}! Flowee from KyheartLx here. ✨ We would love to have you as ${activeArtistData.role} at "${eventTitle}". Are you down for it?`;
                 updateArtistStatusInDb(activeArtistData.id, 'orange', activeArtistData.link); // optimistic update
             } else {
-                message = `Hey ${activeArtistData.name}, kurzer Flow-Check! 🌟 Deine Einladung für "${eventTitle}" ist ready. Gib mir kurz Bescheid, ob alles passt!`;
+                message = `Hey ${activeArtistData.name}, quick flow check! 🌟 Your invite for "${eventTitle}" is ready. Let me know if everything is smooth!`;
             }
             const encodedMessage = encodeURIComponent(message);
             window.open(`https://wa.me/?text=${encodedMessage}`, '_blank');
@@ -926,8 +951,7 @@
         function generateBrowserPdfInvite(artist) {
             const eventTitle = document.querySelector('h1').innerText || "C4C EVENT";
             
-            // Render a loading state somewhere (or just alert)
-            alert(`Flowee bereitet die PDF Einladung für ${artist.name} vor...`);
+            alert(`Flowee is weaving the PDF invite for ${artist.name}...`);
             
             const doc = new window.jspdf.jsPDF({
                 orientation: "portrait",
@@ -976,10 +1000,10 @@
             <div class="flowee-header">
                 <div class="flowee-avatar-container">
                     <span class="flowee-pulse"></span>
-                    <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Flowee" alt="Flowee" class="flowee-avatar">
+                    <div class="fairy-wing left"></div><div class="fairy-wing right"></div><div class="fairy-orb"></div>
                 </div>
                 <div class="flowee-bubble">
-                    <p id="flowee-speech">Yo! Was steht für <strong id="current-artist-name">Artist</strong> an?</p>
+                    <p id="flowee-speech">Yo! What's the status on <strong id="current-artist-name">Artist</strong>?</p>
                 </div>
             </div>
 
@@ -993,25 +1017,25 @@
 
             <div class="overlay-actions space-y-2">
                 <button class="action-btn" onclick="triggerPdfGeneration()">
-                    <span class="material-symbols-outlined">receipt_long</span> Einladung generieren (PDF)
+                    <span class="material-symbols-outlined">receipt_long</span> Generate PDF Invite
                 </button>
 
                 <div class="action-group-drive">
                     <button class="action-btn" onclick="toggleDriveInput()">
-                        <span class="material-symbols-outlined text-[#4285F4]">add_to_drive</span> Google Drive Ordner verlinken
+                        <span class="material-symbols-outlined text-[#4285F4]">add_to_drive</span> Link Google Drive Folder
                     </button>
                     <div id="drive-link-input-container" class="hidden-input-group">
                         <input type="url" id="drive-folder-url" placeholder="https://drive.google.com/..." class="w-full text-sm">
-                        <button class="bg-[#00ffcc]/20 text-[#00ffcc] font-bold px-4 rounded border border-[#00ffcc]" onclick="saveDriveLink()">Sichern</button>
+                        <button class="bg-[#00ffcc]/20 text-[#00ffcc] font-bold px-4 rounded border border-[#00ffcc]" onclick="saveDriveLink()">Save</button>
                     </div>
                 </div>
 
                 <button class="action-btn bg-[#25D366]/10 border-[#25D366]/30 hover:border-[#25D366]" onclick="sendWhatsAppReminder()">
-                    <span class="material-symbols-outlined text-[#25D366]">chat</span> WhatsApp abschicken
+                    <span class="material-symbols-outlined text-[#25D366]">chat</span> Ping on WhatsApp
                 </button>
             </div>
 
-            <button class="w-full mt-4 py-3 border border-white/20 text-white/50 uppercase tracking-widest text-xs font-bold rounded hover:text-white hover:bg-white/5 transition" onclick="closeFloweeOverlay()">Zurück zum Ledger</button>
+            <button class="w-full mt-4 py-3 border border-white/20 text-white/50 uppercase tracking-widest text-xs font-bold rounded hover:text-white hover:bg-white/5 transition" onclick="closeFloweeOverlay()">Back to Ledger</button>
         </div>
     </div>
 </body>

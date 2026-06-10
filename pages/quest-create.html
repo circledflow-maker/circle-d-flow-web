@@ -15,14 +15,7 @@
             theme: {
                 extend: {
                     colors: {
-                        tao: {
-                            earth: '#2E3B32',
-                            wood: '#5C4033',
-                            fire: '#D47E3D',
-                            water: '#2C4957',
-                            metal: '#B0C4DE',
-                            void: '#0B0F0D'
-                        }
+                        tao: { earth: '#2E3B32', wood: '#5C4033', fire: '#D47E3D', water: '#2C4957', metal: '#B0C4DE', void: '#0B0F0D' }
                     },
                     fontFamily: {
                         "display": ["Cinzel", "serif"],
@@ -34,147 +27,57 @@
         }
     </script>
     <style>
-        body { background-color: var(--color-tao-void); color: white; overflow: hidden; /* Lock vertical scroll for swipe UI */ }
+        body { background-color: var(--color-tao-void); color: white; overflow: hidden; }
         
-        /* Antigravity Swipe Container */
+        /* Swipe Container */
         .swipe-container {
-            display: flex;
-            width: 100vw;
-            height: 100vh;
-            overflow-x: auto;
-            overflow-y: hidden;
-            scroll-snap-type: x mandatory;
-            scroll-behavior: smooth;
-            -webkit-overflow-scrolling: touch;
+            display: flex; width: 100vw; height: 100vh; overflow-x: auto; overflow-y: hidden;
+            scroll-snap-type: x mandatory; scroll-behavior: smooth; -webkit-overflow-scrolling: touch;
         }
         .swipe-container::-webkit-scrollbar { display: none; }
         
         .swipe-card {
-            flex: 0 0 100vw;
-            width: 100vw;
-            height: 100vh;
-            scroll-snap-align: start;
-            overflow-y: auto; /* Allow scrolling within the card if content is tall */
-            padding: 100px 20px 100px 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            flex: 0 0 100vw; width: 100vw; height: 100vh; scroll-snap-align: start;
+            overflow-y: auto; padding: 100px 20px 100px 20px; display: flex; flex-direction: column; align-items: center;
         }
+        .swipe-card::-webkit-scrollbar { display: none; }
         
         .card-content {
-            width: 100%;
-            max-width: 500px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            padding: 24px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-            transform: translateY(0);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            width: 100%; max-width: 500px; background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 24px; padding: 24px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5); transform: translateY(0); transition: all 0.3s ease;
         }
-        /* Active card floating effect */
-        .swipe-card.active .card-content {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 50px rgba(0,255,204,0.1);
-            border-color: rgba(0, 255, 204, 0.3);
-        }
+        .swipe-card.active .card-content { transform: translateY(-5px); box-shadow: 0 15px 50px rgba(0,255,204,0.1); border-color: rgba(0, 255, 204, 0.3); }
 
-        .input-tao {
-            background: rgba(0,0,0,0.4);
-            border: 1px solid rgba(255,255,255,0.2);
-            color: #fff;
-            transition: all 0.3s ease;
-        }
-        .input-tao:focus {
-            border-color: #00ffcc;
-            box-shadow: 0 0 10px rgba(0,255,204,0.2);
-            outline: none;
-        }
-
-        .select-chip {
-            border: 1px solid rgba(255,255,255,0.1);
-            background: rgba(255,255,255,0.05);
-            transition: all 0.2s ease;
-            cursor: pointer;
-        }
-        .select-chip.active {
-            border-color: #00ffcc;
-            background: rgba(0,255,204,0.15);
-            color: #00ffcc;
-        }
+        .input-tao { background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.2); color: #fff; transition: all 0.3s ease; }
+        .input-tao:focus { border-color: #00ffcc; box-shadow: 0 0 10px rgba(0,255,204,0.2); outline: none; }
         
-        .economy-card.active {
-            border-color: #00ffcc;
-            background: rgba(0,255,204,0.1);
-        }
+        .select-chip { border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); transition: all 0.2s ease; cursor: pointer; }
+        .select-chip.active { border-color: #00ffcc; background: rgba(0,255,204,0.15); color: #00ffcc; }
 
-        /* Flowee Host Element */
-        .flowee-header {
-            display: flex;
-            gap: 16px;
-            align-items: flex-end;
-            margin-bottom: 24px;
-            width: 100%;
-            max-width: 500px;
-        }
-        .flowee-avatar {
-            width: 50px; height: 50px;
-            border-radius: 50%;
-            border: 2px solid #00ffcc;
-            box-shadow: 0 0 10px rgba(0,255,204,0.5);
-            background: #000;
-        }
-        .flowee-bubble {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 12px 16px;
-            border-radius: 16px;
-            border-bottom-left-radius: 4px;
-            color: #fff;
-            font-size: 0.95rem;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255,255,255,0.1);
-        }
+        /* Flowee Fairy CSS */
+        .flowee-header { display: flex; gap: 16px; align-items: flex-end; margin-bottom: 24px; width: 100%; max-width: 500px; }
+        .flowee-avatar { position: relative; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .fairy-orb { width: 16px; height: 16px; border-radius: 50%; background: #00ffcc; box-shadow: 0 0 15px #00ffcc, 0 0 30px #00ffcc; animation: float 3s ease-in-out infinite; }
+        .fairy-wing { position: absolute; top: 8px; width: 14px; height: 20px; background: rgba(0, 255, 204, 0.5); border-radius: 50% 50% 0 50%; transform-origin: bottom right; }
+        .fairy-wing.left { left: 4px; animation: flap-left 0.15s infinite alternate; }
+        .fairy-wing.right { right: 4px; transform-origin: bottom left; border-radius: 50% 50% 50% 0; animation: flap-right 0.15s infinite alternate; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+        @keyframes flap-left { from { transform: rotate(-10deg); } to { transform: rotate(-50deg); } }
+        @keyframes flap-right { from { transform: rotate(10deg); } to { transform: rotate(50deg); } }
+
+        .flowee-bubble { background: rgba(255, 255, 255, 0.1); padding: 12px 16px; border-radius: 16px; border-bottom-left-radius: 4px; color: #fff; font-size: 0.95rem; backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.1); }
 
         /* Progress Bar */
-        .progress-bar-container {
-            position: fixed;
-            top: 80px; left: 0; width: 100%; height: 4px;
-            background: rgba(255,255,255,0.1);
-            z-index: 40;
-        }
-        .progress-bar {
-            height: 100%; width: 16.6%; /* 6 steps */
-            background: #00ffcc;
-            box-shadow: 0 0 10px #00ffcc;
-            transition: width 0.3s ease;
-        }
+        .progress-bar-container { position: fixed; top: 80px; left: 0; width: 100%; height: 4px; background: rgba(255,255,255,0.1); z-index: 40; }
+        .progress-bar { height: 100%; width: 12.5%; background: #00ffcc; box-shadow: 0 0 10px #00ffcc; transition: width 0.3s ease; }
         
         /* Navigation Arrows */
-        .nav-arrow {
-            position: fixed;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(0,0,0,0.5);
-            border: 1px solid rgba(255,255,255,0.2);
-            color: white;
-            border-radius: 50%;
-            width: 48px; height: 48px;
-            display: flex; align-items: center; justify-content: center;
-            z-index: 40;
-            cursor: pointer;
-            backdrop-filter: blur(4px);
-        }
+        .nav-arrow { position: fixed; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 50%; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; z-index: 40; cursor: pointer; backdrop-filter: blur(4px); }
         .nav-arrow.disabled { opacity: 0.3; pointer-events: none; }
-        .nav-prev { left: 10px; }
-        .nav-next { right: 10px; }
-        @media (min-width: 768px) {
-            .nav-prev { left: 40px; }
-            .nav-next { right: 40px; }
-        }
-
+        .nav-prev { left: 10px; } .nav-next { right: 10px; }
+        @media (min-width: 768px) { .nav-prev { left: 40px; } .nav-next { right: 40px; } }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../js/agents/supabase_client.js"></script>
 </head>
 
 <body class="bg-tao-void text-white min-h-screen relative overflow-hidden">
@@ -188,17 +91,11 @@
     </nav>
     
     <!-- Energy Progress Bar -->
-    <div class="progress-bar-container">
-        <div class="progress-bar" id="progress-bar"></div>
-    </div>
+    <div class="progress-bar-container"><div class="progress-bar" id="progress-bar"></div></div>
 
     <!-- Navigation Arrows -->
-    <div class="nav-arrow nav-prev disabled" id="nav-prev" onclick="swipeTo(currentStep - 1)">
-        <span class="material-symbols-outlined">chevron_left</span>
-    </div>
-    <div class="nav-arrow nav-next" id="nav-next" onclick="validateAndSwipe(currentStep + 1)">
-        <span class="material-symbols-outlined">chevron_right</span>
-    </div>
+    <div class="nav-arrow nav-prev disabled" id="nav-prev" onclick="swipeTo(currentStep - 1)"><span class="material-symbols-outlined">chevron_left</span></div>
+    <div class="nav-arrow nav-next" id="nav-next" onclick="validateAndSwipe(currentStep + 1)"><span class="material-symbols-outlined">chevron_right</span></div>
 
     <!-- Swipe Container -->
     <div class="swipe-container" id="swipe-container">
@@ -206,8 +103,8 @@
         <!-- CARD 1: THE CORE -->
         <div class="swipe-card active" id="card-1">
             <div class="flowee-header">
-                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Flowee" alt="Flowee" class="flowee-avatar">
-                <div class="flowee-bubble">Yo! Welches Konzept bringen wir heute in die physische Welt? Gib mir den Namen und das Datum.</div>
+                <div class="flowee-avatar"><div class="fairy-wing left"></div><div class="fairy-wing right"></div><div class="fairy-orb"></div></div>
+                <div class="flowee-bubble">Yo! What concept are we bringing to the physical world today? Give me a name and a date.</div>
             </div>
             <div class="card-content">
                 <h2 class="text-xl font-display text-[#00ffcc] mb-4 flex items-center gap-2 border-b border-[#00ffcc]/20 pb-2 uppercase tracking-widest text-sm">
@@ -216,15 +113,17 @@
                 <div class="space-y-6">
                     <div>
                         <label class="block text-[10px] uppercase tracking-widest text-white/50 mb-2">Event Title *</label>
-                        <input type="text" id="event-title" required class="w-full input-tao rounded-lg px-4 py-3 font-body text-sm" placeholder="e.g. C-Riz Release Party" oninput="saveDraft()">
+                        <input type="text" id="event-title" required class="w-full input-tao rounded-lg px-4 py-3 font-body text-sm" placeholder="e.g. Secret Garden Session" oninput="saveDraft()">
                     </div>
                     <div>
                         <label class="block text-[10px] uppercase tracking-widest text-white/50 mb-3">Event Spirit & Type</label>
                         <div class="flex flex-wrap gap-2" id="type-selector">
+                            <!-- Multiple allowed -->
                             <div class="select-chip px-3 py-1.5 rounded-full text-xs font-bold active" onclick="toggleChip(this, 'type')">Exhibition</div>
                             <div class="select-chip px-3 py-1.5 rounded-full text-xs font-bold" onclick="toggleChip(this, 'type')">Concert</div>
                             <div class="select-chip px-3 py-1.5 rounded-full text-xs font-bold" onclick="toggleChip(this, 'type')">Jam Session</div>
                             <div class="select-chip px-3 py-1.5 rounded-full text-xs font-bold" onclick="toggleChip(this, 'type')">Art Market</div>
+                            <div class="select-chip px-3 py-1.5 rounded-full text-xs font-bold" onclick="toggleChip(this, 'type')">Talk</div>
                         </div>
                     </div>
                     <div>
@@ -235,112 +134,125 @@
             </div>
         </div>
 
-        <!-- CARD 2: LOGISTICS -->
+        <!-- CARD 2: THE VISION (NEW) -->
         <div class="swipe-card" id="card-2">
             <div class="flowee-header">
-                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Flowee" alt="Flowee" class="flowee-avatar">
-                <div class="flowee-bubble">Wo findet das statt und was brauchen wir an Hardware vor Ort?</div>
+                <div class="flowee-avatar"><div class="fairy-wing left"></div><div class="fairy-wing right"></div><div class="fairy-orb"></div></div>
+                <div class="flowee-bubble">I need your Manifest. What's the vibe? Is it a raw cypher tournament or a deep flow talk? Paint the picture.</div>
             </div>
             <div class="card-content">
                 <h2 class="text-xl font-display text-[#00ffcc] mb-4 flex items-center gap-2 border-b border-[#00ffcc]/20 pb-2 uppercase tracking-widest text-sm">
-                    <span class="material-symbols-outlined text-lg">foundation</span> 2. Location Check
+                    <span class="material-symbols-outlined text-lg">visibility</span> 2. The Vision
+                </h2>
+                <div>
+                    <label class="block text-[10px] uppercase tracking-widest text-white/50 mb-2">Manifest / Press Text *</label>
+                    <textarea id="event-vision" rows="6" required class="w-full input-tao rounded-lg px-4 py-3 font-body text-sm resize-none" placeholder="Enter the soul of the event here. This will be used for Instagram Captions and PDF Invites..." oninput="saveDraft()"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- CARD 3: LOGISTICS & GEAR SYNC -->
+        <div class="swipe-card" id="card-3">
+            <div class="flowee-header">
+                <div class="flowee-avatar"><div class="fairy-wing left"></div><div class="fairy-wing right"></div><div class="fairy-orb"></div></div>
+                <div class="flowee-bubble">Where does the magic happen? And what precise gear do we need to sync?</div>
+            </div>
+            <div class="card-content">
+                <h2 class="text-xl font-display text-[#00ffcc] mb-4 flex items-center gap-2 border-b border-[#00ffcc]/20 pb-2 uppercase tracking-widest text-sm">
+                    <span class="material-symbols-outlined text-lg">foundation</span> 3. Location & Gear Sync
                 </h2>
                 <div class="space-y-6">
                     <div>
                         <label class="block text-[10px] uppercase tracking-widest text-white/50 mb-2">Location / Address *</label>
-                        <input type="text" id="event-location" class="w-full input-tao rounded-lg px-4 py-3 font-body text-sm" placeholder="e.g. ClimaLabs..." oninput="saveDraft()">
+                        <input type="text" id="event-location" class="w-full input-tao rounded-lg px-4 py-3 font-body text-sm" placeholder="e.g. Secret Garden LX" oninput="saveDraft()">
                     </div>
                     <div>
-                        <label class="block text-[10px] uppercase tracking-widest text-white/50 mb-3">Physical Requirements</label>
-                        <div class="space-y-2" id="logistics-checks">
-                            <label class="flex items-center gap-3 cursor-pointer group">
-                                <input type="checkbox" value="Kitchen" class="w-4 h-4 rounded bg-black" onchange="saveDraft()">
-                                <span class="text-xs group-hover:text-[#00ffcc] transition-colors">Kitchen Access required</span>
-                            </label>
-                            <label class="flex items-center gap-3 cursor-pointer group">
-                                <input type="checkbox" value="Sound" class="w-4 h-4 rounded bg-black" onchange="saveDraft()">
-                                <span class="text-xs group-hover:text-[#00ffcc] transition-colors">Sound System (PA) required</span>
-                            </label>
-                        </div>
+                        <label class="block text-[10px] uppercase tracking-widest text-white/50 mb-2">The Gear Sync (Tech Rider)</label>
+                        <textarea id="gear-sync" rows="4" class="w-full input-tao rounded-lg px-4 py-3 font-body text-sm resize-none" placeholder="e.g. 3x Extra Mics, DJ Controller table, Nikon D850 tripod space, Streaming sockets..." oninput="saveDraft()"></textarea>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- CARD 3: ECONOMY -->
-        <div class="swipe-card" id="card-3">
-            <div class="flowee-header">
-                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Flowee" alt="Flowee" class="flowee-avatar">
-                <div class="flowee-bubble" id="eco-speech">Gute Wahl. Wie regeln wir den Energie-Austausch für die Gäste?</div>
-            </div>
-            <div class="card-content">
-                <h2 class="text-xl font-display text-[#00ffcc] mb-4 flex items-center gap-2 border-b border-[#00ffcc]/20 pb-2 uppercase tracking-widest text-sm">
-                    <span class="material-symbols-outlined text-lg">currency_exchange</span> 3. Economy
-                </h2>
-                <div class="grid grid-cols-1 gap-3">
-                    <label class="relative flex cursor-pointer rounded-lg border bg-black/30 p-3 shadow-sm focus:outline-none border-[#00ffcc] bg-[#00ffcc]/10 economy-card transition-colors" onclick="selectEconomy(this, 'Free Flow')">
-                        <input type="radio" name="economy" value="free" class="sr-only" checked>
-                        <div class="flex flex-col">
-                            <span class="block text-sm font-bold text-white mb-1"><span class="text-[#00ffcc]">Free Flow</span> (Donation) </span>
-                            <span class="block text-[10px] text-white/50 leading-tight">Open access. Pay what you feel.</span>
-                        </div>
-                    </label>
-
-                    <label class="relative flex cursor-pointer rounded-lg border border-white/10 bg-black/30 p-3 shadow-sm focus:outline-none hover:border-white/30 economy-card transition-colors" onclick="selectEconomy(this, 'Dice Your Flow')">
-                        <input type="radio" name="economy" value="dice" class="sr-only">
-                        <div class="flex flex-col">
-                            <span class="block text-sm font-bold text-white mb-1">Dice Your Flow (1-6€)</span>
-                            <span class="block text-[10px] text-white/50 leading-tight">The magic 'Pay what you roll' system.</span>
-                        </div>
-                    </label>
-                </div>
-            </div>
-        </div>
-
-        <!-- CARD 4: FLOW NEEDS -->
+        <!-- CARD 4: ECONOMY -->
         <div class="swipe-card" id="card-4">
             <div class="flowee-header">
-                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Flowee" alt="Flowee" class="flowee-avatar">
-                <div class="flowee-bubble">Welche Rollen müssen wir besetzen, um das Event fliegen zu lassen?</div>
+                <div class="flowee-avatar"><div class="fairy-wing left"></div><div class="fairy-wing right"></div><div class="fairy-orb"></div></div>
+                <div class="flowee-bubble">How are we exchanging energy? Set the economic flow for the guests.</div>
             </div>
             <div class="card-content">
                 <h2 class="text-xl font-display text-[#00ffcc] mb-4 flex items-center gap-2 border-b border-[#00ffcc]/20 pb-2 uppercase tracking-widest text-sm">
-                    <span class="material-symbols-outlined text-lg">group_add</span> 4. Flow Needs
+                    <span class="material-symbols-outlined text-lg">currency_exchange</span> 4. Economy
                 </h2>
-                <div class="flex flex-wrap gap-2" id="needs-selector">
-                    <div class="select-chip px-3 py-1.5 rounded text-xs font-mono" onclick="toggleChip(this, 'need')">Audio-Flow</div>
-                    <div class="select-chip px-3 py-1.5 rounded text-xs font-mono" onclick="toggleChip(this, 'need')">Visual-Flow</div>
-                    <div class="select-chip px-3 py-1.5 rounded text-xs font-mono" onclick="toggleChip(this, 'need')">Taste-Flow</div>
-                    <div class="select-chip px-3 py-1.5 rounded text-xs font-mono" onclick="toggleChip(this, 'need')">Master-Flow</div>
-                    <div class="select-chip px-3 py-1.5 rounded text-xs font-mono" onclick="toggleChip(this, 'need')">Space-Provider</div>
+                <div>
+                    <label class="block text-[10px] uppercase tracking-widest text-white/50 mb-2">Economic Model *</label>
+                    <select id="event-economy" class="w-full input-tao rounded-lg px-4 py-3 font-body text-sm text-white" onchange="saveDraft()">
+                        <option value="Free Flow">Free Flow (Donation / Pay what you feel)</option>
+                        <option value="Dice Your Flow">Dice Your Flow (Roll 1-6€ at door)</option>
+                        <option value="Presale Tickets">Presale Tickets (Fixed Entry)</option>
+                        <option value="Guestlist Only">Guestlist Only (Private Event)</option>
+                        <option value="Collaborative">Collaborative Funding</option>
+                    </select>
                 </div>
             </div>
         </div>
 
-        <!-- CARD 5: PARTICIPANTS -->
+        <!-- CARD 5: FLOW NEEDS & TASTE LOGISTICS -->
         <div class="swipe-card" id="card-5">
             <div class="flowee-header">
-                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Flowee" alt="Flowee" class="flowee-avatar">
-                <div class="flowee-bubble">Wer bringt den Vibe? Lass uns die Crew zusammenstellen.</div>
+                <div class="flowee-avatar"><div class="fairy-wing left"></div><div class="fairy-wing right"></div><div class="fairy-orb"></div></div>
+                <div class="flowee-bubble">What roles are required? And if there's food, what are the culinary rules?</div>
             </div>
             <div class="card-content">
                 <h2 class="text-xl font-display text-[#00ffcc] mb-4 flex items-center gap-2 border-b border-[#00ffcc]/20 pb-2 uppercase tracking-widest text-sm">
-                    <span class="material-symbols-outlined text-lg">person_add</span> 5. Crew Roster
+                    <span class="material-symbols-outlined text-lg">restaurant_menu</span> 5. Needs & Taste-Flow
+                </h2>
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-[10px] uppercase tracking-widest text-white/50 mb-3">Flow Roles Required</label>
+                        <div class="flex flex-wrap gap-2" id="needs-selector">
+                            <div class="select-chip px-3 py-1.5 rounded text-xs font-mono" onclick="toggleChip(this, 'need')">Audio-Flow</div>
+                            <div class="select-chip px-3 py-1.5 rounded text-xs font-mono" onclick="toggleChip(this, 'need')">Visual-Flow</div>
+                            <div class="select-chip px-3 py-1.5 rounded text-xs font-mono" onclick="toggleChip(this, 'need')">Taste-Flow</div>
+                            <div class="select-chip px-3 py-1.5 rounded text-xs font-mono" onclick="toggleChip(this, 'need')">Master-Flow</div>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] uppercase tracking-widest text-white/50 mb-2">Taste-Flow Logistics</label>
+                        <textarea id="taste-logistics" rows="3" class="w-full input-tao rounded-lg px-4 py-3 font-body text-sm resize-none" placeholder="e.g. West African dishes, Vegan options, No open fire allowed..." oninput="saveDraft()"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CARD 6: CREW ROSTER & CAPACITY -->
+        <div class="swipe-card" id="card-6">
+            <div class="flowee-header">
+                <div class="flowee-avatar"><div class="fairy-wing left"></div><div class="fairy-wing right"></div><div class="fairy-orb"></div></div>
+                <div class="flowee-bubble">Who's bringing the vibe? Let's assemble the crew and set the limit.</div>
+            </div>
+            <div class="card-content">
+                <h2 class="text-xl font-display text-[#00ffcc] mb-4 flex items-center gap-2 border-b border-[#00ffcc]/20 pb-2 uppercase tracking-widest text-sm">
+                    <span class="material-symbols-outlined text-lg">person_add</span> 6. Crew & Capacity
                 </h2>
                 
-                <div id="participants-list" class="space-y-4 mb-4">
-                    <!-- Dynamic participants go here -->
+                <div class="mb-6">
+                    <label class="block text-[10px] uppercase tracking-widest text-white/50 mb-2">Soul Capacity (Max Limit)</label>
+                    <input type="number" id="max-capacity" class="w-full input-tao rounded-lg px-4 py-3 font-body text-sm" placeholder="e.g. 50 (Leave empty for open air)" oninput="saveDraft()">
                 </div>
 
-                <div class="border border-white/10 rounded-lg p-3 bg-black/40">
-                    <input type="text" id="part-name" placeholder="Name/Alias" class="w-full bg-transparent text-sm border-b border-white/10 p-2 mb-2 focus:outline-none focus:border-[#00ffcc]">
-                    <select id="part-role" class="w-full bg-transparent text-sm border-b border-white/10 p-2 mb-2 focus:outline-none text-white/50">
+                <label class="block text-[10px] uppercase tracking-widest text-white/50 mb-2">Crew Roster</label>
+                <div id="participants-list" class="space-y-2 mb-4"></div>
+
+                <div class="border border-white/10 rounded-lg p-3 bg-black/50">
+                    <input type="text" id="part-name" placeholder="Name/Alias" class="w-full bg-black/60 text-white text-sm border border-white/10 rounded p-2 mb-2 focus:border-[#00ffcc] outline-none">
+                    <select id="part-role" class="w-full bg-black/60 text-white text-sm border border-white/10 rounded p-2 mb-2 focus:border-[#00ffcc] outline-none">
                         <option value="Audio-Flow">Audio-Flow</option>
                         <option value="Visual-Flow">Visual-Flow</option>
                         <option value="Taste-Flow">Taste-Flow</option>
                         <option value="Guest Artist">Guest Artist</option>
                     </select>
-                    <input type="url" id="part-link" placeholder="Portfolio Link (IG/Spotify) Optional" class="w-full bg-transparent text-sm border-b border-white/10 p-2 mb-3 focus:outline-none focus:border-[#00ffcc]">
+                    <input type="url" id="part-link" placeholder="Portfolio Link (IG/Spotify) Optional" class="w-full bg-black/60 text-white text-sm border border-white/10 rounded p-2 mb-3 focus:border-[#00ffcc] outline-none">
                     
                     <button type="button" onclick="addParticipant()" class="w-full py-2 bg-white/10 hover:bg-[#00ffcc]/20 text-white text-xs uppercase tracking-widest font-bold rounded transition-colors border border-white/10 hover:border-[#00ffcc]">
                         + Add Soul
@@ -349,11 +261,41 @@
             </div>
         </div>
 
-        <!-- CARD 6: SUMMARY & MANIFEST -->
-        <div class="swipe-card" id="card-6">
+        <!-- CARD 7: THE SYNC MATRIX (NEW) -->
+        <div class="swipe-card" id="card-7">
             <div class="flowee-header">
-                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Flowee" alt="Flowee" class="flowee-avatar">
-                <div class="flowee-bubble">Alles gecheckt! Manifestiere dieses Event, um dir 50 Flow-Punkte für dein Profil zu sichern! ✨</div>
+                <div class="flowee-avatar"><div class="fairy-wing left"></div><div class="fairy-wing right"></div><div class="fairy-orb"></div></div>
+                <div class="flowee-bubble">An event without rhythm is just a room full of people. Let's sync the timeline.</div>
+            </div>
+            <div class="card-content">
+                <h2 class="text-xl font-display text-[#00ffcc] mb-4 flex items-center gap-2 border-b border-[#00ffcc]/20 pb-2 uppercase tracking-widest text-sm">
+                    <span class="material-symbols-outlined text-lg">timeline</span> 7. The Sync Matrix
+                </h2>
+                
+                <div id="matrix-list" class="space-y-3 mb-4"></div>
+
+                <div class="border border-white/10 rounded-lg p-3 bg-black/50">
+                    <div class="flex gap-2 mb-2">
+                        <input type="time" id="matrix-time" class="flex-1 bg-black/60 text-white text-sm border border-white/10 rounded p-2 focus:border-[#00ffcc] outline-none" style="color-scheme: dark;">
+                        <input type="text" id="matrix-label" placeholder="Phase (e.g. Live Set)" class="flex-[2] bg-black/60 text-white text-sm border border-white/10 rounded p-2 focus:border-[#00ffcc] outline-none">
+                    </div>
+                    <select id="matrix-artist" class="w-full bg-black/60 text-white text-sm border border-white/10 rounded p-2 mb-3 focus:border-[#00ffcc] outline-none">
+                        <option value="">-- Assign Soul (Optional) --</option>
+                        <!-- Populated dynamically -->
+                    </select>
+                    
+                    <button type="button" onclick="addMatrixSlot()" class="w-full py-2 bg-[#d4af37]/20 hover:bg-[#d4af37]/40 text-[#d4af37] text-xs uppercase tracking-widest font-bold rounded transition-colors border border-[#d4af37]/50 hover:border-[#d4af37]">
+                        + Add Timeslot
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- CARD 8: SUMMARY & MANIFEST -->
+        <div class="swipe-card" id="card-8">
+            <div class="flowee-header">
+                <div class="flowee-avatar"><div class="fairy-wing left"></div><div class="fairy-wing right"></div><div class="fairy-orb"></div></div>
+                <div class="flowee-bubble">Everything is in place. Manifest this matrix into the world and secure your 50 Flow Points! ✨</div>
             </div>
             <div class="card-content bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8Y2lyY2xlIGN4PSIyIiBjeT0iMiIgcj0iMSIgZmlsbD0iI2NjYyIvPgo8L3N2Zz4=')]">
                 <div class="bg-white text-black p-4 border-[3px] border-black transform -rotate-1 shadow-xl">
@@ -368,9 +310,9 @@
                         </div>
                         <div>
                             <p class="text-[9px] uppercase text-gray-500">Type</p>
-                            <p id="sum-type" class="mb-2">Exhibition</p>
-                            <p class="text-[9px] uppercase text-gray-500">Crew Size</p>
-                            <p id="sum-crew">0 Souls</p>
+                            <p id="sum-type" class="mb-2">Gathering</p>
+                            <p class="text-[9px] uppercase text-gray-500">Capacity</p>
+                            <p id="sum-cap">Open</p>
                         </div>
                     </div>
                     
@@ -387,12 +329,15 @@
     </div>
 
     <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/agents/supabase_client.js"></script>
     <script>
-        const totalSteps = 6;
+        const totalSteps = 8;
         let currentStep = 1;
         let participants = [];
+        let syncMatrix = [];
 
-        // Scroll Event Listener to update progress bar and arrows
+        // Scroll Event Listener
         const container = document.getElementById('swipe-container');
         container.addEventListener('scroll', () => {
             const scrollLeft = container.scrollLeft;
@@ -402,25 +347,17 @@
             if(newStep !== currentStep) {
                 currentStep = newStep;
                 updateUI();
-                if(currentStep === 6) populateSummary();
+                if(currentStep === 8) populateSummary();
             }
         });
 
         function updateUI() {
-            // Update Progress Bar
             document.getElementById('progress-bar').style.width = `${(currentStep / totalSteps) * 100}%`;
-            
-            // Update Arrows
             document.getElementById('nav-prev').classList.toggle('disabled', currentStep === 1);
             
-            // On step 6 hide next arrow
-            if(currentStep === totalSteps) {
-                document.getElementById('nav-next').classList.add('hidden');
-            } else {
-                document.getElementById('nav-next').classList.remove('hidden');
-            }
+            if(currentStep === totalSteps) document.getElementById('nav-next').classList.add('hidden');
+            else document.getElementById('nav-next').classList.remove('hidden');
 
-            // Highlight active card
             for(let i = 1; i <= totalSteps; i++) {
                 const card = document.getElementById(`card-${i}`);
                 if(i === currentStep) card.classList.add('active');
@@ -429,17 +366,19 @@
         }
 
         function validateAndSwipe(targetStep) {
-            // Validation before moving forward
             if(currentStep === 1 && targetStep > 1) {
                 if(!document.getElementById('event-title').value || !document.getElementById('event-date').value) {
-                    alert("Flowee sagt: Halt, wir brauchen noch Titel und Datum, bevor wir weiterfliegen!");
-                    return;
+                    return alert("Flowee says: Hold up! We need a title and a date before we fly.");
                 }
             }
             if(currentStep === 2 && targetStep > 2) {
+                if(!document.getElementById('event-vision').value) {
+                    return alert("Flowee says: The vision is empty. Write down the soul of the event!");
+                }
+            }
+            if(currentStep === 3 && targetStep > 3) {
                 if(!document.getElementById('event-location').value) {
-                    alert("Flowee sagt: Wir brauchen eine Location für die Map!");
-                    return;
+                    return alert("Flowee says: I need coordinates. Where is the location?");
                 }
             }
             swipeTo(targetStep);
@@ -448,57 +387,32 @@
         function swipeTo(step) {
             if(step < 1 || step > totalSteps) return;
             const cardWidth = window.innerWidth;
-            container.scrollTo({
-                left: (step - 1) * cardWidth,
-                behavior: 'smooth'
-            });
+            container.scrollTo({ left: (step - 1) * cardWidth, behavior: 'smooth' });
         }
 
-        // --- Form Logic ---
-        
-        function selectEconomy(element, text) {
-            document.querySelectorAll('.economy-card').forEach(c => {
-                c.classList.remove('border-[#00ffcc]', 'bg-[#00ffcc]/10', 'active');
-                c.classList.add('border-white/10');
-            });
-            element.classList.remove('border-white/10');
-            element.classList.add('border-[#00ffcc]', 'bg-[#00ffcc]/10', 'active');
-            
-            document.getElementById('eco-speech').innerText = `Gute Wahl: ${text}. Community First.`;
-            saveDraft();
-        }
+        function toggleChip(element, group) { element.classList.toggle('active'); saveDraft(); }
 
-        function toggleChip(element, group) {
-            if(group === 'type') {
-                document.querySelectorAll('#type-selector .active').forEach(c => c.classList.remove('active'));
-            }
-            element.classList.toggle('active');
-            saveDraft();
-        }
-
-        // --- Participants Logic ---
-        
+        // --- Participants ---
         function addParticipant() {
             const name = document.getElementById('part-name').value;
             const role = document.getElementById('part-role').value;
             const link = document.getElementById('part-link').value;
             
-            if(!name) { alert("Bitte einen Namen eintragen!"); return; }
+            if(!name) return alert("Please enter a name or alias.");
+            participants.push({ id: Date.now().toString(), name, role, link, status: 'red' });
             
-            const p = { id: Date.now().toString(), name, role, link, status: 'red' };
-            participants.push(p);
-            
-            // clear inputs
             document.getElementById('part-name').value = '';
             document.getElementById('part-link').value = '';
-            
             renderParticipants();
             saveDraft();
         }
 
         function removeParticipant(id) {
             participants = participants.filter(p => p.id !== id);
+            // remove from matrix too
+            syncMatrix.forEach(m => { if(m.artistId === id) m.artistId = ''; });
             renderParticipants();
+            renderMatrix();
             saveDraft();
         }
 
@@ -507,100 +421,162 @@
             list.innerHTML = '';
             participants.forEach(p => {
                 list.innerHTML += `
-                    <div class="flex items-center justify-between bg-black/50 p-2 border border-white/5 rounded">
+                    <div class="flex items-center justify-between bg-black/60 p-2 border border-white/10 rounded">
                         <div>
                             <p class="text-sm font-bold">${p.name}</p>
                             <p class="text-[10px] text-[#00ffcc] uppercase">${p.role}</p>
                         </div>
                         <button onclick="removeParticipant('${p.id}')" class="text-white/30 hover:text-red-500 material-symbols-outlined text-sm">close</button>
-                    </div>
-                `;
+                    </div>`;
+            });
+            updateMatrixDropdown();
+        }
+
+        // --- Sync Matrix ---
+        function updateMatrixDropdown() {
+            const select = document.getElementById('matrix-artist');
+            select.innerHTML = '<option value="">-- Assign Soul (Optional) --</option>';
+            participants.forEach(p => {
+                select.innerHTML += `<option value="${p.id}">${p.name} (${p.role})</option>`;
             });
         }
 
-        // --- Auto Save & Load ---
+        function addMatrixSlot() {
+            const time = document.getElementById('matrix-time').value;
+            const label = document.getElementById('matrix-label').value;
+            const artistId = document.getElementById('matrix-artist').value;
+            
+            if(!time || !label) return alert("Please provide time and phase label.");
+            
+            syncMatrix.push({ id: Date.now().toString(), time, label, artistId });
+            syncMatrix.sort((a,b) => a.time.localeCompare(b.time)); // Chronological sort
+            
+            document.getElementById('matrix-time').value = '';
+            document.getElementById('matrix-label').value = '';
+            document.getElementById('matrix-artist').value = '';
+            
+            renderMatrix();
+            saveDraft();
+        }
         
+        function removeMatrixSlot(id) {
+            syncMatrix = syncMatrix.filter(m => m.id !== id);
+            renderMatrix();
+            saveDraft();
+        }
+
+        function renderMatrix() {
+            const list = document.getElementById('matrix-list');
+            list.innerHTML = '';
+            syncMatrix.forEach(m => {
+                let artistBadge = '';
+                if(m.artistId) {
+                    const artist = participants.find(p => p.id === m.artistId);
+                    if(artist) artistBadge = `<span class="bg-[#d4af37]/20 text-[#d4af37] px-2 py-0.5 rounded text-[10px] ml-2 font-bold">${artist.name}</span>`;
+                }
+                list.innerHTML += `
+                    <div class="flex flex-col bg-black/60 p-2 border border-white/10 rounded border-l-2 border-l-[#d4af37]">
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center">
+                                <span class="font-mono text-[#d4af37] font-bold text-sm mr-3">${m.time}</span>
+                                <span class="text-sm font-bold text-white">${m.label}</span>
+                                ${artistBadge}
+                            </div>
+                            <button onclick="removeMatrixSlot('${m.id}')" class="text-white/30 hover:text-red-500 material-symbols-outlined text-sm">close</button>
+                        </div>
+                    </div>`;
+            });
+        }
+
+        // --- Auto Save ---
         function saveDraft() {
             const title = document.getElementById('event-title').value;
             const date = document.getElementById('event-date').value;
             const loc = document.getElementById('event-location').value;
+            const vision = document.getElementById('event-vision').value;
+            const eco = document.getElementById('event-economy').value;
+            const gear = document.getElementById('gear-sync').value;
+            const taste = document.getElementById('taste-logistics').value;
+            const cap = document.getElementById('max-capacity').value;
             
-            const draft = { title, date, loc, participants };
-            localStorage.setItem('quest_draft', JSON.stringify(draft));
+            const types = Array.from(document.querySelectorAll('#type-selector .active')).map(c => c.innerText);
+            const needs = Array.from(document.querySelectorAll('#needs-selector .active')).map(c => c.innerText);
+            
+            const draft = { title, date, loc, vision, eco, gear, taste, cap, types, needs, participants, syncMatrix };
+            localStorage.setItem('quest_draft_v2', JSON.stringify(draft));
         }
 
         function loadDraft() {
-            const d = localStorage.getItem('quest_draft');
+            const d = localStorage.getItem('quest_draft_v2');
             if(d) {
                 const draft = JSON.parse(d);
                 document.getElementById('event-title').value = draft.title || '';
                 document.getElementById('event-date').value = draft.date || '';
                 document.getElementById('event-location').value = draft.loc || '';
+                document.getElementById('event-vision').value = draft.vision || '';
+                document.getElementById('event-economy').value = draft.eco || 'Free Flow';
+                document.getElementById('gear-sync').value = draft.gear || '';
+                document.getElementById('taste-logistics').value = draft.taste || '';
+                document.getElementById('max-capacity').value = draft.cap || '';
+                
                 participants = draft.participants || [];
+                syncMatrix = draft.syncMatrix || [];
                 renderParticipants();
+                renderMatrix();
             }
         }
 
         // --- Summary & Submit ---
-        
         function populateSummary() {
-            const title = document.getElementById('event-title').value || "EMPTY_SIGNAL";
-            const date = document.getElementById('event-date').value || "TBA";
-            const loc = document.getElementById('event-location').value || "Unknown";
-            const typeChips = document.querySelectorAll('#type-selector .active');
-            const type = typeChips.length > 0 ? typeChips[0].innerText : "Gathering";
+            document.getElementById('sum-title').innerText = (document.getElementById('event-title').value || "EMPTY_SIGNAL").toUpperCase();
+            document.getElementById('sum-date').innerText = document.getElementById('event-date').value || "TBA";
+            document.getElementById('sum-loc').innerText = document.getElementById('event-location').value || "Unknown";
             
-            document.getElementById('sum-title').innerText = title.toUpperCase();
-            document.getElementById('sum-date').innerText = date;
-            document.getElementById('sum-loc').innerText = loc;
-            document.getElementById('sum-type').innerText = type;
-            document.getElementById('sum-crew').innerText = `${participants.length} Souls`;
+            const types = Array.from(document.querySelectorAll('#type-selector .active')).map(c => c.innerText);
+            document.getElementById('sum-type').innerText = types.length ? types.join(', ') : "Gathering";
+            
+            const cap = document.getElementById('max-capacity').value;
+            document.getElementById('sum-cap').innerText = cap ? cap + ' Souls' : 'Open Air';
         }
 
         async function manifestEvent() {
-            if(!window.supabaseClient) {
-                alert("Database connection offline.");
-                return;
-            }
-            
+            if(!window.supabaseClient) return alert("Database connection offline.");
             const session = await window.supabaseClient.auth.getSession();
-            if(!session.data.session) {
-                alert("You must be logged in to create a quest.");
-                return;
-            }
+            if(!session.data.session) return alert("You must be logged in to create a quest.");
 
             const title = document.getElementById('event-title').value;
             const loc = document.getElementById('event-location').value;
             const date = document.getElementById('event-date').value;
+            const vision = document.getElementById('event-vision').value; // THE FIX FOR NOT-NULL
+            const eco = document.getElementById('event-economy').value;
+            const gear = document.getElementById('gear-sync').value;
+            const taste = document.getElementById('taste-logistics').value;
+            const cap = document.getElementById('max-capacity').value;
             
-            const typeChips = document.querySelectorAll('#type-selector .active');
-            const type = typeChips.length > 0 ? typeChips[0].innerText : "Gathering";
+            const types = Array.from(document.querySelectorAll('#type-selector .active')).map(c => c.innerText);
+            const needsArr = Array.from(document.querySelectorAll('#needs-selector .active')).map(c => c.innerText);
             
-            const ecoRadio = document.querySelector('input[name="economy"]:checked');
-            const eco = ecoRadio ? ecoRadio.value : 'free';
-
-            const needChips = document.querySelectorAll('#needs-selector .active');
-            const needs = Array.from(needChips).map(c => c.innerText);
-            
-            // Add participants to needs JSON string or just store globally
-            // Workaround since we can't alter schema here easily: store participants JSON inside needs
             const combinedNeeds = {
-                requiredRoles: needs,
-                team: participants
+                requiredRoles: needsArr,
+                team: participants,
+                syncMatrix: syncMatrix,
+                gearSync: gear,
+                tasteLogistics: taste,
+                maxCapacity: cap
             };
 
-            const eventData = { title, type, date, economy: eco, needs: combinedNeeds, address: loc };
+            const eventData = { title, type: types.join(', '), date, description: vision, economy: eco, needs: combinedNeeds, address: loc };
             
             try {
-                // Save to Supabase (Stringify combinedNeeds into the needs column which is JSONB)
                 const { data, error } = await window.supabaseClient.from('quests').insert([{
                     title: title,
-                    type: type,
+                    description: vision, // IMPORTANT
+                    type: types.join(', '),
                     reward_xp: 100, 
                     reward_points: 50, 
                     status: 'open',
                     economy: eco,
-                    needs: combinedNeeds, // Will be parsed in Sanctuary
+                    needs: combinedNeeds,
                     address: loc,
                     event_date: date,
                     creator_id: session.data.session.user.id,
@@ -612,32 +588,24 @@
                 const questId = data[0].id;
                 const qrUrl = window.location.origin + "/pages/flavor_quest.html?id=" + questId;
                 
-                // Update QR data
                 await window.supabaseClient.from('quests').update({ qr_code_data: qrUrl }).eq('id', questId);
                 
-                // Clear Draft
-                localStorage.removeItem('quest_draft');
-                localStorage.setItem('cdf_latest_event', JSON.stringify(eventData));
+                localStorage.removeItem('quest_draft_v2');
                 localStorage.setItem('currentEventId', questId);
 
-                if (window.Pusher) {
-                     window.Pusher.showToast(`BROADCAST: New Signal emitted from The Forge: ${title}`, 'success');
-                }
-
+                if (window.Pusher) window.Pusher.showToast(`BROADCAST: New Signal emitted from The Forge: ${title}`, 'success');
                 window.location.href = 'event_sanctuary.html';
                 
             } catch (err) {
                 console.error("Error forging quest:", err);
-                alert("Failed to manifest event: " + (err.message || err));
+                alert("Failed to manifest event: " + (err.message || JSON.stringify(err)));
             }
         }
 
-        // Boot
         document.addEventListener('DOMContentLoaded', () => {
             loadDraft();
             updateUI();
         });
-
     </script>
 </body>
 </html>
