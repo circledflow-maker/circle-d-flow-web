@@ -110,7 +110,49 @@
             font-size: 14px;
             font-weight: bold;
         }
+
+        /* Flowee Overlay CSS */
+        .flowee-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 999;
+            display: flex; align-items: flex-end; justify-content: center;
+            transition: opacity 0.3s ease;
+        }
+        @media (min-width: 768px) { .flowee-overlay { align-items: center; } }
+        .flowee-overlay.hidden { opacity: 0; pointer-events: none; }
+        .overlay-backdrop { position: absolute; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(8px); }
+        .overlay-card {
+            position: relative; width: 100%; max-width: 500px;
+            background: rgba(255, 255, 255, 0.07);
+            border-top-left-radius: 24px; border-top-right-radius: 24px;
+            padding: 24px; border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.3);
+            transform: translateY(0); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @media (min-width: 768px) { .overlay-card { border-radius: 24px; transform: scale(1); } }
+        .flowee-header { display: flex; gap: 16px; align-items: center; margin-bottom: 20px; }
+        .flowee-avatar-container { position: relative; width: 50px; height: 50px; }
+        .flowee-avatar { width: 100%; height: 100%; border-radius: 50%; border: 2px solid #00ffcc; background: black; }
+        .flowee-pulse { position: absolute; width: 100%; height: 100%; border-radius: 50%; background: rgba(0, 255, 204, 0.4); animation: pulse 2s infinite; }
+        .flowee-bubble { background: rgba(255, 255, 255, 0.1); padding: 12px 16px; border-radius: 16px; border-bottom-left-radius: 4px; color: #fff; font-size: 0.95rem; }
+        
+        .status-orb { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-left: 8px; box-shadow: 0 0 8px currentColor; }
+        .status-orb.red { background: #ff4444; color: #ff4444; animation: pulse 2s infinite; }
+        .status-orb.orange { background: #ffaa00; color: #ffaa00; }
+        .status-orb.green { background: #00ffcc; color: #00ffcc; }
+        
+        .action-btn {
+            width: 100%; padding: 14px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px; color: white; font-weight: 600; text-align: left; margin-bottom: 12px;
+            display: flex; align-items: center; gap: 12px; transition: all 0.2s ease;
+        }
+        .action-btn:hover, .action-btn:active { background: rgba(0, 255, 204, 0.15); border-color: #00ffcc; transform: translateY(-2px); }
+        .hidden-input-group { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; display: flex; gap: 8px; margin-bottom: 12px; }
+        .hidden-input-group.open { max-height: 60px; }
+        .hidden-input-group input { flex: 1; background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.2); padding: 10px; border-radius: 8px; color: white; }
+        
+        @keyframes pulse { 0% { transform: scale(0.95); opacity: 0.5; } 70% { transform: scale(1.2); opacity: 0; } 100% { transform: scale(0.95); opacity: 0; } }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 
@@ -234,57 +276,11 @@
                 </div>
             </div>
 
-            <!-- Task List -->
+            <!-- Team Checklist -->
             <div class="space-y-4">
-                <h3 class="text-xs uppercase tracking-widest text-white/50 mb-2">Quest 2: Event Day Logistics</h3>
-                
-                <label class="flex gap-4 items-start bg-black/40 p-4 rounded-lg border border-white/5">
-                    <input type="checkbox" class="ledger-check mt-1">
-                    <div>
-                        <p class="text-sm font-bold">Door-Setup</p>
-                        <p class="text-xs text-white/50">Register, Guestlist, and Flow cubes.</p>
-                        <span class="inline-block mt-2 text-[10px] font-mono gold-accent bg-gold-accent/10 px-2 py-1 rounded">+20 EXP</span>
-                    </div>
-                </label>
-                
-                <label class="flex gap-4 items-start bg-black/40 p-4 rounded-lg border border-white/5">
-                    <input type="checkbox" class="ledger-check mt-1" checked>
-                    <div>
-                        <p class="text-sm font-bold">Culinary Integration</p>
-                        <p class="text-xs text-white/50">Power and setup for Kitchen.</p>
-                        <span class="inline-block mt-2 text-[10px] font-mono gold-accent bg-gold-accent/10 px-2 py-1 rounded">+20 EXP</span>
-                    </div>
-                </label>
-                
-                <label class="flex gap-4 items-start bg-black/40 p-4 rounded-lg border border-white/5">
-                    <input type="checkbox" class="ledger-check mt-1">
-                    <div>
-                        <p class="text-sm font-bold">Stage & Cipher Area</p>
-                        <p class="text-xs text-white/50">Mics, monitors, DJ setup.</p>
-                        <span class="inline-block mt-2 text-[10px] font-mono gold-accent bg-gold-accent/10 px-2 py-1 rounded">+30 EXP</span>
-                    </div>
-                </label>
-            </div>
-
-            <!-- Pending Applications -->
-            <div class="mt-8 pt-6 border-t border-white/10">
-                <h3 class="text-xs uppercase tracking-widest gold-accent mb-4 flex items-center gap-2">
-                    <span class="material-symbols-outlined text-sm">notifications_active</span> Pending Connections (1)
-                </h3>
-                
-                <div class="bg-black/60 p-4 rounded-lg border border-white/10">
-                    <div class="flex items-center gap-3 mb-3">
-                        <div class="w-8 h-8 rounded-full bg-zinc-700"></div>
-                        <div>
-                            <p class="text-sm font-bold">Lara</p>
-                            <p class="text-[10px] text-white/50">Level 3 • 150 TP</p>
-                        </div>
-                    </div>
-                    <p class="text-xs italic text-white/70 mb-4">"I have a gimbal and can be 2nd shooter for Rayan."</p>
-                    <div class="flex gap-2">
-                        <button class="flex-1 py-2 bg-green-500/20 text-green-400 border border-green-500/50 rounded text-xs font-bold uppercase hover:bg-green-500/40">Accept Flow</button>
-                        <button class="flex-1 py-2 bg-white/5 text-white/50 border border-white/10 rounded text-xs font-bold uppercase hover:bg-white/10">Decline</button>
-                    </div>
+                <h3 class="text-xs uppercase tracking-widest text-white/50 mb-2">Team Checklist</h3>
+                <div id="team-checklist-container">
+                    <p class="text-xs text-white/30 italic">No participants found in the database. Add some via the Event Inkubator.</p>
                 </div>
             </div>
             
@@ -403,6 +399,7 @@
                         setCanvasImage(event.flyer_url);
                     }
                     populateMangaShare(event);
+                    renderTeamChecklist(event);
                 }
                 
                 // Load user's created events for the switcher
@@ -803,6 +800,219 @@
 
             }, 3000);
         }
+        
+        // --- Flowee Overlay & Team Checklist Logic ---
+        
+        function renderTeamChecklist(event) {
+            const container = document.getElementById('team-checklist-container');
+            if(!event.needs || !event.needs.team || !Array.isArray(event.needs.team) || event.needs.team.length === 0) {
+                container.innerHTML = `<p class="text-xs text-white/30 italic">No participants found in the database. Add some via the Event Inkubator.</p>`;
+                return;
+            }
+            
+            container.innerHTML = '';
+            event.needs.team.forEach(artist => {
+                const statusColor = artist.status === 'red' ? 'bg-[#ff4444]' : (artist.status === 'orange' ? 'bg-[#ffaa00]' : 'bg-[#00ffcc]');
+                const statusName = artist.status === 'red' ? 'Not Contacted' : (artist.status === 'orange' ? 'Waiting' : 'Confirmed');
+                
+                container.innerHTML += `
+                    <div class="flex items-center justify-between bg-black/40 p-4 rounded-lg border border-white/5 cursor-pointer hover:border-[#00ffcc]/30 transition" onclick="openFloweeOverlay('${artist.id}', '${artist.name}', '${artist.role}', '${artist.status}', '${artist.link || ''}')">
+                        <div>
+                            <p class="text-sm font-bold flex items-center gap-2">
+                                ${artist.name} 
+                                <span class="w-2 h-2 rounded-full ${statusColor} shadow-[0_0_5px_currentColor]"></span>
+                            </p>
+                            <p class="text-[10px] text-[#00ffcc] uppercase tracking-widest mt-1">${artist.role}</p>
+                        </div>
+                        <span class="text-xs text-white/50">${statusName}</span>
+                    </div>
+                `;
+            });
+        }
+        
+        let activeArtistData = null;
+
+        function openFloweeOverlay(artistId, artistName, role, currentStatus, existingDriveLink = "") {
+            activeArtistData = { id: artistId, name: artistName, role: role, status: currentStatus, link: existingDriveLink };
+
+            document.getElementById('current-artist-name').innerText = artistName;
+            document.getElementById('current-artist-role').innerText = role;
+            
+            const speechBubble = document.getElementById('flowee-speech');
+            const orb = document.getElementById('current-status-orb');
+            const textStatus = document.getElementById('current-status-text');
+
+            document.getElementById('drive-folder-url').value = existingDriveLink;
+            document.getElementById('drive-link-input-container').classList.remove('open');
+
+            if (currentStatus === 'red') {
+                speechBubble.innerHTML = `Yo! <strong>${artistName}</strong> wurde noch nicht kontaktiert. Sollen wir direkt die Einladung raushauen?`;
+                orb.className = "status-orb red";
+                textStatus.innerText = "Not Contacted";
+            } else if (currentStatus === 'orange') {
+                speechBubble.innerHTML = `Wir warten noch auf die Zusage von <strong>${artistName}</strong>. Zeit für einen netten WhatsApp-Push?`;
+                orb.className = "status-orb orange";
+                textStatus.innerText = "Waiting Confirmation";
+            } else {
+                speechBubble.innerHTML = `Boom! <strong>${artistName}</strong> ist am Start! Alle Orbs leuchten grün. Material im Drive gesichert?`;
+                orb.className = "status-orb green";
+                textStatus.innerText = "Confirmed";
+            }
+
+            document.getElementById('flowee-overlay').classList.remove('hidden');
+        }
+
+        function closeFloweeOverlay() {
+            document.getElementById('flowee-overlay').classList.add('hidden');
+        }
+
+        function toggleDriveInput() {
+            const container = document.getElementById('drive-link-input-container');
+            container.classList.toggle('open');
+        }
+
+        async function saveDriveLink() {
+            const url = document.getElementById('drive-folder-url').value;
+            if (!url) return alert("Bitte gib einen gültigen Link ein.");
+
+            document.getElementById('flowee-speech').innerHTML = `Perfekt! Der Drive-Ordner für <strong>${activeArtistData.name}</strong> ist jetzt verknüpft.`;
+            activeArtistData.link = url;
+            
+            await updateArtistStatusInDb(activeArtistData.id, 'orange', url); 
+        }
+
+        function sendWhatsAppReminder() {
+            const eventTitle = document.querySelector('h1').innerText || "unserem Flow Event";
+            let message = "";
+            if (activeArtistData.status === 'red') {
+                message = `Hey ${activeArtistData.name}! Flowee von KyheartLx hier. ✨ Wir würden dich mega gerne als ${activeArtistData.role} dabei haben bei "${eventTitle}". Hast du Bock?`;
+                updateArtistStatusInDb(activeArtistData.id, 'orange', activeArtistData.link); // optimistic update
+            } else {
+                message = `Hey ${activeArtistData.name}, kurzer Flow-Check! 🌟 Deine Einladung für "${eventTitle}" ist ready. Gib mir kurz Bescheid, ob alles passt!`;
+            }
+            const encodedMessage = encodeURIComponent(message);
+            window.open(`https://wa.me/?text=${encodedMessage}`, '_blank');
+        }
+
+        async function updateArtistStatusInDb(artistId, newStatus, newLink) {
+            if(!currentEventId || !window.supabaseClient) return;
+            
+            // 1. Get current quest
+            const { data: quest } = await window.supabaseClient.from('quests').select('needs').eq('id', currentEventId).single();
+            if(quest && quest.needs && quest.needs.team) {
+                // 2. Update artist
+                const team = quest.needs.team;
+                const idx = team.findIndex(a => a.id === artistId);
+                if(idx !== -1) {
+                    team[idx].status = newStatus;
+                    team[idx].link = newLink || team[idx].link;
+                    
+                    // 3. Save back
+                    await window.supabaseClient.from('quests').update({ needs: quest.needs }).eq('id', currentEventId);
+                    
+                    // 4. Update UI
+                    activeArtistData.status = newStatus;
+                    openFloweeOverlay(team[idx].id, team[idx].name, team[idx].role, newStatus, team[idx].link);
+                    renderTeamChecklist({ needs: quest.needs });
+                }
+            }
+        }
+
+        function triggerPdfGeneration() {
+            closeFloweeOverlay();
+            generateBrowserPdfInvite(activeArtistData);
+        }
+        
+        function generateBrowserPdfInvite(artist) {
+            const eventTitle = document.querySelector('h1').innerText || "C4C EVENT";
+            
+            // Render a loading state somewhere (or just alert)
+            alert(`Flowee bereitet die PDF Einladung für ${artist.name} vor...`);
+            
+            const doc = new window.jspdf.jsPDF({
+                orientation: "portrait",
+                unit: "px",
+                format: [600, 800]
+            });
+            
+            // Draw a basic Flyer design on PDF since we don't have a backend
+            doc.setFillColor(11, 15, 13); // bg-tao-void
+            doc.rect(0, 0, 600, 800, "F");
+            
+            doc.setTextColor(212, 175, 55); // gold
+            doc.setFontSize(24);
+            doc.text("CIRCLE D FLOW INVITES", 300, 100, { align: 'center' });
+            
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(40);
+            doc.text(artist.name.toUpperCase(), 300, 200, { align: 'center' });
+            
+            doc.setFontSize(18);
+            doc.text("TO JOIN AS", 300, 250, { align: 'center' });
+            
+            doc.setTextColor(0, 255, 204); // cyan
+            doc.setFontSize(30);
+            doc.text(artist.role.toUpperCase(), 300, 300, { align: 'center' });
+            
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(18);
+            doc.text("FOR", 300, 380, { align: 'center' });
+            
+            doc.setFontSize(45);
+            doc.setTextColor(212, 175, 55);
+            doc.text(eventTitle, 300, 440, { align: 'center' });
+            
+            // Update status to orange since we generated the invite
+            updateArtistStatusInDb(artist.id, 'orange', artist.link);
+            
+            doc.save(`CDF_Invite_${artist.name}.pdf`);
+        }
     </script>
+    
+    <!-- Flowee Overlay HTML -->
+    <div id="flowee-overlay" class="flowee-overlay hidden">
+        <div class="overlay-backdrop" onclick="closeFloweeOverlay()"></div>
+        <div class="overlay-card glassmorphism z-50">
+            <div class="flowee-header">
+                <div class="flowee-avatar-container">
+                    <span class="flowee-pulse"></span>
+                    <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Flowee" alt="Flowee" class="flowee-avatar">
+                </div>
+                <div class="flowee-bubble">
+                    <p id="flowee-speech">Yo! Was steht für <strong id="current-artist-name">Artist</strong> an?</p>
+                </div>
+            </div>
+
+            <div class="artist-context mb-6">
+                <span id="current-artist-role" class="text-xs uppercase tracking-widest text-[#00ffcc] font-bold border border-[#00ffcc] rounded px-2 py-1">Audio-Flow</span>
+                <div class="mt-4 text-sm font-bold flex items-center">
+                    Status: <span id="current-status-text" class="ml-2">Not Contacted</span>
+                    <span id="current-status-orb" class="status-orb red"></span>
+                </div>
+            </div>
+
+            <div class="overlay-actions space-y-2">
+                <button class="action-btn" onclick="triggerPdfGeneration()">
+                    <span class="material-symbols-outlined">receipt_long</span> Einladung generieren (PDF)
+                </button>
+
+                <div class="action-group-drive">
+                    <button class="action-btn" onclick="toggleDriveInput()">
+                        <span class="material-symbols-outlined text-[#4285F4]">add_to_drive</span> Google Drive Ordner verlinken
+                    </button>
+                    <div id="drive-link-input-container" class="hidden-input-group">
+                        <input type="url" id="drive-folder-url" placeholder="https://drive.google.com/..." class="w-full text-sm">
+                        <button class="bg-[#00ffcc]/20 text-[#00ffcc] font-bold px-4 rounded border border-[#00ffcc]" onclick="saveDriveLink()">Sichern</button>
+                    </div>
+                </div>
+
+                <button class="action-btn bg-[#25D366]/10 border-[#25D366]/30 hover:border-[#25D366]" onclick="sendWhatsAppReminder()">
+                    <span class="material-symbols-outlined text-[#25D366]">chat</span> WhatsApp abschicken
+                </button>
+            </div>
+
+            <button class="w-full mt-4 py-3 border border-white/20 text-white/50 uppercase tracking-widest text-xs font-bold rounded hover:text-white hover:bg-white/5 transition" onclick="closeFloweeOverlay()">Zurück zum Ledger</button>
+        </div>
+    </div>
 </body>
 </html>
