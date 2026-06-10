@@ -1185,7 +1185,15 @@
                 </div>
                 <div>
                     <label class="text-[10px] uppercase tracking-widest text-white/50 block mb-1">Role / Flow Element</label>
-                    <input type="text" id="new-node-role" class="w-full bg-black border border-white/20 rounded p-3 text-white focus:border-[#00ffcc] outline-none" placeholder="e.g. Audio-Flow, Visuals">
+                    <select id="new-node-role" class="w-full bg-black border border-white/20 rounded p-3 text-white focus:border-[#00ffcc] outline-none">
+                        <option value="" disabled selected>Select a Role</option>
+                        <option value="Audio-Flow">Audio-Flow</option>
+                        <option value="Visual-Flow">Visual-Flow</option>
+                        <option value="Taste-Flow">Taste-Flow</option>
+                        <option value="Gatekeeper">Gatekeeper</option>
+                        <option value="Space-Holder">Space-Holder</option>
+                        <option value="Performance">Performance</option>
+                    </select>
                 </div>
             </div>
             
