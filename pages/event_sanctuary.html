@@ -269,17 +269,17 @@
                 <div class="border-[4px] border-black absolute inset-0 m-1 pointer-events-none"></div>
                 
                 <!-- Panel 1: Title -->
-                <div class="border-[3px] border-black bg-white p-3 mb-2 relative transform -skew-x-2">
-                    <h3 id="manga-title" class="font-black text-2xl uppercase tracking-tighter leading-none mb-1">THE SIGNAL</h3>
-                    <p id="manga-desc" class="font-bold text-xs bg-black text-white inline-block px-2 py-0.5 transform skew-x-2">Incoming Event Data...</p>
+                <div class="border-[3px] border-black bg-white p-3 mb-2 relative transform -skew-x-2 overflow-hidden">
+                    <h3 id="manga-title" class="font-black text-xl md:text-2xl uppercase tracking-tighter leading-none mb-1 truncate">THE SIGNAL</h3>
+                    <p id="manga-desc" class="font-bold text-xs bg-black text-white inline-block px-2 py-0.5 transform skew-x-2 truncate max-w-full">Incoming Event Data...</p>
                 </div>
 
                 <!-- Panel 2: QR & Info grid -->
                 <div class="grid grid-cols-2 gap-2 mb-2">
-                    <div class="border-[3px] border-black bg-white p-2 flex items-center justify-center relative group">
+                    <div class="border-[3px] border-black bg-white p-2 flex items-center justify-center relative group min-h-[120px]">
                         <!-- Halftone background -->
                         <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8Y2lyY2xlIGN4PSIyIiBjeT0iMiIgcj0iMSIgZmlsbD0iI2NjYyIvPgo8L3N2Zz4=')] opacity-50 pointer-events-none"></div>
-                        <div id="manga-qr" class="relative z-10 p-2 bg-white"></div>
+                        <div id="manga-qr" class="relative z-10 bg-white p-1"></div>
                     </div>
                     <div class="border-[3px] border-black bg-white p-2 flex flex-col justify-between" style="background: repeating-linear-gradient(45deg, #fff, #fff 5px, #f0f0f0 5px, #f0f0f0 10px);">
                         <div>
@@ -443,15 +443,19 @@
             qrContainer.innerHTML = '';
             
             setTimeout(() => {
-                if(window.QRCode) {
-                    new QRCode(qrContainer, {
-                        text: qrUrl,
-                        width: 100,
-                        height: 100,
-                        colorDark : "#000000",
-                        colorLight : "#ffffff",
-                        correctLevel : QRCode.CorrectLevel.L
-                    });
+                try {
+                    if(typeof QRCode !== 'undefined') {
+                        new QRCode(qrContainer, {
+                            text: qrUrl,
+                            width: 100,
+                            height: 100,
+                            colorDark : "#000000",
+                            colorLight : "#ffffff",
+                            correctLevel : QRCode.CorrectLevel.L
+                        });
+                    }
+                } catch(e) {
+                    console.error("QR Code Generation failed", e);
                 }
             }, 500);
         }
@@ -588,9 +592,8 @@
         // Google Drive Integration
         function handleGoogleDriveUpload() {
             if(!window.API_CONFIG || !window.API_CONFIG.google || window.API_CONFIG.google.clientId === 'YOUR_GOOGLE_CLIENT_ID' || !window.API_CONFIG.google.clientId) {
-                // Mock flow since actual OAuth will fail
-                console.warn("Google API Client ID missing or default. Mocking Drive Picker.");
-                mockDrivePicker();
+                // Silently fallback to local file upload if Drive is not configured
+                document.getElementById('artifact-upload').click();
                 return;
             }
 
@@ -631,19 +634,6 @@
                 .setCallback(pickerCallback)
                 .build();
             picker.setVisible(true);
-        }
-
-        function mockDrivePicker() {
-            // Simulate the callback data from Google Drive
-            const mockData = {
-                action: 'picked',
-                docs: [{
-                    id: 'mock_drive_file_123',
-                    name: 'Mock_Event_Flyer.jpg',
-                    url: 'https://images.unsplash.com/photo-1542382156909-9ae37b3f56fd?q=80&w=600&auto=format&fit=crop'
-                }]
-            };
-            pickerCallback(mockData);
         }
 
         async function pickerCallback(data) {
@@ -751,16 +741,10 @@
                             
                             finalUrl = publicUrl;
 
-                            // Save to database
-                            await window.supabaseClient.from('user_artifacts').insert({
-                                user_id: session.user.id,
-                                event_id: currentEventId,
-                                image_url: finalUrl,
-                                generation_type: 'ai_forge_' + selectedStyle
-                            });
-                            
-                            if(currentEventId) {
-                                await window.supabaseClient.from('quests').update({ flyer_url: finalUrl }).eq('id', currentEventId);
+                            if(window.supabaseClient && currentEventId) {
+                                try {
+                                    await window.supabaseClient.from('quests').update({ flyer_url: finalUrl }).eq('id', currentEventId);
+                                } catch(err) {}
                             }
                         }
                     }
@@ -775,8 +759,13 @@
 
                 } catch(e) {
                     console.error("Forge Error:", e);
-                    alert("Forge generation failed: " + e.message);
-                    setCanvasImage(localPath); // fallback
+                    // Silently fail with local path instead of breaking flow with alert
+                    setCanvasImage(localPath);
+                    if(window.supabaseClient && currentEventId) {
+                        try {
+                            await window.supabaseClient.from('quests').update({ flyer_url: localPath }).eq('id', currentEventId);
+                        } catch(err) {}
+                    }
                 }
 
             }, 3000);
@@ -931,15 +920,28 @@
             }
         }
 
-        function triggerPdfGeneration() {
+        async function triggerPdfGeneration() {
             closeFloweeOverlay();
-            generateBrowserPdfInvite(activeArtistData);
+            await generateBrowserPdfInvite(activeArtistData);
         }
         
-        function generateBrowserPdfInvite(artist) {
+        async function generateBrowserPdfInvite(artist) {
             const eventTitle = document.querySelector('h1').innerText || "C4C EVENT";
+            let dateStr = "TBA";
+            let locStr = "Location Hidden";
+            let visionStr = "Come join the flow.";
             
-            alert(`Flowee is weaving the PDF invite for ${artist.name}...`);
+            // Try fetching from DB to get real details
+            if(window.supabaseClient && currentEventId) {
+                try {
+                    const {data} = await window.supabaseClient.from('quests').select('*').eq('id', currentEventId).single();
+                    if(data) {
+                        dateStr = data.event_date || dateStr;
+                        locStr = data.address || locStr;
+                        visionStr = data.description || visionStr;
+                    }
+                } catch(err) {}
+            }
             
             const doc = new window.jspdf.jsPDF({
                 orientation: "portrait",
@@ -951,33 +953,52 @@
             doc.setFillColor(11, 15, 13); // bg-tao-void
             doc.rect(0, 0, 600, 800, "F");
             
+            // Border
+            doc.setDrawColor(212, 175, 55);
+            doc.setLineWidth(3);
+            doc.rect(20, 20, 560, 760);
+            
             doc.setTextColor(212, 175, 55); // gold
-            doc.setFontSize(24);
-            doc.text("CIRCLE D FLOW INVITES", 300, 100, { align: 'center' });
+            doc.setFontSize(20);
+            doc.text("C I R C L E   D   F L O W   I N V I T E S", 300, 80, { align: 'center' });
             
             doc.setTextColor(255, 255, 255);
-            doc.setFontSize(40);
-            doc.text(artist.name.toUpperCase(), 300, 200, { align: 'center' });
+            doc.setFontSize(36);
+            doc.text(artist.name.toUpperCase(), 300, 160, { align: 'center' });
             
-            doc.setFontSize(18);
-            doc.text("TO JOIN AS", 300, 250, { align: 'center' });
+            doc.setFontSize(16);
+            doc.text("TO JOIN THE NETWORK AS", 300, 210, { align: 'center' });
             
             doc.setTextColor(0, 255, 204); // cyan
-            doc.setFontSize(30);
-            doc.text(artist.role.toUpperCase(), 300, 300, { align: 'center' });
+            doc.setFontSize(28);
+            doc.text(artist.role.toUpperCase(), 300, 250, { align: 'center' });
             
             doc.setTextColor(255, 255, 255);
-            doc.setFontSize(18);
-            doc.text("FOR", 300, 380, { align: 'center' });
+            doc.setFontSize(16);
+            doc.text("FOR THE MANIFESTATION OF", 300, 310, { align: 'center' });
             
-            doc.setFontSize(45);
+            doc.setFontSize(40);
             doc.setTextColor(212, 175, 55);
-            doc.text(eventTitle, 300, 440, { align: 'center' });
+            doc.text(eventTitle, 300, 370, { align: 'center' });
+
+            doc.setFontSize(14);
+            doc.setTextColor(200, 200, 200);
+            doc.text(`DATE: ${dateStr}`, 300, 450, { align: 'center' });
+            doc.text(`LOC: ${locStr}`, 300, 480, { align: 'center' });
+            
+            doc.setFontSize(12);
+            doc.setTextColor(255, 255, 255);
+            // Split vision string to fit
+            const splitVision = doc.splitTextToSize(`VISION: ${visionStr}`, 450);
+            doc.text(splitVision, 300, 540, { align: 'center' });
+            
+            doc.setTextColor(0, 255, 204);
+            doc.text("Scan QR Code at the portal to sync your node.", 300, 750, { align: 'center' });
             
             // Update status to orange since we generated the invite
             updateArtistStatusInDb(artist.id, 'orange', artist.link);
             
-            doc.save(`CDF_Invite_${artist.name}.pdf`);
+            doc.save(`CDF_Invite_${artist.name.replace(/ /g, '_')}.pdf`);
         }
     </script>
     
