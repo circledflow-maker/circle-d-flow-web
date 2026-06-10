@@ -160,15 +160,20 @@
         @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(0.9); } }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
 
     <!-- Header Navigation -->
     <div class="fixed top-0 left-0 w-full bg-black/80 backdrop-blur-md z-50 border-b border-white/10 h-[80px]">
         <div class="flex items-center justify-between p-4 relative">
-            <button onclick="window.location.href='quest_map.html'" class="material-symbols-outlined text-white/50 hover:gold-accent">arrow_back</button>
-            <h1 class="font-serif text-xl tracking-widest uppercase truncate max-w-[200px]">C4C Event</h1>
-            <button onclick="toggleEventSwitcher()" class="material-symbols-outlined text-white/50 hover:text-white">more_vert</button>
+            <button onclick="window.location.href='quest_map.html'" class="material-symbols-outlined text-white/50 hover:text-[#d4af37]">arrow_back</button>
+            <h1 class="font-serif text-xl tracking-widest uppercase truncate max-w-[150px] mx-2">C4C Event</h1>
+            <div class="flex items-center gap-3">
+                <button onclick="alert('Analytics Dashboard coming soon! Here you will see how many users actually came.')" class="material-symbols-outlined text-[#00ffcc] hover:text-white transition">analytics</button>
+                <button onclick="toggleEventSwitcher()" class="material-symbols-outlined text-white/50 hover:text-white transition">more_vert</button>
+            </div>
             
             <!-- Event Switcher Dropdown -->
             <div id="event-switcher" class="hidden absolute top-[60px] right-4 bg-black/95 border border-white/20 rounded-xl shadow-2xl z-50 w-64 overflow-hidden">
@@ -242,28 +247,6 @@
         <!-- SECTION 3: THE LEDGER -->
         <div class="swipe-section">
             <h2 class="font-serif text-2xl gold-accent mb-4 uppercase tracking-widest mt-4">The Ledger</h2>
-            
-            <!-- Crew Roster -->
-            <div class="mb-8">
-                <h3 class="text-xs uppercase tracking-widest text-white/50 mb-3">Confirmed Flow Nodes</h3>
-                <div class="flex gap-3 overflow-x-auto pb-2">
-                    <div class="bg-white/5 border border-white/10 rounded-lg p-2 min-w-[120px] text-center">
-                        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-purple-500 to-orange-500 mx-auto mb-2"></div>
-                        <p class="text-xs font-bold">Rayan</p>
-                        <p class="text-[10px] gold-accent">Visuals</p>
-                    </div>
-                    <div class="bg-white/5 border border-white/10 rounded-lg p-2 min-w-[120px] text-center">
-                        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-500 to-teal-500 mx-auto mb-2"></div>
-                        <p class="text-xs font-bold">Sandu</p>
-                        <p class="text-[10px] gold-accent">Gatekeeper</p>
-                    </div>
-                    <div class="bg-white/5 border border-white/10 rounded-lg p-2 min-w-[120px] text-center">
-                        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-red-500 to-yellow-500 mx-auto mb-2"></div>
-                        <p class="text-xs font-bold">Akwaba</p>
-                        <p class="text-[10px] gold-accent">Taste</p>
-                    </div>
-                </div>
-            </div>
 
             <!-- Team Checklist -->
             <div class="space-y-4">
@@ -443,15 +426,6 @@
             const el = document.getElementById('event-switcher');
             el.classList.toggle('hidden');
         }
-
-        // Scripts for HTML2Canvas and QR code
-        const scriptHTML2Canvas = document.createElement('script');
-        scriptHTML2Canvas.src = "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
-        document.head.appendChild(scriptHTML2Canvas);
-        
-        const scriptQR = document.createElement('script');
-        scriptQR.src = "https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js";
-        document.head.appendChild(scriptQR);
 
         function populateMangaShare(event) {
             document.getElementById('manga-title').innerText = event.title || "THE SIGNAL";
@@ -747,9 +721,10 @@
                         const { data: { session } } = await window.supabaseClient.auth.getSession();
                         if(session) {
                             const fileName = `generated_${Date.now()}_${selectedStyle.replace('/', '_')}.png`;
+                            const uploadPath = `${session.user.id}-${fileName}`;
                             const { data: uploadData, error } = await window.supabaseClient.storage
                                 .from('artifacts')
-                                .upload(`${session.user.id}/${fileName}`, blob, {
+                                .upload(uploadPath, blob, {
                                     cacheControl: '3600',
                                     upsert: false,
                                     contentType: 'image/png'
@@ -759,7 +734,7 @@
 
                             const { data: { publicUrl } } = window.supabaseClient.storage
                                 .from('artifacts')
-                                .getPublicUrl(`${session.user.id}/${fileName}`);
+                                .getPublicUrl(uploadPath);
                             
                             finalUrl = publicUrl;
 
