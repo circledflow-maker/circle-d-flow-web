@@ -302,12 +302,13 @@
 
             <!-- Actions -->
             <div class="w-full max-w-sm mt-6 space-y-3 relative z-10">
-                <button onclick="downloadMangaShare()" class="w-full py-3 bg-[#d4af37] text-black font-bold uppercase tracking-widest rounded flex items-center justify-center gap-2 hover:bg-white transition-colors">
+                <button onclick="downloadMangaShare()" class="w-full py-3 bg-[#d4af37] text-black font-black uppercase tracking-widest rounded mb-2 hover:bg-[#b5952f] transition flex justify-center items-center gap-2">
                     <span class="material-symbols-outlined">download</span> Download Flyer
                 </button>
-                <button onclick="shareToInstagram()" class="w-full py-3 bg-transparent border border-[#d4af37] text-[#d4af37] font-bold uppercase tracking-widest rounded flex items-center justify-center gap-2 hover:bg-[#d4af37]/20 transition-colors">
+                <button onclick="shareToInstagram()" class="w-full py-3 bg-black border-2 border-[#d4af37] text-[#d4af37] font-black uppercase tracking-widest rounded hover:bg-[#d4af37]/10 transition flex justify-center items-center gap-2">
                     <span class="material-symbols-outlined">share</span> Share
                 </button>
+                <p class="text-center mt-3"><a id="direct-qr-link" href="#" target="_blank" class="text-[10px] text-white/40 hover:text-white/80 underline truncate block max-w-full">Direct Link</a></p>
             </div>
             
             <div class="h-20"></div>
@@ -442,6 +443,10 @@
             const qrContainer = document.getElementById('manga-qr');
             qrContainer.innerHTML = '';
             
+            const directLink = document.getElementById('direct-qr-link');
+            directLink.href = qrUrl;
+            directLink.innerText = qrUrl;
+            
             setTimeout(() => {
                 try {
                     if(typeof QRCode !== 'undefined') {
@@ -460,17 +465,55 @@
             }, 500);
         }
         
-        function downloadMangaShare() {
-            const card = document.getElementById('manga-share-card');
-            if(window.html2canvas) {
-                html2canvas(card, { scale: 3 }).then(canvas => {
-                    const link = document.createElement('a');
-                    link.download = 'CDF_Signal.jpg';
-                    link.href = canvas.toDataURL('image/jpeg', 0.9);
-                    link.click();
-                });
-            } else {
-                alert("Canvas engine not loaded yet. Please try again in a moment.");
+        async function downloadMangaFlyer() {
+            try {
+                // Populate composite card
+                const flyerUrl = document.getElementById('canvas-image').style.backgroundImage.slice(5, -2);
+                if(flyerUrl) {
+                    document.getElementById('composite-flyer').style.backgroundImage = `url('${flyerUrl}')`;
+                }
+
+                document.getElementById('composite-title').innerText = document.getElementById('manga-title').innerText;
+                document.getElementById('composite-date').innerText = document.getElementById('manga-date').innerText;
+                document.getElementById('composite-loc').innerText = document.getElementById('manga-loc').innerText;
+                document.getElementById('composite-vision').innerText = document.getElementById('event-vision-display').innerText.replace(/"/g, '');
+
+                const crewHTML = Array.from(document.getElementById('team-checklist-container').querySelectorAll('.flex.items-center.gap-3')).map(el => {
+                    const name = el.querySelector('.font-bold')?.innerText || '';
+                    const role = el.querySelector('.text-xs.uppercase')?.innerText || '';
+                    if(name && role) return `<p>${name} <span class="text-[#d4af37] opacity-80">| ${role}</span></p>`;
+                    return '';
+                }).join('');
+                document.getElementById('composite-crew').innerHTML = crewHTML || '<p class="italic text-white/50">Calling all souls...</p>';
+
+                const qrContainer = document.getElementById('composite-qr');
+                qrContainer.innerHTML = '';
+                const qrUrl = window.location.origin + "/pages/create_impact.html?id=" + currentEventId;
+                
+                if(typeof QRCode !== 'undefined') {
+                    new QRCode(qrContainer, {
+                        text: qrUrl,
+                        width: 84,
+                        height: 84,
+                        colorDark : "#000000",
+                        colorLight : "#ffffff",
+                        correctLevel : QRCode.CorrectLevel.L
+                    });
+                }
+
+                // Wait a tick for QR code to render and background images to settle
+                setTimeout(() => {
+                    const card = document.getElementById('download-composite-card');
+                    html2canvas(card, { scale: 2, useCORS: true, backgroundColor: '#09090b' }).then(canvas => {
+                        const link = document.createElement('a');
+                        link.download = `CDF_Impact_${currentEventId || 'Event'}.png`;
+                        link.href = canvas.toDataURL('image/png');
+                        link.click();
+                    });
+                }, 800);
+            } catch(e) {
+                console.error("Download Error:", e);
+                alert("Could not generate flyer: " + e.message);
             }
         }
         
@@ -591,9 +634,8 @@
 
         // Google Drive Integration
         function handleGoogleDriveUpload() {
-            if(!window.API_CONFIG || !window.API_CONFIG.google || window.API_CONFIG.google.clientId === 'YOUR_GOOGLE_CLIENT_ID' || !window.API_CONFIG.google.clientId) {
-                // Silently fallback to local file upload if Drive is not configured
-                document.getElementById('artifact-upload').click();
+            if(!window.API_CONFIG || !window.API_CONFIG.google) {
+                alert("Google API Keys missing in api_config.js. Cannot initialize Drive Picker.");
                 return;
             }
 
@@ -837,7 +879,6 @@
         function openFloweeOverlay(artistId, artistName, role, currentStatus, existingDriveLink = "") {
             activeArtistData = { id: artistId, name: artistName, role: role, status: currentStatus, link: existingDriveLink };
 
-            document.getElementById('current-artist-name').innerText = artistName;
             document.getElementById('current-artist-role').innerText = role;
             
             const speechBubble = document.getElementById('flowee-speech');
@@ -883,14 +924,28 @@
             await updateArtistStatusInDb(activeArtistData.id, 'orange', url); 
         }
 
-        function sendWhatsAppReminder() {
-            const eventTitle = document.querySelector('h1').innerText || "our Flow Event";
+        async function triggerWhatsApp() {
+            const eventTitle = document.querySelector('h1').innerText || "C4C EVENT";
+            let dateStr = document.getElementById('manga-date')?.innerText.replace('Date: ', '') || "TBA";
+            let locStr = document.getElementById('manga-loc')?.innerText.replace('Loc: ', '') || "Location Hidden";
+
+            // Try to fetch precise data from DB if possible
+            if(window.supabaseClient && currentEventId) {
+                try {
+                    const {data} = await window.supabaseClient.from('quests').select('event_date, address').eq('id', currentEventId).single();
+                    if(data) {
+                        dateStr = data.event_date || dateStr;
+                        locStr = data.address || locStr;
+                    }
+                } catch(err) {}
+            }
+
             let message = "";
             if (activeArtistData.status === 'red') {
-                message = `Hey ${activeArtistData.name}! Flowee from KyheartLx here. ✨ We would love to have you as ${activeArtistData.role} at "${eventTitle}". Are you down for it?`;
+                message = `Hey ${activeArtistData.name}! ✨ Flowee from the Circle D Flow network here. \n\nWe are summoning your unique energy. We would be honored to have you join us as the ${activeArtistData.role} for our upcoming manifestation: *${eventTitle}*.\n\n📅 Date: ${dateStr}\n📍 Location: ${locStr}\n\nAre you down to sync your node with us? Let me know! 🌊`;
                 updateArtistStatusInDb(activeArtistData.id, 'orange', activeArtistData.link); // optimistic update
             } else {
-                message = `Hey ${activeArtistData.name}, quick flow check! 🌟 Your invite for "${eventTitle}" is ready. Let me know if everything is smooth!`;
+                message = `Hey ${activeArtistData.name}, quick flow check! 🌟 Your official PDF invite for "${eventTitle}" is ready to be minted. Let me know if everything is smooth!`;
             }
             const encodedMessage = encodeURIComponent(message);
             window.open(`https://wa.me/?text=${encodedMessage}`, '_blank');
@@ -1047,5 +1102,38 @@
             <button class="w-full mt-4 py-3 border border-white/20 text-white/50 uppercase tracking-widest text-xs font-bold rounded hover:text-white hover:bg-white/5 transition" onclick="closeFloweeOverlay()">Back to Ledger</button>
         </div>
     </div>
+
+    <!-- Hidden Composite Card for Full Flyer Download -->
+    <div id="download-composite-card" class="fixed top-[-10000px] left-[-10000px] w-[800px] bg-[#09090b] text-white p-8 border-[10px] border-[#d4af37] z-[-1] font-serif" style="font-family: 'Cinzel', serif;">
+        <div class="flex gap-8">
+            <div class="w-[400px]">
+                <div id="composite-flyer" class="w-full aspect-[4/5] bg-cover bg-center border-4 border-[#d4af37]" style="background-image: url('../Assets/images/logo.png');"></div>
+            </div>
+            <div class="w-[320px] flex flex-col justify-between py-4 font-sans" style="font-family: 'Plus Jakarta Sans', sans-serif;">
+                <div>
+                    <h1 id="composite-title" class="font-serif text-3xl text-[#d4af37] mb-2 uppercase tracking-widest font-bold">EVENT TITLE</h1>
+                    <p id="composite-date" class="text-lg font-bold mb-1">Date: TBA</p>
+                    <p id="composite-loc" class="text-lg font-bold mb-4">Loc: Unknown</p>
+                    
+                    <h2 class="text-xs uppercase tracking-widest text-[#00ffcc] mb-2 font-bold">The Vision</h2>
+                    <p id="composite-vision" class="text-xs italic text-white/80 mb-6">...</p>
+                    
+                    <h2 class="text-xs uppercase tracking-widest text-[#d4af37] mb-2 font-bold">Confirmed Nodes</h2>
+                    <div id="composite-crew" class="text-xs font-bold flex flex-col gap-1 mb-6"></div>
+                </div>
+                
+                <div class="flex items-end justify-between border-t border-white/20 pt-4">
+                    <div>
+                        <p class="text-[10px] text-white/50 mb-1 uppercase tracking-widest">Scan to Sync</p>
+                        <div id="composite-qr" class="bg-white p-2 w-[100px] h-[100px]"></div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-[10px] text-[#00ffcc] uppercase tracking-widest mb-1">Circle D Flow</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
