@@ -573,7 +573,9 @@
                 
                 // Update local storage so we keep it in the UI
                 if (currentEventId) {
-                    await window.supabaseClient.from('quests').update({ flyer_url: localBlobUrl }).eq('id', currentEventId).catch(() => {});
+                    try {
+                        await window.supabaseClient.from('quests').update({ flyer_url: localBlobUrl }).eq('id', currentEventId);
+                    } catch(err) {}
                 }
 
                 const expEl = document.createElement('div');
@@ -667,7 +669,9 @@
                         const mockImportedUrl = 'https://images.unsplash.com/photo-1542382156909-9ae37b3f56fd?q=80&w=600&auto=format&fit=crop';
                         
                         if(window.supabaseClient && currentEventId) {
-                            await window.supabaseClient.from('quests').update({ flyer_url: mockImportedUrl }).eq('id', currentEventId).catch(() => {});
+                            try {
+                                await window.supabaseClient.from('quests').update({ flyer_url: mockImportedUrl }).eq('id', currentEventId);
+                            } catch(err) {}
                         }
 
                         setCanvasImage(mockImportedUrl);
