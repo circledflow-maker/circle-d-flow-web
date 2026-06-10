@@ -34,11 +34,21 @@
 </head>
 <body class="pb-24">
 
+    <!-- Burger Menu -->
+    <div id="burger-menu" class="fixed top-0 left-0 w-full h-screen bg-black/95 z-[100] transform -translate-x-full transition-transform duration-300 flex flex-col justify-center items-center gap-8">
+        <button onclick="toggleBurger()" class="absolute top-6 right-6 text-white/50 hover:text-white">
+            <span class="material-symbols-outlined text-4xl">close</span>
+        </button>
+        <a href="#" onclick="toggleBurger()" class="font-serif text-3xl uppercase tracking-widest gold-accent hover:text-white transition">About Us</a>
+        <a href="auth.html" class="font-serif text-3xl uppercase tracking-widest text-[#00ffcc] hover:text-white transition">Become Member</a>
+        <a href="policy.html" class="font-serif text-3xl uppercase tracking-widest text-white/50 hover:text-white transition">Legal Policy</a>
+    </div>
+
     <!-- Header Navigation -->
     <div class="fixed top-0 left-0 w-full bg-black/80 backdrop-blur-md z-50 border-b border-white/10 h-[60px]">
         <div class="flex items-center justify-between p-4 h-full">
-            <button onclick="window.history.back()" class="material-symbols-outlined text-white/50 hover:text-white transition">arrow_back</button>
-            <h1 class="font-serif text-lg tracking-widest uppercase truncate max-w-[200px] text-center" id="header-title">THE IMPACT</h1>
+            <button onclick="toggleBurger()" class="material-symbols-outlined text-white/50 hover:text-white transition">menu</button>
+            <h1 class="font-serif text-lg tracking-widest uppercase truncate max-w-[150px] text-center" id="header-title">THE IMPACT</h1>
             <button onclick="shareImpact()" class="material-symbols-outlined text-[#00ffcc] hover:text-white transition">ios_share</button>
         </div>
     </div>
@@ -143,6 +153,16 @@
         </div>
     </div>
 
+    <!-- Flowee Interactive Avatar -->
+    <div id="impact-flowee" class="fixed bottom-6 right-6 z-40 hidden flex items-end justify-end gap-3 pointer-events-none">
+        <div class="bg-black/80 backdrop-blur-md border border-[#00ffcc]/30 p-4 rounded-2xl rounded-br-none max-w-[250px] text-xs font-bold shadow-[0_0_20px_rgba(0,255,204,0.15)] pointer-events-auto relative transform transition-all duration-500 scale-0 origin-bottom-right" id="flowee-bubble">
+            <p id="flowee-message">Loading signal...</p>
+        </div>
+        <div class="w-16 h-16 rounded-full bg-black/80 border-2 border-[#00ffcc] flex items-center justify-center pointer-events-auto cursor-pointer shadow-[0_0_15px_rgba(0,255,204,0.4)]" onclick="toggleFloweeMessage()">
+            <img src="../Assets/images/logo.png" class="w-10 h-10 rounded-full animate-pulse">
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/api_config.js"></script>
     <script src="../js/agents/supabase_client.js?v=4.1"></script>
@@ -213,9 +233,14 @@
             document.getElementById('checkout-event-title').innerText = event.title || 'Event Ticket';
             document.getElementById('event-type').innerText = event.type || 'Secret Gathering';
             document.getElementById('event-date').innerText = event.event_date || 'Date TBA';
+            
+            const addr = event.address || 'Location Hidden';
             document.getElementById('event-location').innerHTML = `
-                <span class="material-symbols-outlined text-[#d4af37] text-lg">location_on</span>
-                ${event.address || 'Location Hidden'}
+                <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(addr)}" target="_blank" class="flex items-center gap-2 text-white hover:text-[#d4af37] transition w-full">
+                    <span class="material-symbols-outlined text-[#d4af37] text-lg">location_on</span>
+                    <span class="truncate">${addr}</span>
+                    <span class="material-symbols-outlined text-xs ml-auto opacity-50">open_in_new</span>
+                </a>
             `;
             
             if (event.description) {
@@ -263,6 +288,28 @@
             } else {
                 crewList.innerHTML = '<p class="text-xs text-white/30 italic">Lineup hidden or not yet defined.</p>';
             }
+
+            // Flowee Interaction
+            document.getElementById('impact-flowee').classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById('flowee-bubble').classList.remove('scale-0');
+                const title = event.title || 'this manifestation';
+                document.getElementById('flowee-message').innerText = `Welcome to ${title}! I'm Flowee. The vision here is: "${event.description || 'To connect and flow'}". Are you ready to sync your node?`;
+            }, 1000);
+        }
+
+        function toggleBurger() {
+            const menu = document.getElementById('burger-menu');
+            if (menu.classList.contains('-translate-x-full')) {
+                menu.classList.remove('-translate-x-full');
+            } else {
+                menu.classList.add('-translate-x-full');
+            }
+        }
+
+        function toggleFloweeMessage() {
+            const bubble = document.getElementById('flowee-bubble');
+            bubble.classList.toggle('scale-0');
         }
 
         function handlePayment() {

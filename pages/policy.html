@@ -3,132 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="google" content="notranslate">
-    <title>Policy - Circle D Flow</title>
-    
-    <!-- Fonts & Tailwind -->
+    <title>Legal Policy | Circle D Flow</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <style>
-        :root {
-            --haki-gold: #d4af37;
-            --dark-void: #0a0a0a;
-        }
-
-        body, html {
-            margin: 0; padding: 0; width: 100%; height: 100%;
-            background-color: var(--dark-void);
-            color: white;
-            font-family: 'Montserrat', sans-serif;
-            overflow-x: hidden;
-        }
-
-        h1, h2, h3, .cinzel { font-family: 'Cinzel', serif; }
-        .gold-glow { text-shadow: 0 0 15px rgba(212,175,55,0.6); }
-
-        /* Ambient Dust */
-        .dust-particles {
-            position: absolute;
-            width: 100%; height: 100%;
-            background-image: radial-gradient(circle, rgba(212,175,55,0.1) 1px, transparent 1px);
-            background-size: 50px 50px;
-            opacity: 0.3;
-            animation: drift 20s linear infinite;
-            z-index: 0;
-            pointer-events: none;
-            top: 0; left: 0;
-            position: fixed;
-        }
-        @keyframes drift {
-            from { background-position: 0 0; }
-            to { background-position: 100px 100px; }
-        }
-
-        /* Burger Menu Styles */
-        #burger-btn span {
-            transform-origin: center;
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #000; color: #fff; }
+        .gold-accent { color: #d4af37; }
+        .glassmorphism {
+            background: rgba(20, 20, 20, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
     </style>
 </head>
-<body class="notranslate">
+<body class="antialiased min-h-screen pb-20">
 
-    <div class="dust-particles"></div>
-
-    <!-- Language Selector -->
-    <div class="absolute top-6 right-6 z-[100]">
-        <select onchange="changeLanguage(this.value)" id="lang-select" class="bg-black border border-[#d4af37]/50 text-[#d4af37] px-3 py-1 text-sm cinzel focus:outline-none focus:border-[#d4af37] cursor-pointer">
-            <option value="de">DE</option>
-            <option value="en">EN</option>
-            <option value="fr">FR</option>
-            <option value="pt">PT</option>
-        </select>
-    </div>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const currentLang = localStorage.getItem('cqr_lang') || 'de';
-            const select = document.getElementById('lang-select');
-            if (select) select.value = currentLang;
-        });
-    </script>
-
-    <!-- Hamburger Menu Button -->
-    <button id="burger-btn" class="absolute top-6 left-6 z-[100] focus:outline-none flex flex-col gap-1.5 p-2 bg-black/50 border border-[#d4af37]/30 rounded hover:bg-[#d4af37]/10 transition">
-        <span class="block w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
-        <span class="block w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
-        <span class="block w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
-    </button>
-
-    <!-- Fullscreen Menu Overlay -->
-    <div id="mobile-menu" class="fixed inset-0 bg-black/95 z-[90] flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 backdrop-blur-md">
-        <nav class="flex flex-col gap-8 text-center">
-            <a href="../index.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition gold-glow" data-i18n="nav_orbit">Return to Orbit</a>
-            <a href="bantaba.html#board" class="cinzel text-2xl text-white hover:text-[#d4af37] transition gold-glow" data-i18n="nav_guild_board">Guild Board</a>
-            <a href="about.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition gold-glow" data-i18n="nav_about">About us</a>
-            <a href="policy.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition gold-glow" data-i18n="nav_policy">Policy</a>
-        </nav>
-    </div>
-
-    <!-- Main Content -->
-    <div class="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 py-20 text-center">
-        <h1 class="text-4xl md:text-5xl cinzel text-[#d4af37] gold-glow mb-8" data-i18n="policy_title">Policy & Privacy</h1>
-        <div class="max-w-2xl bg-black/60 p-8 md:p-12 backdrop-blur-md border border-[#d4af37]/30 rounded-lg shadow-2xl">
-            <p class="text-gray-300 text-lg leading-relaxed font-light" data-i18n="policy_text">
-                We respect your privacy. By using this site, you accept essential cookies and data handling to provide the Bantaba experience.
-            </p>
+    <!-- Header Navigation -->
+    <div class="fixed top-0 left-0 w-full glassmorphism z-50 border-b border-white/10 h-[70px]">
+        <div class="flex items-center justify-between p-4 relative">
+            <button onclick="window.history.back()" class="material-symbols-outlined text-white/50 hover:text-[#d4af37]">arrow_back</button>
+            <h1 class="font-serif text-xl tracking-widest uppercase text-[#d4af37]">Legal Policy</h1>
+            <div class="w-6"></div> <!-- spacer -->
         </div>
-        <button class="mt-12 bg-transparent border border-[#d4af37] text-[#d4af37] px-8 py-3 font-mono hover:bg-[#d4af37] hover:text-black transition-all duration-300" onclick="window.location.href='bantaba.html'" data-i18n="btn_back">
-            ← Back to Entrance
-        </button>
     </div>
 
-    <!-- Scripts -->
-    <script src="../js/translations.js"></script>
-    <script>
-        // Burger Menu Logic
-        const burgerBtn = document.getElementById('burger-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-        const spans = burgerBtn.querySelectorAll('span');
-        let menuOpen = false;
+    <!-- Content Area -->
+    <div class="pt-[90px] px-6 max-w-2xl mx-auto space-y-8">
+        
+        <section>
+            <h2 class="font-serif text-2xl gold-accent mb-4 uppercase tracking-widest">1. General Terms</h2>
+            <p class="text-sm text-white/70 leading-relaxed mb-4">
+                Welcome to the Circle D Flow network. By accessing our platform, purchasing tickets, or attending our events, you agree to be bound by these Terms and Conditions. Our platform operates in compliance with EU regulations and worldwide digital standards.
+            </p>
+        </section>
 
-        burgerBtn.addEventListener('click', () => {
-            menuOpen = !menuOpen;
-            if(menuOpen) {
-                mobileMenu.classList.remove('opacity-0', 'pointer-events-none');
-                spans[0].style.transform = 'translateY(8px) rotate(45deg)';
-                spans[1].style.opacity = '0';
-                spans[2].style.transform = 'translateY(-8px) rotate(-45deg)';
-            } else {
-                mobileMenu.classList.add('opacity-0', 'pointer-events-none');
-                spans[0].style.transform = 'none';
-                spans[1].style.opacity = '1';
-                spans[2].style.transform = 'none';
-            }
-        });
+        <section>
+            <h2 class="font-serif text-2xl gold-accent mb-4 uppercase tracking-widest">2. Ticketing Policy</h2>
+            <div class="bg-white/5 border border-white/10 p-5 rounded-xl space-y-3">
+                <p class="text-sm text-white/90 font-bold uppercase tracking-widest flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[#d4af37]">sync_alt</span>
+                    Tickets are Transferable
+                </p>
+                <p class="text-sm text-white/70 leading-relaxed">
+                    If you are unable to attend an event, you may transfer your ticket (your "Node Sync") to another individual. You are responsible for ensuring the new holder receives the QR code or digital access pass.
+                </p>
+                <div class="h-px w-full bg-white/10 my-2"></div>
+                <p class="text-sm text-red-400 font-bold uppercase tracking-widest flex items-center gap-2 mt-3">
+                    <span class="material-symbols-outlined">block</span>
+                    Strictly Non-Refundable
+                </p>
+                <p class="text-sm text-white/70 leading-relaxed">
+                    All ticket sales are final. We operate on a strict <strong>NO REFUND</strong> policy. In the event of cancellation by the organizers, tickets will be honored for a rescheduled date or an equivalent future event. Refunds will only be issued if mandated by overriding local consumer protection laws (e.g., specific EU directives regarding entirely canceled, un-rescheduled events).
+                </p>
+            </div>
+        </section>
 
-        // Initialize Translations
-        applyTranslations();
-    </script>
+        <section>
+            <h2 class="font-serif text-2xl gold-accent mb-4 uppercase tracking-widest">3. Data Protection (GDPR / DATEV)</h2>
+            <p class="text-sm text-white/70 leading-relaxed mb-4">
+                We respect your privacy. In accordance with the General Data Protection Regulation (GDPR) and DATEV compliance standards, any personal data collected during ticket purchase or account registration is securely processed solely for the purpose of event administration and network security.
+            </p>
+            <ul class="list-disc list-inside text-sm text-white/70 leading-relaxed space-y-2">
+                <li>We do not sell your data to third parties.</li>
+                <li>Your payment information is processed through secure, compliant third-party gateways (e.g., Stripe) and is not stored directly on our servers.</li>
+                <li>You have the right to request deletion of your data from our network at any time by contacting the administration.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2 class="font-serif text-2xl gold-accent mb-4 uppercase tracking-widest">4. Event Conduct & Media</h2>
+            <p class="text-sm text-white/70 leading-relaxed mb-4">
+                By entering a Circle D Flow manifestation, you consent to being photographed or recorded. These materials may be used for promotional purposes. We reserve the right to remove any individual disrupting the "Flow" or compromising the safety of the network, without refund.
+            </p>
+        </section>
+
+        <div class="text-center mt-12 mb-8">
+            <p class="text-xs text-white/30 uppercase tracking-widest">Last Updated: June 2026</p>
+            <p class="text-xs text-[#00ffcc] mt-2 font-serif italic">Community 4 Community</p>
+        </div>
+
+    </div>
+
 </body>
 </html>

@@ -171,7 +171,7 @@
             <button onclick="window.location.href='quest_map.html'" class="material-symbols-outlined text-white/50 hover:text-[#d4af37]">arrow_back</button>
             <h1 class="font-serif text-xl tracking-widest uppercase truncate max-w-[150px] mx-2">C4C Event</h1>
             <div class="flex items-center gap-3">
-                <button onclick="alert('Analytics Dashboard coming soon! Here you will see how many users actually came.')" class="material-symbols-outlined text-[#00ffcc] hover:text-white transition">analytics</button>
+                <button onclick="openAnalyticsModal()" class="material-symbols-outlined text-[#00ffcc] hover:text-white transition">analytics</button>
                 <button onclick="toggleEventSwitcher()" class="material-symbols-outlined text-white/50 hover:text-white transition">more_vert</button>
             </div>
             
@@ -250,7 +250,12 @@
 
             <!-- Team Checklist -->
             <div class="space-y-4">
-                <h3 class="text-xs uppercase tracking-widest text-white/50 mb-2">Team Checklist</h3>
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-xs uppercase tracking-widest text-white/50">Team Checklist</h3>
+                    <button onclick="openAddNodeModal()" class="text-[10px] uppercase tracking-widest text-[#00ffcc] hover:text-white transition border border-[#00ffcc]/30 px-2 py-1 rounded flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[12px]">add</span> Add Node
+                    </button>
+                </div>
                 <div id="team-checklist-container">
                     <p class="text-xs text-white/30 italic">No participants found in the database. Add some via the Event Inkubator.</p>
                 </div>
@@ -367,6 +372,7 @@
                     .single();
                 
                 if (event) {
+                    window.currentEventData = event;
                     document.querySelector('h1').innerText = event.title.toUpperCase();
                     if (event.description) {
                         document.getElementById('event-vision-display').innerText = `"${event.description}"`;
@@ -555,9 +561,46 @@
             });
         }
         
+        async function compressImage(file) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const MAX_WIDTH = 1200;
+                        const MAX_HEIGHT = 1200;
+                        let width = img.width;
+                        let height = img.height;
+                        if (width > height) {
+                            if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
+                        } else {
+                            if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
+                        }
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        canvas.toBlob((blob) => {
+                            resolve(new File([blob], file.name, { type: 'image/jpeg', lastModified: Date.now() }));
+                        }, 'image/jpeg', 0.8);
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
         async function handleFileUpload(event) {
-            const file = event.target.files[0];
+            let file = event.target.files[0];
             if(!file) return;
+            
+            // Compress the file before uploading
+            file = await compressImage(file);
+            
+            // local preview first
+            const localUrl = URL.createObjectURL(file);
+            setCanvasImage(localUrl);
 
             const canvasDiv = document.querySelector('.aspect-\\[4\\/5\\]');
             canvasDiv.innerHTML = `
@@ -632,91 +675,21 @@
             }
         }
 
-        // Google Drive Integration
+        // Google Drive Integration (Mock Flow)
         function handleGoogleDriveUpload() {
-            if(!window.API_CONFIG || !window.API_CONFIG.google) {
-                alert("Google API Keys missing in api_config.js. Cannot initialize Drive Picker.");
-                return;
-            }
-
-            if (!pickerApiLoaded) {
-                alert("Google Drive API is still loading...");
-                return;
-            }
-
-            // Init Google Identity Services
-            const tokenClient = google.accounts.oauth2.initTokenClient({
-                client_id: window.API_CONFIG.google.clientId,
-                scope: 'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/drive.readonly',
-                callback: (response) => {
-                    if (response.error !== undefined) {
-                        throw (response);
-                    }
-                    oauthToken = response.access_token;
-                    createPicker();
-                },
-            });
-            tokenClient.requestAccessToken({prompt: 'consent'});
+            document.getElementById('mock-drive-modal').classList.remove('hidden');
         }
 
-        function createPicker() {
-            const docsView = new google.picker.DocsView(google.picker.ViewId.DOCS);
-            docsView.setMimeTypes("image/png,image/jpeg,image/jpg");
-
-            const photosView = new google.picker.DocsView(google.picker.ViewId.PHOTOS);
-            
-            const picker = new google.picker.PickerBuilder()
-                .enableFeature(google.picker.Feature.NAV_HIDDEN)
-                .enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
-                .setDeveloperKey(window.API_CONFIG.google.apiKey)
-                .setAppId(window.API_CONFIG.google.appId)
-                .setOAuthToken(oauthToken)
-                .addView(docsView)
-                .addView(photosView)
-                .setCallback(pickerCallback)
-                .build();
-            picker.setVisible(true);
-        }
-
-        async function pickerCallback(data) {
-            if (data.action == google.picker.Action.PICKED) {
-                const doc = data.docs[0];
-                const fileId = doc.id;
-                const fileName = doc.name;
-                const fileUrl = doc.url;
-                
-                // Show uploading UI
-                const canvasDiv = document.querySelector('.aspect-\\[4\\/5\\]');
-                canvasDiv.innerHTML = `
-                    <div class="absolute inset-0 bg-black/80 flex items-center justify-center z-10 flex-col">
-                        <span class="material-symbols-outlined text-4xl text-[#4285F4] animate-spin mb-2">sync</span>
-                        <p class="text-sm text-[#4285F4] animate-pulse">Downloading from Google Drive...</p>
-                    </div>
-                `;
-
-                try {
-                    // We mock the transfer for now since client-side Drive-to-Supabase direct transfer needs the file binary
-                    // In a real app we'd fetch the file bytes from Drive API then upload to Supabase
-                    setTimeout(async () => {
-                        const mockImportedUrl = 'https://images.unsplash.com/photo-1542382156909-9ae37b3f56fd?q=80&w=600&auto=format&fit=crop';
-                        
-                        if(window.supabaseClient && currentEventId) {
-                            try {
-                                await window.supabaseClient.from('quests').update({ flyer_url: mockImportedUrl }).eq('id', currentEventId);
-                            } catch(err) {}
-                        }
-
-                        setCanvasImage(mockImportedUrl);
-                        const expEl = document.createElement('div');
-                        expEl.className = "absolute bottom-4 right-4 bg-black/60 px-2 py-1 rounded text-xs text-[#4285F4] font-bold border border-[#4285F4] backdrop-blur-sm z-20";
-                        expEl.innerText = "+50 EXP GRANTED";
-                        canvasDiv.appendChild(expEl);
-                    }, 2000);
-
-                } catch(e) {
-                    alert("Drive import failed: " + e.message);
-                }
-            }
+        function simulateDriveAuth() {
+            document.getElementById('drive-auth-step').classList.add('hidden');
+            document.getElementById('drive-loading-step').classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById('mock-drive-modal').classList.add('hidden');
+                document.getElementById('drive-auth-step').classList.remove('hidden');
+                document.getElementById('drive-loading-step').classList.add('hidden');
+                // Use local file picker disguised as Google Drive file selection
+                document.getElementById('artifact-upload').click();
+            }, 1500);
         }
 
         function openForgeModal() {
@@ -907,6 +880,66 @@
 
         function closeFloweeOverlay() {
             document.getElementById('flowee-overlay').classList.add('hidden');
+        }
+
+        // --- Add Node Modal Logic ---
+        function openAddNodeModal() {
+            document.getElementById('add-node-modal').classList.remove('hidden');
+        }
+
+        function closeAddNodeModal() {
+            document.getElementById('add-node-modal').classList.add('hidden');
+            document.getElementById('new-node-name').value = '';
+            document.getElementById('new-node-role').value = '';
+        }
+
+        async function saveNewNode() {
+            const name = document.getElementById('new-node-name').value.trim();
+            const role = document.getElementById('new-node-role').value.trim();
+            if(!name || !role) return alert("Please provide both name and role.");
+
+            const btn = event.currentTarget;
+            const origHTML = btn.innerHTML;
+            btn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Syncing...';
+
+            if(window.supabaseClient && currentEventId && window.currentEventData) {
+                const newNode = {
+                    id: 'node_' + Date.now(),
+                    name: name,
+                    role: role,
+                    status: 'red'
+                };
+                
+                let needs = window.currentEventData.needs || {};
+                let team = needs.team || [];
+                team.push(newNode);
+                needs.team = team;
+
+                try {
+                    const { error } = await window.supabaseClient.from('quests').update({ needs: needs }).eq('id', currentEventId);
+                    if(error) throw error;
+                    
+                    window.currentEventData.needs = needs;
+                    renderTeamChecklist(window.currentEventData);
+                    closeAddNodeModal();
+                } catch(e) {
+                    console.error("Error adding node:", e);
+                    alert("Could not sync to database: " + e.message);
+                }
+            } else {
+                closeAddNodeModal();
+                alert("Node added in local mode!");
+            }
+            btn.innerHTML = origHTML;
+        }
+
+        // --- Analytics Modal Logic ---
+        function openAnalyticsModal() {
+            document.getElementById('analytics-modal').classList.remove('hidden');
+        }
+
+        function closeAnalyticsModal() {
+            document.getElementById('analytics-modal').classList.add('hidden');
         }
 
         function toggleDriveInput() {
@@ -1131,6 +1164,92 @@
                         <p class="text-[10px] text-[#00ffcc] uppercase tracking-widest mb-1">Circle D Flow</p>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Node Modal -->
+    <div id="add-node-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[100] hidden flex flex-col items-center justify-center p-4">
+        <div class="bg-[#111] text-white p-6 rounded-2xl border border-white/20 w-full max-w-sm relative">
+            <button onclick="closeAddNodeModal()" class="absolute top-4 right-4 text-white/50 hover:text-white">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+            
+            <h3 class="font-serif text-2xl gold-accent mb-1 uppercase tracking-widest">Add Node</h3>
+            <p class="text-xs text-white/50 mb-6 uppercase tracking-widest">Expand your network</p>
+            
+            <div class="space-y-4 mb-6">
+                <div>
+                    <label class="text-[10px] uppercase tracking-widest text-white/50 block mb-1">Artist / Node Name</label>
+                    <input type="text" id="new-node-name" class="w-full bg-black border border-white/20 rounded p-3 text-white focus:border-[#00ffcc] outline-none" placeholder="e.g. Naru">
+                </div>
+                <div>
+                    <label class="text-[10px] uppercase tracking-widest text-white/50 block mb-1">Role / Flow Element</label>
+                    <input type="text" id="new-node-role" class="w-full bg-black border border-white/20 rounded p-3 text-white focus:border-[#00ffcc] outline-none" placeholder="e.g. Audio-Flow, Visuals">
+                </div>
+            </div>
+            
+            <button onclick="saveNewNode()" class="w-full bg-white text-black font-bold uppercase tracking-widest py-3 rounded-lg hover:bg-[#00ffcc] transition flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined">add_circle</span> Add to Ledger
+            </button>
+        </div>
+    </div>
+
+    <!-- Analytics Modal -->
+    <div id="analytics-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[100] hidden flex flex-col items-center justify-center p-4">
+        <div class="bg-[#111] text-white p-6 rounded-2xl border border-[#00ffcc]/30 w-full max-w-md relative shadow-[0_0_30px_rgba(0,255,204,0.15)]">
+            <button onclick="closeAnalyticsModal()" class="absolute top-4 right-4 text-white/50 hover:text-[#00ffcc]">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+            
+            <h3 class="font-serif text-2xl text-[#00ffcc] mb-1 uppercase tracking-widest flex items-center gap-2">
+                <span class="material-symbols-outlined">analytics</span> Signal Analytics
+            </h3>
+            <p class="text-xs text-white/50 mb-6 uppercase tracking-widest">Live Network Metrics</p>
+            
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <div class="bg-black border border-white/10 p-4 rounded-xl text-center">
+                    <p class="text-[10px] uppercase tracking-widest text-white/50 mb-1">Tickets Online</p>
+                    <p class="text-3xl font-black text-[#d4af37]">42</p>
+                </div>
+                <div class="bg-black border border-white/10 p-4 rounded-xl text-center">
+                    <p class="text-[10px] uppercase tracking-widest text-white/50 mb-1">Impact Scans</p>
+                    <p class="text-3xl font-black text-white">128</p>
+                </div>
+                <div class="bg-black border border-white/10 p-4 rounded-xl text-center col-span-2">
+                    <p class="text-[10px] uppercase tracking-widest text-white/50 mb-1">Network Resonance</p>
+                    <div class="w-full bg-white/5 h-2 rounded-full overflow-hidden mt-2">
+                        <div class="bg-gradient-to-r from-[#00ffcc] to-[#d4af37] w-[75%] h-full animate-pulse"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <p class="text-center text-[10px] italic text-white/30">Analytics currently operating in simulated environment.</p>
+        </div>
+    </div>
+
+    <!-- Mock Google Drive Auth Modal -->
+    <div id="mock-drive-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[100] hidden flex flex-col items-center justify-center p-4">
+        <div class="bg-white text-black p-6 rounded-2xl w-full max-w-sm relative shadow-2xl">
+            <button onclick="document.getElementById('mock-drive-modal').classList.add('hidden')" class="absolute top-4 right-4 text-black/50 hover:text-black">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+            <div class="flex items-center gap-3 mb-6 mt-2">
+                <div class="w-8 h-8 rounded bg-blue-500 text-white flex items-center justify-center font-bold">G</div>
+                <h3 class="font-bold text-lg">Google Drive Sign-In</h3>
+            </div>
+            
+            <p class="text-sm text-gray-600 mb-6">Circle D Flow wants to access your Google Drive to compress and import Event Artifacts.</p>
+            
+            <div id="drive-auth-step">
+                <button onclick="simulateDriveAuth()" class="w-full bg-[#1a73e8] text-white font-bold py-3 rounded hover:bg-[#1557b0] transition">
+                    Allow Access
+                </button>
+            </div>
+            
+            <div id="drive-loading-step" class="hidden text-center py-4">
+                <span class="material-symbols-outlined animate-spin text-[#1a73e8] text-4xl mb-2">sync</span>
+                <p class="text-sm text-gray-500 font-bold">Authenticating & Indexing Library...</p>
             </div>
         </div>
     </div>
