@@ -72,6 +72,10 @@
             <span class="material-symbols-outlined text-xl md:text-sm">person_add</span>
             <span class="font-mono text-xs uppercase tracking-widest hidden md:inline">Invite Soul</span>
         </button>
+        <button onclick="toggleAnalyticsModal()" class="w-10 h-10 md:w-auto md:px-4 md:py-2 bg-white/5 border border-white/20 text-white rounded-lg cursor-pointer flex items-center justify-center gap-2 hover:bg-white/10 transition-all">
+            <span class="material-symbols-outlined text-xl md:text-sm">bar_chart</span>
+            <span class="font-mono text-xs uppercase tracking-widest hidden md:inline">Analytics</span>
+        </button>
     </div>
 
     <!-- Side Panel for Online Users (Swipeable) -->
@@ -135,6 +139,60 @@
     <!-- Overlay for Panel -->
     <div id="online-overlay" onclick="toggleOnlinePanel()" class="fixed inset-0 bg-black/80 z-[105] opacity-0 pointer-events-none transition-opacity duration-300 backdrop-blur-sm"></div>
 
+    <!-- Analytics Modal -->
+    <div id="analytics-modal" class="hidden fixed inset-0 z-[120] bg-black/90 backdrop-blur flex justify-center items-center p-4 opacity-0 transition-opacity duration-500">
+        <div class="sanctuary-panel p-8 rounded-2xl max-w-md w-full relative overflow-hidden shadow-[0_0_30px_rgba(212,175,55,0.15)]">
+            <button onclick="toggleAnalyticsModal()" class="absolute top-4 right-4 text-white/50 hover:text-white transition-colors">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+            <h2 class="text-2xl font-display text-white mb-6 flex items-center gap-3">
+                <span class="material-symbols-outlined text-tao-fire">bar_chart</span>
+                Event Analytics
+            </h2>
+            
+            <div class="space-y-6">
+                <!-- Stat Card 1 -->
+                <div class="bg-black/40 border border-white/10 rounded-xl p-4 flex justify-between items-center">
+                    <div>
+                        <div class="text-[10px] uppercase font-mono text-white/50 tracking-widest mb-1">Total RSVPs</div>
+                        <div class="text-2xl font-bold text-white">42 Souls</div>
+                    </div>
+                    <div class="w-12 h-12 rounded-full bg-tao-water/20 flex items-center justify-center border border-tao-water/40">
+                        <span class="material-symbols-outlined text-tao-water">how_to_reg</span>
+                    </div>
+                </div>
+
+                <!-- Stat Card 2 -->
+                <div class="bg-black/40 border border-white/10 rounded-xl p-4 flex justify-between items-center">
+                    <div>
+                        <div class="text-[10px] uppercase font-mono text-white/50 tracking-widest mb-1">Check-Ins (Arrived)</div>
+                        <div class="text-2xl font-bold text-tao-fire">28 Souls</div>
+                    </div>
+                    <div class="w-12 h-12 rounded-full bg-tao-fire/20 flex items-center justify-center border border-tao-fire/40">
+                        <span class="material-symbols-outlined text-tao-fire">sensor_door</span>
+                    </div>
+                </div>
+                
+                <!-- Stat Card 3 -->
+                <div class="bg-black/40 border border-white/10 rounded-xl p-4 flex justify-between items-center">
+                    <div>
+                        <div class="text-[10px] uppercase font-mono text-white/50 tracking-widest mb-1">Resonance Energy Generated</div>
+                        <div class="text-2xl font-bold text-green-400">1,250 EXP</div>
+                    </div>
+                    <div class="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center border border-green-500/40">
+                        <span class="material-symbols-outlined text-green-400">bolt</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-8 text-center">
+                <button onclick="toggleAnalyticsModal()" class="px-6 py-2 bg-white/10 hover:bg-white/20 border border-white/20 rounded font-mono text-sm uppercase tracking-widest transition-colors w-full">
+                    Close Manifest
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
         function toggleOnlinePanel() {
             const panel = document.getElementById('online-panel');
@@ -147,6 +205,17 @@
                 panel.classList.add('-translate-x-full');
                 overlay.classList.add('opacity-0', 'pointer-events-none');
                 overlay.classList.remove('opacity-100', 'pointer-events-auto');
+            }
+        }
+
+        function toggleAnalyticsModal() {
+            const modal = document.getElementById('analytics-modal');
+            if(modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+                setTimeout(() => modal.classList.remove('opacity-0'), 10);
+            } else {
+                modal.classList.add('opacity-0');
+                setTimeout(() => modal.classList.add('hidden'), 500);
             }
         }
         

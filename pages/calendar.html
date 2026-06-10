@@ -245,20 +245,21 @@
                 let deleteBtnHtml = '';
                 if (currentUserId && event.creator_id === currentUserId) {
                     deleteBtnHtml = `
-                        <button onclick="deleteQuest('${event.id}', event)" class="absolute top-2 left-[-25px] text-red-500/50 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button onclick="deleteQuest('${event.id}', event)" class="w-full mt-2 bg-red-900/30 border border-red-500/30 text-red-400 hover:text-white hover:bg-red-600 p-1.5 rounded transition-all flex items-center justify-center gap-2">
                             <span class="material-symbols-outlined text-[14px]">delete</span>
+                            <span class="text-[10px] uppercase font-bold tracking-widest">Delete Event</span>
                         </button>
                     `;
                 }
 
                 sidebar.innerHTML += `
-                    <div class="bg-black/40 border border-white/5 rounded p-3 hover:border-white/20 transition-all group relative">
-                        ${deleteBtnHtml}
+                    <div class="bg-black/40 border border-white/5 rounded p-3 hover:border-white/20 transition-all group relative flex flex-col">
                         <div class="flex justify-between items-start cursor-pointer" onclick="localStorage.setItem('currentEventId', '${event.id}'); window.location.href='event_sanctuary.html'">
                             <h4 class="text-xs font-bold text-white truncate max-w-[150px]">${event.title || 'Unknown Quest'}</h4>
                             <span class="text-[9px] text-[#d4af37] font-mono border border-[#d4af37]/30 px-1 rounded">${dText}</span>
                         </div>
-                        <p class="text-[10px] text-white/40 mt-1 cursor-pointer" onclick="localStorage.setItem('currentEventId', '${event.id}'); window.location.href='event_sanctuary.html'">${event.address || 'Unknown Location'}</p>
+                        <p class="text-[10px] text-white/40 mt-1 cursor-pointer mb-1" onclick="localStorage.setItem('currentEventId', '${event.id}'); window.location.href='event_sanctuary.html'">${event.address || 'Unknown Location'}</p>
+                        ${deleteBtnHtml}
                     </div>
                 `;
             });
