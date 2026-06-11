@@ -185,7 +185,7 @@
         <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.85em; display: flex; flex-direction: column; gap: 8px;">
             <li onclick="window.location.href='vision_oasis.html'" style="cursor: pointer; padding: 5px; border-radius: 4px; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent'"><span style="color: var(--color-terracotta);">●</span> Visuals (Visio)</li>
             <li onclick="window.location.href='sound_dashboard.html'" style="cursor: pointer; padding: 5px; border-radius: 4px; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent'"><span style="color: var(--color-terracotta);">●</span> Sound (Frequency)</li>
-            <li onclick="window.location.href='under-construction.html'" style="cursor: pointer; padding: 5px; border-radius: 4px; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent'"><span style="color: var(--color-terracotta);">●</span> Taste (Culinary)</li>
+            <li onclick="window.location.href='taste_world_hub.html'" style="cursor: pointer; padding: 5px; border-radius: 4px; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent'"><span style="color: var(--color-terracotta);">●</span> Taste (Culinary)</li>
             <li onclick="window.location.href='portfolio_anime_reality.html'" style="cursor: pointer; padding: 5px; border-radius: 4px; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent'"><span style="color: var(--color-terracotta);">●</span> Style (Aesthetics)</li>
             <li onclick="window.location.href='akademie.html'" style="cursor: pointer; padding: 5px; border-radius: 4px; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent'"><span style="color: var(--color-terracotta);">●</span> Knowledge (Gnosis)</li>
             <li onclick="window.location.href='bantaba.html'" style="cursor: pointer; padding: 5px; border-radius: 4px; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent'"><span style="color: var(--color-terracotta);">●</span> Space (Connection)</li>
@@ -303,14 +303,33 @@
         async function loadFlowAreas() {
             try {
                 if(!window.supabaseClient) return;
-                const { data, error } = await window.supabaseClient.from('flow_areas').select('*');
-                if(error) {
-                    console.warn("Table flow_areas not found or RLS error. Proceeding silently.", error);
-                    return;
+                const { data: areas, error: areaErr } = await window.supabaseClient.from('flow_areas').select('*');
+                if(areaErr) {
+                    console.warn("Table flow_areas not found or RLS error. Proceeding silently.", areaErr);
                 }
-                if(!data) return;
                 
-                activeMissions = data.filter(area => area.lat && area.lng);
+                const { data: quests, error: questErr } = await window.supabaseClient.from('user_quests').select('*');
+                if(questErr) {
+                    console.warn("Table user_quests not found or RLS error.", questErr);
+                }
+
+                let allMarkers = [];
+                if(areas) allMarkers = allMarkers.concat(areas.filter(a => a.lat && a.lng));
+                if(quests) {
+                    const eventMarkers = quests.filter(q => q.latitude && q.longitude).map(q => ({
+                        id: q.id,
+                        name: q.title || 'Unknown Event',
+                        description: q.description || '',
+                        lat: q.latitude,
+                        lng: q.longitude,
+                        isEvent: true,
+                        creator_id: q.user_id,
+                        image_url: q.image_url || null
+                    }));
+                    allMarkers = allMarkers.concat(eventMarkers);
+                }
+                
+                activeMissions = allMarkers;
                 
                 // --- AKADEMIE MANGAS INJECTION REMOVED ---
                 
@@ -325,6 +344,15 @@
                                 <line x1="30" y1="30" x2="70" y2="30" />
                                 <line x1="30" y1="50" x2="70" y2="50" />
                                 <line x1="30" y1="70" x2="50" y2="70" />
+                            </svg>
+                        `;
+                    } else if (area.isEvent) {
+                        // Event Marker (Diamond / Star shape)
+                        let color = "#d4af37";
+                        iconHtml = `
+                            <svg width="40" height="40" viewBox="0 0 100 100" fill="none" stroke="${color}" stroke-width="4" style="background:rgba(26,26,26,0.9); border-radius:50%; box-shadow:0 0 15px ${color}80;">
+                                <circle cx="50" cy="50" r="40" />
+                                <polygon points="50,15 60,40 85,40 65,55 75,80 50,65 25,80 35,55 15,40 40,40" fill="${color}" />
                             </svg>
                         `;
                     } else {
@@ -411,11 +439,13 @@
             const imgHtml = area.image_url ? `<img src="${area.image_url}" style="width:100%; height:100px; object-fit:cover; margin-bottom:10px; border:1px solid var(--color-gold); border-radius:4px;">` : '';
             
             let actionHtml = '';
-            if(isNear) {
-                actionHtml = `<a href="flow_area_scan.html?id=${area.id}" style="display:block; padding:10px; background:var(--color-gold); color:#000; text-decoration:none; font-weight:bold; border-radius:4px; margin-top:15px; animation: floatPulse 2s infinite alternate;">🔓 ENTER THE ZONE (SCAN QR)</a>`;
+            if(area.isEvent) {
+                actionHtml = `<a href="create_impact.html?id=${area.id}" style="display:block; padding:10px; background:var(--color-gold); color:#000; text-decoration:none; font-weight:bold; border-radius:4px; margin-top:15px; animation: floatPulse 2s infinite alternate;">🎫 GO TO EVENT IMPACT</a>`;
+            } else if(isNear) {
+                actionHtml = `<a href="flow_area_scan.html?id=${area.id}" style="display:block; padding:10px; background:var(--color-gold); color:#000; text-decoration:none; font-weight:bold; border-radius:4px; margin-top:15px; animation: floatPulse 2s infinite alternate;">📲 ENTER THE ZONE (SCAN QR)</a>`;
             } else {
                 const distStr = distanceMeters === 999 ? 'Calculating...' : `${Math.round(distanceMeters)}m away`;
-                actionHtml = `<div style="padding:10px; background:rgba(255,255,255,0.1); color:#aaa; margin-top:15px; font-size: 0.8em;">🔒 Too far (${distStr})</div>`;
+                actionHtml = `<div style="padding:10px; background:rgba(255,255,255,0.1); color:#aaa; margin-top:15px; font-size: 0.8em;">📍 Too far (${distStr})</div>`;
             }
 
             mObj.marker.bindPopup(`

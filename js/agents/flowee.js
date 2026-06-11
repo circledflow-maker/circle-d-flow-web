@@ -1679,6 +1679,9 @@ class FloweeAgent {
              localStorage.setItem('cdf_xp', xp + 50);
              if(window.Pusher) window.Pusher.showToast('SYSTEM: +50 EXP ACCUMULATED', 'xp');
          }
+         
+         if(!isCompleted) this.talk(true, "Training wheels off. Welcome to the Deep Flow.", "guide");
+    }
 
     startAuthFlow(isRegister) {
         if(!this.bubble) return;
