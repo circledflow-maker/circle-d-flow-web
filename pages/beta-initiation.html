@@ -122,12 +122,12 @@
     </div>
 
     <!-- 2. FLIGHT COMPANION (Pirate Phoenix Flowee) -->
-    <div id="flowee-companion" class="fixed bottom-6 right-6 z-[100] transition-all duration-1000 scale-0 flex items-end justify-end pointer-events-auto">
-        <div id="flowee-bubble" class="mr-4 w-[90vw] max-w-sm bg-black/80 backdrop-blur-xl border border-white/20 text-white p-6 rounded-3xl rounded-br-none shadow-[0_0_30px_rgba(154,77,255,0.2)] text-sm mb-4 opacity-0 scale-0 transition-all origin-bottom-right flex flex-col gap-4">
+    <div id="flowee-companion" class="fixed bottom-4 right-4 z-[100] transition-all duration-1000 scale-0 flex flex-col md:flex-row items-end justify-end pointer-events-auto w-[calc(100vw-2rem)] md:w-auto">
+        <div id="flowee-bubble" class="mb-2 md:mb-4 md:mr-4 w-full max-w-sm bg-black/80 backdrop-blur-xl border border-white/20 text-white p-6 rounded-3xl rounded-br-none shadow-[0_0_30px_rgba(154,77,255,0.2)] text-sm opacity-0 scale-0 transition-all origin-bottom-right flex flex-col gap-4">
             <div id="flowee-text" class="text-lg font-serif italic text-white/90 leading-relaxed">Howdy, Traveler! Ready to find your soul's rhythm?</div>
             <div id="flowee-inputs" class="flex flex-col gap-3 w-full"></div>
         </div>
-        <img id="flowee-img" src="Assets/images/flowee_pirate_phoenix.png" class="w-24 h-24 md:w-32 md:h-32 object-contain drop-shadow-[0_0_30px_rgba(154,77,234,0.8)] animate-float shrink-0">
+        <img id="flowee-img" src="Assets/images/flowee_pirate_phoenix.png" class="w-20 h-20 md:w-32 md:h-32 object-contain drop-shadow-[0_0_30px_rgba(154,77,234,0.8)] animate-float shrink-0">
     </div>
 
     <!-- 3. AUDIO CONTEXT (Initiation Beats) -->
@@ -211,18 +211,41 @@
 
                 if(this.phase === 1) {
                     this.engine.state = 'ALTAR';
-                    this.showTalk(
-                        "Ah... a new frequency knocks at the gates of eternity. Who seeks entry?",
-                        `
-                        <input type="email" id="identity-email" class="w-full bg-black/50 border border-white/20 rounded-xl p-4 text-white focus:border-mystic-gold outline-none font-mono text-base" placeholder="your@email.com">
-                        <input type="password" id="reg-password" class="w-full bg-black/50 border border-white/20 rounded-xl p-4 text-white focus:border-mystic-gold outline-none font-mono text-base" placeholder="Password">
-                        <button onclick="window.Initiation.nextPhase()" class="w-full py-4 bg-mystic-gold text-black font-bold uppercase tracking-widest hover:scale-105 transition-transform rounded-xl mt-2">Next</button>
-                        <div class="flex gap-4 justify-center mt-2">
-                          <button onclick="window.handleOAuthLogin('google')" class="flex-1 p-3 bg-white/10 rounded-xl hover:bg-white/20 text-center uppercase text-xs font-bold text-white/70">Google</button>
-                          <button onclick="window.handleOAuthLogin('apple')" class="flex-1 p-3 bg-white/10 rounded-xl hover:bg-white/20 text-center uppercase text-xs font-bold text-white/70">Apple</button>
-                        </div>
-                        `
-                    );
+                    
+                    if(window.supabaseClient) {
+                        window.supabaseClient.auth.getSession().then(({ data: { session } }) => {
+                            if (session) {
+                                this.savedEmail = session.user.email;
+                                this.showTalk(
+                                    "Your frequency is already linked to the Matrix. Shall we proceed to naming?",
+                                    `<button onclick="window.Initiation.nextPhase()" class="w-full py-4 bg-mystic-gold text-black font-bold uppercase tracking-widest hover:scale-105 transition-transform rounded-xl mt-2">Next</button>`
+                                );
+                            } else {
+                                this.showTalk(
+                                    "Ah... a new frequency knocks at the gates of eternity. Who seeks entry?",
+                                    `
+                                    <input type="email" id="identity-email" class="w-full bg-black/50 border border-white/20 rounded-xl p-4 text-white focus:border-mystic-gold outline-none font-mono text-base" placeholder="your@email.com">
+                                    <input type="password" id="reg-password" class="w-full bg-black/50 border border-white/20 rounded-xl p-4 text-white focus:border-mystic-gold outline-none font-mono text-base" placeholder="Password">
+                                    <button onclick="window.Initiation.nextPhase()" class="w-full py-4 bg-mystic-gold text-black font-bold uppercase tracking-widest hover:scale-105 transition-transform rounded-xl mt-2">Next</button>
+                                    <div class="flex gap-4 justify-center mt-2">
+                                      <button onclick="window.handleOAuthLogin('google')" class="flex-1 p-3 bg-white/10 rounded-xl hover:bg-white/20 text-center uppercase text-xs font-bold text-white/70">Google</button>
+                                      <button onclick="window.handleOAuthLogin('apple')" class="flex-1 p-3 bg-white/10 rounded-xl hover:bg-white/20 text-center uppercase text-xs font-bold text-white/70">Apple</button>
+                                    </div>
+                                    `
+                                );
+                            }
+                        });
+                    } else {
+                        // Fallback
+                        this.showTalk(
+                            "Ah... a new frequency knocks at the gates of eternity. Who seeks entry?",
+                            `
+                            <input type="email" id="identity-email" class="w-full bg-black/50 border border-white/20 rounded-xl p-4 text-white focus:border-mystic-gold outline-none font-mono text-base" placeholder="your@email.com">
+                            <input type="password" id="reg-password" class="w-full bg-black/50 border border-white/20 rounded-xl p-4 text-white focus:border-mystic-gold outline-none font-mono text-base" placeholder="Password">
+                            <button onclick="window.Initiation.nextPhase()" class="w-full py-4 bg-mystic-gold text-black font-bold uppercase tracking-widest hover:scale-105 transition-transform rounded-xl mt-2">Next</button>
+                            `
+                        );
+                    }
                 } else if(this.phase === 2) {
                     // Validate Phase 1
                     const email = document.getElementById('identity-email')?.value;
@@ -295,14 +318,21 @@
                 document.getElementById('phase-finish').classList.remove('hidden');
                 document.getElementById('assigned-class').innerText = `YOU ARE A ${winner}`;
                 
-                // Perform Supabase SignUp silently
+                // Perform Supabase SignUp or Update silently
                 if(window.supabaseClient) {
                     console.log("Registering user in Supabase...");
-                    await window.supabaseClient.auth.signUp({
-                        email: this.savedEmail || 'wanderer@flow.com',
-                        password: this.savedPw || 'CircleFlow2026!',
-                        options: { data: { username: this.savedUsername || 'Wanderer', flow_class: winner } }
-                    });
+                    const { data: { session } } = await window.supabaseClient.auth.getSession();
+                    if (session) {
+                        await window.supabaseClient.auth.updateUser({
+                            data: { username: this.savedUsername || 'Wanderer', flow_class: winner }
+                        });
+                    } else {
+                        await window.supabaseClient.auth.signUp({
+                            email: this.savedEmail || 'wanderer@flow.com',
+                            password: this.savedPw || 'CircleFlow2026!',
+                            options: { data: { username: this.savedUsername || 'Wanderer', flow_class: winner } }
+                        });
+                    }
                 }
                 
                 // Save to local

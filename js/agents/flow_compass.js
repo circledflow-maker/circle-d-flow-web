@@ -283,10 +283,15 @@ class FlowCompassAgent {
         };
 
         if (planetId === 'Core') {
-            if (this.activePlanet === 'Core') { this.resetFocus(); return; }
             this.resetFocus();
             this.activePlanet = 'Core';
-            if (window.SoulPass) { document.querySelector('.orrery-container').classList.add('master-active'); window.SoulPass.open(); this.updateFlowee('Core'); }
+            if (window.SoulPass) { 
+                document.querySelector('.orrery-container').classList.add('master-active'); 
+                window.SoulPass.open(); 
+                this.updateFlowee('Core'); 
+            } else {
+                console.error("SoulPass agent is offline or missing.");
+            }
             return;
         }
 

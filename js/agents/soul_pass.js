@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Agent: SoulPass (The Seelen-Pass / Soul Nexus)
  * Purpose: A 3D interactive, holographic ID artifact tracking Flow-Siegels (Chakras), Profile, and Settings/Social integration.
  * Functions as the Command Center when the center node of the orbital navigation is clicked.
@@ -34,16 +34,20 @@ class SoulPassAgent {
         }
 
         if(window.supabaseClient) {
-            const { data: { user } } = await window.supabaseClient.auth.getUser();
-            if(user) {
-                this.userData.userId = user.id;
-                const { data: profile } = await window.supabaseClient.from('profiles').select('*').eq('id', user.id).single();
-                if(profile) {
-                    this.userData.name = profile.full_name || this.userData.name;
-                    this.userData.guild = profile.guild || '';
-                    this.userData.preferred_contact_method = profile.preferred_contact_method || 'system_chat';
-                    this.userData.contact_details = typeof profile.contact_details === 'string' ? profile.contact_details : JSON.stringify(profile.contact_details || {});
+            try {
+                const { data: { user }, error: authErr } = await window.supabaseClient.auth.getUser();
+                if(user && !authErr) {
+                    this.userData.userId = user.id;
+                    const { data: profile, error: dbErr } = await window.supabaseClient.from('profiles').select('*').eq('id', user.id).single();
+                    if(profile && !dbErr) {
+                        this.userData.name = profile.full_name || this.userData.name;
+                        this.userData.guild = profile.guild || '';
+                        this.userData.preferred_contact_method = profile.preferred_contact_method || 'system_chat';
+                        this.userData.contact_details = typeof profile.contact_details === 'string' ? profile.contact_details : JSON.stringify(profile.contact_details || {});
+                    }
                 }
+            } catch(e) {
+                console.warn("[SoulPass] Offline or init error:", e);
             }
         }
     }
@@ -214,11 +218,11 @@ class SoulPassAgent {
         const paneIdentity = document.createElement('div');
         paneIdentity.id = 'pane-identity';
         paneIdentity.className = 'sn-pane active';
-        paneIdentity.innerHTML = \`
+        paneIdentity.innerHTML = `
             <div class="sp-crystal-container">
                 <div class="sp-crystal"></div>
-                <h2 style="font-family: 'Cinzel', serif; font-size: 2.5rem; color: #fff; text-shadow: 0 0 15px rgba(255,255,255,0.3); margin-top: 20px;" id="sn-display-name">\${this.userData.name.toUpperCase()}</h2>
-                <p style="font-family: 'Space Mono', monospace; color: #d4af37; letter-spacing: 2px;">\${this.userData.hashId}</p>
+                <h2 style="font-family: 'Cinzel', serif; font-size: 2.5rem; color: #fff; text-shadow: 0 0 15px rgba(255,255,255,0.3); margin-top: 20px;" id="sn-display-name">${(this.userData.name || "Drifter").toUpperCase()}</h2>
+                <p style="font-family: 'Space Mono', monospace; color: #d4af37; letter-spacing: 2px;">${this.userData.hashId}</p>
             </div>
             
             <div class="sp-stats-grid">
@@ -557,6 +561,7 @@ class SoulPassAgent {
 
         if(window.FlowCompass) {
             window.FlowCompass.updateFlowee('Zone');
+            window.FlowCompass.activePlanet = null;
         }
 
         if(window.SoundEngineer) window.SoundEngineer.playSFX('menu_close');

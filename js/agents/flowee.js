@@ -573,10 +573,15 @@ class FloweeAgent {
                         this.showCrossroads(); 
                     }},
                     { label: "Return (Login)", action: () => { 
-                        const authModal = document.getElementById('auth-modal');
-                        if(authModal) {
-                            authModal.style.display = 'flex';
-                            setTimeout(() => authModal.style.opacity = '1', 10);
+                        if (window.OrbitEngine) {
+                            window.OrbitEngine.transitionToLuvo();
+                            localStorage.setItem('cdf_landing_flowee_state', 'step1_arrival'); // reset
+                        } else {
+                            const authModal = document.getElementById('auth-modal');
+                            if(authModal) {
+                                authModal.style.display = 'flex';
+                                setTimeout(() => authModal.style.opacity = '1', 10);
+                            }
                         }
                     }},
                     { label: "💬 Open Chat", action: () => { this.toggleChat(); } }

@@ -233,6 +233,15 @@ async function checkUserSession() {
     const { data: { session } } = await window.supabaseClient.auth.getSession();
     
     if (session) {
+        // Enforce Initiation for New Users
+        const flowClass = session.user?.user_metadata?.flow_class;
+        const currentPath = window.location.pathname;
+        if (!flowClass && !currentPath.includes('beta-initiation')) {
+            console.warn("Auth: User has no flow_class. Redirecting to initiation.");
+            window.location.replace(getRedirectPath('pages/beta-initiation.html'));
+            return session;
+        }
+
         const username = session.user?.user_metadata?.username || session.user?.email?.split('@')[0] || "Flow_Initiate";
         localStorage.setItem('cdf_user_username', username);
         if (!localStorage.getItem('cdf_balance')) {
