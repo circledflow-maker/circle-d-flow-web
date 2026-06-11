@@ -891,11 +891,15 @@
             document.getElementById('add-node-modal').classList.add('hidden');
             document.getElementById('new-node-name').value = '';
             document.getElementById('new-node-role').value = '';
+            document.getElementById('new-node-link').value = '';
+            document.getElementById('new-node-desc').value = '';
         }
 
         async function saveNewNode() {
             const name = document.getElementById('new-node-name').value.trim();
             const role = document.getElementById('new-node-role').value.trim();
+            const link = document.getElementById('new-node-link').value.trim();
+            const desc = document.getElementById('new-node-desc').value.trim();
             if(!name || !role) return alert("Please provide both name and role.");
 
             const btn = event.currentTarget;
@@ -906,7 +910,10 @@
                 const newNode = {
                     id: 'node_' + Date.now(),
                     name: name,
+                    notes: name, // legacy
                     role: role,
+                    social_link: link,
+                    description: desc,
                     status: 'red'
                 };
                 
@@ -1194,6 +1201,14 @@
                         <option value="Space-Holder">Space-Holder</option>
                         <option value="Performance">Performance</option>
                     </select>
+                </div>
+                <div>
+                    <label class="text-[10px] uppercase tracking-widest text-white/50 block mb-1">Social Link (Optional)</label>
+                    <input type="url" id="new-node-link" class="w-full bg-black border border-white/20 rounded p-3 text-white focus:border-[#00ffcc] outline-none" placeholder="e.g. https://instagram.com/naru">
+                </div>
+                <div>
+                    <label class="text-[10px] uppercase tracking-widest text-white/50 block mb-1">Short Description (Optional)</label>
+                    <input type="text" id="new-node-desc" class="w-full bg-black border border-white/20 rounded p-3 text-white focus:border-[#00ffcc] outline-none" placeholder="e.g. Bringing the bass to the dancefloor.">
                 </div>
             </div>
             

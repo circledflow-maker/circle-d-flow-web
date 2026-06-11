@@ -265,22 +265,28 @@
 
             if (participants.length > 0) {
                 participants.forEach(p => {
-                    const name = p.notes || 'Unknown Soul';
+                    const name = p.name || p.notes || 'Unknown Soul';
                     const role = p.role || 'Participant';
+                    const desc = p.description ? `<p class="text-[11px] text-white/70 italic mt-2 leading-snug">${p.description}</p>` : '';
+                    const link = p.social_link ? `<a href="${p.social_link}" target="_blank" class="mt-3 inline-flex items-center gap-1 text-[10px] text-[#00ffcc] hover:text-white uppercase tracking-widest transition"><span class="material-symbols-outlined text-[14px]">link</span> View Profile</a>` : '';
                     
                     // Generate a color based on role
                     let color = 'from-gray-500 to-gray-700';
                     if(role.includes('Visual') || role.includes('Art')) color = 'from-purple-500 to-orange-500';
                     if(role.includes('Gate') || role.includes('Sec')) color = 'from-blue-500 to-teal-500';
                     if(role.includes('Taste') || role.includes('Food')) color = 'from-red-500 to-yellow-500';
-                    if(role.includes('Audio') || role.includes('DJ')) color = 'from-[#00ffcc] to-blue-600';
+                    if(role.includes('Audio') || role.includes('DJ') || role.includes('Performance')) color = 'from-[#00ffcc] to-blue-600';
 
                     crewList.innerHTML += `
-                        <div class="flex items-center gap-4 bg-white/5 border border-white/10 p-3 rounded-xl">
-                            <div class="w-12 h-12 rounded-full bg-gradient-to-tr ${color} flex-shrink-0 shadow-lg"></div>
-                            <div>
-                                <p class="font-bold text-sm">${name}</p>
+                        <div class="flex items-start gap-4 bg-white/5 border border-white/10 p-4 rounded-xl">
+                            <div class="w-12 h-12 mt-1 rounded-full bg-gradient-to-tr ${color} flex-shrink-0 shadow-lg relative">
+                                <div class="absolute inset-0 flex items-center justify-center text-white/50 text-[10px] font-bold">FLOW</div>
+                            </div>
+                            <div class="flex-1">
+                                <p class="font-bold text-sm tracking-wide">${name}</p>
                                 <p class="text-[10px] uppercase tracking-widest text-[#d4af37]">${role}</p>
+                                ${desc}
+                                ${link}
                             </div>
                         </div>
                     `;
