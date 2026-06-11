@@ -101,20 +101,18 @@ class OrbitEngine {
             { z: 1000 }, 
             { z: 150, duration: 3, ease: "expo.out" }
         );
-        
-        // Auto-fade the first hint and ensure it disappears completely
+               // Auto-fade the first hint and ensure it disappears completely
         setTimeout(() => {
             const hint = document.getElementById('hold-hint');
             if(hint) {
                 gsap.to(hint, { opacity: 1, duration: 1 });
-                // Make sure it disappears after a fitable time
-                setTimeout(() => {
-                    if(hint.style.opacity > 0) {
-                        gsap.to(hint, { opacity: 0, duration: 1, onComplete: () => { hint.style.display = 'none'; } });
-                    }
-                }, 4000);
             }
-        }, 3000);
+        }, 1000);
+
+        // Auto-Start Cinematic Story Sequence
+        setTimeout(() => {
+            this.runStorySequence();
+        }, 2000);
     }
 
     skipIntro() {
