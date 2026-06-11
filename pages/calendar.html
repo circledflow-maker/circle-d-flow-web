@@ -351,8 +351,18 @@
             }
             if(!confirm("Are you sure you want to delete this event?")) return;
             try {
-                const { error } = await window.supabaseClient.from('quests').delete().eq('id', id);
+                const btn = eventObj ? eventObj.currentTarget : null;
+                if (btn) btn.innerHTML = 'Deleting...';
+                
+                const { data, error } = await window.supabaseClient.from('quests').delete().eq('id', id).select();
                 if(error) throw error;
+                
+                if(!data || data.length === 0) {
+                    alert("Delete failed. You might not have permission to delete this event.");
+                    if(btn) btn.innerHTML = 'Delete Event';
+                    return;
+                }
+                
                 alert("Event deleted successfully.");
                 window.location.reload();
             } catch(err) {
