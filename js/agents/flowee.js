@@ -657,26 +657,40 @@ class FloweeAgent {
         const isRoot = path.endsWith('index.html') || path.endsWith('/') || path.endsWith('beta-initiation.html');
         const pathPrefix = isRoot ? 'Assets/images/' : '../Assets/images/';
 
-            const img = document.createElement('img');
-            img.id = 'flowee-visual';
-            img.src = `${pathPrefix}flowee_pirate_phoenix.png`;
-            img.style.width = isMobile ? '80px' : '60px';
-            img.style.height = isMobile ? '80px' : '60px';
-            img.style.maxWidth = '100px';
-            img.style.maxHeight = '100px';
-            img.style.objectFit = 'contain';
-            img.style.cursor = 'pointer';
-            img.style.pointerEvents = 'auto';
-            img.style.filter = 'drop-shadow(0 0 10px rgba(139,92,246,0.5))';
-            img.style.zIndex = '1000001';
-            img.className = 'hover:scale-110 transition-transform duration-300 animate-float-slow';
+            const visual = document.createElement('div');
+            visual.id = 'flowee-visual';
+            visual.className = 'hover:scale-110 transition-transform duration-300 animate-float-slow';
+            visual.style.width = isMobile ? '80px' : '60px';
+            visual.style.height = isMobile ? '80px' : '60px';
+            visual.style.cursor = 'pointer';
+            visual.style.pointerEvents = 'auto';
+            visual.style.zIndex = '1000001';
+            visual.style.display = 'flex';
+            visual.style.alignItems = 'center';
+            visual.style.justifyContent = 'center';
+
+            visual.innerHTML = `
+                <svg viewBox="0 0 100 100" width="100%" height="100%" style="filter: drop-shadow(0 0 15px rgba(0, 255, 204, 0.8)); overflow: visible;">
+                    <!-- Left Wing -->
+                    <path d="M40,50 C10,20 -10,60 15,75 C25,80 40,65 40,50 Z" fill="#00ffcc" opacity="0.8">
+                        <animateTransform attributeName="transform" type="rotate" values="0 40 50; -20 40 50; 0 40 50" dur="0.8s" repeatCount="indefinite"/>
+                    </path>
+                    <!-- Right Wing -->
+                    <path d="M60,50 C90,20 110,60 85,75 C75,80 60,65 60,50 Z" fill="#00ffcc" opacity="0.8">
+                        <animateTransform attributeName="transform" type="rotate" values="0 60 50; 20 60 50; 0 60 50" dur="0.8s" repeatCount="indefinite"/>
+                    </path>
+                    <!-- Center Body -->
+                    <circle cx="50" cy="50" r="16" fill="#00ffcc">
+                        <animate attributeName="r" values="16;18;16" dur="2s" repeatCount="indefinite"/>
+                    </circle>
+                </svg>
+            `;
             
-            img.addEventListener('click', (e) => {
+            visual.addEventListener('click', (e) => {
                 console.log("[Flowee] Icon Clicked!");
                 e.stopPropagation();
                 window.Flowee.toggleChat();
             });
-            img.onerror = () => { img.src = `${pathPrefix}logo.png`; };
 
             const bubble = document.createElement('div');
             bubble.id = 'flowee-bubble';
@@ -699,9 +713,9 @@ class FloweeAgent {
             bubble.innerHTML = `<p>Hallo! Ich bin Flowee, dein Navigator. Wie darf ich dir heute assistieren?</p><div style="position:absolute; bottom:-6px; right:0; width:16px; height:16px; background:#fff; transform:rotate(45deg);"></div>`;
 
             this.container.appendChild(bubble);
-            this.container.appendChild(img);
+            this.container.appendChild(visual);
 
-            this.element = img;
+            this.element = visual;
             this.bubble = bubble;
     }
 
