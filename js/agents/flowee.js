@@ -469,7 +469,14 @@ class FloweeAgent {
             // AUTO-TUTORIAL (Page Specific)
             const pathName = window.location.pathname.split('/').pop() || 'index.html';
             if (pathName === 'index.html' || pathName === '') {
-                this.runLandingOnboarding();
+                // Wait for the cinematic intro to finish (i.e. SKIP INTRO button is gone)
+                const checkIntro = setInterval(() => {
+                    const skipBtn = document.getElementById('btn-skip');
+                    if (!skipBtn || skipBtn.style.display === 'none' || skipBtn.style.opacity === '0') {
+                        clearInterval(checkIntro);
+                        this.runLandingOnboarding();
+                    }
+                }, 1000);
             } else {
                 this.checkPageTutorial();
             }
@@ -542,7 +549,7 @@ class FloweeAgent {
     }
 
     // --- LANDING PAGE ZERO-TYPING ONBOARDING ---
-    runLandingOnboarding() {
+    runLandingOnboarding(forceShow = false) {
         this.tutorialActive = true;
         let currentState = localStorage.getItem('cdf_landing_flowee_state') || 'step1_arrival';
         
@@ -551,7 +558,8 @@ class FloweeAgent {
             setTimeout(() => {
                 this.talk(true, "Welcome back. Want to explore The Archive next?", "guide", [
                     { label: "Take me to The Archive", action: () => { window.location.href = 'pages/library.html'; } },
-                    { label: "Show all realms again", action: () => { this.showCrossroads(); } }
+                    { label: "Show all realms again", action: () => { this.showCrossroads(); } },
+                    { label: "💬 Open Chat", action: () => { this.toggleChat(); } }
                 ]);
             }, 2000);
             return;
@@ -570,19 +578,21 @@ class FloweeAgent {
                             authModal.style.display = 'flex';
                             setTimeout(() => authModal.style.opacity = '1', 10);
                         }
-                    }}
+                    }},
+                    { label: "💬 Open Chat", action: () => { this.toggleChat(); } }
                 ]);
-            }, 2500);
+            }, 1000);
         } else if (currentState === 'step2_crossroads') {
-            setTimeout(() => { this.showCrossroads(); }, 2000);
+            setTimeout(() => { this.showCrossroads(); }, 1000);
         }
     }
 
     showCrossroads() {
         this.talk(true, "The universe is expanding. Right now, three realms are open to your energy. Where should I guide you?", "guide", [
-            { label: "Bantaba (Community Hub)", action: () => { this.showBantabaEntry(); } },
-            { label: "Luvo (Philosophy & Roots)", action: () => { window.location.href = 'pages/about.html'; } },
-            { label: "The Archive (System Knowledge)", action: () => { window.location.href = 'pages/library.html'; } }
+            { label: "Bantaba (Gathering of souls)", action: () => { this.showBantabaEntry(); } },
+            { label: "Luvo (Community Hub)", action: () => { window.location.href = 'pages/about.html'; } },
+            { label: "Archive (Portfolio and System knowledge)", action: () => { window.location.href = 'pages/library.html'; } },
+            { label: "💬 Open Chat", action: () => { this.toggleChat(); } }
         ]);
     }
 
@@ -598,7 +608,8 @@ class FloweeAgent {
                 setTimeout(() => {
                     window.location.href = 'pages/bantaba.html';
                 }, 1000);
-            }}
+            }},
+            { label: "💬 Open Chat", action: () => { this.toggleChat(); } }
         ]);
     }
 
@@ -798,7 +809,12 @@ class FloweeAgent {
             visual.addEventListener('click', (e) => {
                 console.log("[Flowee] Icon Clicked!");
                 e.stopPropagation();
-                window.Flowee.toggleChat();
+                const pathName = window.location.pathname.split('/').pop() || 'index.html';
+                if (pathName === 'index.html' || pathName === '') {
+                    this.runLandingOnboarding(true);
+                } else {
+                    window.Flowee.toggleChat();
+                }
             });
 
             const bubble = document.createElement('div');
@@ -806,6 +822,8 @@ class FloweeAgent {
             bubble.style.marginBottom = '12px';
             bubble.style.marginRight = '16px';
             bubble.style.width = '260px';
+            bubble.style.maxWidth = 'calc(100vw - 40px)';
+            bubble.style.boxSizing = 'border-box';
             bubble.style.backgroundColor = 'rgba(15, 20, 25, 0.75)';
             bubble.style.backdropFilter = 'blur(12px)';
             bubble.style.WebkitBackdropFilter = 'blur(12px)';
