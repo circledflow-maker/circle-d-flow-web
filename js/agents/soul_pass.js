@@ -186,10 +186,10 @@ class SoulPassAgent {
         // Header
         const header = document.createElement('div');
         header.className = 'sn-header';
-        header.innerHTML = \`
+        header.innerHTML = `
             <div class="sn-title">SOUL NEXUS</div>
             <div class="sn-close" onclick="SoulPass.close()">X</div>
-        \`;
+        `;
 
         // Body
         const body = document.createElement('div');
@@ -198,7 +198,7 @@ class SoulPassAgent {
         // Sidebar
         const sidebar = document.createElement('div');
         sidebar.className = 'sn-sidebar';
-        sidebar.innerHTML = \`
+        sidebar.innerHTML = `
             <div class="sn-tab active" onclick="SoulPass.switchTab('pane-identity', this)">
                 <span class="material-symbols-outlined">badge</span> Identity
             </div>
@@ -208,7 +208,7 @@ class SoulPassAgent {
             <div class="sn-tab" onclick="SoulPass.switchTab('pane-network', this)">
                 <span class="material-symbols-outlined">hub</span> Network
             </div>
-        \`;
+        `;
 
         // Content Area
         const content = document.createElement('div');
@@ -228,19 +228,19 @@ class SoulPassAgent {
             <div class="sp-stats-grid">
                 <div class="sp-stat-card">
                     <div class="sp-stat-label">Current Rank</div>
-                    <div class="sp-stat-val text-white">\${this.userData.rank}</div>
+                    <div class="sp-stat-val text-white">${this.userData.rank}</div>
                 </div>
                 <div class="sp-stat-card">
                     <div class="sp-stat-label">Allegiance</div>
-                    <div class="sp-stat-val text-haki-gold" id="sn-display-guild">\${this.userData.guild ? "Guild of " + this.userData.guild.charAt(0).toUpperCase() + this.userData.guild.slice(1) : "None"}</div>
+                    <div class="sp-stat-val text-haki-gold" id="sn-display-guild">${this.userData.guild ? "Guild of " + this.userData.guild.charAt(0).toUpperCase() + this.userData.guild.slice(1) : "None"}</div>
                 </div>
                 <div class="sp-stat-card">
                     <div class="sp-stat-label">Flow Tokens</div>
-                    <div class="sp-stat-val">\${this.userData.tokens}</div>
+                    <div class="sp-stat-val">${this.userData.tokens}</div>
                 </div>
                 <div class="sp-stat-card">
                     <div class="sp-stat-label">Zone Immersion</div>
-                    <div class="sp-stat-val">\${this.userData.timeInZone}</div>
+                    <div class="sp-stat-val">${this.userData.timeInZone}</div>
                 </div>
             </div>
 
@@ -256,18 +256,18 @@ class SoulPassAgent {
                     <div class="sp-seal" title="Sahasrara: Enlightenment"><span>7</span></div>
                 </div>
             </div>
-        \`;
+        `;
 
         // Pane: The Synapse (Settings)
         const paneSynapse = document.createElement('div');
         paneSynapse.id = 'pane-synapse';
         paneSynapse.className = 'sn-pane';
-        paneSynapse.innerHTML = \`
+        paneSynapse.innerHTML = `
             <div class="sy-group">
                 <div class="sy-group-title">Core Preferences</div>
                 <div class="sy-row">
                     <span class="sy-label">Profile Name</span>
-                    <input type="text" id="sy-name-input" class="sy-input" style="text-transform: uppercase;" value="\${this.userData.name}" onchange="SoulPass.updateName(this.value)">
+                    <input type="text" id="sy-name-input" class="sy-input" style="text-transform: uppercase;" value="${this.userData.name}" onchange="SoulPass.updateName(this.value)">
                 </div>
                 <div class="sy-row">
                     <span class="sy-label">Guild Allegiance</span>
@@ -311,13 +311,13 @@ class SoulPassAgent {
                     <button class="sy-btn focus" onclick="SoulPass.enterDeepFocus()" style="width: 100%;">Initiate Deep Focus</button>
                 </div>
             </div>
-        \`;
+        `;
 
         // Pane: Network (Social Connections)
         const paneNetwork = document.createElement('div');
         paneNetwork.id = 'pane-network';
         paneNetwork.className = 'sn-pane';
-        paneNetwork.innerHTML = \`
+        paneNetwork.innerHTML = `
             <div class="sy-group">
                 <div class="sy-group-title">Primary Comms Protocol</div>
                 <div class="sy-row" style="flex-direction: column; align-items: stretch; gap: 15px;">
@@ -351,7 +351,7 @@ class SoulPassAgent {
                     </div>
                 </div>
             </div>
-        \`;
+        `;
 
         content.appendChild(paneIdentity);
         content.appendChild(paneSynapse);
@@ -524,9 +524,9 @@ class SoulPassAgent {
                 if(targetCard) targetCard.classList.add('connected');
             }
         } else {
-            const handle = prompt(\`Enter \${platform.toUpperCase()} Handle/URL to sync with Synapse:\`);
+            const handle = prompt(`Enter ${platform.toUpperCase()} Handle/URL to sync with Synapse:`);
             if (handle) {
-                alert(\`Synapse Connected to \${handle}!\`);
+                alert(`Synapse Connected to ${handle}!`);
                 if(targetCard) targetCard.classList.add('connected');
             }
         }
