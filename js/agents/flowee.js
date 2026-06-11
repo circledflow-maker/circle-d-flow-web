@@ -268,19 +268,60 @@ class FloweeAgent {
         }
     }
 
-    talk(visible, text, type="neutral") {
+    talk(visible, text, type="neutral", options=[]) {
         if(!this.bubble) return;
         
-        const p = this.bubble.querySelector('p');
-        if(p) p.innerText = text;
+        const contentDiv = this.bubble.querySelector('.flowee-text-content');
+        const optionsDiv = this.bubble.querySelector('.flowee-options-container');
         
-        if(visible) {
-            this.bubble.classList.remove('opacity-0', 'scale-90');
-            this.bubble.classList.add('opacity-100', 'scale-100');
+        if (visible && text) {
+            this.bubble.style.opacity = '1';
+            this.bubble.style.transform = 'translateY(0) scale(1)';
+            this.bubble.style.pointerEvents = 'auto';
             
-            // Auto-hide after 8 seconds if no interaction
+            // "Thinking" Indicator
+            if (contentDiv) {
+                contentDiv.innerHTML = `<span style="animation: pulse-op 1s infinite;">...</span>`;
+                optionsDiv.innerHTML = ''; // clear options
+                
+                setTimeout(() => {
+                    contentDiv.innerHTML = text;
+                    
+                    // Render Options (Zero-Typing Pills)
+                    if (options && options.length > 0) {
+                        options.forEach(opt => {
+                            const btn = document.createElement('button');
+                            btn.innerText = opt.label;
+                            btn.className = 'hover:scale-105 transition-transform duration-200';
+                            btn.style.padding = '6px 12px';
+                            btn.style.backgroundColor = 'rgba(0, 255, 204, 0.15)';
+                            btn.style.border = '1px solid rgba(0, 255, 204, 0.4)';
+                            btn.style.borderRadius = '20px';
+                            btn.style.color = '#00ffcc';
+                            btn.style.fontSize = '11px';
+                            btn.style.cursor = 'pointer';
+                            btn.style.textTransform = 'uppercase';
+                            btn.style.letterSpacing = '1px';
+                            btn.style.fontFamily = "'Montserrat', sans-serif";
+                            btn.style.fontWeight = 'bold';
+                            
+                            btn.onclick = () => {
+                                this.shush();
+                                if (typeof opt.action === 'function') {
+                                    opt.action();
+                                }
+                            };
+                            optionsDiv.appendChild(btn);
+                        });
+                    }
+                }, 1200); // 1.2s thinking time
+            }
+            
+            // Auto-hide only if no options are present
             if(this.talkTimeout) clearTimeout(this.talkTimeout);
-            this.talkTimeout = setTimeout(() => this.shush(), 8000);
+            if (!options || options.length === 0) {
+                this.talkTimeout = setTimeout(() => this.shush(), 8000);
+            }
             
             // Log to Chat
             this.addChatMessage(text, 'ai');
@@ -291,8 +332,10 @@ class FloweeAgent {
 
     shush() {
         if(this.bubble) {
-            this.bubble.classList.remove('opacity-100', 'scale-100');
-            this.bubble.classList.add('opacity-0', 'scale-90');
+            this.bubble.style.opacity = '0';
+            this.bubble.style.transform = 'translateY(20px) scale(0.9)';
+            this.bubble.style.pointerEvents = 'none';
+            if(this.talkTimeout) clearTimeout(this.talkTimeout);
         }
     }
 
@@ -424,7 +467,12 @@ class FloweeAgent {
             window.addEventListener('resize', () => this.recalculateBubblePosition());
 
             // AUTO-TUTORIAL (Page Specific)
-            this.checkPageTutorial();
+            const pathName = window.location.pathname.split('/').pop() || 'index.html';
+            if (pathName === 'index.html' || pathName === '') {
+                this.runLandingOnboarding();
+            } else {
+                this.checkPageTutorial();
+            }
 
             // IMPERIAL INITIATION (Global Quest)
             this.checkImperialInitiation();
@@ -491,6 +539,67 @@ class FloweeAgent {
         // Start
         this.talk(true, "First time here? Let me show you around...", "guide");
         setTimeout(next, 3000);
+    }
+
+    // --- LANDING PAGE ZERO-TYPING ONBOARDING ---
+    runLandingOnboarding() {
+        this.tutorialActive = true;
+        let currentState = localStorage.getItem('cdf_landing_flowee_state') || 'step1_arrival';
+        
+        // If returning from Bantaba
+        if (currentState === 'returned_from_bantaba') {
+            setTimeout(() => {
+                this.talk(true, "Welcome back. Want to explore The Archive next?", "guide", [
+                    { label: "Take me to The Archive", action: () => { window.location.href = 'pages/library.html'; } },
+                    { label: "Show all realms again", action: () => { this.showCrossroads(); } }
+                ]);
+            }, 2000);
+            return;
+        }
+
+        if (currentState === 'step1_arrival') {
+            setTimeout(() => {
+                this.talk(true, "Bem-vindo to the Singularity. I am Flowee, the navigator of this frequency. Are you here to explore our world, or are you returning to the core?", "guide", [
+                    { label: "Explore (Visitor)", action: () => { 
+                        localStorage.setItem('cdf_landing_flowee_state', 'step2_crossroads');
+                        this.showCrossroads(); 
+                    }},
+                    { label: "Return (Login)", action: () => { 
+                        const authModal = document.getElementById('auth-modal');
+                        if(authModal) {
+                            authModal.style.display = 'flex';
+                            setTimeout(() => authModal.style.opacity = '1', 10);
+                        }
+                    }}
+                ]);
+            }, 2500);
+        } else if (currentState === 'step2_crossroads') {
+            setTimeout(() => { this.showCrossroads(); }, 2000);
+        }
+    }
+
+    showCrossroads() {
+        this.talk(true, "The universe is expanding. Right now, three realms are open to your energy. Where should I guide you?", "guide", [
+            { label: "Bantaba (Community Hub)", action: () => { this.showBantabaEntry(); } },
+            { label: "Luvo (Philosophy & Roots)", action: () => { window.location.href = 'pages/about.html'; } },
+            { label: "The Archive (System Knowledge)", action: () => { window.location.href = 'pages/library.html'; } }
+        ]);
+    }
+
+    showBantabaEntry() {
+        this.talk(true, "Routing to Bantaba... This is our sacred gathering space. Here you will find our local market, the event map, and your first connection to the Luvo system. Ready to step in?", "guide", [
+            { label: "Open the Gates", action: () => {
+                localStorage.setItem('cdf_landing_flowee_state', 'returned_from_bantaba');
+                // Optional: Fade out singularity
+                const canvas = document.getElementById('canvas-container');
+                if (canvas) canvas.style.transition = 'opacity 1s ease';
+                if (canvas) canvas.style.opacity = '0';
+                
+                setTimeout(() => {
+                    window.location.href = 'pages/bantaba.html';
+                }, 1000);
+            }}
+        ]);
     }
 
     // --- IMPERIAL INITIATION LOGIC ---
@@ -694,23 +803,36 @@ class FloweeAgent {
 
             const bubble = document.createElement('div');
             bubble.id = 'flowee-bubble';
-            bubble.style.marginBottom = '8px';
+            bubble.style.marginBottom = '12px';
             bubble.style.marginRight = '16px';
-            bubble.style.width = '192px';
-            bubble.style.backgroundColor = '#fff';
-            bubble.style.color = '#000';
-            bubble.style.padding = '12px';
-            bubble.style.borderRadius = '12px';
-            bubble.style.borderBottomRightRadius = '0px';
-            bubble.style.boxShadow = '0 0 20px rgba(139,92,246,0.3)';
-            bubble.style.fontSize = '12px';
-            bubble.style.fontWeight = '500';
+            bubble.style.width = '260px';
+            bubble.style.backgroundColor = 'rgba(15, 20, 25, 0.75)';
+            bubble.style.backdropFilter = 'blur(12px)';
+            bubble.style.WebkitBackdropFilter = 'blur(12px)';
+            bubble.style.border = '1px solid rgba(0, 255, 204, 0.2)';
+            bubble.style.color = '#fff';
+            bubble.style.padding = '16px';
+            bubble.style.borderRadius = '16px';
+            bubble.style.borderBottomRightRadius = '4px';
+            bubble.style.boxShadow = '0 10px 30px rgba(0,0,0,0.5), 0 0 20px rgba(0,255,204,0.15)';
+            bubble.style.fontSize = '13px';
+            bubble.style.fontWeight = '400';
             bubble.style.opacity = '0';
-            bubble.style.pointerEvents = 'none';
-            bubble.style.transition = 'all 0.3s';
-            bubble.style.transform = 'scale(0.9)';
+            bubble.style.pointerEvents = 'none'; // Will be set to auto when visible
+            bubble.style.transition = 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+            bubble.style.transform = 'translateY(20px) scale(0.9)';
             bubble.style.transformOrigin = 'bottom right';
-            bubble.innerHTML = `<p>Hallo! Ich bin Flowee, dein Navigator. Wie darf ich dir heute assistieren?</p><div style="position:absolute; bottom:-6px; right:0; width:16px; height:16px; background:#fff; transform:rotate(45deg);"></div>`;
+            bubble.innerHTML = `<div class="flowee-text-content" style="line-height: 1.5; font-family: 'Space Mono', monospace;"></div><div class="flowee-options-container" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;"></div>`;
+
+            // Swipe to dismiss
+            let touchStartY = 0;
+            bubble.addEventListener('touchstart', e => { touchStartY = e.changedTouches[0].screenY; }, {passive: true});
+            bubble.addEventListener('touchend', e => {
+                const touchEndY = e.changedTouches[0].screenY;
+                if (touchEndY - touchStartY > 40) {
+                    this.shush();
+                }
+            }, {passive: true});
 
             this.container.appendChild(bubble);
             this.container.appendChild(visual);
