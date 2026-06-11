@@ -1,0 +1,14 @@
+<svg viewBox="0 0 100 100" width="100%" height="100%" style="filter: drop-shadow(0 0 15px rgba(0, 255, 204, 0.8)); overflow: visible;" xmlns="http://www.w3.org/2000/svg">
+    <!-- Left Wing -->
+    <path d="M40,50 C10,20 -10,60 15,75 C25,80 40,65 40,50 Z" fill="#00ffcc" opacity="0.8">
+        <animateTransform attributeName="transform" type="rotate" values="0 40 50; -20 40 50; 0 40 50" dur="0.8s" repeatCount="indefinite"/>
+    </path>
+    <!-- Right Wing -->
+    <path d="M60,50 C90,20 110,60 85,75 C75,80 60,65 60,50 Z" fill="#00ffcc" opacity="0.8">
+        <animateTransform attributeName="transform" type="rotate" values="0 60 50; 20 60 50; 0 60 50" dur="0.8s" repeatCount="indefinite"/>
+    </path>
+    <!-- Center Body -->
+    <circle cx="50" cy="50" r="16" fill="#00ffcc">
+        <animate attributeName="r" values="16;18;16" dur="2s" repeatCount="indefinite"/>
+    </circle>
+</svg>

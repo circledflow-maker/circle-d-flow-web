@@ -1680,7 +1680,88 @@ class FloweeAgent {
              if(window.Pusher) window.Pusher.showToast('SYSTEM: +50 EXP ACCUMULATED', 'xp');
          }
 
-         if(!isCompleted) this.talk(true, "Training wheels off. Welcome to the Deep Flow.", "guide");
+    startAuthFlow(isRegister) {
+        if(!this.bubble) return;
+        
+        // Ensure Flowee is visible
+        if(this.talkTimeout) clearTimeout(this.talkTimeout);
+        
+        const contentDiv = this.bubble.querySelector('.flowee-text-content');
+        const optionsDiv = this.bubble.querySelector('.flowee-options-container');
+        
+        // Initial options
+        this.talk(true, "How would you like to identify your Frequency?", "guide", [
+            { label: "Email / Signature", action: () => { this.showEmailAuthForm(isRegister); } },
+            { label: "Google (OAuth)", action: () => { 
+                if(window.handleOAuthLogin) window.handleOAuthLogin('google'); 
+                else alert('OAuth Offline'); 
+            }},
+            { label: "Discord (OAuth)", action: () => { 
+                if(window.handleOAuthLogin) window.handleOAuthLogin('discord'); 
+                else alert('OAuth Offline'); 
+            }}
+        ]);
+    }
+
+    showEmailAuthForm(isRegister) {
+        if(!this.bubble) return;
+        if(this.talkTimeout) clearTimeout(this.talkTimeout);
+        
+        const contentDiv = this.bubble.querySelector('.flowee-text-content');
+        const optionsDiv = this.bubble.querySelector('.flowee-options-container');
+        
+        let formHtml = '';
+        if (isRegister) {
+            formHtml = `
+                <div style="font-family: 'Space Mono', monospace; text-align: left; animation: scale-in 0.3s ease-out;">
+                    <h3 style="color: #00ffcc; margin-bottom: 10px; font-weight: bold; text-transform: uppercase; font-size: 14px;">Register Signature</h3>
+                    <form id="flowee-auth-form">
+                        <input type="text" id="flowee-reg-username" placeholder="Username (Your Identity)" style="width: 100%; padding: 8px; margin-bottom: 8px; background: rgba(0,0,0,0.5); border: 1px solid rgba(0,255,204,0.3); color: white; border-radius: 4px;" required>
+                        <input type="email" id="flowee-reg-email" placeholder="Email Frequency" style="width: 100%; padding: 8px; margin-bottom: 8px; background: rgba(0,0,0,0.5); border: 1px solid rgba(0,255,204,0.3); color: white; border-radius: 4px;" required>
+                        <input type="password" id="flowee-reg-password" placeholder="Passcode (Secret)" style="width: 100%; padding: 8px; margin-bottom: 12px; background: rgba(0,0,0,0.5); border: 1px solid rgba(0,255,204,0.3); color: white; border-radius: 4px;" required>
+                        <button type="submit" style="width: 100%; padding: 10px; background: rgba(0,255,204,0.2); color: #00ffcc; font-weight: bold; border-radius: 4px; border: 1px solid #00ffcc; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.2s;">Link Identity</button>
+                    </form>
+                    <button type="button" onclick="window.Flowee.showEmailAuthForm(false)" style="margin-top: 10px; font-size: 10px; color: #aaa; background: none; border: none; cursor: pointer; text-decoration: underline; width: 100%; text-align: center;">Already have an account? Login here</button>
+                </div>
+            `;
+        } else {
+            formHtml = `
+                <div style="font-family: 'Space Mono', monospace; text-align: left; animation: scale-in 0.3s ease-out;">
+                    <h3 style="color: #00ffcc; margin-bottom: 10px; font-weight: bold; text-transform: uppercase; font-size: 14px;">Verify Signature</h3>
+                    <form id="flowee-auth-form">
+                        <input type="email" id="flowee-login-email" placeholder="Email Frequency" style="width: 100%; padding: 8px; margin-bottom: 8px; background: rgba(0,0,0,0.5); border: 1px solid rgba(0,255,204,0.3); color: white; border-radius: 4px;" required>
+                        <input type="password" id="flowee-login-password" placeholder="Passcode (Secret)" style="width: 100%; padding: 8px; margin-bottom: 12px; background: rgba(0,0,0,0.5); border: 1px solid rgba(0,255,204,0.3); color: white; border-radius: 4px;" required>
+                        <button type="submit" style="width: 100%; padding: 10px; background: rgba(0,255,204,0.2); color: #00ffcc; font-weight: bold; border-radius: 4px; border: 1px solid #00ffcc; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.2s;">Access Orbit</button>
+                    </form>
+                    <button type="button" onclick="window.Flowee.showEmailAuthForm(true)" style="margin-top: 10px; font-size: 10px; color: #aaa; background: none; border: none; cursor: pointer; text-decoration: underline; width: 100%; text-align: center;">Need an account? Register here</button>
+                </div>
+            `;
+        }
+        
+        contentDiv.innerHTML = formHtml;
+        optionsDiv.innerHTML = '';
+        
+        const form = document.getElementById('flowee-auth-form');
+        form.onsubmit = (e) => {
+            e.preventDefault();
+            const btn = form.querySelector('button[type="submit"]');
+            btn.innerText = "Processing Resonance...";
+            btn.style.opacity = '0.5';
+            btn.disabled = true;
+            
+            if (isRegister) {
+                const u = document.getElementById('flowee-reg-username').value;
+                const em = document.getElementById('flowee-reg-email').value;
+                const pw = document.getElementById('flowee-reg-password').value;
+                if(window.handleRegister) window.handleRegister(em, pw, u);
+                else { alert("Auth System Offline."); btn.innerText = "Link Identity"; btn.disabled = false; btn.style.opacity = '1'; }
+            } else {
+                const em = document.getElementById('flowee-login-email').value;
+                const pw = document.getElementById('flowee-login-password').value;
+                if(window.handleLogin) window.handleLogin(em, pw);
+                else { alert("Auth System Offline."); btn.innerText = "Access Orbit"; btn.disabled = false; btn.style.opacity = '1'; }
+            }
+        };
     }
 
 }

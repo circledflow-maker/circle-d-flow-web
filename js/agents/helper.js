@@ -224,7 +224,7 @@ class HelperAgent extends Agent {
     preloadMandalaAssets() {
         const assets = [
             '../Assets/images/logo.png',
-            '../Assets/images/flowee_pirate_phoenix.png'
+            '../Assets/images/flowee.svg'
             // Add other core icons here
         ];
         assets.forEach(src => {

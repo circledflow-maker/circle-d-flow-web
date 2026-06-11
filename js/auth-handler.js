@@ -161,7 +161,7 @@ async function handleRegister(argEmail, argPassword, argUsername) {
                 return; 
             }
 
-            const target = 'https://circle-d-flow-web.vercel.app/pages/dashboard';
+            const target = 'https://circle-d-flow-web.vercel.app/pages/beta-initiation.html';
             showFeedback(`Profile Created. Initializing...`, "success");
             localStorage.removeItem('seen_command_trinity'); // Force welcome for new users
             localStorage.setItem('cqr_auth_state', 'logged_in'); // PERSIST FOR DASHBOARD SECURITY
@@ -308,4 +308,7 @@ async function handleOAuthLogin(provider) {
         localStorage.removeItem('cqr_auth_state'); // Revert on failure
     }
 }
+
+window.handleLogin = handleLogin;
+window.handleRegister = handleRegister;
 window.handleOAuthLogin = handleOAuthLogin;

@@ -778,23 +778,23 @@ class OrbitEngine {
         console.log("🖱️ Door Clicked:", type);
         
         if(type === 'initiation') {
-            // REDIRECT TO NEW CINEMATIC RITUAL
-            const overlay = document.getElementById('flowee-intro');
-            if(overlay) {
-                overlay.style.display = 'flex';
-                overlay.innerHTML = "<h2 style='color:white; font-family:Cinzel; text-align:center'>Diving into the Ritual...</h2>";
-                gsap.to(overlay, { opacity: 1, duration: 1, onComplete: () => {
-                    window.location.href = 'pages/beta-initiation.html';
-                }});
+            // TRIGGER REGISTER MODAL VIA FLOWEE
+            if(window.Flowee) {
+                window.Flowee.startAuthFlow(true);
+            } else if(window.Gatekeeper) {
+                window.Gatekeeper.openLoginModal(true);
             } else {
-                window.location.href = 'pages/beta-initiation.html';
+                console.error("Gatekeeper and Flowee Offline.");
+                alert("Login System Offline. Check neural link.");
             }
         } else if(type === 'return') {
-            // TRIGGER LOGIN MODAL
-            if(window.Gatekeeper) {
+            // TRIGGER LOGIN MODAL VIA FLOWEE
+            if(window.Flowee) {
+                window.Flowee.startAuthFlow(false);
+            } else if(window.Gatekeeper) {
                 window.Gatekeeper.openLoginModal();
             } else {
-                console.error("Gatekeeper Offline.");
+                console.error("Gatekeeper and Flowee Offline.");
                 alert("Login System Offline. Check neural link.");
             }
         }

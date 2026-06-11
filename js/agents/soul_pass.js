@@ -15,10 +15,9 @@ class SoulPassAgent {
         this.userData = {
             name: localStorage.getItem('cdf_user_username') || "Drifter",
             rank: localStorage.getItem('cdf_user_rank') || "Voyager",
-            tokens: localStorage.getItem('cdf_balance') || 1250,
-            timeInZone: "42h",
-            class: localStorage.getItem('cqr_auth_state') ? "Kinetic" : "Arcane", 
-            hashId: "D-" + Math.floor(Math.random()*9000 + 1000) + "-FLOW"
+            guild: "",
+            preferred_contact_method: "system_chat",
+            contact_details: "{}"
         };
 
         this.init();
@@ -41,6 +40,7 @@ class SoulPassAgent {
                     const { data: profile, error: dbErr } = await window.supabaseClient.from('profiles').select('*').eq('id', user.id).single();
                     if(profile && !dbErr) {
                         this.userData.name = profile.full_name || this.userData.name;
+                        this.userData.rank = profile.rank || this.userData.rank;
                         this.userData.guild = profile.guild || '';
                         this.userData.preferred_contact_method = profile.preferred_contact_method || 'system_chat';
                         this.userData.contact_details = typeof profile.contact_details === 'string' ? profile.contact_details : JSON.stringify(profile.contact_details || {});
@@ -131,16 +131,6 @@ class SoulPassAgent {
             .sp-stat-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 15px; text-align: center; }
             .sp-stat-val { font-size: 1.5rem; color: #d4af37; font-family: 'Space Mono', monospace; font-weight: bold; margin-top: 5px; }
             .sp-stat-label { font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 1px; }
-
-            .sp-seals { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-top: 20px; }
-            .sp-seal { width: 45px; height: 45px; border-radius: 8px; background: #111; border: 2px solid #222; transform: rotate(45deg); display: flex; align-items: center; justify-content: center; transition: 0.3s; cursor: pointer; box-shadow: inset 0 0 10px #000; }
-            .sp-seal span { transform: rotate(-45deg); font-family: 'Cinzel', serif; font-size: 1.2rem; color: rgba(255,255,255,0.2); transition: 0.3s; }
-            .sp-seal:hover { transform: rotate(45deg) scale(1.1); border-color: #555; }
-            
-            .sp-seal.active.root { background: radial-gradient(circle, #ff4b4b, #8b0000); border-color: #ffb3b3; box-shadow: 0 0 20px rgba(255,0,0,0.5); }
-            .sp-seal.active.sacral { background: radial-gradient(circle, #ffa500, #b35900); border-color: #ffe6b3; box-shadow: 0 0 20px rgba(255,165,0,0.5); }
-            .sp-seal.active.solar { background: radial-gradient(circle, #ffd700, #b8860b); border-color: #fffaca; box-shadow: 0 0 20px rgba(255,215,0,0.5); }
-            .sp-seal.active span { color: #fff; text-shadow: 0 0 5px #fff; }
 
             /* Synapse Specifics */
             .sy-group { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
@@ -233,27 +223,6 @@ class SoulPassAgent {
                 <div class="sp-stat-card">
                     <div class="sp-stat-label">Allegiance</div>
                     <div class="sp-stat-val text-haki-gold" id="sn-display-guild">${this.userData.guild ? "Guild of " + this.userData.guild.charAt(0).toUpperCase() + this.userData.guild.slice(1) : "None"}</div>
-                </div>
-                <div class="sp-stat-card">
-                    <div class="sp-stat-label">Flow Tokens</div>
-                    <div class="sp-stat-val">${this.userData.tokens}</div>
-                </div>
-                <div class="sp-stat-card">
-                    <div class="sp-stat-label">Zone Immersion</div>
-                    <div class="sp-stat-val">${this.userData.timeInZone}</div>
-                </div>
-            </div>
-
-            <div class="sy-group" style="background: transparent; border: none;">
-                <div class="sy-group-title" style="text-align: center; border: none;">Flow Seals (Chakras)</div>
-                <div class="sp-seals">
-                    <div class="sp-seal active root" title="Muladhara: Grounding"><span>1</span></div>
-                    <div class="sp-seal active sacral" title="Svadhisthana: Creativity"><span>2</span></div>
-                    <div class="sp-seal active solar" title="Manipura: Willpower"><span>3</span></div>
-                    <div class="sp-seal" title="Anahata: Heart"><span>4</span></div>
-                    <div class="sp-seal" title="Vishuddha: Truth"><span>5</span></div>
-                    <div class="sp-seal" title="Ajna: Intuition"><span>6</span></div>
-                    <div class="sp-seal" title="Sahasrara: Enlightenment"><span>7</span></div>
                 </div>
             </div>
         `;

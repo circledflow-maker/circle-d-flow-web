@@ -108,7 +108,22 @@
             <div id="flowee-text" class="text-lg font-serif italic text-white/90 leading-relaxed">Howdy, Traveler! Ready to find your soul's rhythm?</div>
             <div id="flowee-inputs" class="flex flex-col gap-3 w-full"></div>
         </div>
-        <img id="flowee-img" src="../assets/images/flowee-character.gif" class="w-20 h-20 md:w-32 md:h-32 object-contain drop-shadow-[0_0_30px_rgba(154,77,234,0.8)] animate-float shrink-0">
+        <div id="flowee-img" class="w-20 h-20 md:w-32 md:h-32 shrink-0 animate-float" style="cursor: pointer;">
+            <svg viewBox="0 0 100 100" width="100%" height="100%" style="filter: drop-shadow(0 0 15px rgba(0, 255, 204, 0.8)); overflow: visible;">
+                <!-- Left Wing -->
+                <path d="M40,50 C10,20 -10,60 15,75 C25,80 40,65 40,50 Z" fill="#00ffcc" opacity="0.8">
+                    <animateTransform attributeName="transform" type="rotate" values="0 40 50; -20 40 50; 0 40 50" dur="0.8s" repeatCount="indefinite"/>
+                </path>
+                <!-- Right Wing -->
+                <path d="M60,50 C90,20 110,60 85,75 C75,80 60,65 60,50 Z" fill="#00ffcc" opacity="0.8">
+                    <animateTransform attributeName="transform" type="rotate" values="0 60 50; 20 60 50; 0 60 50" dur="0.8s" repeatCount="indefinite"/>
+                </path>
+                <!-- Center Body -->
+                <circle cx="50" cy="50" r="16" fill="#00ffcc">
+                    <animate attributeName="r" values="16;18;16" dur="2s" repeatCount="indefinite"/>
+                </circle>
+            </svg>
+        </div>
     </div>
 
     <!-- 3. AUDIO CONTEXT (Initiation Beats) -->
@@ -367,6 +382,7 @@
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px) rotate(5deg); } }
         .animate-float { animation: float 6s ease-in-out infinite; }
     </style>
+<script src="../js/agents/agent.js" defer></script>
 <script src="../js/agents/pusher.js" defer></script>
 <script src="../js/agents/helper.js" defer></script>
 <script src="../js/agents/network_hub.js" defer></script>

@@ -89,11 +89,35 @@ class GatekeeperAgent {
         window.location.href = isPages ? '/pages/dashboard.html' : '/pages/dashboard.html';
     }
 
-    openLoginModal() {
+    openLoginModal(isRegister = false) {
         const modal = document.getElementById('auth-modal');
         if (modal) {
             modal.style.display = 'flex';
             setTimeout(() => modal.style.opacity = '1', 10);
+            
+            const title = modal.querySelector('h2');
+            const btn = modal.querySelector('.auth-btn');
+            
+            if (isRegister) {
+                if(title) title.innerHTML = "THE INITIATION";
+                if(btn) {
+                    btn.innerHTML = "BEGIN JOURNEY";
+                    btn.onclick = () => {
+                        const email = document.getElementById('login-email').value;
+                        const pass = document.getElementById('login-password').value;
+                        if(window.handleRegister) window.handleRegister(email, pass, 'Initiate');
+                    };
+                }
+            } else {
+                if(title) title.innerHTML = "THE RETURN";
+                if(btn) {
+                    btn.innerHTML = "CONFIRM IDENTITY";
+                    btn.onclick = () => {
+                        if(window.handleLogin) window.handleLogin();
+                    };
+                }
+            }
+
             // Focus email
             const emailInput = document.getElementById('login-email');
             if(emailInput) emailInput.focus();
