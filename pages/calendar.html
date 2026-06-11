@@ -229,6 +229,8 @@
             sidebar.innerHTML = '';
             const { data: { session } } = await window.supabaseClient.auth.getSession();
             const currentUserId = session ? session.user.id : null;
+            const currentUserEmail = session ? session.user.email : null;
+            const isAdmin = currentUserEmail === 'circle.d.flow@gmail.com';
 
             calendarEvents.slice(0, 3).forEach(event => { // Show up to 3 upcoming
                 // Parsing logic (event.event_date is a string like "2026-06-27" from input[type="date"] usually)
@@ -243,7 +245,7 @@
                 }
                 
                 let deleteBtnHtml = '';
-                if (currentUserId && event.creator_id === currentUserId) {
+                if (isAdmin || (currentUserId && event.creator_id === currentUserId)) {
                     deleteBtnHtml = `
                         <button onclick="deleteQuest('${event.id}', event)" class="w-full mt-2 bg-red-900/30 border border-red-500/30 text-red-400 hover:text-white hover:bg-red-600 p-1.5 rounded transition-all flex items-center justify-center gap-2">
                             <span class="material-symbols-outlined text-[14px]">delete</span>
