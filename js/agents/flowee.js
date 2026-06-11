@@ -590,7 +590,14 @@ class FloweeAgent {
     showCrossroads() {
         this.talk(true, "The universe is expanding. Right now, three realms are open to your energy. Where should I guide you?", "guide", [
             { label: "Bantaba (Gathering of souls)", action: () => { this.showBantabaEntry(); } },
-            { label: "Luvo (Community Hub)", action: () => { window.location.href = 'pages/about.html'; } },
+            { label: "Luvo (Community Hub)", action: () => { 
+                if (window.OrbitEngine) {
+                    window.OrbitEngine.transitionToLuvo();
+                    localStorage.setItem('cdf_landing_flowee_state', 'step1_arrival'); // reset
+                } else {
+                    window.location.href = 'pages/about.html';
+                }
+            }},
             { label: "Archive (Portfolio and System knowledge)", action: () => { window.location.href = 'pages/library.html'; } },
             { label: "💬 Open Chat", action: () => { this.toggleChat(); } }
         ]);
