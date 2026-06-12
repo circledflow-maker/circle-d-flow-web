@@ -276,7 +276,7 @@ class FlowCompassAgent {
             'Battle': 'colosseum.html',
             'Vision': 'vision_oasis.html',
             'Sound': 'sound_dashboard.html',
-            'Taste': 'taste_world_hub.html',
+            'Taste': 'taste_world_entry.html',
             'Connection': 'modal',
             'Quest': 'quest_map.html',
             'Core': null // Core stays on dashboard
