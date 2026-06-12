@@ -407,6 +407,57 @@
         <p id="hud-text">Warte auf Agenten-Input...</p>
     </div>
 
+    <!-- BAZAR ONBOARDING (FLOWEE TOUR) -->
+    <div id="bazar-onboarding-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-md z-[2000] hidden flex-col items-center justify-end pb-12 px-4 transition-opacity duration-500">
+        <div class="max-w-md w-full bg-[#120818]/90 border border-[#00ffcc]/30 rounded-2xl p-6 shadow-[0_0_30px_rgba(0,255,204,0.15)] relative">
+            <div class="absolute -top-10 right-4 w-20 h-20 bg-black/80 rounded-full border-2 border-[#00ffcc] shadow-[0_0_20px_rgba(0,255,204,0.5)] flex items-center justify-center" id="flowee-avatar-glow">
+                <img src="../Assets/images/logo.png" class="w-12 h-12 rounded-full animate-pulse">
+            </div>
+            
+            <div id="tour-step-1">
+                <p class="text-sm font-bold text-[#00ffcc] mb-1">Flowee</p>
+                <p class="text-white/90 text-sm mb-6 leading-relaxed">"Willkommen im Bazar. Hier zirkuliert die kreative Energie unserer Community – in Form von physischer Kunst, digitalen Artefakten und einzigartigen Services. Soll ich dir zeigen, wie unsere Wirtschaft fließt?"</p>
+                <div class="flex flex-col gap-3">
+                    <button onclick="nextBazarStep(2)" class="w-full py-3 bg-[#00ffcc]/20 border border-[#00ffcc]/50 text-[#00ffcc] rounded font-bold uppercase tracking-widest text-xs hover:bg-[#00ffcc]/40 transition">Zeig mir den Flow</button>
+                    <button onclick="finishBazarTour(true)" class="w-full py-3 bg-white/5 border border-white/10 text-white/50 rounded font-bold uppercase tracking-widest text-xs hover:bg-white/10 hover:text-white transition">Ich kenne den Weg (Skip)</button>
+                </div>
+            </div>
+
+            <div id="tour-step-2" class="hidden">
+                <p class="text-sm font-bold text-[#00ffcc] mb-1">Flowee</p>
+                <p class="text-white/90 text-sm mb-6 leading-relaxed">"Wir glauben an fairen Austausch. Wenn hier Energie (Geld) fließt, wird sie sofort geteilt. Der Großteil geht direkt auf das Konto des Creators. Ein kleiner Bruchteil nährt den Circle D Flow, um unsere Server und Events am Leben zu halten. Transparenz ist unser Fundament."</p>
+                <div class="flex flex-col gap-3">
+                    <button onclick="nextBazarStep(3, 'skip-creator')" class="w-full py-3 bg-white/5 border border-white/10 text-white/70 rounded font-bold uppercase tracking-widest text-xs hover:bg-white/10 transition">Klingt fair</button>
+                    <button onclick="nextBazarStep(3, 'creator')" class="w-full py-3 bg-[#00ffcc]/20 border border-[#00ffcc]/50 text-[#00ffcc] rounded font-bold uppercase tracking-widest text-xs hover:bg-[#00ffcc]/40 transition">Wie werde ich Creator?</button>
+                </div>
+            </div>
+
+            <div id="tour-step-3" class="hidden">
+                <p class="text-sm font-bold text-[#00ffcc] mb-1">Flowee</p>
+                <p class="text-white/90 text-sm mb-6 leading-relaxed">"Jeder kann hier seine Artefakte anbieten. Um deine Kunstwerke oder Talente in den Ring zu werfen, musst du nur deinen Energie-Kanal öffnen. Ein kurzer Check über unser System (Stripe Connect), und deine Einnahmen fließen direkt auf deine IBAN."</p>
+                <div class="flex flex-col gap-3">
+                    <button onclick="nextBazarStep(4)" class="w-full py-3 bg-[#00ffcc]/20 border border-[#00ffcc]/50 text-[#00ffcc] rounded font-bold uppercase tracking-widest text-xs hover:bg-[#00ffcc]/40 transition">Verstanden. Let's go!</button>
+                </div>
+            </div>
+
+            <div id="tour-step-4" class="hidden text-center">
+                <div class="mb-4">
+                    <span class="material-symbols-outlined text-5xl text-[#d4af37] drop-shadow-[0_0_15px_rgba(212,175,55,0.8)]">auto_awesome</span>
+                </div>
+                <p class="text-sm font-bold text-[#d4af37] mb-1">Flowee</p>
+                <p class="text-white/90 text-sm mb-6 leading-relaxed">"Dein Geist ist synchronisiert. Du verstehst die Frequenz dieses Ortes. Nimm diese Energie als Startkapital für deine Reise."</p>
+                
+                <div class="bg-black/50 border-2 border-[#d4af37] rounded-xl py-4 mb-6 transform scale-110 shadow-[0_0_20px_rgba(212,175,55,0.3)]">
+                    <h2 class="text-2xl font-black text-[#d4af37] animate-pulse">+50 Resonance Points (RP)</h2>
+                </div>
+
+                <div class="flex flex-col gap-3">
+                    <button onclick="finishBazarTour(false)" class="w-full py-4 bg-[#d4af37] text-black rounded font-black uppercase tracking-widest text-sm hover:bg-white transition shadow-[0_0_15px_rgba(212,175,55,0.5)]">Bazar betreten</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- TUTORIAL CSS -->
     <style>
         .tutorial-hud {
@@ -660,6 +711,9 @@
                 });
             }
 
+            // --- FLOWEE BAZAR ONBOARDING LOGIC ---
+            checkBazarTour();
+
             // Tutorial Check
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.get('tutorial') === 'active') {
@@ -668,6 +722,77 @@
                 document.getElementById('hud-text').innerText = "Mission: Click a Guild Filter button above.";
             }
         });
+
+        function checkBazarTour() {
+            const hasSeen = localStorage.getItem('has_seen_bazar_tour');
+            if (!hasSeen) {
+                // Determine if we want a slight delay before popup
+                setTimeout(() => {
+                    const overlay = document.getElementById('bazar-onboarding-overlay');
+                    overlay.classList.remove('hidden');
+                    overlay.classList.add('flex');
+                    // Add slight glassmorphism blur to background
+                    document.body.style.overflow = 'hidden';
+                }, 1000);
+            }
+        }
+
+        function nextBazarStep(stepNum, branch) {
+            // Hide all steps
+            for(let i=1; i<=4; i++) {
+                const el = document.getElementById(`tour-step-${i}`);
+                if(el) el.classList.add('hidden');
+            }
+            
+            // Handle branching
+            if (stepNum === 3 && branch === 'skip-creator') {
+                // Skip to reward directly if they don't want creator info
+                stepNum = 4;
+            }
+
+            const nextEl = document.getElementById(`tour-step-${stepNum}`);
+            if(nextEl) {
+                nextEl.classList.remove('hidden');
+                // Change avatar glow for final step
+                if (stepNum === 4) {
+                    const glow = document.getElementById('flowee-avatar-glow');
+                    glow.classList.remove('border-[#00ffcc]', 'shadow-[0_0_20px_rgba(0,255,204,0.5)]');
+                    glow.classList.add('border-[#d4af37]', 'shadow-[0_0_20px_rgba(212,175,55,0.8)]');
+                }
+            }
+        }
+
+        async function finishBazarTour(skipped) {
+            localStorage.setItem('has_seen_bazar_tour', 'true');
+            const overlay = document.getElementById('bazar-onboarding-overlay');
+            overlay.classList.add('hidden');
+            overlay.classList.remove('flex');
+            document.body.style.overflow = 'auto';
+
+            if (!skipped && window.supabaseClient) {
+                // Grant 50 EXP/RP
+                try {
+                    const { data: { user } } = await window.supabaseClient.auth.getUser();
+                    if (user) {
+                        const { data: profile } = await window.supabaseClient.from('profiles').select('exp, flow_credits').eq('id', user.id).single();
+                        if (profile) {
+                            await window.supabaseClient.from('profiles').update({
+                                exp: (profile.exp || 0) + 50
+                            }).eq('id', user.id);
+                            
+                            // Optional: update cqr_user table if it exists as per instructions
+                            try {
+                                await window.supabaseClient.from('cqr_user').update({ bazar_tour_completed: true }).eq('id', user.id);
+                            } catch(e) { /* Ignore if cqr_user table doesn't exist yet */ }
+
+                            if(window.Pusher) window.Pusher.showToast("+50 RP (Bazar Synced)", "xp");
+                        }
+                    }
+                } catch(e) {
+                    console.error("Failed to sync tour reward:", e);
+                }
+            }
+        }
     </script>
     <style>
         html, body {

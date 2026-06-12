@@ -107,20 +107,24 @@
                 <div id="timer-display" class="text-electric font-bold text-glow mb-2 mt-2">25:00</div>
                 <p class="text-xs text-white/60 mb-2">The timer continues in the background.</p>
 
-                <!-- System Video Player -->
-                <div class="bg-black/80 rounded border border-[#d4af37]/30 p-2 mb-4 relative">
-                    <p class="text-xs text-[#d4af37] uppercase tracking-widest mb-2">Protocol Preview</p>
+                <!-- System Video Player (Mangaka Style) -->
+                <div class="bg-white rounded-sm border-4 border-black p-2 mb-4 relative shadow-[8px_8px_0_0_rgba(0,0,0,1)] dark:bg-[#1a1a1a] dark:border-white dark:shadow-[8px_8px_0_0_rgba(255,255,255,1)]">
+                    <p class="text-xs text-black dark:text-white font-cinzel font-bold tracking-widest mb-2 border-b-2 border-black dark:border-white pb-1">PROTOCOL PREVIEW</p>
                     <div id="vid-loader" class="kh-loader"></div>
                     <!-- Local Video Player -->
-                    <video id="jam-player-vid" controls playsinline class="w-full rounded h-[180px] bg-black border border-[#333] hidden" oncanplay="document.getElementById('vid-loader').style.display='none'" onwaiting="document.getElementById('vid-loader').style.display='block'"></video>
+                    <video id="jam-player-vid" controls playsinline muted class="w-full h-[200px] bg-black border-2 border-black dark:border-white hidden object-cover grayscale contrast-125" oncanplay="document.getElementById('vid-loader').style.display='none'" onwaiting="document.getElementById('vid-loader').style.display='block'"></video>
                     <!-- Google Drive iframe Player -->
-                    <iframe id="jam-player-iframe" class="w-full rounded h-[180px] bg-black border border-[#333] hidden" allowfullscreen onload="document.getElementById('vid-loader').style.display='none'"></iframe>
+                    <iframe id="jam-player-iframe" class="w-full h-[200px] bg-white border-2 border-black dark:border-white hidden grayscale contrast-125" allowfullscreen onload="document.getElementById('vid-loader').style.display='none'"></iframe>
                     <!-- Image Viewer -->
-                    <img id="jam-player-img" class="w-full rounded h-[180px] bg-black border border-[#333] hidden object-contain" onload="document.getElementById('vid-loader').style.display='none'">
+                    <img id="jam-player-img" class="w-full h-[200px] bg-white border-2 border-black dark:border-white hidden object-contain grayscale contrast-125" onload="document.getElementById('vid-loader').style.display='none'">
                     
-                    <div class="flex justify-between mt-2">
-                        <button onclick="playNextVideo(-1)" class="text-xs border border-white/20 min-h-[44px] min-w-[44px] px-3 py-2 hover:bg-white/10 rounded flex items-center justify-center">Previous</button>
-                        <button onclick="playNextVideo(1)" class="text-xs border border-white/20 min-h-[44px] min-w-[44px] px-3 py-2 hover:bg-white/10 rounded flex items-center justify-center">Next</button>
+                    <div id="no-media-fallback" class="w-full h-[200px] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPjxyZWN0IHdpZHRoPSI0IiBoZWlnaHQ9IjQiIGZpbGw9IiNmZmYiLz48cmVjdCB3aWR0aD0iMiIgaGVpZ2h0PSIyIiBmaWxsPSIjY2NjIi8+PC9zdmc+')] border-2 border-black dark:border-white flex items-center justify-center hidden">
+                        <span class="bg-white text-black font-cinzel font-bold px-2 py-1 text-xs uppercase border-2 border-black transform -rotate-3">No Memories Forged</span>
+                    </div>
+
+                    <div class="flex justify-between mt-3 font-cinzel">
+                        <button onclick="playNextVideo(-1)" class="text-xs border-2 border-black dark:border-white text-black dark:text-white min-h-[44px] min-w-[44px] px-3 py-2 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition flex items-center justify-center font-bold">◄ PREV</button>
+                        <button onclick="playNextVideo(1)" class="text-xs border-2 border-black dark:border-white text-black dark:text-white min-h-[44px] min-w-[44px] px-3 py-2 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition flex items-center justify-center font-bold">NEXT ►</button>
                     </div>
                 </div>
                 
@@ -181,12 +185,7 @@
         let sessionUser = null;
         let inZone = false;
         
-        let jamVideos = [
-            '../Assets/images/circle-d-flow-reel.mp4',
-            '../Assets/Community_Vibe_Reel.mp4',
-            '../Assets/local_archives/Session_Graca_Street_Art.mp4',
-            '../Flow_in_Lisbon/FlowInHempyroots/VID_20260131_215823.mp4'
-        ];
+        let jamVideos = [];
         let currentVideoIdx = 0;
 
         function loadVideoMedia(url) {
@@ -216,7 +215,8 @@
             } else {
                 vidPlayer.src = url;
                 vidPlayer.classList.remove('hidden');
-                vidPlayer.play().catch(e => console.log('Autoplay prevented:', e));
+                // Added muted to the video tag above and using catch here
+                vidPlayer.play().catch(e => console.log('Autoplay prevented/delayed:', e));
             }
         }
 
@@ -285,8 +285,14 @@
                 });
             }
 
-            currentVideoIdx = Math.floor(Math.random() * jamVideos.length);
-            loadVideoMedia(jamVideos[currentVideoIdx]);
+            if(jamVideos && jamVideos.length > 0) {
+                currentVideoIdx = Math.floor(Math.random() * jamVideos.length);
+                loadVideoMedia(jamVideos[currentVideoIdx]);
+            } else {
+                document.getElementById('no-media-fallback').classList.remove('hidden');
+                document.getElementById('vid-loader').style.display = 'none';
+            }
+            
             loadComments();
             
             document.getElementById('init-view').classList.add('hidden');
@@ -342,29 +348,25 @@
                 // Extract uploaded media and insert into jamVideos so the main player shows them!
                 const userMediaUrls = data.filter(c => c.media_url).map(c => c.media_url);
                 
-                const isSpecialArea = areaData && areaData.name && (areaData.name.toLowerCase().includes('hempyroots') || areaData.name.toLowerCase().includes('mobbeat'));
-                
                 let baseVideos = [];
                 if (areaData && areaData.media_urls && areaData.media_urls.length > 0) {
                     baseVideos = areaData.media_urls;
-                } else if (isSpecialArea) {
-                    baseVideos = [
-                        '../Assets/images/circle-d-flow-reel.mp4',
-                        '../Assets/Community_Vibe_Reel.mp4',
-                        '../Assets/local_archives/Session_Graca_Street_Art.mp4'
-                    ];
                 }
                 
                 jamVideos = [...userMediaUrls, ...baseVideos];
                 
                 if (jamVideos.length > 0) {
+                    document.getElementById('no-media-fallback').classList.add('hidden');
                     // If we haven't manually switched videos yet, show the newest upload
                     if(currentVideoIdx === 0) {
                         loadVideoMedia(jamVideos[0]);
                     }
                 } else {
                     document.getElementById('jam-player-vid').classList.add('hidden');
+                    document.getElementById('jam-player-iframe').classList.add('hidden');
+                    document.getElementById('jam-player-img').classList.add('hidden');
                     document.getElementById('vid-loader').style.display = 'none';
+                    document.getElementById('no-media-fallback').classList.remove('hidden');
                 }
                 
                 list.innerHTML = data.map(c => {
