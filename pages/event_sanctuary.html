@@ -160,7 +160,8 @@
         @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(0.9); } }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
@@ -169,7 +170,7 @@
     <div class="fixed top-0 left-0 w-full bg-black/80 backdrop-blur-md z-50 border-b border-white/10 h-[80px]">
         <div class="flex items-center justify-between p-4 relative">
             <button onclick="window.location.href='quest_map.html'" class="material-symbols-outlined text-white/50 hover:text-[#d4af37]">arrow_back</button>
-            <h1 class="font-serif text-xl tracking-widest uppercase truncate max-w-[150px] mx-2">C4C Event</h1>
+            <h1 id="event-title" class="font-serif text-xl tracking-widest uppercase truncate max-w-[150px] mx-2">C4C Event</h1>
             <div class="flex items-center gap-3">
                 <button onclick="openAnalyticsModal()" class="material-symbols-outlined text-[#00ffcc] hover:text-white transition">analytics</button>
                 <button onclick="toggleEventSwitcher()" class="material-symbols-outlined text-white/50 hover:text-white transition">more_vert</button>
@@ -228,9 +229,10 @@
                 <h3 class="text-xs uppercase tracking-widest text-[#00ffcc] font-bold mb-2 flex items-center gap-2">
                     <span class="material-symbols-outlined text-sm">visibility</span> The Vision
                 </h3>
-                <p id="event-vision-display" class="text-sm italic text-white/80 font-serif leading-relaxed">
+                <p id="event-vision-display" class="text-sm italic text-white/80 font-serif leading-relaxed line-clamp-3 transition-all duration-300">
                     "Loading the soul of the event..."
                 </p>
+                <button id="vision-more-btn" onclick="toggleVision()" class="text-[10px] uppercase tracking-widest text-[#00ffcc] font-bold mt-2 hidden">+ More</button>
             </div>
             <div class="h-20"></div>
         </div>
@@ -320,11 +322,6 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../js/api_config.js"></script>
-    <script src="../js/agents/supabase_client.js?v=4.1"></script>
-    <script src="https://apis.google.com/js/api.js"></script>
-    <script src="https://accounts.google.com/gsi/client"></script>
         <!-- Forge Modal -->
         <div id="forge-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[100] hidden flex items-center justify-center">
             <div class="bg-[#0a0a0f] border border-[#00f0ff]/30 p-6 rounded-2xl w-[90%] max-w-sm">
@@ -335,6 +332,7 @@
                     <button onclick="selectForgeStyle('Surrealist', this)" class="forge-style-btn py-3 px-4 bg-white/5 border border-white/10 rounded text-sm text-left hover:border-[#00f0ff] transition-colors focus:border-[#00f0ff] focus:bg-[#00f0ff]/10">Surrealist Dream</button>
                     <button onclick="selectForgeStyle('Hip-Hop', this)" class="forge-style-btn py-3 px-4 bg-white/5 border border-white/10 rounded text-sm text-left hover:border-[#00f0ff] transition-colors focus:border-[#00f0ff] focus:bg-[#00f0ff]/10">Urban Hip-Hop</button>
                     <button onclick="selectForgeStyle('Manga/Anime', this)" class="forge-style-btn py-3 px-4 bg-white/5 border border-white/10 rounded text-sm text-left hover:border-[#00f0ff] transition-colors focus:border-[#00f0ff] focus:bg-[#00f0ff]/10">Manga / Anime</button>
+                    <button onclick="selectForgeStyle('Retro Comic', this)" class="forge-style-btn py-3 px-4 bg-white/5 border border-white/10 rounded text-sm text-left hover:border-[#00f0ff] transition-colors focus:border-[#00f0ff] focus:bg-[#00f0ff]/10">Retro Comic (Funk/Soul)</button>
                 </div>
 
                 <div class="flex gap-3">
@@ -373,7 +371,7 @@
                 
                 if (event) {
                     window.currentEventData = event;
-                    document.querySelector('h1').innerText = event.title.toUpperCase();
+                    document.getElementById('event-title').innerText = event.title.toUpperCase();
                     if (event.description) {
                         document.getElementById('event-vision-display').innerText = `"${event.description}"`;
                     }
@@ -388,7 +386,7 @@
                 // Load user's created events for the switcher
                 loadEventSwitcher();
             } else if (isMock === 'c4c') {
-                document.querySelector('h1').innerText = "C4C EVENT";
+                document.getElementById('event-title').innerText = "C4C EVENT";
                 populateMangaShare({ title: 'C4C EVENT', type: 'Gathering', event_date: 'Tonight', address: 'ClimaLabs', needs: ['Visual-Flow'] });
             }
 
@@ -397,7 +395,19 @@
                 gapi.load('picker', {'callback': () => pickerApiLoaded = true});
             }
         });
-        
+
+        function toggleVision() {
+            const visionEl = document.getElementById('event-vision-display');
+            const btnEl = document.getElementById('vision-more-btn');
+            if (visionEl.classList.contains('line-clamp-3')) {
+                visionEl.classList.remove('line-clamp-3');
+                btnEl.innerText = '- Less';
+            } else {
+                visionEl.classList.add('line-clamp-3');
+                btnEl.innerText = '+ More';
+            }
+        }
+
         async function loadEventSwitcher() {
             try {
                 const session = await window.supabaseClient.auth.getSession();
@@ -469,58 +479,37 @@
                     console.error("QR Code Generation failed", e);
                 }
             }, 500);
+            
+            setTimeout(() => {
+                const visionEl = document.getElementById('event-vision-display');
+                if(visionEl && visionEl.scrollHeight > visionEl.clientHeight) {
+                    document.getElementById('vision-more-btn').classList.remove('hidden');
+                }
+            }, 100);
         }
         
-        async function downloadMangaFlyer() {
-            try {
-                // Populate composite card
-                const flyerUrl = document.getElementById('canvas-image').style.backgroundImage.slice(5, -2);
-                if(flyerUrl) {
-                    document.getElementById('composite-flyer').style.backgroundImage = `url('${flyerUrl}')`;
-                }
+        function downloadMangaShare() {
+            const element = document.getElementById('manga-share-card');
+            const opt = {
+                margin:       0.2,
+                filename:     `CDF_Invite_${document.getElementById('event-title').innerText.replace(/\s+/g, '_')}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+            };
+            
+            // Add a temporary logo overlay for the PDF
+            const logoOverlay = document.createElement('div');
+            logoOverlay.style.position = 'absolute';
+            logoOverlay.style.top = '10px';
+            logoOverlay.style.right = '10px';
+            logoOverlay.style.zIndex = '9999';
+            logoOverlay.innerHTML = `<img src="../Assets/images/logo.png" style="width: 40px; height: 40px; opacity: 0.8;">`;
+            element.appendChild(logoOverlay);
 
-                document.getElementById('composite-title').innerText = document.getElementById('manga-title').innerText;
-                document.getElementById('composite-date').innerText = document.getElementById('manga-date').innerText;
-                document.getElementById('composite-loc').innerText = document.getElementById('manga-loc').innerText;
-                document.getElementById('composite-vision').innerText = document.getElementById('event-vision-display').innerText.replace(/"/g, '');
-
-                const crewHTML = Array.from(document.getElementById('team-checklist-container').querySelectorAll('.flex.items-center.gap-3')).map(el => {
-                    const name = el.querySelector('.font-bold')?.innerText || '';
-                    const role = el.querySelector('.text-xs.uppercase')?.innerText || '';
-                    if(name && role) return `<p>${name} <span class="text-[#d4af37] opacity-80">| ${role}</span></p>`;
-                    return '';
-                }).join('');
-                document.getElementById('composite-crew').innerHTML = crewHTML || '<p class="italic text-white/50">Calling all souls...</p>';
-
-                const qrContainer = document.getElementById('composite-qr');
-                qrContainer.innerHTML = '';
-                const qrUrl = window.location.origin + "/pages/create_impact.html?id=" + currentEventId;
-                
-                if(typeof QRCode !== 'undefined') {
-                    new QRCode(qrContainer, {
-                        text: qrUrl,
-                        width: 84,
-                        height: 84,
-                        colorDark : "#000000",
-                        colorLight : "#ffffff",
-                        correctLevel : QRCode.CorrectLevel.L
-                    });
-                }
-
-                // Wait a tick for QR code to render and background images to settle
-                setTimeout(() => {
-                    const card = document.getElementById('download-composite-card');
-                    html2canvas(card, { scale: 2, useCORS: true, backgroundColor: '#09090b' }).then(canvas => {
-                        const link = document.createElement('a');
-                        link.download = `CDF_Impact_${currentEventId || 'Event'}.png`;
-                        link.href = canvas.toDataURL('image/png');
-                        link.click();
-                    });
-                }, 800);
-            } catch(e) {
-                console.error("Download Error:", e);
-                alert("Could not generate flyer: " + e.message);
-            }
+            html2pdf().set(opt).from(element).save().then(() => {
+                element.removeChild(logoOverlay);
+            });
         }
         
         function shareToInstagram() {
@@ -595,10 +584,7 @@
             let file = event.target.files[0];
             if(!file) return;
             
-            // Compress the file before uploading
             file = await compressImage(file);
-            
-            // local preview first
             const localUrl = URL.createObjectURL(file);
             setCanvasImage(localUrl);
 
@@ -726,6 +712,8 @@
                     localPath = '../Assets/images/manga_flyer.png';
                 } else if (selectedStyle === 'Hip-Hop') {
                     localPath = '../Assets/images/hiphop_flyer.png';
+                } else if (selectedStyle === 'Retro Comic') {
+                    localPath = '../Assets/images/retro_comic_flyer.png';
                 }
 
                 try {

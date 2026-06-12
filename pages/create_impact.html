@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&family=Cinzel:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <link rel="stylesheet" href="../css/styles.css">
     <style>
         body {
@@ -61,59 +62,73 @@
         </div>
     </div>
 
-    <div class="mt-[60px] p-4 max-w-md mx-auto hidden" id="impact-content">
-        
-        <!-- Flyer Container -->
-        <div class="w-full aspect-[4/5] rounded-xl overflow-hidden mb-6 relative border border-white/10 shadow-2xl">
-            <div id="flyer-image" class="absolute inset-0 bg-cover bg-center" style="background-image: url('../Assets/images/logo.png');"></div>
-            <!-- Gradient Overlay -->
-            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
-            
-            <div class="absolute bottom-0 left-0 w-full p-4">
-                <p class="text-xs gold-accent font-bold tracking-widest uppercase mb-1" id="event-type">Secret Gathering</p>
-                <h2 class="font-serif text-3xl text-white uppercase leading-tight drop-shadow-lg" id="event-title">Loading...</h2>
-                <div class="flex items-center gap-2 mt-2 text-white/80 text-sm">
-                    <span class="material-symbols-outlined text-sm">calendar_month</span>
-                    <span id="event-date">TBA</span>
+    <div class="mt-[60px] max-w-md mx-auto hidden h-[calc(100vh-60px)]" id="impact-content">
+        <div class="swiper impactSwiper w-full h-full">
+            <div class="swiper-wrapper">
+                
+                <!-- Slide 1: Flyer & CTA -->
+                <div class="swiper-slide p-4 flex flex-col justify-center overflow-y-auto pb-24">
+                    <!-- Flyer Container -->
+                    <div class="w-full aspect-[4/5] rounded-xl overflow-hidden mb-6 relative border border-white/10 shadow-2xl">
+                        <div id="flyer-image" class="absolute inset-0 bg-cover bg-center" style="background-image: url('../Assets/images/logo.png');"></div>
+                        <!-- Gradient Overlay -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
+                        
+                        <div class="absolute bottom-0 left-0 w-full p-4">
+                            <p class="text-xs gold-accent font-bold tracking-widest uppercase mb-1" id="event-type">Secret Gathering</p>
+                            <h2 class="font-serif text-3xl text-white uppercase leading-tight drop-shadow-lg" id="event-title">Loading...</h2>
+                            <div class="flex items-center gap-2 mt-2 text-white/80 text-sm">
+                                <span class="material-symbols-outlined text-sm">calendar_month</span>
+                                <span id="event-date">TBA</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Call to Action -->
+                    <div class="mb-8">
+                        <button onclick="handlePayment()" class="w-full stripe-btn text-white font-bold py-4 rounded-xl flex items-center justify-center gap-3 uppercase tracking-widest text-sm">
+                            <span class="material-symbols-outlined">payments</span>
+                            Claim Ticket via Stripe
+                        </button>
+                        <p class="text-center text-[10px] text-white/40 mt-2">Secure encrypted payment processing.</p>
+                    </div>
                 </div>
+
+                <!-- Slide 2: Event Vision -->
+                <div class="swiper-slide p-4 flex flex-col justify-center overflow-y-auto pb-24">
+                    <div class="bg-white/5 border border-white/10 rounded-xl p-5 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-[#00ffcc]/10 blur-3xl rounded-full pointer-events-none"></div>
+                        <h3 class="text-xs uppercase tracking-widest text-[#00ffcc] font-bold mb-3 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm">visibility</span> The Vision
+                        </h3>
+                        <p id="event-description" class="text-sm italic text-white/80 font-serif leading-relaxed">
+                            Loading the soul of the event...
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Slide 3: Lineup / Crew -->
+                <div class="swiper-slide p-4 flex flex-col overflow-y-auto pb-24">
+                    <h3 class="text-xs uppercase tracking-widest text-white/50 mb-3 pl-1">Confirmed Flow Nodes</h3>
+                    <div id="crew-list" class="flex flex-col gap-3">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+
+                <!-- Slide 4: Location Details -->
+                <div class="swiper-slide p-4 flex flex-col justify-center overflow-y-auto pb-24">
+                    <div class="bg-black/40 border border-white/5 rounded-xl p-4">
+                        <h3 class="text-xs uppercase tracking-widest text-white/50 mb-2">Location Data</h3>
+                        <p class="text-sm font-bold flex items-center gap-2" id="event-location">
+                            <span class="material-symbols-outlined text-[#d4af37] text-lg">location_on</span>
+                            Loading...
+                        </p>
+                    </div>
+                </div>
+
             </div>
-        </div>
-
-        <!-- Call to Action -->
-        <div class="mb-8">
-            <button onclick="handlePayment()" class="w-full stripe-btn text-white font-bold py-4 rounded-xl flex items-center justify-center gap-3 uppercase tracking-widest text-sm">
-                <span class="material-symbols-outlined">payments</span>
-                Claim Ticket via Stripe
-            </button>
-            <p class="text-center text-[10px] text-white/40 mt-2">Secure encrypted payment processing.</p>
-        </div>
-
-        <!-- Event Vision -->
-        <div class="mb-8 bg-white/5 border border-white/10 rounded-xl p-5 relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-32 h-32 bg-[#00ffcc]/10 blur-3xl rounded-full pointer-events-none"></div>
-            <h3 class="text-xs uppercase tracking-widest text-[#00ffcc] font-bold mb-3 flex items-center gap-2">
-                <span class="material-symbols-outlined text-sm">visibility</span> The Vision
-            </h3>
-            <p id="event-description" class="text-sm italic text-white/80 font-serif leading-relaxed">
-                Loading the soul of the event...
-            </p>
-        </div>
-
-        <!-- Lineup / Crew -->
-        <div class="mb-8">
-            <h3 class="text-xs uppercase tracking-widest text-white/50 mb-3 pl-1">Confirmed Flow Nodes</h3>
-            <div id="crew-list" class="flex flex-col gap-3">
-                <!-- Populated via JS -->
-            </div>
-        </div>
-
-        <!-- Location Details -->
-        <div class="mb-8 bg-black/40 border border-white/5 rounded-xl p-4">
-            <h3 class="text-xs uppercase tracking-widest text-white/50 mb-2">Location Data</h3>
-            <p class="text-sm font-bold flex items-center gap-2" id="event-location">
-                <span class="material-symbols-outlined text-[#d4af37] text-lg">location_on</span>
-                Loading...
-            </p>
+            <!-- Pagination -->
+            <div class="swiper-pagination"></div>
         </div>
     </div>
 
@@ -155,14 +170,15 @@
 
     <!-- Flowee Interactive Avatar -->
     <div id="impact-flowee" class="fixed bottom-6 right-6 z-40 hidden flex items-end justify-end gap-3 pointer-events-none">
-        <div class="bg-black/80 backdrop-blur-md border border-[#00ffcc]/30 p-4 rounded-2xl rounded-br-none max-w-[250px] text-xs font-bold shadow-[0_0_20px_rgba(0,255,204,0.15)] pointer-events-auto relative transform transition-all duration-500 scale-0 origin-bottom-right" id="flowee-bubble">
-            <p id="flowee-message">Loading signal...</p>
+        <div class="bg-black/80 backdrop-blur-md border border-[#00ffcc]/30 p-4 rounded-2xl rounded-br-none max-w-[70vw] text-xs font-bold shadow-[0_0_20px_rgba(0,255,204,0.15)] pointer-events-auto relative transform transition-all duration-500 scale-0 origin-bottom-right" id="flowee-bubble">
+            <p id="flowee-message" class="leading-relaxed">Loading signal...</p>
         </div>
         <div class="w-16 h-16 rounded-full bg-black/80 border-2 border-[#00ffcc] flex items-center justify-center pointer-events-auto cursor-pointer shadow-[0_0_15px_rgba(0,255,204,0.4)]" onclick="toggleFloweeMessage()">
             <img src="../Assets/images/logo.png" class="w-10 h-10 rounded-full animate-pulse">
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/api_config.js"></script>
     <script src="../js/agents/supabase_client.js?v=4.1"></script>
@@ -300,8 +316,36 @@
             setTimeout(() => {
                 document.getElementById('flowee-bubble').classList.remove('scale-0');
                 const title = event.title || 'this manifestation';
-                document.getElementById('flowee-message').innerText = `Welcome to ${title}! I'm Flowee. The vision here is: "${event.description || 'To connect and flow'}". Are you ready to sync your node?`;
+                document.getElementById('flowee-message').innerText = `Welcome to ${title}! Swipe right to explore the vision, lineup, and location. I'll guide you through it! ?`;
             }, 1000);
+
+            // Initialize Swiper
+            const swiper = new Swiper('.impactSwiper', {
+                pagination: {
+                    el: '.swiper-pagination',
+                    dynamicBullets: true,
+                },
+                on: {
+                    slideChange: function () {
+                        const messages = [
+                            `This is the main event artifact. Claim your ticket via Stripe below to secure your spot! ?`,
+                            `The Vision: Every event has a soul. This is the core purpose of why we're gathering. ?`,
+                            `The Crew: Meet the nodes! These are the creatives and organizers making the magic happen. ?`,
+                            `The Location: Keep this safe. Click the map link to open directions to the gathering. ?`
+                        ];
+                        
+                        const msg = messages[this.activeIndex] || messages[0];
+                        const bubble = document.getElementById('flowee-bubble');
+                        const text = document.getElementById('flowee-message');
+                        
+                        bubble.classList.add('scale-0');
+                        setTimeout(() => {
+                            text.innerText = msg;
+                            bubble.classList.remove('scale-0');
+                        }, 300);
+                    }
+                }
+            });
         }
 
         function toggleBurger() {
