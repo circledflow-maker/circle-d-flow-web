@@ -6,229 +6,26 @@
     <title>Circle D Flow - The Zone</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        dark: '#0a0a0a',
-                        primary: { 500: '#8b5cf6' },
-                        electric: '#d4af37'
-                    },
-                    fontFamily: {
-                        mono: ['"Space Mono"', 'monospace'],
-                        cinzel: ['"Cinzel"', 'serif']
-                    }
-                }
-            }
-        }
-    </script>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../js/agents/supabase_client.js"></script>
-
-    <style>
-        body { background-color: #050505; color: #fff; font-family: 'Space Mono', monospace; overflow: hidden; }
-        .glass-panel {
-            background: rgba(10, 10, 10, 0.85);
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            backdrop-filter: blur(20px);
-        }
-        .pulse-ring {
-            position: absolute;
-            top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 300px; height: 300px;
-            border-radius: 50%;
-            border: 1px solid rgba(212, 175, 55, 0.5);
-            animation: pulse-out 4s infinite ease-out;
-            pointer-events: none;
-        }
-        @keyframes pulse-out {
-            0% { transform: translate(-50%, -50%) scale(0.8); opacity: 1; }
-            100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
-        }
-        .text-glow { text-shadow: 0 0 15px rgba(212, 175, 55, 0.8); }
-        
-        #timer-display {
-            font-size: 4rem;
-            font-family: 'Cinzel', serif;
-        }
-    </style>
-</head>
-<body class="min-h-screen flex items-center justify-center relative">
-    
-    <div class="pulse-ring"></div>
-    <div class="pulse-ring" style="animation-delay: 2s;"></div>
-
-    <div class="glass-panel p-6 md:p-10 rounded-2xl shadow-2xl relative z-10 max-w-lg w-full text-center border-t-4 border-electric flex flex-col max-h-[90vh]">
-        
-        <!-- KH Loader Style -->
-        <style>
-            .kh-loader {
-                position: absolute;
-                top: 50%; left: 50%; transform: translate(-50%, -50%);
-                width: 40px; height: 40px;
-                border: 3px solid rgba(212, 175, 55, 0.2);
-                border-top: 3px solid #d4af37;
-                border-radius: 50%;
-                animation: spin 1s linear infinite;
-                pointer-events: none;
-                z-index: 20;
-            }
-            @keyframes spin { 0% { transform: translate(-50%, -50%) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotate(360deg); } }
-        </style>
-
-        <!-- Close Button -->
-        <button onclick="window.location.href='quest_map.html'" class="absolute top-4 right-4 text-white/50 hover:text-white transition-colors z-50 text-xl font-bold">
-            &times;
-        </button>
-
-        <div id="init-view" class="overflow-y-auto flex-grow">
-            <h1 class="text-3xl font-cinzel font-bold text-electric mb-4 uppercase text-glow">Entering the Zone</h1>
-            <p class="text-sm text-white/70 mb-6 leading-relaxed">
-                You have arrived. To anchor your presence, you must remain in the Wu-Wei state for 25 minutes.<br><br>
-                <span class="text-electric font-bold">Rule:</span> Your device's screen can be turned off or you can switch apps. Just remain at this physical location.
-            </p>
-            <button id="start-flow-btn" class="px-8 py-3 bg-gradient-to-r from-electric to-yellow-600 text-black font-cinzel font-bold uppercase tracking-widest rounded shadow-[0_0_20px_rgba(212,175,55,0.4)] hover:scale-105 transition-transform mt-4">
-                Begin Flow
-            </button>
-            <p class="text-xs text-yellow-500 mt-4 italic">Note: XP and Karma points are only granted if you are physically at this location (within 150m). You can still view and leave chronicles if you are off-site.</p>
-            <button id="delete-node-btn" onclick="deleteNode()" class="hidden mt-6 px-4 py-2 border border-red-500 text-red-500 hover:bg-red-500 hover:text-white text-xs font-bold uppercase tracking-widest rounded transition-colors mx-auto">
-                Delete Node
-            </button>
-        </div>
-
-        <div id="timer-view" class="hidden flex-col h-full overflow-y-auto w-full">
-            <div class="flex-shrink-0">
-                <h2 id="area-name-display" class="text-xl font-cinzel text-electric/80 mb-1 uppercase">Unknown Location</h2>
-                <p id="area-creator-display" class="text-xs text-white/50 mb-2 font-mono">Forged by: Unknown</p>
-                <div id="gps-status" class="text-xs mb-3 p-1 inline-block rounded font-bold uppercase tracking-widest bg-yellow-500/20 text-yellow-500 border border-yellow-500/50">Off-Site (Chronicles Only)</div>
-                
-                <div id="timer-display" class="text-electric font-bold text-glow mb-2 mt-2">25:00</div>
-                <p class="text-xs text-white/60 mb-2">The timer continues in the background.</p>
-
-                <!-- System Video Player (Mangaka Style) -->
-                <div class="bg-white rounded-sm border-4 border-black p-2 mb-4 relative shadow-[8px_8px_0_0_rgba(0,0,0,1)] dark:bg-[#1a1a1a] dark:border-white dark:shadow-[8px_8px_0_0_rgba(255,255,255,1)]">
-                    <p class="text-xs text-black dark:text-white font-cinzel font-bold tracking-widest mb-2 border-b-2 border-black dark:border-white pb-1">PROTOCOL PREVIEW</p>
-                    <div id="vid-loader" class="kh-loader"></div>
-                    <!-- Local Video Player -->
-                    <video id="jam-player-vid" controls playsinline muted class="w-full h-[200px] bg-black border-2 border-black dark:border-white hidden object-cover grayscale contrast-125" oncanplay="document.getElementById('vid-loader').style.display='none'" onwaiting="document.getElementById('vid-loader').style.display='block'"></video>
-                    <!-- Google Drive iframe Player -->
-                    <iframe id="jam-player-iframe" class="w-full h-[200px] bg-white border-2 border-black dark:border-white hidden grayscale contrast-125" allowfullscreen onload="document.getElementById('vid-loader').style.display='none'"></iframe>
-                    <!-- Image Viewer -->
-                    <img id="jam-player-img" class="w-full h-[200px] bg-white border-2 border-black dark:border-white hidden object-contain grayscale contrast-125" onload="document.getElementById('vid-loader').style.display='none'">
-                    
-                    <div id="no-media-fallback" class="w-full h-[200px] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPjxyZWN0IHdpZHRoPSI0IiBoZWlnaHQ9IjQiIGZpbGw9IiNmZmYiLz48cmVjdCB3aWR0aD0iMiIgaGVpZ2h0PSIyIiBmaWxsPSIjY2NjIi8+PC9zdmc+')] border-2 border-black dark:border-white flex items-center justify-center hidden">
-                        <span class="bg-white text-black font-cinzel font-bold px-2 py-1 text-xs uppercase border-2 border-black transform -rotate-3">No Memories Forged</span>
-                    </div>
-
-                    <div class="flex justify-between mt-3 font-cinzel">
-                        <button onclick="playNextVideo(-1)" class="text-xs border-2 border-black dark:border-white text-black dark:text-white min-h-[44px] min-w-[44px] px-3 py-2 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition flex items-center justify-center font-bold">◄ PREV</button>
-                        <button onclick="playNextVideo(1)" class="text-xs border-2 border-black dark:border-white text-black dark:text-white min-h-[44px] min-w-[44px] px-3 py-2 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition flex items-center justify-center font-bold">NEXT ►</button>
-                    </div>
-                </div>
-                
-                <!-- Portfolio FAB -->
-                <button onclick="window.location.href='akademie.html'" class="w-full mb-4 bg-gradient-to-r from-[#2a1a3a] to-[#1a1a2e] border border-electric/50 text-electric min-h-[44px] rounded shadow-[0_0_15px_rgba(212,175,55,0.2)] font-bold uppercase tracking-widest text-xs hover:scale-[1.02] transition-transform flex items-center justify-center gap-2">
-                    Enter the Portfolio
-                </button>
-            </div>
-            
-            <!-- Comments Section -->
-            <div class="flex-grow overflow-y-auto bg-black/50 border border-[#333] rounded p-4 text-left mb-4 mt-2">
-                <h3 class="text-electric text-sm font-bold uppercase tracking-widest mb-3 border-b border-[#333] pb-1">Area Chronicles</h3>
-                <div id="comments-list" class="space-y-3 mt-4 h-48 overflow-y-auto mb-4 border border-white/10 p-2 rounded">
-                    <p class="text-xs text-white/40 italic">Loading chronicles...</p>
-                </div>
-                
-                <!-- Comment Input (Hidden for guests) -->
-                <div id="comment-input-section" class="flex flex-col gap-2 relative hidden">
-                    <textarea id="comment-input" rows="2" class="w-full bg-black/50 border border-white/20 rounded p-2 text-sm text-white focus:outline-none focus:border-electric transition-colors" placeholder="Leave a mark..."></textarea>
-                    
-                    <div class="flex justify-between items-center">
-                        <div class="flex items-center gap-2">
-                            <label for="media-input" class="cursor-pointer bg-[#333] hover:bg-[#444] p-2 rounded border border-white/20 transition flex items-center justify-center" title="Attach Media (Max 5MB)">
-                                📷 <span class="text-xs ml-2 hidden sm:inline">Attach</span>
-                            </label>
-                            <input type="file" id="media-input" accept="image/*,video/*" class="hidden" onchange="document.getElementById('file-name').textContent = this.files[0] ? this.files[0].name : '';">
-                            <span id="file-name" class="text-[10px] text-white/50 overflow-hidden text-ellipsis whitespace-nowrap max-w-[100px]"></span>
-                        </div>
-                        <button onclick="postComment()" class="bg-electric text-black font-bold px-4 py-2 rounded text-xs hover:bg-[#b08d29] transition-colors">POST</button>
-                    </div>
-                </div>
-                
-                <!-- Guest View -->
-                <div id="guest-action-section" class="flex flex-col items-center justify-center py-4 hidden border border-white/10 rounded bg-black/50 mt-2">
-                    <p class="text-xs text-white/60 mb-3 text-center px-4">The Chronicles are sealed. Only forged souls may leave their mark.</p>
-                    <button onclick="window.location.href='auth.html'" class="bg-electric text-black font-cinzel font-bold px-6 py-2 rounded text-sm hover:bg-[#b08d29] shadow-[0_0_15px_rgba(212,175,55,0.4)] transition-all">Become Active Soul</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="success-view" class="hidden overflow-y-auto">
-            <h2 class="text-3xl font-cinzel font-bold text-green-500 mb-4 uppercase text-glow">Flow Achieved</h2>
-            <p class="text-sm text-white/80 mb-6" id="reward-text">You have mastered the Zone.<br><br>Flowee awaits you at the Dashboard to grant your <b>100 XP</b>, <b>Karma</b>, and your first <b>Museum Emblem</b>!</p>
-            
-            <a href="dashboard.html" class="inline-block px-8 py-3 border border-electric text-electric hover:bg-electric hover:text-black font-cinzel font-bold uppercase tracking-widest rounded transition-colors">
-                Return to Matrix
-            </a>
-        </div>
-    </div>
-
-    <script>
         const TOTAL_SECONDS = 25 * 60; // 25 minutes
         let remainingSeconds = TOTAL_SECONDS;
         let endTime = null;
         let timerInterval = null;
-        let areaId = new URLSearchParams(window.location.search).get('id');
+        
+        // Support ?id=... and ?node=...
+        const urlParams = new URLSearchParams(window.location.search);
+        let areaId = urlParams.get('id') || urlParams.get('node');
+        
         let areaData = null;
         let sessionUser = null;
         let inZone = false;
         
         let jamVideos = [];
         let currentVideoIdx = 0;
+        let isFirstBlood = false;
 
-        function loadVideoMedia(url) {
-            if(!url) return;
-            const vidPlayer = document.getElementById('jam-player-vid');
-            const iframePlayer = document.getElementById('jam-player-iframe');
-            const imgPlayer = document.getElementById('jam-player-img');
-            const loader = document.getElementById('vid-loader');
-            
-            loader.style.display = 'block';
-            
-            // Hide all
-            vidPlayer.classList.add('hidden');
-            iframePlayer.classList.add('hidden');
-            imgPlayer.classList.add('hidden');
-            vidPlayer.pause();
-            iframePlayer.src = '';
-            imgPlayer.src = '';
-            
-            if (url.includes('drive.google.com')) {
-                const previewUrl = url.replace(/\/view.*$/, '/preview');
-                iframePlayer.src = previewUrl;
-                iframePlayer.classList.remove('hidden');
-            } else if (url.match(/\.(jpeg|jpg|gif|png|webp)$/i)) {
-                imgPlayer.src = url;
-                imgPlayer.classList.remove('hidden');
-            } else {
-                vidPlayer.src = url;
-                vidPlayer.classList.remove('hidden');
-                // Added muted to the video tag above and using catch here
-                vidPlayer.play().catch(e => console.log('Autoplay prevented/delayed:', e));
-            }
-        }
-
-        function playNextVideo(dir) {
-            if(!jamVideos || jamVideos.length === 0) return;
-            currentVideoIdx = (currentVideoIdx + dir + jamVideos.length) % jamVideos.length;
-            loadVideoMedia(jamVideos[currentVideoIdx]);
-        }
-
-        document.getElementById('start-flow-btn').addEventListener('click', async () => {
+        async function init() {
             if (!window.supabaseClient) {
-                alert("Database connection not ready. Please wait.");
+                setTimeout(init, 500);
                 return;
             }
             
@@ -241,27 +38,19 @@
                 alert("Invalid Area ID.");
                 return;
             }
-            
-            if(sessionUser) {
-                document.getElementById('comment-input-section').classList.remove('hidden');
-            } else {
-                document.getElementById('guest-action-section').classList.remove('hidden');
-            }
-            
+
             try {
                 const { data, error } = await window.supabaseClient.from('flow_areas').select('*').eq('id', areaId).single();
                 if(error) throw error;
                 areaData = data;
                 document.getElementById('area-name-display').innerText = areaData.name || "Flow Area";
-                document.getElementById('area-creator-display').innerText = `Forged by: ${areaData.creator_name || "Unknown Voyager"}`;
                 
                 if (data.media_urls && Array.isArray(data.media_urls) && data.media_urls.length > 0) {
-                    jamVideos = data.media_urls;
-                }
-                
-                const localUser = localStorage.getItem('cdf_user_username');
-                if((sessionUser && areaData.creator_id === sessionUser.id) || (localUser && localUser !== 'Voyager' && areaData.creator_name === localUser)) {
-                    document.getElementById('delete-node-btn').classList.remove('hidden');
+                    jamVideos = data.media_urls.map(url => ({
+                        url: url,
+                        speech: null,
+                        author: areaData.creator_name || 'Architect'
+                    }));
                 }
             } catch(e) {
                 console.error(e);
@@ -269,45 +58,187 @@
                 return;
             }
 
-            if(navigator.geolocation && areaData.latitude && areaData.longitude) {
-                navigator.geolocation.getCurrentPosition((pos) => {
-                    const dist = getDistance(pos.coords.latitude, pos.coords.longitude, areaData.latitude, areaData.longitude);
-                    const gpsStatus = document.getElementById('gps-status');
-                    if(dist <= 150) { 
-                        inZone = true;
-                        gpsStatus.innerText = "GPS: On-Site Verified";
-                        gpsStatus.className = "text-xs mb-3 p-1 inline-block rounded font-bold uppercase tracking-widest bg-green-500/20 text-green-500 border border-green-500/50";
-                    } else {
-                        gpsStatus.innerText = `GPS: Off-Site (${Math.round(dist)}m)`;
-                    }
-                }, (err) => {
-                    console.warn("GPS error:", err);
-                });
-            }
-
-            if(jamVideos && jamVideos.length > 0) {
-                currentVideoIdx = Math.floor(Math.random() * jamVideos.length);
-                loadVideoMedia(jamVideos[currentVideoIdx]);
-            } else {
-                document.getElementById('no-media-fallback').classList.remove('hidden');
-                document.getElementById('vid-loader').style.display = 'none';
-            }
-            
-            loadComments();
-            
-            document.getElementById('init-view').classList.add('hidden');
-            document.getElementById('timer-view').classList.remove('hidden');
-            
+            // Setup Realtime for Ghost Sparks & Chronicles
             window.supabaseClient
-                .channel('public:chronicles')
+                .channel(`public:area:${areaId}`)
                 .on('postgres_changes', { event: '*', schema: 'public', table: 'chronicles', filter: `area_id=eq.${areaId}` }, payload => {
                     loadComments();
                 })
+                .on('broadcast', { event: 'ghost_spark' }, payload => {
+                    showGhostSparkUI(payload.payload.emoji);
+                })
                 .subscribe();
 
-            startTimer();
-        });
-        
+            await loadComments();
+
+            // Geolocation and Anti-Spoofing
+            if(navigator.geolocation && areaData.latitude && areaData.longitude) {
+                navigator.geolocation.getCurrentPosition((pos) => {
+                    handleGPSUpdate(pos.coords.latitude, pos.coords.longitude);
+                }, (err) => {
+                    console.warn("GPS error:", err);
+                    document.getElementById('gps-status').innerText = "GPS: Signal Lost";
+                    setupViewBasedOnAuth();
+                });
+            } else {
+                setupViewBasedOnAuth();
+            }
+            
+            document.getElementById('loading-view').classList.add('hidden');
+            document.getElementById('swipe-view').classList.remove('hidden');
+        }
+
+        function handleGPSUpdate(lat, lon) {
+            // Anti-spoof check
+            const lastGps = JSON.parse(localStorage.getItem('cdf_last_gps') || 'null');
+            const now = Date.now();
+            let isSpoof = false;
+
+            if (lastGps) {
+                const distToLast = getDistance(lat, lon, lastGps.lat, lastGps.lon);
+                const timeDiffHours = (now - lastGps.time) / (1000 * 60 * 60);
+                if (timeDiffHours > 0) {
+                    const speedKmh = (distToLast / 1000) / timeDiffHours;
+                    if (speedKmh > 1000) { // Impossible speed > 1000 km/h
+                        isSpoof = true;
+                        console.warn("Spoofing detected: Unrealistic speed jumps.");
+                    }
+                }
+            }
+            localStorage.setItem('cdf_last_gps', JSON.stringify({lat, lon, time: now}));
+
+            const dist = getDistance(lat, lon, areaData.latitude, areaData.longitude);
+            const gpsStatus = document.getElementById('gps-status');
+            
+            if(dist <= 150 && !isSpoof) { 
+                inZone = true;
+                gpsStatus.innerText = "GPS: On-Site Verified";
+                gpsStatus.className = "text-xs mb-3 p-1 inline-block rounded font-bold uppercase tracking-widest bg-green-500/20 text-green-500 border border-green-500/50 text-center";
+                document.getElementById('forge-lock-overlay').classList.add('hidden');
+            } else {
+                inZone = false;
+                gpsStatus.innerText = `GPS: Off-Site (${Math.round(dist)}m)`;
+                document.getElementById('forge-lock-overlay').classList.remove('hidden');
+                
+                if(isSpoof && sessionUser) {
+                    document.getElementById('auth-flowee-text').innerText = "Deine Frequenz flackert. Das System kann deine reale Präsenz nicht verifizieren. Bewege dich normal durch die Matrix.";
+                }
+            }
+
+            setupViewBasedOnAuth();
+        }
+
+        function setupViewBasedOnAuth() {
+            if (sessionUser) {
+                document.getElementById('guest-card-2').classList.add('hidden');
+                document.getElementById('guest-card-3').classList.add('hidden');
+                document.getElementById('guest-flowee').classList.add('hidden');
+                
+                document.getElementById('auth-card-2').classList.remove('hidden');
+                document.getElementById('auth-card-3').classList.remove('hidden');
+                document.getElementById('auth-flowee').classList.remove('hidden');
+                
+                if (inZone) {
+                    document.getElementById('btn-timer-start').classList.remove('hidden');
+                }
+            } else {
+                document.getElementById('auth-card-2').classList.add('hidden');
+                document.getElementById('auth-card-3').classList.add('hidden');
+                document.getElementById('auth-flowee').classList.add('hidden');
+                
+                document.getElementById('guest-card-2').classList.remove('hidden');
+                document.getElementById('guest-card-3').classList.remove('hidden');
+                document.getElementById('guest-flowee').classList.remove('hidden');
+            }
+        }
+
+        function loadVideoMedia(url, speechText = null, author = "Unknown") {
+            if(!url) return;
+            const vidPlayer = document.getElementById('jam-player-vid');
+            const iframePlayer = document.getElementById('jam-player-iframe');
+            const imgPlayer = document.getElementById('jam-player-img');
+            const loader = document.getElementById('vid-loader');
+            const speechBubble = document.getElementById('speech-bubble-overlay');
+            
+            loader.style.display = 'block';
+            vidPlayer.classList.add('hidden');
+            iframePlayer.classList.add('hidden');
+            imgPlayer.classList.add('hidden');
+            vidPlayer.pause();
+            iframePlayer.src = '';
+            imgPlayer.src = '';
+            
+            document.getElementById('chronicle-author').innerText = `By ${author}`;
+            
+            if (speechText) {
+                speechBubble.innerText = speechText;
+                speechBubble.classList.remove('hidden');
+            } else {
+                speechBubble.classList.add('hidden');
+            }
+            
+            if (url.includes('drive.google.com')) {
+                const previewUrl = url.replace(/\/view.*$/, '/preview');
+                iframePlayer.src = previewUrl;
+                iframePlayer.classList.remove('hidden');
+            } else if (url.match(/\.(jpeg|jpg|gif|png|webp)$/i)) {
+                imgPlayer.src = url;
+                imgPlayer.classList.remove('hidden');
+            } else {
+                vidPlayer.src = url;
+                vidPlayer.classList.remove('hidden');
+                vidPlayer.play().catch(e => console.log('Autoplay prevented:', e));
+            }
+        }
+
+        function playNextVideo(dir) {
+            if(!jamVideos || jamVideos.length === 0) return;
+            currentVideoIdx = (currentVideoIdx + dir + jamVideos.length) % jamVideos.length;
+            const media = jamVideos[currentVideoIdx];
+            loadVideoMedia(media.url, media.speech, media.author);
+        }
+
+        async function loadComments() {
+            try {
+                const { data, error } = await window.supabaseClient.from('chronicles').select('*').eq('area_id', areaId).order('created_at', {ascending: false});
+                
+                if(error || !data || data.length === 0) {
+                    isFirstBlood = true;
+                    // Try showing base videos if available
+                    if (jamVideos.length > 0) {
+                        document.getElementById('no-media-fallback').classList.add('hidden');
+                        loadVideoMedia(jamVideos[0].url, jamVideos[0].speech, jamVideos[0].author);
+                    }
+                    return;
+                }
+                
+                isFirstBlood = false;
+                
+                // Map chronicles to media array
+                const userMedia = data.filter(c => c.media_url).map(c => ({
+                    url: c.media_url,
+                    speech: c.content,
+                    author: c.user_name
+                }));
+                
+                let baseVideos = [];
+                if (areaData && areaData.media_urls) {
+                    baseVideos = areaData.media_urls.map(url => ({
+                        url: url,
+                        speech: null,
+                        author: areaData.creator_name || 'Architect'
+                    }));
+                }
+                
+                jamVideos = [...userMedia, ...baseVideos];
+                
+                if (jamVideos.length > 0) {
+                    document.getElementById('no-media-fallback').classList.add('hidden');
+                    loadVideoMedia(jamVideos[0].url, jamVideos[0].speech, jamVideos[0].author);
+                }
+            } catch(e) { console.error(e); }
+        }
+
         function getDistance(lat1, lon1, lat2, lon2) {
             const R = 6371e3;
             const φ1 = lat1 * Math.PI/180; const φ2 = lat2 * Math.PI/180;
@@ -316,13 +247,19 @@
             return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
         }
 
+        function switchToTimer() {
+            document.getElementById('swipe-view').classList.add('hidden');
+            document.getElementById('timer-view').classList.remove('hidden');
+            startTimer();
+        }
+
         function startTimer() {
+            if(timerInterval) return;
             endTime = Date.now() + (TOTAL_SECONDS * 1000);
             updateDisplay();
             timerInterval = setInterval(() => {
                 remainingSeconds = Math.max(0, Math.floor((endTime - Date.now()) / 1000));
                 updateDisplay();
-                
                 if(remainingSeconds <= 0) {
                     completeFlow();
                 }
@@ -332,136 +269,110 @@
         function updateDisplay() {
             const m = Math.floor(remainingSeconds / 60);
             const s = remainingSeconds % 60;
-            document.getElementById('timer-display').innerText = 
-                `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            document.getElementById('timer-display').innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
         }
-        
-        async function loadComments() {
-            try {
-                const { data, error } = await window.supabaseClient.from('chronicles').select('*').eq('area_id', areaId).order('created_at', {ascending: false});
-                const list = document.getElementById('comments-list');
-                if(error || !data || data.length === 0) {
-                    list.innerHTML = `<p class="text-xs text-white/40 italic">No chronicles yet. Be the first.</p>`;
-                    return;
-                }
-                
-                // Extract uploaded media and insert into jamVideos so the main player shows them!
-                const userMediaUrls = data.filter(c => c.media_url).map(c => c.media_url);
-                
-                let baseVideos = [];
-                if (areaData && areaData.media_urls && areaData.media_urls.length > 0) {
-                    baseVideos = areaData.media_urls;
-                }
-                
-                jamVideos = [...userMediaUrls, ...baseVideos];
-                
-                if (jamVideos.length > 0) {
-                    document.getElementById('no-media-fallback').classList.add('hidden');
-                    // If we haven't manually switched videos yet, show the newest upload
-                    if(currentVideoIdx === 0) {
-                        loadVideoMedia(jamVideos[0]);
-                    }
-                } else {
-                    document.getElementById('jam-player-vid').classList.add('hidden');
-                    document.getElementById('jam-player-iframe').classList.add('hidden');
-                    document.getElementById('jam-player-img').classList.add('hidden');
-                    document.getElementById('vid-loader').style.display = 'none';
-                    document.getElementById('no-media-fallback').classList.remove('hidden');
-                }
-                
-                list.innerHTML = data.map(c => {
-                    let mediaHtml = '';
-                    if(c.media_url) {
-                        if(c.media_url.match(/\.(jpeg|jpg|gif|png)$/i)) {
-                            mediaHtml = `<img src="${c.media_url}" class="mt-2 rounded max-h-32 border border-[#333]">`;
-                        } else if(c.media_url.match(/\.(mp4|webm)$/i)) {
-                            mediaHtml = `<video src="${c.media_url}" controls class="mt-2 rounded max-h-32 border border-[#333]"></video>`;
-                        } else {
-                            mediaHtml = `<a href="${c.media_url}" target="_blank" class="text-[10px] text-electric underline mt-1 block">View Attached Media</a>`;
-                        }
-                    }
-                    return `
-                    <div class="border-b border-[#222] pb-2">
-                        <span class="text-electric font-bold text-xs">${c.user_name}</span>
-                        <p class="text-white/80 text-xs mt-1 whitespace-pre-wrap">${c.content}</p>
-                        ${mediaHtml}
-                    </div>
-                `}).join('');
-            } catch(e) { console.error(e); }
-        }
-        
-        async function postComment() {
-            const input = document.getElementById('comment-input');
-            const fileInput = document.getElementById('media-input');
-            let text = input.value.trim();
-            const file = fileInput.files[0];
+
+        // --- GHOST SPARK LOGIC (Guest) ---
+        function dropGhostSpark(emoji) {
+            showGhostSparkUI(emoji);
             
-            if(!text && !file) return;
-            
-            if(file && file.size > 5 * 1024 * 1024) {
-                alert("File is too large. Maximum size is 5MB.");
-                return;
+            if(window.supabaseClient) {
+                window.supabaseClient.channel(`public:area:${areaId}`).send({
+                    type: 'broadcast',
+                    event: 'ghost_spark',
+                    payload: { emoji: emoji }
+                }).catch(e => console.log('Broadcast error:', e));
             }
+        }
 
-            input.value = 'Posting...';
-            input.disabled = true;
-            fileInput.disabled = true;
+        function showGhostSparkUI(emoji) {
+            const playerContainer = document.getElementById('manga-player-container');
+            const spark = document.createElement('div');
+            spark.className = 'ghost-spark';
+            spark.innerText = emoji;
+            playerContainer.appendChild(spark);
+            setTimeout(() => spark.remove(), 2000);
+        }
+
+        // --- MANGA CHRONICLE FORGE LOGIC (Auth) ---
+        function previewForgeMedia(event) {
+            const file = event.target.files[0];
+            if(!file) return;
             
-            try {
-                let uploadedUrl = null;
-                if (file) {
-                    const ext = file.name.split('.').pop();
-                    const sanitizedName = file.name.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9.\-_]/g, '');
-                    const fileName = `${Date.now()}_${sanitizedName}`;
-                    
-                    const { data: uploadData, error: uploadError } = await window.supabaseClient
-                        .storage
-                        .from('flow_media')
-                        .upload(`chronicles/${fileName}`, file, {
-                            cacheControl: '3600',
-                            upsert: false
-                        });
-                        
-                    if (uploadError) throw uploadError;
-                    
-                    const { data: publicData } = window.supabaseClient.storage.from('flow_media').getPublicUrl(`chronicles/${fileName}`);
-                    uploadedUrl = publicData.publicUrl;
-                }
+            if (file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = document.getElementById('forge-preview');
+                    img.src = e.target.result;
+                    img.classList.remove('hidden');
+                    document.getElementById('forge-placeholder').classList.add('hidden');
+                    document.getElementById('forge-watermark').classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
 
-                const userName = localStorage.getItem('cdf_user_username') || "Voyager";
+        async function manifestPanel() {
+            const fileInput = document.getElementById('forge-media');
+            const speechInput = document.getElementById('forge-speech');
+            const file = fileInput.files[0];
+            const text = speechInput.value.trim();
+            
+            if(!file) return alert("You must upload an image to forge a panel.");
+            if(file.size > 5 * 1024 * 1024) return alert("File is too large. Maximum size is 5MB.");
+
+            document.getElementById('swipe-view').scrollBy({left: window.innerWidth, behavior: 'smooth'});
+            document.getElementById('auth-card-3').querySelector('#manifest-loader').classList.remove('hidden');
+            document.getElementById('auth-card-3').querySelector('#manifest-success').classList.add('hidden');
+
+            try {
+                const ext = file.name.split('.').pop();
+                const sanitizedName = file.name.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9.\-_]/g, '');
+                const fileName = `${Date.now()}_${sanitizedName}`;
+                
+                const { data: uploadData, error: uploadError } = await window.supabaseClient
+                    .storage
+                    .from('flow_media')
+                    .upload(`chronicles/${fileName}`, file, { cacheControl: '3600', upsert: false });
+                    
+                if (uploadError) throw uploadError;
+                
+                const { data: publicData } = window.supabaseClient.storage.from('flow_media').getPublicUrl(`chronicles/${fileName}`);
+                const uploadedUrl = publicData.publicUrl;
+
+                const userName = localStorage.getItem('cdf_user_username') || "Architect";
                 const { error } = await window.supabaseClient.from('chronicles').insert([{
                     area_id: areaId,
-                    user_id: sessionUser ? sessionUser.id : null,
+                    user_id: sessionUser.id,
                     user_name: userName,
                     content: text,
                     media_url: uploadedUrl
                 }]);
                 if (error) throw error;
                 
-                input.value = '';
+                const rpReward = isFirstBlood ? 100 : 30;
+                document.getElementById('rp-amount').innerText = rpReward;
+                if(isFirstBlood) document.getElementById('rp-desc').innerText = "FIRST BLOOD BONUS! Pionier der Matrix.";
+                
+                const { data: profile } = await window.supabaseClient.from('profiles').select('exp, karma').eq('id', sessionUser.id).single();
+                if(profile) {
+                    await window.supabaseClient.from('profiles').update({ 
+                        exp: profile.exp + rpReward,
+                    }).eq('id', sessionUser.id);
+                }
+
+                document.getElementById('manifest-loader').classList.add('hidden');
+                document.getElementById('manifest-success').classList.remove('hidden');
+                
                 fileInput.value = '';
-                document.getElementById('file-name').textContent = '';
-                // No need to loadComments() here because realtime subscription will catch it
+                speechInput.value = '';
+                document.getElementById('forge-preview').classList.add('hidden');
+                document.getElementById('forge-placeholder').classList.remove('hidden');
+                
             } catch(e) {
                 console.error("Failed to post", e);
                 alert("Failed to post chronicle. " + e.message);
-            } finally {
-                input.disabled = false;
-                fileInput.disabled = false;
-                if(input.value === 'Posting...') input.value = text;
-            }
-        }
-        
-        async function deleteNode() {
-            if(!confirm("Are you sure you want to permanently vanish this Flow Area?")) return;
-            try {
-                const { error } = await window.supabaseClient.from('flow_areas').delete().eq('id', areaId);
-                if(error) throw error;
-                alert("Area vanished into the void.");
-                window.location.href = "quest_map.html";
-            } catch(err) {
-                alert("Failed to delete Area. Check console.");
-                console.error(err);
+                document.getElementById('swipe-view').scrollBy({left: -window.innerWidth, behavior: 'smooth'});
             }
         }
         
@@ -473,36 +384,26 @@
             
             if(!inZone) {
                 document.getElementById('reward-text').innerText = "Flow complete, but you were outside the zone. No points awarded.";
-                return; // Stop reward process
+                return;
             }
 
             document.getElementById('reward-text').innerText = "You have earned 100 XP and 10 Karma.";
 
-            // Set flag for Flowee Dashboard logic
             localStorage.setItem('flowee_reward_pending', '100');
             localStorage.setItem('flowee_reward_emblem', 'true');
             
-            // Grant Rewards to Creator and Self
             try {
-                // 1. Increment Area Scan Count
                 await window.supabaseClient.rpc('increment_scan_count', { area_id: areaId });
-                // Note: Fallback frontend update
-                await window.supabaseClient.from('flow_areas').update({ scan_count: (areaData.scan_count || 0) + 1 }).eq('id', areaId);
-                
-                // Add points to self directly to profile (so it's recorded)
                 if(sessionUser) {
                     const { data: profile } = await window.supabaseClient.from('profiles').select('exp, karma').eq('id', sessionUser.id).single();
                     if(profile) {
-                        await window.supabaseClient.from('profiles').update({ 
-                            exp: profile.exp + 100,
-                            karma: profile.karma + 10
-                        }).eq('id', sessionUser.id);
+                        await window.supabaseClient.from('profiles').update({ exp: profile.exp + 100, karma: profile.karma + 10 }).eq('id', sessionUser.id);
                     }
                 }
-            } catch(e) {
-                console.error("Reward error", e);
-            }
+            } catch(e) { console.error("Reward error", e); }
         }
+
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
