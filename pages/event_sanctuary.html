@@ -363,6 +363,31 @@
                 currentEventId = localStorage.getItem('currentEventId');
             }
 
+            if (!currentEventId && window.supabaseClient) {
+                try {
+                    const { data: { user } } = await window.supabaseClient.auth.getUser();
+                    if (user) {
+                        const { data: latestEvent } = await window.supabaseClient
+                            .from('quests')
+                            .select('id')
+                            .eq('creator_id', user.id)
+                            .order('created_at', { ascending: false })
+                            .limit(1)
+                            .single();
+                        
+                        if (latestEvent) {
+                            currentEventId = latestEvent.id;
+                            localStorage.setItem('currentEventId', currentEventId);
+                            const newUrl = new URL(window.location);
+                            newUrl.searchParams.set('id', currentEventId);
+                            window.history.pushState({}, '', newUrl);
+                        }
+                    }
+                } catch(err) {
+                    console.warn("Could not auto-load latest event:", err);
+                }
+            }
+
             if (currentEventId && window.supabaseClient) {
                 // Fetch dynamic event data
                 const { data: event } = await window.supabaseClient

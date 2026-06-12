@@ -363,7 +363,11 @@
         }
 
         function handlePayment() {
-            document.getElementById('stripe-modal').classList.remove('hidden');
+            if (currentEventData && currentEventData.externalUrl) {
+                window.open(currentEventData.externalUrl, '_blank');
+            } else {
+                document.getElementById('stripe-modal').classList.remove('hidden');
+            }
         }
 
         function closePayment() {
