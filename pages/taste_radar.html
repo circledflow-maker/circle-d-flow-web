@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Taste Radar | Circle D Flow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&family=Cinzel:wght@700&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <style>
+        /* MANGAKA AESTHETICS */
+        :root {
+            --manga-black: #050505;
+            --manga-white: #f0f0f0;
+            --gold: #CD7F32;
+        }
+
+        body {
+            background-color: var(--manga-black);
+            color: var(--manga-white);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow: hidden; /* Mobile App feel */
+            margin: 0; padding: 0;
+        }
+
+        .cinzel { font-family: 'Cinzel', serif; }
+        .space-mono { font-family: 'Space Mono', monospace; }
+
+        /* Hard Black Borders & Shadows */
+        .manga-panel {
+            background: var(--manga-white);
+            color: var(--manga-black);
+            border: 4px solid var(--manga-black);
+            box-shadow: 8px 8px 0px var(--manga-black);
+            position: relative;
+            overflow: hidden;
+            border-radius: 4px;
+        }
+
+        .manga-panel-dark {
+            background: #111;
+            color: var(--manga-white);
+            border: 2px solid var(--manga-white);
+            box-shadow: 6px 6px 0px rgba(255,255,255,0.2);
+            border-radius: 4px;
+        }
+
+        /* High Contrast Filter */
+        .manga-filter {
+            filter: grayscale(100%) contrast(125%);
+            transition: filter 0.3s ease;
+        }
+        .manga-filter:hover {
+            filter: grayscale(0%) contrast(100%);
+        }
+
+        /* Swiper Container */
+        .swiper {
+            width: 100%;
+            height: 100vh;
+        }
+
+        .swiper-slide {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* Action Buttons */
+        .manga-btn {
+            background: var(--manga-white);
+            color: var(--manga-black);
+            border: 3px solid var(--manga-black);
+            box-shadow: 4px 4px 0px var(--manga-black);
+            font-family: 'Space Mono', monospace;
+            text-transform: uppercase;
+            font-weight: bold;
+            transition: all 0.1s;
+        }
+        .manga-btn:active {
+            transform: translate(4px, 4px);
+            box-shadow: 0px 0px 0px var(--manga-black);
+        }
+        .manga-btn.dark {
+            background: var(--manga-black);
+            color: var(--manga-white);
+            border-color: var(--manga-white);
+            box-shadow: 4px 4px 0px var(--manga-white);
+        }
+
+        /* Flowee */
+        #taste-flowee { z-index: 100; pointer-events: none; }
+        #taste-flowee * { pointer-events: auto; }
+        .flowee-bubble {
+            background: rgba(0,0,0,0.9);
+            border: 2px solid var(--gold);
+            padding: 12px;
+            border-radius: 12px 12px 0 12px;
+            font-size: 0.75rem;
+            max-width: 250px;
+            opacity: 0;
+            transform: scale(0);
+            transform-origin: bottom right;
+            transition: all 0.3s ease;
+            box-shadow: 4px 4px 0px var(--gold);
+        }
+        .flowee-bubble.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Overlay -->
+    <div class="fixed top-0 w-full z-50 flex justify-between items-center p-6 pointer-events-none">
+        <div class="pointer-events-auto">
+            <h1 class="cinzel text-xl text-white drop-shadow-md">Taste Radar</h1>
+            <p class="text-[10px] space-mono text-white/70 uppercase">Finding Resonance</p>
+        </div>
+        <button onclick="window.location.href='dashboard.html'" class="pointer-events-auto material-symbols-outlined text-white text-3xl drop-shadow-md">close</button>
+    </div>
+
+    <!-- Swiper Container -->
+    <div class="swiper tasteRadarSwiper">
+        <div class="swiper-wrapper" id="radar-container">
+            <!-- Slides injected via JS -->
+        </div>
+        <!-- Pagination -->
+        <div class="swiper-pagination"></div>
+    </div>
+
+    <!-- Flowee HUD -->
+    <div id="taste-flowee" class="fixed bottom-6 right-6 flex items-end justify-end gap-3">
+        <div class="flowee-bubble active space-mono" id="flowee-dialog">
+            "Swipe up and down to scan local kitchens. When you find the resonance, secure your order. +15 EXP await!"
+        </div>
+        <div class="w-16 h-16 rounded-full bg-black/80 border-2 border-[var(--gold)] flex items-center justify-center cursor-pointer manga-panel" style="box-shadow: 4px 4px 0 var(--gold);" onclick="toggleFlowee()">
+            <img src="../Assets/images/logo.png" class="w-10 h-10 rounded-full animate-pulse filter invert">
+        </div>
+    </div>
+
+    <!-- Order Modal -->
+    <dialog id="order-modal" class="bg-transparent p-0 w-full max-w-sm backdrop:bg-black/80">
+        <div class="manga-panel p-6 m-4 relative">
+            <button onclick="document.getElementById('order-modal').close()" class="absolute top-4 right-4 material-symbols-outlined text-xl">close</button>
+            <h2 class="cinzel text-xl font-bold mb-2 uppercase" id="order-title">Secure Artifact</h2>
+            <p class="text-xs space-mono text-gray-600 mb-6" id="order-kitchen">@Kitchen</p>
+
+            <form class="space-y-4" onsubmit="event.preventDefault(); placeOrder();">
+                <div>
+                    <label class="space-mono text-[10px] uppercase block mb-1">Preferences / Allergies</label>
+                    <input type="text" id="order-notes" class="w-full bg-gray-100 border-2 border-black p-2 text-sm focus:outline-none" placeholder="No spicy...">
+                </div>
+                <div>
+                    <label class="space-mono text-[10px] uppercase block mb-1">Payment Method</label>
+                    <select id="order-payment" class="w-full bg-gray-100 border-2 border-black p-2 text-sm focus:outline-none">
+                        <option value="cash">Pay at Kitchen (Local Cash)</option>
+                        <option value="stripe">Digital Transfer (Stripe)</option>
+                        <option value="flow">Flow Credits (FC)</option>
+                    </select>
+                </div>
+
+                <div class="pt-4 border-t-2 border-black border-dashed mt-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="space-mono text-xs uppercase font-bold">Total:</span>
+                        <span class="font-bold text-lg" id="order-price">€0.00</span>
+                    </div>
+                    <button type="submit" class="manga-btn dark w-full py-3">Transmit Order</button>
+                </div>
+            </form>
+        </div>
+    </dialog>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/agents/supabase_client.js?v=3.2"></script>
+
+    <script>
+        // Mock Data since DB might be empty
+        const mockKitchens = [
+            {
+                id: 'k1',
+                kitchen: 'AkwabaLX',
+                dish: 'Red Red Stew',
+                price: '€12.50',
+                desc: 'A powerful frequency of black-eyed peas, plantains, and rich palm oil.',
+                img: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=600&q=80',
+                tags: ['Vegan', 'Gluten-Free']
+            },
+            {
+                id: 'k2',
+                kitchen: 'Outbreak Sushi',
+                dish: 'Neon Roll',
+                price: '€18.00',
+                desc: 'Cyber-fresh salmon, avocado, and spicy mayo drops.',
+                img: 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=600&q=80',
+                tags: ['Seafood', 'Spicy']
+            },
+            {
+                id: 'k3',
+                kitchen: 'African Queen',
+                dish: 'Jollof Empire',
+                price: '€15.00',
+                desc: 'The legendary rice dish. Spiced up, smoked out.',
+                img: 'https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=600&q=80',
+                tags: ['Meat', 'Spicy']
+            }
+        ];
+
+        let selectedItem = null;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await renderRadar();
+
+            const swiper = new Swiper('.tasteRadarSwiper', {
+                direction: 'vertical',
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+                on: {
+                    slideChange: function() {
+                        const dialog = document.getElementById('flowee-dialog');
+                        if(this.activeIndex === 0) {
+                            dialog.innerText = "AkwabaLX. High resonance vegan food. The energy is pure.";
+                        } else if(this.activeIndex === 1) {
+                            dialog.innerText = "Outbreak Sushi. Precision cuts, sharp flavors.";
+                        } else {
+                            dialog.innerText = "The African Queen. Legendary status confirmed.";
+                        }
+                    }
+                }
+            });
+        });
+
+        async function renderRadar() {
+            const container = document.getElementById('radar-container');
+            container.innerHTML = '';
+
+            mockKitchens.forEach(item => {
+                const tagsHtml = item.tags.map(t => `<span class="bg-black text-white px-2 py-1 text-[8px] uppercase tracking-widest">${t}</span>`).join('');
+
+                container.innerHTML += `
+                    <div class="swiper-slide bg-black">
+                        <!-- Manga Image Container -->
+                        <div class="manga-panel w-full max-w-sm h-[60vh] relative">
+                            <img src="${item.img}" class="absolute inset-0 w-full h-full object-cover manga-filter">
+                            
+                            <!-- Manga Speedlines / Overlay -->
+                            <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80"></div>
+                            
+                            <div class="absolute bottom-6 left-6 right-6">
+                                <h3 class="text-[10px] space-mono text-white/70 uppercase mb-1 drop-shadow-md">@${item.kitchen}</h3>
+                                <h2 class="cinzel text-3xl text-white font-bold mb-2 drop-shadow-md">${item.dish}</h2>
+                                <div class="flex gap-2 mb-4">
+                                    ${tagsHtml}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Info Panel below -->
+                        <div class="w-full max-w-sm mt-6 manga-panel-dark p-6">
+                            <p class="text-xs space-mono text-white/80 leading-relaxed mb-6">"${item.desc}"</p>
+                            
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-xl space-mono">${item.price}</span>
+                                <button onclick="openOrderModal('${item.id}')" class="manga-btn px-6 py-2">Order Now</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function toggleFlowee() {
+            document.getElementById('flowee-dialog').classList.toggle('active');
+        }
+
+        function openOrderModal(id) {
+            selectedItem = mockKitchens.find(k => k.id === id);
+            if(selectedItem) {
+                document.getElementById('order-title').innerText = selectedItem.dish;
+                document.getElementById('order-kitchen').innerText = "@" + selectedItem.kitchen;
+                document.getElementById('order-price').innerText = selectedItem.price;
+                document.getElementById('order-modal').showModal();
+            }
+        }
+
+        async function placeOrder() {
+            document.getElementById('order-modal').close();
+            
+            // Gamification logic
+            if (window.supabaseClient) {
+                try {
+                    const { data: { session } } = await window.supabaseClient.auth.getSession();
+                    if (session && session.user) {
+                        const { data: profile } = await window.supabaseClient.from('profiles').select('exp').eq('id', session.user.id).single();
+                        if (profile) {
+                            await window.supabaseClient.from('profiles').update({ exp: (profile.exp || 0) + 15 }).eq('id', session.user.id);
+                        }
+                    }
+                } catch(e) { console.log("Offline mode or no auth"); }
+            }
+
+            const dialog = document.getElementById('flowee-dialog');
+            dialog.innerText = `Transmission successful. ${selectedItem.kitchen} is forging your order. +15 EXP!`;
+            dialog.classList.add('active');
+            
+            alert(`ORDER CONFIRMED!\nDish: ${selectedItem.dish}\nKitchen: ${selectedItem.kitchen}\nWait for the WhatsApp Ping!`);
+        }
+    </script>
+</body>
+</html>
