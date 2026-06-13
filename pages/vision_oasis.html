@@ -436,28 +436,40 @@
             });
         }
 
+        // --- DESKTOP UX: MOUSEWHEEL TO HORIZONTAL SCROLL ---
+        const scrollContainer = document.querySelector('.manga-scroll-container');
+        scrollContainer.addEventListener('wheel', (evt) => {
+            // Only translate vertical scrolling to horizontal if we aren't scrolling inside a diary container
+            if(evt.deltaY !== 0) {
+                evt.preventDefault();
+                scrollContainer.scrollBy({
+                    left: evt.deltaY > 0 ? window.innerWidth : -window.innerWidth,
+                    behavior: 'smooth'
+                });
+            }
+        });
+
         // --- FLOWEE INTERACTIVE ONBOARDING ---
         function checkVisionTour() {
             setTimeout(() => {
                 if (window.Flowee) {
-                    window.Flowee.talk(true, "Welcome to the Vision Oasis, Voyager. Here, you can swipe through my Director's Portfolio, or create your own visual diary.", "guide", [
+                    window.Flowee.talk(true, "Welcome to the Vision Oasis, Voyager. Swipe right or scroll down to explore the Manga Portfolio and Services!", "guide", [
                         { label: "Show me the Portfolio", action: () => { 
-                            document.querySelector('.manga-scroll-container').scrollTo({ left: window.innerWidth, behavior: 'smooth' }); 
+                            scrollContainer.scrollTo({ left: window.innerWidth, behavior: 'smooth' }); 
                         }},
                         { label: "How do I book a Tour?", action: () => { 
-                            document.querySelector('.manga-scroll-container').scrollTo({ left: window.innerWidth * 3, behavior: 'smooth' });
-                            setTimeout(() => {
-                                window.Flowee.talk(true, "In Chapter 3, you can use your earned Flow Credits (FC) or fiat to book a Lisbon Adventure Tour or a Photoshoot! Click on a service to open the Calendar.", "guide");
-                            }, 1000);
+                            scrollContainer.scrollTo({ left: window.innerWidth * 2, behavior: 'smooth' });
                         }}
                     ]);
                 }
-            }, 1500);
+            }, 1000);
         }
 
         // Initialize when agents load
         window.addEventListener('load', () => {
-            // We give Flowee a second to inject into the DOM
+            if(window.Flowee && typeof window.Flowee.init === 'function') {
+                window.Flowee.init();
+            }
             checkVisionTour();
         });
     </script>
