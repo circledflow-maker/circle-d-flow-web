@@ -201,23 +201,24 @@
                 <span class="text-xs bg-[var(--accent-color)] text-[var(--bg-color)] px-2 py-1 rounded font-bold">PIPELINE ACTIVE</span>
             </div>
             
-            <div class="manga-grid">
-                <!-- Large Panel -->
-                <div class="manga-panel panel-span-2" onclick="openTerminal('C-Riz Performance', 'Mobb Beat HQ Lisboa', 'Shot on Nikon Z50. Flow State active.', 'youtube.com/c-riz')">
-                    <img src="../Assets/images/vision_oasis_bg.png" alt="Circle D Jam">
-                </div>
-                <!-- Small Panels -->
-                <div class="manga-panel" onclick="openTerminal('Decifra', 'Hempy Roots', 'The rhythm of the soul.', 'ig: @decifra')">
-                    <div class="text-center p-4">
-                        <span class="material-symbols-outlined text-4xl mb-2">mic</span><br>
-                        <span class="text-xs font-bold">Decifra</span>
+            <div class="manga-grid" style="display: flex; flex-direction: column; gap: 1rem; overflow-y: auto; max-height: calc(100% - 60px); padding-right: 8px;">
+                <!-- Drive Sync Header -->
+                <div style="background: rgba(0, 255, 204, 0.1); border: 1px solid rgba(0, 255, 204, 0.3); padding: 8px 12px; border-radius: 8px; display: flex; align-items: center; justify-content: space-between;">
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[var(--accent-color)]">cloud_sync</span>
+                        <span class="text-xs font-bold font-['Space_Mono'] uppercase">Google Drive Sync Active</span>
                     </div>
+                    <span class="text-[10px] opacity-70">Source: C-Riz Content</span>
                 </div>
-                <div class="manga-panel" onclick="openTerminal('Soul of Lisbon', 'Streets', 'Taoism in motion.', '')">
-                    <div class="text-center p-4">
-                        <span class="material-symbols-outlined text-4xl mb-2">diversity_2</span><br>
-                        <span class="text-xs font-bold">Lisbon</span>
-                    </div>
+
+                <!-- Embedded Drive Folder 1 -->
+                <div class="manga-panel" style="width: 100%; height: 300px; padding: 0; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; overflow: hidden; background: #000;">
+                    <iframe src="https://drive.google.com/embeddedfolderview?id=1SlKAQLkWv7VWAkvLqQZETl4srkdkb6pc#grid" style="width:100%; height:100%; border:0;"></iframe>
+                </div>
+                
+                <!-- Embedded Drive Folder 2 -->
+                <div class="manga-panel" style="width: 100%; height: 300px; padding: 0; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; overflow: hidden; background: #000;">
+                    <iframe src="https://drive.google.com/embeddedfolderview?id=1pbuFkZaATtpy5MWoUog_fydCITMWBmCF#grid" style="width:100%; height:100%; border:0;"></iframe>
                 </div>
             </div>
         </div>
