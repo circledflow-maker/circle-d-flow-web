@@ -789,7 +789,9 @@ class FloweeAgent {
         const isRoot = path.endsWith('index.html') || path.endsWith('/') || path.endsWith('beta-initiation.html');
         const pathPrefix = isRoot ? 'Assets/images/' : '../Assets/images/';
 
-            const visual = document.createElement('div');
+        let visual = document.getElementById('flowee-visual');
+        if (!visual) {
+            visual = document.createElement('div');
             visual.id = 'flowee-visual';
             visual.className = 'hover:scale-110 transition-transform duration-300 animate-float-slow';
             visual.style.width = isMobile ? '80px' : '60px';
@@ -828,8 +830,12 @@ class FloweeAgent {
                     window.Flowee.toggleChat();
                 }
             });
+            this.container.appendChild(visual);
+        }
 
-            const bubble = document.createElement('div');
+        let bubble = document.getElementById('flowee-bubble');
+        if (!bubble) {
+            bubble = document.createElement('div');
             bubble.id = 'flowee-bubble';
             bubble.style.marginBottom = '12px';
             bubble.style.marginRight = '16px';
@@ -864,16 +870,18 @@ class FloweeAgent {
                 }
             }, {passive: true});
 
-            this.container.appendChild(bubble);
-            this.container.appendChild(visual);
+            this.container.insertBefore(bubble, visual);
+        }
 
-            this.element = visual;
-            this.bubble = bubble;
+        this.element = visual;
+        this.bubble = bubble;
     }
 
     renderChatInterface() {
-        const chatDiv = document.createElement('div');
-        chatDiv.id = 'flowee-chat';
+        let chatDiv = document.getElementById('flowee-chat');
+        if (!chatDiv) {
+            chatDiv = document.createElement('div');
+            chatDiv.id = 'flowee-chat';
         chatDiv.style.position = 'fixed';
         chatDiv.style.bottom = '96px';
         chatDiv.style.right = '32px';
@@ -926,14 +934,69 @@ class FloweeAgent {
                     onfocus="this.style.borderColor='rgba(212,175,55,0.6)'"
                     onblur="this.style.borderColor='rgba(212,175,55,0.2)'"
                     onkeypress="if(event.key === 'Enter') window.Flowee.processInput(this.value)">
-                <button onclick="window.Flowee.processInput(document.getElementById('flowee-input').value)" 
-                    style="position: absolute; right: 12px; top: 22px; background: none; border: none; color: var(--haki-gold); cursor: pointer; transition: transform 0.2s;" 
-                    onmousedown="this.style.transform='scale(0.9)'" 
-                    onmouseup="this.style.transform='scale(1)'"
-                    class="material-symbols-outlined">send</button>
-            </div>
-        `;
-        document.body.appendChild(chatDiv);
+            chatDiv.style.position = 'fixed';
+            chatDiv.style.bottom = '96px';
+            chatDiv.style.right = '32px';
+            chatDiv.style.width = '320px';
+            chatDiv.style.height = '384px';
+            chatDiv.style.zIndex = '1000000';
+            chatDiv.style.backgroundColor = 'rgba(0,0,0,0.95)';
+            chatDiv.style.border = '1px solid rgba(212,175,55,0.3)';
+            chatDiv.style.borderRadius = '16px';
+            chatDiv.style.backdropFilter = 'blur(24px)';
+            chatDiv.style.padding = '16px';
+            chatDiv.style.display = 'none';
+            chatDiv.style.flexDirection = 'column';
+            chatDiv.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+            chatDiv.style.transform = 'scale(0.95)';
+            chatDiv.style.opacity = '0';
+            chatDiv.style.transformOrigin = 'bottom right';
+            chatDiv.style.boxShadow = '0 25px 50px -12px rgba(0, 0, 0, 0.7)';
+            chatDiv.style.fontFamily = "'Montserrat', sans-serif";
+            chatDiv.style.pointerEvents = 'auto';
+
+            const path = window.location.pathname;
+            const isRoot = path.endsWith('index.html') || path.endsWith('/') || path.endsWith('beta-initiation.html');
+            const pathPrefix = isRoot ? 'Assets/images/' : '../Assets/images/';
+
+            chatDiv.innerHTML = `
+                <!-- Header -->
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-bottom: 10px;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                         <img src="${pathPrefix}logo.png" style="width: 20px; height: 20px;">
+                         <span style="font-family: 'Cinzel', serif; color: var(--haki-gold); font-size: 0.8rem; letter-spacing: 2px; font-weight: bold;">Flowee AI</span>
+                    </div>
+                    <div style="display: flex; gap: 12px; align-items: center;">
+                        <span id="flowee-dismiss-btn" onclick="window.Flowee.dismissCommunityTutorial()" style="display: none; cursor: pointer; color: #EF4444; font-size: 10px; text-transform: uppercase; font-weight: bold; letter-spacing: 1px; border: 1px solid #EF4444; padding: 2px 4px; border-radius: 4px;">Dismiss Training</span>
+                        <span onclick="window.Flowee.toggleChat()" style="cursor: pointer; color: rgba(255,255,255,0.5); font-size: 18px;" class="material-symbols-outlined">close</span>
+                    </div>
+                </div>
+
+                <!-- Messages Area -->
+                <div id="flowee-messages" style="flex: 1; overflow-y: auto; padding: 4px; display: flex; flex-direction: column; gap: 12px; font-size: 0.8rem; color: #eee; scroll-behavior: smooth;">
+                    <div style="background: rgba(212,175,55,0.1); border-left: 3px solid var(--haki-gold); padding: 10px; border-radius: 4px; line-height: 1.4;">
+                        Hallo! Ich bin Flowee, dein Navigator. Wie darf ich dir heute assistieren?
+                    </div>
+                </div>
+
+                <!-- Input Area -->
+                <div style="position: relative; margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+                    <input id="flowee-input" type="text" placeholder="Command the Matrix..." 
+                        style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(212,175,55,0.2); border-radius: 20px; padding: 12px 45px 12px 20px; color: #fff; font-size: 0.8rem; outline: none; box-sizing: border-box; transition: border-color 0.3s;"
+                        onfocus="this.style.borderColor='rgba(212,175,55,0.6)'"
+                        onblur="this.style.borderColor='rgba(212,175,55,0.2)'"
+                        onkeypress="if(event.key === 'Enter') window.Flowee.processInput(this.value)">
+                    <button onclick="window.Flowee.processInput(document.getElementById('flowee-input').value)" 
+                        style="position: absolute; right: 12px; top: 22px; background: none; border: none; color: var(--haki-gold); cursor: pointer; transition: transform 0.2s;" 
+                        onmousedown="this.style.transform='scale(0.9)'" 
+                        onmouseup="this.style.transform='scale(1)'"
+                        class="material-symbols-outlined">send</button>
+                </div>
+                <!-- Quick Actions -->
+                <div id="flowee-chat-quick-actions" style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 8px;"></div>
+            `;
+            document.body.appendChild(chatDiv);
+        }
         this.chatInterface = chatDiv;
     }
 
