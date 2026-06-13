@@ -259,6 +259,53 @@
             </div>
         </div>
 
+        <!-- PAGE 4: Path C - Book the Creator -->
+        <div class="manga-page">
+            <div class="page-indicator">CH.03 - BOOKING & TOURS</div>
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold uppercase">Services</h2>
+                <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+            </div>
+
+            <div class="user-studio-grid">
+                <!-- Tour 1 -->
+                <div class="diary-entry flex gap-4 items-center" onclick="window.location.href='calendar.html'">
+                    <div class="w-16 h-16 rounded-lg overflow-hidden bg-white/10 flex-shrink-0">
+                        <img src="../Assets/images/vision_oasis_bg.png" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex-grow">
+                        <h3 class="font-bold text-sm text-[var(--accent-color)]">Lisbon Adventure Tour</h3>
+                        <p class="text-[10px] opacity-70">Guided street art & photography tour.</p>
+                        <div class="flex gap-2 mt-1">
+                            <span class="text-[10px] font-bold bg-[#d4af37] text-black px-1 rounded">250 FC</span>
+                            <span class="text-[10px] opacity-50">or 50€</span>
+                        </div>
+                    </div>
+                    <span class="material-symbols-outlined opacity-50">arrow_forward_ios</span>
+                </div>
+
+                <!-- Service 2 -->
+                <div class="diary-entry flex gap-4 items-center" onclick="window.location.href='calendar.html'">
+                    <div class="w-16 h-16 rounded-lg overflow-hidden bg-white/10 flex-shrink-0 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-3xl">photo_camera</span>
+                    </div>
+                    <div class="flex-grow">
+                        <h3 class="font-bold text-sm text-[var(--accent-color)]">Portrait Session</h3>
+                        <p class="text-[10px] opacity-70">Nikon Z50 photoshoot. Flow philosophy.</p>
+                        <div class="flex gap-2 mt-1">
+                            <span class="text-[10px] font-bold bg-[#d4af37] text-black px-1 rounded">500 FC</span>
+                            <span class="text-[10px] opacity-50">or 100€</span>
+                        </div>
+                    </div>
+                    <span class="material-symbols-outlined opacity-50">arrow_forward_ios</span>
+                </div>
+                
+                <button onclick="window.location.href='calendar.html'" class="w-full py-3 bg-[var(--accent-color)] text-[var(--bg-color)] rounded font-bold uppercase tracking-widest text-xs mt-2">
+                    Open Calendar Schedule
+                </button>
+            </div>
+        </div>
+
     </div>
 
     <!-- AGENT TERMINAL MODAL -->
@@ -388,6 +435,32 @@
                 }
             });
         }
+
+        // --- FLOWEE INTERACTIVE ONBOARDING ---
+        function checkVisionTour() {
+            setTimeout(() => {
+                if (window.Flowee) {
+                    window.Flowee.talk(true, "Welcome to the Vision Oasis, Voyager. Here, you can swipe through my Director's Portfolio, or create your own visual diary.", "guide", [
+                        { label: "Show me the Portfolio", action: () => { 
+                            document.querySelector('.manga-scroll-container').scrollTo({ left: window.innerWidth, behavior: 'smooth' }); 
+                        }},
+                        { label: "How do I book a Tour?", action: () => { 
+                            document.querySelector('.manga-scroll-container').scrollTo({ left: window.innerWidth * 3, behavior: 'smooth' });
+                            setTimeout(() => {
+                                window.Flowee.talk(true, "In Chapter 3, you can use your earned Flow Credits (FC) or fiat to book a Lisbon Adventure Tour or a Photoshoot! Click on a service to open the Calendar.", "guide");
+                            }, 1000);
+                        }}
+                    ]);
+                }
+            }, 1500);
+        }
+
+        // Initialize when agents load
+        window.addEventListener('load', () => {
+            // We give Flowee a second to inject into the DOM
+            checkVisionTour();
+        });
     </script>
+    <script src="../js/agents/flowee.js"></script>
 </body>
 </html>
