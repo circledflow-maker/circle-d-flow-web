@@ -2198,15 +2198,7 @@ const AkademieData = [
                         "type": "image"
                     },
                     {
-                        "id": "10yqKntVmpVPugU-GPuF8oYNw0qSJqCTH",
-                        "type": "image"
-                    },
-                    {
                         "id": "1--EL_gJXTCQXwElt44j21NsMGMG0VIx-",
-                        "type": "image"
-                    },
-                    {
-                        "id": "181KUWVxUPBkXoy8vYAWSjkL1tVDApW_q",
                         "type": "image"
                     },
                     {
@@ -2214,15 +2206,7 @@ const AkademieData = [
                         "type": "image"
                     },
                     {
-                        "id": "1JPUkD7fjvQWmQkipi6q656M4UB2y1H4f",
-                        "type": "image"
-                    },
-                    {
                         "id": "1c_RVdSXudW3xl1xRppinR2fkBgTcL9x-",
-                        "type": "image"
-                    },
-                    {
-                        "id": "1a8gm61D9QALQoSimip0h0K8eAo-ORj7K",
                         "type": "image"
                     },
                     {
@@ -2238,10 +2222,6 @@ const AkademieData = [
                         "type": "image"
                     },
                     {
-                        "id": "1sB8vxqmb7BPjEvcA7TjRkr052ROdEBoc",
-                        "type": "image"
-                    },
-                    {
                         "id": "15myVP5QYr_w_Ppats8yQi2w2Q1mSyzsK",
                         "type": "image"
                     },
@@ -2251,10 +2231,6 @@ const AkademieData = [
                     },
                     {
                         "id": "1MWyGqdzigZD2-Tad2XAjhF9JJXbeFtLn",
-                        "type": "image"
-                    },
-                    {
-                        "id": "1LLe9aSQuOdKcCpel6tk3xx_9WWlAJmKX",
                         "type": "image"
                     },
                     {
@@ -2382,10 +2358,6 @@ const AkademieData = [
                         "type": "image"
                     },
                     {
-                        "id": "13Rl5Tb6BbXyjfrhc_-3elDR2LSlqNJ5h",
-                        "type": "image"
-                    },
-                    {
                         "id": "1TuRZQuPixGsSBwfXKeFnghEDPiiq8Ybe",
                         "type": "image"
                     },
@@ -2438,10 +2410,6 @@ const AkademieData = [
                         "type": "image"
                     },
                     {
-                        "id": "1YWBJ95QzNSHYM5a5L36eKI_0JSd4ZEL1",
-                        "type": "image"
-                    },
-                    {
                         "id": "1xIkOSoQaADnli_bxEvvqTwtVHJ6laYcM",
                         "type": "image"
                     },
@@ -2451,6 +2419,38 @@ const AkademieData = [
                     },
                     {
                         "id": "1chr1T4-HTGviJvAnK03K54VIe0mZvnz4",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1A5vHXMaJjbt6d2_95e4cT2kFokmTirAS",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1O1gTRRaaZPwGfCE4XbftE8uuaZukZ0_A",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1lmoSomJFqc6ZEOMRYIW_3QLNleN0_Vrw",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1CSafyXJFk1J95QhDGvjdGDzwynOfXGzW",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1D2Xlj8-thffyRiP8ck84tGoLes5kegsT",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1w9xah_C16iiUsfnbg8OfuSG8GT2MCVMX",
+                        "type": "image"
+                    },
+                    {
+                        "id": "161d7fvTXAyYGFOuqOX-KoDH6lDclpckQ",
+                        "type": "image"
+                    },
+                    {
+                        "id": "19otN5T79Huifi8jKBBlnCqE8FXcq-WyP",
                         "type": "image"
                     }
                 ]
