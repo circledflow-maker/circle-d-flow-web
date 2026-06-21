@@ -910,7 +910,7 @@
                 
                 container.innerHTML += `
                     <div class="flex items-center justify-between bg-black/40 p-4 rounded-lg border border-white/5 transition hover:border-[#00ffcc]/30">
-                        <div class="cursor-pointer flex-1" onclick="openFloweeOverlay('${artist.id}', '${artist.name}', '${artist.role}', '${artist.status}', '${artist.link || ''}')">
+                        <div class="cursor-pointer flex-1" onclick="openFloweeOverlay('${artist.id}', '${artist.name}', '${artist.role}', '${artist.status}', '${artist.link || ''}', '${artist.imgUrl || ''}', '${(artist.bio || '').replace(/'/g, "\\'")}', '${artist.socialLink || ''}')">
                             <p class="text-sm font-bold flex items-center gap-2">
                                 ${artist.name} 
                                 <span class="w-2 h-2 rounded-full ${statusColor} shadow-[0_0_5px_currentColor]"></span>
@@ -1078,8 +1078,8 @@
         
         let activeArtistData = null;
 
-        function openFloweeOverlay(artistId, artistName, role, currentStatus, existingDriveLink = "") {
-            activeArtistData = { id: artistId, name: artistName, role: role, status: currentStatus, link: existingDriveLink };
+        function openFloweeOverlay(artistId, artistName, role, currentStatus, existingDriveLink = "", imgUrl = "", bio = "", socialLink = "") {
+            activeArtistData = { id: artistId, name: artistName, role: role, status: currentStatus, link: existingDriveLink, imgUrl: imgUrl, bio: bio, socialLink: socialLink };
 
             document.getElementById('current-artist-role').innerText = role;
             
@@ -1195,7 +1195,33 @@
             document.getElementById('flowee-speech').innerHTML = `Perfect! The Drive folder for <strong>${activeArtistData.name}</strong> is now synced.`;
             activeArtistData.link = url;
             
-            await updateArtistStatusInDb(activeArtistData.id, 'orange', url); 
+            await updateArtistStatusInDb(activeArtistData.id, 'orange', url, activeArtistData.imgUrl, activeArtistData.bio, activeArtistData.socialLink); 
+        }
+
+        function toggleProfileInput() {
+            const container = document.getElementById('profile-input-container');
+            if(container.classList.contains('open')) {
+                container.classList.remove('open');
+            } else {
+                container.classList.add('open');
+                document.getElementById('profile-img-url').value = activeArtistData.imgUrl || "";
+                document.getElementById('profile-bio').value = activeArtistData.bio || "";
+                document.getElementById('profile-social-url').value = activeArtistData.socialLink || "";
+            }
+        }
+
+        async function saveArtistProfile() {
+            const imgUrl = document.getElementById('profile-img-url').value.trim();
+            const bio = document.getElementById('profile-bio').value.trim();
+            const socialLink = document.getElementById('profile-social-url').value.trim();
+
+            document.getElementById('flowee-speech').innerHTML = `Got it! The profile for <strong>${activeArtistData.name}</strong> has been updated.`;
+            activeArtistData.imgUrl = imgUrl;
+            activeArtistData.bio = bio;
+            activeArtistData.socialLink = socialLink;
+            
+            // Note: we preserve the current status and drive link
+            await updateArtistStatusInDb(activeArtistData.id, activeArtistData.status, activeArtistData.link, imgUrl, bio, socialLink); 
         }
 
         async function triggerWhatsApp() {
@@ -1225,7 +1251,7 @@
             window.open(`https://wa.me/?text=${encodedMessage}`, '_blank');
         }
 
-        async function updateArtistStatusInDb(artistId, newStatus, newLink) {
+        async function updateArtistStatusInDb(artistId, newStatus, newLink, newImgUrl, newBio, newSocialLink) {
             if(!currentEventId || !window.supabaseClient) return;
             
             // 1. Get current quest
@@ -1237,13 +1263,16 @@
                 if(idx !== -1) {
                     team[idx].status = newStatus;
                     team[idx].link = newLink || team[idx].link;
+                    if (newImgUrl !== undefined) team[idx].imgUrl = newImgUrl;
+                    if (newBio !== undefined) team[idx].bio = newBio;
+                    if (newSocialLink !== undefined) team[idx].socialLink = newSocialLink;
                     
                     // 3. Save back
                     await window.supabaseClient.from('quests').update({ needs: quest.needs }).eq('id', currentEventId);
                     
                     // 4. Update UI
                     activeArtistData.status = newStatus;
-                    openFloweeOverlay(team[idx].id, team[idx].name, team[idx].role, newStatus, team[idx].link);
+                    openFloweeOverlay(team[idx].id, team[idx].name, team[idx].role, newStatus, team[idx].link, team[idx].imgUrl, team[idx].bio, team[idx].socialLink);
                     renderTeamChecklist({ needs: quest.needs });
                 }
             }
@@ -1392,6 +1421,18 @@
                     <div id="drive-link-input-container" class="hidden-input-group">
                         <input type="url" id="drive-folder-url" placeholder="https://drive.google.com/..." class="w-full text-sm">
                         <button class="bg-[#00ffcc]/20 text-[#00ffcc] font-bold px-4 rounded border border-[#00ffcc]" onclick="saveDriveLink()">Save</button>
+                    </div>
+                </div>
+
+                <div class="action-group-drive">
+                    <button class="action-btn" onclick="toggleProfileInput()">
+                        <span class="material-symbols-outlined text-[#ff00cc]">person_add</span> Edit Artist Profile
+                    </button>
+                    <div id="profile-input-container" class="hidden-input-group flex-col items-start p-3">
+                        <input type="url" id="profile-img-url" placeholder="Profile Image URL..." class="w-full text-sm mb-2 p-2 bg-black/50 border border-white/20 rounded">
+                        <textarea id="profile-bio" placeholder="Artist Bio..." class="w-full text-sm mb-2 p-2 bg-black/50 border border-white/20 rounded resize-none" rows="2"></textarea>
+                        <input type="url" id="profile-social-url" placeholder="Social Link (e.g. Instagram)..." class="w-full text-sm mb-2 p-2 bg-black/50 border border-white/20 rounded">
+                        <button class="bg-[#ff00cc]/20 text-[#ff00cc] font-bold px-4 py-2 w-full rounded border border-[#ff00cc]" onclick="saveArtistProfile()">Save Profile</button>
                     </div>
                 </div>
 
