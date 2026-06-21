@@ -127,9 +127,12 @@
                 <!-- Slide 4: Location Details with Slideshow -->
                 <div class="swiper-slide flex flex-col justify-end pb-32 relative overflow-hidden">
                     <!-- Background Slideshow -->
-                    <div class="absolute inset-0 z-0 bg-black" id="slide-bg-container">
-                        <!-- Gradient Overlay -->
-                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/10 z-10 pointer-events-none"></div>
+                    <div class="absolute inset-0 z-0 bg-black">
+                        <div class="swiper locationSwiper w-full h-full">
+                            <div class="swiper-wrapper" id="location-swiper-wrapper"></div>
+                        </div>
+                        <!-- Gradient Overlay (adjusted for clarity) -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-transparent z-10 pointer-events-none"></div>
                     </div>
 
                     <div class="bg-black/60 backdrop-blur-md border border-white/10 rounded-xl p-5 z-20 mx-4 shadow-2xl relative mt-auto border-b-4 border-b-[#00ffcc]/50">
@@ -497,31 +500,25 @@
             });
 
             // Start Background Slideshow
-            const bgContainer = document.getElementById('slide-bg-container');
-            if (bgContainer) {
+            const locationWrapper = document.getElementById('location-swiper-wrapper');
+            if (locationWrapper) {
                 const totalImages = 44; // Exactly 44 images were successfully downloaded and processed
                 for (let i = 1; i <= totalImages; i++) {
-                    const div = document.createElement('div');
-                    div.className = 'absolute inset-0 bg-cover bg-center transition-opacity duration-1000 slide-bg';
-                    div.style.opacity = i === 1 ? '0.5' : '0';
-                    div.style.backgroundImage = `url('../Assets/images/secret_garden/bg_${i}.webp')`;
-                    // Preload first few, lazy load others for performance
-                    if (i > 3) div.style.willChange = 'opacity';
-                    bgContainer.insertBefore(div, bgContainer.lastElementChild);
+                    const slide = document.createElement('div');
+                    slide.className = 'swiper-slide bg-cover bg-center';
+                    slide.style.backgroundImage = `url('../Assets/images/secret_garden/bg_${i}.webp')`;
+                    locationWrapper.appendChild(slide);
                 }
 
-                const slideBgs = bgContainer.querySelectorAll('.slide-bg');
-                if (slideBgs.length > 0) {
-                    let currentBg = 0;
-                    setInterval(() => {
-                        slideBgs[currentBg].style.opacity = '0';
-                        currentBg = (currentBg + 1) % slideBgs.length;
-                        
-                        // If image fails to load, background will be black, so we could check, 
-                        // but it's simpler to just set opacity and let browser handle it.
-                        slideBgs[currentBg].style.opacity = '0.5';
-                    }, 4000);
-                }
+                new Swiper('.locationSwiper', {
+                    nested: true,         // Allows inner swiping without dragging the outer swiper
+                    loop: true,           // Infinite swiping
+                    grabCursor: true,
+                    autoplay: {
+                        delay: 3500,
+                        disableOnInteraction: false, // Keep autoplaying even after user swipes
+                    },
+                });
             }
         }
 
