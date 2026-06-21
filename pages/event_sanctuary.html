@@ -306,12 +306,6 @@
                     </div>
                 </div>
                 
-                <div class="bg-black/40 p-4 rounded-lg border border-white/5">
-                    <label class="text-[10px] text-[#00ffcc] uppercase font-bold tracking-widest block mb-2">Checkout URL (Stripe/Dice)</label>
-                    <input type="text" id="ticket-checkout-url" class="w-full bg-black border border-white/20 rounded p-2 text-white text-sm" placeholder="https://buy.stripe.com/..." value="">
-                    <p class="text-[10px] text-white/40 mt-2">Users will be redirected here to finalize purchase.</p>
-                </div>
-                
                 <button onclick="saveTickets()" class="w-full py-3 bg-[#00ffcc]/20 border border-[#00ffcc]/50 text-[#00ffcc] font-black uppercase tracking-widest rounded hover:bg-[#00ffcc]/40 transition flex justify-center items-center gap-2">
                     <span class="material-symbols-outlined">save</span> Sync Tickets
                 </button>
@@ -1002,19 +996,15 @@
             const regularPrice = document.getElementById('ticket-regular-price').value;
             const regularQty = document.getElementById('ticket-regular-qty').value;
             
-            const checkoutUrl = document.getElementById('ticket-checkout-url').value.trim();
-            
             if(window.supabaseClient && currentEventId) {
                 const btn = event.currentTarget;
                 const orig = btn.innerHTML;
                 btn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Syncing...';
                 try {
-                    // Storing tickets inside 'needs' JSONB for simplicity since we don't have a dedicated tickets table structure visible.
                     let needs = window.currentEventData.needs || {};
                     needs.tickets = {
                         ticket1: { name: earlyName, price: earlyPrice, qty: earlyQty },
-                        ticket2: { name: regularName, price: regularPrice, qty: regularQty },
-                        checkoutUrl: checkoutUrl
+                        ticket2: { name: regularName, price: regularPrice, qty: regularQty }
                     };
                     await window.supabaseClient.from('quests').update({ needs: needs }).eq('id', currentEventId);
                     window.currentEventData.needs = needs;
@@ -1078,10 +1068,15 @@
 
         async function saveNewNode() {
             const name = document.getElementById('new-node-name').value.trim();
-            const role = document.getElementById('new-node-role').value.trim();
-            const link = document.getElementById('new-node-link').value.trim();
-            const desc = document.getElementById('new-node-desc').value.trim();
-            if(!name || !role) return alert("Please provide both name and role.");
+            const role = document.getElementById('new-node-role').value;
+            const image = document.getElementById('new-node-image').value.trim();
+            const bio = document.getElementById('new-node-bio').value.trim();
+            const social = document.getElementById('new-node-social').value.trim();
+            
+            if(!name || !role) {
+                alert("Please fill in the Artist Name and Role");
+                return;
+            }
 
             const btn = event.currentTarget;
             const origHTML = btn.innerHTML;
@@ -1091,11 +1086,11 @@
                 const newNode = {
                     id: 'node_' + Date.now(),
                     name: name,
-                    notes: name, // legacy
                     role: role,
-                    social_link: link,
-                    description: desc,
-                    status: 'red'
+                    image: image,
+                    bio: bio,
+                    social: social,
+                    status: 'red' // Default not contacted
                 };
                 
                 let needs = window.currentEventData.needs || {};
@@ -1408,15 +1403,20 @@
                         <option value="Gatekeeper">Gatekeeper</option>
                         <option value="Space-Holder">Space-Holder</option>
                         <option value="Performance">Performance</option>
+                        <option value="Other">Other</option>
                     </select>
                 </div>
                 <div>
-                    <label class="text-[10px] uppercase tracking-widest text-white/50 block mb-1">Social Link (Optional)</label>
-                    <input type="url" id="new-node-link" class="w-full bg-black border border-white/20 rounded p-3 text-white focus:border-[#00ffcc] outline-none" placeholder="e.g. https://instagram.com/naru">
+                    <label class="text-[10px] uppercase tracking-widest text-white/50 block mb-1">Profile Image URL (Optional)</label>
+                    <input type="url" id="new-node-image" class="w-full bg-black border border-white/20 rounded p-3 text-white focus:border-[#00ffcc] outline-none" placeholder="https://...">
                 </div>
                 <div>
-                    <label class="text-[10px] uppercase tracking-widest text-white/50 block mb-1">Short Description (Optional)</label>
-                    <input type="text" id="new-node-desc" class="w-full bg-black border border-white/20 rounded p-3 text-white focus:border-[#00ffcc] outline-none" placeholder="e.g. Bringing the bass to the dancefloor.">
+                    <label class="text-[10px] uppercase tracking-widest text-white/50 block mb-1">Short Bio (1-2 sentences)</label>
+                    <textarea id="new-node-bio" class="w-full bg-black border border-white/20 rounded p-3 text-white focus:border-[#00ffcc] outline-none" rows="2" placeholder="A local DJ known for deep hypnotic grooves..."></textarea>
+                </div>
+                <div>
+                    <label class="text-[10px] uppercase tracking-widest text-white/50 block mb-1">Social Media Link</label>
+                    <input type="url" id="new-node-social" class="w-full bg-black border border-white/20 rounded p-3 text-white focus:border-[#00ffcc] outline-none" placeholder="https://instagram.com/...">
                 </div>
             </div>
             
