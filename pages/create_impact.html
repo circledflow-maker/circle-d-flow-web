@@ -95,13 +95,13 @@
                 </div>
 
                 <!-- Slide 2: Event Vision -->
-                <div class="swiper-slide p-4 flex flex-col justify-start overflow-y-auto pb-32 pt-16">
+                <div class="swiper-slide p-4 flex flex-col justify-start overflow-y-auto pb-48 pt-16">
                     <div class="bg-white/5 border border-white/10 rounded-xl p-5 relative overflow-hidden">
                         <div class="absolute top-0 right-0 w-32 h-32 bg-[#00ffcc]/10 blur-3xl rounded-full pointer-events-none"></div>
                         <h3 class="text-xs uppercase tracking-widest text-[#00ffcc] font-bold mb-3 flex items-center gap-2">
                             <span class="material-symbols-outlined text-sm">visibility</span> The Vision
                         </h3>
-                        <p id="event-description" class="text-sm italic text-white/80 font-serif leading-relaxed line-clamp-3 transition-all duration-300">
+                        <p id="event-description" class="text-sm italic text-white/80 font-serif leading-relaxed line-clamp-3 transition-all duration-300 whitespace-pre-wrap">
                             Loading the soul of the event...
                         </p>
                         <button id="vision-more-btn" onclick="toggleVision()" class="text-[10px] uppercase tracking-widest text-[#00ffcc] font-bold mt-2 hidden">+ More</button>
@@ -109,7 +109,7 @@
                 </div>
 
                 <!-- Slide 2.5: The Program (Blueprint) -->
-                <div class="swiper-slide p-4 flex flex-col justify-start overflow-y-auto pb-32 pt-16">
+                <div class="swiper-slide p-4 flex flex-col justify-start overflow-y-auto pb-48 pt-16">
                     <h3 class="text-xs uppercase tracking-widest text-[#d4af37] mb-3 pl-1">The Program</h3>
                     <div class="relative pl-4 border-l border-white/10 space-y-6 mt-4" id="program-list">
                         <!-- Populated via JS -->
@@ -118,7 +118,7 @@
                 </div>
 
                 <!-- Slide 3: Lineup / Crew -->
-                <div class="swiper-slide p-4 flex flex-col justify-start overflow-y-auto pb-32 pt-16">
+                <div class="swiper-slide p-4 flex flex-col justify-start overflow-y-auto pb-48 pt-16">
                     <h3 class="text-xs uppercase tracking-widest text-white/50 mb-3 pl-1">Confirmed Flow Nodes</h3>
                     <div id="crew-list" class="flex flex-col gap-3">
                         <!-- Populated via JS -->
@@ -126,7 +126,7 @@
                 </div>
 
                 <!-- Slide 4: Location Details -->
-                <div class="swiper-slide p-4 flex flex-col justify-center overflow-y-auto pb-24">
+                <div class="swiper-slide p-4 flex flex-col justify-center overflow-y-auto pb-48">
                     <div class="bg-black/40 border border-white/5 rounded-xl p-4">
                         <h3 class="text-xs uppercase tracking-widest text-white/50 mb-2">Location Data</h3>
                         <p class="text-sm font-bold flex items-center gap-2" id="event-location">
@@ -219,9 +219,9 @@
     </div>
 
     <!-- Flowee Interactive Avatar -->
-    <div id="impact-flowee" class="fixed bottom-6 right-6 z-40 hidden flex items-end justify-end gap-3 pointer-events-none">
+    <div id="impact-flowee" class="fixed bottom-28 right-6 z-40 hidden flex items-end justify-end gap-3 pointer-events-none">
         <div class="bg-black/80 backdrop-blur-md border border-[#00ffcc]/30 p-4 rounded-2xl rounded-br-none max-w-[70vw] text-xs font-bold shadow-[0_0_20px_rgba(0,255,204,0.15)] pointer-events-auto relative transform transition-all duration-500 scale-0 origin-bottom-right" id="flowee-bubble">
-            <p id="flowee-message" class="leading-relaxed">Loading signal...</p>
+            <p id="flowee-message" class="leading-relaxed whitespace-pre-wrap">Loading signal...</p>
         </div>
         <div class="w-16 h-16 rounded-full bg-black/80 border-2 border-[#00ffcc] flex items-center justify-center pointer-events-auto cursor-pointer shadow-[0_0_15px_rgba(0,255,204,0.4)]" onclick="toggleFloweeMessage()">
             <img src="../Assets/images/logo.png" class="w-10 h-10 rounded-full animate-pulse">
