@@ -1320,30 +1320,47 @@
             await updateArtistStatusInDb(activeArtistData.id, 'orange', url, activeArtistData.imgUrl, activeArtistData.bio, activeArtistData.socialLink); 
         }
 
-        function toggleProfileInput() {
-            const container = document.getElementById('profile-input-container');
-            if(container.classList.contains('open')) {
-                container.classList.remove('open');
-            } else {
-                container.classList.add('open');
-                document.getElementById('profile-img-url').value = activeArtistData.imgUrl || "";
-                document.getElementById('profile-bio').value = activeArtistData.bio || "";
-                document.getElementById('profile-social-url').value = activeArtistData.socialLink || "";
-            }
+        function openArtistProfileModal() {
+            closeFloweeOverlay(); // Close the Flowee action menu
+            document.getElementById('artist-profile-modal').classList.remove('hidden');
+            document.getElementById('profile-img-url').value = activeArtistData.imgUrl || "";
+            document.getElementById('profile-bio').value = activeArtistData.bio || "";
+            document.getElementById('profile-social-url').value = activeArtistData.socialLink || "";
+            document.getElementById('profile-music-url').value = activeArtistData.musicLink || "";
+        }
+
+        function closeArtistProfileModal() {
+            document.getElementById('artist-profile-modal').classList.add('hidden');
         }
 
         async function saveArtistProfile() {
             const imgUrl = document.getElementById('profile-img-url').value.trim();
             const bio = document.getElementById('profile-bio').value.trim();
             const socialLink = document.getElementById('profile-social-url').value.trim();
+            const musicLink = document.getElementById('profile-music-url').value.trim();
 
-            document.getElementById('flowee-speech').innerHTML = `Got it! The profile for <strong>${activeArtistData.name}</strong> has been updated.`;
-            activeArtistData.imgUrl = imgUrl;
-            activeArtistData.bio = bio;
-            activeArtistData.socialLink = socialLink;
-            
-            // Note: we preserve the current status and drive link
-            await updateArtistStatusInDb(activeArtistData.id, activeArtistData.status, activeArtistData.link, imgUrl, bio, socialLink); 
+            const btn = document.getElementById('save-profile-btn');
+            const origHTML = btn.innerHTML;
+            btn.innerHTML = 'Saving...';
+            btn.disabled = true;
+
+            try {
+                activeArtistData.imgUrl = imgUrl;
+                activeArtistData.bio = bio;
+                activeArtistData.socialLink = socialLink;
+                activeArtistData.musicLink = musicLink;
+                
+                await updateArtistStatusInDb(activeArtistData.id, activeArtistData.status, activeArtistData.link, imgUrl, bio, socialLink, musicLink); 
+                
+                closeArtistProfileModal();
+                alert(`Profile for ${activeArtistData.name} updated successfully!`);
+            } catch (err) {
+                console.error("Failed to save profile:", err);
+                alert("Failed to save profile.");
+            } finally {
+                btn.innerHTML = origHTML;
+                btn.disabled = false;
+            }
         }
 
         async function triggerWhatsApp() {
@@ -1373,7 +1390,7 @@
             window.open(`https://wa.me/?text=${encodedMessage}`, '_blank');
         }
 
-        async function updateArtistStatusInDb(artistId, newStatus, newLink, newImgUrl, newBio, newSocialLink) {
+        async function updateArtistStatusInDb(artistId, newStatus, newLink, newImgUrl, newBio, newSocialLink, newMusicLink) {
             if(!currentEventId || !window.supabaseClient) return;
             
             // 1. Get current quest
@@ -1388,6 +1405,7 @@
                     if (newImgUrl !== undefined) team[idx].imgUrl = newImgUrl;
                     if (newBio !== undefined) team[idx].bio = newBio;
                     if (newSocialLink !== undefined) team[idx].socialLink = newSocialLink;
+                    if (newMusicLink !== undefined) team[idx].musicLink = newMusicLink;
                     
                     // 3. Save back
                     await window.supabaseClient.from('quests').update({ needs: quest.needs }).eq('id', currentEventId);
@@ -1467,37 +1485,64 @@
             
             doc.setFontSize(40);
             doc.setTextColor(212, 175, 55);
-            doc.text(eventTitle, 300, 370, { align: 'center' });
+            const splitTitle = doc.splitTextToSize(eventTitle, 500);
+            doc.text(splitTitle, 300, 370, { align: 'center' });
+            
+            let currentY = 370 + ((splitTitle.length - 1) * 45); // Adjust based on lines
 
             doc.setFontSize(14);
             doc.setTextColor(200, 200, 200);
-            doc.text(`DATE: ${dateStr}`, 300, 450, { align: 'center' });
-            doc.text(`LOC: ${locStr}`, 300, 480, { align: 'center' });
+            doc.text(`DATE: ${dateStr}`, 300, currentY + 60, { align: 'center' });
+            doc.text(`LOC: ${locStr}`, 300, currentY + 90, { align: 'center' });
             
             doc.setFontSize(12);
             doc.setTextColor(255, 255, 255);
             // Split vision string to fit
             const splitVision = doc.splitTextToSize(`VISION: ${visionStr}`, 450);
-            doc.text(splitVision, 300, 540, { align: 'center' });
+            doc.text(splitVision, 300, currentY + 140, { align: 'center' });
             
+            let programY = currentY + 140 + (splitVision.length * 15) + 30;
+
+            // Helper to add page
+            function addNewPage() {
+                doc.addPage();
+                doc.setFillColor(11, 15, 13);
+                doc.rect(0, 0, 600, 800, "F");
+                doc.setDrawColor(212, 175, 55);
+                doc.setLineWidth(3);
+                doc.rect(20, 20, 560, 760);
+            }
+
             // Program Syntax
             if(artist.program && artist.program.length > 0) {
+                if (programY > 700) {
+                    addNewPage();
+                    programY = 60;
+                }
+
                 doc.setTextColor(212, 175, 55);
                 doc.setFontSize(14);
-                doc.text("PROGRAM SYNTAX:", 300, 600, { align: 'center' });
+                doc.text("PROGRAM SYNTAX:", 300, programY, { align: 'center' });
                 
                 doc.setTextColor(255, 255, 255);
                 doc.setFontSize(10);
-                let yOffset = 620;
+                let yOffset = programY + 20;
                 artist.program.forEach(p => {
                     let assignedStr = p.assigned ? ` - ${p.assigned}` : '';
-                    if(yOffset < 730) { // prevent overflowing
-                        doc.text(`${p.time} | ${p.label}${assignedStr}`, 300, yOffset, { align: 'center' });
-                        yOffset += 15;
+                    if(yOffset > 730) { // prevent overflowing
+                        addNewPage();
+                        yOffset = 60;
                     }
+                    doc.text(`${p.time} | ${p.label}${assignedStr}`, 300, yOffset, { align: 'center' });
+                    yOffset += 15;
                 });
+                programY = yOffset;
             }
             
+            if (programY > 740) {
+                addNewPage();
+            }
+
             doc.setTextColor(0, 255, 204);
             doc.setFontSize(12);
             doc.text("Scan QR Code at the portal to sync your node.", 300, 750, { align: 'center' });
@@ -1546,16 +1591,10 @@
                     </div>
                 </div>
 
-                <div class="action-group-drive">
-                    <button class="action-btn" onclick="toggleProfileInput()">
-                        <span class="material-symbols-outlined text-[#ff00cc]">person_add</span> Edit Artist Profile
+                <div class="relative w-full">
+                    <button class="action-btn" onclick="openArtistProfileModal()">
+                        <span class="material-symbols-outlined text-[#ff00cc]">person_edit</span> Edit Artist Profile
                     </button>
-                    <div id="profile-input-container" class="hidden-input-group flex-col items-start p-3">
-                        <input type="url" id="profile-img-url" placeholder="Profile Image URL..." class="w-full text-sm mb-2 p-2 bg-black/50 border border-white/20 rounded">
-                        <textarea id="profile-bio" placeholder="Artist Bio..." class="w-full text-sm mb-2 p-2 bg-black/50 border border-white/20 rounded resize-none" rows="2"></textarea>
-                        <input type="url" id="profile-social-url" placeholder="Social Link (e.g. Instagram)..." class="w-full text-sm mb-2 p-2 bg-black/50 border border-white/20 rounded">
-                        <button class="bg-[#ff00cc]/20 text-[#ff00cc] font-bold px-4 py-2 w-full rounded border border-[#ff00cc]" onclick="saveArtistProfile()">Save Profile</button>
-                    </div>
                 </div>
 
                 <button class="action-btn bg-[#25D366]/10 border-[#25D366]/30 hover:border-[#25D366]" onclick="sendWhatsAppReminder()">
@@ -1728,6 +1767,39 @@
                 <span class="material-symbols-outlined text-4xl mb-2" id="scan-icon"></span>
                 <p id="scan-message" class="font-bold"></p>
                 <p id="scan-details" class="text-xs text-white/50 mt-1"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Artist Profile Edit Modal -->
+    <div id="artist-profile-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[100] hidden flex flex-col items-center justify-center p-4">
+        <div class="bg-[#111] text-white p-6 rounded-2xl border border-[#ff00cc]/30 w-full max-w-md relative shadow-[0_0_30px_rgba(255,0,204,0.15)]">
+            <button onclick="closeArtistProfileModal()" class="absolute top-4 right-4 text-white/50 hover:text-[#ff00cc]">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+            <h3 class="font-serif text-2xl text-[#ff00cc] mb-4 uppercase tracking-widest flex items-center gap-2">
+                <span class="material-symbols-outlined">person_edit</span> Artist Profile
+            </h3>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs uppercase tracking-widest text-white/50 mb-1">Profile Image URL</label>
+                    <input type="url" id="profile-img-url" placeholder="https://..." class="w-full text-sm p-3 bg-black/50 border border-white/20 rounded focus:border-[#ff00cc] outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs uppercase tracking-widest text-white/50 mb-1">Artist Bio</label>
+                    <textarea id="profile-bio" placeholder="Tell the network about the artist..." class="w-full text-sm p-3 bg-black/50 border border-white/20 rounded resize-none focus:border-[#ff00cc] outline-none" rows="3"></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs uppercase tracking-widest text-white/50 mb-1">Social Link (e.g. Instagram)</label>
+                    <input type="url" id="profile-social-url" placeholder="https://instagram.com/..." class="w-full text-sm p-3 bg-black/50 border border-white/20 rounded focus:border-[#ff00cc] outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs uppercase tracking-widest text-white/50 mb-1">Music Link (SoundCloud, Spotify, YouTube)</label>
+                    <input type="url" id="profile-music-url" placeholder="https://soundcloud.com/..." class="w-full text-sm p-3 bg-black/50 border border-white/20 rounded focus:border-[#ff00cc] outline-none">
+                </div>
+                <button id="save-profile-btn" onclick="saveArtistProfile()" class="w-full bg-[#ff00cc] text-white font-bold py-3 rounded hover:bg-[#ff00cc]/80 transition uppercase tracking-widest mt-4">
+                    Confirm & Save to Live
+                </button>
             </div>
         </div>
     </div>

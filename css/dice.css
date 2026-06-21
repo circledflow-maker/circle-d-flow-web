@@ -1,8 +1,8 @@
 :root {
-    --bg-color: #0d0d0d;
-    --text-color: #f0f0f0;
-    --accent-color: #4a90e2;
-    --accent-glow: rgba(74, 144, 226, 0.5);
+    --bg-color: #120e0a;
+    --text-color: #e6c17a;
+    --accent-color: #8b5a2b;
+    --accent-glow: rgba(230, 193, 122, 0.4);
     --error-color: #e74c3c;
 }
 
@@ -13,8 +13,9 @@
 }
 
 body {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Cinzel', 'Inter', serif;
     background-color: var(--bg-color);
+    background-image: radial-gradient(circle at center, #2a1f16 0%, #120e0a 100%);
     color: var(--text-color);
     display: flex;
     justify-content: center;
@@ -29,6 +30,17 @@ body {
     padding: 20px;
     text-align: center;
     position: relative;
+    z-index: 10;
+}
+
+/* Add a subtle Adinkra pattern background overlay to the whole body */
+body::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l30 30-30 30L0 30z' fill='%23e6c17a' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+    z-index: 0;
+    pointer-events: none;
 }
 
 .screen {
@@ -52,12 +64,13 @@ h1 {
     font-size: 2.5rem;
     font-weight: 800;
     margin-bottom: 10px;
-    letter-spacing: -1px;
+    letter-spacing: 2px;
+    text-shadow: 0 2px 10px rgba(230, 193, 122, 0.3);
 }
 
 p {
     font-size: 1rem;
-    color: #aaaaaa;
+    color: #bfa168;
     margin-bottom: 30px;
     line-height: 1.5;
 }
@@ -74,36 +87,39 @@ input[type="email"] {
     width: 100%;
     padding: 15px;
     border-radius: 8px;
-    border: 1px solid #333;
-    background-color: #1a1a1a;
-    color: #fff;
+    border: 1px solid #4a3320;
+    background-color: rgba(20, 15, 10, 0.8);
+    color: #e6c17a;
     font-size: 1rem;
     outline: none;
-    transition: border-color 0.3s;
+    transition: border-color 0.3s, box-shadow 0.3s;
 }
 
 input[type="email"]:focus {
-    border-color: var(--accent-color);
+    border-color: var(--text-color);
+    box-shadow: 0 0 10px var(--accent-glow);
 }
 
 .glow-button {
     width: 100%;
     padding: 15px;
     border-radius: 8px;
-    border: none;
-    background-color: var(--accent-color);
+    border: 1px solid #e6c17a;
+    background: linear-gradient(145deg, #8b5a2b, #5c3a18);
     color: #fff;
     font-size: 1rem;
-    font-weight: 600;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
     cursor: pointer;
-    box-shadow: 0 0 15px var(--accent-glow);
-    transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+    box-shadow: 0 4px 15px rgba(139, 90, 43, 0.5);
+    transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
 }
 
 .glow-button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 0 25px var(--accent-glow);
-    background-color: #5da0f2;
+    box-shadow: 0 6px 20px var(--accent-glow);
+    filter: brightness(1.2);
 }
 
 .glow-button:active {
@@ -125,56 +141,71 @@ input[type="email"]:focus {
     margin-bottom: 50px;
     font-size: 1.5rem;
     font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: #e6c17a;
 }
 
 .scene {
-    width: 100px;
-    height: 100px;
-    perspective: 400px;
+    width: 120px;
+    height: 120px;
+    perspective: 600px;
     margin: 40px auto 80px;
 }
 
 .cube {
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
     position: relative;
     transform-style: preserve-3d;
-    transform: translateZ(-50px) rotateX(0deg) rotateY(0deg);
-    transition: transform 3s cubic-bezier(0.25, 1, 0.5, 1); /* Smooth easing for the roll */
+    transform: translateZ(-60px) rotateX(0deg) rotateY(0deg);
+    transition: transform 3s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .cube.spinning {
-    /* Fast infinite spin during loading */
-    animation: spinInfinite 0.5s linear infinite;
+    animation: spinInfinite 0.6s linear infinite;
 }
 
 @keyframes spinInfinite {
-    0% { transform: translateZ(-50px) rotateX(0deg) rotateY(0deg); }
-    100% { transform: translateZ(-50px) rotateX(360deg) rotateY(360deg); }
+    0% { transform: translateZ(-60px) rotateX(0deg) rotateY(0deg); }
+    100% { transform: translateZ(-60px) rotateX(360deg) rotateY(360deg); }
 }
 
 .cube__face {
     position: absolute;
-    width: 100px;
-    height: 100px;
-    background: var(--accent-color);
-    border: 2px solid #ffffff;
-    border-radius: 10px;
+    width: 120px;
+    height: 120px;
+    /* Ancient wood/stone texture */
+    background: radial-gradient(circle at 30% 30%, #a67b4b, #5c3a18);
+    border: 3px solid #e6c17a;
+    border-radius: 15px;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 40px;
-    font-weight: bold;
-    color: white;
-    box-shadow: inset 0 0 20px rgba(0,0,0,0.2), 0 0 10px var(--accent-glow);
+    font-size: 50px;
+    font-weight: 800;
+    color: #ffe6b3;
+    font-family: 'Cinzel', serif;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8), 0 0 10px rgba(230, 193, 122, 0.5);
+    box-shadow: inset 0 0 30px rgba(0,0,0,0.6), 0 0 15px rgba(230, 193, 122, 0.3);
 }
 
-.cube__face--front  { transform: rotateY(  0deg) translateZ(50px); }
-.cube__face--right  { transform: rotateY( 90deg) translateZ(50px); }
-.cube__face--back   { transform: rotateY(180deg) translateZ(50px); }
-.cube__face--left   { transform: rotateY(-90deg) translateZ(50px); }
-.cube__face--top    { transform: rotateX( 90deg) translateZ(50px); }
-.cube__face--bottom { transform: rotateX(-90deg) translateZ(50px); }
+/* Add inner decorative border to faces */
+.cube__face::after {
+    content: '';
+    position: absolute;
+    top: 8px; left: 8px; right: 8px; bottom: 8px;
+    border: 1px dashed rgba(230, 193, 122, 0.4);
+    border-radius: 8px;
+    pointer-events: none;
+}
+
+.cube__face--front  { transform: rotateY(  0deg) translateZ(60px); }
+.cube__face--right  { transform: rotateY( 90deg) translateZ(60px); }
+.cube__face--back   { transform: rotateY(180deg) translateZ(60px); }
+.cube__face--left   { transform: rotateY(-90deg) translateZ(60px); }
+.cube__face--top    { transform: rotateX( 90deg) translateZ(60px); }
+.cube__face--bottom { transform: rotateX(-90deg) translateZ(60px); }
 
 /* Result Popup */
 .popup {
