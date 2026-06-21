@@ -15,6 +15,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const email = emailInput.value.trim();
         if (!email) return;
 
+        // Read URL params
+        const urlParams = new URLSearchParams(window.location.search);
+        const basePrice = parseInt(urlParams.get('basePrice')) || 1;
+        const eventId = urlParams.get('eventId') || 'listening-party-june-2';
+
+        if (localStorage.getItem(`has_rolled_${eventId}_${email}`)) {
+            errorMessage.innerText = "You have already rolled the dice! Please check your previous checkout link or contact support.";
+            errorMessage.className = 'error-visible';
+            return;
+        }
+
         // Hide error
         errorMessage.className = 'error-hidden';
         errorMessage.innerText = '';
@@ -27,11 +38,6 @@ document.addEventListener('DOMContentLoaded', () => {
         cube.classList.add('spinning');
 
         try {
-            // Read URL params for basePrice and eventId
-            const urlParams = new URLSearchParams(window.location.search);
-            const basePrice = parseInt(urlParams.get('basePrice')) || 1;
-            const eventId = urlParams.get('eventId') || 'listening-party-june-2';
-
             const response = await fetch('/api/roll', {
                 method: 'POST',
                 headers: {
@@ -99,6 +105,9 @@ document.addEventListener('DOMContentLoaded', () => {
                             }]);
                         } catch(e) { console.warn("Stats Sync Failed", e); }
                     }
+                    
+                    // Save to local storage to prevent frontend re-rolling
+                    localStorage.setItem(`has_rolled_${eventId}_${email}`, 'true');
                     
                     resultAmount.innerText = data.rolled * basePrice;
                     checkoutBtn.href = data.checkout_url;

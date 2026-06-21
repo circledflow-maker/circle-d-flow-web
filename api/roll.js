@@ -45,7 +45,12 @@ module.exports = async (req, res) => {
                 rolledValue = parseInt(existingRoll);
             }
             if (!rolledValue || isNaN(rolledValue) || rolledValue < 1 || rolledValue > 6) {
-                rolledValue = Math.floor(Math.random() * 6) + 1;
+                // Generate a deterministic roll based on email to prevent re-rolling
+                const crypto = require('crypto');
+                const salt = process.env.STRIPE_SECRET_KEY || 'default_salt';
+                const hash = crypto.createHash('md5').update(email.toLowerCase().trim() + eventId + salt).digest('hex');
+                const hashInt = parseInt(hash.substring(0, 8), 16);
+                rolledValue = (hashInt % 6) + 1;
             }
             
             if (dbClient) {
