@@ -101,9 +101,10 @@
                         <h3 class="text-xs uppercase tracking-widest text-[#00ffcc] font-bold mb-3 flex items-center gap-2">
                             <span class="material-symbols-outlined text-sm">visibility</span> The Vision
                         </h3>
-                        <p id="event-description" class="text-sm italic text-white/80 font-serif leading-relaxed">
+                        <p id="event-description" class="text-sm italic text-white/80 font-serif leading-relaxed line-clamp-3 transition-all duration-300">
                             Loading the soul of the event...
                         </p>
+                        <button id="vision-more-btn" onclick="toggleVision()" class="text-[10px] uppercase tracking-widest text-[#00ffcc] font-bold mt-2 hidden">+ More</button>
                     </div>
                 </div>
 
@@ -309,7 +310,13 @@
             `;
             
             if (event.description) {
-                document.getElementById('event-description').innerText = `"${event.description}"`;
+                const descEl = document.getElementById('event-description');
+                descEl.innerText = `"${event.description}"`;
+                setTimeout(() => {
+                    if (descEl.scrollHeight > descEl.clientHeight) {
+                        document.getElementById('vision-more-btn').classList.remove('hidden');
+                    }
+                }, 100);
             }
 
             if (event.flyer_url) {
@@ -466,6 +473,18 @@
                 menu.classList.remove('-translate-x-full');
             } else {
                 menu.classList.add('-translate-x-full');
+            }
+        }
+
+        function toggleVision() {
+            const el = document.getElementById('event-description');
+            const btn = document.getElementById('vision-more-btn');
+            if(el.classList.contains('line-clamp-3')) {
+                el.classList.remove('line-clamp-3');
+                btn.innerText = '- Less';
+            } else {
+                el.classList.add('line-clamp-3');
+                btn.innerText = '+ More';
             }
         }
 

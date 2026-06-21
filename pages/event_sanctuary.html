@@ -206,28 +206,30 @@
         
         <!-- SECTION 1: THE CANVAS -->
         <div class="swipe-section flex flex-col items-center justify-center text-center">
-            <div class="w-full max-w-sm aspect-[4/5] bg-black/50 border border-white/10 rounded-xl mb-6 flex flex-col items-center justify-center relative overflow-hidden group">
-                <span class="material-symbols-outlined text-6xl text-white/10 mb-2 group-hover:scale-110 transition-transform">add_photo_alternate</span>
-                <p class="text-white/30 text-sm">No Artifact Provided</p>
-                <!-- Image would go here -->
-            </div>
-            
-            <div class="w-full max-w-sm space-y-4 relative mt-4">
-                <!-- Flyer options are temporarily hidden, use the buttons inside the canvas area or below -->
-                <input type="file" id="artifact-upload" accept="image/*" class="hidden" onchange="handleFileUpload(event)">
-                <div class="flex gap-2">
-                    <button onclick="document.getElementById('artifact-upload').click()" class="flex-1 py-3 bg-white/5 border gold-border text-white rounded-lg hover:bg-white/10 transition flex flex-col items-center justify-center gap-1">
-                        <span class="material-symbols-outlined gold-accent">upload_file</span>
-                        <span class="text-[10px] uppercase tracking-widest">Upload</span>
-                    </button>
-                    <button onclick="handleGoogleDriveUpload()" class="flex-1 py-3 bg-[#4285F4]/10 border border-[#4285F4]/50 text-[#4285F4] rounded-lg hover:bg-[#4285F4]/20 transition flex flex-col items-center justify-center gap-1">
-                        <span class="material-symbols-outlined">add_to_drive</span>
-                        <span class="text-[10px] uppercase tracking-widest">Drive</span>
-                    </button>
-                    <button onclick="openForgeModal()" class="flex-1 py-3 bg-black border border-white/20 text-white/70 rounded-lg hover:bg-white/5 transition flex flex-col items-center justify-center gap-1">
-                        <span class="material-symbols-outlined">auto_awesome</span>
-                        <span class="text-[10px] uppercase tracking-widest">Forge</span>
-                    </button>
+            <div class="w-full max-w-sm aspect-[4/5] bg-black/50 border border-white/10 rounded-xl mb-6 relative overflow-hidden group">
+                <!-- Image Layer -->
+                <div id="canvas-image-layer" class="absolute inset-0 flex flex-col items-center justify-center">
+                    <span class="material-symbols-outlined text-6xl text-white/10 mb-2 group-hover:scale-110 transition-transform">add_photo_alternate</span>
+                    <p class="text-white/30 text-sm">No Artifact Provided</p>
+                </div>
+                
+                <!-- Options Layer -->
+                <div id="canvas-options-layer" class="absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-black/90 via-black/50 to-transparent flex flex-col justify-end z-10">
+                    <input type="file" id="artifact-upload" accept="image/*" class="hidden" onchange="handleFileUpload(event)">
+                    <div class="flex gap-2 w-full">
+                        <button onclick="document.getElementById('artifact-upload').click()" class="flex-1 py-3 bg-white/10 backdrop-blur-md border border-[#d4af37]/50 text-white rounded-lg hover:bg-white/20 transition flex flex-col items-center justify-center gap-1 shadow-lg">
+                            <span class="material-symbols-outlined text-[#d4af37]">upload_file</span>
+                            <span class="text-[10px] uppercase tracking-widest font-bold">Upload</span>
+                        </button>
+                        <button onclick="handleGoogleDriveUpload()" class="flex-1 py-3 bg-[#4285F4]/20 backdrop-blur-md border border-[#4285F4]/50 text-[#4285F4] rounded-lg hover:bg-[#4285F4]/30 transition flex flex-col items-center justify-center gap-1 shadow-lg">
+                            <span class="material-symbols-outlined">add_to_drive</span>
+                            <span class="text-[10px] uppercase tracking-widest font-bold">Drive</span>
+                        </button>
+                        <button onclick="openForgeModal()" class="flex-1 py-3 bg-black/50 backdrop-blur-md border border-[#00ffcc]/50 text-[#00ffcc] rounded-lg hover:bg-black/70 transition flex flex-col items-center justify-center gap-1 shadow-lg">
+                            <span class="material-symbols-outlined">auto_awesome</span>
+                            <span class="text-[10px] uppercase tracking-widest font-bold">Forge</span>
+                        </button>
+                    </div>
                 </div>
             </div>
             
@@ -589,8 +591,8 @@
         }
 
         function setCanvasImage(url) {
-            const canvasDiv = document.querySelector('.aspect-\\[4\\/5\\]');
-            canvasDiv.innerHTML = `
+            const imageLayer = document.getElementById('canvas-image-layer');
+            imageLayer.innerHTML = `
                 <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('${url}');"></div>
                 <div class="absolute inset-0 border-2 border-gold-accent opacity-50"></div>
             `;
