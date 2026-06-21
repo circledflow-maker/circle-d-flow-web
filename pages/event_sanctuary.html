@@ -232,10 +232,9 @@
                 <h3 class="text-xs uppercase tracking-widest text-[#00ffcc] font-bold mb-2 flex items-center gap-2">
                     <span class="material-symbols-outlined text-sm">visibility</span> The Vision
                 </h3>
-                <p id="event-vision-display" class="text-sm italic text-white/80 font-serif leading-relaxed line-clamp-3 transition-all duration-300">
+                <p id="event-vision-display" class="text-sm italic text-white/80 font-serif leading-relaxed transition-all duration-300">
                     "Loading the soul of the event..."
                 </p>
-                <button id="vision-more-btn" onclick="toggleVision()" class="text-[10px] uppercase tracking-widest text-[#00ffcc] font-bold mt-2 hidden">+ More</button>
             </div>
             <div class="h-20"></div>
         </div>
@@ -276,7 +275,7 @@
 
             <div class="space-y-4">
                 <div class="bg-black/40 p-4 rounded-lg border border-white/5">
-                    <h3 class="text-sm font-bold text-[#00ffcc] mb-2 uppercase tracking-widest">Early Bird</h3>
+                    <input type="text" id="ticket-early-name" class="w-full bg-transparent border-b border-[#00ffcc]/30 text-sm font-bold text-[#00ffcc] mb-3 pb-1 uppercase tracking-widest outline-none focus:border-[#00ffcc]" value="Early Bird">
                     <div class="flex items-center justify-between gap-2">
                         <div class="flex-1">
                             <label class="text-[10px] text-white/50 uppercase block mb-1">Price (€)</label>
@@ -290,7 +289,7 @@
                 </div>
 
                 <div class="bg-black/40 p-4 rounded-lg border border-white/5">
-                    <h3 class="text-sm font-bold text-[#d4af37] mb-2 uppercase tracking-widest">Regular Flow</h3>
+                    <input type="text" id="ticket-regular-name" class="w-full bg-transparent border-b border-[#d4af37]/30 text-sm font-bold text-[#d4af37] mb-3 pb-1 uppercase tracking-widest outline-none focus:border-[#d4af37]" value="Regular Flow">
                     <div class="flex items-center justify-between gap-2">
                         <div class="flex-1">
                             <label class="text-[10px] text-white/50 uppercase block mb-1">Price (€)</label>
@@ -964,8 +963,11 @@
         }
 
         async function saveTickets() {
+            const earlyName = document.getElementById('ticket-early-name').value;
             const earlyPrice = document.getElementById('ticket-early-price').value;
             const earlyQty = document.getElementById('ticket-early-qty').value;
+            
+            const regularName = document.getElementById('ticket-regular-name').value;
             const regularPrice = document.getElementById('ticket-regular-price').value;
             const regularQty = document.getElementById('ticket-regular-qty').value;
             
@@ -977,8 +979,8 @@
                     // Storing tickets inside 'needs' JSONB for simplicity since we don't have a dedicated tickets table structure visible.
                     let needs = window.currentEventData.needs || {};
                     needs.tickets = {
-                        earlyBird: { price: earlyPrice, qty: earlyQty },
-                        regular: { price: regularPrice, qty: regularQty }
+                        ticket1: { name: earlyName, price: earlyPrice, qty: earlyQty },
+                        ticket2: { name: regularName, price: regularPrice, qty: regularQty }
                     };
                     await window.supabaseClient.from('quests').update({ needs: needs }).eq('id', currentEventId);
                     window.currentEventData.needs = needs;
