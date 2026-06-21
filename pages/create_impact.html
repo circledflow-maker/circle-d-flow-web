@@ -336,11 +336,11 @@
                 participants.forEach(p => {
                     const name = p.name || 'Unknown Soul';
                     const role = p.role || 'Participant';
-                    const imageHtml = p.image ? `<img src="${p.image}" class="w-full h-full object-cover">` : `<div class="absolute inset-0 flex items-center justify-center text-white/50 text-xs font-bold tracking-widest">FLOW</div>`;
+                    const imageHtml = p.imgUrl ? `<img src="${p.imgUrl}" class="w-full h-full object-cover">` : `<div class="absolute inset-0 flex items-center justify-center text-white/50 text-xs font-bold tracking-widest">FLOW</div>`;
                     
                     const encodedBio = encodeURIComponent(p.bio || '');
-                    const encodedSocial = encodeURIComponent(p.social || '');
-                    const encodedImg = encodeURIComponent(p.image || '');
+                    const encodedSocial = encodeURIComponent(p.socialLink || '');
+                    const encodedImg = encodeURIComponent(p.imgUrl || '');
 
                     // Generate a color based on role
                     let color = 'from-gray-500 to-gray-700';
