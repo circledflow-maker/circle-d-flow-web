@@ -80,6 +80,7 @@ class FloweeAgent {
             // LANDING / GATEWAY
             "index.html": [
                 { text: "Welcome, Voyager. This is the Gateway to the Circle. Hold to grow.", target: "#canvas-container" },
+                { text: "Swipe down to explore more information about our network.", target: "body" },
                 { text: "Choose your Language at the top right to harmonize the frequency.", target: ".lang-selector" },
                 { text: "Discover the Trinity by navigating the 3D space.", target: "#title-overlay" }
             ],
@@ -567,7 +568,7 @@ class FloweeAgent {
 
         if (currentState === 'step1_arrival') {
             setTimeout(() => {
-                this.talk(true, "Bem-vindo to the Singularity. I am Flowee, the navigator of this frequency. Are you here to explore our world, or are you returning to the core?", "guide", [
+                this.talk(true, "Bem-vindo to the Singularity. I am Flowee, the navigator of this frequency. (Tip: Swipe down for more info!)", "guide", [
                     { label: "Explore (Visitor)", action: () => { 
                         localStorage.setItem('cdf_landing_flowee_state', 'step2_crossroads');
                         this.showCrossroads(); 

@@ -13,6 +13,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
         rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 
 <body class="bg-[#0F0A13] text-white min-h-screen flex items-center justify-center p-4 overflow-hidden">
@@ -56,24 +57,19 @@
             family.</p>
 
         <div class="bg-[#1a1625] p-6 rounded-xl border border-white/5 mb-8 text-left">
-            <h3 class="text-xs font-bold uppercase tracking-widest text-[#9A4DFF] mb-2">Next Steps</h3>
-            <ul class="space-y-3 text-sm text-gray-300">
-                <li class="flex items-center gap-3">
-                    <span
-                        class="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center text-xs font-bold">1</span>
-                    Access your Dashboard
-                </li>
-                <li class="flex items-center gap-3">
-                    <span
-                        class="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center text-xs font-bold">2</span>
-                    Set up your Creator Profile
-                </li>
-                <li class="flex items-center gap-3">
-                    <span
-                        class="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center text-xs font-bold">3</span>
-                    Start Listing Items or Events
-                </li>
-            </ul>
+            <h3 class="text-xs font-bold uppercase tracking-widest text-[#9A4DFF] mb-4 text-center">Your Event Ticket</h3>
+            <div id="ticket-loading" class="text-center text-sm text-gray-400 py-4">Verifying your ticket...</div>
+            <div id="ticket-container" class="hidden flex flex-col items-center justify-center space-y-4">
+                <div id="qrcode" class="bg-white p-2 rounded"></div>
+                <div class="text-center">
+                    <p id="ticket-name" class="font-bold text-[#d4af37] text-lg uppercase"></p>
+                    <p id="ticket-email" class="text-sm text-gray-300"></p>
+                    <p class="text-[10px] text-gray-500 mt-2 uppercase tracking-widest">Please present this code at the entrance</p>
+                </div>
+            </div>
+            <div id="ticket-error" class="hidden text-center text-red-400 text-sm py-4">
+                Could not retrieve your ticket. Please contact support.
+            </div>
         </div>
 
         <a href="dashboard.html"
@@ -96,11 +92,40 @@
         // Upgrade User Locally
         const params = new URLSearchParams(window.location.search);
         const plan = params.get('plan');
+        const sessionId = params.get('session_id');
 
         if (plan && window.Gamification) {
-            // Apply membership logic locally for immediate gratification
-            // In a real app, this would verify the Stripe Session ID first
             window.Gamification.setMembership(plan);
+        }
+
+        if (sessionId) {
+            fetch(`/api/verify-session?session_id=${sessionId}`)
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('ticket-loading').classList.add('hidden');
+                    if (data.success && data.qrData) {
+                        document.getElementById('ticket-container').classList.remove('hidden');
+                        document.getElementById('ticket-container').classList.add('flex');
+                        document.getElementById('ticket-name').innerText = data.ticketName || 'Circle D Flow Ticket';
+                        document.getElementById('ticket-email').innerText = data.email || '';
+                        
+                        new QRCode(document.getElementById("qrcode"), {
+                            text: data.qrData,
+                            width: 150,
+                            height: 150,
+                            colorDark : "#000000",
+                            colorLight : "#ffffff",
+                            correctLevel : QRCode.CorrectLevel.H
+                        });
+                    } else {
+                        document.getElementById('ticket-error').classList.remove('hidden');
+                    }
+                })
+                .catch(err => {
+                    console.error("Ticket verification error:", err);
+                    document.getElementById('ticket-loading').classList.add('hidden');
+                    document.getElementById('ticket-error').classList.remove('hidden');
+                });
         }
     </script>
     <!-- PHOENIX-EE CORE AGENTS -->

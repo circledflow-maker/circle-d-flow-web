@@ -161,6 +161,7 @@
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     <script src="../js/api_config.js"></script>
     <script src="../js/agents/supabase_client.js?v=4.1"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -174,6 +175,7 @@
             <button onclick="window.location.href='quest_map.html'" class="material-symbols-outlined text-white/50 hover:text-[#d4af37]">arrow_back</button>
             <h1 id="event-title" class="font-serif text-xl tracking-widest uppercase truncate max-w-[150px] mx-2">C4C Event</h1>
             <div class="flex items-center gap-3">
+                <button onclick="openScannerModal()" class="material-symbols-outlined text-[#d4af37] hover:text-white transition">qr_code_scanner</button>
                 <button onclick="openAnalyticsModal()" class="material-symbols-outlined text-[#00ffcc] hover:text-white transition">analytics</button>
                 <button onclick="toggleEventSwitcher()" class="material-symbols-outlined text-white/50 hover:text-white transition">more_vert</button>
             </div>
@@ -1175,12 +1177,132 @@
         }
 
         // --- Analytics Modal Logic ---
-        function openAnalyticsModal() {
+        async function openAnalyticsModal() {
             document.getElementById('analytics-modal').classList.remove('hidden');
+            document.getElementById('analytics-status').innerText = "Syncing network metrics...";
+            
+            if(window.supabaseClient && currentEventId) {
+                try {
+                    const { data, error } = await window.supabaseClient
+                        .from('user_rolls')
+                        .select('scanned')
+                        .eq('event_id', currentEventId);
+                        
+                    if (error) throw error;
+                    
+                    const totalTickets = data.length;
+                    const totalScans = data.filter(r => r.scanned).length;
+                    
+                    document.getElementById('analytics-tickets').innerText = totalTickets;
+                    document.getElementById('analytics-scans').innerText = totalScans;
+                    
+                    const resonance = totalTickets > 0 ? Math.round((totalScans / totalTickets) * 100) : 0;
+                    document.getElementById('analytics-bar').style.width = resonance + '%';
+                    
+                    document.getElementById('analytics-status').innerText = "Live Network Sync Active.";
+                } catch(e) {
+                    console.error("Analytics fetch error:", e);
+                    document.getElementById('analytics-status').innerText = "Error syncing metrics.";
+                }
+            } else {
+                document.getElementById('analytics-status').innerText = "Simulated metrics active (No DB Connection).";
+            }
         }
 
         function closeAnalyticsModal() {
             document.getElementById('analytics-modal').classList.add('hidden');
+        }
+
+        // --- QR Scanner Logic ---
+        let html5QrcodeScanner = null;
+        function openScannerModal() {
+            document.getElementById('scanner-modal').classList.remove('hidden');
+            document.getElementById('scan-result').classList.add('hidden');
+            
+            if (!html5QrcodeScanner) {
+                html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: {width: 250, height: 250} }, false);
+                html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+            }
+        }
+
+        function closeScannerModal() {
+            document.getElementById('scanner-modal').classList.add('hidden');
+            if (html5QrcodeScanner) {
+                html5QrcodeScanner.clear().catch(error => {
+                    console.error("Failed to clear html5QrcodeScanner. ", error);
+                });
+                html5QrcodeScanner = null;
+            }
+        }
+
+        async function onScanSuccess(decodedText, decodedResult) {
+            if (html5QrcodeScanner) {
+                html5QrcodeScanner.clear();
+                html5QrcodeScanner = null;
+            }
+            
+            const scanResultDiv = document.getElementById('scan-result');
+            const scanIcon = document.getElementById('scan-icon');
+            const scanMessage = document.getElementById('scan-message');
+            const scanDetails = document.getElementById('scan-details');
+            
+            scanResultDiv.classList.remove('hidden');
+            scanResultDiv.className = 'mt-4 p-4 rounded-xl text-center border'; // Reset styling
+            
+            scanIcon.innerText = "hourglass_empty";
+            scanIcon.className = "material-symbols-outlined text-4xl mb-2 text-[#d4af37] animate-spin";
+            scanMessage.innerText = "Verifying...";
+            scanMessage.className = "font-bold text-[#d4af37]";
+            scanDetails.innerText = "";
+            
+            try {
+                const ticketData = JSON.parse(decodedText);
+                if (!ticketData.email || !ticketData.eventId) throw new Error("Invalid ticket format");
+                
+                if (ticketData.eventId !== currentEventId) {
+                    throw new Error("Ticket is for a different event!");
+                }
+                
+                if (window.supabaseClient) {
+                    const { data, error } = await window.supabaseClient.from('user_rolls')
+                        .select('id, scanned, ticket_name')
+                        .eq('email', ticketData.email)
+                        .eq('event_id', ticketData.eventId)
+                        .single();
+                        
+                    if (error || !data) throw new Error("Ticket not found in database");
+                    if (data.scanned) {
+                        // Already scanned!
+                        scanIcon.innerText = "warning";
+                        scanIcon.className = "material-symbols-outlined text-4xl mb-2 text-red-500";
+                        scanMessage.innerText = "Ticket Already Used!";
+                        scanMessage.className = "font-bold text-red-500";
+                        scanDetails.innerText = `Email: ${ticketData.email}`;
+                    } else {
+                        // Valid, mark as scanned
+                        await window.supabaseClient.from('user_rolls').update({ scanned: true }).eq('id', data.id);
+                        
+                        scanIcon.innerText = "check_circle";
+                        scanIcon.className = "material-symbols-outlined text-4xl mb-2 text-green-500";
+                        scanMessage.innerText = "Access Granted";
+                        scanMessage.className = "font-bold text-green-500";
+                        scanDetails.innerText = `${data.ticket_name || 'Ticket'} verified for ${ticketData.email}`;
+                    }
+                } else {
+                    throw new Error("No database connection");
+                }
+            } catch (err) {
+                console.error("Scan error:", err);
+                scanIcon.innerText = "error";
+                scanIcon.className = "material-symbols-outlined text-4xl mb-2 text-red-500";
+                scanMessage.innerText = "Invalid Ticket";
+                scanMessage.className = "font-bold text-red-500";
+                scanDetails.innerText = err.message;
+            }
+        }
+
+        function onScanFailure(error) {
+            // handle scan failure, usually better to ignore and keep scanning
         }
 
         function toggleDriveInput() {
@@ -1570,21 +1692,43 @@
             <div class="grid grid-cols-2 gap-4 mb-6">
                 <div class="bg-black border border-white/10 p-4 rounded-xl text-center">
                     <p class="text-[10px] uppercase tracking-widest text-white/50 mb-1">Tickets Online</p>
-                    <p class="text-3xl font-black text-[#d4af37]">42</p>
+                    <p class="text-3xl font-black text-[#d4af37]" id="analytics-tickets">0</p>
                 </div>
                 <div class="bg-black border border-white/10 p-4 rounded-xl text-center">
                     <p class="text-[10px] uppercase tracking-widest text-white/50 mb-1">Impact Scans</p>
-                    <p class="text-3xl font-black text-white">128</p>
+                    <p class="text-3xl font-black text-white" id="analytics-scans">0</p>
                 </div>
                 <div class="bg-black border border-white/10 p-4 rounded-xl text-center col-span-2">
                     <p class="text-[10px] uppercase tracking-widest text-white/50 mb-1">Network Resonance</p>
                     <div class="w-full bg-white/5 h-2 rounded-full overflow-hidden mt-2">
-                        <div class="bg-gradient-to-r from-[#00ffcc] to-[#d4af37] w-[75%] h-full animate-pulse"></div>
+                        <div id="analytics-bar" class="bg-gradient-to-r from-[#00ffcc] to-[#d4af37] w-[0%] h-full transition-all duration-1000"></div>
                     </div>
                 </div>
             </div>
             
-            <p class="text-center text-[10px] italic text-white/30">Analytics currently operating in simulated environment.</p>
+            <p class="text-center text-[10px] italic text-[#00ffcc]" id="analytics-status">Live Network Sync Active.</p>
+        </div>
+    </div>
+
+    <!-- QR Scanner Modal -->
+    <div id="scanner-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[100] hidden flex flex-col items-center justify-center p-4">
+        <div class="bg-[#111] text-white p-6 rounded-2xl border border-[#d4af37]/30 w-full max-w-md relative shadow-[0_0_30px_rgba(212,175,55,0.15)]">
+            <button onclick="closeScannerModal()" class="absolute top-4 right-4 text-white/50 hover:text-[#d4af37]">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+            
+            <h3 class="font-serif text-2xl text-[#d4af37] mb-1 uppercase tracking-widest flex items-center gap-2">
+                <span class="material-symbols-outlined">qr_code_scanner</span> Scan Ticket
+            </h3>
+            <p class="text-xs text-white/50 mb-6 uppercase tracking-widest">Verify Attendee Access</p>
+            
+            <div id="reader" class="w-full bg-black border border-white/10 rounded-xl overflow-hidden min-h-[300px]"></div>
+            
+            <div id="scan-result" class="mt-4 p-4 rounded-xl hidden text-center border">
+                <span class="material-symbols-outlined text-4xl mb-2" id="scan-icon"></span>
+                <p id="scan-message" class="font-bold"></p>
+                <p id="scan-details" class="text-xs text-white/50 mt-1"></p>
+            </div>
         </div>
     </div>
 

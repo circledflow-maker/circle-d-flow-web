@@ -77,7 +77,7 @@ module.exports = async (req, res) => {
                 quantity: 1,
             }],
             mode: 'payment',
-            success_url: `${host}/success.html?event=${eventId || ''}`,
+            success_url: `${host}/pages/success.html?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${host}/pages/bantaba.html`,
             customer_email: email,
             metadata: {

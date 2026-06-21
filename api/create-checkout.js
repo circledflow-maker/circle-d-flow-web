@@ -31,7 +31,7 @@ export default async function handler(req, res) {
         },
       ],
       mode: 'payment',
-      success_url: `${req.headers.origin}/pages/create_impact?id=${eventId}&success=true`,
+      success_url: `${req.headers.origin}/pages/success.html?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${req.headers.origin}/pages/create_impact?id=${eventId}&canceled=true`,
       metadata: {
         eventId: eventId,
