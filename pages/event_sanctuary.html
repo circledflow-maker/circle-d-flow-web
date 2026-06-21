@@ -213,28 +213,32 @@
             </div>
             
             <div class="w-full max-w-sm space-y-4 relative mt-4">
+                <!-- Flyer options are temporarily hidden, use the buttons inside the canvas area or below -->
                 <input type="file" id="artifact-upload" accept="image/*" class="hidden" onchange="handleFileUpload(event)">
-                <button onclick="document.getElementById('artifact-upload').click()" class="w-full py-4 bg-white/5 border gold-border text-white rounded-lg hover:bg-white/10 transition flex items-center justify-center gap-2">
-                    <span class="material-symbols-outlined gold-accent">upload_file</span>
-                    Upload Custom Artifact <span class="text-xs gold-accent">(+50 EXP)</span>
-                </button>
-                <button onclick="handleGoogleDriveUpload()" class="w-full py-4 bg-[#4285F4]/10 border border-[#4285F4]/50 text-[#4285F4] rounded-lg hover:bg-[#4285F4]/20 transition flex items-center justify-center gap-2">
-                    <span class="material-symbols-outlined">add_to_drive</span>
-                    Import from Google Drive <span class="text-xs opacity-70">(+50 EXP)</span>
-                </button>
-                <button onclick="openForgeModal()" class="w-full py-4 bg-black border border-white/20 text-white/70 rounded-lg hover:bg-white/5 transition flex items-center justify-center gap-2">
-                    <span class="material-symbols-outlined">auto_awesome</span>
-                    Auto-Generate via Forge <span class="text-xs text-white/40">(+20 EXP)</span>
-                </button>
+                <div class="flex gap-2">
+                    <button onclick="document.getElementById('artifact-upload').click()" class="flex-1 py-3 bg-white/5 border gold-border text-white rounded-lg hover:bg-white/10 transition flex flex-col items-center justify-center gap-1">
+                        <span class="material-symbols-outlined gold-accent">upload_file</span>
+                        <span class="text-[10px] uppercase tracking-widest">Upload</span>
+                    </button>
+                    <button onclick="handleGoogleDriveUpload()" class="flex-1 py-3 bg-[#4285F4]/10 border border-[#4285F4]/50 text-[#4285F4] rounded-lg hover:bg-[#4285F4]/20 transition flex flex-col items-center justify-center gap-1">
+                        <span class="material-symbols-outlined">add_to_drive</span>
+                        <span class="text-[10px] uppercase tracking-widest">Drive</span>
+                    </button>
+                    <button onclick="openForgeModal()" class="flex-1 py-3 bg-black border border-white/20 text-white/70 rounded-lg hover:bg-white/5 transition flex flex-col items-center justify-center gap-1">
+                        <span class="material-symbols-outlined">auto_awesome</span>
+                        <span class="text-[10px] uppercase tracking-widest">Forge</span>
+                    </button>
+                </div>
             </div>
             
             <div class="w-full max-w-sm mt-8 text-left bg-black/40 p-4 rounded-xl border border-[#00ffcc]/30 shadow-[0_0_15px_rgba(0,255,204,0.1)]">
                 <h3 class="text-xs uppercase tracking-widest text-[#00ffcc] font-bold mb-2 flex items-center gap-2">
                     <span class="material-symbols-outlined text-sm">visibility</span> The Vision
                 </h3>
-                <p id="event-vision-display" class="text-sm italic text-white/80 font-serif leading-relaxed transition-all duration-300">
+                <p id="event-vision-display" class="text-sm italic text-white/80 font-serif leading-relaxed line-clamp-3 transition-all duration-300">
                     "Loading the soul of the event..."
                 </p>
+                <button id="vision-more-btn" onclick="toggleVision()" class="text-[10px] uppercase tracking-widest text-[#00ffcc] font-bold mt-2">+ More</button>
             </div>
             <div class="h-20"></div>
         </div>
