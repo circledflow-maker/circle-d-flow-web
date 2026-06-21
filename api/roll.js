@@ -89,6 +89,7 @@ module.exports = async (req, res) => {
         return res.status(200).json({
             email: email,
             rolled: rolledValue,
+            alreadyRolled: !!(existingRoll && !fetchError),
             checkout_url: session.url
         });
 

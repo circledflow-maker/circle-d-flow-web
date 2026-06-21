@@ -72,14 +72,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 case 6: xRand = 180; yRand = 0; break;
             }
 
-            // Apply final rotation
-            cube.style.transform = `translateZ(-50px) rotateX(${xRand + extraSpins}deg) rotateY(${yRand + extraSpins}deg)`;
+            // If already rolled, no need to spin again
+            if(data.alreadyRolled) {
+                cube.style.transform = `translateZ(-50px) rotateX(${xRand}deg) rotateY(${yRand}deg)`;
+                resultText.innerText = `You already rolled a ${data.rolled}!`;
+                resultAmount.innerText = data.rolled * basePrice;
+                checkoutBtn.href = data.checkout_url;
+                cube.style.transform += ' scale(1.8)';
+                resultPopup.classList.remove('hidden');
+            } else {
+                // Apply final rotation for new roll
+                cube.style.transform = `translateZ(-50px) rotateX(${xRand + extraSpins}deg) rotateY(${yRand + extraSpins}deg)`;
 
-            // Wait for animation to finish (3s defined in CSS)
-            setTimeout(async () => {
-                if(data.alreadyRolled) {
-                    resultText.innerText = `You already rolled a ${data.rolled}!`;
-                } else {
+                // Wait for animation to finish (3s defined in CSS)
+                setTimeout(async () => {
                     resultText.innerText = `It's a ${data.rolled}!`;
                     
                     // SAVE TO SUPABASE STATS (Analytics)
@@ -93,16 +99,16 @@ document.addEventListener('DOMContentLoaded', () => {
                             }]);
                         } catch(e) { console.warn("Stats Sync Failed", e); }
                     }
-                } // Added missing closing brace for else block
-                
-                resultAmount.innerText = data.rolled * basePrice;
-                checkoutBtn.href = data.checkout_url;
-                
-                // Cinematic zoom in
-                cube.style.transform += ' scale(1.8)';
-                
-                resultPopup.classList.remove('hidden');
-            }, 3000);
+                    
+                    resultAmount.innerText = data.rolled * basePrice;
+                    checkoutBtn.href = data.checkout_url;
+                    
+                    // Cinematic zoom in
+                    cube.style.transform += ' scale(1.8)';
+                    
+                    resultPopup.classList.remove('hidden');
+                }, 3000);
+            }
 
         } catch (error) {
             console.error(error);
