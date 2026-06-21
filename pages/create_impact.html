@@ -69,18 +69,17 @@
                 <!-- Slide 1: Flyer & CTA -->
                 <div class="swiper-slide p-4 flex flex-col justify-center overflow-y-auto pb-24">
                     <!-- Flyer Container -->
-                    <div class="w-full aspect-[4/5] rounded-xl overflow-hidden mb-6 relative border border-white/10 shadow-2xl">
+                    <div class="w-full aspect-[4/5] rounded-xl overflow-hidden mb-4 relative border border-white/10 shadow-2xl">
                         <div id="flyer-image" class="absolute inset-0 bg-cover bg-center" style="background-image: url('../Assets/images/logo.png');"></div>
-                        <!-- Gradient Overlay -->
-                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
-                        
-                        <div class="absolute bottom-0 left-0 w-full p-4">
-                            <p class="text-xs gold-accent font-bold tracking-widest uppercase mb-1" id="event-type">Secret Gathering</p>
-                            <h2 class="font-serif text-3xl text-white uppercase leading-tight drop-shadow-lg" id="event-title">Loading...</h2>
-                            <div class="flex items-center gap-2 mt-2 text-white/80 text-sm">
-                                <span class="material-symbols-outlined text-sm">calendar_month</span>
-                                <span id="event-date">TBA</span>
-                            </div>
+                    </div>
+                    
+                    <!-- Title and Info -->
+                    <div class="w-full px-2 mb-6 text-center">
+                        <p class="text-xs gold-accent font-bold tracking-widest uppercase mb-1" id="event-type">Secret Gathering</p>
+                        <h2 class="font-serif text-3xl text-white uppercase leading-tight drop-shadow-lg" id="event-title">Loading...</h2>
+                        <div class="flex items-center justify-center gap-2 mt-2 text-white/80 text-sm">
+                            <span class="material-symbols-outlined text-sm">calendar_month</span>
+                            <span id="event-date">TBA</span>
                         </div>
                     </div>
 
@@ -390,6 +389,23 @@
                 const t = event.needs.tickets;
                 sheetTickets.innerHTML = '';
                 let hasTickets = false;
+                
+                // Dice Ticket
+                if (t.dice && t.dice.isDice) {
+                    sheetTickets.innerHTML += `
+                        <div onclick="window.location.href='../dice.html'" class="flex items-center justify-between p-4 bg-gradient-to-r from-[#ff00cc]/20 to-transparent border border-[#ff00cc]/30 rounded-xl cursor-pointer hover:bg-[#ff00cc]/10 transition group">
+                            <div class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-[#ff00cc] group-hover:animate-spin">casino</span>
+                                <div>
+                                    <p class="text-sm font-bold text-[#ff00cc] uppercase tracking-widest">${t.dice.name || 'Pay What You Dice'}</p>
+                                    <p class="text-xs text-white/50 mt-1">${t.dice.qty ? t.dice.qty + ' left' : 'Available'} • Base €${t.dice.price || 0}</p>
+                                </div>
+                            </div>
+                            <span class="material-symbols-outlined text-[#ff00cc]">arrow_forward</span>
+                        </div>
+                    `;
+                    hasTickets = true;
+                }
                 
                 if (t.ticket1 && t.ticket1.name && t.ticket1.price) {
                     sheetTickets.innerHTML += `
