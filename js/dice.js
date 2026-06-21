@@ -27,12 +27,17 @@ document.addEventListener('DOMContentLoaded', () => {
         cube.classList.add('spinning');
 
         try {
+            // Read URL params for basePrice and eventId
+            const urlParams = new URLSearchParams(window.location.search);
+            const basePrice = parseInt(urlParams.get('basePrice')) || 1;
+            const eventId = urlParams.get('eventId') || 'listening-party-june-2';
+
             const response = await fetch('/api/roll', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ email })
+                body: JSON.stringify({ email, basePrice, eventId })
             });
 
             const data = await response.json();
@@ -83,14 +88,14 @@ document.addEventListener('DOMContentLoaded', () => {
                             await window.supabaseClient.from('dice_stats').insert([{
                                 email: email,
                                 rolled_value: data.rolled,
-                                amount_paid_cents: data.rolled * 100,
-                                event_id: 'listening-party-june-2'
+                                amount_paid_cents: data.rolled * basePrice * 100,
+                                event_id: eventId
                             }]);
                         } catch(e) { console.warn("Stats Sync Failed", e); }
                     }
                 } // Added missing closing brace for else block
                 
-                resultAmount.innerText = data.rolled;
+                resultAmount.innerText = data.rolled * basePrice;
                 checkoutBtn.href = data.checkout_url;
                 
                 // Cinematic zoom in

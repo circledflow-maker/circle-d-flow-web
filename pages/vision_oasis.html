@@ -202,23 +202,33 @@
             </div>
             
             <div class="manga-grid" style="display: flex; flex-direction: column; gap: 1rem; overflow-y: auto; max-height: calc(100% - 60px); padding-right: 8px;">
-                <!-- Drive Sync Header -->
-                <div style="background: rgba(0, 255, 204, 0.1); border: 1px solid rgba(0, 255, 204, 0.3); padding: 8px 12px; border-radius: 8px; display: flex; align-items: center; justify-content: space-between;">
-                    <div class="flex items-center gap-2">
-                        <span class="material-symbols-outlined text-[var(--accent-color)]">cloud_sync</span>
-                        <span class="text-xs font-bold font-['Space_Mono'] uppercase">Google Drive Sync Active</span>
+                <!-- Manga Panel 1 -->
+                <div class="manga-panel relative" style="width: 100%; height: 200px; padding: 0; border: 2px solid var(--panel-border); border-radius: 4px; overflow: hidden; background: #000;">
+                    <img src="../Assets/images/c-riz-flyer.jpg" alt="Manga Cover" class="w-full h-full object-cover">
+                    <!-- Iktion Watermark -->
+                    <div class="absolute bottom-2 right-2 opacity-50 z-10 w-8 h-8 rounded-full border border-white flex items-center justify-center bg-black/50 backdrop-blur-sm">
+                        <span class="material-symbols-outlined text-white text-sm">favorite</span>
                     </div>
-                    <span class="text-[10px] opacity-70">Source: C-Riz Content</span>
-                </div>
-
-                <!-- Embedded Drive Folder 1 -->
-                <div class="manga-panel" style="width: 100%; height: 300px; padding: 0; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; overflow: hidden; background: #000;">
-                    <iframe src="https://drive.google.com/embeddedfolderview?id=1SlKAQLkWv7VWAkvLqQZETl4srkdkb6pc#grid" style="width:100%; height:100%; border:0;"></iframe>
                 </div>
                 
-                <!-- Embedded Drive Folder 2 -->
-                <div class="manga-panel" style="width: 100%; height: 300px; padding: 0; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; overflow: hidden; background: #000;">
-                    <iframe src="https://drive.google.com/embeddedfolderview?id=1pbuFkZaATtpy5MWoUog_fydCITMWBmCF#grid" style="width:100%; height:100%; border:0;"></iframe>
+                <!-- Manga Panel 2 -->
+                <div class="manga-panel relative" style="width: 100%; height: 250px; padding: 0; border: 2px solid var(--panel-border); border-radius: 4px; overflow: hidden; background: #000;">
+                    <img src="../Assets/images/vision_oasis_bg.png" alt="Manga Page 1" class="w-full h-full object-cover">
+                    <div class="absolute top-2 left-2 bg-black/80 px-2 py-1 text-[10px] font-bold tracking-widest text-white border border-[var(--panel-border)]">
+                        THE ENERGY WAS RAW.
+                    </div>
+                    <!-- Iktion Watermark -->
+                    <div class="absolute bottom-2 right-2 opacity-50 z-10 w-8 h-8 rounded-full border border-white flex items-center justify-center bg-black/50 backdrop-blur-sm">
+                        <span class="material-symbols-outlined text-white text-sm">favorite</span>
+                    </div>
+                </div>
+
+                <!-- Gamification Synchronization Node -->
+                <div class="mt-4 p-4 border border-[var(--accent-color)] bg-[var(--accent-color)]/10 rounded-lg text-center backdrop-blur-md">
+                    <p class="text-xs font-['Space_Mono'] mb-3 opacity-80 uppercase tracking-widest">End of Chapter 01</p>
+                    <button onclick="syncMangaChapter(this)" class="w-full py-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold rounded shadow-[0_0_15px_rgba(0,240,255,0.4)] transition uppercase tracking-widest flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined">bolt</span> Synchronize & Claim EXP
+                    </button>
                 </div>
             </div>
         </div>
@@ -264,46 +274,63 @@
         <div class="manga-page">
             <div class="page-indicator">CH.03 - BOOKING & TOURS</div>
             <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-bold uppercase">Services</h2>
-                <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                <h2 class="text-xl font-bold uppercase">Services & Artifacts</h2>
+                <div class="w-2 h-2 rounded-full bg-[var(--accent-color)] animate-pulse shadow-[0_0_10px_var(--accent-color)]"></div>
             </div>
 
             <div class="user-studio-grid">
-                <!-- Tour 1 -->
-                <div class="diary-entry flex gap-4 items-center" onclick="window.location.href='calendar.html'">
-                    <div class="w-16 h-16 rounded-lg overflow-hidden bg-white/10 flex-shrink-0">
-                        <img src="../Assets/images/vision_oasis_bg.png" class="w-full h-full object-cover">
-                    </div>
-                    <div class="flex-grow">
-                        <h3 class="font-bold text-sm text-[var(--accent-color)]">Lisbon Adventure Tour</h3>
-                        <p class="text-[10px] opacity-70">Guided street art & photography tour.</p>
-                        <div class="flex gap-2 mt-1">
-                            <span class="text-[10px] font-bold bg-[#d4af37] text-black px-1 rounded">250 FC</span>
-                            <span class="text-[10px] opacity-50">or 50€</span>
+                <!-- Service 1: The Raw Energy -->
+                <div class="diary-entry flex flex-col gap-3 relative overflow-hidden" onclick="triggerBookingDialog('artist')">
+                    <div class="absolute inset-0 bg-gradient-to-r from-cyan-900/20 to-transparent pointer-events-none"></div>
+                    <div class="flex gap-4 items-start">
+                        <div class="w-16 h-16 rounded-lg overflow-hidden bg-white/10 flex-shrink-0 relative">
+                            <img src="../Assets/images/c-riz-flyer.jpg" class="w-full h-full object-cover">
+                        </div>
+                        <div class="flex-grow z-10">
+                            <h3 class="font-bold text-sm text-[var(--accent-color)] uppercase tracking-widest">Artist Portfolio & Tour</h3>
+                            <p class="text-[10px] opacity-70 font-['Space_Mono'] mt-1">The Raw Energy. Tour doc, studio shots, Tiny-Desk live jams.</p>
+                            <div class="flex gap-2 mt-2">
+                                <span class="text-[10px] font-bold bg-[var(--haki-gold)] text-black px-2 py-0.5 rounded shadow-[0_0_5px_var(--haki-shadow)]">1500 - 4000 FC</span>
+                                <span class="text-[10px] border border-white/20 px-2 py-0.5 rounded">300€ - 800€</span>
+                            </div>
                         </div>
                     </div>
-                    <span class="material-symbols-outlined opacity-50">arrow_forward_ios</span>
                 </div>
 
-                <!-- Service 2 -->
-                <div class="diary-entry flex gap-4 items-center" onclick="window.location.href='calendar.html'">
-                    <div class="w-16 h-16 rounded-lg overflow-hidden bg-white/10 flex-shrink-0 flex items-center justify-center">
-                        <span class="material-symbols-outlined text-3xl">photo_camera</span>
-                    </div>
-                    <div class="flex-grow">
-                        <h3 class="font-bold text-sm text-[var(--accent-color)]">Portrait Session</h3>
-                        <p class="text-[10px] opacity-70">Nikon Z50 photoshoot. Flow philosophy.</p>
-                        <div class="flex gap-2 mt-1">
-                            <span class="text-[10px] font-bold bg-[#d4af37] text-black px-1 rounded">500 FC</span>
-                            <span class="text-[10px] opacity-50">or 100€</span>
+                <!-- Service 2: Corporate -->
+                <div class="diary-entry flex flex-col gap-3 relative overflow-hidden" onclick="triggerBookingDialog('brand')">
+                    <div class="flex gap-4 items-start">
+                        <div class="w-16 h-16 rounded-lg overflow-hidden bg-white/10 flex-shrink-0 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-3xl">domain</span>
+                        </div>
+                        <div class="flex-grow z-10">
+                            <h3 class="font-bold text-sm text-[var(--text-color)] uppercase tracking-widest">Corporate & Brand</h3>
+                            <p class="text-[10px] opacity-70 font-['Space_Mono'] mt-1">The Identity. Professional docs, headshots, atmospheric stories.</p>
+                            <div class="flex gap-2 mt-2">
+                                <span class="text-[10px] font-bold bg-[var(--text-color)] text-black px-2 py-0.5 rounded">CASH ONLY</span>
+                                <span class="text-[10px] border border-white/20 px-2 py-0.5 rounded">150€ / hr</span>
+                            </div>
                         </div>
                     </div>
-                    <span class="material-symbols-outlined opacity-50">arrow_forward_ios</span>
+                </div>
+
+                <!-- Service 3: Private -->
+                <div class="diary-entry flex flex-col gap-3 relative overflow-hidden" onclick="triggerBookingDialog('private')">
+                    <div class="flex gap-4 items-start">
+                        <div class="w-16 h-16 rounded-lg overflow-hidden bg-white/10 flex-shrink-0 flex items-center justify-center">
+                            <span class="material-symbols-outlined text-3xl">celebration</span>
+                        </div>
+                        <div class="flex-grow z-10">
+                            <h3 class="font-bold text-sm text-[#FF3131] uppercase tracking-widest">Private & Ceremonies</h3>
+                            <p class="text-[10px] opacity-70 font-['Space_Mono'] mt-1">The Memory. Unposed, raw emotion. Nikon Z50II.</p>
+                            <div class="flex gap-2 mt-2">
+                                <span class="text-[10px] border border-white/20 px-2 py-0.5 rounded">800€ - 2500€</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 
-                <button onclick="window.location.href='calendar.html'" class="w-full py-3 bg-[var(--accent-color)] text-[var(--bg-color)] rounded font-bold uppercase tracking-widest text-xs mt-2">
-                    Open Calendar Schedule
-                </button>
+                <!-- Booking Flowee Modal logic is handled by Flowee -->
             </div>
         </div>
 
@@ -454,16 +481,57 @@
         function checkVisionTour() {
             setTimeout(() => {
                 if (window.Flowee) {
-                    window.Flowee.talk(true, "Welcome to the Vision Oasis, Voyager. Swipe right or scroll down to explore the Manga Portfolio and Services!", "guide", [
-                        { label: "Show me the Portfolio", action: () => { 
+                    window.Flowee.talk(true, "Welcome to the Archives, Traveler. These are the living chronicles of our frequency, rendered straight from the master node. Swipe horizontally to journey through the chapters.", "guide", [
+                        { label: "Read the Chronicles", action: () => { 
                             scrollContainer.scrollTo({ left: window.innerWidth, behavior: 'smooth' }); 
                         }},
-                        { label: "How do I book a Tour?", action: () => { 
-                            scrollContainer.scrollTo({ left: window.innerWidth * 2, behavior: 'smooth' });
+                        { label: "View Services & Pricing", action: () => { 
+                            scrollContainer.scrollTo({ left: window.innerWidth * 3, behavior: 'smooth' });
                         }}
                     ]);
                 }
             }, 1000);
+        }
+
+        // --- GAMIFICATION LOGIC ---
+        function syncMangaChapter(btn) {
+            btn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Synchronizing...';
+            btn.classList.add('opacity-50', 'pointer-events-none');
+            
+            setTimeout(() => {
+                btn.innerHTML = '<span class="material-symbols-outlined">check_circle</span> +20 EXP CLAIMED';
+                btn.classList.remove('from-cyan-600', 'to-blue-600');
+                btn.classList.add('bg-green-600', 'border-green-400');
+                
+                if (window.Flowee) {
+                    window.Flowee.talk(true, "You've absorbed the resonance of this moment. Mihaly's flow is evident here. Take these 20 EXP for witnessing the creation.", "success", [
+                        { label: "Claim EXP & Next Chapter", action: () => {
+                            scrollContainer.scrollTo({ left: window.innerWidth * 2, behavior: 'smooth' });
+                        }}
+                    ]);
+                }
+            }, 1500);
+        }
+
+        // --- BOOKING LOGIC ---
+        function triggerBookingDialog(type) {
+            if (!window.Flowee) return;
+            
+            if (type === 'artist') {
+                window.Flowee.talk(true, "We move with the rhythm of the streets. A full visual manifesto for artists ranges from 300€ to 800€, or you can channel your earned Flow Credits (1500-4000 FC). Shall we set the parameters?", "guide", [
+                    { label: "Define the Project", action: () => alert("Opening Supabase Form...") },
+                    { label: "Use Flow Credits", action: () => alert("Authenticating Wallet...") }
+                ]);
+            } else if (type === 'brand') {
+                window.Flowee.talk(true, "I sense you wish to manifest a corporate vision. We charge 150€ hourly for brand identity work. This physical currency subsidizes the local underground. Shall we proceed?", "guide", [
+                    { label: "Book 3+ Hours", action: () => alert("Opening Supabase Form...") }
+                ]);
+            } else if (type === 'private') {
+                window.Flowee.talk(true, "The Memory. We capture raw, unposed emotion. Packages range from 800€ to 2500€. Let's forge your history.", "guide", [
+                    { label: "Half-Day Flow", action: () => alert("Selecting Half-Day...") },
+                    { label: "Full-Day Immersion", action: () => alert("Selecting Full-Day...") }
+                ]);
+            }
         }
 
         // Initialize when agents load

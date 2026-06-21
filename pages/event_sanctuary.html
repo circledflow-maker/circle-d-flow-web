@@ -1043,6 +1043,11 @@
             const regularName = document.getElementById('ticket-regular-name').value;
             const regularPrice = document.getElementById('ticket-regular-price').value;
             const regularQty = document.getElementById('ticket-regular-qty').value;
+
+            const diceName = document.getElementById('ticket-dice-name').value;
+            const diceToggle = document.getElementById('ticket-dice-toggle').checked;
+            const dicePrice = document.getElementById('ticket-dice-price').value;
+            const diceQty = document.getElementById('ticket-dice-qty').value;
             
             if(window.supabaseClient && currentEventId) {
                 const btn = event.currentTarget;
@@ -1054,6 +1059,11 @@
                         ticket1: { name: earlyName, price: earlyPrice, qty: earlyQty },
                         ticket2: { name: regularName, price: regularPrice, qty: regularQty }
                     };
+                    if (diceToggle) {
+                        needs.tickets.dice = { name: diceName, price: dicePrice, qty: diceQty, isDice: true };
+                    } else {
+                        needs.tickets.dice = null;
+                    }
                     await window.supabaseClient.from('quests').update({ needs: needs }).eq('id', currentEventId);
                     window.currentEventData.needs = needs;
                     alert("Tickets synchronized successfully!");

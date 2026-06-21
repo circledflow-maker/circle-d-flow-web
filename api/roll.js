@@ -7,11 +7,13 @@ module.exports = async (req, res) => {
     }
 
     try {
-        const { email, eventId, existingRoll } = req.body;
+        const { email, eventId, existingRoll, basePrice } = req.body;
 
         if (!email) {
             return res.status(400).json({ error: 'Email is required' });
         }
+        
+        const priceMultiplier = parseInt(basePrice) || 1;
 
         let rolledValue = null;
 
@@ -68,9 +70,9 @@ module.exports = async (req, res) => {
                     currency: 'eur',
                     product_data: {
                         name: productName,
-                        description: `Your rolled contribution of ${rolledValue}€`,
+                        description: `Your rolled contribution of ${rolledValue} times base price ${priceMultiplier}€`,
                     },
-                    unit_amount: rolledValue * 100, // cents
+                    unit_amount: rolledValue * priceMultiplier * 100, // cents
                 },
                 quantity: 1,
             }],
