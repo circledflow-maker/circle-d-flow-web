@@ -302,6 +302,12 @@
                     </div>
                 </div>
                 
+                <div class="bg-black/40 p-4 rounded-lg border border-white/5">
+                    <label class="text-[10px] text-[#00ffcc] uppercase font-bold tracking-widest block mb-2">Checkout URL (Stripe/Dice)</label>
+                    <input type="text" id="ticket-checkout-url" class="w-full bg-black border border-white/20 rounded p-2 text-white text-sm" placeholder="https://buy.stripe.com/..." value="">
+                    <p class="text-[10px] text-white/40 mt-2">Users will be redirected here to finalize purchase.</p>
+                </div>
+                
                 <button onclick="saveTickets()" class="w-full py-3 bg-[#00ffcc]/20 border border-[#00ffcc]/50 text-[#00ffcc] font-black uppercase tracking-widest rounded hover:bg-[#00ffcc]/40 transition flex justify-center items-center gap-2">
                     <span class="material-symbols-outlined">save</span> Sync Tickets
                 </button>
@@ -857,18 +863,39 @@
                 const statusName = artist.status === 'red' ? 'Not Contacted' : (artist.status === 'orange' ? 'Waiting' : 'Confirmed');
                 
                 container.innerHTML += `
-                    <div class="flex items-center justify-between bg-black/40 p-4 rounded-lg border border-white/5 cursor-pointer hover:border-[#00ffcc]/30 transition" onclick="openFloweeOverlay('${artist.id}', '${artist.name}', '${artist.role}', '${artist.status}', '${artist.link || ''}')">
-                        <div>
+                    <div class="flex items-center justify-between bg-black/40 p-4 rounded-lg border border-white/5 transition hover:border-[#00ffcc]/30">
+                        <div class="cursor-pointer flex-1" onclick="openFloweeOverlay('${artist.id}', '${artist.name}', '${artist.role}', '${artist.status}', '${artist.link || ''}')">
                             <p class="text-sm font-bold flex items-center gap-2">
                                 ${artist.name} 
                                 <span class="w-2 h-2 rounded-full ${statusColor} shadow-[0_0_5px_currentColor]"></span>
                             </p>
                             <p class="text-[10px] text-[#00ffcc] uppercase tracking-widest mt-1">${artist.role}</p>
                         </div>
-                        <span class="text-xs text-white/50">${statusName}</span>
+                        <div class="flex items-center gap-4">
+                            <span class="text-xs text-white/50">${statusName}</span>
+                            <button onclick="deleteTeamNode('${artist.id}')" class="material-symbols-outlined text-white/20 hover:text-red-500 text-sm transition" title="Remove from Event">delete</button>
+                        </div>
                     </div>
                 `;
             });
+        }
+        
+        async function deleteTeamNode(artistId) {
+            if(!confirm("Are you sure you want to remove this node from the network?")) return;
+            
+            if(window.currentEventData && window.currentEventData.needs && window.currentEventData.needs.team) {
+                let team = window.currentEventData.needs.team.filter(a => a.id !== artistId);
+                window.currentEventData.needs.team = team;
+                
+                if(window.supabaseClient && currentEventId) {
+                    try {
+                        await window.supabaseClient.from('quests').update({ needs: window.currentEventData.needs }).eq('id', currentEventId);
+                    } catch(e) {
+                        console.error("Failed to delete node:", e);
+                    }
+                }
+                renderTeamChecklist(window.currentEventData);
+            }
         }
         
         // --- Sync Matrix Logic ---
@@ -971,6 +998,8 @@
             const regularPrice = document.getElementById('ticket-regular-price').value;
             const regularQty = document.getElementById('ticket-regular-qty').value;
             
+            const checkoutUrl = document.getElementById('ticket-checkout-url').value.trim();
+            
             if(window.supabaseClient && currentEventId) {
                 const btn = event.currentTarget;
                 const orig = btn.innerHTML;
@@ -980,7 +1009,8 @@
                     let needs = window.currentEventData.needs || {};
                     needs.tickets = {
                         ticket1: { name: earlyName, price: earlyPrice, qty: earlyQty },
-                        ticket2: { name: regularName, price: regularPrice, qty: regularQty }
+                        ticket2: { name: regularName, price: regularPrice, qty: regularQty },
+                        checkoutUrl: checkoutUrl
                     };
                     await window.supabaseClient.from('quests').update({ needs: needs }).eq('id', currentEventId);
                     window.currentEventData.needs = needs;
