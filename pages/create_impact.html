@@ -124,10 +124,26 @@
                     </div>
                 </div>
 
-                <!-- Slide 4: Location Details -->
-                <div class="swiper-slide p-4 flex flex-col justify-center overflow-y-auto pb-48">
-                    <div class="bg-black/40 border border-white/5 rounded-xl p-4">
-                        <h3 class="text-xs uppercase tracking-widest text-white/50 mb-2">Location Data</h3>
+                <!-- Slide 4: Location Details with Slideshow -->
+                <div class="swiper-slide flex flex-col justify-end pb-32 relative overflow-hidden">
+                    <!-- Background Slideshow -->
+                    <div class="absolute inset-0 z-0 bg-black">
+                        <div class="absolute inset-0 bg-cover bg-center opacity-0 transition-opacity duration-1000 slide-bg" style="background-image: url('../Assets/images/secret_garden/bg_1.webp'); opacity: 0.5;"></div>
+                        <div class="absolute inset-0 bg-cover bg-center opacity-0 transition-opacity duration-1000 slide-bg" style="background-image: url('../Assets/images/secret_garden/bg_2.webp');"></div>
+                        <div class="absolute inset-0 bg-cover bg-center opacity-0 transition-opacity duration-1000 slide-bg" style="background-image: url('../Assets/images/secret_garden/bg_3.webp');"></div>
+                        <div class="absolute inset-0 bg-cover bg-center opacity-0 transition-opacity duration-1000 slide-bg" style="background-image: url('../Assets/images/secret_garden/bg_4.webp');"></div>
+                        <div class="absolute inset-0 bg-cover bg-center opacity-0 transition-opacity duration-1000 slide-bg" style="background-image: url('../Assets/images/secret_garden/bg_5.webp');"></div>
+                        <div class="absolute inset-0 bg-cover bg-center opacity-0 transition-opacity duration-1000 slide-bg" style="background-image: url('../Assets/images/secret_garden/bg_6.webp');"></div>
+                        <div class="absolute inset-0 bg-cover bg-center opacity-0 transition-opacity duration-1000 slide-bg" style="background-image: url('../Assets/images/secret_garden/bg_7.webp');"></div>
+                        <div class="absolute inset-0 bg-cover bg-center opacity-0 transition-opacity duration-1000 slide-bg" style="background-image: url('../Assets/images/secret_garden/bg_8.webp');"></div>
+                        <!-- Gradient Overlay -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/10 z-10 pointer-events-none"></div>
+                    </div>
+
+                    <div class="bg-black/60 backdrop-blur-md border border-white/10 rounded-xl p-5 z-20 mx-4 shadow-2xl relative mt-auto border-b-4 border-b-[#00ffcc]/50">
+                        <h3 class="text-xs uppercase tracking-widest text-[#00ffcc] font-bold mb-3 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm">explore</span> Location Data
+                        </h3>
                         <p class="text-sm font-bold flex items-center gap-2" id="event-location">
                             <span class="material-symbols-outlined text-[#d4af37] text-lg">location_on</span>
                             Loading...
@@ -468,11 +484,11 @@
                 on: {
                     slideChange: function () {
                         const messages = [
-                            `This is the main event artifact. Claim your ticket via Stripe below to secure your spot! ?`,
-                            `The Vision: Every event has a soul. This is the core purpose of why we're gathering. ?`,
-                            `The Program: The sync matrix. This is the timeline of the flow. ?`,
-                            `The Crew: Meet the nodes! These are the creatives and organizers making the magic happen. ?`,
-                            `The Location: Keep this safe. Click the map link to open directions to the gathering. ?`
+                            `This is the main event artifact. Claim your ticket via Stripe below to secure your spot! \u2728`,
+                            `The Vision: Every event has a soul. This is the core purpose of why we're gathering. \u2728`,
+                            `The Program: The sync matrix. This is the timeline of the flow. \u2728`,
+                            `The Crew: Meet the nodes! These are the creatives and organizers making the magic happen. \u2728`,
+                            `The Location: Keep this safe. Click the map link to open directions to the gathering. \u2728`
                         ];
                         
                         const msg = messages[this.activeIndex] || messages[0];
@@ -487,6 +503,17 @@
                     }
                 }
             });
+
+            // Start Background Slideshow
+            const slideBgs = document.querySelectorAll('.slide-bg');
+            if (slideBgs.length > 0) {
+                let currentBg = 0;
+                setInterval(() => {
+                    slideBgs[currentBg].style.opacity = '0';
+                    currentBg = (currentBg + 1) % slideBgs.length;
+                    slideBgs[currentBg].style.opacity = '0.5';
+                }, 4000);
+            }
         }
 
         function toggleBurger() {
