@@ -196,7 +196,8 @@
             <div class="nav-pill active py-2 px-2 cursor-pointer text-center flex-1" onclick="scrollToTab(0)">Canvas</div>
             <div class="nav-pill py-2 px-2 cursor-pointer text-center flex-1" onclick="scrollToTab(1)">Blueprint</div>
             <div class="nav-pill py-2 px-2 cursor-pointer text-center flex-1" onclick="scrollToTab(2)">Ledger</div>
-            <div class="nav-pill py-2 px-2 cursor-pointer text-center flex-1 text-[#d4af37]" onclick="scrollToTab(3)">Share</div>
+            <div class="nav-pill py-2 px-2 cursor-pointer text-center flex-1" onclick="scrollToTab(3)">Tickets</div>
+            <div class="nav-pill py-2 px-2 cursor-pointer text-center flex-1 text-[#d4af37]" onclick="scrollToTab(4)">Share</div>
         </div>
     </div>
 
@@ -268,7 +269,48 @@
             <div class="h-20"></div> <!-- Bottom padding -->
         </div>
 
-        <!-- SECTION 4: MANGA QR SHARE -->
+        <!-- SECTION 4: TICKETS -->
+        <div class="swipe-section">
+            <h2 class="font-serif text-2xl gold-accent mb-4 uppercase tracking-widest mt-4">Ticket Coordination</h2>
+            <p class="text-xs text-white/50 mb-6 max-w-sm">Manage ticket types, quantities, and pricing mapped to Supabase.</p>
+
+            <div class="space-y-4">
+                <div class="bg-black/40 p-4 rounded-lg border border-white/5">
+                    <h3 class="text-sm font-bold text-[#00ffcc] mb-2 uppercase tracking-widest">Early Bird</h3>
+                    <div class="flex items-center justify-between gap-2">
+                        <div class="flex-1">
+                            <label class="text-[10px] text-white/50 uppercase block mb-1">Price (€)</label>
+                            <input type="number" id="ticket-early-price" class="w-full bg-black border border-white/20 rounded p-2 text-white" value="15">
+                        </div>
+                        <div class="flex-1">
+                            <label class="text-[10px] text-white/50 uppercase block mb-1">Quantity</label>
+                            <input type="number" id="ticket-early-qty" class="w-full bg-black border border-white/20 rounded p-2 text-white" value="50">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-black/40 p-4 rounded-lg border border-white/5">
+                    <h3 class="text-sm font-bold text-[#d4af37] mb-2 uppercase tracking-widest">Regular Flow</h3>
+                    <div class="flex items-center justify-between gap-2">
+                        <div class="flex-1">
+                            <label class="text-[10px] text-white/50 uppercase block mb-1">Price (€)</label>
+                            <input type="number" id="ticket-regular-price" class="w-full bg-black border border-white/20 rounded p-2 text-white" value="25">
+                        </div>
+                        <div class="flex-1">
+                            <label class="text-[10px] text-white/50 uppercase block mb-1">Quantity</label>
+                            <input type="number" id="ticket-regular-qty" class="w-full bg-black border border-white/20 rounded p-2 text-white" value="100">
+                        </div>
+                    </div>
+                </div>
+                
+                <button onclick="saveTickets()" class="w-full py-3 bg-[#00ffcc]/20 border border-[#00ffcc]/50 text-[#00ffcc] font-black uppercase tracking-widest rounded hover:bg-[#00ffcc]/40 transition flex justify-center items-center gap-2">
+                    <span class="material-symbols-outlined">save</span> Sync Tickets
+                </button>
+            </div>
+            <div class="h-20"></div>
+        </div>
+
+        <!-- SECTION 5: MANGA QR SHARE -->
         <div class="swipe-section flex flex-col items-center">
             <h2 class="font-serif text-2xl gold-accent mb-4 uppercase tracking-widest mt-4">Share Event</h2>
             <p class="text-xs text-white/50 mb-6 text-center max-w-sm">Capture this signal and spread it through the network.</p>
@@ -841,10 +883,12 @@
             container.innerHTML = '';
             event.needs.syncMatrix.forEach((m, idx) => {
                 const isActive = idx === 0 ? 'active' : ''; // Just for visual demo
-                let artistBadge = '';
-                let artistDesc = 'Open Phase';
                 
-                if(m.artistId && event.needs.team) {
+                // Use the explicit assigned string if it exists, otherwise fallback to old artistId mapping
+                let artistDesc = m.assigned || 'Open Phase';
+                let artistBadge = '';
+                
+                if(!m.assigned && m.artistId && event.needs.team) {
                     const artist = event.needs.team.find(a => a.id === m.artistId);
                     if(artist) {
                         artistBadge = `<span class="inline-block px-2 py-0.5 bg-[#d4af37]/20 text-[#d4af37] border border-[#d4af37]/30 rounded text-[10px] ml-2 uppercase font-bold tracking-widest">${artist.name}</span>`;
@@ -855,11 +899,97 @@
                 container.innerHTML += `
                     <div class="timeline-node ${isActive}">
                         <div class="timeline-orb"></div>
-                        <h3 class="font-bold text-lg flex items-center">${m.time} - ${m.label} ${artistBadge}</h3>
-                        <p class="text-sm text-white/60">${artistDesc}</p>
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="font-bold text-lg flex items-center">${m.time} - ${m.label} ${artistBadge}</h3>
+                                <p class="text-sm text-white/60">${artistDesc}</p>
+                            </div>
+                            <button onclick="openEditMatrixModal(${idx})" class="material-symbols-outlined text-white/30 hover:text-[#00ffcc] text-sm">edit</button>
+                        </div>
                     </div>
                 `;
             });
+        }
+        
+        let editingMatrixIndex = null;
+        function openEditMatrixModal(idx) {
+            editingMatrixIndex = idx;
+            const matrix = window.currentEventData.needs.syncMatrix[idx];
+            document.getElementById('edit-matrix-time').value = matrix.time || '';
+            document.getElementById('edit-matrix-label').value = matrix.label || '';
+            document.getElementById('edit-matrix-assigned').value = matrix.assigned || '';
+            document.getElementById('edit-matrix-modal').classList.remove('hidden');
+        }
+        
+        function closeEditMatrixModal() {
+            document.getElementById('edit-matrix-modal').classList.add('hidden');
+        }
+        
+        async function saveMatrixEdit() {
+            if(editingMatrixIndex === null) return;
+            
+            const time = document.getElementById('edit-matrix-time').value.trim();
+            const label = document.getElementById('edit-matrix-label').value.trim();
+            const assigned = document.getElementById('edit-matrix-assigned').value.trim();
+            
+            if(!time || !label) return alert("Time and Label are required.");
+            
+            let needs = window.currentEventData.needs || {};
+            let matrix = needs.syncMatrix || [];
+            
+            matrix[editingMatrixIndex].time = time;
+            matrix[editingMatrixIndex].label = label;
+            matrix[editingMatrixIndex].assigned = assigned;
+            
+            needs.syncMatrix = matrix;
+            
+            if(window.supabaseClient && currentEventId) {
+                const btn = event.currentTarget;
+                const orig = btn.innerHTML;
+                btn.innerHTML = 'Saving...';
+                try {
+                    await window.supabaseClient.from('quests').update({ needs: needs }).eq('id', currentEventId);
+                    window.currentEventData.needs = needs;
+                    renderSyncMatrix(window.currentEventData);
+                    closeEditMatrixModal();
+                } catch(e) {
+                    alert("Error saving: " + e.message);
+                }
+                btn.innerHTML = orig;
+            } else {
+                window.currentEventData.needs = needs;
+                renderSyncMatrix(window.currentEventData);
+                closeEditMatrixModal();
+            }
+        }
+
+        async function saveTickets() {
+            const earlyPrice = document.getElementById('ticket-early-price').value;
+            const earlyQty = document.getElementById('ticket-early-qty').value;
+            const regularPrice = document.getElementById('ticket-regular-price').value;
+            const regularQty = document.getElementById('ticket-regular-qty').value;
+            
+            if(window.supabaseClient && currentEventId) {
+                const btn = event.currentTarget;
+                const orig = btn.innerHTML;
+                btn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Syncing...';
+                try {
+                    // Storing tickets inside 'needs' JSONB for simplicity since we don't have a dedicated tickets table structure visible.
+                    let needs = window.currentEventData.needs || {};
+                    needs.tickets = {
+                        earlyBird: { price: earlyPrice, qty: earlyQty },
+                        regular: { price: regularPrice, qty: regularQty }
+                    };
+                    await window.supabaseClient.from('quests').update({ needs: needs }).eq('id', currentEventId);
+                    window.currentEventData.needs = needs;
+                    alert("Tickets synchronized successfully!");
+                } catch(e) {
+                    alert("Error syncing tickets: " + e.message);
+                }
+                btn.innerHTML = orig;
+            } else {
+                alert("Tickets synced locally! (Mock)");
+            }
         }
         
         let activeArtistData = null;
@@ -1032,6 +1162,14 @@
 
         async function triggerPdfGeneration() {
             closeFloweeOverlay();
+            
+            // Pass the syncMatrix program to the artist data for the PDF
+            if (window.currentEventData && window.currentEventData.needs && window.currentEventData.needs.syncMatrix) {
+                activeArtistData.program = window.currentEventData.needs.syncMatrix;
+            } else {
+                activeArtistData.program = [];
+            }
+            
             await generateBrowserPdfInvite(activeArtistData);
         }
         
@@ -1102,7 +1240,26 @@
             const splitVision = doc.splitTextToSize(`VISION: ${visionStr}`, 450);
             doc.text(splitVision, 300, 540, { align: 'center' });
             
+            // Program Syntax
+            if(artist.program && artist.program.length > 0) {
+                doc.setTextColor(212, 175, 55);
+                doc.setFontSize(14);
+                doc.text("PROGRAM SYNTAX:", 300, 600, { align: 'center' });
+                
+                doc.setTextColor(255, 255, 255);
+                doc.setFontSize(10);
+                let yOffset = 620;
+                artist.program.forEach(p => {
+                    let assignedStr = p.assigned ? ` - ${p.assigned}` : '';
+                    if(yOffset < 730) { // prevent overflowing
+                        doc.text(`${p.time} | ${p.label}${assignedStr}`, 300, yOffset, { align: 'center' });
+                        yOffset += 15;
+                    }
+                });
+            }
+            
             doc.setTextColor(0, 255, 204);
+            doc.setFontSize(12);
             doc.text("Scan QR Code at the portal to sync your node.", 300, 750, { align: 'center' });
             
             // Update status to orange since we generated the invite
@@ -1229,6 +1386,36 @@
             
             <button onclick="saveNewNode()" class="w-full bg-white text-black font-bold uppercase tracking-widest py-3 rounded-lg hover:bg-[#00ffcc] transition flex items-center justify-center gap-2">
                 <span class="material-symbols-outlined">add_circle</span> Add to Ledger
+            </button>
+        </div>
+    </div>
+
+    <!-- Edit Matrix Modal -->
+    <div id="edit-matrix-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[100] hidden flex flex-col items-center justify-center p-4">
+        <div class="bg-[#111] text-white p-6 rounded-2xl border border-white/20 w-full max-w-sm relative">
+            <button onclick="closeEditMatrixModal()" class="absolute top-4 right-4 text-white/50 hover:text-white">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+            
+            <h3 class="font-serif text-2xl gold-accent mb-1 uppercase tracking-widest">Edit Timeline Node</h3>
+            
+            <div class="space-y-4 mb-6 mt-4">
+                <div>
+                    <label class="text-[10px] uppercase tracking-widest text-white/50 block mb-1">Time</label>
+                    <input type="text" id="edit-matrix-time" class="w-full bg-black border border-white/20 rounded p-3 text-white focus:border-[#00ffcc] outline-none" placeholder="e.g. 14:30">
+                </div>
+                <div>
+                    <label class="text-[10px] uppercase tracking-widest text-white/50 block mb-1">Label / Title</label>
+                    <input type="text" id="edit-matrix-label" class="w-full bg-black border border-white/20 rounded p-3 text-white focus:border-[#00ffcc] outline-none" placeholder="e.g. Cipher">
+                </div>
+                <div>
+                    <label class="text-[10px] uppercase tracking-widest text-white/50 block mb-1">Assigned / Responsibility</label>
+                    <input type="text" id="edit-matrix-assigned" class="w-full bg-black border border-white/20 rounded p-3 text-white focus:border-[#00ffcc] outline-none" placeholder="e.g. Led by Mobb Beat HQ">
+                </div>
+            </div>
+            
+            <button onclick="saveMatrixEdit()" class="w-full bg-white text-black font-bold uppercase tracking-widest py-3 rounded-lg hover:bg-[#00ffcc] transition flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined">save</span> Save Node
             </button>
         </div>
     </div>
