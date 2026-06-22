@@ -285,6 +285,10 @@
                 <button id="gl-submit-btn" onclick="submitGuestList()" class="w-full bg-[#00ffcc] text-black font-black py-3 rounded-lg hover:bg-[#00ffcc]/80 transition flex items-center justify-center gap-2 tracking-widest uppercase">
                     <span class="material-symbols-outlined">login</span> Verify & Join
                 </button>
+
+                <button onclick="returnToCheckout()" class="w-full mt-3 bg-transparent border border-white/20 text-white/70 py-3 rounded-lg hover:bg-white/5 transition flex items-center justify-center gap-2 tracking-widest uppercase text-xs">
+                    <span class="material-symbols-outlined text-sm">arrow_back</span> Back to Tickets
+                </button>
             </div>
             
             <div id="guestlist-success" class="hidden text-center py-4">
@@ -409,15 +413,10 @@
                     const name = p.name || 'Unknown Soul';
                     const role = p.role || 'Participant';
                     
-                    // Graceful fallback for broken blob urls (caused by RLS upload errors on sanctuary)
-                    const fallbackHtml = `<div class='absolute inset-0 flex items-center justify-center text-white/50 text-xs font-bold tracking-widest'>FLOW</div>`;
-                    const imageHtml = p.imgUrl ? `<img src="${p.imgUrl}" onerror="this.outerHTML=\\"${fallbackHtml}\\"" class="w-full h-full object-cover">` : fallbackHtml;
+                    const fallbackHtml = `<div class="absolute inset-0 flex items-center justify-center text-white/50 text-xs font-bold tracking-widest">FLOW</div>`;
+                    const errorFallback = `<span class=&quot;absolute inset-0 flex items-center justify-center text-white/50 text-xs font-bold tracking-widest&quot;>FLOW</span>`;
+                    const imageHtml = p.imgUrl ? `<img src="${p.imgUrl}" onerror="this.parentElement.innerHTML='${errorFallback}'" class="w-full h-full object-cover">` : fallbackHtml;
                     
-                    const encodedBio = encodeURIComponent(p.bio || '');
-                    const encodedSocial = encodeURIComponent(p.socialLink || '');
-                    const encodedImg = encodeURIComponent(p.imgUrl || '');
-                    const encodedMusic = encodeURIComponent(p.musicLink || '');
-
                     // Generate a color based on role
                     let color = 'from-gray-500 to-gray-700';
                     if(role.includes('Visual') || role.includes('Art')) color = 'from-purple-500 to-orange-500';
@@ -426,7 +425,7 @@
                     if(role.includes('Audio') || role.includes('DJ') || role.includes('Performance')) color = 'from-[#00ffcc] to-blue-600';
 
                     crewList.innerHTML += `
-                        <div class="snap-center shrink-0 w-[220px] bg-white/5 border border-white/10 rounded-xl overflow-hidden cursor-pointer hover:border-white/30 transition shadow-lg" onclick="openNodeModal('${name}', '${role}', '${encodedImg}', '${encodedBio}', '${encodedSocial}', '${encodedMusic}')">
+                        <div class="snap-center shrink-0 w-[220px] bg-white/5 border border-white/10 rounded-xl overflow-hidden cursor-pointer hover:border-white/30 transition shadow-lg" onclick="openNodeModal('${p.id}')">
                             <div class="w-full aspect-square bg-gradient-to-tr ${color} relative">
                                 ${imageHtml}
                             </div>
@@ -704,6 +703,11 @@
             document.getElementById('guestlist-modal').classList.add('hidden');
         }
 
+        function returnToCheckout() {
+            closeGuestListFlow();
+            openCheckoutSheet();
+        }
+
         async function submitGuestList() {
             const passInput = document.getElementById('gl-password').value;
             const nameInput = document.getElementById('gl-name').value;
@@ -764,11 +768,17 @@
             alert("Payment simulation successful. A ticket has been minted!");
         }
 
-        function openNodeModal(name, role, imgEncoded, bioEncoded, socialEncoded, musicEncoded) {
-            const img = decodeURIComponent(imgEncoded);
-            const bio = decodeURIComponent(bioEncoded);
-            const social = decodeURIComponent(socialEncoded);
-            const music = decodeURIComponent(musicEncoded || '');
+        function openNodeModal(participantId) {
+            if (!currentEventData || !currentEventData.needs || !currentEventData.needs.team) return;
+            const p = currentEventData.needs.team.find(t => t.id === participantId);
+            if (!p) return;
+
+            const name = p.name || 'Unknown Soul';
+            const role = p.role || 'Participant';
+            const img = p.imgUrl || '';
+            const bio = p.bio || '';
+            const social = p.socialLink || '';
+            const music = p.musicLink || '';
 
             document.getElementById('node-modal-name').innerText = name;
             document.getElementById('node-modal-role').innerText = role;
