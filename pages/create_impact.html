@@ -400,7 +400,7 @@
             // Render Crew (Swipe Cards)
             const crewList = document.getElementById('crew-list');
             crewList.innerHTML = '';
-            crewList.className = 'flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 hide-scrollbar';
+            crewList.className = 'flex flex-col gap-3 pb-4';
             
             let participants = [];
             if (event.needs && event.needs.team) {
@@ -413,8 +413,8 @@
                     const name = p.name || 'Unknown Soul';
                     const role = p.role || 'Participant';
                     
-                    const fallbackHtml = `<div class="absolute inset-0 flex items-center justify-center text-white/50 text-xs font-bold tracking-widest">FLOW</div>`;
-                    const errorFallback = `<span class=&quot;absolute inset-0 flex items-center justify-center text-white/50 text-xs font-bold tracking-widest&quot;>FLOW</span>`;
+                    const fallbackHtml = `<div class="absolute inset-0 flex items-center justify-center text-white/50 text-[10px] font-bold tracking-widest">FLOW</div>`;
+                    const errorFallback = `<span class=&quot;absolute inset-0 flex items-center justify-center text-white/50 text-[10px] font-bold tracking-widest&quot;>FLOW</span>`;
                     const imageHtml = p.imgUrl ? `<img src="${p.imgUrl}" onerror="this.parentElement.innerHTML='${errorFallback}'" class="w-full h-full object-cover">` : fallbackHtml;
                     
                     // Generate a color based on role
@@ -425,19 +425,19 @@
                     if(role.includes('Audio') || role.includes('DJ') || role.includes('Performance')) color = 'from-[#00ffcc] to-blue-600';
 
                     crewList.innerHTML += `
-                        <div class="snap-center shrink-0 w-[220px] bg-white/5 border border-white/10 rounded-xl overflow-hidden cursor-pointer hover:border-white/30 transition shadow-lg" onclick="openNodeModal('${p.id}')">
-                            <div class="w-full aspect-square bg-gradient-to-tr ${color} relative">
+                        <div class="flex items-center gap-4 bg-white/5 border border-white/10 rounded-xl p-3 cursor-pointer hover:border-[#00ffcc]/30 transition shadow-lg" onclick="openNodeModal('${p.id}')">
+                            <div class="w-14 h-14 shrink-0 rounded-full bg-gradient-to-tr ${color} relative overflow-hidden border border-white/10 shadow-[0_0_10px_rgba(0,0,0,0.5)]">
                                 ${imageHtml}
                             </div>
-                            <div class="p-4">
+                            <div class="flex-1 min-w-0">
                                 <p class="font-bold text-sm tracking-wide text-white truncate uppercase">${name}</p>
-                                <p class="text-[10px] uppercase tracking-widest text-[#d4af37] truncate mt-1">${role}</p>
+                                <p class="text-[10px] uppercase tracking-widest text-[#d4af37] truncate mt-0.5">${role}</p>
                             </div>
+                            <span class="material-symbols-outlined text-white/20">chevron_right</span>
                         </div>
                     `;
                 });
             } else {
-                crewList.className = 'flex flex-col gap-3';
                 crewList.innerHTML = '<p class="text-xs text-white/30 italic">Lineup hidden or not yet defined.</p>';
             }
 
