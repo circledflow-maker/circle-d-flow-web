@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Guest Ticket | Circle D Flow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        body {
+            background-color: #050505;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(212, 175, 55, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(0, 255, 204, 0.03) 0%, transparent 50%);
+            min-height: 100vh;
+        }
+        .glassmorphism {
+            background: rgba(17, 17, 17, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center p-4 min-h-screen">
+
+    <div class="glassmorphism w-full max-w-sm rounded-2xl p-6 shadow-[0_0_40px_rgba(0,255,204,0.1)] relative overflow-hidden text-center">
+        <!-- Decoration -->
+        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#d4af37] to-[#00ffcc]"></div>
+        
+        <img src="/assets/images/logo_white.png" alt="Circle D Flow" class="h-10 mx-auto mb-6 opacity-80" onerror="this.src='https://placehold.co/100x40/111/fff?text=LOGO'">
+        
+        <h1 class="font-serif text-3xl text-[#d4af37] uppercase tracking-widest mb-1">VIP Guest</h1>
+        <p class="text-xs text-[#00ffcc] tracking-widest uppercase mb-8">Access Granted</p>
+
+        <div class="bg-white p-4 rounded-xl inline-block mb-6 shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+            <div id="qr-code" class="w-[200px] h-[200px] mx-auto"></div>
+        </div>
+
+        <h2 id="guest-name" class="text-2xl font-bold mb-1">-</h2>
+        <p id="guest-email" class="text-sm text-white/50 mb-6">-</p>
+
+        <div class="border-t border-white/10 pt-6">
+            <p class="text-xs text-white/40 max-w-[250px] mx-auto leading-relaxed">
+                Please present this code at the sanctuary entrance for priority check-in.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const name = params.get('name');
+            const email = params.get('email');
+            
+            if(!name || !email) {
+                document.body.innerHTML = '<div class="text-center mt-20 text-white/50">Invalid Ticket Link.</div>';
+                return;
+            }
+
+            document.getElementById('guest-name').innerText = decodeURIComponent(name);
+            document.getElementById('guest-email').innerText = decodeURIComponent(email);
+
+            // Generate QR Code Payload
+            const qrPayload = `KY-GUEST-${decodeURIComponent(email)}`;
+            
+            new QRCode(document.getElementById("qr-code"), {
+                text: qrPayload,
+                width: 200,
+                height: 200,
+                colorDark : "#000000",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
+        });
+    </script>
+</body>
+</html>

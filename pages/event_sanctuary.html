@@ -1383,6 +1383,37 @@
                     }
                 }
 
+                // 2. Check for Guest Ticket QR (KY-GUEST-...)
+                if (decodedText.startsWith('KY-GUEST-')) {
+                    const guestEmail = decodedText.split('KY-GUEST-')[1];
+                    if (window.supabaseClient) {
+                        const { data: guestData, error: guestErr } = await window.supabaseClient
+                            .from('guest_registrations')
+                            .select('id, name')
+                            .eq('event_id', currentEventId)
+                            .eq('email', guestEmail)
+                            .single();
+                        
+                        if (guestErr || !guestData) throw new Error("Guest not found on list for this event.");
+
+                        // Register check-in (using ticket_type to mark as guest)
+                        await window.supabaseClient.from('event_checkins').insert([{
+                            event_id: currentEventId,
+                            artist_id: null,
+                            ticket_type: 'Guest_CheckIn'
+                        }]);
+
+                        scanIcon.innerText = "check_circle";
+                        scanIcon.className = "material-symbols-outlined text-4xl mb-2 text-[#00ffcc]";
+                        scanMessage.innerText = "Guest Access Granted";
+                        scanMessage.className = "font-bold text-[#00ffcc]";
+                        scanDetails.innerText = `Welcome, ${guestData.name}!`;
+                        return;
+                    } else {
+                        throw new Error("No database connection for guest lookup.");
+                    }
+                }
+
                 // 3. Normal Guest Ticket Check
                 const ticketData = JSON.parse(decodedText);
                 if (!ticketData.email || !ticketData.eventId) throw new Error("Invalid ticket format");
@@ -1800,6 +1831,48 @@
                 if(analyticsCurrentSlide > 0) setAnalyticsSlide(analyticsCurrentSlide - 1);
             }
         }
+        async function inviteGuestPrompt() {
+            const name = prompt("Guest Name:");
+            if(!name) return;
+            const email = prompt("Guest Email:");
+            if(!email) return;
+
+            if(!window.supabaseClient) return alert("Database connection required.");
+
+            try {
+                const { error } = await window.supabaseClient.from('guest_registrations').insert([{
+                    event_id: currentEventId,
+                    name: name.trim(),
+                    email: email.trim()
+                }]);
+
+                if (error) throw error;
+
+                const ticketUrl = `${window.location.origin}/pages/guest_ticket.html?name=${encodeURIComponent(name.trim())}&email=${encodeURIComponent(email.trim())}`;
+                
+                if (navigator.share) {
+                    try {
+                        await navigator.share({
+                            title: 'VIP Guest Ticket',
+                            text: `You've been invited! Here is your VIP ticket for Circle D Flow:`,
+                            url: ticketUrl
+                        });
+                    } catch(e) {
+                        console.log("Share cancelled", e);
+                        prompt("Guest added! Copy this link to send them their ticket:", ticketUrl);
+                    }
+                } else {
+                    prompt("Guest added! Copy this link to send them their ticket:", ticketUrl);
+                }
+                
+                // Refresh list
+                openAnalyticsModal();
+                
+            } catch (err) {
+                console.error("Invite Error:", err);
+                alert("Failed to invite guest: " + err.message);
+            }
+        }
     </script>
     
     <!-- Flowee Overlay HTML -->
@@ -2003,8 +2076,13 @@
                         </div>
                     </div>
                     <div class="bg-black border border-white/10 p-4 rounded-xl flex-1 flex flex-col min-h-0">
-                        <p class="text-[10px] uppercase tracking-widest text-[#00ffcc] mb-1 font-bold text-center">Guest List Registrations</p>
-                        <div id="analytics-guests" class="text-sm text-left mt-3 flex-1 overflow-y-auto hide-scrollbar">
+                        <div class="flex justify-between items-center mb-1">
+                            <p class="text-[10px] uppercase tracking-widest text-[#00ffcc] font-bold">Guest List Registrations</p>
+                            <button onclick="inviteGuestPrompt()" class="text-[#00ffcc] hover:text-white transition-colors bg-white/5 rounded-full p-1 border border-[#00ffcc]/30" title="Invite Guest">
+                                <span class="material-symbols-outlined text-[14px]">person_add</span>
+                            </button>
+                        </div>
+                        <div id="analytics-guests" class="text-sm text-left mt-2 flex-1 overflow-y-auto hide-scrollbar">
                             <span class="text-white/50 text-xs italic text-center block">Loading...</span>
                         </div>
                     </div>
