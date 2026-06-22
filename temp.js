@@ -1,309 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Create Impact | Circle D Flow</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&family=Cinzel:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    <link rel="stylesheet" href="../css/styles.css">
-    <style>
-        body {
-            background-color: #09090b; /* bg-zinc-950 */
-            color: #ffffff;
-            overflow-x: hidden;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-        
-        .gold-accent { color: #D4AF37; }
-        .gold-border { border-color: #D4AF37; }
-        .gold-glow { box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); }
-        .cyan-glow { box-shadow: 0 0 15px rgba(0, 255, 204, 0.4); }
 
-        .stripe-btn {
-            background: linear-gradient(135deg, #635bff, #0a2540);
-            box-shadow: 0 4px 15px rgba(99, 91, 255, 0.4);
-            transition: all 0.2s ease;
-        }
-        .stripe-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(99, 91, 255, 0.6);
-        }
-    </style>
-</head>
-<body class="pb-24">
-
-    <!-- Burger Menu -->
-    <div id="burger-menu" class="fixed top-0 left-0 w-full h-screen bg-black/95 z-[100] transform -translate-x-full transition-transform duration-300 flex flex-col justify-center items-center gap-8">
-        <button onclick="toggleBurger()" class="absolute top-6 right-6 text-white/50 hover:text-white">
-            <span class="material-symbols-outlined text-4xl">close</span>
-        </button>
-        <a href="about.html" class="font-serif text-3xl uppercase tracking-widest gold-accent hover:text-white transition">About Us</a>
-        <a href="/" class="font-serif text-3xl uppercase tracking-widest text-[#00ffcc] hover:text-white transition">Become Member</a>
-        <a href="policy.html" class="font-serif text-3xl uppercase tracking-widest text-white/50 hover:text-white transition">Legal Policy</a>
-    </div>
-
-    <!-- Header Navigation -->
-    <div class="fixed top-0 left-0 w-full bg-black/80 backdrop-blur-md z-50 border-b border-white/10 h-[60px]">
-        <div class="flex items-center justify-between p-4 h-full">
-            <button onclick="toggleBurger()" class="material-symbols-outlined text-white/50 hover:text-white transition">menu</button>
-            <h1 class="font-serif text-lg tracking-widest uppercase truncate max-w-[150px] text-center" id="header-title">THE IMPACT</h1>
-            <button onclick="shareImpact()" class="material-symbols-outlined text-[#00ffcc] hover:text-white transition">ios_share</button>
-        </div>
-    </div>
-
-    <!-- Main Content Area -->
-    <div class="mt-[60px] p-4 max-w-md mx-auto" id="loading-state">
-        <div class="flex flex-col items-center justify-center mt-20">
-            <span class="material-symbols-outlined text-4xl text-[#00ffcc] animate-spin mb-4">sync</span>
-            <p class="text-sm text-white/50 animate-pulse tracking-widest uppercase">Connecting to Event Node...</p>
-        </div>
-    </div>
-
-    <div class="mt-[60px] max-w-md mx-auto hidden h-[calc(100vh-60px)]" id="impact-content">
-        <div class="swiper impactSwiper w-full h-full">
-            <div class="swiper-wrapper">
-                
-                <!-- Slide 1: Flyer & CTA -->
-                <div class="swiper-slide p-4 flex flex-col justify-center overflow-y-auto pb-24">
-                    <!-- Flyer Container -->
-                    <div class="w-full aspect-[4/5] rounded-xl overflow-hidden mb-4 relative border border-white/10 shadow-2xl">
-                        <div id="flyer-image" class="absolute inset-0 bg-cover bg-center" style="background-image: url('../Assets/images/logo.png');"></div>
-                    </div>
-                    
-                    <!-- Title and Info -->
-                    <div class="w-full px-2 mb-6 text-center">
-                        <p class="text-xs gold-accent font-bold tracking-widest uppercase mb-1" id="event-type">Secret Gathering</p>
-                        <h2 class="font-serif text-3xl text-white uppercase leading-tight drop-shadow-lg" id="event-title">Loading...</h2>
-                        <div class="flex items-center justify-center gap-2 mt-2 text-white/80 text-sm">
-                            <span class="material-symbols-outlined text-sm">calendar_month</span>
-                            <span id="event-date">TBA</span>
-                        </div>
-                    </div>
-
-                    <!-- Call to Action -->
-                    <div class="mb-8">
-                        <button onclick="openCheckoutSheet()" class="w-full stripe-btn text-white font-bold py-4 rounded-xl flex items-center justify-center gap-3 uppercase tracking-widest text-sm">
-                            <span class="material-symbols-outlined">payments</span>
-                            Claim Ticket
-                        </button>
-                        <p class="text-center text-[10px] text-white/40 mt-2">Secure encrypted payment processing via Stripe.</p>
-                    </div>
-                </div>
-
-                <!-- Slide 2: Event Vision -->
-                <div class="swiper-slide p-4 flex flex-col justify-start overflow-y-auto pb-48 pt-16">
-                    <div class="bg-white/5 border border-white/10 rounded-xl p-5 relative overflow-hidden">
-                        <div class="absolute top-0 right-0 w-32 h-32 bg-[#00ffcc]/10 blur-3xl rounded-full pointer-events-none"></div>
-                        <h3 class="text-xs uppercase tracking-widest text-[#00ffcc] font-bold mb-3 flex items-center gap-2">
-                            <span class="material-symbols-outlined text-sm">visibility</span> The Vision
-                        </h3>
-                        <p id="event-description" class="text-sm italic text-white/80 font-serif leading-relaxed line-clamp-3 transition-all duration-300 whitespace-pre-wrap">
-                            Loading the soul of the event...
-                        </p>
-                        <button id="vision-more-btn" onclick="toggleVision()" class="text-[10px] uppercase tracking-widest text-[#00ffcc] font-bold mt-2 hidden">+ More</button>
-                    </div>
-                </div>
-
-                <!-- Slide 2.5: The Program (Blueprint) -->
-                <div class="swiper-slide p-4 flex flex-col justify-start overflow-y-auto pb-48 pt-16">
-                    <h3 class="text-xs uppercase tracking-widest text-[#d4af37] mb-3 pl-1">The Program</h3>
-                    <div class="relative pl-4 border-l border-white/10 space-y-6 mt-4" id="program-list">
-                        <!-- Populated via JS -->
-                        <p class="text-xs text-white/30 italic">No timeline data available.</p>
-                    </div>
-                </div>
-
-                <!-- Slide 3: Lineup / Crew -->
-                <div class="swiper-slide p-4 flex flex-col justify-start overflow-y-auto pb-48 pt-16">
-                    <h3 class="text-xs uppercase tracking-widest text-white/50 mb-3 pl-1">Confirmed Flow Nodes</h3>
-                    <div id="crew-list" class="flex flex-col gap-3">
-                        <!-- Populated via JS -->
-                    </div>
-                </div>
-
-                <!-- Slide 4: Location Details with Slideshow -->
-                <div class="swiper-slide flex flex-col justify-end pb-32 relative overflow-hidden">
-                    <!-- Background Slideshow -->
-                    <div class="absolute inset-0 z-0 bg-black">
-                        <div class="swiper locationSwiper w-full h-full">
-                            <div class="swiper-wrapper" id="location-swiper-wrapper"></div>
-                        </div>
-                        <!-- Gradient Overlay (adjusted for clarity) -->
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-transparent z-10 pointer-events-none"></div>
-                    </div>
-
-                    <!-- Back Button to slide 3 -->
-                    <button onclick="document.querySelector('.impactSwiper').swiper.slidePrev()" class="absolute top-6 left-6 z-30 bg-black/50 backdrop-blur-md border border-white/20 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-white/10 transition shadow-lg">
-                        <span class="material-symbols-outlined text-xl">arrow_back</span>
-                    </button>
-
-                    <div class="bg-black/60 backdrop-blur-md border border-white/10 rounded-xl p-5 z-20 mx-4 shadow-2xl relative mt-auto border-b-4 border-b-[#00ffcc]/50">
-                        <h3 class="text-xs uppercase tracking-widest text-[#00ffcc] font-bold mb-3 flex items-center gap-2">
-                            <span class="material-symbols-outlined text-sm">explore</span> Location Data
-                        </h3>
-                        <p class="text-sm font-bold flex items-center gap-2" id="event-location">
-                            <span class="material-symbols-outlined text-[#d4af37] text-lg">location_on</span>
-                            Loading...
-                        </p>
-                    </div>
-                </div>
-
-            </div>
-            <!-- Pagination -->
-            <div class="swiper-pagination"></div>
-        </div>
-    </div>
-
-    <!-- Sticky Checkout Button -->
-    <div class="fixed bottom-0 left-0 w-full p-4 bg-gradient-to-t from-black via-black/90 to-transparent z-[60] hidden" id="sticky-checkout-container">
-        <button onclick="openCheckoutSheet()" class="w-full max-w-md mx-auto stripe-btn text-white font-bold py-4 rounded-xl flex items-center justify-center gap-3 uppercase tracking-widest text-sm shadow-[0_0_20px_rgba(99,91,255,0.3)]">
-            <span class="material-symbols-outlined">payments</span>
-            Claim Ticket
-        </button>
-    </div>
-
-    <!-- Bottom Sheet Checkout -->
-    <div id="checkout-sheet-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[110] hidden transition-opacity opacity-0" onclick="closeCheckoutSheet()"></div>
-    <div id="checkout-sheet" class="fixed bottom-0 left-0 w-full bg-[#0a0a0f] border-t border-white/10 rounded-t-3xl z-[120] transform translate-y-full transition-transform duration-300 p-6 flex flex-col shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
-        <div class="w-12 h-1 bg-white/20 rounded-full mx-auto mb-6"></div>
-        <h3 class="font-serif text-xl text-white mb-4 uppercase tracking-widest flex items-center gap-2"><span class="material-symbols-outlined text-[#d4af37]">local_activity</span> Select Ticket</h3>
-        <div id="sheet-tickets" class="space-y-3 mb-6 overflow-y-auto max-h-[40vh] hide-scrollbar">
-            <!-- dynamically populated -->
-        </div>
-        <button id="btn-proceed-checkout" onclick="proceedToCheckout()" class="w-full stripe-btn text-white font-bold py-4 rounded-xl flex items-center justify-center gap-3 uppercase tracking-widest text-sm opacity-50 cursor-not-allowed transition-opacity" disabled>
-            <span class="material-symbols-outlined">lock</span>
-            Checkout via Stripe
-        </button>
-    </div>
-
-    <!-- Node Profile Modal -->
-    <div id="node-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[130] hidden flex-col items-center justify-center p-4 opacity-0 transition-opacity duration-300">
-        <div class="bg-[#111] border border-white/10 rounded-2xl w-full max-w-sm overflow-hidden relative shadow-2xl">
-            <button onclick="closeNodeModal()" class="absolute top-4 right-4 text-white/50 hover:text-white z-10 bg-black/50 rounded-full p-1">
-                <span class="material-symbols-outlined">close</span>
-            </button>
-            <div id="node-modal-img" class="w-full aspect-square bg-cover bg-center"></div>
-            <div class="p-6">
-                <h3 id="node-modal-name" class="font-serif text-2xl text-white tracking-widest uppercase mb-1">Name</h3>
-                <p id="node-modal-role" class="text-xs uppercase tracking-widest text-[#d4af37] mb-4">Role</p>
-                <p id="node-modal-bio" class="text-sm text-white/70 italic leading-relaxed mb-6 font-serif">Bio...</p>
-                <a id="node-modal-social" href="#" target="_blank" class="w-full py-3 bg-white/5 border border-white/10 text-white rounded-lg hover:bg-white/10 transition flex items-center justify-center gap-2 text-sm uppercase tracking-widest font-bold">
-                    <span class="material-symbols-outlined">link</span> Connect
-                </a>
-                <a id="node-modal-music" href="#" target="_blank" class="w-full mt-2 py-3 bg-[#ff00cc]/20 border border-[#ff00cc]/30 text-[#ff00cc] rounded-lg hover:bg-[#ff00cc]/30 transition flex items-center justify-center gap-2 text-sm uppercase tracking-widest font-bold hidden">
-                    <span class="material-symbols-outlined">headphones</span> Listen to Music
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Payment Simulation Modal -->
-    <div id="stripe-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[100] hidden flex flex-col items-center justify-center p-4">
-        <div class="bg-white text-black p-6 rounded-2xl w-full max-w-sm relative">
-            <button onclick="closePayment()" class="absolute top-4 right-4 text-black/50 hover:text-black">
-                <span class="material-symbols-outlined">close</span>
-            </button>
-            
-            <div class="text-center mb-6">
-                <div class="w-12 h-12 bg-[#635bff]/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <span class="material-symbols-outlined text-[#635bff]">lock</span>
-                </div>
-                <h3 class="font-bold text-lg">Stripe Checkout</h3>
-                <p class="text-sm text-gray-500" id="checkout-event-title">Event Ticket</p>
-            </div>
-            
-            <div class="space-y-4 mb-6">
-                <div class="flex justify-between border-b pb-2">
-                    <span class="text-gray-600">Ticket Price</span>
-                    <span class="font-bold">€15.00</span>
-                </div>
-                <div class="flex justify-between border-b pb-2">
-                    <span class="text-gray-600">Fee</span>
-                    <span class="font-bold">€0.00</span>
-                </div>
-                <div class="flex justify-between text-lg">
-                    <span class="font-bold">Total</span>
-                    <span class="font-bold text-[#635bff]">€15.00</span>
-                </div>
-            </div>
-            
-            <button onclick="simulateSuccess()" class="w-full bg-[#635bff] text-white font-bold py-3 rounded-lg hover:bg-[#5249e5] transition flex items-center justify-center gap-2">
-                Pay €15.00
-            </button>
-        </div>
-    </div>
-
-    <!-- Flowee Interactive Avatar -->
-    <div id="impact-flowee" class="fixed bottom-28 right-6 z-40 hidden flex items-end justify-end gap-3 pointer-events-none">
-        <div class="bg-black/80 backdrop-blur-md border border-[#00ffcc]/30 p-4 rounded-2xl rounded-br-none max-w-[70vw] text-xs font-bold shadow-[0_0_20px_rgba(0,255,204,0.15)] pointer-events-auto relative transform transition-all duration-500 scale-0 origin-bottom-right" id="flowee-bubble">
-            <p id="flowee-message" class="leading-relaxed whitespace-pre-wrap">Loading signal...</p>
-        </div>
-        <div class="w-16 h-16 rounded-full bg-black/80 border-2 border-[#00ffcc] flex items-center justify-center pointer-events-auto cursor-pointer shadow-[0_0_15px_rgba(0,255,204,0.4)]" onclick="toggleFloweeMessage()">
-            <img src="../Assets/images/logo.png" class="w-10 h-10 rounded-full animate-pulse">
-        </div>
-    </div>
-
-    <!-- Guest List Modal -->
-    <div id="guestlist-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[100] hidden flex flex-col items-center justify-center p-4">
-        <div class="bg-[#111] text-white p-6 rounded-2xl border border-[#00ffcc]/20 w-full max-w-md relative shadow-[0_0_50px_rgba(0,255,204,0.1)]">
-            <button onclick="closeGuestListFlow()" class="absolute top-4 right-4 text-white/50 hover:text-white transition">
-                <span class="material-symbols-outlined">close</span>
-            </button>
-            
-            <div id="guestlist-form">
-                <div class="text-center mb-6">
-                    <span class="material-symbols-outlined text-4xl text-[#00ffcc] mb-2">vpn_key</span>
-                    <h3 class="font-serif text-2xl uppercase tracking-widest text-white">Guest List</h3>
-                    <p class="text-xs text-white/50 mt-2">Enter the secret password to secure your spot.</p>
-                </div>
-                
-                <div class="space-y-4 mb-6">
-                    <div>
-                        <label class="text-[10px] uppercase tracking-widest text-white/50 mb-1 block">Password</label>
-                        <input type="password" id="gl-password" class="w-full bg-black border border-[#00ffcc]/50 rounded-lg p-3 text-[#00ffcc] font-mono tracking-widest focus:border-[#00ffcc] focus:outline-none transition shadow-[inset_0_0_10px_rgba(0,255,204,0.1)]" placeholder="••••••••">
-                    </div>
-                    <div>
-                        <label class="text-[10px] uppercase tracking-widest text-white/50 mb-1 block">Full Name</label>
-                        <input type="text" id="gl-name" class="w-full bg-black border border-white/20 rounded-lg p-3 text-white focus:border-[#00ffcc] focus:outline-none transition" placeholder="Neo">
-                    </div>
-                    <div>
-                        <label class="text-[10px] uppercase tracking-widest text-white/50 mb-1 block">Email</label>
-                        <input type="email" id="gl-email" class="w-full bg-black border border-white/20 rounded-lg p-3 text-white focus:border-[#00ffcc] focus:outline-none transition" placeholder="you@example.com">
-                    </div>
-                    <div>
-                        <label class="text-[10px] uppercase tracking-widest text-white/50 mb-1 block">Language</label>
-                        <select id="gl-lang" class="w-full bg-black border border-white/20 rounded-lg p-3 text-white focus:border-[#00ffcc] focus:outline-none transition">
-                            <option value="en">English</option>
-                            <option value="pt">Português</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <button id="gl-submit-btn" onclick="submitGuestList()" class="w-full bg-[#00ffcc] text-black font-black py-3 rounded-lg hover:bg-[#00ffcc]/80 transition flex items-center justify-center gap-2 tracking-widest uppercase">
-                    <span class="material-symbols-outlined">login</span> Verify & Join
-                </button>
-            </div>
-            
-            <div id="guestlist-success" class="hidden text-center py-4">
-                <span class="material-symbols-outlined text-6xl text-[#00ffcc] mb-4">check_circle</span>
-                <h3 class="font-serif text-2xl text-[#00ffcc] mb-2 uppercase tracking-widest">You're In!</h3>
-                <p class="text-sm text-white/70 mb-4">You have successfully joined the guest list. A confirmation email and QR code will be sent to your email address shortly.</p>
-                <button onclick="closeGuestListFlow()" class="w-full border border-[#00ffcc]/50 text-[#00ffcc] font-bold py-3 rounded-lg hover:bg-[#00ffcc]/10 transition tracking-widest uppercase">
-                    Close
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../js/api_config.js"></script>
-    <script src="../js/agents/supabase_client.js?v=4.1"></script>
-
-    <script>
         let currentEventData = null;
 
         document.addEventListener('DOMContentLoaded', async () => {
@@ -393,10 +88,10 @@
                 document.getElementById('flyer-image').style.backgroundImage = `url('${event.flyer_url}')`;
             }
 
-            // Render Crew (Swipe Cards)
+            // Render Crew (Vertical Scroll)
             const crewList = document.getElementById('crew-list');
             crewList.innerHTML = '';
-            crewList.className = 'flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 hide-scrollbar';
+            crewList.className = 'flex flex-col gap-4 pb-4 overflow-y-auto max-h-[60vh] hide-scrollbar w-full items-center';
             
             let participants = [];
             if (event.needs && event.needs.team) {
@@ -426,7 +121,7 @@
                     if(role.includes('Audio') || role.includes('DJ') || role.includes('Performance')) color = 'from-[#00ffcc] to-blue-600';
 
                     crewList.innerHTML += `
-                        <div class="snap-center shrink-0 w-[220px] bg-white/5 border border-white/10 rounded-xl overflow-hidden cursor-pointer hover:border-white/30 transition shadow-lg" onclick="openNodeModal('${name}', '${role}', '${encodedImg}', '${encodedBio}', '${encodedSocial}', '${encodedMusic}')">
+                        <div class="shrink-0 w-full max-w-[280px] bg-white/5 border border-white/10 rounded-xl overflow-hidden cursor-pointer hover:border-white/30 transition shadow-lg" onclick="openNodeModal('${name}', '${role}', '${encodedImg}', '${encodedBio}', '${encodedSocial}', '${encodedMusic}')">
                             <div class="w-full aspect-square bg-gradient-to-tr ${color} relative">
                                 ${imageHtml}
                             </div>
@@ -499,8 +194,7 @@
                         </label>
                     `;
                     hasTickets = true;
-                }
-                if (t.ticket2 && t.ticket2.name && t.ticket2.price) {
+                     if (t.ticket2 && t.ticket2.name && t.ticket2.price) {
                     sheetTickets.innerHTML += `
                         <label class="flex items-center justify-between p-4 bg-white/5 border border-white/10 rounded-xl cursor-pointer hover:bg-white/10 transition">
                             <div class="flex items-center gap-3">
@@ -669,29 +363,26 @@
             btn.disabled = true;
 
             try {
-                // Call our Vercel API backend
                 const response = await fetch('/api/create-checkout', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        ticketName: activeTicketSelection.name,
-                        price: activeTicketSelection.price,
-                        quantity: 1,
                         eventId: currentEventData.id,
-                        eventTitle: currentEventData.title || 'Circle D Flow Event'
+                        ticketName: activeTicketSelection.name,
+                        price: activeTicketSelection.price
                     })
                 });
-
                 const data = await response.json();
                 if (data.url) {
                     window.location.href = data.url;
                 } else {
-                    throw new Error(data.error || "Unknown Error");
+                    throw new Error(data.error || 'Failed to create checkout session');
                 }
-            } catch (err) {
-                console.error("Stripe Checkout Failed:", err);
-                alert("Payment initiation failed. Ensure Stripe API is configured. Mocking success...");
-                simulateSuccess();
+            } catch(e) {
+                console.error("Checkout error:", e);
+                alert("Payment initiation failed. Network error or missing Stripe keys.");
+                btn.innerHTML = orig;
+                btn.disabled = false;
             }
         }
 
@@ -832,6 +523,4 @@
                 alert("Share URL: " + window.location.href);
             }
         }
-    </script>
-</body>
-</html>
+    
