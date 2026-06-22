@@ -272,6 +272,13 @@
                         <label class="text-[10px] uppercase tracking-widest text-white/50 mb-1 block">Email</label>
                         <input type="email" id="gl-email" class="w-full bg-black border border-white/20 rounded-lg p-3 text-white focus:border-[#00ffcc] focus:outline-none transition" placeholder="you@example.com">
                     </div>
+                    <div>
+                        <label class="text-[10px] uppercase tracking-widest text-white/50 mb-1 block">Language</label>
+                        <select id="gl-lang" class="w-full bg-black border border-white/20 rounded-lg p-3 text-white focus:border-[#00ffcc] focus:outline-none transition">
+                            <option value="en">English</option>
+                            <option value="pt">Português</option>
+                        </select>
+                    </div>
                 </div>
                 
                 <button id="gl-submit-btn" onclick="submitGuestList()" class="w-full bg-[#00ffcc] text-black font-black py-3 rounded-lg hover:bg-[#00ffcc]/80 transition flex items-center justify-center gap-2 tracking-widest uppercase">
@@ -696,6 +703,7 @@
             const passInput = document.getElementById('gl-password').value;
             const nameInput = document.getElementById('gl-name').value;
             const emailInput = document.getElementById('gl-email').value;
+            const langInput = document.getElementById('gl-lang').value;
             
             if (!passInput || !nameInput || !emailInput) {
                 alert("Please fill in all fields.");
@@ -704,33 +712,42 @@
             
             const expectedPass = currentEventData.needs?.tickets?.guestlist?.password;
             if (passInput !== expectedPass) {
-                alert("Incorrect Password.");
+                alert(langInput === 'pt' ? "Senha incorreta." : "Incorrect Password.");
                 return;
             }
             
             const btn = document.getElementById('gl-submit-btn');
             const orig = btn.innerHTML;
-            btn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Verifying...';
+            btn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> ' + (langInput === 'pt' ? 'Verificando...' : 'Verifying...');
             btn.disabled = true;
             
             try {
-                if (window.supabaseClient) {
-                    const { error } = await window.supabaseClient.from('guest_registrations').insert([
-                        {
-                            event_id: currentEventData.id,
-                            name: nameInput,
-                            email: emailInput
-                        }
-                    ]);
-                    if (error) throw error;
+                const response = await fetch('/api/register-guest', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        eventId: currentEventData.id,
+                        name: nameInput,
+                        email: emailInput,
+                        language: langInput,
+                        eventTitle: currentEventData.title || "Circle D Flow Event",
+                        eventDate: currentEventData.event_date || "TBA",
+                        eventAddress: currentEventData.address || "TBA"
+                    })
+                });
+                
+                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data.error || "Failed to register");
                 }
                 
+                // Show Success
                 document.getElementById('guestlist-form').classList.add('hidden');
                 document.getElementById('guestlist-success').classList.remove('hidden');
                 
             } catch (e) {
                 console.error(e);
-                alert("Error registering. Please try again.");
+                alert(langInput === 'pt' ? "Erro ao registrar. Tente novamente." : "Error registering. Please try again.");
             } finally {
                 btn.innerHTML = orig;
                 btn.disabled = false;

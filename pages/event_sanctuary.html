@@ -929,7 +929,7 @@
                 
                 container.innerHTML += `
                     <div class="flex items-center justify-between bg-black/40 p-4 rounded-lg border border-white/5 transition hover:border-[#00ffcc]/30">
-                        <div class="cursor-pointer flex-1" onclick="openFloweeOverlay('${artist.id}', '${artist.name}', '${artist.role}', '${artist.status}', '${artist.link || ''}', '${artist.imgUrl || ''}', '${(artist.bio || '').replace(/'/g, "\\'")}', '${artist.socialLink || ''}')">
+                        <div class="cursor-pointer flex-1" onclick="openFloweeOverlay('${artist.id}')">
                             <p class="text-sm font-bold flex items-center gap-2">
                                 ${artist.name} 
                                 <span class="w-2 h-2 rounded-full ${statusColor} shadow-[0_0_5px_currentColor]"></span>
@@ -1102,8 +1102,16 @@
         
         let activeArtistData = null;
 
-        function openFloweeOverlay(artistId, artistName, role, currentStatus, existingDriveLink = "", imgUrl = "", bio = "", socialLink = "") {
-            activeArtistData = { id: artistId, name: artistName, role: role, status: currentStatus, link: existingDriveLink, imgUrl: imgUrl, bio: bio, socialLink: socialLink };
+        function openFloweeOverlay(artistId) {
+            const team = window.currentEventData?.needs?.team || [];
+            const artist = team.find(a => a.id === artistId);
+            if (!artist) return;
+            
+            activeArtistData = artist; // Keep a reference
+            const artistName = artist.name;
+            const role = artist.role;
+            const currentStatus = artist.status;
+            const existingDriveLink = artist.link || "";
 
             document.getElementById('current-artist-role').innerText = role;
             
@@ -1452,7 +1460,7 @@
                     
                     // 4. Update UI
                     activeArtistData.status = newStatus;
-                    openFloweeOverlay(team[idx].id, team[idx].name, team[idx].role, newStatus, team[idx].link, team[idx].imgUrl, team[idx].bio, team[idx].socialLink);
+                    openFloweeOverlay(team[idx].id);
                     renderTeamChecklist({ needs: quest.needs });
                 }
             }
