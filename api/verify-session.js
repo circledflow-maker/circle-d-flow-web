@@ -43,10 +43,27 @@ export default async function handler(req, res) {
             .single();
 
           if (!existing) {
-              await dbClient.from('user_rolls').insert([
-                  { email: email, event_id: eventId, ticket_name: ticketName, rolled_value: 0, scanned: false }
-              ]);
-              shouldSendEmail = true;
+              const dbResponse = await fetch(`${supabaseUrl}/rest/v1/user_rolls`, {
+                  method: 'POST',
+                  headers: {
+                      'apikey': supabaseKey,
+                      'Authorization': `Bearer ${supabaseKey}`,
+                      'Content-Type': 'application/json',
+                      'Prefer': 'return=minimal'
+                  },
+                  body: JSON.stringify({
+                      email: email, 
+                      event_id: eventId, 
+                      ticket_name: ticketName, 
+                      rolled_value: 0, 
+                      scanned: false
+                  })
+              });
+              if (dbResponse.ok) {
+                  shouldSendEmail = true;
+              } else {
+                  console.error("Supabase insert error:", await dbResponse.text());
+              }
           } else {
               // Update ticket name if it was a dice ticket (dice ticket doesn't set ticket_name yet)
               if (!existing.ticket_name) {

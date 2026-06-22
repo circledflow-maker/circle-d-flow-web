@@ -30,20 +30,28 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: "Missing required fields" });
         }
 
-        // 1. Insert into Supabase user_rolls table (reusing the existing table for tickets)
-        const { error: dbError } = await supabase.from('user_rolls').insert([
-            {
+        // 1. Insert into Supabase user_rolls table using raw fetch
+        const dbResponse = await fetch(`${supabaseUrl}/rest/v1/user_rolls`, {
+            method: 'POST',
+            headers: {
+                'apikey': supabaseKey,
+                'Authorization': `Bearer ${supabaseKey}`,
+                'Content-Type': 'application/json',
+                'Prefer': 'return=minimal'
+            },
+            body: JSON.stringify({
                 event_id: eventId,
                 ticket_name: 'Guest List: ' + name,
                 email: email,
                 rolled_value: 0,
                 scanned: false
-            }
-        ]);
+            })
+        });
 
-        if (dbError) {
-            console.error("Supabase insert error:", dbError);
-            return res.status(500).json({ error: "Database error", details: dbError.message });
+        if (!dbResponse.ok) {
+            const errorText = await dbResponse.text();
+            console.error("Supabase insert error:", errorText);
+            return res.status(500).json({ error: "Database error", details: errorText });
         }
 
         // 2. Generate QR Code base64
