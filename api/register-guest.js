@@ -6,7 +6,7 @@ const resend = new Resend(process.env.RESEND_API_KEY || "re_4EN5hgyf_52v3D6JTJVM
 
 // Use the Service Role Key for backend insertion (bypassing RLS if necessary) or regular anon key since RLS is public insert
 const supabaseUrl = process.env.SUPABASE_URL || "https://agkmbaephgsnunlarntm.supabase.co";
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY;
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || "sb_publishable_VwT4qFpNCgNizSXMILBcKQ_aevHvWvM";
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 export default async function handler(req, res) {
@@ -31,12 +31,13 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: "Missing required fields" });
         }
 
-        // 1. Insert into Supabase guest_registrations table
-        const { error: dbError } = await supabase.from('guest_registrations').insert([
+        // 1. Insert into Supabase user_rolls table (reusing the existing table for tickets)
+        const { error: dbError } = await supabase.from('user_rolls').insert([
             {
                 event_id: eventId,
-                name: name,
-                email: email
+                ticket_name: 'Guest List: ' + name,
+                email: email,
+                scanned: false
             }
         ]);
 

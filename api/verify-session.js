@@ -14,8 +14,8 @@ export default async function handler(req, res) {
   const stripeKey = process.env.STRIPE_SECRET_KEY;
   if (!stripeKey) return res.status(500).json({ error: 'Stripe configured improperly' });
 
-  const supabaseUrl = process.env.SUPABASE_URL;
-  const supabaseKey = process.env.SUPABASE_ANON_KEY;
+  const supabaseUrl = process.env.SUPABASE_URL || "https://agkmbaephgsnunlarntm.supabase.co";
+  const supabaseKey = process.env.SUPABASE_ANON_KEY || "sb_publishable_VwT4qFpNCgNizSXMILBcKQ_aevHvWvM";
   let dbClient = null;
   if (supabaseUrl && supabaseKey) {
       dbClient = createClient(supabaseUrl, supabaseKey);
