@@ -4,7 +4,7 @@ const QRCode = require('qrcode');
 
 const resend = new Resend(process.env.RESEND_API_KEY || "re_4EN5hgyf_52v3D6JTJVMRQ1GW5Ds5gwkw");
 
-const envUrl = process.env.SUPABASE_URL ? process.env.SUPABASE_URL.replace(/['"]/g, '').trim() : "";
+const envUrl = process.env.SUPABASE_URL ? process.env.SUPABASE_URL.replace(/['"]/g, '').trim().replace(/\/$/, '') : "";
 const supabaseUrl = envUrl || "https://agkmbaephgsnunlarntm.supabase.co";
 const envKey = process.env.SUPABASE_SERVICE_ROLE_KEY ? process.env.SUPABASE_SERVICE_ROLE_KEY.replace(/['"]/g, '').trim() : process.env.SUPABASE_ANON_KEY ? process.env.SUPABASE_ANON_KEY.replace(/['"]/g, '').trim() : "";
 const supabaseKey = envKey || "sb_publishable_VwT4qFpNCgNizSXMILBcKQ_aevHvWvM";
