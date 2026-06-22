@@ -35,7 +35,8 @@ export default async function handler(req, res) {
       cancel_url: `${req.headers.origin}/pages/create_impact?id=${eventId}&canceled=true`,
       metadata: {
         eventId: eventId,
-        ticketName: ticketName
+        ticketName: ticketName,
+        eventTitle: eventTitle || "Circle D Flow Event"
       }
     });
 
