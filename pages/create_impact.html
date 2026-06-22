@@ -246,6 +246,50 @@
         </div>
     </div>
 
+    <!-- Guest List Modal -->
+    <div id="guestlist-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[100] hidden flex flex-col items-center justify-center p-4">
+        <div class="bg-[#111] text-white p-6 rounded-2xl border border-[#00ffcc]/30 w-full max-w-md relative shadow-[0_0_30px_rgba(0,255,204,0.15)]">
+            <button onclick="closeGuestListFlow()" class="absolute top-4 right-4 text-white/50 hover:text-[#00ffcc]">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+            
+            <div id="guestlist-form">
+                <h3 class="font-serif text-2xl text-[#00ffcc] mb-1 uppercase tracking-widest flex items-center gap-2">
+                    <span class="material-symbols-outlined">lock</span> Guest List
+                </h3>
+                <p class="text-xs text-white/50 mb-6 uppercase tracking-widest">Enter the secret code to join.</p>
+                
+                <div class="space-y-4 mb-6">
+                    <div>
+                        <label class="text-[10px] uppercase tracking-widest text-white/50 mb-1 block">Secret Password</label>
+                        <input type="text" id="gl-password" class="w-full bg-black border border-white/20 rounded-lg p-3 text-white focus:border-[#00ffcc] focus:outline-none transition" placeholder="Password">
+                    </div>
+                    <div>
+                        <label class="text-[10px] uppercase tracking-widest text-white/50 mb-1 block">Full Name</label>
+                        <input type="text" id="gl-name" class="w-full bg-black border border-white/20 rounded-lg p-3 text-white focus:border-[#00ffcc] focus:outline-none transition" placeholder="Your Name">
+                    </div>
+                    <div>
+                        <label class="text-[10px] uppercase tracking-widest text-white/50 mb-1 block">Email</label>
+                        <input type="email" id="gl-email" class="w-full bg-black border border-white/20 rounded-lg p-3 text-white focus:border-[#00ffcc] focus:outline-none transition" placeholder="you@example.com">
+                    </div>
+                </div>
+                
+                <button id="gl-submit-btn" onclick="submitGuestList()" class="w-full bg-[#00ffcc] text-black font-black py-3 rounded-lg hover:bg-[#00ffcc]/80 transition flex items-center justify-center gap-2 tracking-widest uppercase">
+                    <span class="material-symbols-outlined">login</span> Verify & Join
+                </button>
+            </div>
+            
+            <div id="guestlist-success" class="hidden text-center py-4">
+                <span class="material-symbols-outlined text-6xl text-[#00ffcc] mb-4">check_circle</span>
+                <h3 class="font-serif text-2xl text-[#00ffcc] mb-2 uppercase tracking-widest">You're In!</h3>
+                <p class="text-sm text-white/70 mb-4">You have successfully joined the guest list. A confirmation email and QR code will be sent to your email address shortly.</p>
+                <button onclick="closeGuestListFlow()" class="w-full border border-[#00ffcc]/50 text-[#00ffcc] font-bold py-3 rounded-lg hover:bg-[#00ffcc]/10 transition tracking-widest uppercase">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/api_config.js"></script>
@@ -341,10 +385,10 @@
                 document.getElementById('flyer-image').style.backgroundImage = `url('${event.flyer_url}')`;
             }
 
-            // Render Crew (Swipe Cards)
+            // Render Crew (Vertical Scroll)
             const crewList = document.getElementById('crew-list');
             crewList.innerHTML = '';
-            crewList.className = 'flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 hide-scrollbar';
+            crewList.className = 'flex flex-col gap-4 pb-4 overflow-y-auto max-h-[60vh] hide-scrollbar w-full items-center';
             
             let participants = [];
             if (event.needs && event.needs.team) {
@@ -374,7 +418,7 @@
                     if(role.includes('Audio') || role.includes('DJ') || role.includes('Performance')) color = 'from-[#00ffcc] to-blue-600';
 
                     crewList.innerHTML += `
-                        <div class="snap-center shrink-0 w-[220px] bg-white/5 border border-white/10 rounded-xl overflow-hidden cursor-pointer hover:border-white/30 transition shadow-lg" onclick="openNodeModal('${name}', '${role}', '${encodedImg}', '${encodedBio}', '${encodedSocial}', '${encodedMusic}')">
+                        <div class="shrink-0 w-full max-w-[280px] bg-white/5 border border-white/10 rounded-xl overflow-hidden cursor-pointer hover:border-white/30 transition shadow-lg" onclick="openNodeModal('${name}', '${role}', '${encodedImg}', '${encodedBio}', '${encodedSocial}', '${encodedMusic}')">
                             <div class="w-full aspect-square bg-gradient-to-tr ${color} relative">
                                 ${imageHtml}
                             </div>
@@ -447,8 +491,7 @@
                         </label>
                     `;
                     hasTickets = true;
-                }
-                if (t.ticket2 && t.ticket2.name && t.ticket2.price) {
+                     if (t.ticket2 && t.ticket2.name && t.ticket2.price) {
                     sheetTickets.innerHTML += `
                         <label class="flex items-center justify-between p-4 bg-white/5 border border-white/10 rounded-xl cursor-pointer hover:bg-white/10 transition">
                             <div class="flex items-center gap-3">
@@ -459,6 +502,22 @@
                                 </div>
                             </div>
                             <span class="text-lg font-serif">€${t.ticket2.price}</span>
+                        </label>
+                    `;
+                    hasTickets = true;
+                }
+                
+                if (t.guestlist && t.guestlist.qty && t.guestlist.password) {
+                    sheetTickets.innerHTML += `
+                        <label class="flex items-center justify-between p-4 bg-white/5 border border-[#00ffcc]/30 rounded-xl cursor-pointer hover:bg-white/10 transition">
+                            <div class="flex items-center gap-3">
+                                <input type="radio" name="selected_ticket" value="guestlist" class="w-4 h-4 accent-[#00ffcc]" onchange="selectTicket('Guest List', 0, true)">
+                                <div>
+                                    <p class="text-sm font-bold text-white uppercase tracking-widest">Guest List</p>
+                                    <p class="text-xs text-white/50 mt-1">${t.guestlist.qty} left &nbsp;|&nbsp; Password Req.</p>
+                                </div>
+                            </div>
+                            <span class="material-symbols-outlined text-[#00ffcc]">lock</span>
                         </label>
                     `;
                     hasTickets = true;
@@ -559,12 +618,16 @@
 
         let activeTicketSelection = null;
 
-        function selectTicket(name, price) {
-            activeTicketSelection = { name, price };
+        function selectTicket(name, price, isGuestList = false) {
+            activeTicketSelection = { name, price, isGuestList };
             const btn = document.getElementById('btn-proceed-checkout');
             btn.disabled = false;
             btn.classList.remove('opacity-50', 'cursor-not-allowed');
-            btn.innerHTML = `<span class="material-symbols-outlined">payments</span> Pay €${price}`;
+            if (isGuestList) {
+                btn.innerHTML = `<span class="material-symbols-outlined">lock_open</span> Enter Password`;
+            } else {
+                btn.innerHTML = `<span class="material-symbols-outlined">payments</span> Pay €${price}`;
+            }
         }
 
         function openCheckoutSheet() {
@@ -586,35 +649,91 @@
         async function proceedToCheckout() {
             if (!activeTicketSelection || !currentEventData) return;
             
+            if (activeTicketSelection.isGuestList) {
+                openGuestListFlow();
+                return;
+            }
+            
             const btn = document.getElementById('btn-proceed-checkout');
             const orig = btn.innerHTML;
             btn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Redirecting...';
             btn.disabled = true;
 
             try {
-                // Call our Vercel API backend
                 const response = await fetch('/api/create-checkout', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        ticketName: activeTicketSelection.name,
-                        price: activeTicketSelection.price,
-                        quantity: 1,
                         eventId: currentEventData.id,
-                        eventTitle: currentEventData.title || 'Circle D Flow Event'
+                        ticketName: activeTicketSelection.name,
+                        price: activeTicketSelection.price
                     })
                 });
-
                 const data = await response.json();
                 if (data.url) {
                     window.location.href = data.url;
                 } else {
-                    throw new Error(data.error || "Unknown Error");
+                    throw new Error(data.error || 'Failed to create checkout session');
                 }
-            } catch (err) {
-                console.error("Stripe Checkout Failed:", err);
-                alert("Payment initiation failed. Ensure Stripe API is configured. Mocking success...");
-                simulateSuccess();
+            } catch(e) {
+                console.error("Checkout error:", e);
+                alert("Payment initiation failed. Network error or missing Stripe keys.");
+                btn.innerHTML = orig;
+                btn.disabled = false;
+            }
+        }
+
+        function openGuestListFlow() {
+            closeCheckoutSheet();
+            document.getElementById('guestlist-modal').classList.remove('hidden');
+        }
+
+        function closeGuestListFlow() {
+            document.getElementById('guestlist-modal').classList.add('hidden');
+        }
+
+        async function submitGuestList() {
+            const passInput = document.getElementById('gl-password').value;
+            const nameInput = document.getElementById('gl-name').value;
+            const emailInput = document.getElementById('gl-email').value;
+            
+            if (!passInput || !nameInput || !emailInput) {
+                alert("Please fill in all fields.");
+                return;
+            }
+            
+            const expectedPass = currentEventData.needs?.tickets?.guestlist?.password;
+            if (passInput !== expectedPass) {
+                alert("Incorrect Password.");
+                return;
+            }
+            
+            const btn = document.getElementById('gl-submit-btn');
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Verifying...';
+            btn.disabled = true;
+            
+            try {
+                if (window.supabaseClient) {
+                    const { error } = await window.supabaseClient.from('guest_registrations').insert([
+                        {
+                            event_id: currentEventData.id,
+                            name: nameInput,
+                            email: emailInput
+                        }
+                    ]);
+                    if (error) throw error;
+                }
+                
+                document.getElementById('guestlist-form').classList.add('hidden');
+                document.getElementById('guestlist-success').classList.remove('hidden');
+                
+            } catch (e) {
+                console.error(e);
+                alert("Error registering. Please try again.");
+            } finally {
+                btn.innerHTML = orig;
+                btn.disabled = false;
             }
         }
 
