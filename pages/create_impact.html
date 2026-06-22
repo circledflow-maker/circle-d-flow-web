@@ -193,9 +193,7 @@
                 <a id="node-modal-social" href="#" target="_blank" class="w-full py-3 bg-white/5 border border-white/10 text-white rounded-lg hover:bg-white/10 transition flex items-center justify-center gap-2 text-sm uppercase tracking-widest font-bold">
                     <span class="material-symbols-outlined">link</span> Connect
                 </a>
-                <a id="node-modal-music" href="#" target="_blank" class="w-full mt-2 py-3 bg-[#ff00cc]/20 border border-[#ff00cc]/30 text-[#ff00cc] rounded-lg hover:bg-[#ff00cc]/30 transition flex items-center justify-center gap-2 text-sm uppercase tracking-widest font-bold hidden">
-                    <span class="material-symbols-outlined">headphones</span> Listen to Music
-                </a>
+                <div id="node-modal-player" class="hidden w-full"></div>
             </div>
         </div>
     </div>
@@ -808,12 +806,45 @@
                 socialEl.classList.add('hidden');
             }
 
-            const musicEl = document.getElementById('node-modal-music');
+            const playerContainer = document.getElementById('node-modal-player');
             if(music) {
-                musicEl.href = music;
-                musicEl.classList.remove('hidden');
+                let embedHtml = `<a href="${music}" target="_blank" class="w-full mt-2 py-3 bg-[#ff00cc]/20 border border-[#ff00cc]/30 text-[#ff00cc] rounded-lg hover:bg-[#ff00cc]/30 transition flex items-center justify-center gap-2 text-sm uppercase tracking-widest font-bold"><span class="material-symbols-outlined">headphones</span> Listen to Media</a>`;
+                
+                try {
+                    // YouTube
+                    if (music.includes('youtube.com/watch') || music.includes('youtu.be/')) {
+                        let videoId = '';
+                        if (music.includes('youtu.be/')) {
+                            videoId = music.split('youtu.be/')[1].split('?')[0];
+                        } else {
+                            videoId = new URL(music).searchParams.get('v');
+                        }
+                        if (videoId) {
+                            embedHtml = `<iframe class="w-full mt-4 rounded-lg aspect-video" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+                        }
+                    } 
+                    // SoundCloud
+                    else if (music.includes('soundcloud.com/')) {
+                        embedHtml = `<iframe class="w-full mt-4 rounded-lg h-[166px]" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=${encodeURIComponent(music)}&color=%23ff00cc&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"></iframe>`;
+                    }
+                    // Spotify
+                    else if (music.includes('spotify.com/')) {
+                        const spotifyUrl = music.replace('spotify.com/', 'spotify.com/embed/');
+                        embedHtml = `<iframe class="w-full mt-4 rounded-lg h-[152px]" src="${spotifyUrl}" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>`;
+                    }
+                    // Direct Audio
+                    else if (music.endsWith('.mp3') || music.endsWith('.wav')) {
+                        embedHtml = `<audio controls class="w-full mt-4 outline-none"><source src="${music}" type="audio/mpeg">Your browser does not support the audio element.</audio>`;
+                    }
+                } catch(e) {
+                    console.error("Failed to parse media URL:", e);
+                }
+
+                playerContainer.innerHTML = embedHtml;
+                playerContainer.classList.remove('hidden');
             } else {
-                musicEl.classList.add('hidden');
+                playerContainer.innerHTML = '';
+                playerContainer.classList.add('hidden');
             }
 
             const modal = document.getElementById('node-modal');
