@@ -1303,13 +1303,22 @@
 
         // --- QR Scanner Logic ---
         let html5QrcodeScanner = null;
-        function openScannerModal() {
+        async function openScannerModal() {
             document.getElementById('scanner-modal').classList.remove('hidden');
             document.getElementById('scan-result').classList.add('hidden');
+            document.getElementById('scanner-carousel').style.transform = 'translateX(0)';
             
             if (!html5QrcodeScanner) {
                 html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: {width: 250, height: 250} }, false);
                 html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+            }
+
+            try {
+                const regUrl = `${window.location.origin}/pages/artist_registration.html?eventId=${currentEventId}`;
+                const qrDataUrl = await QRCode.toDataURL(regUrl, { width: 250, margin: 1, color: { dark: '#000000ff', light: '#ffffffff' } });
+                document.getElementById('onboarding-qr-container').innerHTML = `<img src="${qrDataUrl}" alt="Artist Registration QR" />`;
+            } catch(e) {
+                console.error("QR Generation Error", e);
             }
         }
 
@@ -1344,14 +1353,7 @@
             scanDetails.innerText = "";
             
             try {
-                // 1. Check for Artist Registration Trigger
-                if (decodedText === 'ARTIST_SIGNUP_TRIGGER') {
-                    document.getElementById('scan-result').classList.add('hidden');
-                    document.getElementById('artist-signup-flow').classList.remove('hidden');
-                    return; // Stop here, form takes over
-                }
-                
-                // 2. Check for existing permanent artist QR (KY-FLOW-...)
+                // 1. Check for existing permanent artist QR (KY-FLOW-...)
                 if (decodedText.startsWith('KY-FLOW-')) {
                     if (window.supabaseClient) {
                         const { data: artistData, error: artistErr } = await window.supabaseClient
@@ -1730,131 +1732,28 @@
             };
             reader.readAsDataURL(file);
         }
-        let currentArtistType = null;
+        // --- Swipe Logic for Scanner Carousel ---
+        let touchStartX = 0;
+        let touchEndX = 0;
+        const scannerCarousel = document.getElementById('scanner-carousel');
+        const scannerModal = document.getElementById('scanner-modal');
+        
+        scannerModal.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, {passive: true});
 
-        function selectArtistType(type) {
-            currentArtistType = type;
-            document.getElementById('artist-type-selection').classList.add('hidden');
-            document.getElementById('artist-form-container').classList.remove('hidden');
-            
-            if(type === 'performance') {
-                document.getElementById('perf-fields').classList.remove('hidden');
-            } else {
-                document.getElementById('service-fields').classList.remove('hidden');
+        scannerModal.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, {passive: true});
+
+        function handleSwipe() {
+            const threshold = 50;
+            if (touchEndX < touchStartX - threshold) {
+                scannerCarousel.style.transform = 'translateX(-50%)';
             }
-        }
-
-        function addProductRow() {
-            const list = document.getElementById('product-list');
-            const row = document.createElement('div');
-            row.className = 'flex gap-2 product-row mt-2';
-            row.innerHTML = `
-                <input type="text" placeholder="Product Name" class="bg-black border border-white/20 rounded p-2 text-white outline-none focus:border-[#d4af37] flex-1 text-xs prod-name">
-                <input type="number" placeholder="Qty" value="1" class="bg-black border border-white/20 rounded p-2 text-white outline-none focus:border-[#d4af37] w-14 text-xs prod-qty">
-                <input type="number" step="0.01" placeholder="Price" class="bg-black border border-white/20 rounded p-2 text-white outline-none focus:border-[#d4af37] w-20 text-xs prod-price">
-            `;
-            list.appendChild(row);
-        }
-
-        async function submitArtistIngest() {
-            const name = document.getElementById('artist-form-name').value.trim();
-            const email = document.getElementById('artist-form-email').value.trim();
-            const phone = document.getElementById('artist-form-phone').value.trim();
-            const ig = document.getElementById('artist-form-ig').value.trim();
-            const photoRelease = document.getElementById('artist-form-photo-release').checked;
-            
-            if(!name || !email) {
-                return alert("Name and Email are required!");
-            }
-            if(!window.supabaseClient) {
-                return alert("No database connection active.");
-            }
-
-            const btn = document.getElementById('btn-submit-ingest');
-            const origHTML = btn.innerHTML;
-            btn.innerHTML = 'Registering...';
-            btn.disabled = true;
-
-            const permanentQrCode = `KY-FLOW-${Date.now()}`;
-
-            try {
-                // 1. Insert into master_artists
-                const { data: artist, error: artistErr } = await window.supabaseClient
-                    .from('master_artists')
-                    .insert([{
-                        name: name,
-                        email: email,
-                        phone: phone,
-                        instagram: ig,
-                        artist_type: currentArtistType,
-                        permanent_qr_code: permanentQrCode,
-                        photo_release_granted: photoRelease
-                    }])
-                    .select()
-                    .single();
-
-                if(artistErr) throw artistErr;
-
-                // 2. Specific Tables
-                if(currentArtistType === 'performance') {
-                    const cat = document.getElementById('artist-form-category').value;
-                    const tech = document.getElementById('artist-form-tech').value;
-                    await window.supabaseClient.from('performance_details').insert([{
-                        artist_id: artist.id,
-                        performance_category: cat,
-                        technical_needs: tech,
-                        event_id: currentEventId
-                    }]);
-                } else {
-                    const rows = document.querySelectorAll('.product-row');
-                    const inventories = [];
-                    rows.forEach(r => {
-                        const pName = r.querySelector('.prod-name').value;
-                        const pQty = parseInt(r.querySelector('.prod-qty').value) || 0;
-                        const pPrice = parseFloat(r.querySelector('.prod-price').value) || 0;
-                        if(pName) {
-                            inventories.push({
-                                artist_id: artist.id,
-                                event_id: currentEventId,
-                                product_name: pName,
-                                quantity: pQty,
-                                price: pPrice
-                            });
-                        }
-                    });
-                    if(inventories.length > 0) {
-                        await window.supabaseClient.from('service_inventories').insert(inventories);
-                    }
-                }
-
-                // 3. Grant free ticket for this event
-                await window.supabaseClient.from('event_checkins').insert([{
-                    event_id: currentEventId,
-                    artist_id: artist.id,
-                    ticket_type: 'Free_Artist'
-                }]);
-
-                // 4. Update UI to show the permanent QR code
-                const container = document.getElementById('artist-signup-flow');
-                container.innerHTML = `
-                    <div class="text-center mt-6">
-                        <span class="material-symbols-outlined text-5xl text-green-500 mb-2">check_circle</span>
-                        <h3 class="font-serif text-xl text-[#d4af37] uppercase tracking-widest mb-2">Access Granted</h3>
-                        <p class="text-xs text-white/70 mb-4">Your permanent Artist ID code. Save it.</p>
-                        <div id="new-artist-qr" class="bg-white p-2 inline-block rounded max-w-full"></div>
-                        <p class="text-[10px] text-white/50 mt-2 break-all">${permanentQrCode}</p>
-                        <button onclick="closeScannerModal()" class="mt-6 w-full py-2 bg-white/10 text-white rounded font-bold uppercase tracking-widest text-xs hover:bg-white/20 transition border border-white/20">Close</button>
-                    </div>
-                `;
-                
-                const qrDataUrl = await QRCode.toDataURL(permanentQrCode, { width: 200, margin: 1 });
-                document.getElementById('new-artist-qr').innerHTML = `<img src="${qrDataUrl}" alt="Artist QR" />`;
-
-            } catch(e) {
-                console.error("Ingest error", e);
-                alert("Error registering artist: " + e.message);
-                btn.innerHTML = origHTML;
-                btn.disabled = false;
+            if (touchEndX > touchStartX + threshold) {
+                scannerCarousel.style.transform = 'translateX(0)';
             }
         }
     </script>
@@ -2074,66 +1973,48 @@
 
     <!-- QR Scanner Modal -->
     <div id="scanner-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[100] hidden flex flex-col items-center justify-center p-4">
-        <div class="bg-[#111] text-white p-6 rounded-2xl border border-[#d4af37]/30 w-full max-w-md relative shadow-[0_0_30px_rgba(212,175,55,0.15)]">
-            <button onclick="closeScannerModal()" class="absolute top-4 right-4 text-white/50 hover:text-[#d4af37]">
+        <div class="bg-[#111] text-white p-6 rounded-2xl border border-[#d4af37]/30 w-full max-w-md relative shadow-[0_0_30px_rgba(212,175,55,0.15)] overflow-hidden">
+            <button onclick="closeScannerModal()" class="absolute top-4 right-4 text-white/50 hover:text-[#d4af37] z-20">
                 <span class="material-symbols-outlined">close</span>
             </button>
+            <button onclick="closeScannerModal()" class="absolute top-4 left-4 text-white/50 hover:text-[#d4af37] z-20 flex items-center text-xs uppercase tracking-widest gap-1">
+                <span class="material-symbols-outlined text-sm">arrow_back</span> Back
+            </button>
             
-            <h3 class="font-serif text-2xl text-[#d4af37] mb-1 uppercase tracking-widest flex items-center gap-2">
-                <span class="material-symbols-outlined">qr_code_scanner</span> Scan Ticket
-            </h3>
-            <p class="text-xs text-white/50 mb-6 uppercase tracking-widest">Verify Attendee Access</p>
-            
-            <div id="reader" class="w-full bg-black border border-white/10 rounded-xl overflow-hidden min-h-[300px]"></div>
-            
-            <div id="scan-result" class="mt-4 p-4 rounded-xl hidden text-center border">
-                <span class="material-symbols-outlined text-4xl mb-2" id="scan-icon"></span>
-                <p id="scan-message" class="font-bold"></p>
-                <p id="scan-details" class="text-xs text-white/50 mt-1"></p>
-            </div>
-            
-            <div id="artist-signup-flow" class="hidden w-full mt-4">
-                <div id="artist-type-selection" class="flex flex-col gap-4 my-6">
-                    <p class="text-center text-white/50 text-[10px] uppercase tracking-widest">Select Artist Category:</p>
-                    <button onclick="selectArtistType('performance')" class="bg-[#d4af37] text-black p-3 rounded font-bold uppercase tracking-widest text-xs hover:bg-[#d4af37]/80 transition">Performance Artist</button>
-                    <button onclick="selectArtistType('service')" class="bg-white/10 text-white p-3 rounded font-bold uppercase tracking-widest text-xs hover:bg-white/20 transition border border-white/20">Service Artist</button>
+            <div id="scanner-carousel" class="flex transition-transform duration-300 w-[200%] mt-8">
+                <!-- Slide 1: Scanner -->
+                <div class="w-1/2 flex flex-col px-2">
+                    <h3 class="font-serif text-2xl text-[#d4af37] mb-1 uppercase tracking-widest flex items-center gap-2 justify-center">
+                        <span class="material-symbols-outlined">qr_code_scanner</span> Scan Ticket
+                    </h3>
+                    <p class="text-[10px] text-white/50 mb-4 uppercase tracking-widest text-center">Verify Attendee Access</p>
+                    
+                    <div id="reader" class="w-full bg-black border border-white/10 rounded-xl overflow-hidden min-h-[250px]"></div>
+                    
+                    <div id="scan-result" class="mt-4 p-4 rounded-xl hidden text-center border">
+                        <span class="material-symbols-outlined text-4xl mb-2" id="scan-icon"></span>
+                        <p id="scan-message" class="font-bold"></p>
+                        <p id="scan-details" class="text-xs text-white/50 mt-1"></p>
+                    </div>
+
+                    <button onclick="document.getElementById('scanner-carousel').style.transform = 'translateX(-50%)'" class="mt-4 text-[#00ffcc] uppercase tracking-widest text-xs flex items-center justify-center gap-1 hover:text-white transition">
+                        Artist Onboarding QR <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                    </button>
                 </div>
 
-                <div id="artist-form-container" class="hidden space-y-4 text-sm mt-4 max-h-[60vh] overflow-y-auto hide-scrollbar px-1">
-                    <input type="text" id="artist-form-name" placeholder="Name / Stage Name" class="w-full bg-black border border-white/20 rounded p-3 text-white outline-none focus:border-[#d4af37]">
-                    <input type="email" id="artist-form-email" placeholder="Email" class="w-full bg-black border border-white/20 rounded p-3 text-white outline-none focus:border-[#d4af37]">
-                    <input type="text" id="artist-form-phone" placeholder="Phone" class="w-full bg-black border border-white/20 rounded p-3 text-white outline-none focus:border-[#d4af37]">
-                    <input type="text" id="artist-form-ig" placeholder="Instagram (optional)" class="w-full bg-black border border-white/20 rounded p-3 text-white outline-none focus:border-[#d4af37]">
+                <!-- Slide 2: Artist Onboarding QR -->
+                <div class="w-1/2 flex flex-col items-center px-2">
+                    <h3 class="font-serif text-2xl text-[#00ffcc] mb-1 uppercase tracking-widest flex items-center gap-2 justify-center text-center">
+                        <span class="material-symbols-outlined">how_to_reg</span> Artist Ingest
+                    </h3>
+                    <p class="text-[10px] text-white/50 mb-6 uppercase tracking-widest text-center text-balance">Let the arriving artist scan this code<br>with their own smartphone</p>
 
-                    <div id="perf-fields" class="hidden space-y-4">
-                        <select id="artist-form-category" class="w-full bg-black border border-white/20 rounded p-3 text-white outline-none focus:border-[#d4af37]">
-                            <option value="" disabled selected>Select Category</option>
-                            <option value="movement">Movement / Dance</option>
-                            <option value="audiovisual">Audiovisual / Music</option>
-                            <option value="visual">Visual Art</option>
-                        </select>
-                        <textarea id="artist-form-tech" placeholder="Technical Needs (Mic, Space, etc.)" class="w-full bg-black border border-white/20 rounded p-3 text-white outline-none focus:border-[#d4af37] resize-none" rows="3"></textarea>
+                    <div id="onboarding-qr-container" class="bg-white p-4 rounded-xl shadow-[0_0_20px_rgba(0,255,204,0.2)] mb-6 flex items-center justify-center min-h-[200px]">
+                        <!-- QR injected here -->
                     </div>
 
-                    <div id="service-fields" class="hidden space-y-3">
-                        <p class="text-[10px] uppercase tracking-widest text-[#d4af37] font-bold">Inventory / Products</p>
-                        <div id="product-list" class="space-y-2">
-                            <div class="flex gap-2 product-row">
-                                <input type="text" placeholder="Product Name" class="bg-black border border-white/20 rounded p-2 text-white outline-none focus:border-[#d4af37] flex-1 text-xs prod-name">
-                                <input type="number" placeholder="Qty" value="1" class="bg-black border border-white/20 rounded p-2 text-white outline-none focus:border-[#d4af37] w-14 text-xs prod-qty">
-                                <input type="number" step="0.01" placeholder="Price" class="bg-black border border-white/20 rounded p-2 text-white outline-none focus:border-[#d4af37] w-20 text-xs prod-price">
-                            </div>
-                        </div>
-                        <button onclick="addProductRow()" class="text-[10px] text-[#00ffcc] uppercase tracking-widest hover:underline">+ Add Product</button>
-                    </div>
-
-                    <label class="flex items-center gap-2 text-[10px] text-white/50 py-2 cursor-pointer uppercase tracking-widest">
-                        <input type="checkbox" id="artist-form-photo-release" class="accent-[#d4af37]">
-                        Accept Photo & Video Release for Content
-                    </label>
-
-                    <button onclick="submitArtistIngest()" id="btn-submit-ingest" class="w-full bg-[#d4af37] text-black font-bold uppercase tracking-widest py-3 rounded-lg hover:bg-[#d4af37]/80 transition flex items-center justify-center gap-2">
-                        <span class="material-symbols-outlined">how_to_reg</span> Register & Grant Ticket
+                    <button onclick="document.getElementById('scanner-carousel').style.transform = 'translateX(0)'" class="mt-auto text-[#d4af37] uppercase tracking-widest text-xs flex items-center justify-center gap-1 hover:text-white transition">
+                        <span class="material-symbols-outlined text-sm">arrow_back</span> Back to Scanner
                     </button>
                 </div>
             </div>
