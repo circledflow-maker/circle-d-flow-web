@@ -4,9 +4,10 @@ const QRCode = require('qrcode');
 
 const resend = new Resend(process.env.RESEND_API_KEY || "re_4EN5hgyf_52v3D6JTJVMRQ1GW5Ds5gwkw");
 
-// Use the Service Role Key for backend insertion (bypassing RLS if necessary) or regular anon key since RLS is public insert
-const supabaseUrl = process.env.SUPABASE_URL || "https://agkmbaephgsnunlarntm.supabase.co";
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || "sb_publishable_VwT4qFpNCgNizSXMILBcKQ_aevHvWvM";
+const envUrl = process.env.SUPABASE_URL ? process.env.SUPABASE_URL.replace(/['"]/g, '') : "";
+const supabaseUrl = envUrl || "https://agkmbaephgsnunlarntm.supabase.co";
+const envKey = process.env.SUPABASE_SERVICE_ROLE_KEY ? process.env.SUPABASE_SERVICE_ROLE_KEY.replace(/['"]/g, '') : process.env.SUPABASE_ANON_KEY ? process.env.SUPABASE_ANON_KEY.replace(/['"]/g, '') : "";
+const supabaseKey = envKey || "sb_publishable_VwT4qFpNCgNizSXMILBcKQ_aevHvWvM";
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 export default async function handler(req, res) {
