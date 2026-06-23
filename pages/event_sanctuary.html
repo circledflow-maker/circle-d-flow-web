@@ -1129,6 +1129,20 @@
                 textStatus.innerText = "Confirmed";
             }
 
+            // Reset Ping Flow Steps
+            const s1 = document.getElementById('artist-ping-step-1');
+            const s2 = document.getElementById('artist-ping-step-2');
+            const s3 = document.getElementById('artist-ping-step-3');
+            if(s1 && s2 && s3) {
+                s1.classList.remove('hidden');
+                s1.classList.add('flex');
+                s2.classList.add('hidden');
+                s2.classList.remove('flex');
+                s3.classList.add('hidden');
+                s3.classList.remove('flex');
+                document.getElementById('artist-ping-message').value = '';
+            }
+
             document.getElementById('flowee-overlay').classList.remove('hidden');
         }
 
@@ -1997,6 +2011,58 @@
                 prompt("Copy this to send them their ticket:", combinedShareText);
             }
         }
+        // --- Artist Ping Flow ---
+        let artistPingState = { channel: 'WhatsApp' };
+
+        function artistPingAskChannel() {
+            document.getElementById('artist-ping-step-1').classList.add('hidden');
+            document.getElementById('artist-ping-step-1').classList.remove('flex');
+            document.getElementById('artist-ping-step-2').classList.remove('hidden');
+            document.getElementById('artist-ping-step-2').classList.add('flex');
+            
+            document.getElementById('flowee-speech').innerHTML = `Where should we reach <strong>${activeArtistData.name}</strong>?`;
+        }
+
+        function artistPingSelectChannel(channel) {
+            artistPingState.channel = channel;
+            document.getElementById('artist-ping-step-2').classList.add('hidden');
+            document.getElementById('artist-ping-step-2').classList.remove('flex');
+            document.getElementById('artist-ping-step-3').classList.remove('hidden');
+            document.getElementById('artist-ping-step-3').classList.add('flex');
+            
+            document.getElementById('flowee-speech').innerHTML = `Got it. Any personal note for <strong>${activeArtistData.name}</strong> before we send the link?`;
+        }
+
+        async function artistPingFinish() {
+            if(!activeArtistData) return;
+            const msg = document.getElementById('artist-ping-message').value.trim();
+            
+            document.getElementById('flowee-speech').innerHTML = `Wait a sec... generating link for <strong>${activeArtistData.name}</strong>... 🪄`;
+
+            const regUrl = `${window.location.origin}/pages/artist_registration.html?eventId=${currentEventId}&artistId=${activeArtistData.id}`;
+            
+            let extraMsg = msg ? `\n\n"${msg}"\n` : "";
+            
+            const shareTextEng = `Yo ${activeArtistData.name}! We'd love to have you at Circle D Flow.${extraMsg}\nHere is your personal registration & upload link. Please fill it out so we can prepare your set: ${regUrl}`;
+            const shareTextPt = `Drop ${activeArtistData.name}! Queremos muito contar contigo no Circle D Flow.${extraMsg}\nAqui está o teu link pessoal de registo. Por favor, preenche para prepararmos o teu set: ${regUrl}`;
+            
+            const combinedShareText = `${shareTextPt}\n\n${shareTextEng}`;
+
+            closeFloweeOverlay();
+
+            if (navigator.share) {
+                try {
+                    await navigator.share({
+                        title: 'Circle D Flow - Artist Invite',
+                        text: combinedShareText
+                    });
+                } catch(e) {
+                    prompt("Copy this to send to the artist:", combinedShareText);
+                }
+            } else {
+                prompt("Copy this to send to the artist:", combinedShareText);
+            }
+        }
     </script>
     
     <!-- Flowee Overlay HTML -->
@@ -2021,30 +2087,44 @@
                 </div>
             </div>
 
-            <div class="overlay-actions space-y-2">
-                <button class="action-btn" onclick="triggerPdfGeneration()">
-                    <span class="material-symbols-outlined">receipt_long</span> Generate PDF Invite
-                </button>
-
-                <div class="action-group-drive">
-                    <button class="action-btn" onclick="toggleDriveInput()">
-                        <span class="material-symbols-outlined text-[#4285F4]">add_to_drive</span> Link Google Drive Folder
+            <div class="overlay-actions space-y-2 w-full">
+                <!-- Step 1: Initial Action -->
+                <div id="artist-ping-step-1" class="flex flex-col gap-2">
+                    <button class="action-btn bg-[#d4af37]/10 border-[#d4af37]/30 hover:border-[#d4af37]" onclick="artistPingAskChannel()">
+                        <span class="material-symbols-outlined text-[#d4af37]">campaign</span> Ping the soul
                     </button>
-                    <div id="drive-link-input-container" class="hidden-input-group">
-                        <input type="url" id="drive-folder-url" placeholder="https://drive.google.com/..." class="w-full text-sm">
-                        <button class="bg-[#00ffcc]/20 text-[#00ffcc] font-bold px-4 rounded border border-[#00ffcc]" onclick="saveDriveLink()">Save</button>
+                    
+                    <div class="action-group-drive">
+                        <button class="action-btn" onclick="toggleDriveInput()">
+                            <span class="material-symbols-outlined text-[#4285F4]">add_to_drive</span> Link Google Drive Folder
+                        </button>
+                        <div id="drive-link-input-container" class="hidden-input-group">
+                            <input type="url" id="drive-folder-url" placeholder="https://drive.google.com/..." class="w-full text-sm">
+                            <button class="bg-[#00ffcc]/20 text-[#00ffcc] font-bold px-4 rounded border border-[#00ffcc]" onclick="saveDriveLink()">Save</button>
+                        </div>
+                    </div>
+
+                    <div class="relative w-full">
+                        <button class="action-btn" onclick="openArtistProfileModal()">
+                            <span class="material-symbols-outlined text-[#ff00cc]">person_edit</span> Edit Artist Profile
+                        </button>
                     </div>
                 </div>
 
-                <div class="relative w-full">
-                    <button class="action-btn" onclick="openArtistProfileModal()">
-                        <span class="material-symbols-outlined text-[#ff00cc]">person_edit</span> Edit Artist Profile
-                    </button>
+                <!-- Step 2: Channel Selection -->
+                <div id="artist-ping-step-2" class="hidden flex-col gap-2">
+                    <p class="text-xs text-[#d4af37] text-center uppercase tracking-widest mb-1 font-bold">Select Channel</p>
+                    <button onclick="artistPingSelectChannel('WhatsApp')" class="action-btn bg-[#25D366]/10 border-[#25D366]/30 hover:border-[#25D366]"><span class="material-symbols-outlined text-[#25D366]">chat</span> WhatsApp</button>
+                    <button onclick="artistPingSelectChannel('IG')" class="action-btn bg-[#E1306C]/10 border-[#E1306C]/30 hover:border-[#E1306C]"><span class="material-symbols-outlined text-[#E1306C]">photo_camera</span> Instagram</button>
+                    <button onclick="artistPingSelectChannel('Email')" class="action-btn bg-white/5 hover:border-white/50"><span class="material-symbols-outlined">mail</span> Email</button>
                 </div>
 
-                <button class="action-btn bg-[#25D366]/10 border-[#25D366]/30 hover:border-[#25D366]" onclick="sendWhatsAppReminder()">
-                    <span class="material-symbols-outlined text-[#25D366]">chat</span> Ping on WhatsApp
-                </button>
+                <!-- Step 3: Message & Send -->
+                <div id="artist-ping-step-3" class="hidden flex-col gap-2">
+                    <p class="text-xs text-[#d4af37] text-center uppercase tracking-widest mb-1 font-bold">Personal Note (Optional)</p>
+                    <textarea id="artist-ping-message" placeholder="Add something personal..." class="w-full bg-black/50 border border-[#d4af37]/30 rounded p-3 text-sm text-white focus:outline-none focus:border-[#d4af37] resize-none h-20"></textarea>
+                    <button onclick="artistPingFinish()" class="action-btn bg-[#d4af37]/20 border-[#d4af37]/50 text-[#d4af37] font-bold"><span class="material-symbols-outlined">send</span> Send Invite Link</button>
+                </div>
             </div>
 
             <button class="w-full mt-4 py-3 border border-white/20 text-white/50 uppercase tracking-widest text-xs font-bold rounded hover:text-white hover:bg-white/5 transition" onclick="closeFloweeOverlay()">Back to Ledger</button>
