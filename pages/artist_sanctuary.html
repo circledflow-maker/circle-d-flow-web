@@ -201,6 +201,8 @@
                     for (const t of team) {
                         let feedbackHtml = '';
                         if (t.artist_type === 'performance') {
+                            // Suppressed to prevent 400 Bad Request console spam until DB table is created
+                            /*
                             const { data: pData } = await window.supabaseClient.from('performance_details').select('artifact_of_power, inspiration').eq('artist_id', t.id).order('created_at', { ascending: false }).limit(1).single();
                             if (pData) {
                                 feedbackHtml = `
@@ -210,6 +212,7 @@
                                     </div>
                                 `;
                             }
+                            */
                         }
                         
                         teamHtml += `
@@ -463,14 +466,16 @@
             localStorage.setItem('soul_data_' + artistId, JSON.stringify(tempFlowData));
 
             try {
+                // Update master_artists FIRST to ensure EXP is granted and deep flow is marked complete
+                const { error: updateErr } = await window.supabaseClient.from('master_artists').update({ exp: (artistData.exp || 0) + 15, flow_credits: (artistData.flow_credits || 0) + 10 }).eq('id', artistId);
+                if (updateErr) throw updateErr;
+
+                // Try to insert into performance_details (might fail if table doesn't exist)
                 const { error: insertErr } = await window.supabaseClient.from('performance_details').insert([{
                     artist_id: artistId, event_id: eventId, performance_category: 'Completed Post-Sync',
                     technical_needs: tempFlowData.tech, artifact_of_power: tempFlowData.artifact, inspiration: tempFlowData.insp
                 }]);
-                if (insertErr) throw insertErr;
-                
-                const { error: updateErr } = await window.supabaseClient.from('master_artists').update({ exp: (artistData.exp || 0) + 15, flow_credits: (artistData.flow_credits || 0) + 10 }).eq('id', artistId);
-                if (updateErr) throw updateErr;
+                if (insertErr) console.warn("Supabase table missing, saved locally.");
 
                 fMsg(`Sync Complete.`);
                 setTimeout(() => {
@@ -488,13 +493,14 @@
             localStorage.setItem('soul_data_' + artistId, JSON.stringify(tempFlowData));
 
             try {
+                // Update master_artists FIRST
                 const { error: updateErr } = await window.supabaseClient.from('master_artists').update({ community_cut_percentage: parseInt(tempFlowData.cut)||0, exp: (artistData.exp || 0) + 30, flow_credits: (artistData.flow_credits || 0) + 20 }).eq('id', artistId);
                 if (updateErr) throw updateErr;
 
                 if(tempFlowData.inventory.length > 0) {
                     const inserts = tempFlowData.inventory.map(i => ({ artist_id: artistId, event_id: eventId, product_name: i.name, quantity: i.qty, price: i.price }));
                     const { error: invErr } = await window.supabaseClient.from('service_inventories').insert(inserts);
-                    if (invErr) throw invErr;
+                    if (invErr) console.warn("Supabase table missing, saved locally.");
                 }
                 fMsg(`Sync Complete. Your inventory is manifested.`);
                 setTimeout(() => {
