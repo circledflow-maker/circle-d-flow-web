@@ -37,6 +37,7 @@ class SoulPassAgent {
                 const { data: { user }, error: authErr } = await window.supabaseClient.auth.getUser();
                 if(user && !authErr) {
                     this.userData.userId = user.id;
+                    this.userData.email = user.email;
                     const { data: profile, error: dbErr } = await window.supabaseClient.from('profiles').select('*').eq('id', user.id).single();
                     if(profile && !dbErr) {
                         this.userData.name = profile.full_name || this.userData.name;
@@ -198,6 +199,9 @@ class SoulPassAgent {
             <div class="sn-tab" onclick="SoulPass.switchTab('pane-network', this)">
                 <span class="material-symbols-outlined">hub</span> Network
             </div>
+            <div class="sn-tab" onclick="SoulPass.switchTab('pane-settings', this)">
+                <span class="material-symbols-outlined">settings</span> Settings
+            </div>
         `;
 
         // Content Area
@@ -325,6 +329,32 @@ class SoulPassAgent {
         content.appendChild(paneIdentity);
         content.appendChild(paneSynapse);
         content.appendChild(paneNetwork);
+
+        // Pane: Settings
+        const paneSettings = document.createElement('div');
+        paneSettings.id = 'pane-settings';
+        paneSettings.className = 'sn-pane';
+        paneSettings.innerHTML = `
+            <div class="sy-group">
+                <div class="sy-group-title">Account Information</div>
+                <div class="sy-row">
+                    <div class="sy-label">Registered Email</div>
+                    <div class="sy-value" id="sn-user-email" style="color:#d4af37; font-family:'Space Mono', monospace;">${this.userData.email || 'Loading...'}</div>
+                </div>
+            </div>
+
+            <div class="sy-group">
+                <div class="sy-group-title">Security Actions</div>
+                <div class="sy-row" style="margin-top: 10px;">
+                    <button class="sy-btn" style="flex:1;" onclick="SoulPass.changePassword()">Reset Password</button>
+                    <button class="sy-btn" style="flex:1; border-color:#eab308; color:#eab308;" onclick="SoulPass.logout()">Disconnect (Logout)</button>
+                </div>
+                <div class="sy-row" style="margin-top:15px;">
+                    <button class="sy-btn" style="flex:1; border-color:#ef4444; color:#ef4444;" onclick="SoulPass.deleteProfile()">Erase Existence (Delete Profile)</button>
+                </div>
+            </div>
+        `;
+        content.appendChild(paneSettings);
         
         body.appendChild(sidebar);
         body.appendChild(content);
@@ -497,6 +527,47 @@ class SoulPassAgent {
             if (handle) {
                 alert(`Synapse Connected to ${handle}!`);
                 if(targetCard) targetCard.classList.add('connected');
+            }
+        }
+    }
+
+    async changePassword() {
+        if(!window.supabaseClient) return;
+        const email = this.userData.email;
+        if(!email) return alert("Email not found.");
+        const confirmMsg = confirm(`Send password reset link to ${email}?`);
+        if(confirmMsg) {
+            const { error } = await window.supabaseClient.auth.resetPasswordForEmail(email, {
+                redirectTo: window.location.origin + '/pages/dashboard.html'
+            });
+            if(error) alert("Error sending reset link: " + error.message);
+            else alert("Password reset link sent to your email!");
+        }
+    }
+
+    async logout() {
+        if(!window.supabaseClient) return;
+        const confirmMsg = confirm("Are you sure you want to disconnect from the Nexus?");
+        if(confirmMsg) {
+            await window.supabaseClient.auth.signOut();
+            window.location.href = '/index.html';
+        }
+    }
+
+    async deleteProfile() {
+        if(!window.supabaseClient) return;
+        const confirm1 = confirm("WARNING: This will permanently erase your existence from the Circle D Flow network. Are you absolutely sure?");
+        if(confirm1) {
+            const confirm2 = prompt("Type 'DELETE' to confirm eradication of your profile:");
+            if(confirm2 === 'DELETE') {
+                try {
+                    await window.supabaseClient.from('profiles').delete().eq('id', this.userData.userId);
+                    alert("Profile data wiped. Disconnecting from Nexus.");
+                    await window.supabaseClient.auth.signOut();
+                    window.location.href = '/index.html';
+                } catch(err) {
+                    alert("Error: " + err.message);
+                }
             }
         }
     }
