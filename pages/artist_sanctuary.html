@@ -256,12 +256,23 @@
                         try {
                             const { data: perf } = await window.supabaseClient.from('performance_details').select('*').eq('artist_id', artistId).order('created_at', { ascending: false }).limit(1).single();
                             if(perf && perf.artifact_of_power) {
-                                contentHtml += `<div class="mb-2"><strong class="text-[#d4af37]">Category:</strong> ${perf.performance_category}</div>`;
+                                contentHtml += `<div class="mb-2"><strong class="text-[#d4af37]">Category:</strong> ${perf.performance_category || 'Completed Post-Sync'}</div>`;
                                 contentHtml += `<div class="mb-2"><strong class="text-[#d4af37]">Tech Rider:</strong> ${perf.technical_needs || 'None'}</div>`;
                                 contentHtml += `<div class="mb-2"><strong class="text-[#d4af37]">Artifact:</strong> ${perf.artifact_of_power}</div>`;
                                 contentHtml += `<div class="mb-2"><strong class="text-[#d4af37]">Inspiration:</strong> ${perf.inspiration}</div>`;
                             }
-                        } catch(err) { /* ignore 400 error if table is still missing */ }
+                        } catch(err) { /* ignore 400 error */ }
+                        
+                        // Fallback to local storage if DB fails
+                        if (!contentHtml) {
+                            const localData = JSON.parse(localStorage.getItem('soul_data_' + artistId));
+                            if(localData && localData.artifact) {
+                                contentHtml += `<div class="mb-2"><strong class="text-[#d4af37]">Category:</strong> Completed Post-Sync</div>`;
+                                contentHtml += `<div class="mb-2"><strong class="text-[#d4af37]">Tech Rider:</strong> ${localData.tech || 'None'}</div>`;
+                                contentHtml += `<div class="mb-2"><strong class="text-[#d4af37]">Artifact:</strong> ${localData.artifact}</div>`;
+                                contentHtml += `<div class="mb-2"><strong class="text-[#d4af37]">Inspiration:</strong> ${localData.insp}</div>`;
+                            }
+                        }
                     } else {
                         try {
                             const { data: inv } = await window.supabaseClient.from('service_inventories').select('*').eq('artist_id', artistId);
@@ -278,8 +289,27 @@
                                 }
                             }
                         } catch(err) { /* ignore 400 error */ }
+
+                        // Fallback to local storage if DB fails or is empty
+                        const localData = JSON.parse(localStorage.getItem('soul_data_' + artistId));
+                        if(localData && localData.cut && !contentHtml.includes('Community Cut')) {
+                            contentHtml += `<div class="mb-4 text-[#00ffcc]">Community Cut: ${localData.cut}% (Local Sync)</div>`;
+                            if(localData.inventory && localData.inventory.length > 0) {
+                                contentHtml += `<h3 class="text-[#d4af37] font-bold mb-2">Inventory</h3>`;
+                                localData.inventory.forEach(i => {
+                                    contentHtml += `<div class="flex justify-between border-b border-white/10 py-2">
+                                        <span>${i.name} <span class="text-white/40">x${i.qty}</span></span>
+                                        <span class="text-[#00ffcc]">€${i.price}</span>
+                                    </div>`;
+                                });
+                            }
+                        }
                     }
-                    document.getElementById('data-content').innerHTML = contentHtml || 'Data sync pending...';
+                    
+                    if(!contentHtml) {
+                        contentHtml = 'Data sync pending... If you just answered Flowee, the database might be updating.';
+                    }
+                    document.getElementById('data-content').innerHTML = contentHtml;
 
                     // Trigger Flowee Deep Flow if not complete
                     if(!deepFlowCompleted) {
@@ -428,6 +458,10 @@
 
         async function finishPerfFlow() {
             fMsg(`<span class="text-[#d4af37] animate-pulse">Syncing Soul Imprint to Network...</span>`);
+            
+            // Fallback: Save to LocalStorage immediately
+            localStorage.setItem('soul_data_' + artistId, JSON.stringify(tempFlowData));
+
             try {
                 const { error: insertErr } = await window.supabaseClient.from('performance_details').insert([{
                     artist_id: artistId, event_id: eventId, performance_category: 'Completed Post-Sync',
@@ -449,6 +483,10 @@
 
         async function finishServFlow() {
             fMsg(`<span class="text-[#d4af37] animate-pulse">Syncing Inventory to Network...</span>`);
+            
+            // Fallback: Save to LocalStorage immediately
+            localStorage.setItem('soul_data_' + artistId, JSON.stringify(tempFlowData));
+
             try {
                 const { error: updateErr } = await window.supabaseClient.from('master_artists').update({ community_cut_percentage: parseInt(tempFlowData.cut)||0, exp: (artistData.exp || 0) + 30, flow_credits: (artistData.flow_credits || 0) + 20 }).eq('id', artistId);
                 if (updateErr) throw updateErr;
