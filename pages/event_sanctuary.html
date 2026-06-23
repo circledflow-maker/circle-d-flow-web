@@ -1914,7 +1914,10 @@
             if(channel === 'Email') contactInput.placeholder = "Email Address...";
             if(channel === 'WhatsApp') contactInput.placeholder = "WhatsApp Number...";
             if(channel === 'IG') contactInput.placeholder = "Instagram Handle...";
-            contactIn        async function floweeGuestFinish() {
+            contactInput.focus();
+        }
+
+        async function floweeGuestFinish() {
             const contact = document.getElementById('flowee-guest-contact').value.trim();
             if(!contact) return;
             
@@ -1966,8 +1969,6 @@
             } catch (err) {
                 console.error("Invite Error:", err);
                 document.getElementById('flowee-guest-speech').innerHTML = `<p class="text-red-500">Error: ${err.message}</p>`;
-            }
-        }essage}</p>`;
             }
         }
 
