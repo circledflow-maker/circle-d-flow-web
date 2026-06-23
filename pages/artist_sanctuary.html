@@ -193,21 +193,37 @@
                     document.getElementById('content-flyer').innerHTML = `<div class="text-center text-white/50 text-sm mt-10">No Flyer Uploaded Yet</div>`;
                 }
 
-                // Fetch Team
-                const { data: team } = await window.supabaseClient.from('master_artists').select('name, artist_type').limit(10);
+                // Fetch Team & Feedback Board
+                const { data: team } = await window.supabaseClient.from('master_artists').select('id, name, artist_type').limit(10);
                 if(team) {
                     let teamHtml = '';
-                    team.forEach(t => {
+                    for (const t of team) {
+                        let feedbackHtml = '';
+                        if (t.artist_type === 'performance') {
+                            const { data: pData } = await window.supabaseClient.from('performance_details').select('artifact_of_power, inspiration').eq('artist_id', t.id).order('created_at', { ascending: false }).limit(1).single();
+                            if (pData) {
+                                feedbackHtml = `
+                                    <div class="mt-2 text-[10px] text-white/70 bg-black/50 p-2 rounded border border-white/5">
+                                        <div class="text-[#d4af37]">Artifact: ${pData.artifact_of_power || '?'}</div>
+                                        <div class="text-[#00ffcc]">Inspiration: ${pData.inspiration || '?'}</div>
+                                    </div>
+                                `;
+                            }
+                        }
+                        
                         teamHtml += `
-                            <div class="bg-white/5 p-3 rounded-lg border border-white/10 flex items-center justify-between">
-                                <div>
-                                    <div class="text-[#00ffcc] font-bold text-sm">${t.name}</div>
-                                    <div class="text-[10px] uppercase tracking-widest text-white/50">${t.artist_type}</div>
+                            <div class="bg-white/5 p-3 rounded-lg border border-white/10 flex flex-col justify-between">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <div class="text-[#00ffcc] font-bold text-sm">${t.name}</div>
+                                        <div class="text-[10px] uppercase tracking-widest text-white/50">${t.artist_type}</div>
+                                    </div>
+                                    <span class="material-symbols-outlined text-[#d4af37]">verified</span>
                                 </div>
-                                <span class="material-symbols-outlined text-[#d4af37]">verified</span>
+                                ${feedbackHtml}
                             </div>
                         `;
-                    });
+                    }
                     document.getElementById('content-team').innerHTML = teamHtml;
                 }
             }
@@ -387,29 +403,36 @@
         async function finishPerfFlow() {
             fMsg(`<span class="text-[#d4af37] animate-pulse">Syncing Soul Imprint to Network...</span>`);
             try {
-                await window.supabaseClient.from('performance_details').insert([{
+                const { error: insertErr } = await window.supabaseClient.from('performance_details').insert([{
                     artist_id: artistId, event_id: eventId, performance_category: 'Completed Post-Sync',
                     technical_needs: tempFlowData.tech, artifact_of_power: tempFlowData.artifact, inspiration: tempFlowData.insp
                 }]);
-                await window.supabaseClient.from('master_artists').update({ exp: (artistData.exp || 0) + 15, flow_credits: (artistData.flow_credits || 0) + 10 }).eq('id', artistId);
+                if (insertErr) throw insertErr;
+                
+                const { error: updateErr } = await window.supabaseClient.from('master_artists').update({ exp: (artistData.exp || 0) + 15, flow_credits: (artistData.flow_credits || 0) + 10 }).eq('id', artistId);
+                if (updateErr) throw updateErr;
+
                 fMsg(`Sync Complete. Enjoy your Sanctuary.`);
                 setTimeout(() => document.getElementById('flowee-overlay').classList.add('hidden'), 2000);
                 initData(); // refresh UI
-            } catch(e) { fMsg("Error: " + e.message); }
+            } catch(e) { fMsg("Error syncing data: " + (e.message || "Database tables missing.")); }
         }
 
         async function finishServFlow() {
             fMsg(`<span class="text-[#d4af37] animate-pulse">Syncing Inventory to Network...</span>`);
             try {
-                await window.supabaseClient.from('master_artists').update({ community_cut_percentage: parseInt(tempFlowData.cut)||0, exp: (artistData.exp || 0) + 30, flow_credits: (artistData.flow_credits || 0) + 20 }).eq('id', artistId);
+                const { error: updateErr } = await window.supabaseClient.from('master_artists').update({ community_cut_percentage: parseInt(tempFlowData.cut)||0, exp: (artistData.exp || 0) + 30, flow_credits: (artistData.flow_credits || 0) + 20 }).eq('id', artistId);
+                if (updateErr) throw updateErr;
+
                 if(tempFlowData.inventory.length > 0) {
                     const inserts = tempFlowData.inventory.map(i => ({ artist_id: artistId, event_id: eventId, product_name: i.name, quantity: i.qty, price: i.price }));
-                    await window.supabaseClient.from('service_inventories').insert(inserts);
+                    const { error: invErr } = await window.supabaseClient.from('service_inventories').insert(inserts);
+                    if (invErr) throw invErr;
                 }
                 fMsg(`Sync Complete. Your inventory is manifested.`);
                 setTimeout(() => document.getElementById('flowee-overlay').classList.add('hidden'), 2000);
                 initData(); // refresh UI
-            } catch(e) { fMsg("Error: " + e.message); }
+            } catch(e) { fMsg("Error syncing data: " + (e.message || "Database tables missing.")); }
         }
 
         // --- Three.js Pure 3D Engine ---
