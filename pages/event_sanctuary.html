@@ -1738,7 +1738,9 @@
             }
             
             // Update status to orange since we generated the invite
-            updateArtistStatusInDb(artist.id, 'orange', artist.link);
+            if (artist && artist.id) {
+                updateArtistStatusInDb(artist.id, 'orange', artist.link);
+            }
             
             const pdfBlob = doc.output('blob');
             return new File([pdfBlob], `CDF_Invite_${artist.name.replace(/ /g, '_')}.pdf`, { type: 'application/pdf' });
@@ -1912,16 +1914,13 @@
             if(channel === 'Email') contactInput.placeholder = "Email Address...";
             if(channel === 'WhatsApp') contactInput.placeholder = "WhatsApp Number...";
             if(channel === 'IG') contactInput.placeholder = "Instagram Handle...";
-            contactInput.focus();
-        }
-
-        async function floweeGuestFinish() {
+            contactIn        async function floweeGuestFinish() {
             const contact = document.getElementById('flowee-guest-contact').value.trim();
             if(!contact) return;
             
             if(!window.supabaseClient) return alert("Database connection required.");
 
-            document.getElementById('flowee-guest-speech').innerHTML = `<p>Wait a sec... generating the VIP ticket... ✨</p>`;
+            document.getElementById('flowee-guest-speech').innerHTML = `<p>Wait a sec... generating the VIP ticket & PDF... 🪄</p>`;
 
             try {
                 let dbEmail = contact;
@@ -1937,26 +1936,29 @@
                 if (error) throw error;
 
                 const ticketUrl = `${window.location.origin}/pages/guest_ticket.html?name=${encodeURIComponent(floweeGuestState.name)}&email=${encodeURIComponent(dbEmail)}`;
+                const visitorUrl = `${window.location.origin}/pages/create_impact.html?id=${currentEventId}`;
                 
-                const shareTextEng = `Yo ${floweeGuestState.name}! Here is your VIP Guest Ticket for Circle D Flow. Let them scan the QR-code at the entrance and welcome to the Zone! 💜 Link: ${ticketUrl}`;
-                const shareTextPt = `Drop ${floweeGuestState.name}! Aqui está o teu VIP Guest Ticket para o Circle D Flow. Mostra o código QR na entrada para validação. Entra no Flow! 💜 Link: ${ticketUrl}`;
-                
-                const combinedShareText = `${shareTextPt}\n\n${shareTextEng}`;
+                // Prep dummy artist object for PDF
+                const guestObj = { name: floweeGuestState.name, program: window.currentEventData?.needs?.syncMatrix || [] };
+                const pdfFile = await generateBrowserPdfInvite(guestObj);
 
+                const shareTextEng = `Yo ${floweeGuestState.name}! Here is your VIP Guest Ticket for Circle D Flow.\nAttached is the official invite with the program. Let them scan the QR-code at the entrance and welcome to the Zone! 💜 Link: ${ticketUrl}\n\nHere is the public event link to share with your network: ${visitorUrl}`;
+                
                 closeFloweeGuestOverlay();
 
-                if (navigator.share) {
+                if (navigator.share && navigator.canShare && navigator.canShare({ files: [pdfFile] })) {
                     try {
                         await navigator.share({
                             title: 'VIP Guest Ticket',
-                            text: combinedShareText
+                            text: shareTextEng,
+                            files: [pdfFile]
                         });
                     } catch(e) {
                         console.log("Share cancelled", e);
-                        prompt("Guest added! Copy this to send them their ticket:", combinedShareText);
+                        fallbackShare(pdfFile, shareTextEng);
                     }
                 } else {
-                    prompt("Guest added! Copy this to send them their ticket:", combinedShareText);
+                    fallbackShare(pdfFile, shareTextEng);
                 }
                 
                 openAnalyticsModal();
@@ -1964,6 +1966,8 @@
             } catch (err) {
                 console.error("Invite Error:", err);
                 document.getElementById('flowee-guest-speech').innerHTML = `<p class="text-red-500">Error: ${err.message}</p>`;
+            }
+        }essage}</p>`;
             }
         }
 
@@ -1993,23 +1997,26 @@
 
         async function resendGuestInvite(name, email) {
             const ticketUrl = `${window.location.origin}/pages/guest_ticket.html?name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}`;
-                
-            const shareTextEng = `Yo ${name}! Here is your VIP Guest Ticket for Circle D Flow. Let them scan the QR-code at the entrance and welcome to the Zone! 💜 Link: ${ticketUrl}`;
-            const shareTextPt = `Drop ${name}! Aqui está o teu VIP Guest Ticket para o Circle D Flow. Mostra o código QR na entrada para validação. Entra no Flow! 💜 Link: ${ticketUrl}`;
+            const visitorUrl = `${window.location.origin}/pages/create_impact.html?id=${currentEventId}`;
             
-            const combinedShareText = `${shareTextPt}\n\n${shareTextEng}`;
+            // Prep dummy artist object for PDF
+            const guestObj = { name: name, program: window.currentEventData?.needs?.syncMatrix || [] };
+            const pdfFile = await generateBrowserPdfInvite(guestObj);
+            
+            const shareTextEng = `Yo ${name}! Here is your VIP Guest Ticket for Circle D Flow.\nAttached is the official invite with the program. Let them scan the QR-code at the entrance and welcome to the Zone! 💜 Link: ${ticketUrl}\n\nHere is the public event link to share with your network: ${visitorUrl}`;
 
-            if (navigator.share) {
+            if (navigator.share && navigator.canShare && navigator.canShare({ files: [pdfFile] })) {
                 try {
                     await navigator.share({
                         title: 'VIP Guest Ticket',
-                        text: combinedShareText
+                        text: shareTextEng,
+                        files: [pdfFile]
                     });
                 } catch(e) {
-                    prompt("Copy this to send them their ticket:", combinedShareText);
+                    fallbackShare(pdfFile, shareTextEng);
                 }
             } else {
-                prompt("Copy this to send them their ticket:", combinedShareText);
+                fallbackShare(pdfFile, shareTextEng);
             }
         }
         // --- Artist Ping Flow ---
