@@ -1760,20 +1760,27 @@
         // --- Swipe Logic for Scanner Carousel ---
         let touchStartX = 0;
         let touchEndX = 0;
-        const scannerCarousel = document.getElementById('scanner-carousel');
-        const scannerModal = document.getElementById('scanner-modal');
+        let scannerCarousel = null;
         
-        scannerModal.addEventListener('touchstart', e => {
-            touchStartX = e.changedTouches[0].screenX;
-        }, {passive: true});
+        document.addEventListener('DOMContentLoaded', () => {
+            const scannerModal = document.getElementById('scanner-modal');
+            if(scannerModal) {
+                scannerModal.addEventListener('touchstart', e => {
+                    touchStartX = e.changedTouches[0].screenX;
+                }, {passive: true});
 
-        scannerModal.addEventListener('touchend', e => {
-            touchEndX = e.changedTouches[0].screenX;
-            handleSwipe();
-        }, {passive: true});
+                scannerModal.addEventListener('touchend', e => {
+                    touchEndX = e.changedTouches[0].screenX;
+                    handleSwipe();
+                }, {passive: true});
+            }
+        });
 
         function handleSwipe() {
             const threshold = 50;
+            if(!scannerCarousel) scannerCarousel = document.getElementById('scanner-carousel');
+            if(!scannerCarousel) return;
+            
             if (touchEndX < touchStartX - threshold) {
                 scannerCarousel.style.transform = 'translateX(-50%)';
             }
