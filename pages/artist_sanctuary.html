@@ -32,6 +32,17 @@
         }
         
         .glass-panel { background: rgba(10, 5, 0, 0.6); backdrop-filter: blur(10px); border: 1px solid rgba(212, 175, 55, 0.2); }
+
+        /* Flowee Overlay Chat */
+        .bubble-flowee { background: rgba(0, 255, 204, 0.1); border: 1px solid rgba(0, 255, 204, 0.3); color: #fff; border-radius: 16px; border-bottom-left-radius: 4px; }
+        .bubble-user { background: rgba(212, 175, 55, 0.1); border: 1px solid rgba(212, 175, 55, 0.3); color: #d4af37; border-radius: 16px; border-bottom-right-radius: 4px; text-align: right; }
+        .fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .tab-btn.active { border-bottom: 2px solid #d4af37; color: #d4af37; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -52,11 +63,15 @@
 
         <!-- Action Buttons (Right Side) -->
         <div class="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col gap-4 pointer-events-auto">
-            <button onclick="toggleModal('qr-modal')" class="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-[#d4af37] hover:bg-white/10 transition">
-                <span class="material-symbols-outlined">qr_code_2</span>
+            <!-- Program / Ledger Button -->
+            <button onclick="openLedger()" class="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-[#ff00cc] hover:bg-white/10 transition shadow-[0_0_15px_rgba(255,0,204,0.3)]">
+                <span class="material-symbols-outlined">menu_book</span>
             </button>
-            <button onclick="toggleModal('data-modal')" class="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-[#00ffcc] hover:bg-white/10 transition">
+            <button onclick="toggleModal('data-modal')" class="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-[#00ffcc] hover:bg-white/10 transition shadow-[0_0_15px_rgba(0,255,204,0.3)]">
                 <span class="material-symbols-outlined">inventory_2</span>
+            </button>
+            <button onclick="toggleModal('qr-modal')" class="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-[#d4af37] hover:bg-white/10 transition shadow-[0_0_15px_rgba(212,175,55,0.3)]">
+                <span class="material-symbols-outlined">qr_code_2</span>
             </button>
         </div>
 
@@ -66,8 +81,60 @@
         </div>
     </div>
 
+    <!-- Interactive Flowee Deep Flow Overlay -->
+    <div id="flowee-overlay" class="hidden fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm pointer-events-auto flex flex-col justify-end pb-8 px-4">
+        <div class="glass-panel p-4 rounded-3xl w-full max-w-md mx-auto flex flex-col h-[60vh]">
+            <div class="flex items-center gap-2 mb-4 border-b border-white/10 pb-2">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-r from-[#00ffcc] to-[#003322] flex items-center justify-center shadow-[0_0_10px_#00ffcc] font-bold text-black text-xs">F</div>
+                <div class="text-[#00ffcc] text-sm uppercase tracking-widest font-bold">Flowee</div>
+            </div>
+            <div id="flowee-chat-area" class="flex-1 overflow-y-auto hide-scrollbar flex flex-col gap-3 pb-4">
+                <!-- Chat injected here -->
+            </div>
+            <div id="flowee-input-area" class="pt-2 border-t border-white/10">
+                <!-- Input injected here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Ledger / Program Modal -->
+    <div id="ledger-modal" class="hidden fixed inset-0 z-50 bg-black/95 backdrop-blur-md pointer-events-auto flex flex-col pt-12 pb-4 px-4">
+        <button onclick="toggleModal('ledger-modal')" class="absolute top-4 right-4 text-white/50 hover:text-white"><span class="material-symbols-outlined">close</span></button>
+        <h2 class="font-serif text-[#d4af37] text-2xl uppercase tracking-widest mb-6 text-center">Sanctuary Ledger</h2>
+        
+        <!-- Tabs -->
+        <div class="flex border-b border-white/20 mb-4 overflow-x-auto hide-scrollbar">
+            <button onclick="switchLedgerTab('flyer')" id="tab-flyer" class="tab-btn active flex-1 py-2 text-xs uppercase tracking-widest text-white/60">Flyer</button>
+            <button onclick="switchLedgerTab('team')" id="tab-team" class="tab-btn flex-1 py-2 text-xs uppercase tracking-widest text-white/60">Team</button>
+            <button onclick="switchLedgerTab('comms')" id="tab-comms" class="tab-btn flex-1 py-2 text-xs uppercase tracking-widest text-white/60">Comms</button>
+        </div>
+
+        <!-- Tab Content -->
+        <div id="content-flyer" class="flex-1 overflow-y-auto">
+            <div class="text-center text-white/50 text-sm mt-10">Loading Flyer...</div>
+        </div>
+        
+        <div id="content-team" class="hidden flex-1 overflow-y-auto hide-scrollbar space-y-3">
+            <div class="text-center text-white/50 text-sm mt-10">Syncing network souls...</div>
+        </div>
+
+        <div id="content-comms" class="hidden flex-1 flex flex-col">
+            <div class="flex-1 overflow-y-auto bg-white/5 rounded-xl p-3 space-y-3 mb-3 border border-white/10" id="comms-chat">
+                <div class="text-center text-xs text-[#00ffcc]/50 my-2">Sanctuary Internal Channel Active</div>
+                <div class="flex gap-2">
+                    <div class="w-6 h-6 rounded-full bg-[#d4af37] shrink-0"></div>
+                    <div class="bg-white/10 p-2 rounded-lg text-xs text-white">Welcome to the secret garden.</div>
+                </div>
+            </div>
+            <div class="flex gap-2">
+                <input type="text" placeholder="Transmit message..." class="flex-1 bg-black/50 border border-white/20 rounded p-2 text-sm text-white outline-none">
+                <button class="bg-[#00ffcc] text-black px-3 rounded font-bold"><span class="material-symbols-outlined text-sm">send</span></button>
+            </div>
+        </div>
+    </div>
+
     <!-- QR Modal -->
-    <div id="qr-modal" class="hidden fixed inset-0 z-50 bg-black/90 backdrop-blur flex items-center justify-center p-4">
+    <div id="qr-modal" class="hidden fixed inset-0 z-50 bg-black/90 backdrop-blur pointer-events-auto flex items-center justify-center p-4">
         <div class="glass-panel p-8 rounded-3xl w-full max-w-sm text-center relative border-[#00ffcc]/30">
             <button onclick="toggleModal('qr-modal')" class="absolute top-4 right-4 text-white/50 hover:text-white"><span class="material-symbols-outlined">close</span></button>
             <h2 class="font-serif text-[#00ffcc] text-2xl uppercase tracking-widest mb-2">Soul Seal</h2>
@@ -78,7 +145,7 @@
     </div>
 
     <!-- Data Modal -->
-    <div id="data-modal" class="hidden fixed inset-0 z-50 bg-black/90 backdrop-blur flex items-center justify-center p-4">
+    <div id="data-modal" class="hidden fixed inset-0 z-50 bg-black/90 backdrop-blur pointer-events-auto flex items-center justify-center p-4">
         <div class="glass-panel p-6 rounded-3xl w-full max-w-sm relative border-[#d4af37]/30 max-h-[80vh] overflow-y-auto">
             <button onclick="toggleModal('data-modal')" class="absolute top-4 right-4 text-white/50 hover:text-white"><span class="material-symbols-outlined">close</span></button>
             <h2 class="font-serif text-[#d4af37] text-xl uppercase tracking-widest mb-4">Sanctuary Data</h2>
@@ -93,17 +160,56 @@
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
-        const artistId = urlParams.get('artistId');
+        let artistId = urlParams.get('artistId') || localStorage.getItem('flowee_artist_id');
         const eventId = urlParams.get('eventId');
         let artistData = null;
+        let deepFlowCompleted = true; // Assume true until checked
 
-        // UI Functions
         function toggleModal(id) {
             const el = document.getElementById(id);
-            if(el.classList.contains('hidden')) {
-                el.classList.remove('hidden');
-            } else {
-                el.classList.add('hidden');
+            if(el.classList.contains('hidden')) el.classList.remove('hidden');
+            else el.classList.add('hidden');
+        }
+
+        function switchLedgerTab(tab) {
+            ['flyer', 'team', 'comms'].forEach(t => {
+                document.getElementById('tab-' + t).classList.remove('active');
+                document.getElementById('content-' + t).classList.add('hidden');
+            });
+            document.getElementById('tab-' + tab).classList.add('active');
+            document.getElementById('content-' + tab).classList.remove('hidden');
+        }
+
+        async function openLedger() {
+            toggleModal('ledger-modal');
+            
+            // Load Ledger Data
+            if(window.supabaseClient && eventId) {
+                // Fetch Flyer
+                const { data: quest } = await window.supabaseClient.from('quests').select('flyer_url').eq('id', eventId).single();
+                if(quest && quest.flyer_url) {
+                    document.getElementById('content-flyer').innerHTML = `<img src="${quest.flyer_url}" class="w-full rounded-xl border-2 border-[#d4af37]/50 shadow-[0_0_20px_rgba(212,175,55,0.2)]">`;
+                } else {
+                    document.getElementById('content-flyer').innerHTML = `<div class="text-center text-white/50 text-sm mt-10">No Flyer Uploaded Yet</div>`;
+                }
+
+                // Fetch Team
+                const { data: team } = await window.supabaseClient.from('master_artists').select('name, artist_type').limit(10);
+                if(team) {
+                    let teamHtml = '';
+                    team.forEach(t => {
+                        teamHtml += `
+                            <div class="bg-white/5 p-3 rounded-lg border border-white/10 flex items-center justify-between">
+                                <div>
+                                    <div class="text-[#00ffcc] font-bold text-sm">${t.name}</div>
+                                    <div class="text-[10px] uppercase tracking-widest text-white/50">${t.artist_type}</div>
+                                </div>
+                                <span class="material-symbols-outlined text-[#d4af37]">verified</span>
+                            </div>
+                        `;
+                    });
+                    document.getElementById('content-team').innerHTML = teamHtml;
+                }
             }
         }
 
@@ -119,48 +225,195 @@
                     document.getElementById('artist-exp').innerText = `${artist.exp || 0} EXP`;
                     document.getElementById('artist-flow').innerText = `${artist.flow_credits || 0} FLOW`;
 
-                    // Generate QR
                     if(artist.permanent_qr_code) {
                         const qrDataUrl = await QRCode.toDataURL(artist.permanent_qr_code, { width: 250, margin: 1, color: { dark: '#00ffccff', light: '#09090bff' } });
                         document.getElementById('qr-container').innerHTML = `<img src="${qrDataUrl}" alt="QR" />`;
                         document.getElementById('qr-text').innerText = artist.permanent_qr_code;
                     }
 
-                    // Fetch Details
                     let contentHtml = '';
                     if(artist.artist_type === 'performance') {
                         const { data: perf } = await window.supabaseClient.from('performance_details').select('*').eq('artist_id', artistId).order('created_at', { ascending: false }).limit(1).single();
-                        if(perf) {
+                        if(perf && perf.artifact_of_power) {
+                            deepFlowCompleted = true;
                             contentHtml += `<div class="mb-2"><strong class="text-[#d4af37]">Category:</strong> ${perf.performance_category}</div>`;
                             contentHtml += `<div class="mb-2"><strong class="text-[#d4af37]">Tech Rider:</strong> ${perf.technical_needs || 'None'}</div>`;
-                            if(perf.artifact_of_power) contentHtml += `<div class="mb-2"><strong class="text-[#d4af37]">Artifact:</strong> ${perf.artifact_of_power}</div>`;
-                            if(perf.inspiration) contentHtml += `<div class="mb-2"><strong class="text-[#d4af37]">Inspiration:</strong> ${perf.inspiration}</div>`;
+                            contentHtml += `<div class="mb-2"><strong class="text-[#d4af37]">Artifact:</strong> ${perf.artifact_of_power}</div>`;
+                            contentHtml += `<div class="mb-2"><strong class="text-[#d4af37]">Inspiration:</strong> ${perf.inspiration}</div>`;
+                        } else {
+                            deepFlowCompleted = false;
                         }
                     } else {
                         const { data: inv } = await window.supabaseClient.from('service_inventories').select('*').eq('artist_id', artistId);
-                        if(artist.community_cut_percentage) contentHtml += `<div class="mb-4 text-[#00ffcc]">Community Cut: ${artist.community_cut_percentage}%</div>`;
-                        if(inv && inv.length > 0) {
-                            contentHtml += `<h3 class="text-[#d4af37] font-bold mb-2">Inventory</h3>`;
-                            inv.forEach(i => {
-                                contentHtml += `<div class="flex justify-between border-b border-white/10 py-2">
-                                    <span>${i.product_name} <span class="text-white/40">x${i.quantity}</span></span>
-                                    <span class="text-[#00ffcc]">€${i.price}</span>
-                                </div>`;
-                            });
+                        if(artist.community_cut_percentage !== null) {
+                            deepFlowCompleted = true;
+                            contentHtml += `<div class="mb-4 text-[#00ffcc]">Community Cut: ${artist.community_cut_percentage}%</div>`;
+                            if(inv && inv.length > 0) {
+                                contentHtml += `<h3 class="text-[#d4af37] font-bold mb-2">Inventory</h3>`;
+                                inv.forEach(i => {
+                                    contentHtml += `<div class="flex justify-between border-b border-white/10 py-2">
+                                        <span>${i.product_name} <span class="text-white/40">x${i.quantity}</span></span>
+                                        <span class="text-[#00ffcc]">€${i.price}</span>
+                                    </div>`;
+                                });
+                            }
                         } else {
-                            contentHtml += `<p class="text-white/50">No inventory found.</p>`;
+                            deepFlowCompleted = false;
                         }
                     }
-                    document.getElementById('data-content').innerHTML = contentHtml || 'No data recorded.';
+                    document.getElementById('data-content').innerHTML = contentHtml || 'Data sync pending...';
+
+                    // Trigger Flowee Deep Flow if not complete
+                    if(!deepFlowCompleted) {
+                        setTimeout(startInSanctuaryDeepFlow, 2000);
+                    }
                 }
             } catch(e) { console.error(e); }
         }
 
         setTimeout(initData, 1000);
 
+        // --- Flowee In-Sanctuary Chat Logic ---
+        const fChat = document.getElementById('flowee-chat-area');
+        const fInput = document.getElementById('flowee-input-area');
+        let tempFlowData = { inventory: [] };
+
+        function scrollFChat() { fChat.scrollTop = fChat.scrollHeight; }
+
+        function fMsg(text) {
+            fChat.innerHTML += `<div class="fade-in max-w-[85%] self-start bubble-flowee p-3 text-sm mb-2">${text}</div>`;
+            scrollFChat();
+        }
+
+        function uMsg(text) {
+            fChat.innerHTML += `<div class="fade-in max-w-[85%] self-end bubble-user p-3 text-sm mb-2">${text}</div>`;
+            scrollFChat();
+        }
+
+        function setFInput(html) { fInput.innerHTML = html; }
+
+        async function startInSanctuaryDeepFlow() {
+            document.getElementById('flowee-overlay').classList.remove('hidden');
+            fMsg(`Welcome to your personal Sanctuary, <b>${artistData.name}</b>. The world is forming around you.`);
+            
+            setTimeout(() => {
+                if(artistData.artist_type === 'performance') {
+                    fMsg(`Let's complete your soul imprint. <br><br>Deep Dive: Any special gear you need onstage? (Tech Rider)`);
+                    setFInput(`
+                        <div class="flex gap-2">
+                            <input type="text" id="fc-input" class="flex-1 bg-black/50 border border-white/20 rounded p-2 text-white outline-none focus:border-[#00ffcc]">
+                            <button onclick="handleFC('tech')" class="bg-[#00ffcc] text-black px-4 rounded font-bold">SEND</button>
+                        </div>
+                    `);
+                } else {
+                    fMsg(`Let's align your inventory. <br><br>Community comes first. What percentage (%) of your sales are you willing to share with the collective?`);
+                    setFInput(`
+                        <div class="flex gap-2">
+                            <input type="number" id="fc-input" class="flex-1 bg-black/50 border border-white/20 rounded p-2 text-white outline-none focus:border-[#00ffcc]" placeholder="%">
+                            <button onclick="handleFC('cut')" class="bg-[#00ffcc] text-black px-4 rounded font-bold">SEND</button>
+                        </div>
+                    `);
+                }
+            }, 1500);
+        }
+
+        async function handleFC(step) {
+            const val = document.getElementById('fc-input') ? document.getElementById('fc-input').value.trim() : null;
+            if(val) uMsg(val);
+            setFInput('');
+
+            if(step === 'tech') {
+                tempFlowData.tech = val;
+                setTimeout(() => {
+                    fMsg("Every artist carries an artifact of power. What's yours? A pendant, a specific pen, your shoes?");
+                    setFInput(`<div class="flex gap-2"><input type="text" id="fc-input" class="flex-1 bg-black/50 border border-white/20 rounded p-2 text-white outline-none focus:border-[#00ffcc]"><button onclick="handleFC('artifact')" class="bg-[#00ffcc] text-black px-4 rounded font-bold">SEND</button></div>`);
+                }, 1000);
+            }
+            else if(step === 'artifact') {
+                tempFlowData.artifact = val;
+                setTimeout(() => {
+                    fMsg("Which artist or moment ignited the fire within you to start creating?");
+                    setFInput(`<div class="flex gap-2"><input type="text" id="fc-input" class="flex-1 bg-black/50 border border-white/20 rounded p-2 text-white outline-none focus:border-[#00ffcc]"><button onclick="handleFC('insp')" class="bg-[#00ffcc] text-black px-4 rounded font-bold">SEND</button></div>`);
+                }, 1000);
+            }
+            else if(step === 'insp') {
+                tempFlowData.insp = val;
+                finishPerfFlow();
+            }
+            else if(step === 'cut') {
+                tempFlowData.cut = val;
+                setTimeout(() => {
+                    fMsg("What's the first item you are bringing? (Name)");
+                    setFInput(`<div class="flex gap-2"><input type="text" id="fc-input" class="flex-1 bg-black/50 border border-white/20 rounded p-2 text-white outline-none focus:border-[#00ffcc]"><button onclick="handleFC('invQty')" class="bg-[#00ffcc] text-black px-4 rounded font-bold">SEND</button></div>`);
+                }, 1000);
+            }
+            else if(step === 'invQty') {
+                tempFlowData.tempName = val;
+                setTimeout(() => {
+                    fMsg("How many units/portions are available?");
+                    setFInput(`<div class="flex gap-2"><input type="number" id="fc-input" class="flex-1 bg-black/50 border border-white/20 rounded p-2 text-white outline-none focus:border-[#00ffcc]"><button onclick="handleFC('invPrice')" class="bg-[#00ffcc] text-black px-4 rounded font-bold">SEND</button></div>`);
+                }, 500);
+            }
+            else if(step === 'invPrice') {
+                tempFlowData.tempQty = val;
+                setTimeout(() => {
+                    fMsg("Price per unit (€)?");
+                    setFInput(`<div class="flex gap-2"><input type="number" id="fc-input" class="flex-1 bg-black/50 border border-white/20 rounded p-2 text-white outline-none focus:border-[#00ffcc]"><button onclick="handleFC('invAdd')" class="bg-[#00ffcc] text-black px-4 rounded font-bold">SEND</button></div>`);
+                }, 500);
+            }
+            else if(step === 'invAdd') {
+                tempFlowData.inventory.push({ name: tempFlowData.tempName, qty: tempFlowData.tempQty, price: val });
+                setTimeout(() => {
+                    fMsg("Item added. Add another item?");
+                    setFInput(`
+                        <div class="flex gap-2 flex-col">
+                            <button onclick="handleFC('invYes')" class="bg-[#00ffcc]/20 border border-[#00ffcc]/50 text-[#00ffcc] py-2 rounded font-bold">Yes, add more</button>
+                            <button onclick="handleFC('invNo')" class="bg-[#d4af37] text-black py-2 rounded font-bold">No, I'm done</button>
+                        </div>
+                    `);
+                }, 500);
+            }
+            else if(step === 'invYes') {
+                setTimeout(() => {
+                    fMsg("Next item name?");
+                    setFInput(`<div class="flex gap-2"><input type="text" id="fc-input" class="flex-1 bg-black/50 border border-white/20 rounded p-2 text-white outline-none focus:border-[#00ffcc]"><button onclick="handleFC('invQty')" class="bg-[#00ffcc] text-black px-4 rounded font-bold">SEND</button></div>`);
+                }, 500);
+            }
+            else if(step === 'invNo') {
+                finishServFlow();
+            }
+        }
+
+        async function finishPerfFlow() {
+            fMsg(`<span class="text-[#d4af37] animate-pulse">Syncing Soul Imprint to Network...</span>`);
+            try {
+                await window.supabaseClient.from('performance_details').insert([{
+                    artist_id: artistId, event_id: eventId, performance_category: 'Completed Post-Sync',
+                    technical_needs: tempFlowData.tech, artifact_of_power: tempFlowData.artifact, inspiration: tempFlowData.insp
+                }]);
+                await window.supabaseClient.from('master_artists').update({ exp: (artistData.exp || 0) + 15, flow_credits: (artistData.flow_credits || 0) + 10 }).eq('id', artistId);
+                fMsg(`Sync Complete. Enjoy your Sanctuary.`);
+                setTimeout(() => document.getElementById('flowee-overlay').classList.add('hidden'), 2000);
+                initData(); // refresh UI
+            } catch(e) { fMsg("Error: " + e.message); }
+        }
+
+        async function finishServFlow() {
+            fMsg(`<span class="text-[#d4af37] animate-pulse">Syncing Inventory to Network...</span>`);
+            try {
+                await window.supabaseClient.from('master_artists').update({ community_cut_percentage: parseInt(tempFlowData.cut)||0, exp: (artistData.exp || 0) + 30, flow_credits: (artistData.flow_credits || 0) + 20 }).eq('id', artistId);
+                if(tempFlowData.inventory.length > 0) {
+                    const inserts = tempFlowData.inventory.map(i => ({ artist_id: artistId, event_id: eventId, product_name: i.name, quantity: i.qty, price: i.price }));
+                    await window.supabaseClient.from('service_inventories').insert(inserts);
+                }
+                fMsg(`Sync Complete. Your inventory is manifested.`);
+                setTimeout(() => document.getElementById('flowee-overlay').classList.add('hidden'), 2000);
+                initData(); // refresh UI
+            } catch(e) { fMsg("Error: " + e.message); }
+        }
+
         // --- Three.js Pure 3D Engine ---
         
-        // 1. Generate Procedural Adinkra Texture
         function createAdinkraTexture() {
             const cvs = document.getElementById('adinkra-canvas');
             const c = cvs.getContext('2d');
@@ -168,28 +421,18 @@
             c.strokeStyle = '#d4af37'; c.lineWidth = 8; c.lineCap = 'round';
             c.shadowBlur = 15; c.shadowColor = '#d4af37';
             
-            // Draw abstract Gye Nyame inspired spiral
-            c.beginPath();
-            c.arc(128, 128, 60, 0, Math.PI, false);
-            c.stroke();
-            c.beginPath();
-            c.arc(128, 128, 80, Math.PI, Math.PI * 2, false);
-            c.stroke();
-            c.beginPath();
-            c.arc(68, 128, 20, Math.PI, Math.PI * 2, true);
-            c.stroke();
-            c.beginPath();
-            c.arc(208, 128, 20, 0, Math.PI, true);
-            c.stroke();
+            c.beginPath(); c.arc(128, 128, 60, 0, Math.PI, false); c.stroke();
+            c.beginPath(); c.arc(128, 128, 80, Math.PI, Math.PI * 2, false); c.stroke();
+            c.beginPath(); c.arc(68, 128, 20, Math.PI, Math.PI * 2, true); c.stroke();
+            c.beginPath(); c.arc(208, 128, 20, 0, Math.PI, true); c.stroke();
 
             const tex = new THREE.CanvasTexture(cvs);
-            tex.wrapS = THREE.RepeatWrapping;
-            tex.wrapT = THREE.RepeatWrapping;
+            tex.wrapS = THREE.RepeatWrapping; tex.wrapT = THREE.RepeatWrapping;
             return tex;
         }
 
         const scene = new THREE.Scene();
-        scene.fog = new THREE.FogExp2(0x3a1e04, 0.02); // Warm dusty fog
+        scene.fog = new THREE.FogExp2(0x3a1e04, 0.02);
 
         const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -199,25 +442,16 @@
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-        // Lighting: Golden Hour / Terra Cotta vibes
-        const hemiLight = new THREE.HemisphereLight(0xffb56b, 0x2e1104, 0.6); // Warm sky, dark earth
+        const hemiLight = new THREE.HemisphereLight(0xffb56b, 0x2e1104, 0.6);
         scene.add(hemiLight);
 
         const dirLight = new THREE.DirectionalLight(0xffa500, 1.2);
         dirLight.position.set(50, 40, 20);
         dirLight.castShadow = true;
-        dirLight.shadow.mapSize.width = 1024;
-        dirLight.shadow.mapSize.height = 1024;
-        dirLight.shadow.camera.near = 0.5;
-        dirLight.shadow.camera.far = 150;
-        dirLight.shadow.camera.left = -50;
-        dirLight.shadow.camera.right = 50;
-        dirLight.shadow.camera.top = 50;
-        dirLight.shadow.camera.bottom = -50;
         scene.add(dirLight);
 
-        // Environment: Secret Garden LX (Procedural Terra-Cotta Architecture)
-        const earthMat = new THREE.MeshStandardMaterial({ color: 0x8b3a1a, roughness: 0.9, metalness: 0.1 }); // Terracotta
+        // Environment
+        const earthMat = new THREE.MeshStandardMaterial({ color: 0x8b3a1a, roughness: 0.9, metalness: 0.1 });
         const ground = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), earthMat);
         ground.rotation.x = -Math.PI / 2;
         ground.receiveShadow = true;
@@ -227,19 +461,15 @@
         const wallMat = new THREE.MeshStandardMaterial({ color: 0x6e2c10, roughness: 0.8 });
         const glowWallMat = new THREE.MeshStandardMaterial({ color: 0x5c220a, emissiveMap: adinkraTex, emissive: 0xd4af37, emissiveIntensity: 2 });
 
-        // Generate abstract village / labyrinth
         for(let i=0; i<40; i++) {
             const w = Math.random() * 8 + 4;
             const h = Math.random() * 10 + 4;
             const d = Math.random() * 8 + 4;
             const isGlowing = Math.random() > 0.8;
             const box = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), isGlowing ? glowWallMat : wallMat);
-            
-            // Random position, keep center relatively clear
             let px = (Math.random() - 0.5) * 100;
             let pz = (Math.random() - 0.5) * 100;
             if(Math.abs(px) < 10 && Math.abs(pz) < 10) { px += 15; pz += 15; }
-            
             box.position.set(px, h/2, pz);
             box.rotation.y = (Math.random() * Math.PI) / 4;
             box.castShadow = true;
@@ -247,23 +477,24 @@
             scene.add(box);
         }
 
-        // Avatar: "Schwebende Seele" (Floating Soul)
-        const soulGroup = new THREE.Group();
-        scene.add(soulGroup);
-        soulGroup.position.y = 2; // Hovering
+        // --- Avatars ---
+        const playerGroup = new THREE.Group();
+        scene.add(playerGroup);
 
-        // Core Soul (Glowing Sphere)
+        // Player Soul
+        const soulGroup = new THREE.Group();
+        playerGroup.add(soulGroup);
+        soulGroup.position.y = 2; 
+
         const coreGeo = new THREE.SphereGeometry(0.6, 32, 32);
         const coreMat = new THREE.MeshStandardMaterial({ color: 0x00ffcc, emissive: 0x00ffcc, emissiveIntensity: 2, transparent: true, opacity: 0.9 });
         const soulCore = new THREE.Mesh(coreGeo, coreMat);
         soulCore.castShadow = true;
         soulGroup.add(soulCore);
 
-        // Point light from soul
         const soulLight = new THREE.PointLight(0x00ffcc, 1.5, 20);
         soulGroup.add(soulLight);
 
-        // Flowing Aura (Particles)
         const auraCount = 150;
         const auraGeo = new THREE.BufferGeometry();
         const auraPos = new Float32Array(auraCount * 3);
@@ -279,8 +510,22 @@
         const auraParticles = new THREE.Points(auraGeo, auraMat);
         soulGroup.add(auraParticles);
 
+        // Flowee Orb (Companion)
+        const floweeOrb = new THREE.Group();
+        playerGroup.add(floweeOrb);
+        floweeOrb.position.set(-2, 2.5, -1);
+        
+        const fCoreGeo = new THREE.SphereGeometry(0.3, 16, 16);
+        const fCoreMat = new THREE.MeshStandardMaterial({ color: 0x00ffcc, emissive: 0x00ffcc, emissiveIntensity: 3, wireframe: true });
+        const fCore = new THREE.Mesh(fCoreGeo, fCoreMat);
+        floweeOrb.add(fCore);
+        
+        const fLight = new THREE.PointLight(0x00ffcc, 1, 10);
+        floweeOrb.add(fLight);
+
+
         camera.position.set(0, 5, 10);
-        camera.lookAt(soulGroup.position);
+        camera.lookAt(playerGroup.position);
 
         // --- Controls ---
         let moveVec = new THREE.Vector2(0, 0);
@@ -340,32 +585,30 @@
 
             // Hover soul
             soulCore.position.y = Math.sin(time * 2) * 0.3;
-            
-            // Rotate Aura
             auraParticles.rotation.y += 0.5 * delta;
-            
-            // Pulse light
             soulLight.intensity = 1.5 + Math.sin(time * 3) * 0.3;
+
+            // Flowee Orbit logic
+            floweeOrb.position.y = 2.5 + Math.sin(time * 3) * 0.4;
+            fCore.rotation.y += delta;
+            fCore.rotation.x += delta * 0.5;
 
             // Move Soul
             if(moveVec.length() > 0) {
                 const speed = 8 * delta;
-                soulGroup.position.x += moveVec.x * speed;
-                soulGroup.position.z += moveVec.y * speed;
+                playerGroup.position.x += moveVec.x * speed;
+                playerGroup.position.z += moveVec.y * speed;
                 
-                // Tilt core slightly in direction of movement
                 soulCore.rotation.z = -moveVec.x * 0.5;
                 soulCore.rotation.x = moveVec.y * 0.5;
             } else {
-                // Reset tilt
                 soulCore.rotation.z = THREE.MathUtils.lerp(soulCore.rotation.z, 0, 0.1);
                 soulCore.rotation.x = THREE.MathUtils.lerp(soulCore.rotation.x, 0, 0.1);
             }
 
-            // Camera follow smoothly
-            const targetCamPos = soulGroup.position.clone().add(new THREE.Vector3(0, 5, 12));
+            const targetCamPos = playerGroup.position.clone().add(new THREE.Vector3(0, 5, 12));
             camera.position.lerp(targetCamPos, 0.05);
-            camera.lookAt(soulGroup.position);
+            camera.lookAt(playerGroup.position);
 
             renderer.render(scene, camera);
         }
