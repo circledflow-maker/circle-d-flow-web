@@ -1740,7 +1740,8 @@
             // Update status to orange since we generated the invite
             updateArtistStatusInDb(artist.id, 'orange', artist.link);
             
-            doc.save(`CDF_Invite_${artist.name.replace(/ /g, '_')}.pdf`);
+            const pdfBlob = doc.output('blob');
+            return new File([pdfBlob], `CDF_Invite_${artist.name.replace(/ /g, '_')}.pdf`, { type: 'application/pdf' });
         }
         async function compressAndSetImage(input) {
             if (!input.files || !input.files[0]) return;
@@ -2037,31 +2038,48 @@
             if(!activeArtistData) return;
             const msg = document.getElementById('artist-ping-message').value.trim();
             
-            document.getElementById('flowee-speech').innerHTML = `Wait a sec... generating link for <strong>${activeArtistData.name}</strong>... 🪄`;
+            document.getElementById('flowee-speech').innerHTML = `Wait a sec... generating link & PDF for <strong>${activeArtistData.name}</strong>... 🪄`;
+
+            // Prep data for PDF
+            if (window.currentEventData && window.currentEventData.needs && window.currentEventData.needs.syncMatrix) {
+                activeArtistData.program = window.currentEventData.needs.syncMatrix;
+            } else {
+                activeArtistData.program = [];
+            }
+            
+            const pdfFile = await generateBrowserPdfInvite(activeArtistData);
 
             const regUrl = `${window.location.origin}/pages/artist_registration.html?eventId=${currentEventId}&artistId=${activeArtistData.id}`;
             
             let extraMsg = msg ? `\n\n"${msg}"\n` : "";
             
-            const shareTextEng = `Yo ${activeArtistData.name}! We'd love to have you at Circle D Flow.${extraMsg}\nHere is your personal registration & upload link. Please fill it out so we can prepare your set: ${regUrl}`;
-            const shareTextPt = `Drop ${activeArtistData.name}! Queremos muito contar contigo no Circle D Flow.${extraMsg}\nAqui está o teu link pessoal de registo. Por favor, preenche para prepararmos o teu set: ${regUrl}`;
-            
-            const combinedShareText = `${shareTextPt}\n\n${shareTextEng}`;
+            const shareTextEng = `Yo ${activeArtistData.name}! We'd love to have you at Circle D Flow.${extraMsg}\nAttached is the official invite with the program. Please fill out this personal link so we can prepare your set and get your QR code: ${regUrl}`;
 
             closeFloweeOverlay();
 
-            if (navigator.share) {
+            if (navigator.share && navigator.canShare && navigator.canShare({ files: [pdfFile] })) {
                 try {
                     await navigator.share({
                         title: 'Circle D Flow - Artist Invite',
-                        text: combinedShareText
+                        text: shareTextEng,
+                        files: [pdfFile]
                     });
                 } catch(e) {
-                    prompt("Copy this to send to the artist:", combinedShareText);
+                    console.error("Share failed", e);
+                    fallbackShare(pdfFile, shareTextEng);
                 }
             } else {
-                prompt("Copy this to send to the artist:", combinedShareText);
+                fallbackShare(pdfFile, shareTextEng);
             }
+        }
+
+        function fallbackShare(pdfFile, shareText) {
+            const objectUrl = URL.createObjectURL(pdfFile);
+            const link = document.createElement('a');
+            link.href = objectUrl;
+            link.download = pdfFile.name;
+            link.click();
+            prompt("PDF downloaded! Copy this text to send to the artist:", shareText);
         }
     </script>
     
