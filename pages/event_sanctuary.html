@@ -2050,10 +2050,11 @@
             const pdfFile = await generateBrowserPdfInvite(activeArtistData);
 
             const regUrl = `${window.location.origin}/pages/artist_registration.html?eventId=${currentEventId}&artistId=${activeArtistData.id}`;
+            const visitorUrl = `${window.location.origin}/pages/create_impact.html?id=${currentEventId}`;
             
             let extraMsg = msg ? `\n\n"${msg}"\n` : "";
             
-            const shareTextEng = `Yo ${activeArtistData.name}! We'd love to have you at Circle D Flow.${extraMsg}\nAttached is the official invite with the program. Please fill out this personal link so we can prepare your set and get your QR code: ${regUrl}`;
+            const shareTextEng = `Yo ${activeArtistData.name}! We'd love to have you at Circle D Flow.${extraMsg}\nAttached is the official invite with the program. Please fill out this personal link so we can prepare your set and get your QR code: ${regUrl}\n\nHere is the public event link to share with your network: ${visitorUrl}`;
 
             closeFloweeOverlay();
 
