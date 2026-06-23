@@ -63,6 +63,10 @@
 
         <!-- Action Buttons (Right Side) -->
         <div class="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col gap-4 pointer-events-auto">
+            <!-- Flowee Menu Button -->
+            <button onclick="openFloweeMenu()" class="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-white hover:bg-white/10 transition shadow-[0_0_15px_rgba(0,255,204,0.3)] bg-gradient-to-br from-[#00ffcc]/30 to-black font-bold border border-[#00ffcc]/50">
+                F
+            </button>
             <!-- Program / Ledger Button -->
             <button onclick="openLedger()" class="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-[#ff00cc] hover:bg-white/10 transition shadow-[0_0_15px_rgba(255,0,204,0.3)]">
                 <span class="material-symbols-outlined">menu_book</span>
@@ -282,13 +286,15 @@
                             if(artist.community_cut_percentage !== null) {
                                 contentHtml += `<div class="mb-4 text-[#00ffcc]">Community Cut: ${artist.community_cut_percentage}%</div>`;
                                 if(inv && inv.length > 0) {
-                                    contentHtml += `<h3 class="text-[#d4af37] font-bold mb-2">Inventory</h3>`;
-                                    inv.forEach(i => {
-                                        contentHtml += `<div class="flex justify-between border-b border-white/10 py-2">
-                                            <span>${i.product_name} <span class="text-white/40">x${i.quantity}</span></span>
-                                            <span class="text-[#00ffcc]">€${i.price}</span>
-                                        </div>`;
+                                    contentHtml += `<div class="mt-4 bg-white/5 border border-white/10 rounded-lg p-3">
+                                        <h3 class="text-[#d4af37] font-bold mb-2 flex items-center gap-2"><span class="material-symbols-outlined text-sm">inventory_2</span> Inventory</h3>
+                                        <table class="w-full text-left border-collapse text-xs">
+                                            <thead><tr class="text-[#00ffcc] border-b border-white/20"><th class="py-1">Nr.</th><th class="py-1">Name</th><th class="py-1">Qty</th><th class="py-1">Price</th></tr></thead>
+                                            <tbody>`;
+                                    inv.forEach((i, idx) => {
+                                        contentHtml += `<tr class="border-b border-white/10"><td class="py-2 text-white/50">${idx+1}</td><td class="py-2">${i.product_name}</td><td class="py-2 text-white/50">${i.quantity}</td><td class="py-2 text-[#d4af37]">€${i.price}</td></tr>`;
                                     });
+                                    contentHtml += `</tbody></table></div>`;
                                 }
                             }
                         } catch(err) { /* ignore 400 error */ }
@@ -298,13 +304,15 @@
                         if(localData && localData.cut && !contentHtml.includes('Community Cut')) {
                             contentHtml += `<div class="mb-4 text-[#00ffcc]">Community Cut: ${localData.cut}% (Local Sync)</div>`;
                             if(localData.inventory && localData.inventory.length > 0) {
-                                contentHtml += `<h3 class="text-[#d4af37] font-bold mb-2">Inventory</h3>`;
-                                localData.inventory.forEach(i => {
-                                    contentHtml += `<div class="flex justify-between border-b border-white/10 py-2">
-                                        <span>${i.name} <span class="text-white/40">x${i.qty}</span></span>
-                                        <span class="text-[#00ffcc]">€${i.price}</span>
-                                    </div>`;
-                                });
+                                    contentHtml += `<div class="mt-4 bg-white/5 border border-white/10 rounded-lg p-3">
+                                        <h3 class="text-[#d4af37] font-bold mb-2 flex items-center gap-2"><span class="material-symbols-outlined text-sm">inventory_2</span> Inventory</h3>
+                                        <table class="w-full text-left border-collapse text-xs">
+                                            <thead><tr class="text-[#00ffcc] border-b border-white/20"><th class="py-1">Nr.</th><th class="py-1">Name</th><th class="py-1">Qty</th><th class="py-1">Price</th></tr></thead>
+                                            <tbody>`;
+                                    localData.inventory.forEach((i, idx) => {
+                                        contentHtml += `<tr class="border-b border-white/10"><td class="py-2 text-white/50">${idx+1}</td><td class="py-2">${i.name}</td><td class="py-2 text-white/50">${i.qty}</td><td class="py-2 text-[#d4af37]">€${i.price}</td></tr>`;
+                                    });
+                                    contentHtml += `</tbody></table></div>`;
                             }
                         }
                     }
@@ -342,6 +350,41 @@
         }
 
         function setFInput(html) { fInput.innerHTML = html; }
+
+        function openFloweeMenu() {
+            document.getElementById('flowee-overlay').classList.remove('hidden');
+            fMsg(`Welcome back, <b>${artistData.name}</b>. How can I assist you?`);
+            if (artistData.artist_type === 'performance') {
+                setFInput(`<div class="flex flex-col gap-2">
+                    <button onclick="document.getElementById('flowee-overlay').classList.add('hidden')" class="bg-white/10 border border-white/20 text-white py-2 rounded font-bold uppercase tracking-widest text-xs hover:bg-white/20 transition">Close Menu</button>
+                </div>`);
+            } else {
+                setFInput(`<div class="flex flex-col gap-2">
+                    <button onclick="handleFC('addProdStart')" class="bg-[#00ffcc]/20 border border-[#00ffcc]/50 text-[#00ffcc] py-2 rounded font-bold uppercase tracking-widest text-xs hover:bg-[#00ffcc]/40 transition">Add Product to Inventory</button>
+                    <button onclick="document.getElementById('flowee-overlay').classList.add('hidden')" class="bg-white/10 border border-white/20 text-white py-2 rounded font-bold uppercase tracking-widest text-xs hover:bg-white/20 transition">Close Menu</button>
+                </div>`);
+            }
+        }
+
+        async function saveNewProduct(name, qty, price) {
+            const localDataStr = localStorage.getItem('soul_data_' + artistId);
+            const localData = localDataStr ? JSON.parse(localDataStr) : { inventory: [] };
+            if (!localData.inventory) localData.inventory = [];
+            localData.inventory.push({ name, qty, price });
+            localStorage.setItem('soul_data_' + artistId, JSON.stringify(localData));
+
+            try {
+                const inserts = [{ artist_id: artistId, event_id: eventId, product_name: name, quantity: qty, price: price }];
+                const { error: invErr } = await window.supabaseClient.from('service_inventories').insert(inserts);
+                if (invErr) console.warn("Supabase table missing, saved locally.");
+            } catch(e) {}
+
+            fMsg("Product added successfully!");
+            setTimeout(() => {
+                setFInput(`<button onclick="document.getElementById('flowee-overlay').classList.add('hidden')" class="w-full bg-[#00ffcc]/20 border border-[#00ffcc]/50 text-[#00ffcc] py-3 rounded font-bold uppercase tracking-widest text-xs mt-2 hover:bg-[#00ffcc]/40 transition">Close Menu</button>`);
+                initData(); // Refresh UI
+            }, 1000);
+        }
 
         async function startInSanctuaryDeepFlow() {
             document.getElementById('flowee-overlay').classList.remove('hidden');
@@ -446,6 +489,26 @@
             else if(step === 'colorS') {
                 setSoulColor(val);
                 finishServFlow();
+            }
+            // Add Product Menu Flow
+            else if(step === 'addProdStart') {
+                fMsg("What is the name of the new product/service?");
+                setFInput(`<div class="flex gap-2"><input type="text" id="fc-input" class="flex-1 bg-black/50 border border-white/20 rounded p-2 text-white outline-none focus:border-[#00ffcc]"><button onclick="handleFC('addProdQty')" class="bg-[#00ffcc] text-black px-4 rounded font-bold">SEND</button></div>`);
+            }
+            else if(step === 'addProdQty') {
+                tempFlowData.tempName = val;
+                fMsg("How many units/portions?");
+                setFInput(`<div class="flex gap-2"><input type="number" id="fc-input" class="flex-1 bg-black/50 border border-white/20 rounded p-2 text-white outline-none focus:border-[#00ffcc]"><button onclick="handleFC('addProdPrice')" class="bg-[#00ffcc] text-black px-4 rounded font-bold">SEND</button></div>`);
+            }
+            else if(step === 'addProdPrice') {
+                tempFlowData.tempQty = val;
+                fMsg("Price per unit (in €)?");
+                setFInput(`<div class="flex gap-2"><input type="number" id="fc-input" class="flex-1 bg-black/50 border border-white/20 rounded p-2 text-white outline-none focus:border-[#00ffcc]"><button onclick="handleFC('addProdFinish')" class="bg-[#00ffcc] text-black px-4 rounded font-bold">SEND</button></div>`);
+            }
+            else if(step === 'addProdFinish') {
+                tempFlowData.tempPrice = val;
+                fMsg(`<span class="text-[#d4af37] animate-pulse">Adding product to network...</span>`);
+                saveNewProduct(tempFlowData.tempName, tempFlowData.tempQty, tempFlowData.tempPrice);
             }
         }
 
