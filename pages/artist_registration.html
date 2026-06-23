@@ -119,9 +119,10 @@
 
         // Check if artistId is in URL, auto-redirect if valid
         async function checkUrlArtist() {
-            if(urlArtistId && window.supabaseClient) {
+            let localArtistId = urlArtistId || localStorage.getItem('flowee_artist_id');
+            if(localArtistId && window.supabaseClient) {
                 try {
-                    const { data: artist } = await window.supabaseClient.from('master_artists').select('*').eq('id', urlArtistId).single();
+                    const { data: artist } = await window.supabaseClient.from('master_artists').select('*').eq('id', localArtistId).single();
                     if(artist && artist.permanent_qr_code) {
                         window.location.href = `/pages/artist_sanctuary.html?eventId=${eventId}&artistId=${artist.id}`;
                     }
@@ -436,6 +437,7 @@
                     throw artistErr;
                 }
                 artistData.id = artist.id;
+                localStorage.setItem('flowee_artist_id', artist.id);
 
                 // Event checkin
                 if(eventId) {
@@ -516,6 +518,12 @@
                     awardPoints(30, 20);
                     await showTyping();
                     addFloweeMessage(`<span class="text-[#00ffcc] font-bold">${getT('finalServ')}</span>`);
+                    
+                    setTimeout(() => {
+                        setInputOptions(`
+                            <button onclick="window.location.href='/pages/artist_sanctuary.html?eventId=${eventId}&artistId=${artistData.id}'" class="w-full bg-[#00ffcc]/10 border border-[#00ffcc]/30 text-[#00ffcc] font-bold py-3 rounded-lg hover:bg-[#00ffcc]/20 transition shadow-[0_0_15px_rgba(0,255,204,0.3)] uppercase tracking-widest text-xs">Enter Sanctuary</button>
+                        `);
+                    }, 1000);
                 } catch(e) { addFloweeMessage("Error syncing: " + e.message); }
             }
         }
@@ -538,6 +546,12 @@
                 awardPoints(15, 10);
                 await showTyping();
                 addFloweeMessage(`<span class="text-[#00ffcc] font-bold">${getT('finalPerf')}</span>`);
+
+                setTimeout(() => {
+                    setInputOptions(`
+                        <button onclick="window.location.href='/pages/artist_sanctuary.html?eventId=${eventId}&artistId=${artistData.id}'" class="w-full bg-[#d4af37]/10 border border-[#d4af37]/30 text-[#d4af37] font-bold py-3 rounded-lg hover:bg-[#d4af37]/20 transition shadow-[0_0_15px_rgba(212,175,55,0.3)] uppercase tracking-widest text-xs">Enter Sanctuary</button>
+                    `);
+                }, 1000);
             } catch(e) { addFloweeMessage("Error syncing: " + e.message); }
         }
 
