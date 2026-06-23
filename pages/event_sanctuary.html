@@ -1227,7 +1227,7 @@
                     // Fetch Guest List
                     const { data: guests, error: guestsError } = await window.supabaseClient
                         .from('guest_registrations')
-                        .select('name, email, created_at')
+                        .select('id, name, email, created_at')
                         .eq('event_id', currentEventId)
                         .order('created_at', { ascending: false });
 
@@ -1235,7 +1235,22 @@
                     if (guestsError) {
                         guestDiv.innerHTML = `<span class="text-white/50 text-xs italic">Table missing or RLS issue. Run SQL.</span>`;
                     } else if (guests && guests.length > 0) {
-                        guestDiv.innerHTML = guests.map(g => `<div class="flex justify-between items-center bg-white/5 p-2 rounded mb-1 border border-white/10"><span class="text-white truncate">${g.name}</span><span class="text-[10px] text-white/50 truncate max-w-[100px]">${g.email}</span></div>`).join('');
+                        guestDiv.innerHTML = guests.map(g => `
+                            <div class="flex justify-between items-center bg-white/5 p-2 rounded mb-1 border border-white/10">
+                                <div class="flex flex-col truncate flex-1 mr-2">
+                                    <span class="text-white truncate font-bold">${g.name}</span>
+                                    <span class="text-[10px] text-white/50 truncate">${g.email}</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <button onclick="editGuestPrompt('${g.id}', '${g.name.replace(/'/g, "\\'")}', '${g.email.replace(/'/g, "\\'")}')" class="text-white/50 hover:text-white transition" title="Edit Contact">
+                                        <span class="material-symbols-outlined text-[16px]">edit</span>
+                                    </button>
+                                    <button onclick="resendGuestInvite('${g.name.replace(/'/g, "\\'")}', '${g.email.replace(/'/g, "\\'")}')" class="text-[#00ffcc] hover:text-white transition" title="Resend Invite">
+                                        <span class="material-symbols-outlined text-[16px]">send</span>
+                                    </button>
+                                </div>
+                            </div>
+                        `).join('');
                     } else {
                         guestDiv.innerHTML = `<span class="text-white/50 text-xs italic">No guests yet.</span>`;
                     }
@@ -1934,6 +1949,52 @@
             } catch (err) {
                 console.error("Invite Error:", err);
                 document.getElementById('flowee-guest-speech').innerHTML = `<p class="text-red-500">Error: ${err.message}</p>`;
+            }
+        }
+
+        async function editGuestPrompt(id, oldName, oldEmail) {
+            const newName = prompt("Edit Guest Name:", oldName);
+            if(newName === null) return;
+            
+            const newEmail = prompt("Edit Contact Handle (Email / WA: ... / IG: ...):", oldEmail);
+            if(newEmail === null) return;
+
+            if(!window.supabaseClient) return alert("Database connection required.");
+            
+            try {
+                const { error } = await window.supabaseClient.from('guest_registrations')
+                    .update({ name: newName.trim(), email: newEmail.trim() })
+                    .eq('id', id);
+                    
+                if (error) throw error;
+                
+                alert("Guest updated successfully.");
+                openAnalyticsModal(); // refresh list
+            } catch(e) {
+                console.error("Edit Error", e);
+                alert("Failed to update guest: " + e.message);
+            }
+        }
+
+        async function resendGuestInvite(name, email) {
+            const ticketUrl = `${window.location.origin}/pages/guest_ticket.html?name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}`;
+                
+            const shareTextEng = `Yo ${name}! Here is your VIP Guest Ticket for Circle D Flow. Let them scan the QR-code at the entrance and welcome to the Zone! 💜 Link: ${ticketUrl}`;
+            const shareTextPt = `Drop ${name}! Aqui está o teu VIP Guest Ticket para o Circle D Flow. Mostra o código QR na entrada para validação. Entra no Flow! 💜 Link: ${ticketUrl}`;
+            
+            const combinedShareText = `${shareTextPt}\n\n${shareTextEng}`;
+
+            if (navigator.share) {
+                try {
+                    await navigator.share({
+                        title: 'VIP Guest Ticket',
+                        text: combinedShareText
+                    });
+                } catch(e) {
+                    prompt("Copy this to send them their ticket:", combinedShareText);
+                }
+            } else {
+                prompt("Copy this to send them their ticket:", combinedShareText);
             }
         }
     </script>
