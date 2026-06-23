@@ -1831,46 +1831,102 @@
                 if(analyticsCurrentSlide > 0) setAnalyticsSlide(analyticsCurrentSlide - 1);
             }
         }
-        async function inviteGuestPrompt() {
-            const name = prompt("Guest Name:");
-            if(!name) return;
-            const email = prompt("Guest Email:");
-            if(!email) return;
+        let floweeGuestState = { name: '', channel: 'Email' };
 
+        function inviteGuestPrompt() {
+            floweeGuestState = { name: '', channel: 'Email' };
+            document.getElementById('flowee-guest-name').value = '';
+            document.getElementById('flowee-guest-contact').value = '';
+            document.getElementById('flowee-guest-step-1').classList.remove('hidden');
+            document.getElementById('flowee-guest-step-2').classList.add('hidden');
+            document.getElementById('flowee-guest-speech').innerHTML = `<p>Bem-vindo ao flow. Qual é o nome do convidado? / Welcome to the zone. What's the guest name?</p>`;
+            setGuestChannel('Email');
+
+            document.getElementById('flowee-guest-overlay').classList.remove('hidden');
+        }
+
+        function closeFloweeGuestOverlay() {
+            document.getElementById('flowee-guest-overlay').classList.add('hidden');
+        }
+
+        function floweeGuestNextStep() {
+            const name = document.getElementById('flowee-guest-name').value.trim();
+            if(!name) return;
+            floweeGuestState.name = name;
+
+            document.getElementById('flowee-guest-step-1').classList.add('hidden');
+            document.getElementById('flowee-guest-step-2').classList.remove('hidden');
+            document.getElementById('flowee-guest-speech').innerHTML = `<p>Boa. Para onde enviamos o convite? Email, WhatsApp ou IG?<br><span class="text-white/50 text-xs">Cool. Where should we drop the invite?</span></p>`;
+        }
+
+        function setGuestChannel(channel) {
+            floweeGuestState.channel = channel;
+            const channels = ['Email', 'WhatsApp', 'IG'];
+            channels.forEach(ch => {
+                const btn = document.getElementById(`btn-channel-${ch}`);
+                if(ch === channel) {
+                    btn.className = "bg-black/50 border border-[#00ffcc] text-[#00ffcc] py-2 rounded-xl text-sm font-bold transition-all";
+                } else {
+                    btn.className = "bg-black/50 border border-white/20 text-white/50 py-2 rounded-xl text-sm font-bold transition-all";
+                }
+            });
+
+            const contactInput = document.getElementById('flowee-guest-contact');
+            if(channel === 'Email') contactInput.placeholder = "Email Address...";
+            if(channel === 'WhatsApp') contactInput.placeholder = "WhatsApp Number...";
+            if(channel === 'IG') contactInput.placeholder = "Instagram Handle...";
+            contactInput.focus();
+        }
+
+        async function floweeGuestFinish() {
+            const contact = document.getElementById('flowee-guest-contact').value.trim();
+            if(!contact) return;
+            
             if(!window.supabaseClient) return alert("Database connection required.");
 
+            document.getElementById('flowee-guest-speech').innerHTML = `<p>Wait a sec... generating the VIP ticket... ✨</p>`;
+
             try {
+                let dbEmail = contact;
+                if(floweeGuestState.channel === 'WhatsApp') dbEmail = `WA: ${contact}`;
+                if(floweeGuestState.channel === 'IG') dbEmail = `IG: ${contact}`;
+
                 const { error } = await window.supabaseClient.from('guest_registrations').insert([{
                     event_id: currentEventId,
-                    name: name.trim(),
-                    email: email.trim()
+                    name: floweeGuestState.name,
+                    email: dbEmail
                 }]);
 
                 if (error) throw error;
 
-                const ticketUrl = `${window.location.origin}/pages/guest_ticket.html?name=${encodeURIComponent(name.trim())}&email=${encodeURIComponent(email.trim())}`;
+                const ticketUrl = `${window.location.origin}/pages/guest_ticket.html?name=${encodeURIComponent(floweeGuestState.name)}&email=${encodeURIComponent(dbEmail)}`;
                 
+                const shareTextEng = `Yo ${floweeGuestState.name}! Here is your VIP Guest Ticket for Circle D Flow. Let them scan the QR-code at the entrance and welcome to the Zone! 💜 Link: ${ticketUrl}`;
+                const shareTextPt = `Drop ${floweeGuestState.name}! Aqui está o teu VIP Guest Ticket para o Circle D Flow. Mostra o código QR na entrada para validação. Entra no Flow! 💜 Link: ${ticketUrl}`;
+                
+                const combinedShareText = `${shareTextPt}\n\n${shareTextEng}`;
+
+                closeFloweeGuestOverlay();
+
                 if (navigator.share) {
                     try {
                         await navigator.share({
                             title: 'VIP Guest Ticket',
-                            text: `You've been invited! Here is your VIP ticket for Circle D Flow:`,
-                            url: ticketUrl
+                            text: combinedShareText
                         });
                     } catch(e) {
                         console.log("Share cancelled", e);
-                        prompt("Guest added! Copy this link to send them their ticket:", ticketUrl);
+                        prompt("Guest added! Copy this to send them their ticket:", combinedShareText);
                     }
                 } else {
-                    prompt("Guest added! Copy this link to send them their ticket:", ticketUrl);
+                    prompt("Guest added! Copy this to send them their ticket:", combinedShareText);
                 }
                 
-                // Refresh list
                 openAnalyticsModal();
                 
             } catch (err) {
                 console.error("Invite Error:", err);
-                alert("Failed to invite guest: " + err.message);
+                document.getElementById('flowee-guest-speech').innerHTML = `<p class="text-red-500">Error: ${err.message}</p>`;
             }
         }
     </script>
@@ -1955,6 +2011,39 @@
                         <p class="text-[10px] text-[#00ffcc] uppercase tracking-widest mb-1">Circle D Flow</p>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Flowee Guest Overlay HTML -->
+    <div id="flowee-guest-overlay" class="flowee-overlay hidden">
+        <div class="overlay-backdrop" onclick="closeFloweeGuestOverlay()"></div>
+        <div class="overlay-card glassmorphism z-50">
+            <div class="flowee-header">
+                <div class="flowee-avatar-container">
+                    <span class="flowee-pulse"></span>
+                    <div class="fairy-wing left"></div><div class="fairy-wing right"></div><div class="fairy-orb"></div>
+                </div>
+                <div class="flowee-bubble" id="flowee-guest-speech">
+                    <p>Bem-vindo ao flow. Qual é o nome do convidado? / Welcome to the zone. What's the guest name?</p>
+                </div>
+            </div>
+
+            <!-- Step 1: Name Input -->
+            <div id="flowee-guest-step-1" class="mb-4">
+                <input type="text" id="flowee-guest-name" placeholder="Guest Name..." class="w-full bg-black/50 border border-white/20 rounded-xl p-3 text-white mb-4">
+                <button onclick="floweeGuestNextStep()" class="w-full bg-[#00ffcc] text-black font-bold py-3 rounded-xl hover:bg-white transition-colors">Continue</button>
+            </div>
+
+            <!-- Step 2: Channel Selection & Handle Input -->
+            <div id="flowee-guest-step-2" class="hidden mb-4">
+                <div class="grid grid-cols-3 gap-2 mb-4">
+                    <button onclick="setGuestChannel('Email')" id="btn-channel-Email" class="bg-black/50 border border-[#00ffcc] text-[#00ffcc] py-2 rounded-xl text-sm font-bold">Email</button>
+                    <button onclick="setGuestChannel('WhatsApp')" id="btn-channel-WhatsApp" class="bg-black/50 border border-white/20 text-white/50 py-2 rounded-xl text-sm font-bold">WhatsApp</button>
+                    <button onclick="setGuestChannel('IG')" id="btn-channel-IG" class="bg-black/50 border border-white/20 text-white/50 py-2 rounded-xl text-sm font-bold">IG</button>
+                </div>
+                <input type="text" id="flowee-guest-contact" placeholder="Email Address..." class="w-full bg-black/50 border border-white/20 rounded-xl p-3 text-white mb-4">
+                <button onclick="floweeGuestFinish()" class="w-full bg-[#00ffcc] text-black font-bold py-3 rounded-xl hover:bg-white transition-colors">Send Invite</button>
             </div>
         </div>
     </div>
