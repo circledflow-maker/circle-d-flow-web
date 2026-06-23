@@ -1338,8 +1338,8 @@
 
             try {
                 const regUrl = `${window.location.origin}/pages/artist_registration.html?eventId=${currentEventId}`;
-                const qrDataUrl = await QRCode.toDataURL(regUrl, { width: 250, margin: 1, color: { dark: '#000000ff', light: '#ffffffff' } });
-                document.getElementById('onboarding-qr-container').innerHTML = `<img src="${qrDataUrl}" alt="Artist Registration QR" />`;
+                const qrDataUrl = await generateQRCodeDataURL(regUrl, "#000000", "#ffffff");
+                if (qrDataUrl) document.getElementById('onboarding-qr-container').innerHTML = `<img src="${qrDataUrl}" alt="Artist Registration QR" />`;
             } catch(e) {
                 console.error("QR Generation Error", e);
             }
@@ -1612,6 +1612,20 @@
             await generateBrowserPdfInvite(activeArtistData);
         }
         
+        function generateQRCodeDataURL(text, darkColor, lightColor) {
+            return new Promise((resolve) => {
+                try {
+                    const tempDiv = document.createElement('div');
+                    new QRCode(tempDiv, { text: text, width: 250, height: 250, colorDark: darkColor || "#000000", colorLight: lightColor || "#ffffff", correctLevel: QRCode.CorrectLevel.L });
+                    setTimeout(() => {
+                        const canvas = tempDiv.querySelector('canvas');
+                        if (canvas) resolve(canvas.toDataURL('image/png'));
+                        else resolve('');
+                    }, 50);
+                } catch(e) { resolve(''); }
+            });
+        }
+
         async function generateBrowserPdfInvite(artist) {
             const eventTitle = document.querySelector('h1').innerText || "C4C EVENT";
             let dateStr = "TBA";
@@ -1658,7 +1672,7 @@
             
             doc.setTextColor(0, 255, 204); // cyan
             doc.setFontSize(28);
-            doc.text(artist.role.toUpperCase(), 300, 250, { align: 'center' });
+            doc.text((artist.role || 'VIP GUEST').toUpperCase(), 300, 250, { align: 'center' });
             
             doc.setTextColor(255, 255, 255);
             doc.setFontSize(16);
@@ -1731,8 +1745,8 @@
             try {
                 // Generate QR code for the artist
                 const qrValue = artist.permanent_qr_code || 'ARTIST_SIGNUP_TRIGGER';
-                const qrDataUrl = await QRCode.toDataURL(qrValue, { width: 150, margin: 1, color: { dark: '#00ffccff', light: '#09090bff' } });
-                doc.addImage(qrDataUrl, 'PNG', 225, 590, 150, 150);
+                const qrDataUrl = await generateQRCodeDataURL(qrValue, "#00ffcc", "#09090b");
+                if (qrDataUrl) doc.addImage(qrDataUrl, 'PNG', 225, 590, 150, 150);
             } catch(e) {
                 console.error("Failed to generate QR code for PDF", e);
             }
