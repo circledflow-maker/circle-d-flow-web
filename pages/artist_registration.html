@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Artist Registration | Circle D Flow</title>
+    <title>Artist Nexus | Flowee Sync</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&family=Cinzel:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
@@ -13,230 +13,507 @@
     <script src="../js/api_config.js"></script>
     <script src="../js/agents/supabase_client.js?v=4.1"></script>
     <style>
-        body { background-color: #09090b; color: #ffffff; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: #09090b; color: #ffffff; font-family: 'Plus Jakarta Sans', sans-serif; overflow: hidden; }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .chat-container {
+            height: calc(100vh - 80px);
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
+
+        .bubble-flowee {
+            background: rgba(0, 255, 204, 0.05);
+            border: 1px solid rgba(0, 255, 204, 0.2);
+            color: #fff;
+            border-radius: 16px;
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.1);
+        }
+
+        .bubble-user {
+            background: rgba(212, 175, 55, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            color: #d4af37;
+            border-radius: 16px;
+            border-bottom-right-radius: 4px;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.1);
+        }
+
+        .flowee-avatar {
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #00ffcc 0%, #003322 100%);
+            box-shadow: 0 0 10px #00ffcc;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .typing-dot {
+            width: 6px; height: 6px;
+            background: #00ffcc;
+            border-radius: 50%;
+            animation: typePulse 1.4s infinite ease-in-out both;
+        }
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        
+        @keyframes typePulse {
+            0%, 80%, 100% { transform: scale(0); opacity: 0.3; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
+        .fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
-<body class="flex flex-col items-center justify-center min-h-screen p-4 relative">
+<body class="flex flex-col h-screen relative w-full max-w-md mx-auto">
     <!-- Starfield BG -->
-    <div id="starfield" class="fixed inset-0 z-[-1] opacity-50"></div>
+    <div id="starfield" class="fixed inset-0 z-[-1] opacity-30 pointer-events-none"></div>
 
-    <div class="bg-[#111] text-white p-6 rounded-2xl border border-[#d4af37]/30 w-full max-w-md relative shadow-[0_0_30px_rgba(212,175,55,0.15)] z-10">
-        <div class="text-center mb-6">
-            <h1 class="font-serif text-3xl text-[#d4af37] mb-2 uppercase tracking-widest">Artist Onboarding</h1>
-            <p class="text-xs text-white/50 uppercase tracking-widest">Register for Event Access</p>
+    <!-- Header -->
+    <div class="h-[60px] border-b border-white/10 flex items-center px-4 justify-between bg-black/80 backdrop-blur z-10 shrink-0">
+        <div class="flex items-center gap-3">
+            <div class="flowee-avatar text-[10px] font-bold text-black">F</div>
+            <div>
+                <h1 class="font-serif text-[#00ffcc] text-sm uppercase tracking-widest leading-none">Flowee</h1>
+                <p class="text-[9px] text-white/50 uppercase tracking-widest">Network Nexus</p>
+            </div>
         </div>
-
-        <div id="artist-signup-flow" class="w-full">
-            <div id="artist-type-selection" class="flex flex-col gap-4 my-6">
-                <p class="text-center text-white/50 text-[10px] uppercase tracking-widest">Select Artist Category:</p>
-                <button onclick="selectArtistType('performance')" class="bg-[#d4af37] text-black p-3 rounded font-bold uppercase tracking-widest text-xs hover:bg-[#d4af37]/80 transition shadow-[0_0_15px_rgba(212,175,55,0.3)]">Performance Artist</button>
-                <button onclick="selectArtistType('service')" class="bg-[#00ffcc]/10 text-[#00ffcc] p-3 rounded font-bold uppercase tracking-widest text-xs hover:bg-[#00ffcc]/20 transition border border-[#00ffcc]/30 shadow-[0_0_15px_rgba(0,255,204,0.1)]">Service Artist</button>
-            </div>
-
-            <div id="artist-form-container" class="hidden space-y-4 text-sm mt-4 px-1">
-                <input type="text" id="artist-form-name" placeholder="Name / Stage Name" class="w-full bg-black border border-white/20 rounded p-3 text-white outline-none focus:border-[#d4af37]">
-                <input type="email" id="artist-form-email" placeholder="Email" class="w-full bg-black border border-white/20 rounded p-3 text-white outline-none focus:border-[#d4af37]">
-                <input type="text" id="artist-form-phone" placeholder="Phone" class="w-full bg-black border border-white/20 rounded p-3 text-white outline-none focus:border-[#d4af37]">
-                <input type="text" id="artist-form-ig" placeholder="Instagram (optional)" class="w-full bg-black border border-white/20 rounded p-3 text-white outline-none focus:border-[#d4af37]">
-
-                <div id="perf-fields" class="hidden space-y-4">
-                    <select id="artist-form-category" class="w-full bg-black border border-white/20 rounded p-3 text-white outline-none focus:border-[#d4af37]">
-                        <option value="" disabled selected>Select Category</option>
-                        <option value="movement">Movement / Dance</option>
-                        <option value="audiovisual">Audiovisual / Music</option>
-                        <option value="visual">Visual Art</option>
-                    </select>
-                    <textarea id="artist-form-tech" placeholder="Technical Needs (Mic, Space, etc.)" class="w-full bg-black border border-white/20 rounded p-3 text-white outline-none focus:border-[#d4af37] resize-none" rows="3"></textarea>
-                </div>
-
-                <div id="service-fields" class="hidden space-y-3">
-                    <p class="text-[10px] uppercase tracking-widest text-[#d4af37] font-bold">Inventory / Products</p>
-                    <div id="product-list" class="space-y-2">
-                        <div class="flex gap-2 product-row">
-                            <input type="text" placeholder="Product Name" class="bg-black border border-white/20 rounded p-2 text-white outline-none focus:border-[#d4af37] flex-1 text-xs prod-name">
-                            <input type="number" placeholder="Qty" value="1" class="bg-black border border-white/20 rounded p-2 text-white outline-none focus:border-[#d4af37] w-14 text-xs prod-qty">
-                            <input type="number" step="0.01" placeholder="Price" class="bg-black border border-white/20 rounded p-2 text-white outline-none focus:border-[#d4af37] w-20 text-xs prod-price">
-                        </div>
-                    </div>
-                    <button onclick="addProductRow()" class="text-[10px] text-[#00ffcc] uppercase tracking-widest hover:underline">+ Add Product</button>
-                </div>
-
-                <label class="flex items-center gap-2 text-[10px] text-white/50 py-2 cursor-pointer uppercase tracking-widest">
-                    <input type="checkbox" id="artist-form-photo-release" class="accent-[#d4af37]">
-                    Accept Photo & Video Release for Content
-                </label>
-
-                <div class="flex gap-2 mt-4">
-                    <button onclick="goBackToSelection()" class="w-1/3 bg-white/5 border border-white/10 text-white font-bold uppercase tracking-widest py-3 rounded-lg hover:bg-white/10 transition text-xs">Back</button>
-                    <button onclick="submitArtistIngest()" id="btn-submit-ingest" class="w-2/3 bg-[#d4af37] text-black font-bold uppercase tracking-widest py-3 rounded-lg hover:bg-[#d4af37]/80 transition flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(212,175,55,0.4)]">
-                        Register
-                    </button>
-                </div>
-            </div>
+        <div class="flex gap-2">
+            <span id="exp-display" class="text-[10px] text-[#d4af37] font-bold tracking-widest hidden fade-in border border-[#d4af37]/30 px-2 py-1 rounded-full bg-[#d4af37]/10">0 EXP</span>
+            <span id="flow-display" class="text-[10px] text-[#00ffcc] font-bold tracking-widest hidden fade-in border border-[#00ffcc]/30 px-2 py-1 rounded-full bg-[#00ffcc]/10">0 FLOW</span>
         </div>
     </div>
 
+    <!-- Chat Area -->
+    <div id="chat-area" class="chat-container flex-1 p-4 flex flex-col gap-4 pb-20">
+        <!-- Messages injected here -->
+    </div>
+
+    <!-- Input Area -->
+    <div id="input-area" class="fixed bottom-0 w-full max-w-md bg-black/90 backdrop-blur border-t border-white/10 p-3 flex flex-col gap-2 z-10">
+        <!-- Dynamic Inputs go here -->
+    </div>
+
     <script>
-        // Setup Starfield
+        // Starfield
         const canvas = document.createElement('canvas');
         document.getElementById('starfield').appendChild(canvas);
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-        const stars = Array.from({length: 100}).map(() => ({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
-            size: Math.random() * 2,
-            speed: Math.random() * 0.5 + 0.1
-        }));
+        const stars = Array.from({length: 80}).map(() => ({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, size: Math.random()*1.5, speed: Math.random()*0.3+0.1 }));
         function draw() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#fff';
-            stars.forEach(s => {
-                ctx.beginPath();
-                ctx.arc(s.x, s.y, s.size, 0, Math.PI*2);
-                ctx.fill();
-                s.y += s.speed;
-                if(s.y > canvas.height) s.y = 0;
-            });
+            ctx.clearRect(0,0,canvas.width,canvas.height); ctx.fillStyle='#fff';
+            stars.forEach(s => { ctx.beginPath(); ctx.arc(s.x, s.y, s.size, 0, Math.PI*2); ctx.fill(); s.y+=s.speed; if(s.y>canvas.height) s.y=0; });
             requestAnimationFrame(draw);
         }
         draw();
 
-        // Retrieve event ID from URL
         const urlParams = new URLSearchParams(window.location.search);
         const eventId = urlParams.get('eventId');
+        if(!eventId) alert("No Event ID found. Connection may be unstable.");
 
-        if(!eventId) {
-            alert("No Event ID found in the URL. Please scan the QR code from the Door Manager.");
+        // --- State Machine ---
+        let currentLang = 'en';
+        let artistData = {
+            id: null,
+            name: '',
+            email: '',
+            phone: '',
+            type: '', // performance or service
+            category: '', // sub-category
+            photoRelease: true,
+            techRider: '',
+            artifact: '',
+            inspiration: '',
+            communityCut: '',
+            inventory: []
+        };
+        let earnedExp = 0;
+        let earnedFlow = 0;
+
+        const chatArea = document.getElementById('chat-area');
+        const inputArea = document.getElementById('input-area');
+
+        // --- UI Helpers ---
+        function scrollToBottom() {
+            chatArea.scrollTop = chatArea.scrollHeight;
         }
 
-        let currentArtistType = null;
+        async function showTyping() {
+            const id = 'typing-' + Date.now();
+            const div = document.createElement('div');
+            div.id = id;
+            div.className = 'flex items-end gap-2 fade-in max-w-[85%]';
+            div.innerHTML = `
+                <div class="flowee-avatar shrink-0 text-[10px] font-bold text-black opacity-50">F</div>
+                <div class="bubble-flowee p-3 text-sm flex gap-1 items-center h-10">
+                    <div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>
+                </div>
+            `;
+            chatArea.appendChild(div);
+            scrollToBottom();
+            return new Promise(r => setTimeout(() => {
+                document.getElementById(id).remove();
+                r();
+            }, 800 + Math.random() * 600));
+        }
 
-        function selectArtistType(type) {
-            currentArtistType = type;
-            document.getElementById('artist-type-selection').classList.add('hidden');
-            document.getElementById('artist-form-container').classList.remove('hidden');
+        function addFloweeMessage(htmlContent) {
+            const div = document.createElement('div');
+            div.className = 'flex items-end gap-2 fade-in max-w-[90%]';
+            div.innerHTML = `
+                <div class="flowee-avatar shrink-0 text-[10px] font-bold text-black mt-1">F</div>
+                <div class="bubble-flowee p-4 text-sm font-light leading-relaxed">
+                    ${htmlContent}
+                </div>
+            `;
+            chatArea.appendChild(div);
+            scrollToBottom();
+        }
+
+        function addUserMessage(text) {
+            const div = document.createElement('div');
+            div.className = 'flex items-end justify-end fade-in w-full mt-2 mb-2';
+            div.innerHTML = `
+                <div class="bubble-user p-3 px-5 text-sm font-medium max-w-[85%] text-right break-words">
+                    ${text}
+                </div>
+            `;
+            chatArea.appendChild(div);
+            scrollToBottom();
+        }
+
+        function setInputOptions(optionsHTML) {
+            inputArea.innerHTML = optionsHTML;
+        }
+
+        function clearInput() {
+            inputArea.innerHTML = '';
+        }
+
+        function awardPoints(exp, flow) {
+            earnedExp += exp;
+            earnedFlow += flow;
+            const ed = document.getElementById('exp-display');
+            const fd = document.getElementById('flow-display');
+            ed.classList.remove('hidden'); fd.classList.remove('hidden');
+            ed.innerText = `+${earnedExp} EXP`;
+            fd.innerText = `+${earnedFlow} FLOW`;
+            ed.classList.remove('fade-in'); void ed.offsetWidth; ed.classList.add('fade-in');
+            fd.classList.remove('fade-in'); void fd.offsetWidth; fd.classList.add('fade-in');
+        }
+
+        // --- Translations ---
+        const T = {
+            en: {
+                welcome: "Welcome to the C4C Sanctuary. Choose your frequency.",
+                perf: "Performance Artist",
+                serv: "Service Artist",
+                askName: "What's your stage name or brand?",
+                askEmail: "Drop your email for the network link.",
+                askPhone: "And your comms number (WhatsApp)?",
+                askPerfCat: "Movement, Audiovisual, or Visual Art? Choose your expression.",
+                catMov: "Movement / Dance", catAudio: "Audiovisual / Music", catVis: "Visual Art",
+                askServCat: "What are you bringing? Food, Merch, Art, or Services?",
+                askPhoto: "Do you grant us the photo/video release for the archive?",
+                btnYes: "Yes, fully.", btnNo: "No thanks.",
+                registering: "Forging your seal...",
+                qrReady: "Got it! Here is your KY-Code. Present this at the door.",
+                qrSwipe: "Keep scrolling to secure your digital presence.",
+                techRider: "Deep Dive: Any special gear you need on stage? (Tech Rider)",
+                artifact: "Every artist carries an artifact of power. What's yours? A pendant, a specific pen, your shoes?",
+                inspiration: "Which artist or moment ignited the fire within you to start creating?",
+                cut: "Community comes first. What percentage (%) of your sales are you willing to share with the collective?",
+                inventoryInit: "Let's build your inventory. What's the first item you are offering? (Name)",
+                inventoryQty: "How many items/portions are available?",
+                inventoryPrice: "What's the price per unit (€)?",
+                inventoryMore: "Add another item?",
+                btnMore: "Yes, add more", btnDone: "No, I'm done",
+                finalPerf: "Your soul is registered. I'll be here. Drop me an update anytime your vision shifts.",
+                finalServ: "Your inventory is locked in. Ready for the marketplace. See you in the physical realm.",
+                placeholder: "Type your response...",
+                btnSend: "Send"
+            },
+            pt: {
+                welcome: "Bem-vindo ao Sanctuary C4C. Escolhe a tua frequência.",
+                perf: "Artista de Performance",
+                serv: "Artista de Serviço (Food/Merch)",
+                askName: "Qual é o teu nome artístico ou marca?",
+                askEmail: "Deixa o teu email para a rede.",
+                askPhone: "E o teu número de contacto (WhatsApp)?",
+                askPerfCat: "Movimento, Audiovisual ou Arte Visual? Escolhe a tua expressão.",
+                catMov: "Movimento / Dança", catAudio: "Audiovisual / Música", catVis: "Arte Visual",
+                askServCat: "O que trazes? Comida, Merch, Arte ou Serviços?",
+                askPhoto: "Concedes a autorização de imagem (foto/vídeo) para o arquivo?",
+                btnYes: "Sim, totalmente.", btnNo: "Não, obrigado.",
+                registering: "A forjar o teu selo...",
+                qrReady: "Feito! Aqui está o teu código KY. Apresenta-o à porta.",
+                qrSwipe: "Continua a fazer scroll para garantir a tua presença digital.",
+                techRider: "Deep Dive: Precisas de equipamento especial no palco? (Tech Rider)",
+                artifact: "Cada artista carrega um artefacto de poder. Qual é o teu? Um colar, uma caneta, os teus sapatos?",
+                inspiration: "Que artista ou momento despertou o fogo em ti para começares a criar?",
+                cut: "A comunidade vem primeiro. Que percentagem (%) das tuas vendas estás disposto a partilhar com o coletivo?",
+                inventoryInit: "Vamos construir o teu inventário. Qual é o primeiro artigo que ofereces? (Nome)",
+                inventoryQty: "Quantas unidades/porções estão disponíveis?",
+                inventoryPrice: "Qual é o preço por unidade (€)?",
+                inventoryMore: "Adicionar outro artigo?",
+                btnMore: "Sim, adicionar", btnDone: "Não, terminei",
+                finalPerf: "A tua alma está registada. Estarei aqui. Manda-me uma atualização sempre que a tua visão mudar.",
+                finalServ: "O teu inventário está bloqueado. Pronto para o mercado. Vemo-nos no reino físico.",
+                placeholder: "Escreve a tua resposta...",
+                btnSend: "Enviar"
+            }
+        };
+
+        function getT(key) { return T[currentLang][key]; }
+
+        // --- Flow Controllers ---
+        async function initFlow() {
+            await showTyping();
+            addFloweeMessage("Select your frequency / Seleciona a tua frequência");
+            setInputOptions(`
+                <div class="flex gap-2">
+                    <button onclick="handleLang('en')" class="flex-1 bg-[#00ffcc]/10 border border-[#00ffcc]/30 text-[#00ffcc] font-bold py-3 rounded-lg hover:bg-[#00ffcc]/20 transition shadow-[0_0_10px_rgba(0,255,204,0.1)] uppercase tracking-widest text-xs">ENG</button>
+                    <button onclick="handleLang('pt')" class="flex-1 bg-[#d4af37]/10 border border-[#d4af37]/30 text-[#d4af37] font-bold py-3 rounded-lg hover:bg-[#d4af37]/20 transition shadow-[0_0_10px_rgba(212,175,55,0.1)] uppercase tracking-widest text-xs">PT</button>
+                </div>
+            `);
+        }
+
+        async function handleLang(lang) {
+            currentLang = lang;
+            addUserMessage(lang === 'en' ? 'English' : 'Português');
+            clearInput();
+            await showTyping();
+            addFloweeMessage(getT('welcome'));
             
-            if(type === 'performance') {
-                document.getElementById('perf-fields').classList.remove('hidden');
-                document.getElementById('service-fields').classList.add('hidden');
+            setInputOptions(`
+                <div class="flex flex-col gap-2">
+                    <button onclick="handleType('performance')" class="w-full bg-[#d4af37] text-black font-bold py-3 rounded-lg hover:bg-[#d4af37]/80 transition shadow-[0_0_15px_rgba(212,175,55,0.3)] uppercase tracking-widest text-xs">${getT('perf')}</button>
+                    <button onclick="handleType('service')" class="w-full bg-white/5 border border-white/20 text-white font-bold py-3 rounded-lg hover:bg-white/10 transition uppercase tracking-widest text-xs">${getT('serv')}</button>
+                </div>
+            `);
+        }
+
+        async function handleType(type) {
+            artistData.type = type;
+            addUserMessage(type === 'performance' ? getT('perf') : getT('serv'));
+            clearInput();
+            await askTextItem('askName', 'name', 'askEmail');
+        }
+
+        async function askTextItem(tKey, dataKey, nextFunc) {
+            await showTyping();
+            addFloweeMessage(getT(tKey));
+            setInputOptions(`
+                <div class="flex gap-2">
+                    <input type="text" id="chat-input" placeholder="${getT('placeholder')}" class="flex-1 bg-black/50 border border-white/20 rounded-lg p-3 text-white text-sm outline-none focus:border-[#00ffcc]">
+                    <button onclick="handleTextSubmit('${dataKey}', '${nextFunc}')" class="bg-[#00ffcc] text-black font-bold px-4 rounded-lg hover:bg-[#00ffcc]/80 transition"><span class="material-symbols-outlined">send</span></button>
+                </div>
+            `);
+            setTimeout(() => document.getElementById('chat-input').focus(), 100);
+            
+            // Add enter listener
+            document.getElementById('chat-input').addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') handleTextSubmit(dataKey, nextFunc);
+            });
+        }
+
+        async function handleTextSubmit(dataKey, nextFuncStr) {
+            const val = document.getElementById('chat-input').value.trim();
+            if(!val) return;
+            artistData[dataKey] = val;
+            addUserMessage(val);
+            clearInput();
+
+            if(nextFuncStr === 'askEmail') await askTextItem('askEmail', 'email', 'askPhone');
+            else if(nextFuncStr === 'askPhone') await askPhoneNext();
+            else if(nextFuncStr === 'afterPerfCat') await askPhotoRelease();
+            else if(nextFuncStr === 'afterServCat') await askPhotoRelease();
+            // Deep Flow
+            else if(nextFuncStr === 'askArtifact') await askTextItem('artifact', 'artifact', 'askInspiration');
+            else if(nextFuncStr === 'askInspiration') await askTextItem('inspiration', 'inspiration', 'endPerf');
+            else if(nextFuncStr === 'endPerf') await window.endPerf();
+            // Inventory
+            else if(nextFuncStr === 'invQty') await askTextItem('inventoryQty', 'tempQty', 'invPrice');
+            else if(nextFuncStr === 'invPrice') await finishInvItem();
+            else if(nextFuncStr === 'askInvInit') await askTextItem('inventoryInit', 'tempName', 'invQty');
+        }
+
+        async function askPhoneNext() {
+            if(artistData.type === 'performance') {
+                await showTyping();
+                addFloweeMessage(getT('askPerfCat'));
+                setInputOptions(`
+                    <div class="flex flex-col gap-2">
+                        <button onclick="handleCatSelect('Movement', '${getT('catMov')}')" class="w-full bg-white/5 border border-white/20 text-white font-bold py-3 rounded-lg hover:bg-[#d4af37]/20 hover:border-[#d4af37]/50 transition text-xs">${getT('catMov')}</button>
+                        <button onclick="handleCatSelect('Audiovisual', '${getT('catAudio')}')" class="w-full bg-white/5 border border-white/20 text-white font-bold py-3 rounded-lg hover:bg-[#d4af37]/20 hover:border-[#d4af37]/50 transition text-xs">${getT('catAudio')}</button>
+                        <button onclick="handleCatSelect('Visual Art', '${getT('catVis')}')" class="w-full bg-white/5 border border-white/20 text-white font-bold py-3 rounded-lg hover:bg-[#d4af37]/20 hover:border-[#d4af37]/50 transition text-xs">${getT('catVis')}</button>
+                    </div>
+                `);
             } else {
-                document.getElementById('service-fields').classList.remove('hidden');
-                document.getElementById('perf-fields').classList.add('hidden');
+                await askTextItem('askServCat', 'category', 'afterServCat');
             }
         }
 
-        function goBackToSelection() {
-            document.getElementById('artist-form-container').classList.add('hidden');
-            document.getElementById('artist-type-selection').classList.remove('hidden');
+        async function handleCatSelect(val, displayLabel) {
+            artistData.category = val;
+            addUserMessage(displayLabel);
+            clearInput();
+            await askPhotoRelease();
         }
 
-        function addProductRow() {
-            const list = document.getElementById('product-list');
-            const row = document.createElement('div');
-            row.className = 'flex gap-2 product-row mt-2';
-            row.innerHTML = `
-                <input type="text" placeholder="Product Name" class="bg-black border border-white/20 rounded p-2 text-white outline-none focus:border-[#d4af37] flex-1 text-xs prod-name">
-                <input type="number" placeholder="Qty" value="1" class="bg-black border border-white/20 rounded p-2 text-white outline-none focus:border-[#d4af37] w-14 text-xs prod-qty">
-                <input type="number" step="0.01" placeholder="Price" class="bg-black border border-white/20 rounded p-2 text-white outline-none focus:border-[#d4af37] w-20 text-xs prod-price">
-            `;
-            list.appendChild(row);
+        async function askPhotoRelease() {
+            await showTyping();
+            addFloweeMessage(getT('askPhoto'));
+            setInputOptions(`
+                <div class="flex gap-2">
+                    <button onclick="handlePhoto(true)" class="flex-1 bg-[#00ffcc]/10 border border-[#00ffcc]/30 text-[#00ffcc] font-bold py-3 rounded-lg hover:bg-[#00ffcc]/20 transition text-xs">${getT('btnYes')}</button>
+                    <button onclick="handlePhoto(false)" class="flex-1 bg-white/5 border border-white/20 text-white/50 font-bold py-3 rounded-lg hover:bg-white/10 transition text-xs">${getT('btnNo')}</button>
+                </div>
+            `);
         }
 
-        async function submitArtistIngest() {
-            const name = document.getElementById('artist-form-name').value.trim();
-            const email = document.getElementById('artist-form-email').value.trim();
-            const phone = document.getElementById('artist-form-phone').value.trim();
-            const ig = document.getElementById('artist-form-ig').value.trim();
-            const photoRelease = document.getElementById('artist-form-photo-release').checked;
+        async function handlePhoto(val) {
+            artistData.photoRelease = val;
+            addUserMessage(val ? getT('btnYes') : getT('btnNo'));
+            clearInput();
+            await registerBaseArtist();
+        }
+
+        async function registerBaseArtist() {
+            await showTyping();
+            addFloweeMessage(`<span class="text-[#d4af37] animate-pulse">${getT('registering')}</span>`);
             
-            if(!name || !email) return alert("Name and Email are required!");
-            if(!eventId) return alert("Missing Event ID. Registration aborted.");
-            if(!window.supabaseClient) return alert("Database connection loading... Please try again.");
-
-            const btn = document.getElementById('btn-submit-ingest');
-            const origHTML = btn.innerHTML;
-            btn.innerHTML = 'Registering...';
-            btn.disabled = true;
+            // Generate QR & Insert to Supabase Phase 1
+            if(!window.supabaseClient) {
+                addFloweeMessage("Network Error: DB not connected.");
+                return;
+            }
 
             const permanentQrCode = `KY-FLOW-${Date.now()}`;
-
             try {
                 const { data: artist, error: artistErr } = await window.supabaseClient
                     .from('master_artists')
                     .insert([{
-                        name: name,
-                        email: email,
-                        phone: phone,
-                        instagram: ig,
-                        artist_type: currentArtistType,
-                        permanent_qr_code: permanentQrCode,
-                        photo_release_granted: photoRelease
-                    }])
-                    .select()
-                    .single();
+                        name: artistData.name, email: artistData.email, phone: artistData.phone,
+                        artist_type: artistData.type,
+                        permanent_qr_code: permanentQrCode, photo_release_granted: artistData.photoRelease,
+                        exp: 25, flow_credits: 0
+                    }]).select().single();
 
-                if(artistErr) {
-                    if(artistErr.code === '23505') { // unique violation
-                        throw new Error("Email is already registered! Please inform the door manager.");
-                    }
-                    throw artistErr;
-                }
+                if(artistErr) throw artistErr;
+                artistData.id = artist.id;
 
-                if(currentArtistType === 'performance') {
-                    const cat = document.getElementById('artist-form-category').value;
-                    const tech = document.getElementById('artist-form-tech').value;
-                    await window.supabaseClient.from('performance_details').insert([{
-                        artist_id: artist.id,
-                        performance_category: cat,
-                        technical_needs: tech,
-                        event_id: eventId
+                // Event checkin
+                if(eventId) {
+                    await window.supabaseClient.from('event_checkins').insert([{
+                        event_id: eventId, artist_id: artist.id, ticket_type: 'Free_Artist'
                     }]);
-                } else {
-                    const rows = document.querySelectorAll('.product-row');
-                    const inventories = [];
-                    rows.forEach(r => {
-                        const pName = r.querySelector('.prod-name').value;
-                        const pQty = parseInt(r.querySelector('.prod-qty').value) || 0;
-                        const pPrice = parseFloat(r.querySelector('.prod-price').value) || 0;
-                        if(pName) {
-                            inventories.push({ artist_id: artist.id, event_id: eventId, product_name: pName, quantity: pQty, price: pPrice });
-                        }
-                    });
-                    if(inventories.length > 0) await window.supabaseClient.from('service_inventories').insert(inventories);
                 }
 
-                await window.supabaseClient.from('event_checkins').insert([{
-                    event_id: eventId,
-                    artist_id: artist.id,
-                    ticket_type: 'Free_Artist'
-                }]);
-
-                const container = document.getElementById('artist-signup-flow');
-                container.innerHTML = `
-                    <div class="text-center mt-6">
-                        <span class="material-symbols-outlined text-5xl text-green-500 mb-2 drop-shadow-[0_0_10px_rgba(34,197,94,0.5)]">check_circle</span>
-                        <h3 class="font-serif text-xl text-[#d4af37] uppercase tracking-widest mb-2">Registration Complete</h3>
-                        <p class="text-sm text-white/70 mb-4">Please present this QR code to the door manager.</p>
-                        <div id="new-artist-qr" class="bg-white p-4 inline-block rounded-xl shadow-[0_0_20px_rgba(255,255,255,0.2)]"></div>
-                        <p class="text-[10px] text-white/50 mt-4 break-all opacity-50">${permanentQrCode}</p>
-                        <p class="text-xs text-[#00ffcc] mt-4 font-bold uppercase tracking-widest">Screenshot and save this code <br/>for future events!</p>
-                    </div>
-                `;
+                // Generate visual QR
+                const qrDataUrl = await QRCode.toDataURL(permanentQrCode, { width: 250, margin: 1, color: { dark: '#00ffccff', light: '#09090bff' } });
                 
-                const qrDataUrl = await QRCode.toDataURL(permanentQrCode, { width: 250, margin: 1, color: { dark: '#000000ff', light: '#ffffffff' } });
-                document.getElementById('new-artist-qr').innerHTML = `<img src="${qrDataUrl}" alt="Your Artist QR Code" />`;
+                awardPoints(25, 0); // Award first phase points
+
+                await showTyping();
+                addFloweeMessage(`
+                    <div class="font-bold mb-2 text-[#00ffcc]">${getT('qrReady')}</div>
+                    <img src="${qrDataUrl}" class="rounded-xl border-2 border-[#00ffcc]/30 w-full max-w-[200px] shadow-[0_0_20px_rgba(0,255,204,0.3)] mb-2" />
+                    <div class="text-[10px] text-[#00ffcc] tracking-widest break-all">${permanentQrCode}</div>
+                    <div class="mt-4 text-white/70 italic text-xs">${getT('qrSwipe')}</div>
+                `);
+
+                // Start Deep Flow
+                setTimeout(() => startDeepFlow(), 2500);
 
             } catch(e) {
-                console.error("Ingest error", e);
-                alert("Error registering: " + e.message);
-                btn.innerHTML = origHTML;
-                btn.disabled = false;
+                console.error(e);
+                addFloweeMessage("Error: " + e.message);
             }
         }
+
+        async function startDeepFlow() {
+            if(artistData.type === 'performance') {
+                await askTextItem('techRider', 'techRider', 'askArtifact');
+            } else {
+                await askTextItem('cut', 'communityCut', 'askInvInit');
+            }
+        }
+
+        async function finishInvItem() {
+            artistData.inventory.push({
+                name: artistData.tempName,
+                qty: parseInt(artistData.tempQty) || 0,
+                price: parseFloat(artistData.tempPrice) || 0
+            });
+            delete artistData.tempName; delete artistData.tempQty; delete artistData.tempPrice;
+            
+            await showTyping();
+            addFloweeMessage(getT('inventoryMore'));
+            setInputOptions(`
+                <div class="flex gap-2 flex-col">
+                    <button onclick="handleInvMore(true)" class="w-full bg-[#00ffcc]/10 border border-[#00ffcc]/30 text-[#00ffcc] font-bold py-3 rounded-lg hover:bg-[#00ffcc]/20 transition text-xs">${getT('btnMore')}</button>
+                    <button onclick="handleInvMore(false)" class="w-full bg-[#d4af37] text-black font-bold py-3 rounded-lg hover:bg-[#d4af37]/80 transition shadow-[0_0_15px_rgba(212,175,55,0.3)] text-xs">${getT('btnDone')}</button>
+                </div>
+            `);
+        }
+
+        async function handleInvMore(more) {
+            addUserMessage(more ? getT('btnMore') : getT('btnDone'));
+            clearInput();
+            if(more) {
+                await askTextItem('inventoryInit', 'tempName', 'invQty');
+            } else {
+                // Save Service Details
+                addFloweeMessage(`<span class="text-[#d4af37] animate-pulse">Syncing Inventory...</span>`);
+                try {
+                    // Save cut
+                    if(artistData.communityCut) {
+                        await window.supabaseClient.from('master_artists').update({ community_cut_percentage: parseInt(artistData.communityCut) || 0, exp: 55, flow_credits: 20 }).eq('id', artistData.id);
+                    }
+                    
+                    if(artistData.inventory.length > 0) {
+                        const inserts = artistData.inventory.map(i => ({
+                            artist_id: artistData.id, event_id: eventId, product_name: i.name, quantity: i.qty, price: i.price, category: artistData.category
+                        }));
+                        await window.supabaseClient.from('service_inventories').insert(inserts);
+                    }
+                    
+                    awardPoints(30, 20);
+                    await showTyping();
+                    addFloweeMessage(`<span class="text-[#00ffcc] font-bold">${getT('finalServ')}</span>`);
+                } catch(e) { addFloweeMessage("Error syncing: " + e.message); }
+            }
+        }
+
+        // Global functions for the handleTextSubmit dynamic calls
+        window.endPerf = async function() {
+            addFloweeMessage(`<span class="text-[#d4af37] animate-pulse">Syncing Soul Imprint...</span>`);
+            try {
+                await window.supabaseClient.from('performance_details').insert([{
+                    artist_id: artistData.id, event_id: eventId,
+                    performance_category: artistData.category,
+                    technical_needs: artistData.techRider,
+                    artifact_of_power: artistData.artifact,
+                    inspiration: artistData.inspiration
+                }]);
+                
+                // Update EXP
+                await window.supabaseClient.from('master_artists').update({ exp: 40, flow_credits: 10 }).eq('id', artistData.id);
+
+                awardPoints(15, 10);
+                await showTyping();
+                addFloweeMessage(`<span class="text-[#00ffcc] font-bold">${getT('finalPerf')}</span>`);
+            } catch(e) { addFloweeMessage("Error syncing: " + e.message); }
+        }
+
+        // Bootstrap
+        setTimeout(() => initFlow(), 500);
+
     </script>
 </body>
 </html>
