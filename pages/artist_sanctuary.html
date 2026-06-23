@@ -83,7 +83,8 @@
 
     <!-- Interactive Flowee Deep Flow Overlay -->
     <div id="flowee-overlay" class="hidden fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm pointer-events-auto flex flex-col justify-end pb-8 px-4">
-        <div class="glass-panel p-4 rounded-3xl w-full max-w-md mx-auto flex flex-col h-[60vh]">
+        <button onclick="document.getElementById('flowee-overlay').classList.add('hidden')" class="absolute top-8 right-6 text-white/50 hover:text-white bg-black/50 p-2 rounded-full backdrop-blur-md border border-white/10 z-[70] flex"><span class="material-symbols-outlined">close</span></button>
+        <div class="glass-panel p-4 rounded-3xl w-full max-w-md mx-auto flex flex-col h-[60vh] relative">
             <div class="flex items-center gap-2 mb-4 border-b border-white/10 pb-2">
                 <div class="w-8 h-8 rounded-full bg-gradient-to-r from-[#00ffcc] to-[#003322] flex items-center justify-center shadow-[0_0_10px_#00ffcc] font-bold text-black text-xs">F</div>
                 <div class="text-[#00ffcc] text-sm uppercase tracking-widest font-bold">Flowee</div>
@@ -412,8 +413,11 @@
                 const { error: updateErr } = await window.supabaseClient.from('master_artists').update({ exp: (artistData.exp || 0) + 15, flow_credits: (artistData.flow_credits || 0) + 10 }).eq('id', artistId);
                 if (updateErr) throw updateErr;
 
-                fMsg(`Sync Complete. Enjoy your Sanctuary.`);
-                setTimeout(() => document.getElementById('flowee-overlay').classList.add('hidden'), 2000);
+                fMsg(`Sync Complete.`);
+                setTimeout(() => {
+                    fMsg(`Look to your right: <br>• The glowing <strong class="text-[#d4af37]">gold icon</strong> is your Soul Seal (QR). Present it at the gate.<br>• The <strong class="text-[#ff00cc]">pink book icon</strong> is your Sanctuary Ledger (Flyer, Team, Chat).`);
+                    setFInput(`<button onclick="document.getElementById('flowee-overlay').classList.add('hidden')" class="w-full bg-[#00ffcc]/20 border border-[#00ffcc]/50 text-[#00ffcc] py-3 rounded font-bold uppercase tracking-widest text-xs mt-2 hover:bg-[#00ffcc]/40 transition">Enter 3D World</button>`);
+                }, 1500);
                 initData(); // refresh UI
             } catch(e) { fMsg("Error syncing data: " + (e.message || "Database tables missing.")); }
         }
@@ -430,7 +434,10 @@
                     if (invErr) throw invErr;
                 }
                 fMsg(`Sync Complete. Your inventory is manifested.`);
-                setTimeout(() => document.getElementById('flowee-overlay').classList.add('hidden'), 2000);
+                setTimeout(() => {
+                    fMsg(`Look to your right: <br>• The glowing <strong class="text-[#d4af37]">gold icon</strong> is your Soul Seal (QR). Present it at the gate.<br>• The <strong class="text-[#ff00cc]">pink book icon</strong> is your Sanctuary Ledger (Flyer, Team, Chat).`);
+                    setFInput(`<button onclick="document.getElementById('flowee-overlay').classList.add('hidden')" class="w-full bg-[#00ffcc]/20 border border-[#00ffcc]/50 text-[#00ffcc] py-3 rounded font-bold uppercase tracking-widest text-xs mt-2 hover:bg-[#00ffcc]/40 transition">Enter 3D World</button>`);
+                }, 1500);
                 initData(); // refresh UI
             } catch(e) { fMsg("Error syncing data: " + (e.message || "Database tables missing.")); }
         }
