@@ -249,34 +249,35 @@
                     }
 
                     let contentHtml = '';
+                    // Robust check: if exp > 0, they already finished the onboarding
+                    deepFlowCompleted = (artist.exp > 0 || artist.community_cut_percentage !== null);
+
                     if(artist.artist_type === 'performance') {
-                        const { data: perf } = await window.supabaseClient.from('performance_details').select('*').eq('artist_id', artistId).order('created_at', { ascending: false }).limit(1).single();
-                        if(perf && perf.artifact_of_power) {
-                            deepFlowCompleted = true;
-                            contentHtml += `<div class="mb-2"><strong class="text-[#d4af37]">Category:</strong> ${perf.performance_category}</div>`;
-                            contentHtml += `<div class="mb-2"><strong class="text-[#d4af37]">Tech Rider:</strong> ${perf.technical_needs || 'None'}</div>`;
-                            contentHtml += `<div class="mb-2"><strong class="text-[#d4af37]">Artifact:</strong> ${perf.artifact_of_power}</div>`;
-                            contentHtml += `<div class="mb-2"><strong class="text-[#d4af37]">Inspiration:</strong> ${perf.inspiration}</div>`;
-                        } else {
-                            deepFlowCompleted = false;
-                        }
-                    } else {
-                        const { data: inv } = await window.supabaseClient.from('service_inventories').select('*').eq('artist_id', artistId);
-                        if(artist.community_cut_percentage !== null) {
-                            deepFlowCompleted = true;
-                            contentHtml += `<div class="mb-4 text-[#00ffcc]">Community Cut: ${artist.community_cut_percentage}%</div>`;
-                            if(inv && inv.length > 0) {
-                                contentHtml += `<h3 class="text-[#d4af37] font-bold mb-2">Inventory</h3>`;
-                                inv.forEach(i => {
-                                    contentHtml += `<div class="flex justify-between border-b border-white/10 py-2">
-                                        <span>${i.product_name} <span class="text-white/40">x${i.quantity}</span></span>
-                                        <span class="text-[#00ffcc]">€${i.price}</span>
-                                    </div>`;
-                                });
+                        try {
+                            const { data: perf } = await window.supabaseClient.from('performance_details').select('*').eq('artist_id', artistId).order('created_at', { ascending: false }).limit(1).single();
+                            if(perf && perf.artifact_of_power) {
+                                contentHtml += `<div class="mb-2"><strong class="text-[#d4af37]">Category:</strong> ${perf.performance_category}</div>`;
+                                contentHtml += `<div class="mb-2"><strong class="text-[#d4af37]">Tech Rider:</strong> ${perf.technical_needs || 'None'}</div>`;
+                                contentHtml += `<div class="mb-2"><strong class="text-[#d4af37]">Artifact:</strong> ${perf.artifact_of_power}</div>`;
+                                contentHtml += `<div class="mb-2"><strong class="text-[#d4af37]">Inspiration:</strong> ${perf.inspiration}</div>`;
                             }
-                        } else {
-                            deepFlowCompleted = false;
-                        }
+                        } catch(err) { /* ignore 400 error if table is still missing */ }
+                    } else {
+                        try {
+                            const { data: inv } = await window.supabaseClient.from('service_inventories').select('*').eq('artist_id', artistId);
+                            if(artist.community_cut_percentage !== null) {
+                                contentHtml += `<div class="mb-4 text-[#00ffcc]">Community Cut: ${artist.community_cut_percentage}%</div>`;
+                                if(inv && inv.length > 0) {
+                                    contentHtml += `<h3 class="text-[#d4af37] font-bold mb-2">Inventory</h3>`;
+                                    inv.forEach(i => {
+                                        contentHtml += `<div class="flex justify-between border-b border-white/10 py-2">
+                                            <span>${i.product_name} <span class="text-white/40">x${i.quantity}</span></span>
+                                            <span class="text-[#00ffcc]">€${i.price}</span>
+                                        </div>`;
+                                    });
+                                }
+                            }
+                        } catch(err) { /* ignore 400 error */ }
                     }
                     document.getElementById('data-content').innerHTML = contentHtml || 'Data sync pending...';
 
@@ -355,6 +356,13 @@
             }
             else if(step === 'insp') {
                 tempFlowData.insp = val;
+                setTimeout(() => {
+                    fMsg("Last question: What is the color of your soul? (e.g. cyan, purple, #ff00cc)");
+                    setFInput(`<div class="flex gap-2"><input type="text" id="fc-input" class="flex-1 bg-black/50 border border-white/20 rounded p-2 text-white outline-none focus:border-[#00ffcc]"><button onclick="handleFC('colorP')" class="bg-[#00ffcc] text-black px-4 rounded font-bold">SEND</button></div>`);
+                }, 500);
+            }
+            else if(step === 'colorP') {
+                setSoulColor(val);
                 finishPerfFlow();
             }
             else if(step === 'cut') {
@@ -397,8 +405,25 @@
                 }, 500);
             }
             else if(step === 'invNo') {
+                setTimeout(() => {
+                    fMsg("Last question: What is the color of your soul? (e.g. cyan, purple, #ff00cc)");
+                    setFInput(`<div class="flex gap-2"><input type="text" id="fc-input" class="flex-1 bg-black/50 border border-white/20 rounded p-2 text-white outline-none focus:border-[#00ffcc]"><button onclick="handleFC('colorS')" class="bg-[#00ffcc] text-black px-4 rounded font-bold">SEND</button></div>`);
+                }, 500);
+            }
+            else if(step === 'colorS') {
+                setSoulColor(val);
                 finishServFlow();
             }
+        }
+
+        let targetSoulColor = null;
+        function setSoulColor(colorStr) {
+            try {
+                if(!colorStr) colorStr = '#00ffcc';
+                localStorage.setItem('soul_color_' + artistId, colorStr);
+                targetSoulColor = new THREE.Color(colorStr);
+                fMsg(`<span class="text-[#d4af37] animate-pulse">Your soul color is shifting...</span>`);
+            } catch(e) { console.warn("Invalid color"); targetSoulColor = new THREE.Color('#00ffcc'); }
         }
 
         async function finishPerfFlow() {
@@ -517,12 +542,13 @@
         soulGroup.position.y = 2; 
 
         const coreGeo = new THREE.SphereGeometry(0.6, 32, 32);
-        const coreMat = new THREE.MeshStandardMaterial({ color: 0x00ffcc, emissive: 0x00ffcc, emissiveIntensity: 2, transparent: true, opacity: 0.9 });
+        const savedColor = localStorage.getItem('soul_color_' + artistId) || '#00ffcc';
+        const coreMat = new THREE.MeshStandardMaterial({ color: savedColor, emissive: savedColor, emissiveIntensity: 2, transparent: true, opacity: 0.9 });
         const soulCore = new THREE.Mesh(coreGeo, coreMat);
         soulCore.castShadow = true;
         soulGroup.add(soulCore);
 
-        const soulLight = new THREE.PointLight(0x00ffcc, 1.5, 20);
+        const soulLight = new THREE.PointLight(savedColor, 1.5, 20);
         soulGroup.add(soulLight);
 
         const auraCount = 150;
@@ -536,7 +562,7 @@
             auraPos[i*3+2] = Math.sin(auraAngles[i]) * 1.5;
         }
         auraGeo.setAttribute('position', new THREE.BufferAttribute(auraPos, 3));
-        const auraMat = new THREE.PointsMaterial({ color: 0xd4af37, size: 0.1, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending });
+        const auraMat = new THREE.PointsMaterial({ color: savedColor, size: 0.1, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending });
         const auraParticles = new THREE.Points(auraGeo, auraMat);
         soulGroup.add(auraParticles);
 
@@ -617,6 +643,14 @@
             soulCore.position.y = Math.sin(time * 2) * 0.3;
             auraParticles.rotation.y += 0.5 * delta;
             soulLight.intensity = 1.5 + Math.sin(time * 3) * 0.3;
+
+            // Animate color transition if set
+            if(targetSoulColor) {
+                coreMat.color.lerp(targetSoulColor, 0.02);
+                coreMat.emissive.lerp(targetSoulColor, 0.02);
+                auraMat.color.lerp(targetSoulColor, 0.02);
+                soulLight.color.lerp(targetSoulColor, 0.02);
+            }
 
             // Flowee Orbit logic
             floweeOrb.position.y = 2.5 + Math.sin(time * 3) * 0.4;
