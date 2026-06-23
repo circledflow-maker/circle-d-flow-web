@@ -165,7 +165,7 @@
     <script src="../js/api_config.js"></script>
     <script src="../js/agents/supabase_client.js?v=4.1"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
 
@@ -778,16 +778,9 @@
                 const localBlobUrl = URL.createObjectURL(file);
                 setCanvasImage(localBlobUrl);
                 
-                // Update local storage so we keep it in the UI
-                if (currentEventId) {
-                    try {
-                        await window.supabaseClient.from('quests').update({ flyer_url: localBlobUrl }).eq('id', currentEventId);
-                    } catch(err) {}
-                }
-
                 const expEl = document.createElement('div');
-                expEl.className = "absolute bottom-4 right-4 bg-black/60 px-2 py-1 rounded text-xs text-orange-400 font-bold border border-orange-400 backdrop-blur-sm z-30";
-                expEl.innerText = "LOCAL MODE (Storage Error)";
+                expEl.className = "absolute bottom-4 right-4 bg-black/60 px-2 py-1 rounded text-xs text-red-500 font-bold border border-red-500 backdrop-blur-sm z-30";
+                expEl.innerText = "UPLOAD FAILED - RLS ERROR";
                 canvasDiv.appendChild(expEl);
             } finally {
                 const overlay = document.getElementById('upload-loading-overlay');
@@ -1793,34 +1786,41 @@
         let analyticsCurrentSlide = 0;
         let analyticsTouchStartX = 0;
         let analyticsTouchEndX = 0;
-        const analyticsCarousel = document.getElementById('analytics-carousel');
-        const analyticsModal = document.getElementById('analytics-modal');
+        let analyticsCarousel = null;
 
         function setAnalyticsSlide(index) {
             analyticsCurrentSlide = index;
             const percentage = -(index * 33.3333333333);
-            analyticsCarousel.style.transform = `translateX(${percentage}%)`;
+            if(!analyticsCarousel) analyticsCarousel = document.getElementById('analytics-carousel');
+            if(analyticsCarousel) analyticsCarousel.style.transform = `translateX(${percentage}%)`;
             
             for(let i=0; i<3; i++) {
                 const dot = document.getElementById(`dot-${i}`);
-                if(i === index) {
-                    dot.classList.remove('bg-white/20');
-                    dot.classList.add('bg-[#00ffcc]');
-                } else {
-                    dot.classList.remove('bg-[#00ffcc]');
-                    dot.classList.add('bg-white/20');
+                if(dot) {
+                    if(i === index) {
+                        dot.classList.remove('bg-white/20');
+                        dot.classList.add('bg-[#00ffcc]');
+                    } else {
+                        dot.classList.remove('bg-[#00ffcc]');
+                        dot.classList.add('bg-white/20');
+                    }
                 }
             }
         }
 
-        analyticsModal.addEventListener('touchstart', e => {
-            analyticsTouchStartX = e.changedTouches[0].screenX;
-        }, {passive: true});
+        document.addEventListener('DOMContentLoaded', () => {
+            const modal = document.getElementById('analytics-modal');
+            if(modal) {
+                modal.addEventListener('touchstart', e => {
+                    analyticsTouchStartX = e.changedTouches[0].screenX;
+                }, {passive: true});
 
-        analyticsModal.addEventListener('touchend', e => {
-            analyticsTouchEndX = e.changedTouches[0].screenX;
-            handleAnalyticsSwipe();
-        }, {passive: true});
+                modal.addEventListener('touchend', e => {
+                    analyticsTouchEndX = e.changedTouches[0].screenX;
+                    handleAnalyticsSwipe();
+                }, {passive: true});
+            }
+        });
 
         function handleAnalyticsSwipe() {
             const threshold = 50;
