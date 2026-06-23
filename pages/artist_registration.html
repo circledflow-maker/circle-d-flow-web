@@ -113,7 +113,24 @@
 
         const urlParams = new URLSearchParams(window.location.search);
         const eventId = urlParams.get('eventId');
+        const urlArtistId = urlParams.get('artistId');
+
         if(!eventId) alert("No Event ID found. Connection may be unstable.");
+
+        // Check if artistId is in URL, auto-redirect if valid
+        async function checkUrlArtist() {
+            if(urlArtistId && window.supabaseClient) {
+                try {
+                    const { data: artist } = await window.supabaseClient.from('master_artists').select('*').eq('id', urlArtistId).single();
+                    if(artist && artist.permanent_qr_code) {
+                        window.location.href = `/pages/artist_sanctuary.html?eventId=${eventId}&artistId=${artist.id}`;
+                    }
+                } catch(e) { console.error(e); }
+            }
+        }
+        
+        // Let supabase init first
+        setTimeout(checkUrlArtist, 1000);
 
         // --- State Machine ---
         let currentLang = 'en';
@@ -404,7 +421,20 @@
                         exp: 25, flow_credits: 0
                     }]).select().single();
 
-                if(artistErr) throw artistErr;
+                if(artistErr) {
+                    if(artistErr.code === '23505') {
+                        // Email exists! Let's fetch the existing artist
+                        const { data: existingArtist } = await window.supabaseClient.from('master_artists').select('*').eq('email', artistData.email).single();
+                        if(existingArtist) {
+                            addFloweeMessage(`I see your soul is already in the network, ${existingArtist.name}. Welcome back. Connecting you to the Sanctuary...`);
+                            setTimeout(() => {
+                                window.location.href = `/pages/artist_sanctuary.html?eventId=${eventId}&artistId=${existingArtist.id}`;
+                            }, 3000);
+                            return;
+                        }
+                    }
+                    throw artistErr;
+                }
                 artistData.id = artist.id;
 
                 // Event checkin

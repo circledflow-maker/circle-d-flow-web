@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Artist Sanctuary | Circle D Flow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="../css/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/api_config.js"></script>
+    <script src="../js/agents/supabase_client.js?v=4.1"></script>
+    <style>
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: #050301; font-family: 'Plus Jakarta Sans', sans-serif; }
+        #canvas-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+        #ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none; }
+        .pointer-events-auto { pointer-events: auto; }
+        
+        /* Joystick */
+        #joystick-zone {
+            position: absolute; bottom: 30px; left: 30px; width: 120px; height: 120px;
+            background: rgba(212, 175, 55, 0.1); border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 50%;
+            pointer-events: auto; touch-action: none; display: flex; justify-content: center; align-items: center;
+        }
+        #joystick-knob {
+            width: 40px; height: 40px; background: #d4af37; border-radius: 50%;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.6); position: absolute;
+            transition: transform 0.1s ease-out;
+        }
+        
+        .glass-panel { background: rgba(10, 5, 0, 0.6); backdrop-filter: blur(10px); border: 1px solid rgba(212, 175, 55, 0.2); }
+    </style>
+</head>
+<body>
+    <div id="canvas-container"></div>
+
+    <div id="ui-layer" class="flex flex-col justify-between p-4 pb-8">
+        <!-- Top HUD -->
+        <div class="glass-panel rounded-2xl p-4 flex items-center justify-between shadow-[0_0_20px_rgba(212,175,55,0.1)] pointer-events-auto">
+            <div>
+                <h1 id="artist-name" class="font-serif text-[#d4af37] text-xl uppercase tracking-widest leading-none">Loading...</h1>
+                <p id="artist-type" class="text-[10px] text-white/50 uppercase tracking-widest mt-1">Connecting to Nexus</p>
+            </div>
+            <div class="text-right">
+                <div id="artist-exp" class="text-sm text-[#00ffcc] font-bold">-- EXP</div>
+                <div id="artist-flow" class="text-[10px] text-[#00ffcc]/70">-- FLOW</div>
+            </div>
+        </div>
+
+        <!-- Action Buttons (Right Side) -->
+        <div class="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col gap-4 pointer-events-auto">
+            <button onclick="toggleModal('qr-modal')" class="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-[#d4af37] hover:bg-white/10 transition">
+                <span class="material-symbols-outlined">qr_code_2</span>
+            </button>
+            <button onclick="toggleModal('data-modal')" class="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-[#00ffcc] hover:bg-white/10 transition">
+                <span class="material-symbols-outlined">inventory_2</span>
+            </button>
+        </div>
+
+        <!-- Joystick -->
+        <div id="joystick-zone">
+            <div id="joystick-knob"></div>
+        </div>
+    </div>
+
+    <!-- QR Modal -->
+    <div id="qr-modal" class="hidden fixed inset-0 z-50 bg-black/90 backdrop-blur flex items-center justify-center p-4">
+        <div class="glass-panel p-8 rounded-3xl w-full max-w-sm text-center relative border-[#00ffcc]/30">
+            <button onclick="toggleModal('qr-modal')" class="absolute top-4 right-4 text-white/50 hover:text-white"><span class="material-symbols-outlined">close</span></button>
+            <h2 class="font-serif text-[#00ffcc] text-2xl uppercase tracking-widest mb-2">Soul Seal</h2>
+            <p class="text-xs text-white/70 mb-6">Present this seal to the Door Manager.</p>
+            <div id="qr-container" class="bg-white p-4 rounded-xl inline-block shadow-[0_0_30px_rgba(0,255,204,0.3)]"></div>
+            <p id="qr-text" class="text-[10px] text-[#00ffcc] mt-4 tracking-widest opacity-70"></p>
+        </div>
+    </div>
+
+    <!-- Data Modal -->
+    <div id="data-modal" class="hidden fixed inset-0 z-50 bg-black/90 backdrop-blur flex items-center justify-center p-4">
+        <div class="glass-panel p-6 rounded-3xl w-full max-w-sm relative border-[#d4af37]/30 max-h-[80vh] overflow-y-auto">
+            <button onclick="toggleModal('data-modal')" class="absolute top-4 right-4 text-white/50 hover:text-white"><span class="material-symbols-outlined">close</span></button>
+            <h2 class="font-serif text-[#d4af37] text-xl uppercase tracking-widest mb-4">Sanctuary Data</h2>
+            <div id="data-content" class="space-y-4 text-sm text-white/80">
+                Loading data...
+            </div>
+        </div>
+    </div>
+
+    <!-- Adinkra Canvas Generator (Hidden) -->
+    <canvas id="adinkra-canvas" width="256" height="256" style="display:none;"></canvas>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const artistId = urlParams.get('artistId');
+        const eventId = urlParams.get('eventId');
+        let artistData = null;
+
+        // UI Functions
+        function toggleModal(id) {
+            const el = document.getElementById(id);
+            if(el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+            } else {
+                el.classList.add('hidden');
+            }
+        }
+
+        async function initData() {
+            if(!artistId || !window.supabaseClient) return;
+
+            try {
+                const { data: artist } = await window.supabaseClient.from('master_artists').select('*').eq('id', artistId).single();
+                if(artist) {
+                    artistData = artist;
+                    document.getElementById('artist-name').innerText = artist.name;
+                    document.getElementById('artist-type').innerText = artist.artist_type === 'performance' ? 'Performance Soul' : 'Service Weaver';
+                    document.getElementById('artist-exp').innerText = `${artist.exp || 0} EXP`;
+                    document.getElementById('artist-flow').innerText = `${artist.flow_credits || 0} FLOW`;
+
+                    // Generate QR
+                    if(artist.permanent_qr_code) {
+                        const qrDataUrl = await QRCode.toDataURL(artist.permanent_qr_code, { width: 250, margin: 1, color: { dark: '#00ffccff', light: '#09090bff' } });
+                        document.getElementById('qr-container').innerHTML = `<img src="${qrDataUrl}" alt="QR" />`;
+                        document.getElementById('qr-text').innerText = artist.permanent_qr_code;
+                    }
+
+                    // Fetch Details
+                    let contentHtml = '';
+                    if(artist.artist_type === 'performance') {
+                        const { data: perf } = await window.supabaseClient.from('performance_details').select('*').eq('artist_id', artistId).order('created_at', { ascending: false }).limit(1).single();
+                        if(perf) {
+                            contentHtml += `<div class="mb-2"><strong class="text-[#d4af37]">Category:</strong> ${perf.performance_category}</div>`;
+                            contentHtml += `<div class="mb-2"><strong class="text-[#d4af37]">Tech Rider:</strong> ${perf.technical_needs || 'None'}</div>`;
+                            if(perf.artifact_of_power) contentHtml += `<div class="mb-2"><strong class="text-[#d4af37]">Artifact:</strong> ${perf.artifact_of_power}</div>`;
+                            if(perf.inspiration) contentHtml += `<div class="mb-2"><strong class="text-[#d4af37]">Inspiration:</strong> ${perf.inspiration}</div>`;
+                        }
+                    } else {
+                        const { data: inv } = await window.supabaseClient.from('service_inventories').select('*').eq('artist_id', artistId);
+                        if(artist.community_cut_percentage) contentHtml += `<div class="mb-4 text-[#00ffcc]">Community Cut: ${artist.community_cut_percentage}%</div>`;
+                        if(inv && inv.length > 0) {
+                            contentHtml += `<h3 class="text-[#d4af37] font-bold mb-2">Inventory</h3>`;
+                            inv.forEach(i => {
+                                contentHtml += `<div class="flex justify-between border-b border-white/10 py-2">
+                                    <span>${i.product_name} <span class="text-white/40">x${i.quantity}</span></span>
+                                    <span class="text-[#00ffcc]">€${i.price}</span>
+                                </div>`;
+                            });
+                        } else {
+                            contentHtml += `<p class="text-white/50">No inventory found.</p>`;
+                        }
+                    }
+                    document.getElementById('data-content').innerHTML = contentHtml || 'No data recorded.';
+                }
+            } catch(e) { console.error(e); }
+        }
+
+        setTimeout(initData, 1000);
+
+        // --- Three.js Pure 3D Engine ---
+        
+        // 1. Generate Procedural Adinkra Texture
+        function createAdinkraTexture() {
+            const cvs = document.getElementById('adinkra-canvas');
+            const c = cvs.getContext('2d');
+            c.fillStyle = '#000000'; c.fillRect(0,0,256,256);
+            c.strokeStyle = '#d4af37'; c.lineWidth = 8; c.lineCap = 'round';
+            c.shadowBlur = 15; c.shadowColor = '#d4af37';
+            
+            // Draw abstract Gye Nyame inspired spiral
+            c.beginPath();
+            c.arc(128, 128, 60, 0, Math.PI, false);
+            c.stroke();
+            c.beginPath();
+            c.arc(128, 128, 80, Math.PI, Math.PI * 2, false);
+            c.stroke();
+            c.beginPath();
+            c.arc(68, 128, 20, Math.PI, Math.PI * 2, true);
+            c.stroke();
+            c.beginPath();
+            c.arc(208, 128, 20, 0, Math.PI, true);
+            c.stroke();
+
+            const tex = new THREE.CanvasTexture(cvs);
+            tex.wrapS = THREE.RepeatWrapping;
+            tex.wrapT = THREE.RepeatWrapping;
+            return tex;
+        }
+
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x3a1e04, 0.02); // Warm dusty fog
+
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+        // Lighting: Golden Hour / Terra Cotta vibes
+        const hemiLight = new THREE.HemisphereLight(0xffb56b, 0x2e1104, 0.6); // Warm sky, dark earth
+        scene.add(hemiLight);
+
+        const dirLight = new THREE.DirectionalLight(0xffa500, 1.2);
+        dirLight.position.set(50, 40, 20);
+        dirLight.castShadow = true;
+        dirLight.shadow.mapSize.width = 1024;
+        dirLight.shadow.mapSize.height = 1024;
+        dirLight.shadow.camera.near = 0.5;
+        dirLight.shadow.camera.far = 150;
+        dirLight.shadow.camera.left = -50;
+        dirLight.shadow.camera.right = 50;
+        dirLight.shadow.camera.top = 50;
+        dirLight.shadow.camera.bottom = -50;
+        scene.add(dirLight);
+
+        // Environment: Secret Garden LX (Procedural Terra-Cotta Architecture)
+        const earthMat = new THREE.MeshStandardMaterial({ color: 0x8b3a1a, roughness: 0.9, metalness: 0.1 }); // Terracotta
+        const ground = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), earthMat);
+        ground.rotation.x = -Math.PI / 2;
+        ground.receiveShadow = true;
+        scene.add(ground);
+
+        const adinkraTex = createAdinkraTexture();
+        const wallMat = new THREE.MeshStandardMaterial({ color: 0x6e2c10, roughness: 0.8 });
+        const glowWallMat = new THREE.MeshStandardMaterial({ color: 0x5c220a, emissiveMap: adinkraTex, emissive: 0xd4af37, emissiveIntensity: 2 });
+
+        // Generate abstract village / labyrinth
+        for(let i=0; i<40; i++) {
+            const w = Math.random() * 8 + 4;
+            const h = Math.random() * 10 + 4;
+            const d = Math.random() * 8 + 4;
+            const isGlowing = Math.random() > 0.8;
+            const box = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), isGlowing ? glowWallMat : wallMat);
+            
+            // Random position, keep center relatively clear
+            let px = (Math.random() - 0.5) * 100;
+            let pz = (Math.random() - 0.5) * 100;
+            if(Math.abs(px) < 10 && Math.abs(pz) < 10) { px += 15; pz += 15; }
+            
+            box.position.set(px, h/2, pz);
+            box.rotation.y = (Math.random() * Math.PI) / 4;
+            box.castShadow = true;
+            box.receiveShadow = true;
+            scene.add(box);
+        }
+
+        // Avatar: "Schwebende Seele" (Floating Soul)
+        const soulGroup = new THREE.Group();
+        scene.add(soulGroup);
+        soulGroup.position.y = 2; // Hovering
+
+        // Core Soul (Glowing Sphere)
+        const coreGeo = new THREE.SphereGeometry(0.6, 32, 32);
+        const coreMat = new THREE.MeshStandardMaterial({ color: 0x00ffcc, emissive: 0x00ffcc, emissiveIntensity: 2, transparent: true, opacity: 0.9 });
+        const soulCore = new THREE.Mesh(coreGeo, coreMat);
+        soulCore.castShadow = true;
+        soulGroup.add(soulCore);
+
+        // Point light from soul
+        const soulLight = new THREE.PointLight(0x00ffcc, 1.5, 20);
+        soulGroup.add(soulLight);
+
+        // Flowing Aura (Particles)
+        const auraCount = 150;
+        const auraGeo = new THREE.BufferGeometry();
+        const auraPos = new Float32Array(auraCount * 3);
+        const auraAngles = new Float32Array(auraCount);
+        for(let i=0; i<auraCount; i++) {
+            auraAngles[i] = Math.random() * Math.PI * 2;
+            auraPos[i*3] = Math.cos(auraAngles[i]) * 1.5;
+            auraPos[i*3+1] = (Math.random() - 0.5) * 3;
+            auraPos[i*3+2] = Math.sin(auraAngles[i]) * 1.5;
+        }
+        auraGeo.setAttribute('position', new THREE.BufferAttribute(auraPos, 3));
+        const auraMat = new THREE.PointsMaterial({ color: 0xd4af37, size: 0.1, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending });
+        const auraParticles = new THREE.Points(auraGeo, auraMat);
+        soulGroup.add(auraParticles);
+
+        camera.position.set(0, 5, 10);
+        camera.lookAt(soulGroup.position);
+
+        // --- Controls ---
+        let moveVec = new THREE.Vector2(0, 0);
+        const zone = document.getElementById('joystick-zone');
+        const knob = document.getElementById('joystick-knob');
+        let activeTouch = null;
+        let joyCenter = { x: 0, y: 0 };
+
+        zone.addEventListener('touchstart', e => {
+            e.preventDefault();
+            const touch = e.changedTouches[0];
+            activeTouch = touch.identifier;
+            const rect = zone.getBoundingClientRect();
+            joyCenter = { x: rect.left + rect.width/2, y: rect.top + rect.height/2 };
+            updateJoy(touch.clientX, touch.clientY);
+        }, {passive: false});
+
+        zone.addEventListener('touchmove', e => {
+            e.preventDefault();
+            for(let i=0; i<e.changedTouches.length; i++) {
+                if(e.changedTouches[i].identifier === activeTouch) {
+                    updateJoy(e.changedTouches[i].clientX, e.changedTouches[i].clientY);
+                }
+            }
+        }, {passive: false});
+
+        zone.addEventListener('touchend', e => {
+            for(let i=0; i<e.changedTouches.length; i++) {
+                if(e.changedTouches[i].identifier === activeTouch) {
+                    activeTouch = null;
+                    knob.style.transform = `translate(0px, 0px)`;
+                    moveVec.set(0, 0);
+                }
+            }
+        });
+
+        function updateJoy(tx, ty) {
+            let dx = tx - joyCenter.x;
+            let dy = ty - joyCenter.y;
+            const maxDist = 40;
+            const dist = Math.sqrt(dx*dx + dy*dy);
+            if(dist > maxDist) {
+                dx = (dx / dist) * maxDist;
+                dy = (dy / dist) * maxDist;
+            }
+            knob.style.transform = `translate(${dx}px, ${dy}px)`;
+            moveVec.set(dx / maxDist, dy / maxDist);
+        }
+
+        // Animation Loop
+        const clock = new THREE.Clock();
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            const delta = clock.getDelta();
+            const time = clock.getElapsedTime();
+
+            // Hover soul
+            soulCore.position.y = Math.sin(time * 2) * 0.3;
+            
+            // Rotate Aura
+            auraParticles.rotation.y += 0.5 * delta;
+            
+            // Pulse light
+            soulLight.intensity = 1.5 + Math.sin(time * 3) * 0.3;
+
+            // Move Soul
+            if(moveVec.length() > 0) {
+                const speed = 8 * delta;
+                soulGroup.position.x += moveVec.x * speed;
+                soulGroup.position.z += moveVec.y * speed;
+                
+                // Tilt core slightly in direction of movement
+                soulCore.rotation.z = -moveVec.x * 0.5;
+                soulCore.rotation.x = moveVec.y * 0.5;
+            } else {
+                // Reset tilt
+                soulCore.rotation.z = THREE.MathUtils.lerp(soulCore.rotation.z, 0, 0.1);
+                soulCore.rotation.x = THREE.MathUtils.lerp(soulCore.rotation.x, 0, 0.1);
+            }
+
+            // Camera follow smoothly
+            const targetCamPos = soulGroup.position.clone().add(new THREE.Vector3(0, 5, 12));
+            camera.position.lerp(targetCamPos, 0.05);
+            camera.lookAt(soulGroup.position);
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+    </script>
+</body>
+</html>
