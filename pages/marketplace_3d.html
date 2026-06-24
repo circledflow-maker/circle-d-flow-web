@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="The Grand Bazaar - Seamless 3D Market">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Grand Bazaar 3D | Circle D Flow</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    
+    <!-- Stripe JS for Checkout -->
+    <script src="https://js.stripe.com/v3/"></script>
+
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #120818;
+            color: #FDFBF7;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        #canvas-container {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 1;
+        }
+
+        /* UI Overlays */
+        #main-ui {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 10;
+            pointer-events: none;
+            transition: opacity 0.8s ease;
+        }
+
+        .pointer-events-auto { pointer-events: auto; }
+
+        .horizon-bar {
+            background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
+        }
+
+        /* Bazaar Carousel (Mobile Swipe UI) */
+        .bazaar-viewport {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            width: 100vw;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none; /* Firefox */
+        }
+        .bazaar-viewport::-webkit-scrollbar { display: none; }
+        
+        .stalls-track {
+            display: flex;
+            width: fit-content;
+            padding: 0 50vw; /* Center padding */
+        }
+
+        .stall-card {
+            width: 280px;
+            scroll-snap-align: center;
+            flex-shrink: 0;
+            margin: 0 10px;
+            background: rgba(22, 11, 26, 0.9);
+            border: 2px solid #d2691e;
+            box-shadow: 0 0 30px rgba(210, 105, 30, 0.15), inset 0 0 20px rgba(0,0,0,0.8);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            transform: scale(0.9);
+            transition: transform 0.3s;
+        }
+        
+        .stall-card.active { transform: scale(1.05); border-color: #ffaa44; }
+        
+        .guild-icon {
+            font-size: 48px;
+            color: #ffaa44;
+            filter: drop-shadow(0 0 10px #ffaa44);
+            margin-bottom: 10px;
+        }
+
+        /* Stripe Checkout Modal */
+        #checkout-modal {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(8, 4, 10, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .checkout-card {
+            background: linear-gradient(145deg, #1a0a18, #08040a);
+            border: 1px solid #d2691e;
+            border-radius: 12px;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 0 40px rgba(210, 105, 30, 0.2);
+            color: white;
+            position: relative;
+        }
+        
+        /* Soul Interaction Modal */
+        #soul-interaction-modal {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(22, 11, 26, 0.95);
+            border: 1px solid #ffaa44;
+            padding: 20px;
+            border-radius: 12px;
+            z-index: 50;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(255, 170, 68, 0.3);
+            display: none;
+        }
+
+        /* Utilities */
+        .hidden { display: none !important; }
+        .text-gold { color: #ffaa44; }
+        .btn-primary {
+            background: linear-gradient(135deg, #d2691e 0%, #8b4513 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            transition: transform 0.2s;
+            width: 100%;
+        }
+        .btn-primary:active { transform: scale(0.95); }
+    </style>
+</head>
+<body>
+
+    <!-- 3D WebGL Canvas -->
+    <div id="canvas-container"></div>
+
+    <!-- MAIN UI LAYER -->
+    <div id="main-ui">
+        
+        <!-- HEADER (Horizon Bar) -->
+        <header class="horizon-bar fixed top-0 w-full h-16 flex items-center justify-between px-6 pointer-events-auto">
+            <a href="dashboard.html" class="flex items-center gap-2 text-white hover:text-gold transition">
+                <span class="material-symbols-outlined">arrow_back</span>
+                <span class="font-cinzel tracking-widest text-sm">Dashboard</span>
+            </a>
+            <h1 class="font-cinzel text-xl text-gold tracking-widest hidden md:block">Grand Bazaar</h1>
+            <div class="flex gap-4">
+                <button onclick="openMyStall()" class="flex flex-col items-center text-white/70 hover:text-gold transition">
+                    <span class="material-symbols-outlined text-[18px]">storefront</span>
+                    <span class="text-[8px] uppercase font-bold tracking-widest mt-1">My Stall</span>
+                </button>
+                <button onclick="openForge()" class="flex flex-col items-center text-white/70 hover:text-gold transition">
+                    <span class="material-symbols-outlined text-[18px]">auto_fix</span>
+                    <span class="text-[8px] uppercase font-bold tracking-widest mt-1">Forge</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- BAZAAR CAROUSEL -->
+        <div class="bazaar-viewport pointer-events-auto" id="bazaar-viewport">
+            <div class="stalls-track" id="stalls-track">
+                
+                <!-- Arts -->
+                <div class="stall-card" id="card-arts">
+                    <span class="material-symbols-outlined guild-icon">palette</span>
+                    <h3 class="font-cinzel text-gold text-lg">Guild of Arts</h3>
+                    <p class="text-xs text-white/50 italic mb-4">"Epoxy wonders & artifacts."</p>
+                    <button class="btn-primary" onclick="triggerCinematicEntry('arts')">Enter Arts</button>
+                </div>
+
+                <!-- Sounds -->
+                <div class="stall-card" id="card-sounds">
+                    <span class="material-symbols-outlined guild-icon">headphones</span>
+                    <h3 class="font-cinzel text-gold text-lg">Guild of Sounds</h3>
+                    <p class="text-xs text-white/50 italic mb-4">"Beats & Sound Medicine."</p>
+                    <button class="btn-primary" onclick="triggerCinematicEntry('sounds')">Enter Sounds</button>
+                </div>
+
+                <!-- Skills -->
+                <div class="stall-card" id="card-skills">
+                    <span class="material-symbols-outlined guild-icon">school</span>
+                    <h3 class="font-cinzel text-gold text-lg">Guild of Skills</h3>
+                    <p class="text-xs text-white/50 italic mb-4">"Knowledge is currency."</p>
+                    <button class="btn-primary" onclick="triggerCinematicEntry('skills')">Enter Skills</button>
+                </div>
+
+                <!-- Central Auction -->
+                <div class="stall-card" id="card-auction">
+                    <span class="material-symbols-outlined guild-icon">gavel</span>
+                    <h3 class="font-cinzel text-gold text-lg">The Colosseum</h3>
+                    <p class="text-xs text-white/50 italic mb-4">"Live Auctions & Bidding Steles."</p>
+                    <button class="btn-primary" onclick="triggerCinematicEntry('auctionCenter')">Enter Plaza</button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- BAZAAR IN-ZONE UI (Visible after Dive) -->
+        <div id="bazaar-inzone-ui" class="absolute bottom-6 left-1/2 transform -translate-x-1/2 hidden pointer-events-auto flex gap-4">
+            <button onclick="exitCinematicDive()" class="px-6 py-2 bg-black/80 border border-white/20 text-white rounded-full hover:bg-white hover:text-black uppercase tracking-widest text-xs font-bold transition-all">
+                <span class="material-symbols-outlined align-middle mr-1 text-sm">flight_takeoff</span> Sky View
+            </button>
+            <button id="view-zone-items-btn" onclick="openZoneItems()" class="px-6 py-2 bg-gold/20 border border-gold text-gold rounded-full hover:bg-gold hover:text-black uppercase tracking-widest text-xs font-bold transition-all shadow-[0_0_15px_rgba(255,170,68,0.3)]">
+                <span class="material-symbols-outlined align-middle mr-1 text-sm">shopping_cart</span> Browse Artifacts
+            </button>
+        </div>
+
+    </div>
+
+    <!-- SOUL INTERACTION MODAL -->
+    <div id="soul-interaction-modal" class="pointer-events-auto">
+        <button onclick="document.getElementById('soul-interaction-modal').style.display='none'" class="absolute top-2 right-2 text-white/50 hover:text-white material-symbols-outlined">close</button>
+        <div id="soul-content"></div>
+    </div>
+
+    <!-- CHECKOUT MODAL (Stripe Elements) -->
+    <div id="checkout-modal" class="hidden pointer-events-auto">
+        <div class="checkout-card">
+            <button onclick="document.getElementById('checkout-modal').classList.add('hidden')" class="absolute top-4 right-4 text-white/50 hover:text-white material-symbols-outlined">close</button>
+            <h2 class="text-gold font-cinzel text-2xl mb-2 border-b border-[#d2691e]/50 pb-2">SECURE ARTIFACT</h2>
+            <p class="text-xs text-white/60 mb-6">Complete transaction to sync to your Vault.</p>
+            
+            <div class="flex justify-between items-center mb-6 bg-black/40 p-4 rounded border border-white/10">
+                <span id="checkout-item-name" class="font-bold">Neon Beat Pack</span>
+                <span id="checkout-price" class="text-gold font-mono font-bold">€45.00</span>
+            </div>
+
+            <!-- Stripe Element Mount Point -->
+            <div id="payment-element" class="mb-6 bg-white/5 p-4 rounded border border-white/10 text-center text-sm text-white/50">
+                (Stripe Payment Element Placeholder)<br>
+                <span class="text-xs text-gold">Awaiting backend integration for /api/create-payment-intent</span>
+            </div>
+            
+            <button id="submit-payment" class="btn-primary" onclick="simulateCheckout()">
+                Confirm Transaction
+            </button>
+        </div>
+    </div>
+
+    <!-- IFRAME MODALS FOR MY STALL / UPLOAD / MARKET ITEMS (Integrates the 2D pages cleanly) -->
+    <dialog id="iframe-modal" class="bg-transparent p-0 backdrop:bg-black/90 w-full h-full max-w-none max-h-none m-0">
+        <div class="w-full h-full relative">
+            <button onclick="document.getElementById('iframe-modal').close()" class="absolute top-6 right-6 z-50 text-white bg-black/50 hover:bg-black rounded-full p-2 border border-white/20 transition-colors pointer-events-auto">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+            <iframe id="integrated-iframe" src="" class="w-full h-full border-none"></iframe>
+        </div>
+    </dialog>
+
+
+    <!-- SCRIPTS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Fallback client info, adjust to your actual init -->
+    <script src="../js/agents/supabase_client.js?v=4.1"></script>
+
+    <script>
+        // --- 1. THREE.JS SETUP: GOLDEN HOUR & TATA-SOMBA ---
+        const scene = new THREE.Scene();
+        
+        // Dusty Warm Fog
+        scene.fog = new THREE.FogExp2(0x2a0a05, 0.025);
+        scene.background = new THREE.Color(0x2a0a05);
+
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+        
+        // Initial Sky View (looking down at the bazaar)
+        const skyPos = new THREE.Vector3(0, 40, 80);
+        camera.position.copy(skyPos);
+        camera.lookAt(0, 0, -50);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0x5c2e16, 1.5);
+        scene.add(ambientLight);
+
+        const sunLight = new THREE.DirectionalLight(0xffa500, 2.5);
+        sunLight.position.set(50, 60, 20);
+        sunLight.castShadow = true;
+        sunLight.shadow.mapSize.width = 2048;
+        sunLight.shadow.mapSize.height = 2048;
+        sunLight.shadow.camera.near = 0.5;
+        sunLight.shadow.camera.far = 150;
+        sunLight.shadow.camera.left = -50;
+        sunLight.shadow.camera.right = 50;
+        sunLight.shadow.camera.top = 50;
+        sunLight.shadow.camera.bottom = -50;
+        scene.add(sunLight);
+
+        // Floor (Dusty Ground)
+        const floorGeo = new THREE.PlaneGeometry(200, 200);
+        const floorMat = new THREE.MeshStandardMaterial({ 
+            color: 0x3d1c0b,
+            roughness: 0.9,
+            metalness: 0.1
+        });
+        const floor = new THREE.Mesh(floorGeo, floorMat);
+        floor.rotation.x = -Math.PI / 2;
+        floor.receiveShadow = true;
+        scene.add(floor);
+
+        // --- 2. ANTIGRAVITY PROCEDURAL SYMBOL GENERATOR ---
+        function generateAdinkraTexture(symbolType, colorHex) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 512;
+            canvas.height = 512;
+            const ctx = canvas.getContext('2d');
+
+            ctx.shadowColor = colorHex;
+            ctx.shadowBlur = 40;
+            ctx.strokeStyle = colorHex;
+            ctx.lineWidth = 24;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+
+            ctx.beginPath();
+            
+            if (symbolType === 'arts') {
+                ctx.arc(256, 180, 80, 0, Math.PI * 2);
+                ctx.moveTo(336, 330);
+                ctx.arc(256, 330, 80, 0, Math.PI * 2);
+            } 
+            else if (symbolType === 'sounds') {
+                ctx.moveTo(100, 256);
+                ctx.bezierCurveTo(100, 50, 412, 50, 412, 256);
+                ctx.moveTo(150, 256);
+                ctx.bezierCurveTo(150, 400, 362, 400, 362, 256);
+                ctx.arc(256, 256, 20, 0, Math.PI * 2);
+                ctx.fillStyle = colorHex;
+                ctx.fill();
+            } 
+            else if (symbolType === 'skills') {
+                ctx.moveTo(256, 80); ctx.lineTo(256, 432);
+                ctx.moveTo(80, 256); ctx.lineTo(432, 256);
+                ctx.moveTo(130, 130); ctx.lineTo(382, 382);
+                ctx.moveTo(130, 382); ctx.lineTo(382, 130);
+            }
+            else { // Default
+                ctx.arc(256, 256, 150, 0, Math.PI * 2);
+            }
+
+            ctx.stroke();
+
+            const texture = new THREE.CanvasTexture(canvas);
+            texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+            return texture;
+        }
+
+        function createProceduralAdinkraWall(x, z, width, height, symbolType, glowColor) {
+            const group = new THREE.Group();
+            group.position.set(x, 0, z);
+
+            // Clay Wall
+            const wallGeo = new THREE.BoxGeometry(width, height, 2);
+            const wallMat = new THREE.MeshStandardMaterial({
+                color: 0x5c2e16, 
+                roughness: 1.0,
+            });
+            const wall = new THREE.Mesh(wallGeo, wallMat);
+            wall.position.y = height / 2;
+            wall.castShadow = true;
+            wall.receiveShadow = true;
+            group.add(wall);
+            
+            // Glowing Symbol Decal
+            const generatedTexture = generateAdinkraTexture(symbolType, glowColor);
+            const symbolGeo = new THREE.PlaneGeometry(width * 0.7, width * 0.7);
+            const symbolMat = new THREE.MeshBasicMaterial({
+                map: generatedTexture,
+                transparent: true,
+                opacity: 0.95,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false
+            });
+            const symbol = new THREE.Mesh(symbolGeo, symbolMat);
+            symbol.position.set(0, height / 2, 1.05); 
+            group.add(symbol);
+
+            scene.add(group);
+            return group;
+        }
+
+        // Build the Bazaar Guild Huts
+        createProceduralAdinkraWall(-20, -30, 10, 12, 'arts', '#ff5500'); 
+        createProceduralAdinkraWall(20, -30, 10, 12, 'sounds', '#00ddee');
+        createProceduralAdinkraWall(-30, -60, 12, 14, 'skills', '#00ff66');
+
+        // --- 3. FLOATING SOULS (Avatars) ---
+        const soulGroup = new THREE.Group(); // Player Soul
+        soulGroup.position.copy(skyPos);
+
+        const soulGeo = new THREE.SphereGeometry(0.8, 32, 32);
+        const soulMat = new THREE.MeshBasicMaterial({
+            color: 0xffcc44,
+            transparent: true,
+            opacity: 0.9,
+            blending: THREE.AdditiveBlending
+        });
+        const soulCore = new THREE.Mesh(soulGeo, soulMat);
+        soulGroup.add(soulCore);
+
+        const soulLight = new THREE.PointLight(0xffcc44, 1.5, 15);
+        soulGroup.add(soulLight);
+        scene.add(soulGroup);
+
+        // Network of other souls
+        const otherSouls = [];
+        
+        function spawnOtherSoul(x, z, name, statusMsg, isOnline) {
+            const group = new THREE.Group();
+            group.position.set(x, 2, z);
+            
+            const color = isOnline ? 0x00ffcc : 0xffaa00;
+            
+            const core = new THREE.Mesh(
+                new THREE.SphereGeometry(0.6, 16, 16),
+                new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending })
+            );
+            group.add(core);
+            
+            const light = new THREE.PointLight(color, 1.0, 10);
+            group.add(light);
+            
+            // Hitbox for raycaster
+            const hitboxGeo = new THREE.SphereGeometry(1.5, 8, 8);
+            const hitboxMat = new THREE.MeshBasicMaterial({ visible: false });
+            const hitbox = new THREE.Mesh(hitboxGeo, hitboxMat);
+            hitbox.userData = { isSoul: true, name, statusMsg, isOnline };
+            group.add(hitbox);
+
+            group.userData = { pulseSpeed: 0.002 + Math.random() * 0.002, offset: Math.random() * Math.PI * 2 };
+            
+            scene.add(group);
+            otherSouls.push(group);
+        }
+
+        // Mock some souls standing around the Colosseum
+        spawnOtherSoul(5, -68, "KyheartLx", "Just synced a new beat.", false);
+        spawnOtherSoul(-5, -72, "Agnese", "Looking for artifacts...", true);
+
+
+        // --- 4. AUCTION COLOSSEUM (Central Hub) ---
+        function createBiddingStele(x, z, itemName, currentBid) {
+            const group = new THREE.Group();
+            group.position.set(x, 0, z);
+
+            const steleGeo = new THREE.CylinderGeometry(1, 1.2, 4, 8);
+            const steleMat = new THREE.MeshStandardMaterial({ color: 0x5c2e16, roughness: 1.0 });
+            const stele = new THREE.Mesh(steleGeo, steleMat);
+            stele.position.y = 2;
+            stele.castShadow = true;
+            group.add(stele);
+
+            const itemGeo = new THREE.OctahedronGeometry(0.8);
+            const itemMat = new THREE.MeshBasicMaterial({ color: 0xffaa00, wireframe: true });
+            const hologram = new THREE.Mesh(itemGeo, itemMat);
+            hologram.position.y = 5;
+            
+            group.userData = { isStele: true, item: itemName, bid: currentBid, hologram: hologram };
+            group.add(hologram);
+
+            scene.add(group);
+            return group;
+        }
+
+        // Central Plaza floor
+        const plazaGeo = new THREE.CircleGeometry(20, 32);
+        const plazaMat = new THREE.MeshStandardMaterial({ color: 0x22110a, roughness: 0.8 });
+        const plaza = new THREE.Mesh(plazaGeo, plazaMat);
+        plaza.rotation.x = -Math.PI / 2;
+        plaza.position.set(0, 0.05, -75);
+        scene.add(plaza);
+
+        const steles = [
+            createBiddingStele(-10, -70, "Neon Flow Track", "450 FC"),
+            createBiddingStele(10, -70, "Golden Epox Mask", "1200 FC"),
+            createBiddingStele(0, -85, "Code Mentorship (1h)", "300 FC")
+        ];
+
+
+        // --- 5. CINEMATIC DIVE & CAMERA LERP ---
+        const bazaarZones = {
+            arts: { x: -20, z: -20 },
+            sounds: { x: 20, z: -20 },
+            skills: { x: -30, z: -50 },
+            auctionCenter: { x: 0, z: -60 }
+        };
+
+        let isCinematicDive = false;
+        let isSkyView = true;
+        let currentGuild = "";
+        let targetCameraPos = new THREE.Vector3();
+        let targetLookAt = new THREE.Vector3();
+        let currentLookAt = new THREE.Vector3(0, 0, -50);
+
+        function triggerCinematicEntry(guildName) {
+            const zone = bazaarZones[guildName] || bazaarZones.auctionCenter;
+            currentGuild = guildName;
+            
+            document.getElementById('bazaar-viewport').classList.add('hidden');
+            document.getElementById('main-ui').style.opacity = '0';
+            
+            // Dive coordinates
+            targetCameraPos.set(zone.x, 3, zone.z + 12);
+            targetLookAt.set(zone.x, 2, zone.z - 5);
+            
+            soulGroup.position.set(zone.x, 1.5, zone.z + 8);
+            
+            isCinematicDive = true;
+            isSkyView = false;
+        }
+
+        function exitCinematicDive() {
+            document.getElementById('bazaar-inzone-ui').classList.add('hidden');
+            currentGuild = "";
+            
+            targetCameraPos.copy(skyPos);
+            targetLookAt.set(0, 0, -50);
+            
+            isCinematicDive = true;
+            isSkyView = true;
+        }
+
+
+        // --- 6. RAYCASTER (Touch/Click Interactions) ---
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+
+        window.addEventListener('click', onInteract);
+        window.addEventListener('touchstart', (e) => {
+            if(e.touches.length > 0) {
+                e.clientX = e.touches[0].clientX;
+                e.clientY = e.touches[0].clientY;
+                onInteract(e);
+            }
+        }, {passive: false});
+
+        function onInteract(event) {
+            if(isSkyView) return; // Disable clicks from sky view
+
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+            raycaster.setFromCamera(mouse, camera);
+
+            // Check Souls
+            let soulHitboxes = otherSouls.map(g => g.children[2]);
+            const intersects = raycaster.intersectObjects(soulHitboxes);
+
+            if (intersects.length > 0) {
+                const data = intersects[0].object.userData;
+                openSoulInteraction(data);
+                return;
+            }
+
+            // Check Steles
+            const steleIntersects = raycaster.intersectObjects(steles, true);
+            if(steleIntersects.length > 0) {
+                let group = steleIntersects[0].object.parent;
+                if(group && group.userData.isStele) {
+                    // Open checkout directly for demo
+                    triggerInGameCheckout({
+                        itemName: group.userData.item,
+                        amount: group.userData.bid
+                    });
+                }
+            }
+        }
+
+        function openSoulInteraction(data) {
+            const modal = document.getElementById('soul-interaction-modal');
+            modal.style.display = 'block';
+            
+            if (data.isOnline) {
+                document.getElementById('soul-content').innerHTML = `
+                    <h3 class="text-gold font-cinzel text-xl mb-1">Verbindung mit ${data.name}</h3>
+                    <p class="text-green-400 text-[10px] uppercase font-bold tracking-widest mb-4">● LIVE</p>
+                    <button class="btn-primary" onclick="alert('Chat initialized')">Live-Chat starten</button>
+                `;
+            } else {
+                document.getElementById('soul-content').innerHTML = `
+                    <h3 class="text-white/80 font-cinzel text-xl mb-1">${data.name}'s Echo</h3>
+                    <div class="italic text-white my-4 p-3 bg-white/10 rounded">"${data.statusMsg}"</div>
+                    <p class="text-white/50 text-[10px] uppercase font-bold tracking-widest mb-4">○ OFFLINE</p>
+                    <input type="text" placeholder="Antwort hinterlassen..." class="w-full bg-black/50 border border-white/20 p-2 text-white mb-2 rounded">
+                    <button class="btn-primary py-2 text-sm" onclick="alert('Message pinned to soul.')">Nachricht anheften</button>
+                `;
+            }
+        }
+
+        // --- 7. IN-GAME STRIPE CHECKOUT ---
+        function triggerInGameCheckout(auctionData) {
+            document.getElementById('checkout-modal').classList.remove('hidden');
+            document.getElementById('checkout-item-name').innerText = auctionData.itemName;
+            document.getElementById('checkout-price').innerText = auctionData.amount;
+            
+            // Slow down soul pulse for cinematic focus
+            soulGroup.children[0].material.color.setHex(0xffffff);
+        }
+
+        function simulateCheckout() {
+            const btn = document.getElementById('submit-payment');
+            btn.innerText = "Processing...";
+            setTimeout(() => {
+                btn.innerText = "Syncing to Vault...";
+                setTimeout(() => {
+                    document.getElementById('checkout-modal').classList.add('hidden');
+                    soulGroup.children[0].material.color.setHex(0xffcc44);
+                    alert("Transaction Successful! Artifact synced to your Vault.");
+                    btn.innerText = "Confirm Transaction";
+                }, 1000);
+            }, 1500);
+        }
+
+
+        // --- 8. INTEGRATE HTML PAGES (IFRAMES) ---
+        function openMyStall() {
+            document.getElementById('integrated-iframe').src = "marketplace-stall.html";
+            document.getElementById('iframe-modal').showModal();
+        }
+        function openForge() {
+            document.getElementById('integrated-iframe').src = "marketplace-upload.html";
+            document.getElementById('iframe-modal').showModal();
+        }
+        function openZoneItems() {
+            // Load the existing marketplace UI directly into the iframe
+            // and maybe filter via URL parameters.
+            document.getElementById('integrated-iframe').src = "marketplace.html?filter=" + currentGuild;
+            document.getElementById('iframe-modal').showModal();
+        }
+
+
+        // --- ANIMATION LOOP ---
+        const clock = new THREE.Clock();
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const time = Date.now();
+            const delta = clock.getDelta();
+
+            // Camera Lerp
+            if (isCinematicDive) {
+                camera.position.lerp(targetCameraPos, 0.03);
+                currentLookAt.lerp(targetLookAt, 0.04);
+                camera.lookAt(currentLookAt);
+                
+                if (camera.position.distanceTo(targetCameraPos) < 0.5) {
+                    isCinematicDive = false;
+                    if(isSkyView) {
+                        document.getElementById('bazaar-viewport').classList.remove('hidden');
+                        document.getElementById('main-ui').style.opacity = '1';
+                    } else {
+                        document.getElementById('bazaar-inzone-ui').classList.remove('hidden');
+                    }
+                }
+            } else if (!isSkyView) {
+                // Slight floating camera effect when in zone
+                camera.position.y = targetCameraPos.y + Math.sin(time * 0.001) * 0.1;
+                camera.lookAt(currentLookAt);
+            }
+
+            // Animate Player Soul
+            soulGroup.position.y = 1.5 + Math.sin(time * 0.002) * 0.2;
+
+            // Animate Other Souls
+            otherSouls.forEach(soul => {
+                const speed = soul.userData.pulseSpeed;
+                const offset = soul.userData.offset;
+                soul.position.y = 2 + Math.sin(time * speed + offset) * 0.3;
+            });
+
+            // Animate Holograms
+            steles.forEach(s => {
+                const holo = s.userData.hologram;
+                if(holo) {
+                    holo.rotation.y += Math.PI * 0.5 * delta;
+                    holo.position.y = 5 + Math.sin(time * 0.003) * 0.2;
+                }
+            });
+
+            renderer.render(scene, camera);
+        }
+
+        // Scroll Sync for Carousel
+        const viewport = document.getElementById('bazaar-viewport');
+        viewport.addEventListener('scroll', () => {
+            const center = viewport.scrollLeft + viewport.clientWidth / 2;
+            document.querySelectorAll('.stall-card').forEach(card => {
+                const cardCenter = card.offsetLeft + card.clientWidth / 2;
+                if(Math.abs(center - cardCenter) < 100) {
+                    card.classList.add('active');
+                } else {
+                    card.classList.remove('active');
+                }
+            });
+        });
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Start
+        setTimeout(() => {
+            document.getElementById('card-arts').classList.add('active'); // Initial highlight
+        }, 500);
+
+        animate();
+    </script>
+</body>
+</html>
