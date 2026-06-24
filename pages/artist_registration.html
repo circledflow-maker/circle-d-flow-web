@@ -44,9 +44,10 @@
         .flowee-avatar {
             width: 32px; height: 32px;
             border-radius: 50%;
-            background: radial-gradient(circle, #00ffcc 0%, #003322 100%);
-            box-shadow: 0 0 10px #00ffcc;
             display: flex; align-items: center; justify-content: center;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0,255,204,0.5);
+            background: #000;
         }
 
         .typing-dot {
@@ -74,7 +75,13 @@
     <!-- Header -->
     <div class="h-[60px] border-b border-white/10 flex items-center px-4 justify-between bg-black/80 backdrop-blur z-10 shrink-0">
         <div class="flex items-center gap-3">
-            <div class="flowee-avatar text-[10px] font-bold text-black">F</div>
+            <div class="flowee-avatar">
+                <svg viewBox="0 0 100 100" width="100%" height="100%" style="transform: scale(1.5);">
+                    <path d="M40,50 C10,20 -10,60 15,75 C25,80 40,65 40,50 Z" fill="#00ffcc" opacity="0.8"><animateTransform attributeName="transform" type="rotate" values="0 40 50; -20 40 50; 0 40 50" dur="0.8s" repeatCount="indefinite"/></path>
+                    <path d="M60,50 C90,20 110,60 85,75 C75,80 60,65 60,50 Z" fill="#00ffcc" opacity="0.8"><animateTransform attributeName="transform" type="rotate" values="0 60 50; 20 60 50; 0 60 50" dur="0.8s" repeatCount="indefinite"/></path>
+                    <circle cx="50" cy="50" r="16" fill="#00ffcc"><animate attributeName="r" values="16;18;16" dur="2s" repeatCount="indefinite"/></circle>
+                </svg>
+            </div>
             <div>
                 <h1 class="font-serif text-[#00ffcc] text-sm uppercase tracking-widest leading-none">Flowee</h1>
                 <p class="text-[9px] text-white/50 uppercase tracking-widest">Network Nexus</p>
@@ -166,7 +173,13 @@
             div.id = id;
             div.className = 'flex items-end gap-2 fade-in max-w-[85%]';
             div.innerHTML = `
-                <div class="flowee-avatar shrink-0 text-[10px] font-bold text-black opacity-50">F</div>
+                <div class="flowee-avatar shrink-0 opacity-50">
+                    <svg viewBox="0 0 100 100" width="100%" height="100%" style="transform: scale(1.5);">
+                        <path d="M40,50 C10,20 -10,60 15,75 C25,80 40,65 40,50 Z" fill="#00ffcc" opacity="0.8"><animateTransform attributeName="transform" type="rotate" values="0 40 50; -20 40 50; 0 40 50" dur="0.8s" repeatCount="indefinite"/></path>
+                        <path d="M60,50 C90,20 110,60 85,75 C75,80 60,65 60,50 Z" fill="#00ffcc" opacity="0.8"><animateTransform attributeName="transform" type="rotate" values="0 60 50; 20 60 50; 0 60 50" dur="0.8s" repeatCount="indefinite"/></path>
+                        <circle cx="50" cy="50" r="16" fill="#00ffcc"><animate attributeName="r" values="16;18;16" dur="2s" repeatCount="indefinite"/></circle>
+                    </svg>
+                </div>
                 <div class="bubble-flowee p-3 text-sm flex gap-1 items-center h-10">
                     <div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>
                 </div>
@@ -183,7 +196,13 @@
             const div = document.createElement('div');
             div.className = 'flex items-end gap-2 fade-in max-w-[90%]';
             div.innerHTML = `
-                <div class="flowee-avatar shrink-0 text-[10px] font-bold text-black mt-1">F</div>
+                <div class="flowee-avatar shrink-0 mt-1">
+                    <svg viewBox="0 0 100 100" width="100%" height="100%" style="transform: scale(1.5);">
+                        <path d="M40,50 C10,20 -10,60 15,75 C25,80 40,65 40,50 Z" fill="#00ffcc" opacity="0.8"><animateTransform attributeName="transform" type="rotate" values="0 40 50; -20 40 50; 0 40 50" dur="0.8s" repeatCount="indefinite"/></path>
+                        <path d="M60,50 C90,20 110,60 85,75 C75,80 60,65 60,50 Z" fill="#00ffcc" opacity="0.8"><animateTransform attributeName="transform" type="rotate" values="0 60 50; 20 60 50; 0 60 50" dur="0.8s" repeatCount="indefinite"/></path>
+                        <circle cx="50" cy="50" r="16" fill="#00ffcc"><animate attributeName="r" values="16;18;16" dur="2s" repeatCount="indefinite"/></circle>
+                    </svg>
+                </div>
                 <div class="bubble-flowee p-4 text-sm font-light leading-relaxed">
                     ${htmlContent}
                 </div>
@@ -222,16 +241,28 @@
             fd.innerText = `+${earnedFlow} FLOW`;
             ed.classList.remove('fade-in'); void ed.offsetWidth; ed.classList.add('fade-in');
             fd.classList.remove('fade-in'); void fd.offsetWidth; fd.classList.add('fade-in');
-        }
-
         // --- Translations ---
         const T = {
             en: {
-                welcome: "Welcome to the C4C Sanctuary. Choose your frequency.",
+                welcome: "Welcome to the C4C Sanctuary.",
+                authAsk: "Are you a Returning Soul or First Contact?",
+                authLogin: "Returning Soul (Log In)",
+                authReg: "First Contact (Registration)",
+                authMethod: "How would you like to identify your Frequency?",
+                authEmailBtn: "EMAIL / SIGNATURE",
+                authGoogle: "GOOGLE (OAUTH)",
+                authDiscord: "DISCORD (OAUTH)",
+                askEmail: "Drop your email for the network link.",
+                askPwReg: "Set your secret frequency (Password):",
+                askPwLog: "What is your secret frequency (Password)?",
+                loginFail: "Frequency mismatch. Password incorrect.",
+                forgotPw: "Forgot Password",
+                tryAgain: "Try Again",
+                forgotSent: "A reset pulse has been sent to your network. Please check your email.",
+                chooseType: "Choose your frequency.",
                 perf: "Performance Artist",
                 serv: "Service Artist",
                 askName: "What's your stage name or brand?",
-                askEmail: "Drop your email for the network link.",
                 askPhone: "And your comms number (WhatsApp)?",
                 askPerfCat: "Movement, Audiovisual, or Visual Art? Choose your expression.",
                 catMov: "Movement / Dance", catAudio: "Audiovisual / Music", catVis: "Visual Art",
@@ -253,14 +284,29 @@
                 finalPerf: "Your soul is registered. I'll be here. Drop me an update anytime your vision shifts.",
                 finalServ: "Your inventory is locked in. Ready for the marketplace. See you in the physical realm.",
                 placeholder: "Type your response...",
+                pwPlaceholder: "Enter password...",
                 btnSend: "Send"
             },
             pt: {
-                welcome: "Bem-vindo ao Sanctuary C4C. Escolhe a tua frequência.",
+                welcome: "Bem-vindo ao Sanctuary C4C.",
+                authAsk: "És uma Alma de Regresso ou Primeiro Contacto?",
+                authLogin: "Alma de Regresso (Entrar)",
+                authReg: "Primeiro Contacto (Registar)",
+                authMethod: "Como gostarias de identificar a tua Frequência?",
+                authEmailBtn: "EMAIL / ASSINATURA",
+                authGoogle: "GOOGLE (OAUTH)",
+                authDiscord: "DISCORD (OAUTH)",
+                askEmail: "Deixa o teu email para a rede.",
+                askPwReg: "Define a tua frequência secreta (Palavra-passe):",
+                askPwLog: "Qual é a tua frequência secreta (Palavra-passe)?",
+                loginFail: "Incompatibilidade de frequência. Palavra-passe incorreta.",
+                forgotPw: "Esqueci-me da Palavra-passe",
+                tryAgain: "Tentar Novamente",
+                forgotSent: "Um pulso de redefinição foi enviado para a tua rede. Verifica o teu email.",
+                chooseType: "Escolhe a tua frequência.",
                 perf: "Artista de Performance",
                 serv: "Artista de Serviço (Food/Merch)",
                 askName: "Qual é o teu nome artístico ou marca?",
-                askEmail: "Deixa o teu email para a rede.",
                 askPhone: "E o teu número de contacto (WhatsApp)?",
                 askPerfCat: "Movimento, Audiovisual ou Arte Visual? Escolhe a tua expressão.",
                 catMov: "Movimento / Dança", catAudio: "Audiovisual / Música", catVis: "Arte Visual",
@@ -282,11 +328,14 @@
                 finalPerf: "A tua alma está registada. Estarei aqui. Manda-me uma atualização sempre que a tua visão mudar.",
                 finalServ: "O teu inventário está bloqueado. Pronto para o mercado. Vemo-nos no reino físico.",
                 placeholder: "Escreve a tua resposta...",
+                pwPlaceholder: "Insere a palavra-passe...",
                 btnSend: "Enviar"
             }
         };
 
         function getT(key) { return T[currentLang][key]; }
+
+        let authFlow = ""; // "login" or "register"
 
         // --- Flow Controllers ---
         async function initFlow() {
@@ -305,8 +354,130 @@
             addUserMessage(lang === 'en' ? 'English' : 'Português');
             clearInput();
             await showTyping();
-            addFloweeMessage(getT('welcome'));
+            addFloweeMessage(getT('welcome') + "<br><br>" + getT('authAsk'));
             
+            setInputOptions(`
+                <div class="flex flex-col gap-2">
+                    <button onclick="handleAuthFlow('login')" class="w-full bg-[#d4af37]/20 border border-[#d4af37]/50 text-[#d4af37] font-bold py-3 rounded-lg hover:bg-[#d4af37]/40 transition shadow-[0_0_15px_rgba(212,175,55,0.3)] uppercase tracking-widest text-xs">${getT('authLogin')}</button>
+                    <button onclick="handleAuthFlow('register')" class="w-full bg-white/5 border border-white/20 text-white font-bold py-3 rounded-lg hover:bg-white/10 transition uppercase tracking-widest text-xs">${getT('authReg')}</button>
+                </div>
+            `);
+        }
+
+        async function handleAuthFlow(flow) {
+            authFlow = flow;
+            addUserMessage(flow === 'login' ? getT('authLogin') : getT('authReg'));
+            clearInput();
+            
+            if(flow === 'register') {
+                await showTyping();
+                addFloweeMessage(getT('authMethod'));
+                setInputOptions(`
+                    <div class="flex flex-col gap-2">
+                        <button onclick="handleAuthMethod('email')" class="w-full bg-[#00ffcc]/10 border border-[#00ffcc]/30 text-[#00ffcc] font-bold py-3 rounded-lg hover:bg-[#00ffcc]/20 transition text-xs tracking-widest shadow-[0_0_10px_rgba(0,255,204,0.1)]">${getT('authEmailBtn')}</button>
+                        <button onclick="window.handleOAuthLogin('google')" class="w-full bg-white/5 border border-white/20 text-white font-bold py-3 rounded-lg hover:bg-white/10 transition text-xs tracking-widest">${getT('authGoogle')}</button>
+                        <button onclick="window.handleOAuthLogin('discord')" class="w-full bg-white/5 border border-white/20 text-white font-bold py-3 rounded-lg hover:bg-white/10 transition text-xs tracking-widest">${getT('authDiscord')}</button>
+                    </div>
+                `);
+            } else {
+                await askAuthEmail();
+            }
+        }
+
+        async function handleAuthMethod(method) {
+            addUserMessage(getT('authEmailBtn'));
+            clearInput();
+            await askAuthEmail();
+        }
+
+        async function askAuthEmail() {
+            await showTyping();
+            addFloweeMessage(getT('askEmail'));
+            setInputOptions(`
+                <div class="flex gap-2">
+                    <input type="email" id="chat-input-email" placeholder="${getT('placeholder')}" class="flex-1 bg-black/50 border border-white/20 rounded-lg p-3 text-white text-sm outline-none focus:border-[#00ffcc]">
+                    <button onclick="submitAuthEmail()" class="bg-[#00ffcc] text-black font-bold px-4 rounded-lg hover:bg-[#00ffcc]/80 transition"><span class="material-symbols-outlined">send</span></button>
+                </div>
+            `);
+            setTimeout(() => document.getElementById('chat-input-email').focus(), 100);
+            document.getElementById('chat-input-email').addEventListener('keypress', function (e) {
+                if (e.key === "Enter") submitAuthEmail();
+            });
+        }
+
+        async function submitAuthEmail() {
+            const val = document.getElementById('chat-input-email').value.trim();
+            if(!val) return;
+            artistData.email = val;
+            addUserMessage(val);
+            clearInput();
+            
+            await showTyping();
+            addFloweeMessage(authFlow === 'login' ? getT('askPwLog') : getT('askPwReg'));
+            setInputOptions(`
+                <div class="flex gap-2">
+                    <input type="password" id="chat-input-pw" placeholder="${getT('pwPlaceholder')}" class="flex-1 bg-black/50 border border-white/20 rounded-lg p-3 text-white text-sm outline-none focus:border-[#00ffcc]">
+                    <button onclick="submitAuthPw()" class="bg-[#00ffcc] text-black font-bold px-4 rounded-lg hover:bg-[#00ffcc]/80 transition"><span class="material-symbols-outlined">send</span></button>
+                </div>
+            `);
+            setTimeout(() => document.getElementById('chat-input-pw').focus(), 100);
+            document.getElementById('chat-input-pw').addEventListener('keypress', function (e) {
+                if (e.key === "Enter") submitAuthPw();
+            });
+        }
+
+        async function submitAuthPw() {
+            const val = document.getElementById('chat-input-pw').value.trim();
+            if(!val) return;
+            artistData.password = val;
+            addUserMessage("••••••••");
+            clearInput();
+            
+            await showTyping();
+            if(authFlow === 'login') {
+                const { data, error } = await window.supabaseClient.auth.signInWithPassword({ email: artistData.email, password: artistData.password });
+                if(!error && data.session) {
+                    const { data: existing } = await window.supabaseClient.from('master_artists').select('id, name').eq('email', artistData.email).single();
+                    if(existing) {
+                        addFloweeMessage(`Welcome back, ${existing.name}! Redirecting to your Sanctuary...`);
+                        setTimeout(() => { window.location.href = `/pages/artist_sanctuary.html?eventId=${eventId || ''}&artistId=${existing.id}`; }, 2000);
+                    } else {
+                        askArtistType();
+                    }
+                } else {
+                    addFloweeMessage(`<span class="text-red-400">${getT('loginFail')}</span>`);
+                    setInputOptions(`
+                        <div class="flex gap-2 flex-col">
+                            <button onclick="askAuthEmail()" class="w-full bg-white/5 border border-white/20 text-white font-bold py-3 rounded-lg hover:bg-white/10 transition uppercase tracking-widest text-xs">${getT('tryAgain')}</button>
+                            <button onclick="forgotPw()" class="w-full bg-[#d4af37]/10 border border-[#d4af37]/30 text-[#d4af37] font-bold py-3 rounded-lg hover:bg-[#d4af37]/20 transition uppercase tracking-widest text-xs">${getT('forgotPw')}</button>
+                        </div>
+                    `);
+                }
+            } else {
+                const { data, error } = await window.supabaseClient.auth.signUp({ email: artistData.email, password: artistData.password });
+                if(error) {
+                    addFloweeMessage("Error: " + error.message);
+                    setInputOptions(`
+                        <button onclick="askAuthEmail()" class="w-full bg-white/5 border border-white/20 text-white font-bold py-3 rounded-lg hover:bg-white/10 transition uppercase tracking-widest text-xs">${getT('tryAgain')}</button>
+                    `);
+                } else {
+                    askArtistType();
+                }
+            }
+        }
+
+        async function forgotPw() {
+            addUserMessage(getT('forgotPw'));
+            clearInput();
+            await window.supabaseClient.auth.resetPasswordForEmail(artistData.email, { redirectTo: window.location.origin + '/pages/reset_state.html' });
+            await showTyping();
+            addFloweeMessage(getT('forgotSent'));
+            setTimeout(() => askAuthEmail(), 4000);
+        }
+
+        async function askArtistType() {
+            await showTyping();
+            addFloweeMessage(getT('chooseType'));
             setInputOptions(`
                 <div class="flex flex-col gap-2">
                     <button onclick="handleType('performance')" class="w-full bg-[#d4af37] text-black font-bold py-3 rounded-lg hover:bg-[#d4af37]/80 transition shadow-[0_0_15px_rgba(212,175,55,0.3)] uppercase tracking-widest text-xs">${getT('perf')}</button>
@@ -319,8 +490,10 @@
             artistData.type = type;
             addUserMessage(type === 'performance' ? getT('perf') : getT('serv'));
             clearInput();
-            await askTextItem('askName', 'name', 'askEmail');
+            await askTextItem('askName', 'name', 'askPhone');
         }
+
+
 
         async function askTextItem(tKey, dataKey, nextFunc) {
             await showTyping();
