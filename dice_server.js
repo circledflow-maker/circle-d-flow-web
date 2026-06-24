@@ -138,3 +138,31 @@ app.listen(PORT, () => {
     console.log(`🎲 Dice Server running on http://localhost:${PORT}`);
     console.log(`🛡️ Anti-Cheat Database located at ${DB_FILE}`);
 });
+
+// Create Payment Intent for In-Game 3D Overlay (Marketplace)
+app.post('/create-payment-intent', async (req, res) => {
+    try {
+        const { amount, currency = 'eur' } = req.body;
+        // Basic validation
+        if (!amount || isNaN(amount)) {
+            return res.status(400).json({ error: 'Valid amount is required' });
+        }
+        
+        // Create a PaymentIntent with the order amount and currency
+        const paymentIntent = await stripe.paymentIntents.create({
+            amount: Math.round(amount * 100), // Convert to cents and ensure integer
+            currency: currency,
+            // automatic_payment_methods is enabled by default in newer API versions
+            automatic_payment_methods: {
+                enabled: true,
+            },
+        });
+
+        res.send({
+            clientSecret: paymentIntent.client_secret,
+        });
+    } catch (error) {
+        console.error("Stripe PaymentIntent Error:", error);
+        res.status(500).json({ error: error.message });
+    }
+});

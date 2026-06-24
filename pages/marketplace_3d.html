@@ -607,27 +607,93 @@
         }
 
         // --- 7. IN-GAME STRIPE CHECKOUT ---
-        function triggerInGameCheckout(auctionData) {
+        let stripeInstance = null;
+        let elements = null;
+        let isStripeReady = false;
+
+        async function triggerInGameCheckout(auctionData) {
             document.getElementById('checkout-modal').classList.remove('hidden');
             document.getElementById('checkout-item-name').innerText = auctionData.itemName;
             document.getElementById('checkout-price').innerText = auctionData.amount;
             
+            // Extract numeric amount from "450 FC" or "€45.00"
+            let numericAmount = parseFloat(auctionData.amount.replace(/[^0-9.]/g, '')) || 45;
+
             // Slow down soul pulse for cinematic focus
             soulGroup.children[0].material.color.setHex(0xffffff);
+
+            // Initialize Stripe Elements
+            const paymentElementContainer = document.getElementById('payment-element');
+            paymentElementContainer.innerHTML = '<span class="text-[#00ffcc] text-xs animate-pulse">Establishing secure connection to Vault Matrix...</span>';
+
+            try {
+                // Change URL to your production backend if needed
+                const backendUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+                    ? 'http://localhost:3000/create-payment-intent'
+                    : 'https://circle-d-flow.loca.lt/create-payment-intent'; // adjust to real production URL
+
+                const response = await fetch(backendUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ amount: numericAmount })
+                });
+                
+                if(!response.ok) throw new Error("Backend connection failed.");
+                const { clientSecret } = await response.json();
+
+                if(clientSecret) {
+                     // IMPORTANT: Replace with your actual live/test publishable key
+                     const pk = 'pk_test_51O2aQkCq3P0Q2X4sN5M7Z'; // Example Stripe PK, replace with real one!
+                     if(!stripeInstance) stripeInstance = Stripe(pk);
+                     
+                     const appearance = { 
+                         theme: 'night', 
+                         variables: { 
+                             colorPrimary: '#d2691e',
+                             colorBackground: '#1a0a18',
+                             colorText: '#ffffff'
+                         } 
+                     };
+                     elements = stripeInstance.elements({ appearance, clientSecret });
+                     
+                     const paymentElement = elements.create('payment');
+                     paymentElementContainer.innerHTML = ''; // clear loading state
+                     paymentElement.mount('#payment-element');
+                     isStripeReady = true;
+                }
+            } catch(err) {
+                console.error('Error init Stripe:', err);
+                paymentElementContainer.innerHTML = '<span class="text-red-500 text-xs">Error connecting to Stripe Nexus. Server might be offline.</span>';
+            }
         }
 
-        function simulateCheckout() {
+        async function simulateCheckout() {
+            if(!isStripeReady) return alert("Stripe Matrix not initialized yet.");
+            
             const btn = document.getElementById('submit-payment');
             btn.innerText = "Processing...";
-            setTimeout(() => {
-                btn.innerText = "Syncing to Vault...";
-                setTimeout(() => {
-                    document.getElementById('checkout-modal').classList.add('hidden');
-                    soulGroup.children[0].material.color.setHex(0xffcc44);
-                    alert("Transaction Successful! Artifact synced to your Vault.");
-                    btn.innerText = "Confirm Transaction";
-                }, 1000);
-            }, 1500);
+            btn.disabled = true;
+
+            const { error } = await stripeInstance.confirmPayment({
+                elements,
+                confirmParams: {
+                    // Make sure to change this to your payment completion page or current page
+                    return_url: window.location.href,
+                },
+                redirect: 'if_required'
+            });
+
+            if (error) {
+                alert(error.message);
+                btn.innerText = "Confirm Transaction";
+                btn.disabled = false;
+            } else {
+                document.getElementById('checkout-modal').classList.add('hidden');
+                soulGroup.children[0].material.color.setHex(0xffcc44);
+                alert("Transaction Successful! Artifact synced to your Vault.");
+                btn.innerText = "Confirm Transaction";
+                btn.disabled = false;
+            }
         }
 
 
