@@ -1388,7 +1388,7 @@
 
                 alert('Lade hoch... ' + file.name + '. Dies nutzt den community-uploads Bucket.');
                 try {
-                    const filePath = \`secret-garden-theke/\${Date.now()}_\${file.name}\`;
+                    const filePath = `secret-garden-theke/${Date.now()}_${file.name}`;
                     const { data, error } = await window.supabaseClient.storage
                         .from('community-uploads')
                         .upload(filePath, file);
