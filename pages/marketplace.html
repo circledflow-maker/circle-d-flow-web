@@ -214,6 +214,25 @@
             <span class="text-[9px] text-white/30 mt-1">Tuck-Tuck & Guides</span>
         </div>
 
+    <!-- Flowee Fullscreen Chat Overlay (Upload Intent) -->
+    <div id="flowee-overlay" class="fixed inset-0 z-[9999] bg-black/95 backdrop-blur-md hidden flex-col">
+        <div class="absolute top-4 right-4 z-10">
+            <button onclick="document.getElementById('flowee-overlay').classList.add('hidden')" class="material-symbols-outlined text-white/50 hover:text-white text-3xl">close</button>
+        </div>
+        <div class="flex-1 p-6 flex flex-col justify-end max-w-2xl mx-auto w-full">
+            <div id="flowee-chat-log" class="space-y-4 mb-6 max-h-[70vh] overflow-y-auto custom-scrollbar">
+                <!-- Chat messages here -->
+            </div>
+            <div class="bg-[#1A1622] rounded-xl p-4 border border-[#00ffcc]/30 shadow-[0_0_30px_rgba(0,255,204,0.1)] flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full border border-[#00ffcc] overflow-hidden flex-shrink-0 animate-pulse">
+                    <img src="../Assets/images/logo.png" class="w-full h-full object-cover opacity-80" alt="Flowee">
+                </div>
+                <div id="flowee-input-zone" class="flex-1">
+                    <button class="w-full bg-[#00ffcc]/20 border border-[#00ffcc]/50 text-[#00ffcc] py-2 rounded font-bold uppercase tracking-widest text-xs hover:bg-[#00ffcc]/40 transition">Loading Flowee...</button>
+                </div>
+            </div>
+        </div>
+    </div>
     </main>
 
     <!-- DRIVER CARD MODAL -->
@@ -672,7 +691,103 @@
                 hud.style.display = 'block';
                 document.getElementById('hud-text').innerText = "Mission: Click a Guild Filter button above.";
             }
+
+            // Upload Intent Check
+            if (urlParams.get('intent') === 'upload') {
+                document.getElementById('flowee-overlay').classList.remove('hidden');
+                startUploadFlow();
+            }
         });
+
+        // --- INTERACTIVE UPLOAD FLOW ---
+        let uploadData = {};
+        function fMsg(text, sender = 'ai') {
+            const log = document.getElementById('flowee-chat-log');
+            const div = document.createElement('div');
+            div.className = sender === 'user' 
+                ? "ml-auto bg-white/10 p-3 rounded-xl border border-white/20 text-white max-w-[80%] text-right text-sm"
+                : "mr-auto bg-[#00ffcc]/10 p-3 rounded-xl border border-[#00ffcc]/20 text-[#00ffcc] max-w-[90%] text-sm";
+            div.innerHTML = text;
+            log.appendChild(div);
+            log.scrollTop = log.scrollHeight;
+        }
+
+        function setFInput(html) {
+            document.getElementById('flowee-input-zone').innerHTML = html;
+        }
+
+        function startUploadFlow() {
+            document.getElementById('flowee-chat-log').innerHTML = '';
+            fMsg("Welcome to the Vault. I am Flowee. Let's mint your new Artifact for the Grand Bazaar.");
+            setTimeout(() => {
+                fMsg("What is the name of your Artifact or Skill?");
+                setFInput(`<div class="flex gap-2"><input type="text" id="up-name" class="flex-1 bg-black/50 border border-[#00ffcc]/30 text-white px-3 py-2 rounded" placeholder="e.g. Neon Beat Pack"><button onclick="upStep2()" class="bg-[#00ffcc] text-black px-4 font-bold rounded">SEND</button></div>`);
+            }, 1000);
+        }
+
+        function upStep2() {
+            const val = document.getElementById('up-name').value;
+            if(!val) return;
+            uploadData.name = val;
+            fMsg(val, 'user');
+            setFInput(`<div class="text-[#00ffcc] text-xs animate-pulse">Processing...</div>`);
+            setTimeout(() => {
+                fMsg(`Ah, "${val}". Excellent. How much Karma/Credits should it cost?`);
+                setFInput(`<div class="flex gap-2"><input type="number" id="up-price" class="flex-1 bg-black/50 border border-[#00ffcc]/30 text-white px-3 py-2 rounded" placeholder="e.g. 50"><button onclick="upStep3()" class="bg-[#00ffcc] text-black px-4 font-bold rounded">SEND</button></div>`);
+            }, 800);
+        }
+
+        function upStep3() {
+            const val = document.getElementById('up-price').value;
+            if(!val) return;
+            uploadData.price = val;
+            fMsg(val, 'user');
+            setFInput(`<div class="text-[#00ffcc] text-xs animate-pulse">Processing...</div>`);
+            setTimeout(() => {
+                fMsg("Almost done. Which Guild does this belong to? (e.g. Arts, Sounds, Skills, Products)");
+                setFInput(`<div class="flex gap-2 flex-wrap">
+                    <button onclick="upFinish('Arts')" class="bg-black/50 border border-[#00ffcc]/30 text-[#00ffcc] px-3 py-2 rounded hover:bg-[#00ffcc]/20">Arts</button>
+                    <button onclick="upFinish('Sounds')" class="bg-black/50 border border-[#00ffcc]/30 text-[#00ffcc] px-3 py-2 rounded hover:bg-[#00ffcc]/20">Sounds</button>
+                    <button onclick="upFinish('Skills')" class="bg-black/50 border border-[#00ffcc]/30 text-[#00ffcc] px-3 py-2 rounded hover:bg-[#00ffcc]/20">Skills</button>
+                    <button onclick="upFinish('Products')" class="bg-black/50 border border-[#00ffcc]/30 text-[#00ffcc] px-3 py-2 rounded hover:bg-[#00ffcc]/20">Products</button>
+                </div>`);
+            }, 800);
+        }
+
+        async function upFinish(guild) {
+            uploadData.guild = guild;
+            fMsg(guild, 'user');
+            setFInput(`<div class="text-[#00ffcc] text-xs animate-pulse">Syncing to Bazaar...</div>`);
+            
+            setTimeout(() => {
+                fMsg(`Artifact "${uploadData.name}" has been minted in the Guild of ${guild} for ${uploadData.price} Credits!`);
+                if(window.Pusher) window.Pusher.showToast("+50 RP (Artifact Minted)", "xp");
+                
+                const container = document.getElementById('bazaar-container');
+                if(container) {
+                    const noItems = container.querySelector('.animate-pulse');
+                    if(noItems && noItems.innerText === 'Scanning Matrix...') noItems.remove();
+                    
+                    const card = document.createElement('div');
+                    card.className = "bg-black/40 border border-white/10 p-4 rounded-lg hover:border-[#CD7F32] transition-colors flex flex-col items-center text-center group cursor-pointer relative overflow-hidden";
+                    card.innerHTML = `
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#CD7F32]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div class="w-20 h-20 bg-[#111] rounded-full flex items-center justify-center mb-4 border border-[#CD7F32]/30 shadow-[0_0_15px_rgba(205,127,50,0.2)]">
+                            <span class="material-symbols-outlined text-3xl text-[#CD7F32]">diamond</span>
+                        </div>
+                        <h3 class="text-white font-serif tracking-widest text-sm mb-1 z-10">${uploadData.name}</h3>
+                        <p class="text-[10px] uppercase tracking-widest text-[#CD7F32] mb-3 z-10">Guild of ${guild}</p>
+                        <div class="w-full flex justify-between items-center z-10 border-t border-white/10 pt-3">
+                            <span class="text-xs text-white/50">New Mint</span>
+                            <span class="text-sm font-bold text-[#CD7F32]">${uploadData.price} cRypts</span>
+                        </div>
+                    `;
+                    container.prepend(card);
+                }
+
+                setFInput(`<button onclick="document.getElementById('flowee-overlay').classList.add('hidden')" class="w-full bg-[#00ffcc]/20 border border-[#00ffcc]/50 text-[#00ffcc] py-3 rounded font-bold uppercase tracking-widest text-xs mt-2 hover:bg-[#00ffcc]/40 transition">Return to Bazaar</button>`);
+            }, 1500);
+        }
 
         function checkBazarTour() {
             const hasSeen = localStorage.getItem('has_seen_bazar_tour');

@@ -52,7 +52,7 @@
     <div id="ui-layer" class="flex flex-col justify-between p-4 pb-8">
         <!-- Top HUD -->
         <div class="glass-panel rounded-2xl p-4 flex items-center justify-between shadow-[0_0_20px_rgba(212,175,55,0.1)] pointer-events-auto">
-            <div>
+            <div onclick="openSoulNexus()" class="cursor-pointer hover:opacity-80 transition">
                 <h1 id="artist-name" class="font-serif text-[#d4af37] text-xl uppercase tracking-widest leading-none">Loading...</h1>
                 <p id="artist-type" class="text-[10px] text-white/50 uppercase tracking-widest mt-1">Connecting to Nexus</p>
             </div>
@@ -81,6 +81,9 @@
             <button onclick="openCameraModal()" class="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-white hover:bg-white/10 transition shadow-[0_0_15px_rgba(255,255,255,0.3)] border border-white/30">
                 <span class="material-symbols-outlined">photo_camera</span>
             </button>
+            <button onclick="goToMarketplace()" class="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-[#d4af37] hover:bg-white/10 transition shadow-[0_0_15px_rgba(212,175,55,0.3)] border border-[#d4af37]/30 mt-4">
+                <span class="material-symbols-outlined">storefront</span>
+            </button>
         </div>
 
         <!-- Joystick -->
@@ -105,6 +108,17 @@
             </div>
         </div>
     </div>
+
+    <!-- Soul Nexus Iframe Modal -->
+    <div id="nexus-modal" class="hidden fixed inset-0 z-[100] bg-black pointer-events-auto flex flex-col transition-transform duration-500 transform translate-y-full">
+        <div class="relative z-10 flex justify-between items-center p-4 bg-gradient-to-b from-black to-transparent">
+            <button onclick="closeSoulNexus()" class="text-white hover:text-[#d4af37] bg-black/50 p-2 rounded-full backdrop-blur-md border border-white/10 flex"><span class="material-symbols-outlined">arrow_back</span></button>
+        </div>
+        <iframe src="dashboard.html" class="w-full flex-1 border-0" id="nexus-iframe"></iframe>
+    </div>
+
+    <!-- Cinematic Transition Overlay -->
+    <div id="cinematic-transition" class="fixed inset-0 z-[200] bg-black pointer-events-none opacity-0 transition-opacity duration-1000"></div>
 
     <!-- Ledger / Program Modal -->
     <div id="ledger-modal" class="hidden fixed inset-0 z-50 bg-black/95 backdrop-blur-md pointer-events-auto flex flex-col pt-12 pb-4 px-4">
@@ -221,6 +235,25 @@
             });
             document.getElementById('tab-' + tab).classList.add('active');
             document.getElementById('content-' + tab).classList.remove('hidden');
+        }
+
+        function openSoulNexus() {
+            document.getElementById('nexus-modal').classList.remove('hidden');
+            setTimeout(() => document.getElementById('nexus-modal').classList.remove('translate-y-full'), 10);
+        }
+
+        function closeSoulNexus() {
+            document.getElementById('nexus-modal').classList.add('translate-y-full');
+            setTimeout(() => document.getElementById('nexus-modal').classList.add('hidden'), 500);
+        }
+
+        function goToMarketplace() {
+            const trans = document.getElementById('cinematic-transition');
+            trans.classList.remove('pointer-events-none');
+            trans.style.opacity = '1';
+            setTimeout(() => {
+                window.location.href = `marketplace.html?intent=upload&artistId=${artistId}`;
+            }, 1000);
         }
 
         async function openLedger() {
@@ -800,12 +833,13 @@
 
         // --- Three.js Pure 3D Engine ---
         
-        function createAdinkraTexture() {
-            const cvs = document.getElementById('adinkra-canvas');
+        function createAdinkraTexture(color1, color2) {
+            const cvs = document.createElement('canvas');
+            cvs.width = 256; cvs.height = 256;
             const c = cvs.getContext('2d');
-            c.fillStyle = '#000000'; c.fillRect(0,0,256,256);
-            c.strokeStyle = '#d4af37'; c.lineWidth = 8; c.lineCap = 'round';
-            c.shadowBlur = 15; c.shadowColor = '#d4af37';
+            c.fillStyle = '#0a0a0a'; c.fillRect(0,0,256,256);
+            c.strokeStyle = color1 || '#d4af37'; c.lineWidth = 8; c.lineCap = 'round';
+            c.shadowBlur = 15; c.shadowColor = color2 || '#d4af37';
             
             c.beginPath(); c.arc(128, 128, 60, 0, Math.PI, false); c.stroke();
             c.beginPath(); c.arc(128, 128, 80, Math.PI, Math.PI * 2, false); c.stroke();
@@ -818,53 +852,169 @@
         }
 
         const scene = new THREE.Scene();
-        scene.fog = new THREE.FogExp2(0x3a1e04, 0.02);
+        scene.fog = new THREE.FogExp2(0x051015, 0.015); // Deep cyan/blue night fog
 
         const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        document.getElementById('canvas-container').innerHTML = ''; // clear old if any
         document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-        const hemiLight = new THREE.HemisphereLight(0xffb56b, 0x2e1104, 0.6);
+        const hemiLight = new THREE.HemisphereLight(0x00ffcc, 0xff00cc, 0.4);
         scene.add(hemiLight);
 
-        const dirLight = new THREE.DirectionalLight(0xffa500, 1.2);
-        dirLight.position.set(50, 40, 20);
+        const dirLight = new THREE.DirectionalLight(0xd4af37, 1.0);
+        dirLight.position.set(50, 60, 20);
         dirLight.castShadow = true;
+        dirLight.shadow.mapSize.width = 2048;
+        dirLight.shadow.mapSize.height = 2048;
         scene.add(dirLight);
 
-        // Environment
-        const earthMat = new THREE.MeshStandardMaterial({ color: 0x8b3a1a, roughness: 0.9, metalness: 0.1 });
-        const ground = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), earthMat);
-        ground.rotation.x = -Math.PI / 2;
-        ground.receiveShadow = true;
-        scene.add(ground);
+        // --- SECRET GARDEN LX ENVIRONMENT ---
+        const environmentGroup = new THREE.Group();
+        scene.add(environmentGroup);
 
-        const adinkraTex = createAdinkraTexture();
-        const wallMat = new THREE.MeshStandardMaterial({ color: 0x6e2c10, roughness: 0.8 });
-        const glowWallMat = new THREE.MeshStandardMaterial({ color: 0x5c220a, emissiveMap: adinkraTex, emissive: 0xd4af37, emissiveIntensity: 2 });
+        // Materials
+        const stoneMat = new THREE.MeshStandardMaterial({ color: 0x2a2a2a, roughness: 0.9 });
+        const grassMat = new THREE.MeshStandardMaterial({ color: 0x0a2210, roughness: 1.0 });
+        const neonEdgeMat = new THREE.MeshBasicMaterial({ color: 0x00ffcc, wireframe: true, transparent: true, opacity: 0.3 });
+        const woodMat = new THREE.MeshStandardMaterial({ color: 0x3d2314, roughness: 0.8 });
+        
+        // 1. Miradouro (Top Viewpoint)
+        const miradouro = new THREE.Mesh(new THREE.BoxGeometry(40, 2, 20), stoneMat);
+        miradouro.position.set(0, 15, -40);
+        miradouro.receiveShadow = true;
+        environmentGroup.add(miradouro);
+        
+        // Fence on Miradouro
+        const fenceGeo = new THREE.BoxGeometry(40, 2, 0.5);
+        const fenceMat = new THREE.MeshStandardMaterial({ color: 0x111111, metalness: 0.8, wireframe: true });
+        const fence = new THREE.Mesh(fenceGeo, fenceMat);
+        fence.position.set(0, 17, -30);
+        environmentGroup.add(fence);
 
-        for(let i=0; i<40; i++) {
-            const w = Math.random() * 8 + 4;
-            const h = Math.random() * 10 + 4;
-            const d = Math.random() * 8 + 4;
-            const isGlowing = Math.random() > 0.8;
-            const box = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), isGlowing ? glowWallMat : wallMat);
-            let px = (Math.random() - 0.5) * 100;
-            let pz = (Math.random() - 0.5) * 100;
-            if(Math.abs(px) < 10 && Math.abs(pz) < 10) { px += 15; pz += 15; }
-            box.position.set(px, h/2, pz);
-            box.rotation.y = (Math.random() * Math.PI) / 4;
-            box.castShadow = true;
-            box.receiveShadow = true;
-            scene.add(box);
+        // Metal Door / Gate at stairs
+        const doorGeo = new THREE.BoxGeometry(4, 5, 0.5);
+        const doorMat = new THREE.MeshStandardMaterial({ color: 0x333333, metalness: 0.9, roughness: 0.2 });
+        const door = new THREE.Mesh(doorGeo, doorMat);
+        door.position.set(-10, 16.5, -30);
+        environmentGroup.add(door);
+
+        // 2. Stairs down the rocky slope
+        const stairsGroup = new THREE.Group();
+        for(let i=0; i<30; i++) {
+            const step = new THREE.Mesh(new THREE.BoxGeometry(6, 0.5, 2), stoneMat);
+            step.position.set(-10, 14.5 - (i * 0.5), -28 + (i * 1.2));
+            step.receiveShadow = true;
+            step.castShadow = true;
+            stairsGroup.add(step);
+        }
+        environmentGroup.add(stairsGroup);
+
+        // 3. Socalkos (Terraces)
+        const createTerrace = (w, d, y, z) => {
+            const terr = new THREE.Mesh(new THREE.BoxGeometry(w, 2, d), grassMat);
+            terr.position.set(0, y, z);
+            terr.receiveShadow = true;
+            
+            const edge = new THREE.Mesh(new THREE.BoxGeometry(w+0.1, 2.1, d+0.1), neonEdgeMat);
+            edge.position.set(0, y, z);
+            environmentGroup.add(edge);
+            
+            environmentGroup.add(terr);
+            return terr;
+        };
+
+        createTerrace(50, 20, 8, -10); // Upper terrace
+        createTerrace(60, 25, 4, 10);  // Middle terrace
+        createTerrace(80, 40, 0, 40);  // Ground level (Stage area)
+
+        // 4. The Bar / Gallery (Marcio Bahia Art)
+        const barGroup = new THREE.Group();
+        barGroup.position.set(15, 5, 10); // on middle terrace
+        
+        const barHouse = new THREE.Mesh(new THREE.BoxGeometry(12, 6, 8), woodMat);
+        barHouse.position.y = 3;
+        barHouse.castShadow = true;
+        barHouse.receiveShadow = true;
+        barGroup.add(barHouse);
+
+        // Art Textures (Marcio Bahia abstract colors)
+        const art1 = createAdinkraTexture('#ff00cc', '#ffaa00');
+        const artMat1 = new THREE.MeshStandardMaterial({ emissiveMap: art1, emissive: 0xffffff, emissiveIntensity: 1.5 });
+        const painting1 = new THREE.Mesh(new THREE.PlaneGeometry(3, 3), artMat1);
+        painting1.position.set(-2, 3, 4.1);
+        barGroup.add(painting1);
+        
+        const art2 = createAdinkraTexture('#00ffcc', '#0044ff');
+        const artMat2 = new THREE.MeshStandardMaterial({ emissiveMap: art2, emissive: 0xffffff, emissiveIntensity: 1.5 });
+        const painting2 = new THREE.Mesh(new THREE.PlaneGeometry(3, 3), artMat2);
+        painting2.position.set(2, 3, 4.1);
+        barGroup.add(painting2);
+
+        // Picture frame window looking out to Lisbon
+        const windowFrame = new THREE.Mesh(new THREE.BoxGeometry(4, 3, 0.2), new THREE.MeshStandardMaterial({ color: 0xd4af37 }));
+        windowFrame.position.set(-6, 3, 0);
+        windowFrame.rotation.y = Math.PI / 2;
+        barGroup.add(windowFrame);
+        const windowGlow = new THREE.PointLight(0xffaa55, 1, 10);
+        windowGlow.position.set(-5, 3, 0);
+        barGroup.add(windowGlow);
+
+        environmentGroup.add(barGroup);
+
+        // 5. Stage / Jam Area (Ground Level)
+        const stageMat = new THREE.MeshStandardMaterial({ color: 0x8b0000, roughness: 0.9 }); // Red rug
+        const stage = new THREE.Mesh(new THREE.CylinderGeometry(8, 8, 0.2, 32), stageMat);
+        stage.position.set(0, 1.1, 40);
+        stage.receiveShadow = true;
+        environmentGroup.add(stage);
+
+        const stageLight = new THREE.PointLight(0xff00cc, 1.5, 20);
+        stageLight.position.set(0, 5, 40);
+        environmentGroup.add(stageLight);
+
+        // 6. Lush Greenery (Dense Plants)
+        const leafMat = new THREE.MeshStandardMaterial({ color: 0x00ff44, roughness: 0.6, emissive: 0x003311 });
+        const plantGeo = new THREE.SphereGeometry(1, 8, 8);
+        for(let i=0; i<150; i++) {
+            const plant = new THREE.Mesh(plantGeo, leafMat);
+            const scale = Math.random() * 2 + 0.5;
+            plant.scale.set(scale, scale, scale);
+            
+            const t = Math.random();
+            let px = (Math.random() - 0.5) * 60;
+            let pz, py;
+            if(t < 0.3) { pz = -10 + (Math.random()-0.5)*15; py = 9; }
+            else if(t < 0.6) { pz = 10 + (Math.random()-0.5)*20; py = 5; }
+            else { pz = 40 + (Math.random()-0.5)*35; py = 1; }
+            
+            if(Math.sqrt(px*px + (pz-40)*(pz-40)) < 10) px += 12;
+
+            plant.position.set(px, py, pz);
+            plant.castShadow = true;
+            plant.receiveShadow = true;
+            environmentGroup.add(plant);
+        }
+
+        // Seating (Cushions)
+        const cushionMat = new THREE.MeshStandardMaterial({ color: 0xd4af37, roughness: 0.8 });
+        for(let i=0; i<30; i++) {
+            const cushion = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.3, 1.5), cushionMat);
+            const px = (Math.random() - 0.5) * 50;
+            const pz = 10 + Math.random() * 40;
+            cushion.position.set(px, pz < 30 ? 5.15 : 1.15, pz);
+            cushion.rotation.y = Math.random() * Math.PI;
+            cushion.receiveShadow = true;
+            environmentGroup.add(cushion);
         }
 
         // --- Avatars ---
         const playerGroup = new THREE.Group();
+        playerGroup.position.set(-10, 16, -26); // Start at top of stairs
         scene.add(playerGroup);
 
         // Player Soul
@@ -897,21 +1047,34 @@
         const auraParticles = new THREE.Points(auraGeo, auraMat);
         soulGroup.add(auraParticles);
 
-        // Flowee Orb (Companion)
+        // Flowee Orb (Companion with Wings)
         const floweeOrb = new THREE.Group();
         playerGroup.add(floweeOrb);
-        floweeOrb.position.set(-2, 2.5, -1);
+        floweeOrb.position.set(2, 2.5, -2);
         
         const fCoreGeo = new THREE.SphereGeometry(0.3, 16, 16);
-        const fCoreMat = new THREE.MeshStandardMaterial({ color: 0x00ffcc, emissive: 0x00ffcc, emissiveIntensity: 3, wireframe: true });
+        const fCoreMat = new THREE.MeshStandardMaterial({ color: 0xff00cc, emissive: 0xff00cc, emissiveIntensity: 3, wireframe: true });
         const fCore = new THREE.Mesh(fCoreGeo, fCoreMat);
         floweeOrb.add(fCore);
         
-        const fLight = new THREE.PointLight(0x00ffcc, 1, 10);
+        const fLight = new THREE.PointLight(0xff00cc, 1, 10);
         floweeOrb.add(fLight);
 
+        // Flowee Wings
+        const wingGeo = new THREE.PlaneGeometry(1.5, 0.8);
+        const wingMat = new THREE.MeshBasicMaterial({ color: 0x00ffcc, transparent: true, opacity: 0.6, side: THREE.DoubleSide, blending: THREE.AdditiveBlending });
+        
+        const leftWing = new THREE.Mesh(wingGeo, wingMat);
+        leftWing.position.set(-0.9, 0, 0);
+        leftWing.rotation.x = Math.PI / 2;
+        floweeOrb.add(leftWing);
 
-        camera.position.set(0, 5, 10);
+        const rightWing = new THREE.Mesh(wingGeo, wingMat);
+        rightWing.position.set(0.9, 0, 0);
+        rightWing.rotation.x = Math.PI / 2;
+        floweeOrb.add(rightWing);
+
+        camera.position.set(0, 20, -10);
         camera.lookAt(playerGroup.position);
 
         // --- Controls ---
@@ -970,12 +1133,10 @@
             const delta = clock.getDelta();
             const time = clock.getElapsedTime();
 
-            // Hover soul
             soulCore.position.y = Math.sin(time * 2) * 0.3;
             auraParticles.rotation.y += 0.5 * delta;
             soulLight.intensity = 1.5 + Math.sin(time * 3) * 0.3;
 
-            // Animate color transition if set
             if(targetSoulColor) {
                 coreMat.color.lerp(targetSoulColor, 0.02);
                 coreMat.emissive.lerp(targetSoulColor, 0.02);
@@ -983,16 +1144,37 @@
                 soulLight.color.lerp(targetSoulColor, 0.02);
             }
 
-            // Flowee Orbit logic
+            // Flowee Orbit logic & Wings
             floweeOrb.position.y = 2.5 + Math.sin(time * 3) * 0.4;
+            floweeOrb.position.x = 2 + Math.cos(time) * 0.5;
+            floweeOrb.position.z = -2 + Math.sin(time * 1.5) * 0.5;
+            
             fCore.rotation.y += delta;
             fCore.rotation.x += delta * 0.5;
 
+            const flapSpeed = 15;
+            const flapAngle = Math.sin(time * flapSpeed) * 0.5;
+            leftWing.rotation.y = flapAngle;
+            rightWing.rotation.y = -flapAngle;
+
             // Move Soul
             if(moveVec.length() > 0) {
-                const speed = 8 * delta;
-                playerGroup.position.x += moveVec.x * speed;
-                playerGroup.position.z += moveVec.y * speed;
+                const speed = 12 * delta;
+                
+                const camDir = new THREE.Vector3();
+                camera.getWorldDirection(camDir);
+                camDir.y = 0;
+                camDir.normalize();
+                
+                const camRight = new THREE.Vector3().crossVectors(camDir, new THREE.Vector3(0,1,0)).normalize();
+                
+                const moveDir = new THREE.Vector3();
+                moveDir.addScaledVector(camRight, moveVec.x);
+                moveDir.addScaledVector(camDir, -moveVec.y);
+                moveDir.normalize();
+
+                playerGroup.position.x += moveDir.x * speed;
+                playerGroup.position.z += moveDir.z * speed;
                 
                 soulCore.rotation.z = -moveVec.x * 0.5;
                 soulCore.rotation.x = moveVec.y * 0.5;
@@ -1001,7 +1183,24 @@
                 soulCore.rotation.x = THREE.MathUtils.lerp(soulCore.rotation.x, 0, 0.1);
             }
 
-            const targetCamPos = playerGroup.position.clone().add(new THREE.Vector3(0, 5, 12));
+            // Simple Terrain Following
+            let targetY = 1;
+            const px = playerGroup.position.x;
+            const pz = playerGroup.position.z;
+            
+            if (px > -14 && px < -6 && pz > -30 && pz < -10) {
+                const ratio = (pz - (-30)) / 20; 
+                targetY = 16 - (ratio * 8);
+            } else if (pz < 0) {
+                targetY = 9; 
+            } else if (pz < 25) {
+                targetY = 5; 
+            } else {
+                targetY = 1; 
+            }
+            playerGroup.position.y = THREE.MathUtils.lerp(playerGroup.position.y, targetY, 0.1);
+
+            const targetCamPos = playerGroup.position.clone().add(new THREE.Vector3(0, 8, 15));
             camera.position.lerp(targetCamPos, 0.05);
             camera.lookAt(playerGroup.position);
 
