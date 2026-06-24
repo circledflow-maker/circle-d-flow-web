@@ -57,7 +57,7 @@ class ImperialHUDAgent {
 
             .imperial-hud {
                 position: fixed;
-                top: 0;
+                bottom: 0;
                 left: 0;
                 width: 100%;
                 height: 25px;
@@ -66,7 +66,7 @@ class ImperialHUDAgent {
                 z-index: 99999;
                 display: flex;
                 align-items: center;
-                border-bottom: 1px solid rgba(0, 255, 212, 0.2);
+                border-top: 1px solid rgba(0, 255, 212, 0.2);
                 transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             }
             
@@ -75,7 +75,8 @@ class ImperialHUDAgent {
                 .imperial-hud {
                     padding: 0 15px;
                     height: 60px;
-                    top: 10px;
+                    bottom: 10px;
+                    top: auto;
                     width: 98%;
                 }
                 .hud-center { display: none; } /* Hide Ticker on mobile portrait to save space, or make it smaller */
