@@ -39,6 +39,107 @@
         .bubble-user { background: rgba(212, 175, 55, 0.1); border: 1px solid rgba(212, 175, 55, 0.3); color: #d4af37; border-radius: 16px; border-bottom-right-radius: 4px; text-align: right; }
         .fade-in { animation: fadeIn 0.4s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ZONES & HUD OVERLAYS */
+        #zone-overlay {
+            position: fixed;
+            top: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 400px;
+            z-index: 100;
+            display: none;
+            pointer-events: auto;
+        }
+
+        .zone-card {
+            background: rgba(18, 8, 5, 0.95);
+            border: 2px solid #d2691e;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            text-align: center;
+        }
+
+        .zone-card h2 {
+            color: #ffaa44;
+            font-size: 16px;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .speech-bubble {
+            background: #2d1408;
+            border: 1px solid #ffaa44;
+            padding: 12px;
+            border-radius: 16px;
+            position: relative;
+            margin-top: 15px;
+            font-size: 13px;
+            color: #e0e0e0;
+            box-shadow: 0 4px 15px rgba(255,170,68,0.2);
+            animation: bounceIn 0.5s ease-out;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .speech-bubble::before {
+            content: '';
+            position: absolute;
+            bottom: 100%; left: 50%;
+            transform: translateX(-50%);
+            border: 8px solid transparent;
+            border-bottom-color: #ffaa44;
+        }
+
+        .status-live { color: #00ff66; font-size: 11px; font-weight: bold; margin-bottom: 5px; }
+        .status-offline { color: #ff7700; font-size: 11px; font-weight: bold; margin-bottom: 5px; }
+
+        .video-archive-modal {
+            background: #0d0502;
+            border: 1px solid #8b4513;
+            padding: 15px;
+            border-radius: 8px;
+            color: white;
+        }
+        
+        .zone-btn {
+            background: rgba(212, 175, 55, 0.2);
+            border: 1px solid #d4af37;
+            color: #d4af37;
+            padding: 8px 16px;
+            border-radius: 4px;
+            margin-top: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+        }
+        .zone-btn:hover { background: #d4af37; color: black; }
+        
+        /* Akwaba Menu Viewer */
+        #akwaba-menu-viewer {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.95);
+            z-index: 150;
+            overflow-y: auto;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        #akwaba-menu-viewer img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+            border: 2px solid #d4af37;
+            border-radius: 8px;
+        }
         
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -107,6 +208,18 @@
                 <!-- Input injected here -->
             </div>
         </div>
+    </div>
+    
+    <!-- ZONES OVERLAY -->
+    <div id="zone-overlay"></div>
+    
+    <!-- AKWABA FOOD MENU VIEWER -->
+    <div id="akwaba-menu-viewer">
+        <button onclick="document.getElementById('akwaba-menu-viewer').style.display='none'" class="absolute top-4 right-4 text-white hover:text-[#d4af37] bg-black/50 p-2 rounded-full border border-white/10"><span class="material-symbols-outlined">close</span></button>
+        <h2 class="text-[#d4af37] font-serif text-2xl uppercase tracking-widest mb-4">AkwabaLX Food Menu</h2>
+        <p class="text-white/60 text-xs mb-6 text-center">Bestellung unten an der Bar / Order at the bar below</p>
+        <img src="../Assets/images/akwaba-menu-1.jpg" alt="Akwaba Menu Front">
+        <img src="../Assets/images/akwaba-menu-2.jpg" alt="Akwaba Menu Back">
     </div>
 
     <!-- Soul Nexus Iframe Modal -->
@@ -934,9 +1047,9 @@
             return terr;
         };
 
-        createTerrace(50, 20, 8, -10); // Upper terrace
-        createTerrace(60, 25, 4, 10);  // Middle terrace
-        createTerrace(80, 40, 0, 40);  // Ground level (Stage area)
+        createTerrace(100, 40, 8, -10); // Upper terrace (Entrance/Bar)
+        createTerrace(120, 45, 4, 20);  // Middle terrace (Lounge)
+        createTerrace(160, 60, 0, 60);  // Ground level (Stage area)
 
         // 4. The Bar / Gallery (Marcio Bahia Art)
         const barGroup = new THREE.Group();
@@ -974,8 +1087,8 @@
 
         // 5. Stage / Jam Area (Ground Level)
         const stageMat = new THREE.MeshStandardMaterial({ color: 0x8b0000, roughness: 0.9 }); // Red rug
-        const stage = new THREE.Mesh(new THREE.CylinderGeometry(8, 8, 0.2, 32), stageMat);
-        stage.position.set(0, 1.1, 40);
+        const stage = new THREE.Mesh(new THREE.CylinderGeometry(15, 15, 0.2, 32), stageMat); // Expanded stage
+        stage.position.set(0, 1.1, 60); // Adjusted position for larger map
         stage.receiveShadow = true;
         environmentGroup.add(stage);
 
@@ -1131,6 +1244,168 @@
             moveVec.set(dx / maxDist, dy / maxDist);
         }
 
+        // --- ZONE DEFINITIONS (Secret Garden LX Layout) ---
+        const zones = {
+            eingangBar: { x: 15, z: 10, radius: 10, active: false }, // Bar / Gallery area (was previously x:15, z:10)
+            buehne:     { x: 0,   z: 60, radius: 20, active: false }, // Stage area (was previously x:0, z:40, now 60)
+            innereBar:  { x: -10, z: -10, radius: 15, active: false } // Inner Bar (Custom area somewhere else)
+        };
+
+        function checkZoneCollisions(avatarPos) {
+            for (const [zoneName, zone] of Object.entries(zones)) {
+                const distance = Math.sqrt(
+                    Math.pow(avatarPos.x - zone.x, 2) + 
+                    Math.pow(avatarPos.z - zone.z, 2)
+                );
+
+                if (distance < zone.radius) {
+                    if (!zone.active) {
+                        zone.active = true;
+                        triggerZoneUI(zoneName);
+                    }
+                } else {
+                    if (zone.active) {
+                        zone.active = false;
+                        closeZoneUI(zoneName);
+                    }
+                }
+            }
+        }
+
+        function triggerZoneUI(zoneName) {
+            const overlay = document.getElementById('zone-overlay');
+            overlay.style.display = 'block';
+            overlay.innerHTML = '';
+            
+            if (zoneName === 'eingangBar') {
+                overlay.innerHTML = `
+                    <div class="zone-card fade-in">
+                        <h2>🌴 KÜCHE & MARKETPLACE</h2>
+                        <p class="text-xs text-white/70 mb-4">Willkommen bei AkwabaLX. Entdecke kulinarische Genüsse und die Produkte unserer lokalen Service Artists.</p>
+                        <button class="zone-btn" onclick="document.getElementById('akwaba-menu-viewer').style.display='flex'">Akwaba Menu ansehen</button>
+                        <button class="zone-btn" onclick="goToMarketplace()">Marketplace öffnen</button>
+                    </div>
+                `;
+            } 
+            else if (zoneName === 'buehne') {
+                overlay.innerHTML = `
+                    <div class="zone-card fade-in">
+                        <h2>🎤 PERFORMANCE BÜHNE</h2>
+                        <div id="live-interaction-area">
+                            <p class="status-offline">○ OFFLINE MODUS: Community-Gedanken</p>
+                        </div>
+                    </div>
+                `;
+                startGhostBubbleRotation();
+            } 
+            else if (zoneName === 'innereBar') {
+                overlay.innerHTML = `
+                    <div class="zone-card fade-in">
+                        <h2>🥃 INTERAKTIVE THEKE</h2>
+                        <p class="text-xs text-white/70 mb-4">Archiv vergangener Momente an diesem Platz.</p>
+                        <button class="zone-btn" onclick="openSystemPlayer()">Videoplayer öffnen (Galerie)</button>
+                        <button class="zone-btn" onclick="triggerMediaUpload()">Eigenes Video/Bild hochladen</button>
+                    </div>
+                `;
+            }
+        }
+
+        function closeZoneUI(zoneName) {
+            const overlay = document.getElementById('zone-overlay');
+            overlay.style.display = 'none';
+            if(window.bubbleInterval) clearInterval(window.bubbleInterval);
+        }
+
+        // Mock Offline Users for Stage
+        const mockOfflineUsers = [
+            { name: "Neon_Ghost", lastAnswer: "Der Flow im Hip Hop ist für mich wie Atmen." },
+            { name: "Agnese", lastAnswer: "Kulinarik verbindet Seelen, genau wie Musik." },
+            { name: "Luvo", lastAnswer: "Rhythmus und Farbe sind die Sprache der Seele." }
+        ];
+
+        let bubbleIndex = 0;
+        function startGhostBubbleRotation() {
+            const area = document.getElementById('live-interaction-area');
+            if(!area) return;
+            
+            if(window.bubbleInterval) clearInterval(window.bubbleInterval);
+            
+            const showNextBubble = () => {
+                if(!document.getElementById('live-interaction-area')) {
+                    clearInterval(window.bubbleInterval);
+                    return;
+                }
+                const user = mockOfflineUsers[bubbleIndex];
+                const bubbleHTML = `
+                    <div class="speech-bubble">
+                        <strong style="color:#00ffcc;">${user.name}:</strong> "${user.lastAnswer}"
+                    </div>
+                `;
+                
+                const existingBubble = document.querySelector('.speech-bubble');
+                if (existingBubble) existingBubble.remove();
+                
+                document.getElementById('live-interaction-area').insertAdjacentHTML('beforeend', bubbleHTML);
+                bubbleIndex = (bubbleIndex + 1) % mockOfflineUsers.length;
+            };
+            
+            showNextBubble();
+            window.bubbleInterval = setInterval(showNextBubble, 5000);
+        }
+
+        function openSystemPlayer() {
+            const overlay = document.getElementById('zone-overlay');
+            overlay.innerHTML = `
+                <div class="video-archive-modal fade-in">
+                    <h3 class="text-[#d4af37] text-center mb-4 uppercase tracking-widest text-sm">🎥 MOMENTS AT SECRET GARDEN</h3>
+                    <video id="sanctuary-player" controls autoplay style="width:100%; border-radius:8px; border:1px solid #d4af37;">
+                        <!-- Using a placeholder video, should connect to Supabase -->
+                        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+                    </video>
+                    <div class="mt-4">
+                        <h4 class="text-xs text-[#00ffcc] mb-2 uppercase">Community Kommentare</h4>
+                        <div id="video-comments" class="bg-black/50 p-2 rounded text-[10px] text-white/70 mb-2 h-20 overflow-y-auto">
+                            <p><strong class="text-white">Neon_Ghost:</strong> Der Sound an dem Abend war unnormal! 🔥</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <input type="text" id="new-comment-input" placeholder="Kommentar hinterlassen..." class="flex-1 bg-black border border-white/20 rounded p-1 text-xs text-white">
+                            <button onclick="alert('Kommentar gespeichert!');" class="bg-[#d4af37] text-black px-2 py-1 rounded text-xs">Senden</button>
+                        </div>
+                    </div>
+                    <button class="zone-btn" onclick="triggerZoneUI('innereBar')">Zurück</button>
+                </div>
+            `;
+        }
+
+        async function triggerMediaUpload() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'video/*,image/*';
+            
+            input.onchange = async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                alert('Lade hoch... ' + file.name + '. Dies nutzt den community-uploads Bucket.');
+                try {
+                    const filePath = \`secret-garden-theke/\${Date.now()}_\${file.name}\`;
+                    const { data, error } = await window.supabaseClient.storage
+                        .from('community-uploads')
+                        .upload(filePath, file);
+
+                    if (error) {
+                        alert("Upload-Fehler: " + error.message);
+                    } else {
+                        alert("Erfolgreich hochgeladen! Dein Beitrag ist nun im System.");
+                    }
+                } catch(err) {
+                    alert("Supabase ist momentan nicht verbunden oder Bucket fehlt.");
+                }
+            };
+            
+            input.click();
+        }
+
         // Animation Loop
         const clock = new THREE.Clock();
         
@@ -1138,6 +1413,8 @@
             requestAnimationFrame(animate);
             const delta = clock.getDelta();
             const time = clock.getElapsedTime();
+
+            checkZoneCollisions(playerGroup.position);
 
             soulCore.position.y = Math.sin(time * 2) * 0.3;
             auraParticles.rotation.y += 0.5 * delta;

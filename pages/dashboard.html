@@ -218,14 +218,8 @@
 
 <body class="h-[100dvh] overflow-hidden bg-[#0A0A0A] m-0 p-0">
 
-    <!-- Mobile Header & Burger Menu -->
-    <div class="fixed top-6 left-6 z-[100]">
-        <button id="burger-btn" class="w-10 h-10 flex flex-col justify-center items-center gap-1.5 bg-black border border-[#d4af37]/50 rounded cursor-pointer z-[101]">
-            <span class="w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
-            <span class="w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
-            <span class="w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
-        </button>
-    </div>
+    <!-- Mobile Header & Burger Menu (Removed per user request) -->
+    <div class="fixed top-6 left-6 z-[100] hidden">
 
     <!-- Fullscreen Mobile Menu Overlay -->
     <div id="mobile-menu" class="fixed inset-0 bg-black/95 z-[90] opacity-0 pointer-events-none transition-opacity duration-300 flex flex-col items-center justify-center">
@@ -246,8 +240,16 @@
     <main class="relative z-10 w-full flex flex-col items-center">        <!-- WELCOME / LOCKDOWN OVERLAY REMOVED FOR DIRECT ACCESS -->
         <div id="system-offline-overlay" style="display:none;"></div>
 
-        <!-- USER PROFILE & UPCOMING QUESTS HUD -->
-        <div id="kylar-hud" class="absolute top-4 left-4 z-50 bg-black/80 border border-white/10 rounded-xl p-4 w-72 backdrop-blur-md hidden">
+        <!-- Global Navigation Actions -->
+        <div class="fixed top-6 right-6 z-[100]">
+            <a href="artist_sanctuary.html" class="flex items-center gap-2 bg-[#d4af37]/20 hover:bg-[#d4af37]/40 border border-[#d4af37] text-[#d4af37] px-4 py-2 rounded-full backdrop-blur-md transition-all shadow-[0_0_15px_rgba(212,175,55,0.3)]">
+                <span class="material-symbols-outlined text-sm">fort</span>
+                <span class="text-xs font-bold tracking-widest uppercase font-mono">To the Sanctuary</span>
+            </a>
+        </div>
+
+        <!-- USER PROFILE & UPCOMING QUESTS HUD (Hidden per user request) -->
+        <div id="kylar-hud" class="hidden">
             <div class="flex items-center gap-3 mb-4">
                 <div class="w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center border border-gold">
                     <span class="material-symbols-outlined text-gold">person</span>
