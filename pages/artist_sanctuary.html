@@ -327,8 +327,10 @@
                     }
 
                     let contentHtml = '';
+                    // Check localData to avoid repeating the flow if DB is not updated
+                    const localData = JSON.parse(localStorage.getItem('soul_data_' + artistId));
                     // Robust check: if exp > 0, they already finished the onboarding
-                    deepFlowCompleted = (artist.exp > 0 || artist.community_cut_percentage !== null);
+                    deepFlowCompleted = (artist.exp > 0 || artist.community_cut_percentage !== null || (localData && (localData.artifact || localData.cut)));
 
                     if(artist.artist_type === 'performance') {
                         try {
@@ -427,6 +429,7 @@
             fMsg(`Welcome back, <b>${artistData.name}</b>. How can I assist you?`);
             if (artistData.artist_type === 'performance') {
                 setFInput(`<div class="flex flex-col gap-2">
+                    <button onclick="handleFC('updateSoul')" class="bg-[#00ffcc]/20 border border-[#00ffcc]/50 text-[#00ffcc] py-2 rounded font-bold uppercase tracking-widest text-xs hover:bg-[#00ffcc]/40 transition">Update Soul Imprint</button>
                     <button onclick="document.getElementById('flowee-overlay').classList.add('hidden')" class="bg-white/10 border border-white/20 text-white py-2 rounded font-bold uppercase tracking-widest text-xs hover:bg-white/20 transition">Close Menu</button>
                 </div>`);
             } else {
@@ -580,6 +583,9 @@
                 tempFlowData.tempPrice = val;
                 fMsg(`<span class="text-[#d4af37] animate-pulse">Adding product to network...</span>`);
                 saveNewProduct(tempFlowData.tempName, tempFlowData.tempQty, tempFlowData.tempPrice);
+            }
+            else if(step === 'updateSoul') {
+                startInSanctuaryDeepFlow();
             }
         }
         let targetSoulColor = null;
