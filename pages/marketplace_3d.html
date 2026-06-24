@@ -123,6 +123,30 @@
             display: none;
         }
 
+        /* Ghost Bubble */
+        #ghost-bubble {
+            position: absolute;
+            transform: translate(-50%, -100%); 
+            background: rgba(18, 8, 5, 0.85);
+            border: 1px solid #33ccff; 
+            border-radius: 12px;
+            padding: 12px 16px;
+            max-width: 200px;
+            text-align: center;
+            pointer-events: none; 
+            box-shadow: 0 0 20px rgba(51, 204, 255, 0.2);
+            z-index: 50;
+            transition: opacity 0.4s ease;
+        }
+        #ghost-bubble::after {
+            content: '';
+            position: absolute;
+            top: 100%; left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: #33ccff;
+        }
+
         /* Utilities */
         .hidden { display: none !important; }
         .text-gold { color: #ffaa44; }
@@ -142,6 +166,11 @@
     </style>
 </head>
 <body>
+    
+    <div id="ghost-bubble" class="hidden">
+        <strong id="ghost-name" class="text-gold"></strong>
+        <p id="ghost-message" class="text-white text-xs mt-1"></p>
+    </div>
 
     <!-- 3D WebGL Canvas -->
     <div id="canvas-container"></div>
@@ -176,32 +205,42 @@
                 <div class="stall-card" id="card-arts">
                     <span class="material-symbols-outlined guild-icon">palette</span>
                     <h3 class="font-cinzel text-gold text-lg">Guild of Arts</h3>
-                    <p class="text-xs text-white/50 italic mb-4">"Epoxy wonders & artifacts."</p>
                     <button class="btn-primary" onclick="triggerCinematicEntry('arts')">Enter Arts</button>
-                </div>
-
-                <!-- Sounds -->
-                <div class="stall-card" id="card-sounds">
-                    <span class="material-symbols-outlined guild-icon">headphones</span>
-                    <h3 class="font-cinzel text-gold text-lg">Guild of Sounds</h3>
-                    <p class="text-xs text-white/50 italic mb-4">"Beats & Sound Medicine."</p>
-                    <button class="btn-primary" onclick="triggerCinematicEntry('sounds')">Enter Sounds</button>
                 </div>
 
                 <!-- Skills -->
                 <div class="stall-card" id="card-skills">
                     <span class="material-symbols-outlined guild-icon">school</span>
                     <h3 class="font-cinzel text-gold text-lg">Guild of Skills</h3>
-                    <p class="text-xs text-white/50 italic mb-4">"Knowledge is currency."</p>
                     <button class="btn-primary" onclick="triggerCinematicEntry('skills')">Enter Skills</button>
                 </div>
 
-                <!-- Central Auction -->
-                <div class="stall-card" id="card-auction">
-                    <span class="material-symbols-outlined guild-icon">gavel</span>
-                    <h3 class="font-cinzel text-gold text-lg">The Colosseum</h3>
-                    <p class="text-xs text-white/50 italic mb-4">"Live Auctions & Bidding Steles."</p>
-                    <button class="btn-primary" onclick="triggerCinematicEntry('auctionCenter')">Enter Plaza</button>
+                <!-- Sounds -->
+                <div class="stall-card" id="card-sounds">
+                    <span class="material-symbols-outlined guild-icon">headphones</span>
+                    <h3 class="font-cinzel text-gold text-lg">Guild of Sounds</h3>
+                    <button class="btn-primary" onclick="triggerCinematicEntry('sounds')">Enter Sounds</button>
+                </div>
+                
+                <!-- Healing -->
+                <div class="stall-card" id="card-healing">
+                    <span class="material-symbols-outlined guild-icon">self_improvement</span>
+                    <h3 class="font-cinzel text-gold text-lg">Guild of Healing</h3>
+                    <button class="btn-primary" onclick="triggerCinematicEntry('healing')">Enter Healing</button>
+                </div>
+                
+                <!-- Products -->
+                <div class="stall-card" id="card-products">
+                    <span class="material-symbols-outlined guild-icon">category</span>
+                    <h3 class="font-cinzel text-gold text-lg">Guild of Products</h3>
+                    <button class="btn-primary" onclick="triggerCinematicEntry('products')">Enter Products</button>
+                </div>
+                
+                <!-- Services -->
+                <div class="stall-card" id="card-services">
+                    <span class="material-symbols-outlined guild-icon">handshake</span>
+                    <h3 class="font-cinzel text-gold text-lg">Guild of Services</h3>
+                    <button class="btn-primary" onclick="triggerCinematicEntry('services')">Enter Services</button>
                 </div>
 
             </div>
@@ -220,15 +259,15 @@
     </div>
 
     <!-- SOUL INTERACTION MODAL -->
-    <div id="soul-interaction-modal" class="pointer-events-auto">
-        <button onclick="document.getElementById('soul-interaction-modal').style.display='none'" class="absolute top-2 right-2 text-white/50 hover:text-white material-symbols-outlined">close</button>
+    <div id="soul-interaction-modal" class="pointer-events-auto flex flex-col">
+        <button onclick="document.getElementById('soul-interaction-modal').style.display='none'" class="self-end text-white/50 hover:text-white flex items-center text-xs mb-2"><span class="material-symbols-outlined text-sm mr-1">close</span> Dismiss</button>
         <div id="soul-content"></div>
     </div>
 
     <!-- CHECKOUT MODAL (Stripe Elements) -->
     <div id="checkout-modal" class="hidden pointer-events-auto">
         <div class="checkout-card">
-            <button onclick="document.getElementById('checkout-modal').classList.add('hidden')" class="absolute top-4 right-4 text-white/50 hover:text-white material-symbols-outlined">close</button>
+            <button onclick="document.getElementById('checkout-modal').classList.add('hidden')" class="absolute top-4 right-4 text-white/50 hover:text-white flex items-center text-xs"><span class="material-symbols-outlined text-sm mr-1">close</span> Dismiss</button>
             <h2 class="text-gold font-cinzel text-2xl mb-2 border-b border-[#d2691e]/50 pb-2">SECURE ARTIFACT</h2>
             <p class="text-xs text-white/60 mb-6">Complete transaction to sync to your Vault.</p>
             
@@ -252,8 +291,8 @@
     <!-- IFRAME MODALS FOR MY STALL / UPLOAD / MARKET ITEMS (Integrates the 2D pages cleanly) -->
     <dialog id="iframe-modal" class="bg-transparent p-0 backdrop:bg-black/90 w-full h-full max-w-none max-h-none m-0">
         <div class="w-full h-full relative">
-            <button onclick="document.getElementById('iframe-modal').close()" class="absolute top-6 right-6 z-50 text-white bg-black/50 hover:bg-black rounded-full p-2 border border-white/20 transition-colors pointer-events-auto">
-                <span class="material-symbols-outlined">close</span>
+            <button onclick="document.getElementById('iframe-modal').close()" class="absolute top-6 right-6 z-50 text-white bg-black/50 hover:bg-black rounded border border-white/20 transition-colors pointer-events-auto flex items-center px-3 py-1 text-sm font-bold tracking-widest">
+                <span class="material-symbols-outlined mr-1">close</span> DISMISS
             </button>
             <iframe id="integrated-iframe" src="" class="w-full h-full border-none"></iframe>
         </div>
@@ -317,147 +356,158 @@
         floor.receiveShadow = true;
         scene.add(floor);
 
-        // --- 2. ANTIGRAVITY PROCEDURAL SYMBOL GENERATOR ---
+        // --- 2. LISBON ATLAS ARCHITECTURE (CLAY BUILDINGS) ---
+        // Basic Adinkra Symbol Generator (Fallback)
         function generateAdinkraTexture(symbolType, colorHex) {
             const canvas = document.createElement('canvas');
-            canvas.width = 512;
-            canvas.height = 512;
+            canvas.width = 512; canvas.height = 512;
             const ctx = canvas.getContext('2d');
-
-            ctx.shadowColor = colorHex;
-            ctx.shadowBlur = 40;
-            ctx.strokeStyle = colorHex;
-            ctx.lineWidth = 24;
-            ctx.lineCap = 'round';
-            ctx.lineJoin = 'round';
-
+            ctx.shadowColor = colorHex; ctx.shadowBlur = 40;
+            ctx.strokeStyle = colorHex; ctx.lineWidth = 24;
+            ctx.lineCap = 'round'; ctx.lineJoin = 'round';
             ctx.beginPath();
-            
-            if (symbolType === 'arts') {
-                ctx.arc(256, 180, 80, 0, Math.PI * 2);
-                ctx.moveTo(336, 330);
-                ctx.arc(256, 330, 80, 0, Math.PI * 2);
-            } 
-            else if (symbolType === 'sounds') {
-                ctx.moveTo(100, 256);
-                ctx.bezierCurveTo(100, 50, 412, 50, 412, 256);
-                ctx.moveTo(150, 256);
-                ctx.bezierCurveTo(150, 400, 362, 400, 362, 256);
-                ctx.arc(256, 256, 20, 0, Math.PI * 2);
-                ctx.fillStyle = colorHex;
-                ctx.fill();
-            } 
-            else if (symbolType === 'skills') {
-                ctx.moveTo(256, 80); ctx.lineTo(256, 432);
-                ctx.moveTo(80, 256); ctx.lineTo(432, 256);
-                ctx.moveTo(130, 130); ctx.lineTo(382, 382);
-                ctx.moveTo(130, 382); ctx.lineTo(382, 130);
-            }
-            else { // Default
-                ctx.arc(256, 256, 150, 0, Math.PI * 2);
-            }
-
+            if (symbolType === 'arts') { ctx.arc(256, 180, 80, 0, Math.PI * 2); ctx.moveTo(336, 330); ctx.arc(256, 330, 80, 0, Math.PI * 2); } 
+            else if (symbolType === 'sounds') { ctx.moveTo(100, 256); ctx.bezierCurveTo(100, 50, 412, 50, 412, 256); ctx.moveTo(150, 256); ctx.bezierCurveTo(150, 400, 362, 400, 362, 256); ctx.arc(256, 256, 20, 0, Math.PI * 2); ctx.fillStyle = colorHex; ctx.fill(); } 
+            else if (symbolType === 'skills') { ctx.moveTo(256, 80); ctx.lineTo(256, 432); ctx.moveTo(80, 256); ctx.lineTo(432, 256); ctx.moveTo(130, 130); ctx.lineTo(382, 382); ctx.moveTo(130, 382); ctx.lineTo(382, 130); }
+            else if (symbolType === 'healing') { ctx.moveTo(256, 100); ctx.lineTo(256, 412); ctx.moveTo(100, 256); ctx.lineTo(412, 256); ctx.arc(256, 256, 100, 0, Math.PI * 2); }
+            else if (symbolType === 'products') { ctx.rect(128, 128, 256, 256); ctx.moveTo(128,128); ctx.lineTo(384,384); ctx.moveTo(384,128); ctx.lineTo(128,384); }
+            else if (symbolType === 'services') { ctx.arc(180, 256, 60, 0, Math.PI * 2); ctx.arc(332, 256, 60, 0, Math.PI * 2); }
+            else { ctx.arc(256, 256, 150, 0, Math.PI * 2); }
             ctx.stroke();
-
             const texture = new THREE.CanvasTexture(canvas);
             texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
             return texture;
         }
 
-        function createProceduralAdinkraWall(x, z, width, height, symbolType, glowColor) {
+        function createClayBuilding(x, z, width, depth, height, symbolType, glowColor) {
             const group = new THREE.Group();
             group.position.set(x, 0, z);
 
-            // Clay Wall
-            const wallGeo = new THREE.BoxGeometry(width, height, 2);
-            const wallMat = new THREE.MeshStandardMaterial({
-                color: 0x5c2e16, 
+            // Clay Structure
+            const geo = new THREE.BoxGeometry(width, height, depth);
+            // Slight noise in geometry to simulate clay
+            const posAttr = geo.attributes.position;
+            for(let i=0; i<posAttr.count; i++) {
+                posAttr.setX(i, posAttr.getX(i) + (Math.random()-0.5)*0.5);
+                posAttr.setY(i, posAttr.getY(i) + (Math.random()-0.5)*0.5);
+                posAttr.setZ(i, posAttr.getZ(i) + (Math.random()-0.5)*0.5);
+            }
+            geo.computeVertexNormals();
+
+            const mat = new THREE.MeshStandardMaterial({
+                color: 0x8b3e2f, // Warm terracotta
                 roughness: 1.0,
+                metalness: 0.05
             });
-            const wall = new THREE.Mesh(wallGeo, wallMat);
-            wall.position.y = height / 2;
-            wall.castShadow = true;
-            wall.receiveShadow = true;
-            group.add(wall);
+            const building = new THREE.Mesh(geo, mat);
+            building.position.y = height / 2;
+            building.castShadow = true;
+            building.receiveShadow = true;
+            group.add(building);
             
-            // Glowing Symbol Decal
-            const generatedTexture = generateAdinkraTexture(symbolType, glowColor);
-            const symbolGeo = new THREE.PlaneGeometry(width * 0.7, width * 0.7);
-            const symbolMat = new THREE.MeshBasicMaterial({
-                map: generatedTexture,
-                transparent: true,
-                opacity: 0.95,
-                blending: THREE.AdditiveBlending,
-                depthWrite: false
-            });
-            const symbol = new THREE.Mesh(symbolGeo, symbolMat);
-            symbol.position.set(0, height / 2, 1.05); 
-            group.add(symbol);
+            // Glowing Symbol Decal on front
+            if (symbolType) {
+                const tex = generateAdinkraTexture(symbolType, glowColor);
+                const symGeo = new THREE.PlaneGeometry(width * 0.6, width * 0.6);
+                const symMat = new THREE.MeshBasicMaterial({
+                    map: tex, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending, depthWrite: false
+                });
+                const symbol = new THREE.Mesh(symGeo, symMat);
+                // Position symbol on the face closest to z=0 (assuming z < 0 for buildings)
+                symbol.position.set(0, height / 2, depth / 2 + 0.5); 
+                group.add(symbol);
+            }
 
             scene.add(group);
             return group;
         }
 
-        // Build the Bazaar Guild Huts
-        createProceduralAdinkraWall(-20, -30, 10, 12, 'arts', '#ff5500'); 
-        createProceduralAdinkraWall(20, -30, 10, 12, 'sounds', '#00ddee');
-        createProceduralAdinkraWall(-30, -60, 12, 14, 'skills', '#00ff66');
+        // Build the Bazaar Guild Huts (6 Stands)
+        createClayBuilding(-12, -20, 10, 10, 12, 'arts', '#ff5500'); 
+        createClayBuilding(12, -20, 10, 10, 12, 'sounds', '#00ddee');
+        createClayBuilding(-12, -40, 10, 10, 14, 'skills', '#00ff66');
+        createClayBuilding(12, -40, 10, 10, 14, 'healing', '#ff00aa');
+        createClayBuilding(-12, -60, 10, 10, 12, 'products', '#ffaa00');
+        createClayBuilding(12, -60, 10, 10, 12, 'services', '#aa00ff');
 
-        // --- 3. FLOATING SOULS (Avatars) ---
+        // Community Hubs
+        // 1. Akwaba Kitchen
+        const kitchenGeo = new THREE.BoxGeometry(15, 3, 5);
+        const kitchenMat = new THREE.MeshStandardMaterial({color: 0x3d1c0b, roughness: 1});
+        const kitchen = new THREE.Mesh(kitchenGeo, kitchenMat);
+        kitchen.position.set(-25, 1.5, -30);
+        kitchen.castShadow = true; scene.add(kitchen);
+        const holoRoofGeo = new THREE.PlaneGeometry(15, 8);
+        const holoRoofMat = new THREE.MeshBasicMaterial({color: 0xff0044, transparent:true, opacity: 0.4, side: THREE.DoubleSide, blending: THREE.AdditiveBlending});
+        const holoRoof = new THREE.Mesh(holoRoofGeo, holoRoofMat);
+        holoRoof.rotation.x = Math.PI / 2; holoRoof.position.set(-25, 6, -30); scene.add(holoRoof);
+
+        // 2. Cypher Stage
+        const stageGeo = new THREE.CylinderGeometry(12, 12, 1, 32);
+        const stageMat = new THREE.MeshStandardMaterial({color: 0x1a050d, roughness: 0.8});
+        const stage = new THREE.Mesh(stageGeo, stageMat);
+        stage.position.set(0, 0.5, -90);
+        stage.receiveShadow = true; scene.add(stage);
+
+        // 3. Video Exhibition Bar
+        createClayBuilding(25, -85, 20, 8, 10, null, null);
+        const screenGeo = new THREE.PlaneGeometry(12, 7);
+        const screenMat = new THREE.MeshBasicMaterial({color: 0x00ffff, transparent: true, opacity: 0.8});
+        const screen = new THREE.Mesh(screenGeo, screenMat);
+        screen.position.set(24, 5, -80.5);
+        scene.add(screen);
+
+        // --- 3. FLOATING SOULS & GHOSTS ---
         const soulGroup = new THREE.Group(); // Player Soul
         soulGroup.position.copy(skyPos);
-
         const soulGeo = new THREE.SphereGeometry(0.8, 32, 32);
-        const soulMat = new THREE.MeshBasicMaterial({
-            color: 0xffcc44,
-            transparent: true,
-            opacity: 0.9,
-            blending: THREE.AdditiveBlending
-        });
+        const soulMat = new THREE.MeshBasicMaterial({ color: 0xffcc44, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending });
         const soulCore = new THREE.Mesh(soulGeo, soulMat);
         soulGroup.add(soulCore);
-
-        const soulLight = new THREE.PointLight(0xffcc44, 1.5, 15);
+        const soulLight = new THREE.PointLight(0xffcc44, 2.0, 20);
         soulGroup.add(soulLight);
         scene.add(soulGroup);
 
-        // Network of other souls
-        const otherSouls = [];
-        
-        function spawnOtherSoul(x, z, name, statusMsg, isOnline) {
-            const group = new THREE.Group();
-            group.position.set(x, 2, z);
-            
-            const color = isOnline ? 0x00ffcc : 0xffaa00;
-            
-            const core = new THREE.Mesh(
-                new THREE.SphereGeometry(0.6, 16, 16),
-                new THREE.MeshBasicMaterial({ color: color, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending })
-            );
-            group.add(core);
-            
-            const light = new THREE.PointLight(color, 1.0, 10);
-            group.add(light);
-            
-            // Hitbox for raycaster
-            const hitboxGeo = new THREE.SphereGeometry(1.5, 8, 8);
-            const hitboxMat = new THREE.MeshBasicMaterial({ visible: false });
-            const hitbox = new THREE.Mesh(hitboxGeo, hitboxMat);
-            hitbox.userData = { isSoul: true, name, statusMsg, isOnline };
-            group.add(hitbox);
+        // Network of Ghost Souls
+        const ghostSouls = [];
+        const ghostData = [
+            { name: "KyheartLx", msg: "Just synced a new beat in Sounds." },
+            { name: "Agnese", msg: "Looking for epox artifacts." },
+            { name: "Oli Flow", msg: "Coding stream tonight." },
+            { name: "Muna", msg: "Fresh food at Akwaba Kitchen!" }
+        ];
 
-            group.userData = { pulseSpeed: 0.002 + Math.random() * 0.002, offset: Math.random() * Math.PI * 2 };
-            
-            scene.add(group);
-            otherSouls.push(group);
+        function spawnGhostSouls() {
+            for(let i=0; i<ghostData.length; i++) {
+                const group = new THREE.Group();
+                const angle = (i / ghostData.length) * Math.PI * 2;
+                const radius = 10;
+                group.position.set(Math.cos(angle) * radius, 2, -90 + Math.sin(angle) * radius);
+                
+                const core = new THREE.Mesh(
+                    new THREE.SphereGeometry(0.5, 16, 16),
+                    new THREE.MeshBasicMaterial({ color: 0x00ffff, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending })
+                );
+                group.add(core);
+                const light = new THREE.PointLight(0x00ffff, 0.8, 8);
+                group.add(light);
+                
+                group.userData = { 
+                    name: ghostData[i].name, 
+                    msg: ghostData[i].msg, 
+                    angle: angle, 
+                    radius: radius,
+                    core: core,
+                    isSpeaking: false
+                };
+                
+                scene.add(group);
+                ghostSouls.push(group);
+            }
         }
+        spawnGhostSouls();
 
-        // Mock some souls standing around the Colosseum
-        spawnOtherSoul(5, -68, "KyheartLx", "Just synced a new beat.", false);
-        spawnOtherSoul(-5, -72, "Agnese", "Looking for artifacts...", true);
-
-
-        // --- 4. AUCTION COLOSSEUM (Central Hub) ---
+        // --- 4. CENTRAL AUCTION / STELES ---
         function createBiddingStele(x, z, itemName, currentBid) {
             const group = new THREE.Group();
             group.position.set(x, 0, z);
@@ -481,27 +531,22 @@
             return group;
         }
 
-        // Central Plaza floor
-        const plazaGeo = new THREE.CircleGeometry(20, 32);
-        const plazaMat = new THREE.MeshStandardMaterial({ color: 0x22110a, roughness: 0.8 });
-        const plaza = new THREE.Mesh(plazaGeo, plazaMat);
-        plaza.rotation.x = -Math.PI / 2;
-        plaza.position.set(0, 0.05, -75);
-        scene.add(plaza);
-
         const steles = [
             createBiddingStele(-10, -70, "Neon Flow Track", "450 FC"),
             createBiddingStele(10, -70, "Golden Epox Mask", "1200 FC"),
-            createBiddingStele(0, -85, "Code Mentorship (1h)", "300 FC")
+            createBiddingStele(0, -70, "Code Mentorship (1h)", "300 FC")
         ];
 
 
         // --- 5. CINEMATIC DIVE & CAMERA LERP ---
         const bazaarZones = {
-            arts: { x: -20, z: -20 },
-            sounds: { x: 20, z: -20 },
-            skills: { x: -30, z: -50 },
-            auctionCenter: { x: 0, z: -60 }
+            arts: { x: -12, z: -20 },
+            sounds: { x: 12, z: -20 },
+            skills: { x: -12, z: -40 },
+            healing: { x: 12, z: -40 },
+            products: { x: -12, z: -60 },
+            services: { x: 12, z: -60 },
+            auctionCenter: { x: 0, z: -70 }
         };
 
         let isCinematicDive = false;
@@ -562,11 +607,11 @@
             raycaster.setFromCamera(mouse, camera);
 
             // Check Souls
-            let soulHitboxes = otherSouls.map(g => g.children[2]);
+            let soulHitboxes = ghostSouls.map(g => g.userData.core);
             const intersects = raycaster.intersectObjects(soulHitboxes);
 
             if (intersects.length > 0) {
-                const data = intersects[0].object.userData;
+                const data = intersects[0].object.parent.userData;
                 openSoulInteraction(data);
                 return;
             }
@@ -589,21 +634,13 @@
             const modal = document.getElementById('soul-interaction-modal');
             modal.style.display = 'block';
             
-            if (data.isOnline) {
-                document.getElementById('soul-content').innerHTML = `
-                    <h3 class="text-gold font-cinzel text-xl mb-1">Verbindung mit ${data.name}</h3>
-                    <p class="text-green-400 text-[10px] uppercase font-bold tracking-widest mb-4">● LIVE</p>
-                    <button class="btn-primary" onclick="alert('Chat initialized')">Live-Chat starten</button>
-                `;
-            } else {
-                document.getElementById('soul-content').innerHTML = `
-                    <h3 class="text-white/80 font-cinzel text-xl mb-1">${data.name}'s Echo</h3>
-                    <div class="italic text-white my-4 p-3 bg-white/10 rounded">"${data.statusMsg}"</div>
-                    <p class="text-white/50 text-[10px] uppercase font-bold tracking-widest mb-4">○ OFFLINE</p>
-                    <input type="text" placeholder="Antwort hinterlassen..." class="w-full bg-black/50 border border-white/20 p-2 text-white mb-2 rounded">
-                    <button class="btn-primary py-2 text-sm" onclick="alert('Message pinned to soul.')">Nachricht anheften</button>
-                `;
-            }
+            document.getElementById('soul-content').innerHTML = `
+                <h3 class="text-white/80 font-cinzel text-xl mb-1">${data.name}'s Echo</h3>
+                <div class="italic text-white my-4 p-3 bg-white/10 rounded">"${data.msg}"</div>
+                <p class="text-white/50 text-[10px] uppercase font-bold tracking-widest mb-4">○ OFFLINE</p>
+                <input type="text" placeholder="Leave a reply..." class="w-full bg-black/50 border border-white/20 p-2 text-white mb-2 rounded">
+                <button class="btn-primary py-2 text-sm" onclick="alert('Message pinned to soul.')">Pin Message</button>
+            `;
         }
 
         // --- 7. IN-GAME STRIPE CHECKOUT ---
@@ -643,7 +680,7 @@
 
                 if(clientSecret) {
                      // IMPORTANT: Replace with your actual live/test publishable key
-                     const pk = 'pk_test_51O2aQkCq3P0Q2X4sN5M7Z'; // Example Stripe PK, replace with real one!
+                     const pk = 'pk_live_51Sdeb3RWAOCIX9wG8qGnzcs53quZQxnBeDTAfBmnuVM8d18wDRwBtHSvwFpWzAdIkLiziv2QPR6lHRM4xn287BTu00HFpRWT2w'; 
                      if(!stripeInstance) stripeInstance = Stripe(pk);
                      
                      const appearance = { 
@@ -716,6 +753,8 @@
 
         // --- ANIMATION LOOP ---
         const clock = new THREE.Clock();
+        let ghostSpeechTimer = 0;
+        let activeSpeakerIndex = -1;
 
         function animate() {
             requestAnimationFrame(animate);
@@ -735,10 +774,11 @@
                         document.getElementById('main-ui').style.opacity = '1';
                     } else {
                         document.getElementById('bazaar-inzone-ui').classList.remove('hidden');
+                        // Trigger NPC Guild Greeting
+                        showGuildGreeting(currentGuild);
                     }
                 }
             } else if (!isSkyView) {
-                // Slight floating camera effect when in zone
                 camera.position.y = targetCameraPos.y + Math.sin(time * 0.001) * 0.1;
                 camera.lookAt(currentLookAt);
             }
@@ -746,12 +786,57 @@
             // Animate Player Soul
             soulGroup.position.y = 1.5 + Math.sin(time * 0.002) * 0.2;
 
-            // Animate Other Souls
-            otherSouls.forEach(soul => {
-                const speed = soul.userData.pulseSpeed;
-                const offset = soul.userData.offset;
-                soul.position.y = 2 + Math.sin(time * speed + offset) * 0.3;
+            // Animate Ghost Souls Orbiting Cypher Stage
+            ghostSouls.forEach((ghost, idx) => {
+                const data = ghost.userData;
+                data.angle += delta * 0.2; // Orbit speed
+                ghost.position.set(Math.cos(data.angle) * data.radius, 2 + Math.sin(time * 0.003 + idx) * 0.4, -90 + Math.sin(data.angle) * data.radius);
+                
+                // Scale core up if speaking
+                const targetScale = data.isSpeaking ? 2.0 : 1.0;
+                data.core.scale.lerp(new THREE.Vector3(targetScale, targetScale, targetScale), 0.1);
             });
+
+            // Ghost Speech Logic (Every 6 seconds)
+            ghostSpeechTimer += delta;
+            if(ghostSpeechTimer > 6.0 && isSkyView) {
+                ghostSpeechTimer = 0;
+                // Deactivate old speaker
+                if(activeSpeakerIndex !== -1) ghostSouls[activeSpeakerIndex].userData.isSpeaking = false;
+                
+                // Pick new speaker
+                activeSpeakerIndex = Math.floor(Math.random() * ghostSouls.length);
+                ghostSouls[activeSpeakerIndex].userData.isSpeaking = true;
+                
+                // Update HTML Bubble
+                const speaker = ghostSouls[activeSpeakerIndex];
+                const bubble = document.getElementById('ghost-bubble');
+                document.getElementById('ghost-name').innerText = speaker.userData.name;
+                document.getElementById('ghost-message').innerText = speaker.userData.msg;
+                bubble.classList.remove('hidden');
+                bubble.style.opacity = '1';
+                
+                // Hide after 4 seconds
+                setTimeout(() => { bubble.style.opacity = '0'; }, 4000);
+            }
+
+            // Project 3D Ghost position to 2D HTML
+            if(activeSpeakerIndex !== -1 && isSkyView) {
+                const speaker = ghostSouls[activeSpeakerIndex];
+                const vector = speaker.position.clone();
+                vector.y += 2; // Offset above ghost
+                vector.project(camera);
+                
+                const bubble = document.getElementById('ghost-bubble');
+                if(vector.z < 1) { // Only show if in front of camera
+                    const x = (vector.x * .5 + .5) * window.innerWidth;
+                    const y = (vector.y * -.5 + .5) * window.innerHeight;
+                    bubble.style.left = `${x}px`;
+                    bubble.style.top = `${y}px`;
+                } else {
+                    bubble.style.opacity = '0';
+                }
+            }
 
             // Animate Holograms
             steles.forEach(s => {
@@ -763,6 +848,34 @@
             });
 
             renderer.render(scene, camera);
+        }
+
+        // NPC Guild Greeting (Simulated Local Data)
+        function showGuildGreeting(guild) {
+            const modal = document.getElementById('soul-interaction-modal');
+            modal.style.display = 'block';
+            
+            const inventoryMock = {
+                arts: [{name: "Golden Epox Mask", price: "1200 FC"}],
+                skills: [{name: "Code Mentorship (1h)", price: "300 FC"}],
+                sounds: [{name: "Neon Flow Track", price: "450 FC"}],
+                healing: [{name: "Chakra Alignment", price: "200 FC"}],
+                products: [{name: "Digital Asset Pack", price: "150 FC"}],
+                services: [{name: "Consulting Block", price: "500 FC"}]
+            };
+
+            const items = inventoryMock[guild] || [];
+            let html = `<h3 class="text-gold font-cinzel text-xl mb-1">NPC Soul (Guild of ${guild.charAt(0).toUpperCase() + guild.slice(1)})</h3>`;
+            html += `<p class="text-white text-sm my-4 italic">"Welcome to our guild. Here is what our masters offer..."</p>`;
+            
+            html += `<div class="bg-white/5 border border-white/10 rounded p-2 text-left mb-4">`;
+            items.forEach(item => {
+                html += `<div class="flex justify-between border-b border-white/10 py-1 last:border-0"><span class="text-white/80 text-xs">${item.name}</span><span class="text-gold text-xs font-bold">${item.price}</span></div>`;
+            });
+            html += `</div>`;
+            
+            html += `<button class="btn-primary text-xs py-2" onclick="openZoneItems()">Open Full Catalog</button>`;
+            document.getElementById('soul-content').innerHTML = html;
         }
 
         // Scroll Sync for Carousel

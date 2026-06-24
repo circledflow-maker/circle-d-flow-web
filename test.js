@@ -1,0 +1,1 @@
+const fs=require('fs');const code=fs.readFileSync('D:/circle-d-flow-web/scripts/check2.js','utf8');let d=0;code.split('\n').forEach((l,i)=>{const pure=l.replace(/[^]*/g,'').replace(/"[^"]*"/g,'').replace(/'[^']*'/g,'').replace(/\/\/.*/g,'');const op=(pure.match(/\{/g)||[]).length;const cl=(pure.match(/\}/g)||[]).length;d+=op-cl;if(op!==cl)console.log(i+1,d,l);});

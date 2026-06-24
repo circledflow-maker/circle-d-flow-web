@@ -70,35 +70,36 @@
             text-transform: uppercase;
         }
 
-        .speech-bubble {
-            background: #2d1408;
-            border: 1px solid #ffaa44;
-            padding: 12px;
-            border-radius: 16px;
-            position: relative;
-            margin-top: 15px;
-            font-size: 13px;
-            color: #e0e0e0;
-            box-shadow: 0 4px 15px rgba(255,170,68,0.2);
-            animation: bounceIn 0.5s ease-out;
+        #ghost-bubble {
+            position: absolute;
+            transform: translate(-50%, -100%); 
+            background: rgba(18, 8, 5, 0.85);
+            border: 1px solid #33ccff; 
+            border-radius: 12px;
+            padding: 12px 16px;
+            max-width: 200px;
+            text-align: center;
+            pointer-events: none; 
+            box-shadow: 0 0 20px rgba(51, 204, 255, 0.2);
+            z-index: 50;
+            transition: opacity 0.4s ease;
         }
 
-        @keyframes bounceIn {
-            0% { transform: scale(0.8); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        .speech-bubble::before {
+        #ghost-bubble::after {
             content: '';
             position: absolute;
-            bottom: 100%; left: 50%;
+            top: 100%; left: 50%;
             transform: translateX(-50%);
-            border: 8px solid transparent;
-            border-bottom-color: #ffaa44;
+            border: 6px solid transparent;
+            border-top-color: #33ccff;
         }
 
-        .status-live { color: #00ff66; font-size: 11px; font-weight: bold; margin-bottom: 5px; }
-        .status-offline { color: #ff7700; font-size: 11px; font-weight: bold; margin-bottom: 5px; }
+        .flavor-text {
+            font-size: 12px;
+            color: #e0e0e0;
+            margin-top: 5px;
+            font-style: italic;
+        }
 
         .video-archive-modal {
             background: #0d0502;
@@ -107,44 +108,6 @@
             border-radius: 8px;
             color: white;
         }
-        
-        .zone-btn {
-            background: rgba(212, 175, 55, 0.2);
-            border: 1px solid #d4af37;
-            color: #d4af37;
-            padding: 8px 16px;
-            border-radius: 4px;
-            margin-top: 10px;
-            cursor: pointer;
-            transition: all 0.3s;
-            width: 100%;
-        }
-        .zone-btn:hover { background: #d4af37; color: black; }
-        
-        /* Akwaba Menu Viewer */
-        #akwaba-menu-viewer {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.95);
-            z-index: 150;
-            overflow-y: auto;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-        }
-        #akwaba-menu-viewer img {
-            max-width: 100%;
-            height: auto;
-            margin-bottom: 20px;
-            border: 2px solid #d4af37;
-            border-radius: 8px;
-        }
-        
-        .hide-scrollbar::-webkit-scrollbar { display: none; }
-        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-        .tab-btn.active { border-bottom: 2px solid #d4af37; color: #d4af37; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -213,6 +176,12 @@
     <!-- ZONES OVERLAY -->
     <div id="zone-overlay"></div>
     
+    <!-- GHOST 3D BUBBLE -->
+    <div id="ghost-bubble" class="hidden">
+        <strong id="ghost-name" class="text-gold"></strong>
+        <p id="ghost-message" class="flavor-text"></p>
+    </div>
+
     <!-- AKWABA FOOD MENU VIEWER -->
     <div id="akwaba-menu-viewer">
         <button onclick="document.getElementById('akwaba-menu-viewer').style.display='none'" class="absolute top-4 right-4 text-white hover:text-[#d4af37] bg-black/50 p-2 rounded-full border border-white/10"><span class="material-symbols-outlined">close</span></button>
@@ -971,7 +940,8 @@
         }
 
         const scene = new THREE.Scene();
-        scene.fog = new THREE.FogExp2(0x051015, 0.015); // Deep cyan/blue night fog
+        scene.background = new THREE.Color(0x2a0a05);
+        scene.fog = new THREE.FogExp2(0x2a0a05, 0.025);
 
         const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -979,192 +949,163 @@
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-        document.getElementById('canvas-container').innerHTML = ''; // clear old if any
+        document.getElementById('canvas-container').innerHTML = ''; 
         document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-        const hemiLight = new THREE.HemisphereLight(0x00ffcc, 0xff00cc, 0.4);
-        scene.add(hemiLight);
+        const ambientLight = new THREE.AmbientLight(0x5c2e16, 1.5); 
+        scene.add(ambientLight);
 
-        const dirLight = new THREE.DirectionalLight(0xd4af37, 1.0);
-        dirLight.position.set(50, 60, 20);
-        dirLight.castShadow = true;
-        dirLight.shadow.mapSize.width = 2048;
-        dirLight.shadow.mapSize.height = 2048;
-        scene.add(dirLight);
+        const sunLight = new THREE.DirectionalLight(0xffa500, 2.5); 
+        sunLight.position.set(20, 15, -30); 
+        sunLight.castShadow = true;
+        scene.add(sunLight);
 
-        // --- SECRET GARDEN LX ENVIRONMENT ---
-        const environmentGroup = new THREE.Group();
-        scene.add(environmentGroup);
+        // --- 2. DIE STRASSE & GEBÄUDE ---
+        const floorGeo = new THREE.PlaneGeometry(100, 200);
+        const floorMat = new THREE.MeshStandardMaterial({ color: 0x5c2e16, roughness: 1.0 });
+        const floor = new THREE.Mesh(floorGeo, floorMat);
+        floor.rotation.x = -Math.PI / 2;
+        floor.receiveShadow = true;
+        scene.add(floor);
 
-        // Materials
-        const stoneMat = new THREE.MeshStandardMaterial({ color: 0x2a2a2a, roughness: 0.9 });
-        const grassMat = new THREE.MeshStandardMaterial({ color: 0x0a2210, roughness: 1.0 });
-        const neonEdgeMat = new THREE.MeshBasicMaterial({ color: 0x00ffcc, wireframe: true, transparent: true, opacity: 0.3 });
-        const woodMat = new THREE.MeshStandardMaterial({ color: 0x3d2314, roughness: 0.8 });
-        
-        // 1. Miradouro (Top Viewpoint)
-        const miradouro = new THREE.Mesh(new THREE.BoxGeometry(40, 2, 20), stoneMat);
-        miradouro.position.set(0, 15, -40);
-        miradouro.receiveShadow = true;
-        environmentGroup.add(miradouro);
-        
-        // Fence on Miradouro
-        const fenceGeo = new THREE.BoxGeometry(40, 2, 0.5);
-        const fenceMat = new THREE.MeshStandardMaterial({ color: 0x111111, metalness: 0.8, wireframe: true });
-        const fence = new THREE.Mesh(fenceGeo, fenceMat);
-        fence.position.set(0, 17, -30);
-        environmentGroup.add(fence);
-
-        // Metal Door / Gate at stairs
-        const doorGeo = new THREE.BoxGeometry(4, 5, 0.5);
-        const doorMat = new THREE.MeshStandardMaterial({ color: 0x333333, metalness: 0.9, roughness: 0.2 });
-        const door = new THREE.Mesh(doorGeo, doorMat);
-        door.position.set(-10, 16.5, -30);
-        environmentGroup.add(door);
-
-        // 2. Stairs down the rocky slope
-        const stairsGroup = new THREE.Group();
-        for(let i=0; i<30; i++) {
-            const step = new THREE.Mesh(new THREE.BoxGeometry(6, 0.5, 2), stoneMat);
-            step.position.set(-10, 14.5 - (i * 0.5), -28 + (i * 1.2));
-            step.receiveShadow = true;
-            step.castShadow = true;
-            stairsGroup.add(step);
-        }
-        environmentGroup.add(stairsGroup);
-
-        // 3. Socalkos (Terraces)
-        const createTerrace = (w, d, y, z) => {
-            const terr = new THREE.Mesh(new THREE.BoxGeometry(w, 2, d), grassMat);
-            terr.position.set(0, y, z);
-            terr.receiveShadow = true;
-            
-            const edge = new THREE.Mesh(new THREE.BoxGeometry(w+0.1, 2.1, d+0.1), neonEdgeMat);
-            edge.position.set(0, y, z);
-            environmentGroup.add(edge);
-            
-            environmentGroup.add(terr);
-            return terr;
-        };
-
-        createTerrace(100, 40, 8, -10); // Upper terrace (Entrance/Bar)
-        createTerrace(120, 45, 4, 20);  // Middle terrace (Lounge)
-        createTerrace(160, 60, 0, 60);  // Ground level (Stage area)
-
-        // 4. The Bar / Gallery (Marcio Bahia Art)
-        const barGroup = new THREE.Group();
-        barGroup.position.set(15, 5, 10); // on middle terrace
-        
-        const barHouse = new THREE.Mesh(new THREE.BoxGeometry(12, 6, 8), woodMat);
-        barHouse.position.y = 3;
-        barHouse.castShadow = true;
-        barHouse.receiveShadow = true;
-        barGroup.add(barHouse);
-
-        // Art Textures (Marcio Bahia abstract colors)
-        const art1 = createAdinkraTexture('#ff00cc', '#ffaa00');
-        const artMat1 = new THREE.MeshStandardMaterial({ emissiveMap: art1, emissive: 0xffffff, emissiveIntensity: 1.5 });
-        const painting1 = new THREE.Mesh(new THREE.PlaneGeometry(3, 3), artMat1);
-        painting1.position.set(-2, 3, 4.1);
-        barGroup.add(painting1);
-        
-        const art2 = createAdinkraTexture('#00ffcc', '#0044ff');
-        const artMat2 = new THREE.MeshStandardMaterial({ emissiveMap: art2, emissive: 0xffffff, emissiveIntensity: 1.5 });
-        const painting2 = new THREE.Mesh(new THREE.PlaneGeometry(3, 3), artMat2);
-        painting2.position.set(2, 3, 4.1);
-        barGroup.add(painting2);
-
-        // Picture frame window looking out to Lisbon
-        const windowFrame = new THREE.Mesh(new THREE.BoxGeometry(4, 3, 0.2), new THREE.MeshStandardMaterial({ color: 0xd4af37 }));
-        windowFrame.position.set(-6, 3, 0);
-        windowFrame.rotation.y = Math.PI / 2;
-        barGroup.add(windowFrame);
-        const windowGlow = new THREE.PointLight(0xffaa55, 1, 10);
-        windowGlow.position.set(-5, 3, 0);
-        barGroup.add(windowGlow);
-
-        environmentGroup.add(barGroup);
-
-        // 5. Stage / Jam Area (Ground Level)
-        const stageMat = new THREE.MeshStandardMaterial({ color: 0x8b0000, roughness: 0.9 }); // Red rug
-        const stage = new THREE.Mesh(new THREE.CylinderGeometry(15, 15, 0.2, 32), stageMat); // Expanded stage
-        stage.position.set(0, 1.1, 60); // Adjusted position for larger map
-        stage.receiveShadow = true;
-        environmentGroup.add(stage);
-
-        const stageLight = new THREE.PointLight(0xff00cc, 1.5, 20);
-        stageLight.position.set(0, 5, 40);
-        environmentGroup.add(stageLight);
-
-        // 6. Lush Greenery (Dense Plants)
-        const leafMat = new THREE.MeshStandardMaterial({ color: 0x00ff44, roughness: 0.6, emissive: 0x003311 });
-        const plantGeo = new THREE.SphereGeometry(1, 8, 8);
-        for(let i=0; i<150; i++) {
-            const plant = new THREE.Mesh(plantGeo, leafMat);
-            const scale = Math.random() * 2 + 0.5;
-            plant.scale.set(scale, scale, scale);
-            
-            const t = Math.random();
-            let px = (Math.random() - 0.5) * 60;
-            let pz, py;
-            if(t < 0.3) { pz = -10 + (Math.random()-0.5)*15; py = 9; }
-            else if(t < 0.6) { pz = 10 + (Math.random()-0.5)*20; py = 5; }
-            else { pz = 40 + (Math.random()-0.5)*35; py = 1; }
-            
-            if(Math.sqrt(px*px + (pz-40)*(pz-40)) < 10) px += 12;
-
-            plant.position.set(px, py, pz);
-            plant.castShadow = true;
-            plant.receiveShadow = true;
-            environmentGroup.add(plant);
+        function createClayBuilding(x, z, width, height, depth) {
+            const buildingGeo = new THREE.BoxGeometry(width, height, depth);
+            const buildingMat = new THREE.MeshStandardMaterial({
+                color: 0x8b3e2f,
+                roughness: 0.9,
+            });
+            const building = new THREE.Mesh(buildingGeo, buildingMat);
+            building.position.set(x, height / 2, z);
+            building.castShadow = true;
+            building.receiveShadow = true;
+            scene.add(building);
         }
 
-        // Seating (Cushions)
-        const cushionMat = new THREE.MeshStandardMaterial({ color: 0xd4af37, roughness: 0.8 });
-        for(let i=0; i<30; i++) {
-            const cushion = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.3, 1.5), cushionMat);
-            const px = (Math.random() - 0.5) * 50;
-            const pz = 10 + Math.random() * 40;
-            cushion.position.set(px, pz < 30 ? 5.15 : 1.15, pz);
-            cushion.rotation.y = Math.random() * Math.PI;
-            cushion.receiveShadow = true;
-            environmentGroup.add(cushion);
+        // Gasse aufbauen
+        for (let i = 0; i < 5; i++) {
+            createClayBuilding(-12, -i * 20, 10, 15 + Math.random()*5, 18); 
+            createClayBuilding(12, -i * 20, 10, 15 + Math.random()*5, 18);  
         }
+
+        // --- 3. ADINKRA GLOW ---
+        function addGlowingDecal(x, y, z, rotationY, rotationX = 0) {
+            const texture = createAdinkraTexture('#ffaa00', '#ff00aa'); 
+            const decalGeo = new THREE.PlaneGeometry(4, 4);
+            const decalMat = new THREE.MeshBasicMaterial({
+                map: texture,
+                transparent: true,
+                opacity: 0.9,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false
+            });
+            const decal = new THREE.Mesh(decalGeo, decalMat);
+            decal.position.set(x, y, z);
+            decal.rotation.y = rotationY;
+            decal.rotation.x = rotationX;
+            scene.add(decal);
+        }
+
+        addGlowingDecal(-6.9, 3, -10, Math.PI / 2); 
+        addGlowingDecal(6.9, 4, -20, -Math.PI / 2); 
+        addGlowingDecal(0, 0.1, -15, 0, -Math.PI / 2); 
+
+        // --- COMMUNITY HUBS ---
+        const lehmMaterial = new THREE.MeshStandardMaterial({ color: 0x5c2e16, roughness: 1.0 });
+
+        function buildKitchenHub() {
+            const hubGroup = new THREE.Group();
+            hubGroup.position.set(-10, 0, -5);
+
+            const counterGeo = new THREE.BoxGeometry(6, 1.2, 2);
+            const counter = new THREE.Mesh(counterGeo, lehmMaterial);
+            counter.position.y = 0.6;
+            counter.castShadow = true;
+            hubGroup.add(counter);
+
+            const roofGeo = new THREE.PlaneGeometry(6, 4);
+            const roofMat = new THREE.MeshBasicMaterial({ 
+                color: 0xff3366, 
+                transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending, side: THREE.DoubleSide
+            });
+            const roof = new THREE.Mesh(roofGeo, roofMat);
+            roof.position.set(0, 4, 1);
+            roof.rotation.x = -Math.PI / 3;
+            hubGroup.add(roof);
+
+            scene.add(hubGroup);
+        }
+
+        function buildStageHub() {
+            const hubGroup = new THREE.Group();
+            hubGroup.position.set(0, 0, -30);
+
+            const stageGeo = new THREE.CylinderGeometry(6, 6.5, 0.4, 32);
+            const stage = new THREE.Mesh(stageGeo, lehmMaterial);
+            stage.position.y = 0.2;
+            stage.receiveShadow = true;
+            hubGroup.add(stage);
+
+            const decalGeo = new THREE.PlaneGeometry(8, 8);
+            const decalMat = new THREE.MeshBasicMaterial({
+                map: createAdinkraTexture('#cc33ff', '#00ffaa'), 
+                transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending, depthWrite: false
+            });
+            const floorDecal = new THREE.Mesh(decalGeo, decalMat);
+            floorDecal.position.y = 0.45;
+            floorDecal.rotation.x = -Math.PI / 2;
+            hubGroup.add(floorDecal);
+
+            scene.add(hubGroup);
+        }
+
+        function buildVideoArchiveHub() {
+            const hubGroup = new THREE.Group();
+            hubGroup.position.set(15, 0, -15);
+
+            const backWall = new THREE.Mesh(new THREE.BoxGeometry(6, 5, 1), lehmMaterial);
+            backWall.position.set(0, 2.5, -2);
+            backWall.castShadow = true;
+            hubGroup.add(backWall);
+
+            const screenGeo = new THREE.PlaneGeometry(4.5, 2.5);
+            const screenMat = new THREE.MeshBasicMaterial({
+                color: 0x33ccff, 
+                transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending
+            });
+            const holoScreen = new THREE.Mesh(screenGeo, screenMat);
+            holoScreen.position.set(0, 2.8, -1.4);
+            holoScreen.userData.isScreen = true;
+            hubGroup.add(holoScreen);
+
+            scene.add(hubGroup);
+            return holoScreen;
+        }
+
+        buildKitchenHub();
+        buildStageHub();
+        const videoScreen = buildVideoArchiveHub();
 
         // --- Avatars ---
         const playerGroup = new THREE.Group();
-        playerGroup.position.set(-10, 16, -26); // Start at top of stairs
+        playerGroup.position.set(0, 2, 10); 
         scene.add(playerGroup);
 
-        // Player Soul
         const soulGroup = new THREE.Group();
         playerGroup.add(soulGroup);
         soulGroup.position.y = 2; 
 
-        const coreGeo = new THREE.SphereGeometry(0.6, 32, 32);
-        const savedColor = localStorage.getItem('soul_color_' + artistId) || '#00ffcc';
-        const coreMat = new THREE.MeshStandardMaterial({ color: savedColor, emissive: savedColor, emissiveIntensity: 2, transparent: true, opacity: 0.9 });
-        const soulCore = new THREE.Mesh(coreGeo, coreMat);
-        soulCore.castShadow = true;
+        const savedColor = localStorage.getItem('soul_color_' + artistId) || '#ffcc44';
+        const coreMat = new THREE.MeshBasicMaterial({
+            color: savedColor, 
+            transparent: true,
+            opacity: 0.8,
+            blending: THREE.AdditiveBlending
+        });
+        const soulCore = new THREE.Mesh(new THREE.SphereGeometry(0.8, 16, 16), coreMat);
         soulGroup.add(soulCore);
 
-        const soulLight = new THREE.PointLight(savedColor, 1.5, 20);
+        const soulLight = new THREE.PointLight(savedColor, 2.0, 15);
         soulGroup.add(soulLight);
-
-        const auraCount = 150;
-        const auraGeo = new THREE.BufferGeometry();
-        const auraPos = new Float32Array(auraCount * 3);
-        const auraAngles = new Float32Array(auraCount);
-        for(let i=0; i<auraCount; i++) {
-            auraAngles[i] = Math.random() * Math.PI * 2;
-            auraPos[i*3] = Math.cos(auraAngles[i]) * 1.5;
-            auraPos[i*3+1] = (Math.random() - 0.5) * 3;
-            auraPos[i*3+2] = Math.sin(auraAngles[i]) * 1.5;
-        }
-        auraGeo.setAttribute('position', new THREE.BufferAttribute(auraPos, 3));
-        const auraMat = new THREE.PointsMaterial({ color: savedColor, size: 0.1, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending });
-        const auraParticles = new THREE.Points(auraGeo, auraMat);
-        soulGroup.add(auraParticles);
 
         // Flowee Orb (Companion with Wings)
         const floweeOrb = new THREE.Group();
@@ -1172,7 +1113,7 @@
         floweeOrb.position.set(2, 2.5, -2);
         
         const fCoreGeo = new THREE.SphereGeometry(0.3, 16, 16);
-        const fCoreMat = new THREE.MeshStandardMaterial({ color: 0xff00cc, emissive: 0xff00cc, emissiveIntensity: 3, wireframe: true });
+        const fCoreMat = new THREE.MeshBasicMaterial({ color: 0xff00cc });
         const fCore = new THREE.Mesh(fCoreGeo, fCoreMat);
         floweeOrb.add(fCore);
         
@@ -1180,20 +1121,20 @@
         floweeOrb.add(fLight);
 
         // Flowee Wings
-        const wingGeo = new THREE.PlaneGeometry(1.5, 0.8);
+        const wingGeo = new THREE.PlaneGeometry(0.5, 0.25);
         const wingMat = new THREE.MeshBasicMaterial({ color: 0x00ffcc, transparent: true, opacity: 0.6, side: THREE.DoubleSide, blending: THREE.AdditiveBlending });
         
         const leftWing = new THREE.Mesh(wingGeo, wingMat);
-        leftWing.position.set(-0.9, 0, 0);
+        leftWing.position.set(-0.4, 0, 0);
         leftWing.rotation.x = Math.PI / 2;
         floweeOrb.add(leftWing);
 
         const rightWing = new THREE.Mesh(wingGeo, wingMat);
-        rightWing.position.set(0.9, 0, 0);
+        rightWing.position.set(0.4, 0, 0);
         rightWing.rotation.x = Math.PI / 2;
         floweeOrb.add(rightWing);
 
-        camera.position.set(0, 20, -10);
+        camera.position.set(0, 10, 20);
         camera.lookAt(playerGroup.position);
 
         // --- Controls ---
@@ -1246,9 +1187,9 @@
 
         // --- ZONE DEFINITIONS (Secret Garden LX Layout) ---
         const zones = {
-            eingangBar: { x: 15, z: 10, radius: 10, active: false }, // Bar / Gallery area (was previously x:15, z:10)
-            buehne:     { x: 0,   z: 60, radius: 20, active: false }, // Stage area (was previously x:0, z:40, now 60)
-            innereBar:  { x: -10, z: -10, radius: 15, active: false } // Inner Bar (Custom area somewhere else)
+            eingangBar: { x: -10, z: -5, radius: 10, active: false }, // Akwaba
+            buehne:     { x: 0,   z: -30, radius: 12, active: false }, // Cypher Stage
+            innereBar:  { x: 15,  z: -15, radius: 10, active: false }  // Video Archive
         };
 
         function checkZoneCollisions(avatarPos) {
@@ -1280,31 +1221,25 @@
             if (zoneName === 'eingangBar') {
                 overlay.innerHTML = `
                     <div class="zone-card fade-in">
-                        <h2>🌴 KÜCHE & MARKETPLACE</h2>
-                        <p class="text-xs text-white/70 mb-4">Willkommen bei AkwabaLX. Entdecke kulinarische Genüsse und die Produkte unserer lokalen Service Artists.</p>
-                        <button class="zone-btn" onclick="document.getElementById('akwaba-menu-viewer').style.display='flex'">Akwaba Menu ansehen</button>
-                        <button class="zone-btn" onclick="goToMarketplace()">Marketplace öffnen</button>
+                        <h2>🌴 KITCHEN & MARKETPLACE</h2>
+                        <p class="text-xs text-white/70 mb-4">Welcome to AkwabaLX. Discover culinary delights and products from our local Service Artists.</p>
+                        <button class="zone-btn" onclick="document.getElementById('akwaba-menu-viewer').style.display='flex'">View Akwaba Menu</button>
+                        <button class="zone-btn" onclick="goToMarketplace()">Open Marketplace</button>
                     </div>
                 `;
             } 
             else if (zoneName === 'buehne') {
-                overlay.innerHTML = `
-                    <div class="zone-card fade-in">
-                        <h2>🎤 PERFORMANCE BÜHNE</h2>
-                        <div id="live-interaction-area">
-                            <p class="status-offline">○ OFFLINE MODUS: Community-Gedanken</p>
-                        </div>
-                    </div>
-                `;
+                // Do not show an HTML overlay for the stage anymore, 
+                // just start the ghost bubble 3D projection.
                 startGhostBubbleRotation();
             } 
             else if (zoneName === 'innereBar') {
                 overlay.innerHTML = `
                     <div class="zone-card fade-in">
-                        <h2>🥃 INTERAKTIVE THEKE</h2>
-                        <p class="text-xs text-white/70 mb-4">Archiv vergangener Momente an diesem Platz.</p>
-                        <button class="zone-btn" onclick="openSystemPlayer()">Videoplayer öffnen (Galerie)</button>
-                        <button class="zone-btn" onclick="triggerMediaUpload()">Eigenes Video/Bild hochladen</button>
+                        <h2>🥃 INTERACTIVE THEATER</h2>
+                        <p class="text-xs text-white/70 mb-4">Archive of past moments shared here.</p>
+                        <button class="zone-btn" onclick="openSystemPlayer()">Open Video Gallery</button>
+                        <button class="zone-btn" onclick="triggerMediaUpload()">Upload Video/Photo</button>
                     </div>
                 `;
             }
@@ -1316,41 +1251,80 @@
             if(window.bubbleInterval) clearInterval(window.bubbleInterval);
         }
 
-        // Mock Offline Users for Stage
+        // Mock Offline Users for Stage (Ghost Souls)
         const mockOfflineUsers = [
-            { name: "Neon_Ghost", lastAnswer: "Der Flow im Hip Hop ist für mich wie Atmen." },
-            { name: "Agnese", lastAnswer: "Kulinarik verbindet Seelen, genau wie Musik." },
-            { name: "Luvo", lastAnswer: "Rhythmus und Farbe sind die Sprache der Seele." }
+            { name: "Neon_Ghost", text: "The flow in Hip Hop is like breathing to me." },
+            { name: "Agnese", text: "Culinary arts connect souls, just like music." },
+            { name: "Luvo", text: "Rhythm and color are the language of the soul." }
         ];
 
-        let bubbleIndex = 0;
+        const ghostSouls = [];
+
+        function spawnGhostSouls() {
+            const stageCenterX = 0;
+            const stageCenterZ = -30;
+            const orbitRadius = 6.5; 
+
+            mockOfflineUsers.forEach((comment, index) => {
+                const angle = (index / mockOfflineUsers.length) * Math.PI * 2;
+                
+                const ghostGeo = new THREE.SphereGeometry(0.3, 16, 16);
+                const ghostMat = new THREE.MeshBasicMaterial({
+                    color: 0x33ccff,
+                    transparent: true,
+                    opacity: 0.4, 
+                    blending: THREE.AdditiveBlending
+                });
+                
+                const ghostMesh = new THREE.Mesh(ghostGeo, ghostMat);
+                
+                ghostMesh.position.set(
+                    stageCenterX + Math.cos(angle) * orbitRadius,
+                    1.5,
+                    stageCenterZ + Math.sin(angle) * orbitRadius
+                );
+                
+                ghostMesh.userData = {
+                    baseAngle: angle,
+                    orbitRadius: orbitRadius,
+                    name: comment.name,
+                    text: comment.text,
+                    isSpeaking: false
+                };
+
+                scene.add(ghostMesh);
+                ghostSouls.push(ghostMesh);
+            });
+        }
+        spawnGhostSouls();
+
+        let currentSpeakerIndex = -1;
+
+        function rotateGhostSpeaker() {
+            if (ghostSouls.length === 0) return;
+
+            if (currentSpeakerIndex !== -1) {
+                ghostSouls[currentSpeakerIndex].material.opacity = 0.4;
+                ghostSouls[currentSpeakerIndex].scale.set(1, 1, 1);
+                ghostSouls[currentSpeakerIndex].userData.isSpeaking = false;
+            }
+
+            currentSpeakerIndex = (currentSpeakerIndex + 1) % ghostSouls.length;
+            const activeGhost = ghostSouls[currentSpeakerIndex];
+
+            activeGhost.material.opacity = 1.0;
+            activeGhost.scale.set(1.5, 1.5, 1.5); 
+            activeGhost.userData.isSpeaking = true;
+
+            document.getElementById('ghost-name').innerText = activeGhost.userData.name;
+            document.getElementById('ghost-message').innerText = `"${activeGhost.userData.text}"`;
+            document.getElementById('ghost-bubble').classList.remove('hidden');
+        }
+
         function startGhostBubbleRotation() {
-            const area = document.getElementById('live-interaction-area');
-            if(!area) return;
-            
             if(window.bubbleInterval) clearInterval(window.bubbleInterval);
-            
-            const showNextBubble = () => {
-                if(!document.getElementById('live-interaction-area')) {
-                    clearInterval(window.bubbleInterval);
-                    return;
-                }
-                const user = mockOfflineUsers[bubbleIndex];
-                const bubbleHTML = `
-                    <div class="speech-bubble">
-                        <strong style="color:#00ffcc;">${user.name}:</strong> "${user.lastAnswer}"
-                    </div>
-                `;
-                
-                const existingBubble = document.querySelector('.speech-bubble');
-                if (existingBubble) existingBubble.remove();
-                
-                document.getElementById('live-interaction-area').insertAdjacentHTML('beforeend', bubbleHTML);
-                bubbleIndex = (bubbleIndex + 1) % mockOfflineUsers.length;
-            };
-            
-            showNextBubble();
-            window.bubbleInterval = setInterval(showNextBubble, 5000);
+            rotateGhostSpeaker();
+            window.bubbleInterval = setInterval(rotateGhostSpeaker, 6000);
         }
 
         function openSystemPlayer() {
@@ -1363,16 +1337,16 @@
                         <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
                     </video>
                     <div class="mt-4">
-                        <h4 class="text-xs text-[#00ffcc] mb-2 uppercase">Community Kommentare</h4>
+                        <h4 class="text-xs text-[#00ffcc] mb-2 uppercase">Community Comments</h4>
                         <div id="video-comments" class="bg-black/50 p-2 rounded text-[10px] text-white/70 mb-2 h-20 overflow-y-auto">
-                            <p><strong class="text-white">Neon_Ghost:</strong> Der Sound an dem Abend war unnormal! 🔥</p>
+                            <p><strong class="text-white">Neon_Ghost:</strong> The sound that night was insane! 🔥</p>
                         </div>
                         <div class="flex gap-2">
-                            <input type="text" id="new-comment-input" placeholder="Kommentar hinterlassen..." class="flex-1 bg-black border border-white/20 rounded p-1 text-xs text-white">
-                            <button onclick="alert('Kommentar gespeichert!');" class="bg-[#d4af37] text-black px-2 py-1 rounded text-xs">Senden</button>
+                            <input type="text" id="new-comment-input" placeholder="Leave a comment..." class="flex-1 bg-black border border-white/20 rounded p-1 text-xs text-white">
+                            <button onclick="alert('Comment saved!');" class="bg-[#d4af37] text-black px-2 py-1 rounded text-xs">Send</button>
                         </div>
                     </div>
-                    <button class="zone-btn" onclick="triggerZoneUI('innereBar')">Zurück</button>
+                    <button class="zone-btn" onclick="triggerZoneUI('innereBar')">Back</button>
                 </div>
             `;
         }
@@ -1383,23 +1357,52 @@
             input.accept = 'video/*,image/*';
             
             input.onchange = async (e) => {
-                const file = e.target.files[0];
+                let file = e.target.files[0];
                 if (!file) return;
 
-                alert('Lade hoch... ' + file.name + '. Dies nutzt den community-uploads Bucket.');
+                // Client-side compression for images to ensure fast uploads and low storage costs
+                if (file.type.startsWith('image/')) {
+                    alert('Optimizing image for the network...');
+                    const img = new Image();
+                    img.src = URL.createObjectURL(file);
+                    await new Promise(r => img.onload = r);
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 1280;
+                    let width = img.width;
+                    let height = img.height;
+                    if (width > MAX_WIDTH) {
+                        height *= MAX_WIDTH / width;
+                        width = MAX_WIDTH;
+                    }
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    const blob = await new Promise(r => canvas.toBlob(r, 'image/jpeg', 0.8));
+                    file = new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".jpg", { type: 'image/jpeg' });
+                } else if (file.type.startsWith('video/')) {
+                    if (file.size > 50 * 1024 * 1024) { // 50MB limit
+                        alert('Video is too large. Please upload a compressed file under 50MB.');
+                        return;
+                    }
+                    alert('Preparing video upload...');
+                }
+
+                alert('Uploading... ' + file.name);
                 try {
                     const filePath = `secret-garden-theke/${Date.now()}_${file.name}`;
                     const { data, error } = await window.supabaseClient.storage
-                        .from('community-uploads')
+                        .from('sanctuary_media') // Using the correct bucket where RLS allows inserts
                         .upload(filePath, file);
 
                     if (error) {
-                        alert("Upload-Fehler: " + error.message);
+                        alert("Upload Error: " + error.message);
                     } else {
-                        alert("Erfolgreich hochgeladen! Dein Beitrag ist nun im System.");
+                        alert("Successfully uploaded! Your contribution is now syncing in the network.");
                     }
                 } catch(err) {
-                    alert("Supabase ist momentan nicht verbunden oder Bucket fehlt.");
+                    alert("Supabase is currently disconnected or the bucket is missing.");
                 }
             };
             
@@ -1417,15 +1420,45 @@
             checkZoneCollisions(playerGroup.position);
 
             soulCore.position.y = Math.sin(time * 2) * 0.3;
-            auraParticles.rotation.y += 0.5 * delta;
             soulLight.intensity = 1.5 + Math.sin(time * 3) * 0.3;
 
             if(targetSoulColor) {
                 coreMat.color.lerp(targetSoulColor, 0.02);
-                coreMat.emissive.lerp(targetSoulColor, 0.02);
-                auraMat.color.lerp(targetSoulColor, 0.02);
                 soulLight.color.lerp(targetSoulColor, 0.02);
             }
+
+            if(videoScreen) {
+                videoScreen.material.opacity = 0.75 + Math.sin(time * 10) * 0.15;
+            }
+
+            // Ghost Souls Orbiting and Projection
+            const stageCenterX = 0;
+            const stageCenterZ = -30;
+
+            ghostSouls.forEach(ghost => {
+                const currentAngle = ghost.userData.baseAngle + (time * 0.5);
+                ghost.position.x = stageCenterX + Math.cos(currentAngle) * ghost.userData.orbitRadius;
+                ghost.position.z = stageCenterZ + Math.sin(currentAngle) * ghost.userData.orbitRadius;
+                ghost.position.y = 1.5 + Math.sin(time * 2 + ghost.userData.baseAngle) * 0.2;
+
+                if (ghost.userData.isSpeaking) {
+                    const projVector = ghost.position.clone();
+                    projVector.y += 1.0; 
+                    projVector.project(camera);
+
+                    if (projVector.z < 1) {
+                        const x = (projVector.x * .5 + .5) * window.innerWidth;
+                        const y = (projVector.y * -.5 + .5) * window.innerHeight;
+
+                        const bubble = document.getElementById('ghost-bubble');
+                        bubble.style.left = `${x}px`;
+                        bubble.style.top = `${y}px`;
+                        bubble.style.opacity = 1;
+                    } else {
+                        document.getElementById('ghost-bubble').style.opacity = 0;
+                    }
+                }
+            });
 
             // Flowee Orbit logic & Wings
             floweeOrb.position.y = 2.5 + Math.sin(time * 3) * 0.4;
@@ -1467,23 +1500,9 @@
             }
 
             // Simple Terrain Following
-            let targetY = 1;
-            const px = playerGroup.position.x;
-            const pz = playerGroup.position.z;
-            
-            if (px > -14 && px < -6 && pz > -30 && pz < -10) {
-                const ratio = (pz - (-30)) / 20; 
-                targetY = 16 - (ratio * 8);
-            } else if (pz < 0) {
-                targetY = 9; 
-            } else if (pz < 25) {
-                targetY = 5; 
-            } else {
-                targetY = 1; 
-            }
-            playerGroup.position.y = THREE.MathUtils.lerp(playerGroup.position.y, targetY, 0.1);
+            playerGroup.position.y = THREE.MathUtils.lerp(playerGroup.position.y, 1.5, 0.1);
 
-            const targetCamPos = playerGroup.position.clone().add(new THREE.Vector3(0, 8, 15));
+            const targetCamPos = playerGroup.position.clone().add(new THREE.Vector3(0, 5, 12));
             camera.position.lerp(targetCamPos, 0.05);
             camera.lookAt(playerGroup.position);
 
