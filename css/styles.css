@@ -1582,3 +1582,8 @@ body {
         max-height: 45px !important;
     }
 }
+
+.gold-logo-glow {
+    filter: invert(72%) sepia(90%) saturate(600%) hue-rotate(5deg) brightness(110%) contrast(100%) drop-shadow(0 0 10px rgba(212,175,55,0.8));
+}
+
