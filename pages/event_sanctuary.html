@@ -617,27 +617,57 @@
         }
         
         function downloadMangaShare() {
-            const element = document.getElementById('manga-share-card');
+            const element = document.getElementById('download-composite-card');
+            
+            // Populate Dynamic Data before downloading
+            document.getElementById('composite-title').innerText = document.getElementById('event-title').innerText;
+            document.getElementById('composite-date').innerText = document.getElementById('manga-date') ? document.getElementById('manga-date').innerText : 'TBA';
+            document.getElementById('composite-loc').innerText = document.getElementById('manga-loc') ? document.getElementById('manga-loc').innerText : 'TBA';
+            
+            const mangaVis = document.getElementById('manga-vision');
+            if (mangaVis) document.getElementById('composite-vision').innerText = mangaVis.innerText;
+            
+            // Generate QR code for the direct link
+            const directLink = window.location.href;
+            const qrContainer = document.getElementById('composite-qr');
+            qrContainer.innerHTML = '';
+            new QRCode(qrContainer, {
+                text: directLink,
+                width: 100,
+                height: 100,
+                colorDark : "#000000",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.L
+            });
+
+            // Populate Artists
+            const teamContainer = document.getElementById('composite-crew');
+            teamContainer.innerHTML = '';
+            if (window.currentQuestData && window.currentQuestData.needs && window.currentQuestData.needs.team) {
+                window.currentQuestData.needs.team.forEach(t => {
+                    teamContainer.innerHTML += `
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                            ${t.imgUrl ? `<img src="${t.imgUrl}" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;">` : `<div style="width: 30px; height: 30px; border-radius: 50%; background: #333;"></div>`}
+                            <div>
+                                <div style="color: #00ffcc; font-weight: bold; text-transform: uppercase;">${t.name}</div>
+                                <div style="font-size: 8px; color: #aaa;">${t.artist_type || 'Artist'} | ${t.status || 'Pending'}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+            } else {
+                teamContainer.innerHTML = '<div>No crew synced yet.</div>';
+            }
+
             const opt = {
-                margin:       0.2,
-                filename:     `CDF_Invite_${document.getElementById('event-title').innerText.replace(/\s+/g, '_')}.pdf`,
+                margin:       0,
+                filename:     `CDF_Flyer_${document.getElementById('event-title').innerText.replace(/\s+/g, '_')}.pdf`,
                 image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { scale: 2, useCORS: true },
-                jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+                jsPDF:        { unit: 'px', format: [794, 1123], orientation: 'portrait' }
             };
             
-            // Add a temporary logo overlay for the PDF
-            const logoOverlay = document.createElement('div');
-            logoOverlay.style.position = 'absolute';
-            logoOverlay.style.top = '10px';
-            logoOverlay.style.right = '10px';
-            logoOverlay.style.zIndex = '9999';
-            logoOverlay.innerHTML = `<img src="../Assets/images/logo.png" style="width: 40px; height: 40px; opacity: 0.8;">`;
-            element.appendChild(logoOverlay);
-
-            html2pdf().set(opt).from(element).save().then(() => {
-                element.removeChild(logoOverlay);
-            });
+            html2pdf().set(opt).from(element).save();
         }
         
         function shareToInstagram() {
@@ -1508,6 +1538,9 @@
             document.getElementById('profile-bio').value = activeArtistData.bio || "";
             document.getElementById('profile-social-url').value = activeArtistData.socialLink || "";
             document.getElementById('profile-music-url').value = activeArtistData.musicLink || "";
+            if (document.getElementById('profile-artist-type')) {
+                document.getElementById('profile-artist-type').value = activeArtistData.artist_type || "traveler";
+            }
         }
 
         function closeArtistProfileModal() {
@@ -1519,6 +1552,7 @@
             const bio = document.getElementById('profile-bio').value.trim();
             const socialLink = document.getElementById('profile-social-url').value.trim();
             const musicLink = document.getElementById('profile-music-url').value.trim();
+            const artistType = document.getElementById('profile-artist-type') ? document.getElementById('profile-artist-type').value : null;
 
             const btn = document.getElementById('save-profile-btn');
             const origHTML = btn.innerHTML;
@@ -1530,8 +1564,9 @@
                 activeArtistData.bio = bio;
                 activeArtistData.socialLink = socialLink;
                 activeArtistData.musicLink = musicLink;
+                if (artistType) activeArtistData.artist_type = artistType;
                 
-                await updateArtistStatusInDb(activeArtistData.id, activeArtistData.status, activeArtistData.link, imgUrl, bio, socialLink, musicLink); 
+                await updateArtistStatusInDb(activeArtistData.id, activeArtistData.status, activeArtistData.link, imgUrl, bio, socialLink, musicLink, artistType); 
                 
                 closeArtistProfileModal();
                 alert(`Profile for ${activeArtistData.name} updated successfully!`);
@@ -1571,7 +1606,7 @@
             window.open(`https://wa.me/?text=${encodedMessage}`, '_blank');
         }
 
-        async function updateArtistStatusInDb(artistId, newStatus, newLink, newImgUrl, newBio, newSocialLink, newMusicLink) {
+        async function updateArtistStatusInDb(artistId, newStatus, newLink, newImgUrl, newBio, newSocialLink, newMusicLink, newArtistType) {
             if(!currentEventId || !window.supabaseClient) return;
             
             // 1. Get current quest
@@ -1587,9 +1622,20 @@
                     if (newBio !== undefined) team[idx].bio = newBio;
                     if (newSocialLink !== undefined) team[idx].socialLink = newSocialLink;
                     if (newMusicLink !== undefined) team[idx].musicLink = newMusicLink;
+                    if (newArtistType !== undefined) team[idx].artist_type = newArtistType;
                     
-                    // 3. Save back
+                    // 3. Save back to quests
                     await window.supabaseClient.from('quests').update({ needs: quest.needs }).eq('id', currentEventId);
+                    
+                    // 3b. Save artist_type and bio to master_artists for global persistence
+                    let updateData = {};
+                    if (newArtistType !== undefined) updateData.artist_type = newArtistType;
+                    if (newBio !== undefined) updateData.bio = newBio;
+                    if (newImgUrl !== undefined) updateData.profile_img_url = newImgUrl;
+                    
+                    if (Object.keys(updateData).length > 0) {
+                        await window.supabaseClient.from('master_artists').update(updateData).eq('id', artistId);
+                    }
                     
                     // 4. Update UI
                     activeArtistData.status = newStatus;
@@ -2173,32 +2219,42 @@
     </div>
 
     <!-- Hidden Composite Card for Full Flyer Download -->
-    <div id="download-composite-card" class="fixed top-[-10000px] left-[-10000px] w-[800px] bg-[#09090b] text-white p-8 border-[10px] border-[#d4af37] z-[-1] font-serif" style="font-family: 'Cinzel', serif;">
-        <div class="flex gap-8">
-            <div class="w-[400px]">
-                <div id="composite-flyer" class="w-full aspect-[4/5] bg-cover bg-center border-4 border-[#d4af37]" style="background-image: url('../Assets/images/logo.png');"></div>
+    <div id="download-composite-card" class="fixed top-[-10000px] left-[-10000px] w-[794px] h-[1123px] bg-[#09090b] text-white z-[-1] font-sans overflow-hidden relative" style="font-family: 'Plus Jakarta Sans', sans-serif;">
+        <!-- Background Image -->
+        <div class="absolute inset-0 z-0">
+            <img src="../Event/Concert%20Poster%20and%20Event%20Poster%20TemplateEvent%20Poster_%20A4%20(1).jpg" class="w-full h-full object-cover opacity-60">
+        </div>
+        
+        <!-- Gradient Overlay for readability -->
+        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent z-0"></div>
+
+        <div class="relative z-10 w-full h-full flex flex-col justify-between p-12">
+            <!-- Header Section -->
+            <div class="text-center mt-16">
+                <h1 id="composite-title" class="font-serif text-5xl text-[#d4af37] mb-4 uppercase tracking-widest font-bold drop-shadow-xl" style="font-family: 'Cinzel', serif;">EVENT TITLE</h1>
+                <p id="composite-date" class="text-2xl font-bold mb-2 text-white drop-shadow-md">Date: TBA</p>
+                <p id="composite-loc" class="text-2xl font-bold mb-8 text-[#00ffcc] drop-shadow-md">Loc: Unknown</p>
+                
+                <div class="max-w-xl mx-auto bg-black/40 backdrop-blur p-6 border border-white/20 rounded-xl">
+                    <h2 class="text-sm uppercase tracking-widest text-[#d4af37] mb-3 font-bold">The Vision</h2>
+                    <p id="composite-vision" class="text-sm italic text-white/90">...</p>
+                </div>
             </div>
-            <div class="w-[320px] flex flex-col justify-between py-4 font-sans" style="font-family: 'Plus Jakarta Sans', sans-serif;">
-                <div>
-                    <h1 id="composite-title" class="font-serif text-3xl text-[#d4af37] mb-2 uppercase tracking-widest font-bold">EVENT TITLE</h1>
-                    <p id="composite-date" class="text-lg font-bold mb-1">Date: TBA</p>
-                    <p id="composite-loc" class="text-lg font-bold mb-4">Loc: Unknown</p>
-                    
-                    <h2 class="text-xs uppercase tracking-widest text-[#00ffcc] mb-2 font-bold">The Vision</h2>
-                    <p id="composite-vision" class="text-xs italic text-white/80 mb-6">...</p>
-                    
-                    <h2 class="text-xs uppercase tracking-widest text-[#d4af37] mb-2 font-bold">Confirmed Nodes</h2>
-                    <div id="composite-crew" class="text-xs font-bold flex flex-col gap-1 mb-6"></div>
+            
+            <!-- Crew Section -->
+            <div class="w-full mt-auto mb-12 flex justify-between items-end gap-8">
+                <div class="flex-1 bg-black/60 backdrop-blur p-6 border border-[#d4af37]/50 rounded-xl">
+                    <h2 class="text-lg uppercase tracking-widest text-[#d4af37] mb-4 font-bold font-serif" style="font-family: 'Cinzel', serif;">Live Roster</h2>
+                    <div id="composite-crew" class="grid grid-cols-2 gap-4">
+                        <!-- Dynamic crew members populated here -->
+                    </div>
                 </div>
                 
-                <div class="flex items-end justify-between border-t border-white/20 pt-4">
-                    <div>
-                        <p class="text-[10px] text-white/50 mb-1 uppercase tracking-widest">Scan to Sync</p>
-                        <div id="composite-qr" class="bg-white p-2 w-[100px] h-[100px]"></div>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-[10px] text-[#00ffcc] uppercase tracking-widest mb-1">Circle D Flow</p>
-                    </div>
+                <!-- QR Code Section -->
+                <div class="bg-black/80 backdrop-blur p-4 border border-[#00ffcc]/50 rounded-xl text-center">
+                    <p class="text-xs text-[#00ffcc] mb-2 uppercase tracking-widest font-bold">Scan to Sync</p>
+                    <div id="composite-qr" class="bg-white p-2 mx-auto"></div>
+                    <p class="text-[10px] text-white/50 mt-2 uppercase tracking-widest">Circle D Flow</p>
                 </div>
             </div>
         </div>
@@ -2462,6 +2518,18 @@
                         </label>
                         <input type="file" id="profile-img-upload" class="hidden" accept="image/*" onchange="compressAndSetImage(this)">
                     </div>
+                </div>
+                <div>
+                    <label class="block text-xs uppercase tracking-widest text-white/50 mb-1">Flow / Artist Type</label>
+                    <select id="profile-artist-type" class="w-full text-sm p-3 bg-black/50 border border-white/20 rounded focus:border-[#ff00cc] outline-none text-white">
+                        <option value="performance">Performance</option>
+                        <option value="music">Music</option>
+                        <option value="visual arts">Visual Arts</option>
+                        <option value="flow">Flow</option>
+                        <option value="tattoo - flow">Tattoo - Flow</option>
+                        <option value="traveler">Traveler</option>
+                        <option value="service">Service</option>
+                    </select>
                 </div>
                 <div>
                     <label class="block text-xs uppercase tracking-widest text-white/50 mb-1">Artist Bio</label>

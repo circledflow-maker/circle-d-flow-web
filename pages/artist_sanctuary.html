@@ -213,7 +213,7 @@
         </div>
         
         <!-- Mobile Camera Controls -->
-        <div class="fixed bottom-32 right-6 z-[60] flex flex-col gap-4 items-end pointer-events-auto">
+        <div class="fixed bottom-32 left-6 z-[60] flex flex-col gap-4 items-start pointer-events-auto">
             <button onclick="toggleCameraView()" class="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-[#00ffcc] hover:bg-white/10 transition shadow-[0_0_15px_rgba(0,255,204,0.3)] border border-[#00ffcc]/30">
                 <span class="material-symbols-outlined">videocam</span>
             </button>
@@ -498,51 +498,119 @@
             toggleModal('ledger-modal');
             
             // Load Ledger Data
-            if(window.supabaseClient && eventId) {
-                // Fetch Flyer
-                const { data: quest } = await window.supabaseClient.from('quests').select('flyer_url').eq('id', eventId).single();
-                if(quest && quest.flyer_url) {
-                    document.getElementById('content-flyer').innerHTML = `<img src="${quest.flyer_url}" class="w-full rounded-xl border-2 border-[#d4af37]/50 shadow-[0_0_20px_rgba(212,175,55,0.2)]">`;
-                } else {
-                    document.getElementById('content-flyer').innerHTML = `<div class="text-center text-white/50 text-sm mt-10">No Flyer Uploaded Yet</div>`;
+            if(window.supabaseClient) {
+                let targetEventId = eventId;
+                
+                // If no eventId in url, find the next upcoming event
+                if (!targetEventId) {
+                    const { data: upcoming } = await window.supabaseClient.from('quests')
+                        .select('id')
+                        .gte('scheduled_at', new Date().toISOString())
+                        .order('scheduled_at', { ascending: true })
+                        .limit(1)
+                        .single();
+                    if (upcoming) targetEventId = upcoming.id;
                 }
 
-                // Fetch Team & Feedback Board
-                const { data: team } = await window.supabaseClient.from('master_artists').select('id, name, artist_type').limit(10);
-                if(team) {
-                    let teamHtml = '';
-                    for (const t of team) {
-                        let feedbackHtml = '';
-                        if (t.artist_type === 'performance') {
-                            // Suppressed to prevent 400 Bad Request console spam until DB table is created
-                            /*
-                            const { data: pData } = await window.supabaseClient.from('performance_details').select('artifact_of_power, inspiration').eq('artist_id', t.id).order('created_at', { ascending: false }).limit(1).single();
-                            if (pData) {
-                                feedbackHtml = `
-                                    <div class="mt-2 text-[10px] text-white/70 bg-black/50 p-2 rounded border border-white/5">
-                                        <div class="text-[#d4af37]">Artifact: ${pData.artifact_of_power || '?'}</div>
-                                        <div class="text-[#00ffcc]">Inspiration: ${pData.inspiration || '?'}</div>
-                                    </div>
-                                `;
-                            }
-                            */
-                        }
-                        
-                        teamHtml += `
-                            <div class="bg-white/5 p-3 rounded-lg border border-white/10 flex flex-col justify-between">
-                                <div class="flex items-center justify-between">
-                                    <div>
-                                        <div class="text-[#00ffcc] font-bold text-sm">${t.name}</div>
-                                        <div class="text-[10px] uppercase tracking-widest text-white/50">${t.artist_type}</div>
-                                    </div>
-                                    <span class="material-symbols-outlined text-[#d4af37]">verified</span>
-                                </div>
-                                ${feedbackHtml}
-                            </div>
-                        `;
+                if(targetEventId) {
+                    // Fetch Flyer
+                    const { data: quest } = await window.supabaseClient.from('quests').select('flyer_url, title, scheduled_at').eq('id', targetEventId).single();
+                    if(quest && quest.flyer_url) {
+                        document.getElementById('content-flyer').innerHTML = `<img src="${quest.flyer_url}" class="w-full rounded-xl border-2 border-[#d4af37]/50 shadow-[0_0_20px_rgba(212,175,55,0.2)]">`;
+                    } else {
+                        document.getElementById('content-flyer').innerHTML = `<div class="text-center text-white/50 text-sm mt-10">No Flyer Uploaded Yet</div>`;
                     }
+
+                    // Get current user
+                    const { data: { user } } = await window.supabaseClient.auth.getUser();
+
+                    // Fetch Team & Check Participation
+                    const { data: participants } = await window.supabaseClient.from('event_participants')
+                        .select('user_id, event_role, profiles(username)')
+                        .eq('event_id', targetEventId);
+
+                    let currentUserParticipant = null;
+                    if (user && participants) {
+                        currentUserParticipant = participants.find(p => p.user_id === user.id);
+                    }
+
+                    let teamHtml = '';
+                    if (participants && participants.length > 0) {
+                        for (const p of participants) {
+                            const artistName = (p.profiles && p.profiles.username) ? p.profiles.username : 'Unknown Artist';
+                            teamHtml += `
+                                <div class="bg-white/5 p-3 rounded-lg border border-white/10 flex flex-col justify-between mb-2">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <div class="text-[#00ffcc] font-bold text-sm">${artistName}</div>
+                                            <div class="text-[10px] uppercase tracking-widest text-white/50">${p.event_role || 'Member'}</div>
+                                        </div>
+                                        <span class="material-symbols-outlined text-[#d4af37]">verified</span>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                    } else {
+                        teamHtml = '<div class="text-center text-white/50 text-sm mt-10">No souls synced yet...</div>';
+                    }
+                    
+                    if (!currentUserParticipant && user) {
+                        teamHtml = `
+                            <div class="text-center mb-6">
+                                <p class="text-sm text-white/70 mb-4">You are not part of this event's team.</p>
+                                <button onclick="requestToJoinEvent('${targetEventId}')" id="join-event-btn" class="bg-[#ff00cc] text-white px-6 py-2 rounded-full font-bold uppercase tracking-widest text-xs hover:bg-[#ff00cc]/80 transition">Request to Join</button>
+                            </div>
+                            <h4 class="font-bold text-[#d4af37] mb-3 text-xs uppercase tracking-widest">Current Team for ${quest ? quest.title : 'Event'}</h4>
+                        ` + teamHtml;
+                        // Hide comms tab content completely for non-members
+                        document.getElementById('content-comms').innerHTML = `<div class="text-center text-white/50 text-sm mt-10">You must be part of the team to access Comms.</div>`;
+                    } else {
+                        // Reset comms tab if they are a member (so they can see it)
+                        // Assuming original comms HTML structure is intact
+                    }
+                    
                     document.getElementById('content-team').innerHTML = teamHtml;
+                } else {
+                    document.getElementById('content-team').innerHTML = `<div class="text-center text-white/50 text-sm mt-10">No upcoming events found.</div>`;
                 }
+            }
+        }
+
+        async function requestToJoinEvent(targetEventId) {
+            if(!window.supabaseClient) return;
+            const btn = document.getElementById('join-event-btn');
+            if(btn) btn.innerText = "Requesting...";
+            try {
+                const { data: { user } } = await window.supabaseClient.auth.getUser();
+                if(user) {
+                    const { error } = await window.supabaseClient.from('event_participants').insert({
+                        event_id: targetEventId,
+                        user_id: user.id,
+                        event_role: 'Pending Request'
+                    });
+                    if(error) {
+                        if(error.code === '23505') {
+                            alert("You have already requested to join.");
+                            if(btn) {
+                                btn.innerText = "Request Pending";
+                                btn.disabled = true;
+                            }
+                            return;
+                        }
+                        throw error;
+                    }
+                    alert("Request sent successfully. Awaiting creator approval.");
+                    if(btn) {
+                        btn.innerText = "Request Pending";
+                        btn.disabled = true;
+                    }
+                } else {
+                    alert("You must be signed in to request to join.");
+                }
+            } catch(e) {
+                console.error(e);
+                alert("Could not send request.");
+                if(btn) btn.innerText = "Request to Join";
             }
         }
 
