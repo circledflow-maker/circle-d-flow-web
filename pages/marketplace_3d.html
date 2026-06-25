@@ -270,7 +270,7 @@
 
     <!-- SOUL INTERACTION MODAL -->
     <div id="soul-interaction-modal" class="pointer-events-auto flex flex-col">
-        <button onclick="document.getElementById('soul-interaction-modal').style.display='none'" class="self-end text-white/50 hover:text-white flex items-center text-xs mb-2"><span class="material-symbols-outlined text-sm mr-1">close</span> Dismiss</button>
+        <button onclick="dismissNPCModal()" class="self-end text-white/50 hover:text-white flex items-center text-xs mb-2"><span class="material-symbols-outlined text-sm mr-1">close</span> Dismiss</button>
         <div id="soul-content"></div>
     </div>
 
@@ -417,8 +417,8 @@
             const group = new THREE.Group();
             group.position.set(x, 0, z);
 
-            // Base clay walls (rounded cylinders for huts look premium)
-            const wallsGeo = new THREE.CylinderGeometry(width * 0.45, width * 0.5, height * 0.7, 16);
+            // Open Front Walls (Arch geometry)
+            const wallsGeo = new THREE.CylinderGeometry(width * 0.45, width * 0.5, height * 0.7, 16, 1, false, Math.PI * 0.4, Math.PI * 1.2);
             const wallsMat = new THREE.MeshStandardMaterial({
                 color: wallColor,
                 roughness: 0.9,
@@ -804,11 +804,31 @@
             document.getElementById('flowee-overlay').classList.remove('hidden');
             startUploadFlow();
         }
-        function openZoneItems() {
-            // Load the existing marketplace UI directly into the iframe
-            // and maybe filter via URL parameters.
-            document.getElementById('integrated-iframe').src = "marketplace.html?filter=" + currentGuild;
-            document.getElementById('iframe-modal').showModal();
+        function openCatalog() {
+            if (activeGuild) {
+                let stallFile = 'arts_stall.html';
+                if (activeGuild === 'sounds') stallFile = 'sound_stall.html';
+                if (activeGuild === 'products') stallFile = 'product_stall.html';
+                if (activeGuild === 'skills') stallFile = 'skills_stall.html';
+                if (activeGuild === 'healing') stallFile = 'healing_stall.html';
+                if (activeGuild === 'services') stallFile = 'services_stall.html';
+                if (activeGuild === 'arts') stallFile = 'arts_stall.html';
+                window.location.href = stallFile;
+            } else {
+                window.location.href = `marketplace.html`;
+            }
+        }
+
+        function dismissNPCModal() {
+            document.getElementById('soul-interaction-modal').style.display = 'none';
+            // Wake up Flowee so she doesn't disappear completely
+            if (window.FloweeAgent) {
+                window.FloweeAgent.state = 'idle';
+                window.FloweeAgent.speak("I'll be right here if you need me!");
+                // Make sure her UI element is visible
+                const floweeEl = document.getElementById('flowee-companion');
+                if (floweeEl) floweeEl.style.display = 'flex';
+            }
         }
 
 
@@ -935,7 +955,7 @@
             });
             html += `</div>`;
             
-            html += `<button class="btn-primary text-xs py-2" onclick="openZoneItems()">Open Full Catalog</button>`;
+            html += `<button class="btn-primary text-xs py-2" onclick="openCatalog()">Open Full Catalog</button>`;
             document.getElementById('soul-content').innerHTML = html;
         }
 

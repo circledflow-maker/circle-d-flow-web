@@ -659,7 +659,7 @@
 
                     if(artistData.artist_type === 'performance') {
                         try {
-                            const { data: perf } = await window.supabaseClient.from('performance_details').select('*').eq('artist_id', artistId).order('created_at', { ascending: false }).limit(1).single();
+                            const { data: perf } = await window.supabaseClient.from('performance_details').select('*').eq('artist_id', artistId).limit(1).single();
                             if(perf && perf.artifact_of_power) {
                                 contentHtml += `<div class="mb-2"><strong class="text-[#d4af37]">Category:</strong> ${perf.performance_category || 'Completed Post-Sync'}</div>`;
                                 contentHtml += `<div class="mb-2"><strong class="text-[#d4af37]">Tech Rider:</strong> ${perf.technical_needs || 'None'}</div>`;
