@@ -1033,9 +1033,77 @@
             if (inputZone) inputZone.innerHTML = html;
         }
 
-        function startUploadFlow() {
+        let isFloweeActive = false;
+
+        function startMarketplaceIntroFlow() {
+            if (isFloweeActive) return;
+            isFloweeActive = true;
+            document.getElementById('flowee-overlay').classList.remove('hidden');
             document.getElementById('flowee-chat-log').innerHTML = '';
-            fMsg("Welcome to the Vault. I am Flowee. Let's mint your new Artifact for the Grand Bazaar.");
+            
+            const firstTime = !localStorage.getItem('visited_marketplace');
+            if (firstTime) {
+                fMsg("Welcome to the Grand Bazaar! Here, creators and seekers meet to exchange Artifacts of Power.");
+                localStorage.setItem('visited_marketplace', 'true');
+            } else {
+                fMsg("Welcome back to the Bazaar.");
+            }
+            
+            setTimeout(() => {
+                fMsg("Are you here to explore the stalls, or do you wish to offer your own services?");
+                setFInput(`
+                    <div class="flex gap-2 w-full">
+                        <button onclick="introVisit()" class="flex-1 bg-black/50 border border-[#00ffcc]/30 text-[#00ffcc] py-2 rounded hover:bg-[#00ffcc]/20 transition text-xs font-bold uppercase tracking-widest">VISIT</button>
+                        <button onclick="introSell()" class="flex-1 bg-[#00ffcc] text-black py-2 rounded hover:bg-[#00ffcc]/80 transition text-xs font-bold uppercase tracking-widest">SELL</button>
+                    </div>
+                `);
+            }, 1000);
+        }
+
+        async function introVisit() {
+            fMsg("Visit", 'user');
+            setFInput(`<div class="text-[#00ffcc] text-xs animate-pulse">Syncing with Bazaar records...</div>`);
+            
+            try {
+                if (window.supabaseClient) {
+                    const { data, error } = await window.supabaseClient
+                        .from('market_items')
+                        .select('title, price_flow')
+                        .order('created_at', { ascending: false })
+                        .limit(1);
+                        
+                    if (data && data.length > 0) {
+                        const latest = data[0];
+                        setTimeout(() => {
+                            fMsg(`The latest artifact brought into the market is "${latest.title}" for ${latest.price_flow} Credits. Feel free to explore the Guild Huts!`);
+                            setFInput(`<button onclick="document.getElementById('flowee-overlay').classList.add('hidden'); isFloweeActive=false;" class="w-full bg-[#00ffcc]/20 border border-[#00ffcc]/50 text-[#00ffcc] py-3 rounded font-bold uppercase tracking-widest text-xs mt-2 hover:bg-[#00ffcc]/40 transition">Explore Bazaar</button>`);
+                        }, 800);
+                        return;
+                    }
+                }
+            } catch(e) {}
+            
+            setTimeout(() => {
+                fMsg("The stalls are open and waiting for you. Feel free to explore the Guild Huts!");
+                setFInput(`<button onclick="document.getElementById('flowee-overlay').classList.add('hidden'); isFloweeActive=false;" class="w-full bg-[#00ffcc]/20 border border-[#00ffcc]/50 text-[#00ffcc] py-3 rounded font-bold uppercase tracking-widest text-xs mt-2 hover:bg-[#00ffcc]/40 transition">Explore Bazaar</button>`);
+            }, 800);
+        }
+
+        function introSell() {
+            fMsg("Sell", 'user');
+            setFInput('');
+            setTimeout(() => {
+                fMsg("Excellent. Remember, 1 Euro equals 100 Flow Credits.");
+                setTimeout(() => {
+                    startUploadFlow(false);
+                }, 1500);
+            }, 500);
+        }
+
+        function startUploadFlow(isDirect = true) {
+            isFloweeActive = true;
+            if(isDirect) document.getElementById('flowee-chat-log').innerHTML = '';
+            fMsg("Let's mint your new Artifact for the Grand Bazaar.");
             setTimeout(() => {
                 fMsg("What is the name of your Artifact or Skill?");
                 setFInput(`<div class="flex gap-2"><input type="text" id="up-name" class="flex-1 bg-black/50 border border-[#00ffcc]/30 text-white px-3 py-2 rounded focus:outline-none focus:border-[#00ffcc]" placeholder="e.g. Neon Beat Pack"><button onclick="upStep2()" class="bg-[#00ffcc] text-black px-4 font-bold rounded hover:bg-[#00ffcc]/80 transition">SEND</button></div>`);
@@ -1113,7 +1181,14 @@
         setTimeout(() => {
             if (urlParams.get('intent') === 'upload') {
                 document.getElementById('flowee-overlay').classList.remove('hidden');
-                startUploadFlow();
+                startUploadFlow(true);
+            } else {
+                // If not upload intent, wait 5 seconds and open Intro Flow if not already active
+                setTimeout(() => {
+                    if (!isFloweeActive && !document.getElementById('iframe-modal').open && document.getElementById('flowee-overlay').classList.contains('hidden')) {
+                        startMarketplaceIntroFlow();
+                    }
+                }, 5000);
             }
         }, 1000);
 

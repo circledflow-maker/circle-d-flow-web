@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link rel="stylesheet" href="../css/styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
@@ -208,6 +209,16 @@
             </button>
             <button onclick="goToMarketplace()" class="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-[#d4af37] hover:bg-white/10 transition shadow-[0_0_15px_rgba(212,175,55,0.3)] border border-[#d4af37]/30 mt-4">
                 <span class="material-symbols-outlined">storefront</span>
+            </button>
+        </div>
+        
+        <!-- Mobile Camera Controls -->
+        <div class="fixed bottom-32 right-6 z-[60] flex flex-col gap-4 items-end pointer-events-auto">
+            <button onclick="toggleCameraView()" class="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-[#00ffcc] hover:bg-white/10 transition shadow-[0_0_15px_rgba(0,255,204,0.3)] border border-[#00ffcc]/30">
+                <span class="material-symbols-outlined">videocam</span>
+            </button>
+            <button onclick="recenterCamera()" class="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-white hover:bg-white/10 transition shadow-[0_0_15px_rgba(255,255,255,0.3)] border border-white/30">
+                <span class="material-symbols-outlined">my_location</span>
             </button>
         </div>
 
@@ -964,7 +975,9 @@
                             contactDetails.revolut = val;
                         }
                         
-                        await window.supabaseClient.from('profiles').update({ contact_details: JSON.stringify(contactDetails) }).eq('id', user.id);
+                        if (user && user.id) {
+                            await window.supabaseClient.from('profiles').update({ contact_details: JSON.stringify(contactDetails) }).eq('id', user.id);
+                        }
                     }
                     
                     const { data: artist } = await window.supabaseClient.from('master_artists').select('contact_details').eq('id', artistId).single();
@@ -1733,6 +1746,16 @@
         document.getElementById('canvas-container').innerHTML = ''; 
         document.getElementById('canvas-container').appendChild(renderer.domElement);
 
+        let orbitControls;
+        if (typeof THREE.OrbitControls !== 'undefined') {
+            orbitControls = new THREE.OrbitControls(camera, renderer.domElement);
+            orbitControls.enableDamping = true;
+            orbitControls.dampingFactor = 0.05;
+            orbitControls.maxPolarAngle = Math.PI / 2 - 0.05; // Prevent going below ground
+            orbitControls.minDistance = 2;
+            orbitControls.maxDistance = 60;
+        }
+
         const ambientLight = new THREE.AmbientLight(0x5c2e16, 1.5); 
         scene.add(ambientLight);
 
@@ -1762,10 +1785,10 @@
             scene.add(building);
         }
 
-        // Gasse aufbauen
+        // Gasse aufbauen (Widened to 44 units)
         for (let i = 0; i < 5; i++) {
-            createClayBuilding(-12, -i * 20, 10, 15 + Math.random()*5, 18); 
-            createClayBuilding(12, -i * 20, 10, 15 + Math.random()*5, 18);  
+            createClayBuilding(-22, -i * 20, 10, 15 + Math.random()*5, 18); 
+            createClayBuilding(22, -i * 20, 10, 15 + Math.random()*5, 18);  
         }
 
         // --- 3. ADINKRA GLOW ---
@@ -1795,7 +1818,8 @@
 
         function buildKitchenHub() {
             const hubGroup = new THREE.Group();
-            hubGroup.position.set(-10, 0, -5);
+            hubGroup.position.set(-15, 0, -10);
+            hubGroup.rotation.y = Math.PI / 4;
 
             // Circular clay hut wall
             const wallGeo = new THREE.CylinderGeometry(3.5, 3.7, 3, 16, 1, true); // open-ended cylinder
@@ -1883,6 +1907,7 @@
         function buildStageHub() {
             const hubGroup = new THREE.Group();
             hubGroup.position.set(0, 0, -30);
+            hubGroup.rotation.y = Math.PI;
 
             // Elevated platform stage
             const stageGeo = new THREE.CylinderGeometry(6, 6.5, 1.2, 32);
@@ -2040,6 +2065,7 @@
         function buildVideoArchiveHub() {
             const hubGroup = new THREE.Group();
             hubGroup.position.set(15, 0, -15);
+            hubGroup.rotation.y = Math.PI;
 
             // Large rounded theater dome shell (semi-sphere)
             const domeGeo = new THREE.SphereGeometry(6, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2);
@@ -2388,13 +2414,55 @@
             window.bubbleInterval = setInterval(rotateGhostSpeaker, 6000);
         }
 
-        // Animation Loop
-        const clock = new THREE.Clock();
+        // --- Camera Control Logic ---
+        let currentPerspective = 'first'; // 'first' or 'third'
         
+        function toggleCameraView() {
+            if (currentPerspective === 'first') {
+                currentPerspective = 'third';
+                targetCameraPos.copy(playerGroup.position).add(new THREE.Vector3(0, 15, 20));
+            } else {
+                currentPerspective = 'first';
+                targetCameraPos.copy(playerGroup.position).add(new THREE.Vector3(0, 1.5, 5));
+            }
+            if (orbitControls) {
+                orbitControls.target.copy(playerGroup.position);
+                orbitControls.update();
+            }
+        }
+
+        function recenterCamera() {
+            targetCameraPos.copy(playerGroup.position).add(new THREE.Vector3(0, 1.5, 5));
+            targetLookAt.copy(playerGroup.position);
+            currentPerspective = 'first';
+            if (orbitControls) {
+                orbitControls.target.copy(playerGroup.position);
+                orbitControls.update();
+            }
+        }
+
+        // Add orbit controls update to animation loop if not cinematic dive
         function animate() {
             requestAnimationFrame(animate);
             const delta = clock.getDelta();
             const time = clock.getElapsedTime();
+
+            // Camera Lerp
+            if (isCinematicDive) {
+                if (orbitControls) orbitControls.enabled = false;
+                camera.position.lerp(targetCameraPos, 0.03);
+                currentLookAt.lerp(targetLookAt, 0.04);
+                camera.lookAt(currentLookAt);
+            } else {
+                if (orbitControls) {
+                    orbitControls.enabled = true;
+                    orbitControls.update();
+                } else {
+                    camera.position.lerp(targetCameraPos, 0.03);
+                    currentLookAt.lerp(targetLookAt, 0.04);
+                    camera.lookAt(currentLookAt);
+                }
+            }
 
             // Draw radar
             updateRadar();
