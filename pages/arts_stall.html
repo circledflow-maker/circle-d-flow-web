@@ -239,7 +239,7 @@
             const grid = document.getElementById('arts-grid');
             const { data, error } = await window.supabaseClient
                 .from('market_items')
-                .select('*, profiles(full_name, preferred_contact_method, contact_details)')
+                .select('*, profiles(username, preferred_contact_method, contact_details)')
                 .eq('guild_category', 'Arts')
                 .eq('is_active', true);
 
@@ -262,7 +262,7 @@
                     try { details = typeof seller.contact_details === 'string' ? JSON.parse(seller.contact_details) : seller.contact_details; } catch(e){}
                     if(details.whatsapp) {
                         const num = details.whatsapp.replace(/[^0-9]/g, '');
-                        contactBtn = `<a href="https://wa.me/${num}?text=Hi%20${seller.full_name},%20I'm%20interested%20in%20${item.title}" target="_blank" class="buy-btn text-[10px]" style="background:#25D366; text-decoration:none;">WhatsApp</a>`;
+                        contactBtn = `<a href="https://wa.me/${num}?text=Hi%20${seller.username || 'Merchant'},%20I'm%20interested%20in%20${item.title}" target="_blank" class="buy-btn text-[10px]" style="background:#25D366; text-decoration:none;">WhatsApp</a>`;
                     }
                 } else if (seller.preferred_contact_method === 'instagram') {
                     let details = {};
@@ -282,7 +282,7 @@
                     <div class="flex-1 w-full flex flex-col h-full">
                         <div class="flex justify-between items-start mb-1">
                             <h4 class="text-lg font-bold text-white">${item.title || item.name}</h4>
-                            <span class="text-[8px] uppercase tracking-widest text-[#228B22]/70">${seller.full_name || 'Unknown'}</span>
+                            <span class="text-[8px] uppercase tracking-widest text-[#228B22]/70">${seller.username || 'Unknown'}</span>
                         </div>
                         <p class="text-xs text-white/40 mb-3 line-clamp-2">${item.description}</p>
                         <div class="flex justify-between items-center mt-auto">

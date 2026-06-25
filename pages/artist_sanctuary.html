@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Artist Sanctuary | Circle D Flow</title>
+    <script>
+        // Suppress Tailwind Play CDN production warning
+        const originalWarn = console.warn;
+        console.warn = function(...args) {
+            if (args[0] && args[0].includes('cdn.tailwindcss.com')) return;
+            originalWarn.apply(console, args);
+        };
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&family=Cinzel:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
@@ -108,6 +116,54 @@
             border-radius: 8px;
             color: white;
         }
+
+        /* Custom scrollbar for premium aesthetics */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(0, 255, 204, 0.3);
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 255, 204, 0.5);
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+
+        /* Zone button styling matching retro-cyber theme */
+        .zone-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(0, 0, 0, 0.6));
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            border-radius: 8px;
+            color: #d4af37;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .zone-btn:hover {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.4), rgba(0, 255, 204, 0.2));
+            border-color: #00ffcc;
+            color: #fff;
+            box-shadow: 0 0 10px rgba(0, 255, 204, 0.3);
+        }
     </style>
 </head>
 <body>
@@ -124,6 +180,11 @@
                 <div id="artist-exp" class="text-sm text-[#00ffcc] font-bold">-- EXP</div>
                 <div id="artist-flow" class="text-[10px] text-[#00ffcc]/70">-- FLOW</div>
             </div>
+        </div>
+
+        <!-- 2D Holographic Map Radar (Flow Radar) -->
+        <div id="radar-container" class="absolute top-28 left-4 w-28 h-28 rounded-full glass-panel border border-[#00ffcc]/30 shadow-[0_0_15px_rgba(0,255,204,0.2)] overflow-hidden pointer-events-auto flex items-center justify-center">
+            <canvas id="radar-canvas" width="112" height="112"></canvas>
         </div>
 
         <!-- Action Buttons (Right Side) -->
@@ -294,6 +355,84 @@
         </div>
     </div>
 
+    <!-- Interactive Theater Cinema Modal -->
+    <div id="theater-cinema-modal" class="hidden fixed inset-0 z-[100] bg-black/90 backdrop-blur-md pointer-events-auto flex flex-col pt-12 pb-4 px-4 overflow-y-auto">
+        <div class="max-w-4xl mx-auto w-full flex-1 flex flex-col">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="font-serif text-[#00ffcc] text-2xl uppercase tracking-widest flex items-center gap-2">
+                    <span class="material-symbols-outlined text-2xl">movie</span> Interactive Theater
+                </h2>
+                <button onclick="closeTheaterModal()" class="text-white/50 hover:text-white bg-white/10 p-2 rounded-full border border-white/10 flex">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+
+            <!-- Main Layout: Player & Comments -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 flex-1 min-h-[400px] mb-6">
+                <!-- Left/Middle Panel: Cinema Screen / Active Media -->
+                <div class="md:col-span-2 glass-panel rounded-2xl p-4 flex flex-col justify-between border-white/10 relative overflow-hidden bg-black/40 min-h-[300px]">
+                    <div id="cinema-screen-container" class="flex-1 flex items-center justify-center bg-black/60 rounded-xl overflow-hidden min-h-[220px]">
+                        <!-- Video or Image elements will be rendered here -->
+                        <div class="text-center text-white/40">
+                            <span class="material-symbols-outlined text-5xl mb-2 animate-pulse">play_circle</span>
+                            <p class="text-sm">Select a clip or photo below to start playing</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex justify-between items-start">
+                        <div>
+                            <h3 id="cinema-media-title" class="text-lg font-bold text-white uppercase tracking-wider">No Media Selected</h3>
+                            <p id="cinema-media-desc" class="text-xs text-white/60 mt-1">Select from the gallery or upload your own moment.</p>
+                        </div>
+                        <div id="cinema-media-meta" class="text-right text-[10px] text-[#00ffcc] uppercase tracking-wider">
+                            <!-- uploader metadata -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Panel: Comments & Feedback -->
+                <div class="glass-panel rounded-2xl p-4 flex flex-col border-white/10 bg-black/40 h-[400px] md:h-auto">
+                    <h3 class="text-xs text-[#00ffcc] font-bold mb-3 uppercase tracking-widest flex items-center gap-1">
+                        <span class="material-symbols-outlined text-sm">forum</span> Feedback Board
+                    </h3>
+                    
+                    <!-- Comments Feed -->
+                    <div id="cinema-comments-feed" class="flex-1 overflow-y-auto pr-1 space-y-3 mb-4 custom-scrollbar text-xs">
+                        <div class="text-center text-white/30 py-8">Select media to see comments.</div>
+                    </div>
+
+                    <!-- Comment input -->
+                    <div class="flex gap-2 border-t border-white/10 pt-3">
+                        <input type="text" id="cinema-comment-input" placeholder="Leave a feedback..." class="flex-1 bg-black/60 border border-white/20 rounded-lg p-2 text-xs text-white outline-none focus:border-[#00ffcc]">
+                        <button onclick="submitCinemaComment()" class="bg-[#00ffcc] text-black px-3 rounded-lg font-bold hover:bg-[#00ffcc]/80 transition flex items-center justify-center">
+                            <span class="material-symbols-outlined text-sm">send</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Gallery Section -->
+            <div class="glass-panel rounded-2xl p-4 border-white/10 bg-black/20">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xs text-[#d4af37] font-bold uppercase tracking-widest flex items-center gap-1">
+                        <span class="material-symbols-outlined text-sm">grid_view</span> Community Gallery
+                    </h3>
+                    
+                    <!-- Action Buttons -->
+                    <div class="flex gap-2">
+                        <button onclick="triggerTheaterUpload()" class="bg-gradient-to-r from-[#00ffcc]/20 to-black hover:from-[#00ffcc]/40 border border-[#00ffcc]/50 text-[#00ffcc] px-4 py-1.5 rounded-lg text-xs font-bold uppercase tracking-widest flex items-center gap-1 transition">
+                            <span class="material-symbols-outlined text-xs">upload</span> Upload Moment
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Grid of thumbnails -->
+                <div id="theater-gallery-grid" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-4 max-h-[220px] overflow-y-auto pr-1 custom-scrollbar">
+                    <!-- Thumbnails go here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Adinkra Canvas Generator (Hidden) -->
     <canvas id="adinkra-canvas" width="256" height="256" style="display:none;"></canvas>
 
@@ -401,6 +540,50 @@
                     document.getElementById('artist-type').innerText = artist.artist_type === 'performance' ? 'Performance Soul' : 'Service Weaver';
                     document.getElementById('artist-exp').innerText = `${artist.exp || 0} EXP`;
                     document.getElementById('artist-flow').innerText = `${artist.flow_credits || 0} FLOW`;
+
+                    // Bidirectional Profile Sync
+                    try {
+                        const { data: { user } } = await window.supabaseClient.auth.getUser();
+                        if (user) {
+                            const { data: profile } = await window.supabaseClient.from('profiles').select('*').eq('id', user.id).single();
+                            if (profile) {
+                                let artistUpdated = false;
+                                const pContact = profile.contact_details || {};
+                                const aContact = artist.contact_details || {};
+                                
+                                // Sync name
+                                if (profile.username && artist.name !== profile.username) {
+                                    artist.name = profile.username;
+                                    document.getElementById('artist-name').innerText = artist.name;
+                                    artistUpdated = true;
+                                }
+                                
+                                // Sync avatar
+                                if (pContact.avatar_url && aContact.avatar_url !== pContact.avatar_url) {
+                                    aContact.avatar_url = pContact.avatar_url;
+                                    artistUpdated = true;
+                                }
+                                
+                                // Sync payment details
+                                if (pContact.payment_details && aContact.payment_details !== pContact.payment_details) {
+                                    aContact.payment_details = pContact.payment_details;
+                                    aContact.bank = pContact.bank || aContact.bank;
+                                    aContact.paypal = pContact.paypal || aContact.paypal;
+                                    aContact.revolut = pContact.revolut || aContact.revolut;
+                                    artistUpdated = true;
+                                }
+                                
+                                if (artistUpdated) {
+                                    await window.supabaseClient.from('master_artists').update({
+                                        name: artist.name,
+                                        contact_details: aContact
+                                    }).eq('id', artistId);
+                                }
+                            }
+                        }
+                    } catch(syncErr) {
+                        console.warn("Profile sync failed:", syncErr);
+                    }
 
                     if(artist.permanent_qr_code) {
                         const qrDataUrl = await QRCode.toDataURL(artist.permanent_qr_code, { width: 250, margin: 1, color: { dark: '#00ffccff', light: '#09090bff' } });
@@ -595,6 +778,13 @@
             }
             else if(step === 'colorP') {
                 setSoulColor(val);
+                setTimeout(() => {
+                    fMsg("Where should the collective send your payouts? (Enter IBAN, PayPal, or Revolut tag)");
+                    setFInput(`<div class="flex gap-2"><input type="text" id="fc-input" class="flex-1 bg-black/50 border border-white/20 rounded p-2 text-white outline-none focus:border-[#00ffcc]" placeholder="IBAN / PayPal / Tag"><button onclick="handleFC('paymentP')" class="bg-[#00ffcc] text-black px-4 rounded font-bold">SEND</button></div>`);
+                }, 1500);
+            }
+            else if(step === 'paymentP') {
+                savePaymentDetails(val);
                 finishPerfFlow();
             }
             else if(step === 'cut') {
@@ -644,6 +834,13 @@
             }
             else if(step === 'colorS') {
                 setSoulColor(val);
+                setTimeout(() => {
+                    fMsg("Where should the collective send your payouts? (Enter IBAN, PayPal, or Revolut tag)");
+                    setFInput(`<div class="flex gap-2"><input type="text" id="fc-input" class="flex-1 bg-black/50 border border-white/20 rounded p-2 text-white outline-none focus:border-[#00ffcc]" placeholder="IBAN / PayPal / Tag"><button onclick="handleFC('paymentS')" class="bg-[#00ffcc] text-black px-4 rounded font-bold">SEND</button></div>`);
+                }, 1500);
+            }
+            else if(step === 'paymentS') {
+                savePaymentDetails(val);
                 finishServFlow();
             }
             // Add Product Menu Flow
@@ -678,6 +875,47 @@
                 targetSoulColor = new THREE.Color(colorStr);
                 fMsg(`<span class="text-[#d4af37] animate-pulse">Your soul color is shifting...</span>`);
             } catch(e) { console.warn("Invalid color"); targetSoulColor = new THREE.Color('#00ffcc'); }
+        }
+
+        async function savePaymentDetails(val) {
+            if (!val) return;
+            tempFlowData.payment_details = val;
+            localStorage.setItem('soul_payment_' + artistId, val);
+            
+            try {
+                if (window.supabaseClient) {
+                    const { data: { user } } = await window.supabaseClient.auth.getUser();
+                    if (user) {
+                        const { data: profile } = await window.supabaseClient.from('profiles').select('contact_details').eq('id', user.id).single();
+                        const contactDetails = (profile && profile.contact_details) ? { ...profile.contact_details } : {};
+                        contactDetails.payment_details = val;
+                        
+                        if (val.toLowerCase().includes('iban') || /^[A-Z]{2}[0-9]{2}/.test(val.replace(/\s+/g, ''))) {
+                            contactDetails.bank = val;
+                        } else if (val.toLowerCase().includes('paypal') || val.includes('@')) {
+                            contactDetails.paypal = val;
+                        } else {
+                            contactDetails.revolut = val;
+                        }
+                        
+                        await window.supabaseClient.from('profiles').update({ contact_details: contactDetails }).eq('id', user.id);
+                    }
+                    
+                    const { data: artist } = await window.supabaseClient.from('master_artists').select('contact_details').eq('id', artistId).single();
+                    const aContact = (artist && artist.contact_details) ? { ...artist.contact_details } : {};
+                    aContact.payment_details = val;
+                    if (val.toLowerCase().includes('iban') || /^[A-Z]{2}[0-9]{2}/.test(val.replace(/\s+/g, ''))) {
+                        aContact.bank = val;
+                    } else if (val.toLowerCase().includes('paypal') || val.includes('@')) {
+                        aContact.paypal = val;
+                    } else {
+                        aContact.revolut = val;
+                    }
+                    await window.supabaseClient.from('master_artists').update({ contact_details: aContact }).eq('id', artistId);
+                }
+            } catch (e) {
+                console.warn("Failed to sync payment details to DB:", e);
+            }
         }
 
         // --- Swipe Gestures & Modal Logic ---
@@ -919,6 +1157,479 @@
             } catch(e) { fMsg("Error syncing data: " + (e.message || "Database tables missing.")); }
         }
 
+        // --- Flow Radar Settings & Logic ---
+        const checkpoints = [
+            { name: 'Kitchen', x: -10, z: -5, color: '#00ffcc', label: 'KTCHN' },
+            { name: 'Stage', x: 0, z: -30, color: '#ff00cc', label: 'STAGE' },
+            { name: 'Theater', x: 15, z: -15, color: '#33ccff', label: 'THTR' }
+        ];
+
+        let radarSweepAngle = 0;
+
+        function updateRadar() {
+            const canvas = document.getElementById('radar-canvas');
+            if (!canvas || !playerGroup) return;
+            const ctx = canvas.getContext('2d');
+            if (!ctx) return;
+
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2;
+            const radius = cx - 4;
+
+            // Clear with transparent black
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw background glass circle
+            ctx.beginPath();
+            ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(10, 5, 0, 0.4)';
+            ctx.fill();
+            
+            // Draw grid rings
+            ctx.strokeStyle = 'rgba(0, 255, 204, 0.15)';
+            ctx.lineWidth = 1;
+            for (let r = radius / 3; r <= radius; r += radius / 3) {
+                ctx.beginPath();
+                ctx.arc(cx, cy, r, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+
+            // Draw crosshairs
+            ctx.beginPath();
+            ctx.moveTo(cx - radius, cy);
+            ctx.lineTo(cx + radius, cy);
+            ctx.moveTo(cx, cy - radius);
+            ctx.lineTo(cx, cy + radius);
+            ctx.stroke();
+
+            const px = playerGroup.position.x;
+            const pz = playerGroup.position.z;
+
+            // Update sweep angle
+            radarSweepAngle += 0.03;
+            if (radarSweepAngle > Math.PI * 2) radarSweepAngle -= Math.PI * 2;
+
+            // Scale mapping (max distance 45 units)
+            const maxDist = 45;
+            const scale = radius / maxDist;
+
+            // Find nearest checkpoint distance for Flow wave intensity
+            let minDistance = Infinity;
+
+            // Draw checkpoints
+            checkpoints.forEach(cp => {
+                const dx = cp.x - px;
+                const dz = cp.z - pz;
+                const dist = Math.sqrt(dx * dx + dz * dz);
+                if (dist < minDistance) minDistance = dist;
+
+                // Map to radar space
+                let rx = cx + dx * scale;
+                let ry = cy + dz * scale;
+
+                // Clip to radar edge
+                const cpDist = Math.sqrt((rx - cx) * (rx - cx) + (ry - cy) * (ry - cy));
+                if (cpDist > radius) {
+                    // Project to boundary
+                    rx = cx + (rx - cx) * (radius / cpDist);
+                    ry = cy + (ry - cy) * (radius / cpDist);
+                }
+
+                // Check if sweeping line is near
+                const cpAngle = Math.atan2(ry - cy, rx - cx) + Math.PI; // 0 to 2PI
+                const sweepNormalized = (radarSweepAngle) % (Math.PI * 2);
+                const angleDiff = Math.abs(cpAngle - sweepNormalized);
+                const isSwept = angleDiff < 0.2 || angleDiff > Math.PI * 2 - 0.2;
+
+                // Draw Flow Waves (concentric expanding rings representing flow field)
+                const pulsePeriod = 2000; // ms
+                const time = Date.now();
+                const pulseProgress = (time % pulsePeriod) / pulsePeriod;
+                
+                // Flow wave radius scales with proximity and pulse
+                // Closer = stronger, larger waves
+                const flowIntensity = Math.max(0, 1 - dist / maxDist);
+                const waveRadius = (10 + 25 * pulseProgress) * flowIntensity;
+                
+                if (flowIntensity > 0) {
+                    ctx.beginPath();
+                    ctx.arc(rx, ry, waveRadius, 0, Math.PI * 2);
+                    ctx.strokeStyle = cp.color + Math.floor((1 - pulseProgress) * 99).toString(16).padStart(2, '0');
+                    ctx.lineWidth = 1.5;
+                    ctx.stroke();
+                }
+
+                // Draw checkpoint dot
+                ctx.beginPath();
+                ctx.arc(rx, ry, 4, 0, Math.PI * 2);
+                ctx.fillStyle = cp.color;
+                ctx.shadowColor = cp.color;
+                ctx.shadowBlur = 8;
+                ctx.fill();
+                ctx.shadowBlur = 0; // reset
+
+                // Draw label
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+                ctx.font = '8px monospace';
+                ctx.textAlign = 'center';
+                ctx.fillText(cp.label, rx, ry - 7);
+            });
+
+            // Draw Flow Waves around player in the center (representing flow field intensity)
+            const centerIntensity = Math.max(0, 1 - minDistance / 30); // within 30 units
+            if (centerIntensity > 0) {
+                const time = Date.now();
+                const pulse = (time % 1500) / 1500;
+                ctx.beginPath();
+                ctx.arc(cx, cy, 5 + pulse * 20 * centerIntensity, 0, Math.PI * 2);
+                ctx.strokeStyle = `rgba(0, 255, 204, ${(1 - pulse) * 0.4 * centerIntensity})`;
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            }
+
+            // Draw sweep line
+            const sx = cx + Math.cos(radarSweepAngle) * radius;
+            const sy = cy + Math.sin(radarSweepAngle) * radius;
+            
+            // Gradient for sweep line tail
+            const sweepGrad = ctx.createRadialGradient(cx, cy, 2, cx, cy, radius);
+            sweepGrad.addColorStop(0, 'rgba(0, 255, 204, 0.2)');
+            sweepGrad.addColorStop(1, 'rgba(0, 255, 204, 0)');
+            
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.arc(cx, cy, radius, radarSweepAngle - 0.2, radarSweepAngle);
+            ctx.lineTo(cx, cy);
+            ctx.fillStyle = 'rgba(0, 255, 204, 0.08)';
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(sx, sy);
+            ctx.strokeStyle = 'rgba(0, 255, 204, 0.4)';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+
+            // Draw player in center
+            ctx.beginPath();
+            ctx.arc(cx, cy, 3, 0, Math.PI * 2);
+            ctx.fillStyle = '#fff';
+            ctx.shadowColor = '#fff';
+            ctx.shadowBlur = 6;
+            ctx.fill();
+            ctx.shadowBlur = 0;
+        }
+
+        // --- Cinema Logic & DB/Local Storage Fallback Helpers ---
+        let activeMedia = null;
+        let mediaList = [];
+
+        async function getTheaterMedia() {
+            try {
+                if (window.supabaseClient) {
+                    const { data, error } = await window.supabaseClient.from('theater_media').select('*').order('created_at', { ascending: false });
+                    if (!error && data) return data;
+                }
+            } catch (e) {
+                console.warn("DB query failed, using local storage fallback", e);
+            }
+            const local = localStorage.getItem('cdf_theater_media');
+            return local ? JSON.parse(local) : [];
+        }
+
+        async function uploadTheaterMedia(title, description, fileUrl, fileType) {
+            const newMedia = {
+                id: crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 15),
+                uploader_id: artistId,
+                uploader_name: artistData ? artistData.name : 'Anonymous',
+                title: title || 'Moment at Sanctuary',
+                description: description || '',
+                media_url: fileUrl,
+                media_type: fileType, // 'video' or 'image'
+                created_at: new Date().toISOString()
+            };
+
+            try {
+                if (window.supabaseClient) {
+                    const { data, error } = await window.supabaseClient.from('theater_media').insert([newMedia]).select();
+                    if (!error && data) return data[0];
+                }
+            } catch (e) {
+                console.warn("DB insert failed, saving to local storage fallback", e);
+            }
+
+            const local = localStorage.getItem('cdf_theater_media');
+            const list = local ? JSON.parse(local) : [];
+            list.unshift(newMedia);
+            localStorage.setItem('cdf_theater_media', JSON.stringify(list));
+            return newMedia;
+        }
+
+        async function getTheaterComments(mediaId) {
+            try {
+                if (window.supabaseClient) {
+                    const { data, error } = await window.supabaseClient.from('theater_comments').select('*').eq('media_id', mediaId).order('created_at', { ascending: true });
+                    if (!error && data) return data;
+                }
+            } catch (e) {
+                console.warn("DB comments query failed, using local storage fallback", e);
+            }
+
+            const local = localStorage.getItem('cdf_theater_comments');
+            const allComments = local ? JSON.parse(local) : [];
+            return allComments.filter(c => c.media_id === mediaId);
+        }
+
+        async function addTheaterComment(mediaId, commentText) {
+            const newComment = {
+                id: crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 15),
+                media_id: mediaId,
+                commenter_id: artistId,
+                commenter_name: artistData ? artistData.name : 'Anonymous',
+                comment: commentText,
+                created_at: new Date().toISOString()
+            };
+
+            try {
+                if (window.supabaseClient) {
+                    const { data, error } = await window.supabaseClient.from('theater_comments').insert([newComment]).select();
+                    if (!error && data) return data[0];
+                }
+            } catch (e) {
+                console.warn("DB comment insert failed, saving to local storage fallback", e);
+            }
+
+            const local = localStorage.getItem('cdf_theater_comments');
+            const list = local ? JSON.parse(local) : [];
+            list.push(newComment);
+            localStorage.setItem('cdf_theater_comments', JSON.stringify(list));
+            return newComment;
+        }
+
+        async function openSystemPlayer(autoUpload = false) {
+            document.getElementById('zone-overlay').style.display = 'none';
+            const modal = document.getElementById('theater-cinema-modal');
+            modal.classList.remove('hidden');
+            
+            await refreshTheaterGallery();
+            
+            if (autoUpload) {
+                triggerTheaterUpload();
+            }
+        }
+
+        function closeTheaterModal() {
+            const modal = document.getElementById('theater-cinema-modal');
+            modal.classList.add('hidden');
+            const container = document.getElementById('cinema-screen-container');
+            container.innerHTML = `
+                <div class="text-center text-white/40">
+                    <span class="material-symbols-outlined text-5xl mb-2 animate-pulse">play_circle</span>
+                    <p class="text-sm">Select a clip or photo below to start playing</p>
+                </div>
+            `;
+            activeMedia = null;
+            
+            const avatarPos = playerGroup.position;
+            checkZoneCollisions(avatarPos);
+        }
+
+        async function refreshTheaterGallery() {
+            const grid = document.getElementById('theater-gallery-grid');
+            grid.innerHTML = '<div class="col-span-full text-center text-white/40 text-xs py-8">Syncing clips...</div>';
+            
+            mediaList = await getTheaterMedia();
+            
+            if (mediaList.length === 0) {
+                grid.innerHTML = '<div class="col-span-full text-center text-white/30 text-xs py-8">No clips shared yet. Be the first to upload!</div>';
+                return;
+            }
+            
+            grid.innerHTML = '';
+            mediaList.forEach(media => {
+                const isVideo = media.media_type === 'video';
+                const card = document.createElement('div');
+                card.className = 'glass-panel rounded-xl overflow-hidden cursor-pointer hover:border-[#00ffcc] border-white/5 transition flex flex-col aspect-video relative group bg-black/60';
+                card.onclick = () => selectTheaterMedia(media);
+                
+                let thumbnailHtml = '';
+                if (isVideo) {
+                    thumbnailHtml = `
+                        <div class="w-full h-full flex items-center justify-center bg-zinc-900 relative">
+                            <span class="material-symbols-outlined text-white/40 text-2xl group-hover:scale-110 transition-transform">play_circle</span>
+                            <span class="absolute bottom-1 right-1 bg-black/80 text-[8px] text-white/70 px-1 rounded">VIDEO</span>
+                        </div>
+                    `;
+                } else {
+                    thumbnailHtml = `
+                        <img src="${media.media_url}" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=300&q=80'">
+                        <span class="absolute bottom-1 right-1 bg-black/80 text-[8px] text-white/70 px-1 rounded">IMAGE</span>
+                    `;
+                }
+                
+                card.innerHTML = `
+                    <div class="flex-1 overflow-hidden relative">${thumbnailHtml}</div>
+                    <div class="p-1.5 bg-black/40">
+                        <div class="text-[9px] font-bold text-white truncate">${media.title}</div>
+                        <div class="text-[8px] text-[#d4af37] truncate">@${media.uploader_name}</div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+            
+            if (!activeMedia && mediaList.length > 0) {
+                selectTheaterMedia(mediaList[0]);
+            }
+        }
+
+        async function selectTheaterMedia(media) {
+            activeMedia = media;
+            const isVideo = media.media_type === 'video';
+            const screen = document.getElementById('cinema-screen-container');
+            
+            if (isVideo) {
+                screen.innerHTML = `
+                    <video id="cinema-video-player" controls autoplay class="w-full h-full object-contain">
+                        <source src="${media.media_url}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                `;
+            } else {
+                screen.innerHTML = `
+                    <img src="${media.media_url}" class="max-w-full max-h-full object-contain" onerror="this.src='https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=800&q=80'">
+                `;
+            }
+            
+            document.getElementById('cinema-media-title').innerText = media.title;
+            document.getElementById('cinema-media-desc').innerText = media.description || 'No description provided.';
+            
+            const dateStr = new Date(media.created_at).toLocaleDateString();
+            document.getElementById('cinema-media-meta').innerHTML = `
+                <div class="text-white font-bold">@${media.uploader_name}</div>
+                <div class="opacity-60 text-[8px]">${dateStr}</div>
+            `;
+            
+            if (videoScreen) {
+                if (isVideo) {
+                    videoScreen.material.color.setHex(0x33ccff);
+                } else {
+                    videoScreen.material.color.setHex(0xff00cc);
+                }
+            }
+            
+            await refreshCommentsFeed(media.id);
+        }
+
+        async function refreshCommentsFeed(mediaId) {
+            const feed = document.getElementById('cinema-comments-feed');
+            feed.innerHTML = '<div class="text-center text-white/40 py-4">Loading feedback...</div>';
+            
+            const comments = await getTheaterComments(mediaId);
+            
+            if (comments.length === 0) {
+                feed.innerHTML = '<div class="text-center text-white/30 py-8">No feedback yet. Tell them what you think!</div>';
+                return;
+            }
+            
+            feed.innerHTML = '';
+            comments.forEach(c => {
+                const dateStr = new Date(c.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                const item = document.createElement('div');
+                item.className = 'bg-white/5 border border-white/5 p-2 rounded-lg flex flex-col gap-1';
+                item.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <span class="text-[#00ffcc] font-bold">@${c.commenter_name}</span>
+                        <span class="opacity-40 text-[8px]">${dateStr}</span>
+                    </div>
+                    <p class="text-white/80">${c.comment}</p>
+                `;
+                feed.appendChild(item);
+            });
+            
+            feed.scrollTop = feed.scrollHeight;
+        }
+
+        async function submitCinemaComment() {
+            if (!activeMedia) {
+                alert("Please select a media item first.");
+                return;
+            }
+            const input = document.getElementById('cinema-comment-input');
+            const commentText = input.value.trim();
+            if (!commentText) return;
+            
+            input.value = '';
+            
+            await addTheaterComment(activeMedia.id, commentText);
+            await refreshCommentsFeed(activeMedia.id);
+        }
+
+        async function triggerTheaterUpload() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'video/*,image/*';
+            
+            input.onchange = async (e) => {
+                let file = e.target.files[0];
+                if (!file) return;
+
+                const fileType = file.type.startsWith('video/') ? 'video' : 'image';
+                
+                const title = prompt("Enter a title for your moment:", file.name.substring(0, 20));
+                if (title === null) return;
+                
+                const desc = prompt("Enter a brief description:");
+                if (desc === null) return;
+                
+                alert('Uploading file...');
+                let mediaUrl = '';
+                
+                try {
+                    if (window.supabaseClient) {
+                        const filePath = `cinema/${Date.now()}_${file.name}`;
+                        const { data, error } = await window.supabaseClient.storage
+                            .from('sanctuary_media')
+                            .upload(filePath, file);
+                            
+                        if (!error && data) {
+                            const { data: urlData } = window.supabaseClient.storage
+                                .from('sanctuary_media')
+                                .getPublicUrl(filePath);
+                            mediaUrl = urlData.publicUrl;
+                        } else {
+                            console.warn("Storage upload failed:", error);
+                        }
+                    }
+                } catch (err) {
+                    console.warn("Supabase Storage error:", err);
+                }
+
+                if (!mediaUrl) {
+                    if (fileType === 'image') {
+                        alert('Storage bucket offline. Encoding image as base64...');
+                        const reader = new FileReader();
+                        mediaUrl = await new Promise((resolve) => {
+                            reader.onload = (ev) => resolve(ev.target.result);
+                            reader.readAsDataURL(file);
+                        });
+                    } else {
+                        alert('Storage offline. Video uploads are only supported when connected to Supabase.');
+                        return;
+                    }
+                }
+                
+                const uploadedItem = await uploadTheaterMedia(title, desc, mediaUrl, fileType);
+                alert("Manifested in theater!");
+                
+                await refreshTheaterGallery();
+                if (uploadedItem) {
+                    selectTheaterMedia(uploadedItem);
+                }
+            };
+            
+            input.click();
+        }
+
         // --- Three.js Pure 3D Engine ---
         
         function createAdinkraTexture(color1, color2) {
@@ -1016,21 +1727,60 @@
             const hubGroup = new THREE.Group();
             hubGroup.position.set(-10, 0, -5);
 
-            const counterGeo = new THREE.BoxGeometry(6, 1.2, 2);
+            // Circular clay hut wall
+            const wallGeo = new THREE.CylinderGeometry(3.5, 3.7, 3, 16, 1, true); // open-ended cylinder
+            const clayMat = new THREE.MeshStandardMaterial({ color: 0x8b3e2f, roughness: 0.9, side: THREE.DoubleSide });
+            const walls = new THREE.Mesh(wallGeo, clayMat);
+            walls.position.y = 1.5;
+            walls.castShadow = true;
+            walls.receiveShadow = true;
+            hubGroup.add(walls);
+
+            // Thatch/Neon conical roof
+            const roofGeo = new THREE.ConeGeometry(4.2, 2.2, 16);
+            const roofMat = new THREE.MeshStandardMaterial({ color: 0xd4af37, roughness: 0.8, flatShading: true });
+            const roof = new THREE.Mesh(roofGeo, roofMat);
+            roof.position.y = 3.8;
+            roof.castShadow = true;
+            hubGroup.add(roof);
+
+            // A glowing neon band under the roof
+            const ringGeo = new THREE.TorusGeometry(3.7, 0.08, 8, 32);
+            const ringMat = new THREE.MeshBasicMaterial({ color: 0x00ffcc });
+            const neonRing = new THREE.Mesh(ringGeo, ringMat);
+            neonRing.position.y = 3.0;
+            neonRing.rotation.x = Math.PI / 2;
+            hubGroup.add(neonRing);
+
+            // Table/Counter for ordering (sticking out of a window cutout)
+            const counterGeo = new THREE.BoxGeometry(4, 0.8, 1.5);
             const counter = new THREE.Mesh(counterGeo, lehmMaterial);
-            counter.position.y = 0.6;
+            counter.position.set(0, 0.8, 2.5);
             counter.castShadow = true;
             hubGroup.add(counter);
 
-            const roofGeo = new THREE.PlaneGeometry(6, 4);
-            const roofMat = new THREE.MeshBasicMaterial({ 
-                color: 0xff3366, 
-                transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending, side: THREE.DoubleSide
-            });
-            const roof = new THREE.Mesh(roofGeo, roofMat);
-            roof.position.set(0, 4, 1);
-            roof.rotation.x = -Math.PI / 3;
-            hubGroup.add(roof);
+            // Small clay pots/jars on the table
+            const potGeo = new THREE.CylinderGeometry(0.3, 0.2, 0.5, 12);
+            const potMat = new THREE.MeshStandardMaterial({ color: 0xcd5c5c, roughness: 0.9 });
+            
+            const pot1 = new THREE.Mesh(potGeo, potMat);
+            pot1.position.set(-1.2, 1.4, 2.5);
+            hubGroup.add(pot1);
+
+            const pot2 = new THREE.Mesh(potGeo, potMat);
+            pot2.position.set(1.2, 1.4, 2.5);
+            hubGroup.add(pot2);
+
+            // Hanging lantern
+            const lanternGeo = new THREE.SphereGeometry(0.2, 8, 8);
+            const lanternMat = new THREE.MeshBasicMaterial({ color: 0xffaa00 });
+            const lantern = new THREE.Mesh(lanternGeo, lanternMat);
+            lantern.position.set(0, 2.2, 2.5);
+            hubGroup.add(lantern);
+
+            const lanternLight = new THREE.PointLight(0xffaa00, 1.5, 6);
+            lanternLight.position.set(0, 2.2, 2.5);
+            hubGroup.add(lanternLight);
 
             scene.add(hubGroup);
         }
@@ -1039,19 +1789,74 @@
             const hubGroup = new THREE.Group();
             hubGroup.position.set(0, 0, -30);
 
-            const stageGeo = new THREE.CylinderGeometry(6, 6.5, 0.4, 32);
+            // Circular platform stage
+            const stageGeo = new THREE.CylinderGeometry(6, 6.5, 0.8, 32);
             const stage = new THREE.Mesh(stageGeo, lehmMaterial);
-            stage.position.y = 0.2;
+            stage.position.y = 0.4;
             stage.receiveShadow = true;
             hubGroup.add(stage);
 
+            // Dramatic acoustic back shell (half-cylinder)
+            const shellGeo = new THREE.CylinderGeometry(6.2, 6.2, 6, 32, 1, true, 0, Math.PI);
+            const shellMat = new THREE.MeshStandardMaterial({ color: 0x8b3e2f, roughness: 0.8, side: THREE.DoubleSide });
+            const backShell = new THREE.Mesh(shellGeo, shellMat);
+            backShell.position.set(0, 3.4, 0);
+            backShell.rotation.y = -Math.PI / 2; // Face forward
+            hubGroup.add(backShell);
+
+            // Neon glowing ribs along the acoustic back shell
+            const ribGeo = new THREE.TorusGeometry(6.2, 0.08, 8, 32, Math.PI);
+            const ribMat = new THREE.MeshBasicMaterial({ color: 0xff00cc });
+            
+            const rib1 = new THREE.Mesh(ribGeo, ribMat);
+            rib1.position.set(0, 3.4, 0);
+            rib1.rotation.y = 0;
+            hubGroup.add(rib1);
+
+            const rib2 = new THREE.Mesh(ribGeo, ribMat);
+            rib2.position.set(0, 5.0, 0);
+            rib2.rotation.y = 0;
+            hubGroup.add(rib2);
+
+            // Stage steps
+            const stepGeo = new THREE.BoxGeometry(4, 0.4, 1.5);
+            const step = new THREE.Mesh(stepGeo, lehmMaterial);
+            step.position.set(0, 0.2, 6.2);
+            hubGroup.add(step);
+
+            // Tall stage lighting trusses (front columns)
+            const trussGeo = new THREE.CylinderGeometry(0.15, 0.15, 6, 8);
+            const trussMat = new THREE.MeshStandardMaterial({ color: 0x222222, metalness: 0.8, roughness: 0.2 });
+            
+            const leftTruss = new THREE.Mesh(trussGeo, trussMat);
+            leftTruss.position.set(-5.5, 3, 3);
+            hubGroup.add(leftTruss);
+
+            const rightTruss = new THREE.Mesh(trussGeo, trussMat);
+            rightTruss.position.set(5.5, 3, 3);
+            hubGroup.add(rightTruss);
+
+            // Spotlights on top of trusses pointing down
+            const spotLightLeft = new THREE.SpotLight(0x00ffcc, 5, 20, Math.PI / 6, 0.5, 1);
+            spotLightLeft.position.set(-5.5, 5.8, 3);
+            spotLightLeft.target.position.set(0, 0, -30);
+            hubGroup.add(spotLightLeft);
+            hubGroup.add(spotLightLeft.target);
+
+            const spotLightRight = new THREE.SpotLight(0xff00cc, 5, 20, Math.PI / 6, 0.5, 1);
+            spotLightRight.position.set(5.5, 5.8, 3);
+            spotLightRight.target.position.set(0, 0, -30);
+            hubGroup.add(spotLightRight);
+            hubGroup.add(spotLightRight.target);
+
+            // Floor Decal Adinkra
             const decalGeo = new THREE.PlaneGeometry(8, 8);
             const decalMat = new THREE.MeshBasicMaterial({
                 map: createAdinkraTexture('#cc33ff', '#00ffaa'), 
                 transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending, depthWrite: false
             });
             const floorDecal = new THREE.Mesh(decalGeo, decalMat);
-            floorDecal.position.y = 0.45;
+            floorDecal.position.y = 0.81;
             floorDecal.rotation.x = -Math.PI / 2;
             hubGroup.add(floorDecal);
 
@@ -1062,20 +1867,70 @@
             const hubGroup = new THREE.Group();
             hubGroup.position.set(15, 0, -15);
 
-            const backWall = new THREE.Mesh(new THREE.BoxGeometry(6, 5, 1), lehmMaterial);
-            backWall.position.set(0, 2.5, -2);
-            backWall.castShadow = true;
-            hubGroup.add(backWall);
+            // Large rounded theater dome shell (semi-sphere)
+            const domeGeo = new THREE.SphereGeometry(6, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2);
+            const domeMat = new THREE.MeshStandardMaterial({ 
+                color: 0x5c2e16, 
+                roughness: 0.95,
+                side: THREE.DoubleSide
+            });
+            const dome = new THREE.Mesh(domeGeo, domeMat);
+            dome.castShadow = true;
+            dome.receiveShadow = true;
+            hubGroup.add(dome);
 
+            // Cut out entrance portal with neon glowing arch
+            const archGeo = new THREE.TorusGeometry(2, 0.2, 8, 16, Math.PI);
+            const archMat = new THREE.MeshBasicMaterial({ color: 0x33ccff });
+            const entranceArch = new THREE.Mesh(archGeo, archMat);
+            entranceArch.position.set(0, 0.1, 5.8);
+            entranceArch.rotation.x = -Math.PI / 2;
+            hubGroup.add(entranceArch);
+
+            const entranceLight = new THREE.PointLight(0x33ccff, 1.0, 5);
+            entranceLight.position.set(0, 2, 5.8);
+            hubGroup.add(entranceLight);
+
+            // Holographic Screen
             const screenGeo = new THREE.PlaneGeometry(4.5, 2.5);
             const screenMat = new THREE.MeshBasicMaterial({
                 color: 0x33ccff, 
-                transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending
+                transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending,
+                side: THREE.DoubleSide
             });
             const holoScreen = new THREE.Mesh(screenGeo, screenMat);
             holoScreen.position.set(0, 2.8, -1.4);
             holoScreen.userData.isScreen = true;
             hubGroup.add(holoScreen);
+
+            // Glowing portal frame around the screen
+            const frameGeo = new THREE.BoxGeometry(5.2, 3.2, 0.2);
+            const frameMat = new THREE.MeshBasicMaterial({ color: 0x33ccff, transparent: true, opacity: 0.5 });
+            const portalFrame = new THREE.Mesh(frameGeo, frameMat);
+            portalFrame.position.set(0, 2.8, -1.45);
+            hubGroup.add(portalFrame);
+
+            // Seating: premium clay benches
+            const seatGeo = new THREE.BoxGeometry(1.2, 0.4, 0.6);
+            const seatMat = new THREE.MeshStandardMaterial({ color: 0x3d2117, roughness: 0.9 });
+            
+            const seatPositions = [
+                { x: -1.8, z: 1.5, rot: 0.2 }, 
+                { x: 0, z: 2.0, rot: 0 }, 
+                { x: 1.8, z: 1.5, rot: -0.2 }
+            ];
+
+            seatPositions.forEach(pos => {
+                const seat = new THREE.Mesh(seatGeo, seatMat);
+                seat.position.set(pos.x, 0.2, pos.z);
+                seat.rotation.y = pos.rot;
+                hubGroup.add(seat);
+            });
+
+            // Blue ambient glow for the cinema
+            const cinemaLight = new THREE.PointLight(0x33ccff, 2.0, 10);
+            cinemaLight.position.set(0, 3, 1);
+            hubGroup.add(cinemaLight);
 
             scene.add(hubGroup);
             return holoScreen;
@@ -1239,7 +2094,7 @@
                         <h2>🥃 INTERACTIVE THEATER</h2>
                         <p class="text-xs text-white/70 mb-4">Archive of past moments shared here.</p>
                         <button class="zone-btn" onclick="openSystemPlayer()">Open Video Gallery</button>
-                        <button class="zone-btn" onclick="triggerMediaUpload()">Upload Video/Photo</button>
+                        <button class="zone-btn" onclick="openSystemPlayer(true)">Upload Video/Photo</button>
                     </div>
                 `;
             }
@@ -1327,88 +2182,6 @@
             window.bubbleInterval = setInterval(rotateGhostSpeaker, 6000);
         }
 
-        function openSystemPlayer() {
-            const overlay = document.getElementById('zone-overlay');
-            overlay.innerHTML = `
-                <div class="video-archive-modal fade-in">
-                    <h3 class="text-[#d4af37] text-center mb-4 uppercase tracking-widest text-sm">🎥 MOMENTS AT SECRET GARDEN</h3>
-                    <video id="sanctuary-player" controls autoplay style="width:100%; border-radius:8px; border:1px solid #d4af37;">
-                        <!-- Using a placeholder video, should connect to Supabase -->
-                        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
-                    </video>
-                    <div class="mt-4">
-                        <h4 class="text-xs text-[#00ffcc] mb-2 uppercase">Community Comments</h4>
-                        <div id="video-comments" class="bg-black/50 p-2 rounded text-[10px] text-white/70 mb-2 h-20 overflow-y-auto">
-                            <p><strong class="text-white">Neon_Ghost:</strong> The sound that night was insane! 🔥</p>
-                        </div>
-                        <div class="flex gap-2">
-                            <input type="text" id="new-comment-input" placeholder="Leave a comment..." class="flex-1 bg-black border border-white/20 rounded p-1 text-xs text-white">
-                            <button onclick="alert('Comment saved!');" class="bg-[#d4af37] text-black px-2 py-1 rounded text-xs">Send</button>
-                        </div>
-                    </div>
-                    <button class="zone-btn" onclick="triggerZoneUI('innereBar')">Back</button>
-                </div>
-            `;
-        }
-
-        async function triggerMediaUpload() {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'video/*,image/*';
-            
-            input.onchange = async (e) => {
-                let file = e.target.files[0];
-                if (!file) return;
-
-                // Client-side compression for images to ensure fast uploads and low storage costs
-                if (file.type.startsWith('image/')) {
-                    alert('Optimizing image for the network...');
-                    const img = new Image();
-                    img.src = URL.createObjectURL(file);
-                    await new Promise(r => img.onload = r);
-                    const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 1280;
-                    let width = img.width;
-                    let height = img.height;
-                    if (width > MAX_WIDTH) {
-                        height *= MAX_WIDTH / width;
-                        width = MAX_WIDTH;
-                    }
-                    canvas.width = width;
-                    canvas.height = height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, width, height);
-                    
-                    const blob = await new Promise(r => canvas.toBlob(r, 'image/jpeg', 0.8));
-                    file = new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".jpg", { type: 'image/jpeg' });
-                } else if (file.type.startsWith('video/')) {
-                    if (file.size > 50 * 1024 * 1024) { // 50MB limit
-                        alert('Video is too large. Please upload a compressed file under 50MB.');
-                        return;
-                    }
-                    alert('Preparing video upload...');
-                }
-
-                alert('Uploading... ' + file.name);
-                try {
-                    const filePath = `secret-garden-theke/${Date.now()}_${file.name}`;
-                    const { data, error } = await window.supabaseClient.storage
-                        .from('sanctuary_media') // Using the correct bucket where RLS allows inserts
-                        .upload(filePath, file);
-
-                    if (error) {
-                        alert("Upload Error: " + error.message);
-                    } else {
-                        alert("Successfully uploaded! Your contribution is now syncing in the network.");
-                    }
-                } catch(err) {
-                    alert("Supabase is currently disconnected or the bucket is missing.");
-                }
-            };
-            
-            input.click();
-        }
-
         // Animation Loop
         const clock = new THREE.Clock();
         
@@ -1416,6 +2189,9 @@
             requestAnimationFrame(animate);
             const delta = clock.getDelta();
             const time = clock.getElapsedTime();
+
+            // Draw radar
+            updateRadar();
 
             checkZoneCollisions(playerGroup.position);
 

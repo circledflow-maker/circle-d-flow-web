@@ -40,11 +40,30 @@ class SoulPassAgent {
                     this.userData.email = user.email;
                     const { data: profile, error: dbErr } = await window.supabaseClient.from('profiles').select('*').eq('id', user.id).single();
                     if(profile && !dbErr) {
-                        this.userData.name = profile.full_name || this.userData.name;
-                        this.userData.rank = profile.rank || this.userData.rank;
+                        this.userData.name = profile.username || profile.full_name || this.userData.name;
+                        this.userData.rank = "LEVEL " + (profile.level || 1) + " " + (profile.flow_class || "AGENT");
                         this.userData.guild = profile.guild || '';
                         this.userData.preferred_contact_method = profile.preferred_contact_method || 'system_chat';
                         this.userData.contact_details = typeof profile.contact_details === 'string' ? profile.contact_details : JSON.stringify(profile.contact_details || {});
+                        
+                        // Update UI if already rendered
+                        const nameDisp = document.getElementById('sn-display-name');
+                        if(nameDisp) nameDisp.innerText = this.userData.name.toUpperCase();
+                        
+                        const rankCard = document.querySelector('.sp-stat-val.text-white');
+                        if(rankCard) rankCard.innerText = this.userData.rank;
+                        
+                        const guildDisp = document.getElementById('sn-display-guild');
+                        if(guildDisp) guildDisp.innerText = this.userData.guild ? "Guild of " + this.userData.guild.charAt(0).toUpperCase() + this.userData.guild.slice(1) : "None";
+
+                        const crystal = document.querySelector('.sp-crystal');
+                        if(crystal) {
+                            let detailsObj = {};
+                            try { detailsObj = JSON.parse(this.userData.contact_details); } catch(e) {}
+                            if(detailsObj.avatar_url) {
+                                crystal.style.background = `url('${detailsObj.avatar_url}') center/cover no-repeat`;
+                            }
+                        }
                     }
                 }
             } catch(e) {
@@ -208,13 +227,20 @@ class SoulPassAgent {
         const content = document.createElement('div');
         content.className = 'sn-content-area';
         
+        let avatarStyle = '';
+        let detailsObj = {};
+        try { detailsObj = JSON.parse(this.userData.contact_details || '{}'); } catch(e) {}
+        if(detailsObj.avatar_url) {
+            avatarStyle = `style="background: url('${detailsObj.avatar_url}') center/cover no-repeat;"`;
+        }
+
         // Pane: Identity (Soul Pass)
         const paneIdentity = document.createElement('div');
         paneIdentity.id = 'pane-identity';
         paneIdentity.className = 'sn-pane active';
         paneIdentity.innerHTML = `
             <div class="sp-crystal-container">
-                <div class="sp-crystal"></div>
+                <div class="sp-crystal" ${avatarStyle}></div>
                 <h2 style="font-family: 'Cinzel', serif; font-size: 2.5rem; color: #fff; text-shadow: 0 0 15px rgba(255,255,255,0.3); margin-top: 20px;" id="sn-display-name">${(this.userData.name || "Drifter").toUpperCase()}</h2>
                 <p style="font-family: 'Space Mono', monospace; color: #d4af37; letter-spacing: 2px;">${this.userData.hashId}</p>
             </div>
@@ -401,13 +427,26 @@ class SoulPassAgent {
         if(window.SoundEngineer) window.SoundEngineer.playSFX('ui_click');
     }
 
-    updateName(newVal) {
+    async updateName(newVal) {
         newVal = newVal.trim();
         if(!newVal) return;
         localStorage.setItem('cdf_user_username', newVal);
         this.userData.name = newVal;
         const nameDisp = document.getElementById('sn-display-name');
         if(nameDisp) nameDisp.innerText = newVal.toUpperCase();
+        
+        // sync to profiles username
+        if(window.supabaseClient && this.userData.userId) {
+            await window.supabaseClient.from('profiles').update({ username: newVal }).eq('id', this.userData.userId);
+            
+            // Also sync to master_artists name if email exists
+            if(this.userData.email) {
+                try {
+                    await window.supabaseClient.from('master_artists').update({ name: newVal }).eq('email', this.userData.email);
+                } catch(e) {}
+            }
+        }
+        
         if(window.Pusher) window.Pusher.showToast('Profile Updated', 'success');
         this.pulseFeedback();
     }

@@ -3,6 +3,32 @@
  * Purpose: Collects bug reports (Glitches), provides Utility functions, and bridges User Actions.
  */
 
+if (typeof window.Agent === 'undefined') {
+    window.Agent = class Agent {
+        constructor(name) {
+            this.name = name || "Unknown Agent";
+            this.initialized = false;
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', () => this._safeInit());
+            } else {
+                this._safeInit();
+            }
+        }
+        _safeInit() {
+            try {
+                console.log(`[${this.name}] Initializing (Fallback)...`);
+                this.init();
+                this.initialized = true;
+                console.log(`[${this.name}] Online.`);
+            } catch (e) {
+                console.error(`[${this.name}] Initialization Failed:`, e);
+            }
+        }
+        init() {}
+        log(msg) { console.log(`[${this.name}] ${msg}`); }
+    };
+}
+
 class HelperAgent extends Agent {
     constructor() {
         super("Helper");

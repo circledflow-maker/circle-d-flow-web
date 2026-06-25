@@ -261,18 +261,24 @@
 
             const { data: profile } = await window.supabaseClient
                 .from('profiles')
-                .select('full_name, avatar_url')
+                .select('username, contact_details')
                 .eq('id', user.id)
                 .single();
 
             if(profile) {
-                document.getElementById('seller-name').value = profile.full_name || "";
+                document.getElementById('seller-name').value = profile.username || "";
                 if(document.getElementById('seller-name-display')) {
-                    document.getElementById('seller-name-display').innerText = profile.full_name || "Unknown Merchant";
+                    document.getElementById('seller-name-display').innerText = profile.username || "Unknown Merchant";
                 }
-                if(profile.avatar_url) {
+                
+                let details = {};
+                try {
+                    details = typeof profile.contact_details === 'string' ? JSON.parse(profile.contact_details) : (profile.contact_details || {});
+                } catch(e){}
+
+                if(details.avatar_url) {
                     const img = document.getElementById('profile-preview');
-                    img.src = profile.avatar_url;
+                    img.src = details.avatar_url;
                     img.classList.remove('hidden');
                 }
             }
@@ -310,7 +316,13 @@
                         document.getElementById('profile-preview').src = e.target.result;
                         document.getElementById('profile-preview').classList.remove('hidden');
                         try {
-                            await window.supabaseClient.from('profiles').update({ avatar_url: e.target.result }).eq('id', currentUser.id);
+                            const { data: currentProfile } = await window.supabaseClient.from('profiles').select('contact_details').eq('id', currentUser.id).single();
+                            let details = {};
+                            if (currentProfile && currentProfile.contact_details) {
+                                details = typeof currentProfile.contact_details === 'string' ? JSON.parse(currentProfile.contact_details) : currentProfile.contact_details;
+                            }
+                            details.avatar_url = e.target.result;
+                            await window.supabaseClient.from('profiles').update({ contact_details: details }).eq('id', currentUser.id);
                         } catch(err) {}
                     }
                     reader.readAsDataURL(file);
@@ -324,9 +336,16 @@
                 document.getElementById('profile-preview').src = publicUrl;
                 document.getElementById('profile-preview').classList.remove('hidden');
                 
+                const { data: currentProfile } = await window.supabaseClient.from('profiles').select('contact_details').eq('id', currentUser.id).single();
+                let details = {};
+                if (currentProfile && currentProfile.contact_details) {
+                    details = typeof currentProfile.contact_details === 'string' ? JSON.parse(currentProfile.contact_details) : currentProfile.contact_details;
+                }
+                details.avatar_url = publicUrl;
+
                 // Update profile immediately
                 await window.supabaseClient.from('profiles')
-                    .update({ avatar_url: publicUrl })
+                    .update({ contact_details: details })
                     .eq('id', currentUser.id);
 
             } catch(e) { alert("Error updating avatar: " + e.message); }
@@ -349,7 +368,7 @@
 
                 // A. Update Profile Name if changed
                 await window.supabaseClient.from('profiles')
-                    .update({ full_name: sellerName })
+                    .update({ username: sellerName })
                     .eq('id', currentUser.id);
 
                 // B. Upload Product Image

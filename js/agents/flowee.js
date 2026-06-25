@@ -985,6 +985,16 @@ class FloweeAgent {
         // 1. User Message
         this.addChatMessage(text, 'user');
 
+        // Check if waiting for payment details
+        if(this.waitingForPaymentDetails) {
+            this.waitingForPaymentDetails = false;
+            this.saveCommsDetailField('payment_details', text);
+            setTimeout(() => {
+                this.addChatMessage("Thank you! I have saved your payment details/tags to your profile. 💰", 'ai');
+            }, 600);
+            return;
+        }
+
         // Dispatch Global Event for Agentic Brain
         window.dispatchEvent(new CustomEvent('CDF_USER_CHAT', { detail: { text } }));
 
@@ -995,6 +1005,26 @@ class FloweeAgent {
             
             if(answer.action) answer.action(); 
         }, 600);
+    }
+
+    async saveCommsDetailField(field, val) {
+        localStorage.setItem(`cdf_user_${field}`, val);
+        if(window.supabaseClient) {
+            try {
+                const { data: { user } } = await window.supabaseClient.auth.getUser();
+                if(user) {
+                    const { data: profile } = await window.supabaseClient.from('profiles').select('contact_details').eq('id', user.id).single();
+                    let details = {};
+                    if(profile && profile.contact_details) {
+                        details = typeof profile.contact_details === 'string' ? JSON.parse(profile.contact_details) : profile.contact_details;
+                    }
+                    details[field] = val;
+                    await window.supabaseClient.from('profiles').update({ contact_details: details }).eq('id', user.id);
+                }
+            } catch(e) {
+                console.warn("[Flowee] Error updating contact details:", e);
+            }
+        }
     }
 
     startCountdownAndNavigate(url, message) {
@@ -1146,6 +1176,11 @@ class FloweeAgent {
         }
 
         const intentMap = [
+            // BANK DETAILS / MONEY TRIGGER
+            { triggers: ["bank", "iban", "paypal", "revolut", "payment", "send money"], text: "Let's update your payment details. Please type your IBAN, PayPal, or Revolut tag below and I will store it in your profile.", action: () => {
+                this.waitingForPaymentDetails = true;
+            }},
+
             // CLOUD PULSE (Agentic Bridge)
             { triggers: ["cloud-pulse", "cloud pulse", "sync cloud", "pulse"], text: "Initiating Cloud Pulse Handshake...", action: () => {
                 if(window.AgenticBrain) window.AgenticBrain.requestSyncConsent();
