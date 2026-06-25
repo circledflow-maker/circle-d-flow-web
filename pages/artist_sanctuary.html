@@ -1747,6 +1747,11 @@
         document.getElementById('canvas-container').innerHTML = ''; 
         document.getElementById('canvas-container').appendChild(renderer.domElement);
 
+        let isCinematicDive = false;
+        let targetCameraPos = new THREE.Vector3(0, 10, 20);
+        let targetLookAt = new THREE.Vector3(0, 2, 10);
+        let currentLookAt = new THREE.Vector3(0, 2, 10);
+
         let orbitControls;
         if (typeof THREE.OrbitControls !== 'undefined') {
             orbitControls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -2175,6 +2180,11 @@
         playerGroup.position.set(0, 2, 10); 
         scene.add(playerGroup);
 
+        if (orbitControls) {
+            orbitControls.target.copy(playerGroup.position);
+            orbitControls.update();
+        }
+
         const soulGroup = new THREE.Group();
         playerGroup.add(soulGroup);
         soulGroup.position.y = 2; 
@@ -2419,6 +2429,7 @@
         let currentPerspective = 'first'; // 'first' or 'third'
         
         function toggleCameraView() {
+            isCinematicDive = true;
             if (currentPerspective === 'first') {
                 currentPerspective = 'third';
                 targetCameraPos.copy(playerGroup.position).add(new THREE.Vector3(0, 15, 20));
@@ -2426,20 +2437,14 @@
                 currentPerspective = 'first';
                 targetCameraPos.copy(playerGroup.position).add(new THREE.Vector3(0, 1.5, 5));
             }
-            if (orbitControls) {
-                orbitControls.target.copy(playerGroup.position);
-                orbitControls.update();
-            }
+            targetLookAt.copy(playerGroup.position);
         }
 
         function recenterCamera() {
+            isCinematicDive = true;
             targetCameraPos.copy(playerGroup.position).add(new THREE.Vector3(0, 1.5, 5));
             targetLookAt.copy(playerGroup.position);
             currentPerspective = 'first';
-            if (orbitControls) {
-                orbitControls.target.copy(playerGroup.position);
-                orbitControls.update();
-            }
         }
 
         // Add orbit controls update to animation loop if not cinematic dive
@@ -2454,6 +2459,13 @@
                 camera.position.lerp(targetCameraPos, 0.03);
                 currentLookAt.lerp(targetLookAt, 0.04);
                 camera.lookAt(currentLookAt);
+                if (camera.position.distanceTo(targetCameraPos) < 0.5) {
+                    isCinematicDive = false;
+                    if (orbitControls) {
+                        orbitControls.target.copy(playerGroup.position);
+                        orbitControls.update();
+                    }
+                }
             } else {
                 if (orbitControls) {
                     orbitControls.enabled = true;
@@ -2556,11 +2568,23 @@
                 moveDir.addScaledVector(camDir, -moveVec.y);
                 moveDir.normalize();
 
+                const oldPlayerPos = playerGroup.position.clone();
                 playerGroup.position.x += moveDir.x * speed;
                 playerGroup.position.z += moveDir.z * speed;
+                const playerDelta = playerGroup.position.clone().sub(oldPlayerPos);
                 
                 soulCore.rotation.z = -moveVec.x * 0.5;
                 soulCore.rotation.x = moveVec.y * 0.5;
+
+                // Shift camera and target positions to follow the player
+                targetCameraPos.add(playerDelta);
+                targetLookAt.add(playerDelta);
+                currentLookAt.add(playerDelta);
+
+                if (orbitControls && !isCinematicDive) {
+                    orbitControls.target.copy(playerGroup.position);
+                    camera.position.add(playerDelta);
+                }
             } else {
                 soulCore.rotation.z = THREE.MathUtils.lerp(soulCore.rotation.z, 0, 0.1);
                 soulCore.rotation.x = THREE.MathUtils.lerp(soulCore.rotation.x, 0, 0.1);
@@ -2568,10 +2592,6 @@
 
             // Simple Terrain Following
             playerGroup.position.y = THREE.MathUtils.lerp(playerGroup.position.y, 1.5, 0.1);
-
-            const targetCamPos = playerGroup.position.clone().add(new THREE.Vector3(0, 5, 12));
-            camera.position.lerp(targetCamPos, 0.05);
-            camera.lookAt(playerGroup.position);
 
             renderer.render(scene, camera);
         }
