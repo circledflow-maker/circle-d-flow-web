@@ -55,7 +55,7 @@
     <!-- NAV (Synchronized Horizon Bar) -->
     <header class="fixed top-0 w-full z-[100] h-16 flex lg:grid lg:grid-cols-[1fr_2fr_1fr] items-center px-4 lg:px-8 bg-black/90 border-b border-[#FFAE42]/20 backdrop-blur-md justify-between lg:justify-start">
         <div class="flex justify-start">
-            <a href="marketplace.html" class="flex items-center gap-2 text-[#FFAE42]/70 hover:text-[#FFAE42] transition-colors group">
+            <a href="marketplace_3d.html" target="_top" class="flex items-center gap-2 text-[#FFAE42]/70 hover:text-[#FFAE42] transition-colors group">
                 <span class="material-symbols-outlined text-sm group-hover:-translate-x-1 transition-transform">arrow_back</span>
                 <span class="text-[10px] font-bold uppercase tracking-widest hidden sm:inline">Back</span>
             </a>
@@ -66,10 +66,10 @@
         </div>
 
         <div class="flex justify-end gap-2 lg:gap-4 items-center">
-            <a href="marketplace-upload.html" class="px-2 lg:px-4 py-1.5 border border-[#FFAE42]/50 text-[#FFAE42] text-[10px] font-bold uppercase rounded hover:bg-[#FFAE42] hover:text-black transition-all flex items-center gap-1">
+            <a href="marketplace_3d.html?intent=upload" onclick="handleForgeClick(event)" class="px-2 lg:px-4 py-1.5 border border-[#FFAE42]/50 text-[#FFAE42] text-[10px] font-bold uppercase rounded hover:bg-[#FFAE42] hover:text-black transition-all flex items-center gap-1">
                 <span class="material-symbols-outlined text-sm">auto_fix</span> <span class="hidden lg:inline">FORGE</span>
             </a>
-            <a href="dashboard.html" class="w-8 h-8 lg:w-10 lg:h-10 rounded-full border border-white/10 flex items-center justify-center hover:border-[#FFAE42] transition-colors overflow-hidden">
+            <a href="dashboard.html" target="_top" class="w-8 h-8 lg:w-10 lg:h-10 rounded-full border border-white/10 flex items-center justify-center hover:border-[#FFAE42] transition-colors overflow-hidden">
                 <img id="header-avatar" src="https://placehold.co/100x100/120818/FFAE42?text=V" class="w-full h-full object-cover">
             </a>
         </div>
@@ -99,7 +99,7 @@
 
                 <!-- Sanctuary Redirection Button -->
                 <div class="flex justify-center md:justify-start mb-6">
-                    <a id="sanctuary-link" href="#" class="px-5 py-2 border border-[#FFAE42] text-[#FFAE42] text-[10px] font-cinzel font-bold uppercase rounded-full hover:bg-[#FFAE42] hover:text-black transition-all flex items-center gap-2 shadow-[0_0_15px_rgba(255,174,66,0.3)]">
+                    <a id="sanctuary-link" href="#" target="_top" class="px-5 py-2 border border-[#FFAE42] text-[#FFAE42] text-[10px] font-cinzel font-bold uppercase rounded-full hover:bg-[#FFAE42] hover:text-black transition-all flex items-center gap-2 shadow-[0_0_15px_rgba(255,174,66,0.3)]">
                         <span class="material-symbols-outlined text-sm">home_pin</span> Go to Sanctuary
                     </a>
                 </div>
@@ -217,7 +217,7 @@
         <section id="section-inventory">
             <div class="flex justify-between items-center mb-6">
                  <h2 class="text-lg font-bold text-white/50 uppercase tracking-widest">Active Listings</h2>
-                 <a href="marketplace-upload.html" class="px-4 py-2 border border-dashed border-white/20 rounded hover:border-gold hover:text-gold text-xs font-bold uppercase transition-all flex items-center gap-2">
+                 <a href="marketplace_3d.html?intent=upload" onclick="handleForgeClick(event)" class="px-4 py-2 border border-dashed border-white/20 rounded hover:border-gold hover:text-gold text-xs font-bold uppercase transition-all flex items-center gap-2">
                     <span class="material-symbols-outlined text-sm">add</span> New
                  </a>
             </div>
@@ -592,6 +592,24 @@
             } else {
                 btn.innerHTML = `<span class="material-symbols-outlined text-sm">wifi_off</span> OFFLINE`;
                 btn.className = "px-4 py-2 rounded-full border border-white/20 text-white/50 text-xs font-bold uppercase hover:bg-white/5 transition-all flex items-center gap-2";
+            }
+        }
+
+        function handleForgeClick(event) {
+            event.preventDefault();
+            // Check if we are embedded in an iframe in marketplace_3d.html
+            if (window.parent !== window && typeof window.parent.openForge === 'function') {
+                window.parent.openForge();
+                // Close parent dialog modal
+                try {
+                    const parentModal = window.parent.document.getElementById('iframe-modal');
+                    if (parentModal && typeof parentModal.close === 'function') {
+                        parentModal.close();
+                    }
+                } catch(e) {}
+            } else {
+                // Not in an iframe or parent doesn't have openForge; redirect top-level to marketplace_3d.html?intent=upload
+                window.top.location.href = `marketplace_3d.html?intent=upload&artistId=${currentUser ? currentUser.id : ''}`;
             }
         }
     </script>

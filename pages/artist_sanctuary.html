@@ -8,7 +8,7 @@
         // Suppress Tailwind Play CDN production warning
         const originalWarn = console.warn;
         console.warn = function(...args) {
-            if (args[0] && args[0].includes('cdn.tailwindcss.com')) return;
+            if (args[0] && (args[0].includes('cdn.tailwindcss.com') || args[0].includes('Tailwind') || args[0].includes('production'))) return;
             originalWarn.apply(console, args);
         };
     </script>
@@ -183,7 +183,7 @@
         </div>
 
         <!-- 2D Holographic Map Radar (Flow Radar) -->
-        <div id="radar-container" class="absolute top-28 left-4 w-28 h-28 rounded-full glass-panel border border-[#00ffcc]/30 shadow-[0_0_15px_rgba(0,255,204,0.2)] overflow-hidden pointer-events-auto flex items-center justify-center">
+        <div id="radar-container" onclick="window.location.href='quest_map.html'" class="absolute bottom-44 left-4 w-28 h-28 rounded-full glass-panel border border-[#00ffcc]/30 shadow-[0_0_15px_rgba(0,255,204,0.2)] overflow-hidden pointer-events-auto flex items-center justify-center cursor-pointer">
             <canvas id="radar-canvas" width="112" height="112"></canvas>
         </div>
 
@@ -222,7 +222,13 @@
         <button onclick="document.getElementById('flowee-overlay').classList.add('hidden')" class="absolute top-8 right-6 text-white/50 hover:text-white bg-black/50 p-2 rounded-full backdrop-blur-md border border-white/10 z-[70] flex"><span class="material-symbols-outlined">close</span></button>
         <div class="glass-panel p-4 rounded-3xl w-full max-w-md mx-auto flex flex-col h-[60vh] relative">
             <div class="flex items-center gap-2 mb-4 border-b border-white/10 pb-2">
-                <div class="w-8 h-8 rounded-full bg-gradient-to-r from-[#00ffcc] to-[#003322] flex items-center justify-center shadow-[0_0_10px_#00ffcc] font-bold text-black text-xs">F</div>
+                <div class="w-8 h-8 rounded-full bg-gradient-to-r from-[#00ffcc] to-[#003322] flex items-center justify-center shadow-[0_0_10px_#00ffcc] overflow-hidden">
+                    <svg viewBox="0 0 100 100" width="100%" height="100%" style="transform: scale(1.5);">
+                        <path d="M40,50 C10,20 -10,60 15,75 C25,80 40,65 40,50 Z" fill="#00ffcc" opacity="0.8"><animateTransform attributeName="transform" type="rotate" values="0 40 50; -20 40 50; 0 40 50" dur="0.8s" repeatCount="indefinite"/></path>
+                        <path d="M60,50 C90,20 110,60 85,75 C75,80 60,65 60,50 Z" fill="#00ffcc" opacity="0.8"><animateTransform attributeName="transform" type="rotate" values="0 60 50; 20 60 50; 0 60 50" dur="0.8s" repeatCount="indefinite"/></path>
+                        <circle cx="50" cy="50" r="16" fill="#00ffcc"><animate attributeName="r" values="16;18;16" dur="2s" repeatCount="indefinite"/></circle>
+                    </svg>
+                </div>
                 <div class="text-[#00ffcc] text-sm uppercase tracking-widest font-bold">Flowee</div>
             </div>
             <div id="flowee-chat-area" class="flex-1 overflow-y-auto hide-scrollbar flex flex-col gap-3 pb-4">
@@ -473,7 +479,7 @@
             trans.classList.remove('pointer-events-none');
             trans.style.opacity = '1';
             setTimeout(() => {
-                window.location.href = `marketplace.html?intent=upload&artistId=${artistId}`;
+                window.location.href = `marketplace_3d.html?intent=upload&artistId=${artistId}`;
             }, 1000);
         }
 
@@ -530,74 +536,126 @@
         }
 
         async function initData() {
-            if(!artistId || !window.supabaseClient) return;
+            if(!window.supabaseClient) return;
 
-            try {
-                const { data: artist } = await window.supabaseClient.from('master_artists').select('*').eq('id', artistId).single();
-                if(artist) {
-                    artistData = artist;
-                    document.getElementById('artist-name').innerText = artist.name;
-                    document.getElementById('artist-type').innerText = artist.artist_type === 'performance' ? 'Performance Soul' : 'Service Weaver';
-                    document.getElementById('artist-exp').innerText = `${artist.exp || 0} EXP`;
-                    document.getElementById('artist-flow').innerText = `${artist.flow_credits || 0} FLOW`;
-
-                    // Bidirectional Profile Sync
-                    try {
-                        const { data: { user } } = await window.supabaseClient.auth.getUser();
-                        if (user) {
-                            const { data: profile } = await window.supabaseClient.from('profiles').select('*').eq('id', user.id).single();
-                            if (profile) {
-                                let artistUpdated = false;
-                                const pContact = profile.contact_details || {};
-                                const aContact = artist.contact_details || {};
-                                
-                                // Sync name
-                                if (profile.username && artist.name !== profile.username) {
-                                    artist.name = profile.username;
-                                    document.getElementById('artist-name').innerText = artist.name;
-                                    artistUpdated = true;
-                                }
-                                
-                                // Sync avatar
-                                if (pContact.avatar_url && aContact.avatar_url !== pContact.avatar_url) {
-                                    aContact.avatar_url = pContact.avatar_url;
-                                    artistUpdated = true;
-                                }
-                                
-                                // Sync payment details
-                                if (pContact.payment_details && aContact.payment_details !== pContact.payment_details) {
-                                    aContact.payment_details = pContact.payment_details;
-                                    aContact.bank = pContact.bank || aContact.bank;
-                                    aContact.paypal = pContact.paypal || aContact.paypal;
-                                    aContact.revolut = pContact.revolut || aContact.revolut;
-                                    artistUpdated = true;
-                                }
-                                
-                                if (artistUpdated) {
-                                    await window.supabaseClient.from('master_artists').update({
-                                        name: artist.name,
-                                        contact_details: aContact
-                                    }).eq('id', artistId);
-                                }
+            // Resolve artistId from session/auth user if not already set
+            if(!artistId) {
+                try {
+                    const { data: { user } } = await window.supabaseClient.auth.getUser();
+                    if (user) {
+                        // Look up by email
+                        const { data: artists } = await window.supabaseClient.from('master_artists').select('*').eq('email', user.email);
+                        if (artists && artists.length > 0) {
+                            artistData = artists[0];
+                            artistId = artistData.id;
+                            localStorage.setItem('flowee_artist_id', artistId);
+                        } else {
+                            // Look up by id
+                            const { data: artists2 } = await window.supabaseClient.from('master_artists').select('*').eq('id', user.id);
+                            if (artists2 && artists2.length > 0) {
+                                artistData = artists2[0];
+                                artistId = artistData.id;
+                                localStorage.setItem('flowee_artist_id', artistId);
                             }
                         }
-                    } catch(syncErr) {
-                        console.warn("Profile sync failed:", syncErr);
+                    }
+                } catch(e) {
+                    console.warn("Could not auto-resolve artistId from session:", e);
+                }
+            }
+
+            try {
+                if (artistId) {
+                    const { data: artist } = await window.supabaseClient.from('master_artists').select('*').eq('id', artistId).single();
+                    if(artist) {
+                        artistData = artist;
+                    }
+                }
+                
+                // Fallback to Profiles if no artist details could be loaded
+                if(!artistData) {
+                    const { data: { user } } = await window.supabaseClient.auth.getUser();
+                    if (user) {
+                        const { data: profile } = await window.supabaseClient.from('profiles').select('*').eq('id', user.id).single();
+                        if (profile) {
+                            artistData = {
+                                id: user.id,
+                                name: profile.username || user.email.split('@')[0],
+                                artist_type: 'traveler',
+                                exp: profile.exp || 0,
+                                flow_credits: profile.flow || 0
+                            };
+                            artistId = user.id;
+                            localStorage.setItem('flowee_artist_id', artistId);
+                        }
+                    }
+                }
+
+                if(artistData) {
+                    document.getElementById('artist-name').innerText = artistData.name;
+                    document.getElementById('artist-type').innerText = artistData.artist_type === 'performance' ? 'Performance Soul' : (artistData.artist_type === 'traveler' ? 'Nexus Traveler' : 'Service Weaver');
+                    document.getElementById('artist-exp').innerText = `${artistData.exp || 0} EXP`;
+                    document.getElementById('artist-flow').innerText = `${artistData.flow_credits || 0} FLOW`;
+
+                    // Bidirectional Profile Sync (only if we have profile and real artist row)
+                    if (artistId && artistData.artist_type !== 'traveler') {
+                        try {
+                            const { data: { user } } = await window.supabaseClient.auth.getUser();
+                            if (user) {
+                                const { data: profile } = await window.supabaseClient.from('profiles').select('*').eq('id', user.id).single();
+                                if (profile) {
+                                    let artistUpdated = false;
+                                    const pContact = profile.contact_details || {};
+                                    const aContact = artistData.contact_details || {};
+                                    
+                                    // Sync name
+                                    if (profile.username && artistData.name !== profile.username) {
+                                        artistData.name = profile.username;
+                                        document.getElementById('artist-name').innerText = artistData.name;
+                                        artistUpdated = true;
+                                    }
+                                    
+                                    // Sync avatar
+                                    if (pContact.avatar_url && aContact.avatar_url !== pContact.avatar_url) {
+                                        aContact.avatar_url = pContact.avatar_url;
+                                        artistUpdated = true;
+                                    }
+                                    
+                                    // Sync payment details
+                                    if (pContact.payment_details && aContact.payment_details !== pContact.payment_details) {
+                                        aContact.payment_details = pContact.payment_details;
+                                        aContact.bank = pContact.bank || aContact.bank;
+                                        aContact.paypal = pContact.paypal || aContact.paypal;
+                                        aContact.revolut = pContact.revolut || aContact.revolut;
+                                        artistUpdated = true;
+                                    }
+                                    
+                                    if (artistUpdated) {
+                                        await window.supabaseClient.from('master_artists').update({
+                                            name: artistData.name,
+                                            contact_details: aContact
+                                        }).eq('id', artistId);
+                                    }
+                                }
+                            }
+                        } catch(syncErr) {
+                            console.warn("Profile sync failed:", syncErr);
+                        }
                     }
 
-                    if(artist.permanent_qr_code) {
-                        const qrDataUrl = await QRCode.toDataURL(artist.permanent_qr_code, { width: 250, margin: 1, color: { dark: '#00ffccff', light: '#09090bff' } });
+                    if(artistData.permanent_qr_code) {
+                        const qrDataUrl = await QRCode.toDataURL(artistData.permanent_qr_code, { width: 250, margin: 1, color: { dark: '#00ffccff', light: '#09090bff' } });
                         document.getElementById('qr-container').innerHTML = `<img src="${qrDataUrl}" alt="QR" />`;
-                        document.getElementById('qr-text').innerText = artist.permanent_qr_code;
+                        document.getElementById('qr-text').innerText = artistData.permanent_qr_code;
                     }
 
                     let contentHtml = '';
                     // Check localData to avoid repeating the flow if DB is not updated
-                    const localData = JSON.parse(localStorage.getItem('soul_data_' + artistId));
+                    const localData = JSON.parse(localStorage.getItem('soul_data_' + (artistId || artistData.id)));
                     // Robust check: if exp > 0, they already finished the onboarding
-                    deepFlowCompleted = (artist.exp > 0 || artist.community_cut_percentage !== null || (localData && (localData.artifact || localData.cut)));
+                    deepFlowCompleted = (artistData.exp > 0 || artistData.community_cut_percentage !== null || (localData && (localData.artifact || localData.cut)));
 
-                    if(artist.artist_type === 'performance') {
+                    if(artistData.artist_type === 'performance') {
                         try {
                             const { data: perf } = await window.supabaseClient.from('performance_details').select('*').eq('artist_id', artistId).order('created_at', { ascending: false }).limit(1).single();
                             if(perf && perf.artifact_of_power) {
@@ -610,7 +668,6 @@
                         
                         // Fallback to local storage if DB fails
                         if (!contentHtml) {
-                            const localData = JSON.parse(localStorage.getItem('soul_data_' + artistId));
                             if(localData && localData.artifact) {
                                 contentHtml += `<div class="mb-2"><strong class="text-[#d4af37]">Category:</strong> Completed Post-Sync</div>`;
                                 contentHtml += `<div class="mb-2"><strong class="text-[#d4af37]">Tech Rider:</strong> ${localData.tech || 'None'}</div>`;
@@ -618,11 +675,11 @@
                                 contentHtml += `<div class="mb-2"><strong class="text-[#d4af37]">Inspiration:</strong> ${localData.insp}</div>`;
                             }
                         }
-                    } else {
+                    } else if (artistData.artist_type !== 'traveler') {
                         try {
                             const { data: inv } = await window.supabaseClient.from('service_inventories').select('*').eq('artist_id', artistId);
-                            if(artist.community_cut_percentage !== null) {
-                                contentHtml += `<div class="mb-4 text-[#00ffcc]">Community Cut: ${artist.community_cut_percentage}%</div>`;
+                            if(artistData.community_cut_percentage !== null) {
+                                contentHtml += `<div class="mb-4 text-[#00ffcc]">Community Cut: ${artistData.community_cut_percentage}%</div>`;
                                 if(inv && inv.length > 0) {
                                     contentHtml += `<div class="mt-4 bg-white/5 border border-white/10 rounded-lg p-3">
                                         <h3 class="text-[#d4af37] font-bold mb-2 flex items-center gap-2"><span class="material-symbols-outlined text-sm">inventory_2</span> Inventory</h3>
@@ -638,7 +695,6 @@
                         } catch(err) { /* ignore 400 error */ }
 
                         // Fallback to local storage if DB fails or is empty
-                        const localData = JSON.parse(localStorage.getItem('soul_data_' + artistId));
                         if(localData && localData.cut && !contentHtml.includes('Community Cut')) {
                             contentHtml += `<div class="mb-4 text-[#00ffcc]">Community Cut: ${localData.cut}% (Local Sync)</div>`;
                             if(localData.inventory && localData.inventory.length > 0) {
@@ -653,6 +709,9 @@
                                     contentHtml += `</tbody></table></div>`;
                             }
                         }
+                    } else {
+                        // Guest/Traveler
+                        contentHtml = 'Welcome! You can explore the 3D sanctuary, view event flyers and network team, check out the interactive theater, and visit the 3D marketplace using the HUD.';
                     }
                     
                     if(!contentHtml) {
@@ -661,7 +720,7 @@
                     document.getElementById('data-content').innerHTML = contentHtml;
 
                     // Trigger Flowee Deep Flow if not complete
-                    if(!deepFlowCompleted) {
+                    if(!deepFlowCompleted && artistData.artist_type !== 'traveler') {
                         setTimeout(startInSanctuaryDeepFlow, 2000);
                     }
                 }
@@ -1752,12 +1811,20 @@
             neonRing.rotation.x = Math.PI / 2;
             hubGroup.add(neonRing);
 
-            // Table/Counter for ordering (sticking out of a window cutout)
-            const counterGeo = new THREE.BoxGeometry(4, 0.8, 1.5);
-            const counter = new THREE.Mesh(counterGeo, lehmMaterial);
-            counter.position.set(0, 0.8, 2.5);
-            counter.castShadow = true;
-            hubGroup.add(counter);
+            // Bar counter top
+            const barTopGeo = new THREE.BoxGeometry(4.4, 0.1, 1.2);
+            const barTopMat = new THREE.MeshStandardMaterial({ color: 0xd4af37, roughness: 0.3 }); // gold/wood top
+            const barTop = new THREE.Mesh(barTopGeo, barTopMat);
+            barTop.position.set(0, 1.2, 2.5);
+            barTop.castShadow = true;
+            hubGroup.add(barTop);
+
+            // Bar base
+            const barBaseGeo = new THREE.BoxGeometry(4.2, 1.2, 1.0);
+            const barBase = new THREE.Mesh(barBaseGeo, clayMat);
+            barBase.position.set(0, 0.6, 2.5);
+            barBase.castShadow = true;
+            hubGroup.add(barBase);
 
             // Small clay pots/jars on the table
             const potGeo = new THREE.CylinderGeometry(0.3, 0.2, 0.5, 12);
@@ -1782,6 +1849,23 @@
             lanternLight.position.set(0, 2.2, 2.5);
             hubGroup.add(lanternLight);
 
+            // Welcoming Barkeeper Soul
+            const soulGeo = new THREE.SphereGeometry(0.4, 16, 16);
+            const soulMat = new THREE.MeshBasicMaterial({
+                color: 0x00ffcc,
+                transparent: true,
+                opacity: 0.8,
+                blending: THREE.AdditiveBlending
+            });
+            const barkeeperSoul = new THREE.Mesh(soulGeo, soulMat);
+            barkeeperSoul.position.set(0, 1.8, 1.2); // behind counter
+            barkeeperSoul.name = "barkeeperSoul";
+            hubGroup.add(barkeeperSoul);
+
+            const barkeeperLight = new THREE.PointLight(0x00ffcc, 1.5, 5);
+            barkeeperLight.position.set(0, 1.8, 1.2);
+            hubGroup.add(barkeeperLight);
+
             scene.add(hubGroup);
         }
 
@@ -1789,76 +1873,155 @@
             const hubGroup = new THREE.Group();
             hubGroup.position.set(0, 0, -30);
 
-            // Circular platform stage
-            const stageGeo = new THREE.CylinderGeometry(6, 6.5, 0.8, 32);
+            // Elevated platform stage
+            const stageGeo = new THREE.CylinderGeometry(6, 6.5, 1.2, 32);
             const stage = new THREE.Mesh(stageGeo, lehmMaterial);
-            stage.position.y = 0.4;
+            stage.position.y = 0.6;
             stage.receiveShadow = true;
             hubGroup.add(stage);
 
-            // Dramatic acoustic back shell (half-cylinder)
+            // Acoustic back shell
             const shellGeo = new THREE.CylinderGeometry(6.2, 6.2, 6, 32, 1, true, 0, Math.PI);
             const shellMat = new THREE.MeshStandardMaterial({ color: 0x8b3e2f, roughness: 0.8, side: THREE.DoubleSide });
             const backShell = new THREE.Mesh(shellGeo, shellMat);
-            backShell.position.set(0, 3.4, 0);
-            backShell.rotation.y = -Math.PI / 2; // Face forward
+            backShell.position.set(0, 3.6, 0);
+            backShell.rotation.y = -Math.PI / 2;
             hubGroup.add(backShell);
 
-            // Neon glowing ribs along the acoustic back shell
+            // Neon glowing ribs
             const ribGeo = new THREE.TorusGeometry(6.2, 0.08, 8, 32, Math.PI);
             const ribMat = new THREE.MeshBasicMaterial({ color: 0xff00cc });
             
             const rib1 = new THREE.Mesh(ribGeo, ribMat);
-            rib1.position.set(0, 3.4, 0);
+            rib1.position.set(0, 3.6, 0);
             rib1.rotation.y = 0;
             hubGroup.add(rib1);
 
             const rib2 = new THREE.Mesh(ribGeo, ribMat);
-            rib2.position.set(0, 5.0, 0);
+            rib2.position.set(0, 5.2, 0);
             rib2.rotation.y = 0;
             hubGroup.add(rib2);
 
             // Stage steps
-            const stepGeo = new THREE.BoxGeometry(4, 0.4, 1.5);
+            const stepGeo = new THREE.BoxGeometry(4, 0.6, 1.5);
             const step = new THREE.Mesh(stepGeo, lehmMaterial);
-            step.position.set(0, 0.2, 6.2);
+            step.position.set(0, 0.3, 6.2);
             hubGroup.add(step);
 
-            // Tall stage lighting trusses (front columns)
+            // trusses
             const trussGeo = new THREE.CylinderGeometry(0.15, 0.15, 6, 8);
             const trussMat = new THREE.MeshStandardMaterial({ color: 0x222222, metalness: 0.8, roughness: 0.2 });
             
             const leftTruss = new THREE.Mesh(trussGeo, trussMat);
-            leftTruss.position.set(-5.5, 3, 3);
+            leftTruss.position.set(-5.5, 3.2, 3);
             hubGroup.add(leftTruss);
 
             const rightTruss = new THREE.Mesh(trussGeo, trussMat);
-            rightTruss.position.set(5.5, 3, 3);
+            rightTruss.position.set(5.5, 3.2, 3);
             hubGroup.add(rightTruss);
 
-            // Spotlights on top of trusses pointing down
+            // Spotlights
             const spotLightLeft = new THREE.SpotLight(0x00ffcc, 5, 20, Math.PI / 6, 0.5, 1);
-            spotLightLeft.position.set(-5.5, 5.8, 3);
+            spotLightLeft.position.set(-5.5, 6.0, 3);
             spotLightLeft.target.position.set(0, 0, -30);
             hubGroup.add(spotLightLeft);
             hubGroup.add(spotLightLeft.target);
 
             const spotLightRight = new THREE.SpotLight(0xff00cc, 5, 20, Math.PI / 6, 0.5, 1);
-            spotLightRight.position.set(5.5, 5.8, 3);
+            spotLightRight.position.set(5.5, 6.0, 3);
             spotLightRight.target.position.set(0, 0, -30);
             hubGroup.add(spotLightRight);
             hubGroup.add(spotLightRight.target);
 
-            // Floor Decal Adinkra
+            // Floor Decal
             const decalGeo = new THREE.PlaneGeometry(8, 8);
             const decalMat = new THREE.MeshBasicMaterial({
                 map: createAdinkraTexture('#cc33ff', '#00ffaa'), 
                 transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending, depthWrite: false
             });
             const floorDecal = new THREE.Mesh(decalGeo, decalMat);
-            floorDecal.position.y = 0.81;
+            floorDecal.position.y = 1.21;
             floorDecal.rotation.x = -Math.PI / 2;
             hubGroup.add(floorDecal);
+
+            // --- 3D Instruments ---
+            // DJ Booth
+            const djBooth = new THREE.Group();
+            djBooth.position.set(0, 1.2, -1);
+            const table = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.9, 0.8), new THREE.MeshStandardMaterial({ color: 0x222222, metalness: 0.7 }));
+            table.position.y = 0.45;
+            djBooth.add(table);
+            const platterGeo = new THREE.CylinderGeometry(0.35, 0.35, 0.05, 16);
+            const platterMat = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.1 });
+            const lp1 = new THREE.Mesh(platterGeo, platterMat);
+            lp1.position.set(-0.5, 0.92, 0);
+            djBooth.add(lp1);
+            const lp2 = new THREE.Mesh(platterGeo, platterMat);
+            lp2.position.set(0.5, 0.92, 0);
+            djBooth.add(lp2);
+            const mixer = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.06, 0.4), new THREE.MeshStandardMaterial({ color: 0x333333 }));
+            mixer.position.set(0, 0.93, 0);
+            djBooth.add(mixer);
+            hubGroup.add(djBooth);
+
+            // Guitar on Stand
+            const guitarGroup = new THREE.Group();
+            guitarGroup.position.set(-3.0, 1.2, -0.5);
+            guitarGroup.rotation.y = Math.PI / 4;
+            const standMat = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.8 });
+            const standLegs = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.3, 0.6, 6), standMat);
+            standLegs.position.y = 0.3;
+            guitarGroup.add(standLegs);
+            const standNeckHolder = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 1.2, 8), standMat);
+            standNeckHolder.position.y = 0.9;
+            guitarGroup.add(standNeckHolder);
+            const guitarColor = new THREE.MeshStandardMaterial({ color: 0xff4500, roughness: 0.2 });
+            const gBody = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.7, 0.15), guitarColor);
+            gBody.position.set(0, 0.7, 0.1);
+            gBody.rotation.z = 0.2;
+            guitarGroup.add(gBody);
+            const gNeck = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.9, 8), new THREE.MeshStandardMaterial({ color: 0x8b5a2b }));
+            gNeck.position.set(0.1, 1.3, 0.1);
+            gNeck.rotation.z = 0.2;
+            guitarGroup.add(gNeck);
+            hubGroup.add(guitarGroup);
+
+            // Microphone Pole Stand
+            const micGroup = new THREE.Group();
+            micGroup.position.set(2.0, 1.2, 1.5);
+            const micBase = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 0.05, 12), standMat);
+            micBase.position.y = 0.025;
+            micGroup.add(micBase);
+            const micPole = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 1.7, 8), standMat);
+            micPole.position.y = 0.85;
+            micGroup.add(micPole);
+            const micClip = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.08, 0.15), new THREE.MeshStandardMaterial({ color: 0x333333 }));
+            micClip.position.set(0, 1.7, 0.05);
+            micClip.rotation.x = 0.3;
+            micGroup.add(micClip);
+            const micCapsule = new THREE.Mesh(new THREE.SphereGeometry(0.06, 8, 8), new THREE.MeshStandardMaterial({ color: 0xcccccc, metalness: 0.9 }));
+            micCapsule.position.set(0, 1.75, 0.1);
+            micGroup.add(micCapsule);
+            hubGroup.add(micGroup);
+
+            // Conga Drums
+            const congaGroup = new THREE.Group();
+            congaGroup.position.set(3.5, 1.2, -1.5);
+            const woodMat = new THREE.MeshStandardMaterial({ color: 0x8b4513, roughness: 0.6 });
+            const skinMat = new THREE.MeshStandardMaterial({ color: 0xf5f5dc, roughness: 0.9 });
+            const drum1 = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.25, 0.9, 12), woodMat);
+            drum1.position.set(-0.35, 0.45, 0);
+            congaGroup.add(drum1);
+            const skin1 = new THREE.Mesh(new THREE.CylinderGeometry(0.34, 0.34, 0.02, 12), skinMat);
+            skin1.position.set(-0.35, 0.9, 0);
+            congaGroup.add(skin1);
+            const drum2 = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.2, 0.8, 12), woodMat);
+            drum2.position.set(0.35, 0.4, 0);
+            congaGroup.add(drum2);
+            const skin2 = new THREE.Mesh(new THREE.CylinderGeometry(0.29, 0.29, 0.02, 12), skinMat);
+            skin2.position.set(0.35, 0.8, 0);
+            congaGroup.add(skin2);
+            hubGroup.add(congaGroup);
 
             scene.add(hubGroup);
         }
@@ -1910,21 +2073,50 @@
             portalFrame.position.set(0, 2.8, -1.45);
             hubGroup.add(portalFrame);
 
-            // Seating: premium clay benches
-            const seatGeo = new THREE.BoxGeometry(1.2, 0.4, 0.6);
-            const seatMat = new THREE.MeshStandardMaterial({ color: 0x3d2117, roughness: 0.9 });
-            
-            const seatPositions = [
-                { x: -1.8, z: 1.5, rot: 0.2 }, 
-                { x: 0, z: 2.0, rot: 0 }, 
-                { x: 1.8, z: 1.5, rot: -0.2 }
-            ];
+            // Red Velvet Curtains
+            const curtainMat = new THREE.MeshStandardMaterial({ color: 0x8b0000, roughness: 0.95 });
+            const leftCurtain = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 3.2, 12), curtainMat);
+            leftCurtain.position.set(-2.6, 2.8, -1.3);
+            leftCurtain.scale.set(1, 1, 0.5);
+            hubGroup.add(leftCurtain);
+            const rightCurtain = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 3.2, 12), curtainMat);
+            rightCurtain.position.set(2.6, 2.8, -1.3);
+            rightCurtain.scale.set(1, 1, 0.5);
+            hubGroup.add(rightCurtain);
+            const topValance = new THREE.Mesh(new THREE.BoxGeometry(5.6, 0.4, 0.4), curtainMat);
+            topValance.position.set(0, 4.4, -1.3);
+            hubGroup.add(topValance);
 
-            seatPositions.forEach(pos => {
-                const seat = new THREE.Mesh(seatGeo, seatMat);
-                seat.position.set(pos.x, 0.2, pos.z);
-                seat.rotation.y = pos.rot;
-                hubGroup.add(seat);
+            // Cabaret Tables with candles
+            const tableMat = new THREE.MeshStandardMaterial({ color: 0x3d2117, roughness: 0.6 });
+            const candleMat = new THREE.MeshBasicMaterial({ color: 0xffeedd });
+            const flameMat = new THREE.MeshBasicMaterial({ color: 0xffaa44 });
+            const tablePositions = [
+                { x: -2.0, z: 2.0 },
+                { x: 2.0, z: 2.0 },
+                { x: 0,    z: 3.5 }
+            ];
+            tablePositions.forEach((pos, idx) => {
+                const tableGroup = new THREE.Group();
+                tableGroup.position.set(pos.x, 0, pos.z);
+                const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.6, 8), tableMat);
+                leg.position.y = 0.3;
+                tableGroup.add(leg);
+                const top = new THREE.Mesh(new THREE.CylinderGeometry(0.6, 0.6, 0.05, 16), tableMat);
+                top.position.y = 0.6;
+                tableGroup.add(top);
+                const candle = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.15, 8), candleMat);
+                candle.position.set(0, 0.68, 0);
+                tableGroup.add(candle);
+                const flame = new THREE.Mesh(new THREE.SphereGeometry(0.03, 6, 6), flameMat);
+                flame.position.set(0, 0.77, 0);
+                flame.scale.set(1, 2, 1);
+                flame.name = `flame_${idx}`;
+                tableGroup.add(flame);
+                const light = new THREE.PointLight(0xffaa44, 0.8, 3);
+                light.position.set(0, 0.8, 0);
+                tableGroup.add(light);
+                hubGroup.add(tableGroup);
             });
 
             // Blue ambient glow for the cinema
@@ -1938,7 +2130,6 @@
 
         buildKitchenHub();
         buildStageHub();
-        const videoScreen = buildVideoArchiveHub();
 
         // --- Avatars ---
         const playerGroup = new THREE.Group();
@@ -2076,22 +2267,25 @@
             if (zoneName === 'eingangBar') {
                 overlay.innerHTML = `
                     <div class="zone-card fade-in">
-                        <h2>🌴 KITCHEN & MARKETPLACE</h2>
-                        <p class="text-xs text-white/70 mb-4">Welcome to AkwabaLX. Discover culinary delights and products from our local Service Artists.</p>
-                        <button class="zone-btn" onclick="document.getElementById('akwaba-menu-viewer').style.display='flex'">View Akwaba Menu</button>
-                        <button class="zone-btn" onclick="goToMarketplace()">Open Marketplace</button>
+                        <div class="flex items-center gap-2 justify-center mb-2">
+                            <span class="material-symbols-outlined text-[#00ffcc] animate-pulse">energy_savings_leaf</span>
+                            <h2>🌴 AKWABALX KITCHENBAR</h2>
+                        </div>
+                        <p class="text-xs text-white/70 italic mb-4">"Greetings, traveler. I am the Barkeeper Soul. Welcome to AkwabaLX. Choose your path:"</p>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button class="zone-btn mt-0 mb-0" onclick="document.getElementById('akwaba-menu-viewer').style.display='flex'">Taste the Art<br><span class="text-[9px] opacity-60">(Akwaba Menu)</span></button>
+                            <button class="zone-btn mt-0 mb-0" onclick="goToMarketplace()">Trade the Flow<br><span class="text-[9px] opacity-60">(Go to Bazaar)</span></button>
+                        </div>
                     </div>
                 `;
             } 
             else if (zoneName === 'buehne') {
-                // Do not show an HTML overlay for the stage anymore, 
-                // just start the ghost bubble 3D projection.
                 startGhostBubbleRotation();
             } 
             else if (zoneName === 'innereBar') {
                 overlay.innerHTML = `
                     <div class="zone-card fade-in">
-                        <h2>🥃 INTERACTIVE THEATER</h2>
+                        <h2>🥃 CABARET COLOSSEUM</h2>
                         <p class="text-xs text-white/70 mb-4">Archive of past moments shared here.</p>
                         <button class="zone-btn" onclick="openSystemPlayer()">Open Video Gallery</button>
                         <button class="zone-btn" onclick="openSystemPlayer(true)">Upload Video/Photo</button>
@@ -2194,6 +2388,22 @@
             updateRadar();
 
             checkZoneCollisions(playerGroup.position);
+
+            // Animate Barkeeper Soul
+            const barkeeper = scene.getObjectByName("barkeeperSoul");
+            if (barkeeper) {
+                barkeeper.position.y = 1.6 + Math.sin(time * 3) * 0.15;
+                barkeeper.scale.setScalar(1 + Math.sin(time * 6) * 0.1);
+            }
+
+            // Animate Candle flames
+            for (let i = 0; i < 3; i++) {
+                const flame = scene.getObjectByName(`flame_${i}`);
+                if (flame) {
+                    flame.scale.y = 1.5 + Math.sin(time * 20 + i) * 0.4;
+                    flame.scale.x = flame.scale.z = 1.0 + Math.sin(time * 15 + i) * 0.2;
+                }
+            }
 
             soulCore.position.y = Math.sin(time * 2) * 0.3;
             soulLight.intensity = 1.5 + Math.sin(time * 3) * 0.3;

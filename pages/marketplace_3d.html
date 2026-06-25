@@ -5,7 +5,14 @@
     <meta name="description" content="The Grand Bazaar - Seamless 3D Market">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Grand Bazaar 3D | Circle D Flow</title>
-    
+    <script>
+        // Suppress Tailwind Play CDN production warning
+        const originalWarn = console.warn;
+        console.warn = function(...args) {
+            if (args[0] && (args[0].includes('cdn.tailwindcss.com') || args[0].includes('Tailwind') || args[0].includes('production'))) return;
+            originalWarn.apply(console, args);
+        };
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&family=Cinzel:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
@@ -21,6 +28,9 @@
             color: #FDFBF7;
             font-family: 'Plus Jakarta Sans', sans-serif;
         }
+
+        .custom-scrollbar::-webkit-scrollbar { height: 4px; width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #ffaa44; border-radius: 4px; }
 
         #canvas-container {
             position: fixed;
@@ -298,6 +308,30 @@
         </div>
     </dialog>
 
+    <!-- Flowee Fullscreen Chat Overlay (Upload Intent Check) -->
+    <div id="flowee-overlay" class="fixed inset-0 z-[9999] bg-black/95 backdrop-blur-md hidden flex-col">
+        <div class="absolute top-4 right-4 z-10 pointer-events-auto">
+            <button onclick="document.getElementById('flowee-overlay').classList.add('hidden')" class="material-symbols-outlined text-white/50 hover:text-white text-3xl">close</button>
+        </div>
+        <div class="flex-1 p-6 flex flex-col justify-end max-w-2xl mx-auto w-full pointer-events-auto">
+            <div id="flowee-chat-log" class="space-y-4 mb-6 max-h-[70vh] overflow-y-auto custom-scrollbar flex flex-col gap-3">
+                <!-- Chat messages here -->
+            </div>
+            <div class="bg-[#1A1622] rounded-xl p-4 border border-[#00ffcc]/30 shadow-[0_0_30px_rgba(0,255,204,0.1)] flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full border border-[#00ffcc] overflow-hidden flex-shrink-0 bg-gradient-to-r from-[#00ffcc] to-[#003322] flex items-center justify-center shadow-[0_0_10px_#00ffcc]">
+                    <svg viewBox="0 0 100 100" width="100%" height="100%" style="transform: scale(1.5);">
+                        <path d="M40,50 C10,20 -10,60 15,75 C25,80 40,65 40,50 Z" fill="#00ffcc" opacity="0.8"><animateTransform attributeName="transform" type="rotate" values="0 40 50; -20 40 50; 0 40 50" dur="0.8s" repeatCount="indefinite"/></path>
+                        <path d="M60,50 C90,20 110,60 85,75 C75,80 60,65 60,50 Z" fill="#00ffcc" opacity="0.8"><animateTransform attributeName="transform" type="rotate" values="0 60 50; 20 60 50; 0 60 50" dur="0.8s" repeatCount="indefinite"/></path>
+                        <circle cx="50" cy="50" r="16" fill="#00ffcc"><animate attributeName="r" values="16;18;16" dur="2s" repeatCount="indefinite"/></circle>
+                    </svg>
+                </div>
+                <div id="flowee-input-zone" class="flex-1">
+                    <button class="w-full bg-[#00ffcc]/20 border border-[#00ffcc]/50 text-[#00ffcc] py-2 rounded font-bold uppercase tracking-widest text-xs hover:bg-[#00ffcc]/40 transition">Loading Flowee...</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <!-- SCRIPTS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -379,42 +413,69 @@
             return texture;
         }
 
-        function createClayBuilding(x, z, width, depth, height, symbolType, glowColor) {
+        function createClayBuilding(x, z, width, depth, height, symbolType, glowColor, wallColor = 0x8b3e2f) {
             const group = new THREE.Group();
             group.position.set(x, 0, z);
 
-            // Clay Structure
-            const geo = new THREE.BoxGeometry(width, height, depth);
-            // Slight noise in geometry to simulate clay
-            const posAttr = geo.attributes.position;
-            for(let i=0; i<posAttr.count; i++) {
-                posAttr.setX(i, posAttr.getX(i) + (Math.random()-0.5)*0.5);
-                posAttr.setY(i, posAttr.getY(i) + (Math.random()-0.5)*0.5);
-                posAttr.setZ(i, posAttr.getZ(i) + (Math.random()-0.5)*0.5);
-            }
-            geo.computeVertexNormals();
-
-            const mat = new THREE.MeshStandardMaterial({
-                color: 0x8b3e2f, // Warm terracotta
-                roughness: 1.0,
+            // Base clay walls (rounded cylinders for huts look premium)
+            const wallsGeo = new THREE.CylinderGeometry(width * 0.45, width * 0.5, height * 0.7, 16);
+            const wallsMat = new THREE.MeshStandardMaterial({
+                color: wallColor,
+                roughness: 0.9,
                 metalness: 0.05
             });
-            const building = new THREE.Mesh(geo, mat);
-            building.position.y = height / 2;
-            building.castShadow = true;
-            building.receiveShadow = true;
-            group.add(building);
+            const walls = new THREE.Mesh(wallsGeo, wallsMat);
+            walls.position.y = (height * 0.7) / 2;
+            walls.castShadow = true;
+            walls.receiveShadow = true;
+            group.add(walls);
+
+            // Conical Roof
+            const roofGeo = new THREE.ConeGeometry(width * 0.6, height * 0.5, 16);
+            const roofMat = new THREE.MeshStandardMaterial({
+                color: 0xd4af37,
+                roughness: 0.8,
+                flatShading: true
+            });
+            const roof = new THREE.Mesh(roofGeo, roofMat);
+            roof.position.y = height * 0.7 + (height * 0.5) / 2 - 0.2;
+            roof.castShadow = true;
+            group.add(roof);
+
+            // Neon glowing ring under the roof
+            const ringGeo = new THREE.TorusGeometry(width * 0.48, 0.08, 8, 32);
+            const ringMat = new THREE.MeshBasicMaterial({ color: glowColor || 0xffaa00 });
+            const neonRing = new THREE.Mesh(ringGeo, ringMat);
+            neonRing.position.y = height * 0.7;
+            neonRing.rotation.x = Math.PI / 2;
+            group.add(neonRing);
+
+            // Open counter table / shelf on the front
+            const counterGeo = new THREE.BoxGeometry(width * 0.7, 0.2, 0.8);
+            const counterMat = new THREE.MeshStandardMaterial({ color: 0xd4af37, roughness: 0.3 }); // gold/wooden top
+            const counter = new THREE.Mesh(counterGeo, counterMat);
+            counter.position.set(0, height * 0.3, depth * 0.48);
+            counter.castShadow = true;
+            group.add(counter);
+
+            // Front counter base
+            const counterBaseGeo = new THREE.BoxGeometry(width * 0.65, height * 0.3, 0.6);
+            const counterBaseMat = new THREE.MeshStandardMaterial({ color: 0x5c2e16, roughness: 0.9 });
+            const counterBase = new THREE.Mesh(counterBaseGeo, counterBaseMat);
+            counterBase.position.set(0, (height * 0.3) / 2, depth * 0.48);
+            counterBase.castShadow = true;
+            group.add(counterBase);
             
-            // Glowing Symbol Decal on front
+            // Glowing Symbol Decal on front above the counter
             if (symbolType) {
                 const tex = generateAdinkraTexture(symbolType, glowColor);
-                const symGeo = new THREE.PlaneGeometry(width * 0.6, width * 0.6);
+                const symGeo = new THREE.PlaneGeometry(width * 0.45, width * 0.45);
                 const symMat = new THREE.MeshBasicMaterial({
                     map: tex, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending, depthWrite: false
                 });
                 const symbol = new THREE.Mesh(symGeo, symMat);
-                // Position symbol on the face closest to z=0 (assuming z < 0 for buildings)
-                symbol.position.set(0, height / 2, depth / 2 + 0.5); 
+                // Position symbol on the front of the hut
+                symbol.position.set(0, height * 0.5, depth * 0.42); 
                 group.add(symbol);
             }
 
@@ -423,12 +484,12 @@
         }
 
         // Build the Bazaar Guild Huts (6 Stands)
-        createClayBuilding(-12, -20, 10, 10, 12, 'arts', '#ff5500'); 
-        createClayBuilding(12, -20, 10, 10, 12, 'sounds', '#00ddee');
-        createClayBuilding(-12, -40, 10, 10, 14, 'skills', '#00ff66');
-        createClayBuilding(12, -40, 10, 10, 14, 'healing', '#ff00aa');
-        createClayBuilding(-12, -60, 10, 10, 12, 'products', '#ffaa00');
-        createClayBuilding(12, -60, 10, 10, 12, 'services', '#aa00ff');
+        createClayBuilding(-12, -20, 10, 10, 12, 'arts', '#ff5500', 0x8b3e2f); 
+        createClayBuilding(12, -20, 10, 10, 12, 'sounds', '#00ddee', 0x5c2e16);
+        createClayBuilding(-12, -40, 10, 10, 14, 'skills', '#00ff66', 0x8b3e2f);
+        createClayBuilding(12, -40, 10, 10, 14, 'healing', '#ff00aa', 0xcd5c5c); // Indian Red (Food/Healing)
+        createClayBuilding(-12, -60, 10, 10, 12, 'products', '#ffaa00', 0x9370db); // Purple (Fashion/Products)
+        createClayBuilding(12, -60, 10, 10, 12, 'services', '#00ffcc', 0x005544); // Teal/Cyan (Services)
 
         // Community Hubs
         // 1. Akwaba Kitchen
@@ -740,8 +801,8 @@
             document.getElementById('iframe-modal').showModal();
         }
         function openForge() {
-            document.getElementById('integrated-iframe').src = "marketplace-upload.html";
-            document.getElementById('iframe-modal').showModal();
+            document.getElementById('flowee-overlay').classList.remove('hidden');
+            startUploadFlow();
         }
         function openZoneItems() {
             // Load the existing marketplace UI directly into the iframe
@@ -900,8 +961,141 @@
 
         // Start
         setTimeout(() => {
-            document.getElementById('card-arts').classList.add('active'); // Initial highlight
+            if (document.getElementById('card-arts')) {
+                document.getElementById('card-arts').classList.add('active'); // Initial highlight
+            }
         }, 500);
+
+        // --- FLOWEE INTERACTIVE UPLOAD FLOW ---
+        let uploadData = {};
+        const urlParams = new URLSearchParams(window.location.search);
+        let artistId = urlParams.get('artistId') || localStorage.getItem('flowee_artist_id');
+        if (artistId === 'null') artistId = null;
+        let artistData = null;
+
+        async function initArtistData() {
+            if (window.supabaseClient) {
+                if (!artistId || artistId === 'null') {
+                    try {
+                        const { data: { user } } = await window.supabaseClient.auth.getUser();
+                        if (user) {
+                            const { data: artists } = await window.supabaseClient.from('master_artists').select('*').eq('email', user.email);
+                            if (artists && artists.length > 0) {
+                                artistId = artists[0].id;
+                                artistData = artists[0];
+                            }
+                        }
+                    } catch(e) {}
+                } else {
+                    try {
+                        const { data } = await window.supabaseClient.from('master_artists').select('*').eq('id', artistId).single();
+                        if (data) artistData = data;
+                    } catch(e) {}
+                }
+            }
+        }
+        initArtistData();
+
+        function fMsg(text, sender = 'ai') {
+            const log = document.getElementById('flowee-chat-log');
+            if (!log) return;
+            const div = document.createElement('div');
+            div.className = sender === 'user' 
+                ? "ml-auto bg-white/10 p-3 rounded-xl border border-white/20 text-white max-w-[80%] text-right text-sm"
+                : "mr-auto bg-[#00ffcc]/10 p-3 rounded-xl border border-[#00ffcc]/20 text-[#00ffcc] max-w-[90%] text-sm";
+            div.innerHTML = text;
+            log.appendChild(div);
+            log.scrollTop = log.scrollHeight;
+        }
+
+        function setFInput(html) {
+            const inputZone = document.getElementById('flowee-input-zone');
+            if (inputZone) inputZone.innerHTML = html;
+        }
+
+        function startUploadFlow() {
+            document.getElementById('flowee-chat-log').innerHTML = '';
+            fMsg("Welcome to the Vault. I am Flowee. Let's mint your new Artifact for the Grand Bazaar.");
+            setTimeout(() => {
+                fMsg("What is the name of your Artifact or Skill?");
+                setFInput(`<div class="flex gap-2"><input type="text" id="up-name" class="flex-1 bg-black/50 border border-[#00ffcc]/30 text-white px-3 py-2 rounded focus:outline-none focus:border-[#00ffcc]" placeholder="e.g. Neon Beat Pack"><button onclick="upStep2()" class="bg-[#00ffcc] text-black px-4 font-bold rounded hover:bg-[#00ffcc]/80 transition">SEND</button></div>`);
+            }, 1000);
+        }
+
+        function upStep2() {
+            const val = document.getElementById('up-name').value.trim();
+            if(!val) return;
+            uploadData.name = val;
+            fMsg(val, 'user');
+            setFInput(`<div class="text-[#00ffcc] text-xs animate-pulse">Processing...</div>`);
+            setTimeout(() => {
+                fMsg(`Ah, "${val}". Excellent. How much Karma/Credits should it cost?`);
+                setFInput(`<div class="flex gap-2"><input type="number" id="up-price" class="flex-1 bg-black/50 border border-[#00ffcc]/30 text-white px-3 py-2 rounded focus:outline-none focus:border-[#00ffcc]" placeholder="e.g. 50"><button onclick="upStep3()" class="bg-[#00ffcc] text-black px-4 font-bold rounded hover:bg-[#00ffcc]/80 transition">SEND</button></div>`);
+            }, 800);
+        }
+
+        function upStep3() {
+            const val = document.getElementById('up-price').value.trim();
+            if(!val) return;
+            uploadData.price = val;
+            fMsg(val, 'user');
+            setFInput(`<div class="text-[#00ffcc] text-xs animate-pulse">Processing...</div>`);
+            setTimeout(() => {
+                fMsg("Almost done. Which Guild does this belong to? (e.g. Arts, Sounds, Skills, Products)");
+                setFInput(`<div class="flex gap-2 flex-wrap">
+                    <button onclick="upFinish('Arts')" class="bg-black/50 border border-[#00ffcc]/30 text-[#00ffcc] px-3 py-2 rounded hover:bg-[#00ffcc]/20 transition">Arts</button>
+                    <button onclick="upFinish('Sounds')" class="bg-black/50 border border-[#00ffcc]/30 text-[#00ffcc] px-3 py-2 rounded hover:bg-[#00ffcc]/20 transition">Sounds</button>
+                    <button onclick="upFinish('Skills')" class="bg-black/50 border border-[#00ffcc]/30 text-[#00ffcc] px-3 py-2 rounded hover:bg-[#00ffcc]/20 transition">Skills</button>
+                    <button onclick="upFinish('Products')" class="bg-black/50 border border-[#00ffcc]/30 text-[#00ffcc] px-3 py-2 rounded hover:bg-[#00ffcc]/20 transition">Products</button>
+                </div>`);
+            }, 800);
+        }
+
+        async function upFinish(guild) {
+            uploadData.guild = guild;
+            fMsg(guild, 'user');
+            setFInput(`<div class="text-[#00ffcc] text-xs animate-pulse">Syncing to Bazaar...</div>`);
+            
+            const newItem = {
+                title: uploadData.name,
+                category: guild,
+                price_flow: parseInt(uploadData.price) * 100,
+                price_fiat: parseFloat(uploadData.price),
+                vendor_id: artistId || 'anonymous',
+                vendor_name: (artistData ? artistData.name : 'Guest Traveler'),
+                is_active: true,
+                created_at: new Date().toISOString()
+            };
+
+            try {
+                if (window.supabaseClient) {
+                    await window.supabaseClient.from('market_items').insert([newItem]);
+                }
+            } catch(e) {
+                console.warn("DB save failed, saving locally", e);
+            }
+
+            try {
+                const local = localStorage.getItem('cqr_offline_items');
+                const list = local ? JSON.parse(local) : [];
+                list.unshift(newItem);
+                localStorage.setItem('cqr_offline_items', JSON.stringify(list));
+            } catch(e) {}
+
+            setTimeout(() => {
+                fMsg(`Artifact "${uploadData.name}" has been minted in the Guild of ${guild} for ${uploadData.price} Credits!`);
+                if(window.Pusher) window.Pusher.showToast("+50 RP (Artifact Minted)", "xp");
+                setFInput(`<button onclick="document.getElementById('flowee-overlay').classList.add('hidden')" class="w-full bg-[#00ffcc]/20 border border-[#00ffcc]/50 text-[#00ffcc] py-3 rounded font-bold uppercase tracking-widest text-xs mt-2 hover:bg-[#00ffcc]/40 transition">Return to Bazaar</button>`);
+            }, 1500);
+        }
+
+        // Check Upload Intent on Load
+        setTimeout(() => {
+            if (urlParams.get('intent') === 'upload') {
+                document.getElementById('flowee-overlay').classList.remove('hidden');
+                startUploadFlow();
+            }
+        }, 1000);
 
         animate();
     </script>
