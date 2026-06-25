@@ -500,7 +500,7 @@ class SoulPassAgent {
         this.userData.contact_details = JSON.stringify(details);
 
         if(window.supabaseClient && this.userData.userId) {
-            await window.supabaseClient.from('profiles').update({ contact_details: details }).eq('id', this.userData.userId);
+            await window.supabaseClient.from('profiles').update({ contact_details: JSON.stringify(details) }).eq('id', this.userData.userId);
             this.pulseFeedback();
         }
     }

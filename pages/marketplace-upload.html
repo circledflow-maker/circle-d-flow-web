@@ -322,7 +322,7 @@
                                 details = typeof currentProfile.contact_details === 'string' ? JSON.parse(currentProfile.contact_details) : currentProfile.contact_details;
                             }
                             details.avatar_url = e.target.result;
-                            await window.supabaseClient.from('profiles').update({ contact_details: details }).eq('id', currentUser.id);
+                            await window.supabaseClient.from('profiles').update({ contact_details: JSON.stringify(details) }).eq('id', currentUser.id);
                         } catch(err) {}
                     }
                     reader.readAsDataURL(file);
@@ -345,7 +345,7 @@
 
                 // Update profile immediately
                 await window.supabaseClient.from('profiles')
-                    .update({ contact_details: details })
+                    .update({ contact_details: JSON.stringify(details) })
                     .eq('id', currentUser.id);
 
             } catch(e) { alert("Error updating avatar: " + e.message); }

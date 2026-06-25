@@ -605,8 +605,10 @@
                                 const { data: profile } = await window.supabaseClient.from('profiles').select('*').eq('id', user.id).single();
                                 if (profile) {
                                     let artistUpdated = false;
-                                    const pContact = profile.contact_details || {};
-                                    const aContact = artistData.contact_details || {};
+                                    const pContactStr = profile.contact_details || '{}';
+                                    const aContactStr = artistData.contact_details || '{}';
+                                    const pContact = typeof pContactStr === 'string' ? JSON.parse(pContactStr) : pContactStr;
+                                    const aContact = typeof aContactStr === 'string' ? JSON.parse(aContactStr) : aContactStr;
                                     
                                     // Sync name
                                     if (profile.username && artistData.name !== profile.username) {
@@ -633,7 +635,7 @@
                                     if (artistUpdated) {
                                         await window.supabaseClient.from('master_artists').update({
                                             name: artistData.name,
-                                            contact_details: aContact
+                                            contact_details: JSON.stringify(aContact)
                                         }).eq('id', artistId);
                                     }
                                 }
@@ -946,7 +948,12 @@
                     const { data: { user } } = await window.supabaseClient.auth.getUser();
                     if (user) {
                         const { data: profile } = await window.supabaseClient.from('profiles').select('contact_details').eq('id', user.id).single();
-                        const contactDetails = (profile && profile.contact_details) ? { ...profile.contact_details } : {};
+                        
+                        let contactDetails = {};
+                        if (profile && profile.contact_details) {
+                            contactDetails = typeof profile.contact_details === 'string' ? JSON.parse(profile.contact_details) : profile.contact_details;
+                        }
+                        
                         contactDetails.payment_details = val;
                         
                         if (val.toLowerCase().includes('iban') || /^[A-Z]{2}[0-9]{2}/.test(val.replace(/\s+/g, ''))) {
@@ -957,11 +964,15 @@
                             contactDetails.revolut = val;
                         }
                         
-                        await window.supabaseClient.from('profiles').update({ contact_details: contactDetails }).eq('id', user.id);
+                        await window.supabaseClient.from('profiles').update({ contact_details: JSON.stringify(contactDetails) }).eq('id', user.id);
                     }
                     
                     const { data: artist } = await window.supabaseClient.from('master_artists').select('contact_details').eq('id', artistId).single();
-                    const aContact = (artist && artist.contact_details) ? { ...artist.contact_details } : {};
+                    
+                    let aContact = {};
+                    if (artist && artist.contact_details) {
+                        aContact = typeof artist.contact_details === 'string' ? JSON.parse(artist.contact_details) : artist.contact_details;
+                    }
                     aContact.payment_details = val;
                     if (val.toLowerCase().includes('iban') || /^[A-Z]{2}[0-9]{2}/.test(val.replace(/\s+/g, ''))) {
                         aContact.bank = val;
@@ -970,7 +981,7 @@
                     } else {
                         aContact.revolut = val;
                     }
-                    await window.supabaseClient.from('master_artists').update({ contact_details: aContact }).eq('id', artistId);
+                    await window.supabaseClient.from('master_artists').update({ contact_details: JSON.stringify(aContact) }).eq('id', artistId);
                 }
             } catch (e) {
                 console.warn("Failed to sync payment details to DB:", e);
@@ -2130,6 +2141,7 @@
 
         buildKitchenHub();
         buildStageHub();
+        let videoScreen = buildVideoArchiveHub();
 
         // --- Avatars ---
         const playerGroup = new THREE.Group();

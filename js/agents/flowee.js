@@ -1019,7 +1019,7 @@ class FloweeAgent {
                         details = typeof profile.contact_details === 'string' ? JSON.parse(profile.contact_details) : profile.contact_details;
                     }
                     details[field] = val;
-                    await window.supabaseClient.from('profiles').update({ contact_details: details }).eq('id', user.id);
+                    await window.supabaseClient.from('profiles').update({ contact_details: JSON.stringify(details) }).eq('id', user.id);
                 }
             } catch(e) {
                 console.warn("[Flowee] Error updating contact details:", e);
