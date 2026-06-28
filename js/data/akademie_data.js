@@ -2484,18 +2484,6 @@ const AkademieData = [
                 "title": "Main Portfolio",
                 "files": [
                     {
-                        "id": "1bN_TGMSSd0n1dXbVcU-J-2qMdJDhQZzR",
-                        "type": "video"
-                    },
-                    {
-                        "id": "13z0EHWhljg_KvwpfNXJKt73RUbIl9_22",
-                        "type": "video"
-                    },
-                    {
-                        "id": "1az2WFL_LzOWMD6ZBWHMftQDTkK0WoXHf",
-                        "type": "video"
-                    },
-                    {
                         "id": "16noMk6AsB7_cyuXlx73ZhL3I9y8kO1mZ",
                         "type": "video"
                     },
@@ -2506,6 +2494,23 @@ const AkademieData = [
                     {
                         "id": "1lC_c0bt3WbTABIdZK6Nk58zaaGJDSfZ4",
                         "type": "image"
+                    }
+                ]
+            },
+            {
+                "title": "Interview ",
+                "files": [
+                    {
+                        "id": "1bN_TGMSSd0n1dXbVcU-J-2qMdJDhQZzR",
+                        "type": "video"
+                    },
+                    {
+                        "id": "13z0EHWhljg_KvwpfNXJKt73RUbIl9_22",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1az2WFL_LzOWMD6ZBWHMftQDTkK0WoXHf",
+                        "type": "video"
                     }
                 ]
             }
@@ -2596,19 +2601,11 @@ const AkademieData = [
                 "title": "Main Portfolio",
                 "files": [
                     {
-                        "id": "1UtmV4zE5dNSPYoOPulWXgeurRcBvNI5y",
-                        "type": "image"
-                    },
-                    {
                         "id": "1MJt9nc55jAUEG9-N2dpaNoJGtKv8jGK8",
                         "type": "image"
                     },
                     {
                         "id": "1b4fYnID9O6qUTSHA20xOUKzE-7FSdyM1",
-                        "type": "image"
-                    },
-                    {
-                        "id": "14lL_h_2BRLWRUZwg8vbzzkOL6xlrw0cT",
                         "type": "image"
                     },
                     {
@@ -2994,28 +2991,20 @@ const AkademieData = [
                     {
                         "id": "17-TYgh2UR9mJYGEnrxUDSh4XqsF1SLMz",
                         "type": "image"
+                    },
+                    {
+                        "id": "1ssPDDA_J2l2cIAyclh49OOprYbZXrrPq",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1G5ACU77rh_jvE0r-ozzqFVya4h9caoET",
+                        "type": "image"
                     }
                 ]
             },
             {
                 "title": "Bearbeitet_und_Komprimiert",
                 "files": [
-                    {
-                        "id": "1ZxKZMWl8S_x-Vh_j2AqwFdWit9zyjd8r",
-                        "type": "image"
-                    },
-                    {
-                        "id": "1EOr97Yp1eqIrWglbNPn8eoFB5ZR6yflo",
-                        "type": "image"
-                    },
-                    {
-                        "id": "1h5t9E4pGAVQ52LYrz81ihGm3rgMmJ7Nj",
-                        "type": "image"
-                    },
-                    {
-                        "id": "1uUslC-ASRZwjaii57qdNz_NhxGMkuUgi",
-                        "type": "image"
-                    },
                     {
                         "id": "1zPZVFXYs9TjVc06AFAH8aHkr77lm-RL3",
                         "type": "image"
@@ -3046,10 +3035,6 @@ const AkademieData = [
                     },
                     {
                         "id": "1-7j--df1UgKhzJf5qjWaMfgoEnNhXLkr",
-                        "type": "image"
-                    },
-                    {
-                        "id": "1zWaQ6ZxT7WwxtJncCyWMCbP2KqDWdoIe",
                         "type": "image"
                     },
                     {
@@ -3101,10 +3086,6 @@ const AkademieData = [
                         "type": "image"
                     },
                     {
-                        "id": "1731kVFYPxz96xWFkTRdRnjpziOyGpBMM",
-                        "type": "video"
-                    },
-                    {
                         "id": "1wvmG0_zalNcbCUReJIxMqoA3FTBVUNNR",
                         "type": "video"
                     },
@@ -3126,10 +3107,6 @@ const AkademieData = [
                     },
                     {
                         "id": "1KzTttcAtkj-urk7HToIK6bXXWSSaoovU",
-                        "type": "image"
-                    },
-                    {
-                        "id": "11KIKAvKbbAJ3CKKZz0t5ajkvUyfiR9cm",
                         "type": "image"
                     },
                     {
@@ -3337,10 +3314,6 @@ const AkademieData = [
                         "type": "image"
                     },
                     {
-                        "id": "17179Awfx6RN4yd-s0Aqp068x1fYnAu-7",
-                        "type": "image"
-                    },
-                    {
                         "id": "1VrEneLCYG3CT12tfhEka6iHsMQYM46Bj",
                         "type": "image"
                     },
@@ -3381,10 +3354,6 @@ const AkademieData = [
                         "type": "image"
                     },
                     {
-                        "id": "1W3uGZ7InEUhV45NwdrUEEctQNAry2GcN",
-                        "type": "image"
-                    },
-                    {
                         "id": "1QnHS_eSO9sh8Hw3DhmI6q-4-8zQlg4p-",
                         "type": "image"
                     },
@@ -3393,11 +3362,121 @@ const AkademieData = [
                         "type": "image"
                     },
                     {
+                        "id": "1nl5U4QZygSN-QGyZhHu7FoXr31RZfWIr",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1z5l8H0cxUmvHwhYqQSKe2-YaWx0MbuPU",
+                        "type": "image"
+                    },
+                    {
+                        "id": "12XJUgLMQjI60jd6rwi9ZwoIp1pgPkXxt",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1amj1Zo17mPJ8gfIt3dNR_AuNN1PbXsLv",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1ToGoz977zo0y0HDiRweOjsWpnFqYORoM",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1-8UnyIZnLy0KCefqYiE2TTgyaiT86vpr",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1Y4-WqQ62l_t7m5KLp84RUJuQqHmDEJj6",
+                        "type": "image"
+                    },
+                    {
+                        "id": "16bi5GhmnkfNiZ1BQkN1uJuMtF3GynugW",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1A58zgqD6S3Is6FGnoSuDdASXpJh8eDUz",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1Xb0Mj6I2d_q04OV9Jy_9nu2B4oKY5sEr",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1WhmLh2lu_YVX5RzNJybrMFkHjtsfEdyW",
+                        "type": "image"
+                    }
+                ]
+            },
+            {
+                "title": "Charles ",
+                "files": [
+                    {
+                        "id": "1ZxKZMWl8S_x-Vh_j2AqwFdWit9zyjd8r",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1UtmV4zE5dNSPYoOPulWXgeurRcBvNI5y",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1EOr97Yp1eqIrWglbNPn8eoFB5ZR6yflo",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1h5t9E4pGAVQ52LYrz81ihGm3rgMmJ7Nj",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1uUslC-ASRZwjaii57qdNz_NhxGMkuUgi",
+                        "type": "image"
+                    },
+                    {
+                        "id": "14lL_h_2BRLWRUZwg8vbzzkOL6xlrw0cT",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1zWaQ6ZxT7WwxtJncCyWMCbP2KqDWdoIe",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1731kVFYPxz96xWFkTRdRnjpziOyGpBMM",
+                        "type": "video"
+                    }
+                ]
+            },
+            {
+                "title": "Shalaby",
+                "files": [
+                    {
+                        "id": "11KIKAvKbbAJ3CKKZz0t5ajkvUyfiR9cm",
+                        "type": "image"
+                    },
+                    {
+                        "id": "17179Awfx6RN4yd-s0Aqp068x1fYnAu-7",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1W3uGZ7InEUhV45NwdrUEEctQNAry2GcN",
+                        "type": "image"
+                    },
+                    {
                         "id": "1CBnV6tiyg5HBmGrAeGKB-VJfk9-ZVXGA",
                         "type": "image"
                     },
                     {
-                        "id": "1nl5U4QZygSN-QGyZhHu7FoXr31RZfWIr",
+                        "id": "1TCxNCOz7fmmBbARjR7K-cBi6YkbpuonH",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1wiAS7nWdSnsBdI4mg6bf4BmEYmBB6wxy",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1XhRbAEAiiPhjeTvxnqyOoQvo1ncpZIro",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1VmNCFQQaOg6DqcH25aRJSyDmen14B5QF",
                         "type": "image"
                     }
                 ]
