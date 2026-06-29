@@ -744,12 +744,34 @@
             fMsg(val, 'user');
             setFInput(`<div class="text-[#00ffcc] text-xs animate-pulse">Processing...</div>`);
             setTimeout(() => {
-                fMsg("Almost done. Which Guild does this belong to? (e.g. Arts, Sounds, Skills, Products)");
+                fMsg("Great. Now, please upload an image or video for your Artifact.");
+                setFInput(`<div class="flex gap-2 w-full flex-col">
+                    <input type="file" id="up-file" accept="image/*,video/*" class="w-full bg-black/50 border border-[#00ffcc]/30 text-white px-2 py-1 rounded focus:outline-none mb-2" onchange="upStep4()">
+                    <button onclick="upStep4(true)" class="bg-transparent border border-[#00ffcc]/50 text-[#00ffcc] px-4 py-1 font-bold rounded hover:bg-[#00ffcc]/20 self-end">SKIP</button>
+                </div>`);
+            }, 800);
+        }
+
+        function upStep4(skipped = false) {
+            const fileInput = document.getElementById('up-file');
+            if(fileInput && fileInput.files && fileInput.files.length > 0) {
+                fMsg("File attached: " + fileInput.files[0].name, 'user');
+                uploadData.file = fileInput.files[0];
+            } else if (skipped) {
+                fMsg("Skipped file upload.", 'user');
+            } else {
+                return;
+            }
+            setFInput(`<div class="text-[#00ffcc] text-xs animate-pulse">Processing...</div>`);
+            setTimeout(() => {
+                fMsg("Almost done. Which Guild does this belong to? (e.g. Arts, Sounds, Skills, Products, Healing, Services)");
                 setFInput(`<div class="flex gap-2 flex-wrap">
                     <button onclick="upFinish('Arts')" class="bg-black/50 border border-[#00ffcc]/30 text-[#00ffcc] px-3 py-2 rounded hover:bg-[#00ffcc]/20">Arts</button>
                     <button onclick="upFinish('Sounds')" class="bg-black/50 border border-[#00ffcc]/30 text-[#00ffcc] px-3 py-2 rounded hover:bg-[#00ffcc]/20">Sounds</button>
                     <button onclick="upFinish('Skills')" class="bg-black/50 border border-[#00ffcc]/30 text-[#00ffcc] px-3 py-2 rounded hover:bg-[#00ffcc]/20">Skills</button>
                     <button onclick="upFinish('Products')" class="bg-black/50 border border-[#00ffcc]/30 text-[#00ffcc] px-3 py-2 rounded hover:bg-[#00ffcc]/20">Products</button>
+                    <button onclick="upFinish('Healing')" class="bg-black/50 border border-[#00ffcc]/30 text-[#00ffcc] px-3 py-2 rounded hover:bg-[#00ffcc]/20">Healing</button>
+                    <button onclick="upFinish('Services')" class="bg-black/50 border border-[#00ffcc]/30 text-[#00ffcc] px-3 py-2 rounded hover:bg-[#00ffcc]/20">Services</button>
                 </div>`);
             }, 800);
         }
