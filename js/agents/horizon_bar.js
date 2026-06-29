@@ -51,7 +51,7 @@ class HorizonBarAgent {
             </div>
 
             <!-- Center: The Unified Ticker (Clean & Centered) -->
-            <div class="absolute left-1/2 transform -translate-x-1/2 flex items-center justify-center h-10 px-6 max-w-2xl w-full pointer-events-none">
+            <div class="absolute left-1/2 transform -translate-x-1/2 hidden md:flex items-center justify-center h-10 px-6 max-w-2xl w-full pointer-events-none">
                  <span class="ticker-text text-[10px] text-white/40 font-mono tracking-widest text-center whitespace-nowrap overflow-hidden text-ellipsis" id="horizon-ticker-text">
                     // SYSTEM ONLINE
                 </span>

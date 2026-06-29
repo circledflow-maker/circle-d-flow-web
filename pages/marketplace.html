@@ -839,8 +839,8 @@
             const newItem = {
                 title: uploadData.name,
                 description: uploadData.description || '',
-                guild_category: guild.toLowerCase(),
-                price_credits: parseInt(uploadData.price) * 100,
+                category: guild,
+                price_flow: parseInt(uploadData.price) * 100,
                 price_fiat: parseFloat(uploadData.price),
                 creator_id: currentUserId,
                 image_url: imageUrl,

@@ -542,7 +542,7 @@
             try {
                 if (window.supabaseClient) {
                     const { data } = await window.supabaseClient.from('market_items_with_vendor')
-                        .select('title, guild_category, vendor_name')
+                        .select('title, category, vendor_name')
                         .eq('is_active', true)
                         .order('created_at', { ascending: false })
                         .limit(4);
@@ -550,7 +550,7 @@
                         // Pad array to keep 4 ghosts if fewer items exist
                         const newData = data.map(item => ({
                             name: item.vendor_name || 'Anonymous',
-                            msg: `Just minted '${item.title}' in ${item.guild_category}!`
+                            msg: `Just minted '${item.title}' in ${item.category}!`
                         }));
                         for(let i=0; i<newData.length && i<ghostData.length; i++){
                             ghostData[i] = newData[i];
@@ -974,13 +974,13 @@
             try {
                 if (window.supabaseClient) {
                     const { data } = await window.supabaseClient.from('market_items')
-                        .select('title, price_credits')
-                        .eq('guild_category', guild.toLowerCase())
+                        .select('title, price_flow')
+                        .eq('category', guild)
                         .eq('is_active', true)
                         .order('created_at', { ascending: false })
                         .limit(3);
                     if (data && data.length > 0) {
-                        items = data.map(i => ({ name: i.title, price: i.price_credits + " FC" }));
+                        items = data.map(i => ({ name: i.title, price: i.price_flow + " FC" }));
                     }
                 }
             } catch(e) {
@@ -1272,8 +1272,8 @@
             const newItem = {
                 title: uploadData.name,
                 description: uploadData.description || '',
-                guild_category: guild.toLowerCase(),
-                price_credits: parseInt(uploadData.price) * 100,
+                category: guild,
+                price_flow: parseInt(uploadData.price) * 100,
                 price_fiat: parseFloat(uploadData.price),
                 creator_id: currentUserId,
                 image_url: imageUrl,
