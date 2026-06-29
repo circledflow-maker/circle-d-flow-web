@@ -405,11 +405,11 @@
             // Merge local offline items
             try {
                 const offlineItems = JSON.parse(localStorage.getItem('cqr_offline_items') || '[]');
-                const myOfflineItems = offlineItems.filter(item => item.creator_id === user.id || item.creator_id === 'local-test-id');
+                const myOfflineItems = offlineItems.filter(item => item.creator_id === user.id || item.vendor_id === user.id || item.creator_id === 'local-test-id');
                 const mappedLocal = myOfflineItems.map(item => ({
                     ...item,
-                    category: item.guild_category,
-                    price_flow: item.price_credits
+                    category: item.category || item.guild_category,
+                    price_flow: item.price_flow || item.price_credits
                 }));
                 data = [...mappedLocal, ...data];
             } catch(e) {}
@@ -521,6 +521,12 @@
             try {
                 const { error } = await window.supabaseClient.from('market_items').delete().eq('id', id);
                 if (error) throw error;
+                
+                try {
+                    const local = JSON.parse(localStorage.getItem('cqr_offline_items') || '[]');
+                    const updatedLocal = local.filter(item => item.id !== id && item.title !== id);
+                    localStorage.setItem('cqr_offline_items', JSON.stringify(updatedLocal));
+                } catch(e) {}
                 
                 document.getElementById('edit-item-modal').close();
                 await loadInventory();
