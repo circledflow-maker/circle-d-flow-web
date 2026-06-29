@@ -531,12 +531,44 @@
 
         // Network of Ghost Souls
         const ghostSouls = [];
-        const ghostData = [
+        let ghostData = [
             { name: "KyheartLx", msg: "Just synced a new beat in Sounds." },
             { name: "Agnese", msg: "Looking for epox artifacts." },
             { name: "Oli Flow", msg: "Coding stream tonight." },
             { name: "Muna", msg: "Fresh food at Akwaba Kitchen!" }
         ];
+
+        async function fetchRecentActivity() {
+            try {
+                if (window.supabaseClient) {
+                    const { data } = await window.supabaseClient.from('market_items')
+                        .select('title, category, vendor_name')
+                        .eq('is_active', true)
+                        .order('created_at', { ascending: false })
+                        .limit(4);
+                    if (data && data.length > 0) {
+                        // Pad array to keep 4 ghosts if fewer items exist
+                        const newData = data.map(item => ({
+                            name: item.vendor_name || 'Anonymous',
+                            msg: `Just minted '${item.title}' in ${item.category}!`
+                        }));
+                        for(let i=0; i<newData.length && i<ghostData.length; i++){
+                            ghostData[i] = newData[i];
+                        }
+                        // update existing ghost objects if already spawned
+                        for(let i=0; i<ghostData.length; i++) {
+                            if (ghostSouls[i]) {
+                                ghostSouls[i].userData.name = ghostData[i].name;
+                                ghostSouls[i].userData.msg = ghostData[i].msg;
+                            }
+                        }
+                    }
+                }
+            } catch(e) {
+                console.warn("Failed to fetch activity", e);
+            }
+        }
+        fetchRecentActivity();
 
         function spawnGhostSouls() {
             for(let i=0; i<ghostData.length; i++) {
@@ -932,27 +964,47 @@
         }
 
         // NPC Guild Greeting (Simulated Local Data)
-        function showGuildGreeting(guild) {
+        async function showGuildGreeting(guild) {
             window.activeGuild = guild;
             const modal = document.getElementById('soul-interaction-modal');
             modal.style.display = 'block';
+            document.getElementById('soul-content').innerHTML = `<div class="text-[#00ffcc] text-xs animate-pulse p-4">Communing with the Guild...</div>`;
             
-            const inventoryMock = {
-                arts: [{name: "Golden Epox Mask", price: "1200 FC"}],
-                skills: [{name: "Code Mentorship (1h)", price: "300 FC"}],
-                sounds: [{name: "Neon Flow Track", price: "450 FC"}],
-                healing: [{name: "Chakra Alignment", price: "200 FC"}],
-                products: [{name: "Digital Asset Pack", price: "150 FC"}],
-                services: [{name: "Consulting Block", price: "500 FC"}]
-            };
+            let items = [];
+            try {
+                if (window.supabaseClient) {
+                    const { data } = await window.supabaseClient.from('market_items')
+                        .select('title, price_flow')
+                        .eq('category', guild)
+                        .eq('is_active', true)
+                        .order('created_at', { ascending: false })
+                        .limit(3);
+                    if (data && data.length > 0) {
+                        items = data.map(i => ({ name: i.title, price: i.price_flow + " FC" }));
+                    }
+                }
+            } catch(e) {
+                console.warn("Failed to fetch guild items", e);
+            }
 
-            const items = inventoryMock[guild] || [];
+            if (items.length === 0) {
+                const inventoryMock = {
+                    arts: [{name: "Golden Epox Mask", price: "1200 FC"}],
+                    skills: [{name: "Code Mentorship (1h)", price: "300 FC"}],
+                    sounds: [{name: "Neon Flow Track", price: "450 FC"}],
+                    healing: [{name: "Chakra Alignment", price: "200 FC"}],
+                    products: [{name: "Digital Asset Pack", price: "150 FC"}],
+                    services: [{name: "Consulting Block", price: "500 FC"}]
+                };
+                items = inventoryMock[guild.toLowerCase()] || [];
+            }
+
             let html = `<h3 class="text-gold font-cinzel text-xl mb-1">NPC Soul (Guild of ${guild.charAt(0).toUpperCase() + guild.slice(1)})</h3>`;
             html += `<p class="text-white text-sm my-4 italic">"Welcome to our guild. Here is what our masters offer..."</p>`;
             
             html += `<div class="bg-white/5 border border-white/10 rounded p-2 text-left mb-4">`;
             items.forEach(item => {
-                html += `<div class="flex justify-between border-b border-white/10 py-1 last:border-0"><span class="text-white/80 text-xs">${item.name}</span><span class="text-gold text-xs font-bold">${item.price}</span></div>`;
+                html += `<div class="flex justify-between border-b border-white/10 py-1 last:border-0"><span class="text-white/80 text-xs truncate mr-2">${item.name}</span><span class="text-gold text-xs font-bold whitespace-nowrap">${item.price}</span></div>`;
             });
             html += `</div>`;
             
@@ -1119,15 +1171,38 @@
             setFInput(`<div class="text-[#00ffcc] text-xs animate-pulse">Processing...</div>`);
             setTimeout(() => {
                 fMsg(`Ah, "${val}". Excellent. How much Karma/Credits should it cost?`);
-                setFInput(`<div class="flex gap-2"><input type="number" id="up-price" class="flex-1 bg-black/50 border border-[#00ffcc]/30 text-white px-3 py-2 rounded focus:outline-none focus:border-[#00ffcc]" placeholder="e.g. 50"><button onclick="upStep3()" class="bg-[#00ffcc] text-black px-4 font-bold rounded hover:bg-[#00ffcc]/80 transition">SEND</button></div>`);
+                setFInput(`<div class="flex gap-2"><input type="number" id="up-price" class="flex-1 bg-black/50 border border-[#00ffcc]/30 text-white px-3 py-2 rounded focus:outline-none focus:border-[#00ffcc]" placeholder="e.g. 50"><button onclick="upStepDesc()" class="bg-[#00ffcc] text-black px-4 font-bold rounded hover:bg-[#00ffcc]/80 transition">SEND</button></div>`);
             }, 800);
         }
 
-        function upStep3() {
+        function upStepDesc() {
             const val = document.getElementById('up-price').value.trim();
             if(!val) return;
             uploadData.price = val;
             fMsg(val, 'user');
+            setFInput(`<div class="text-[#00ffcc] text-xs animate-pulse">Processing...</div>`);
+            setTimeout(() => {
+                fMsg(`Understood. Could you provide a short description for "${uploadData.name}"?`);
+                setFInput(`<div class="flex gap-2 w-full flex-col">
+                    <input type="text" id="up-desc" class="w-full bg-black/50 border border-[#00ffcc]/30 text-white px-3 py-2 rounded focus:outline-none focus:border-[#00ffcc]" placeholder="Describe your item...">
+                    <div class="flex justify-end gap-2 mt-2">
+                        <button onclick="upStep3(true)" class="bg-transparent border border-[#00ffcc]/50 text-[#00ffcc] px-4 py-1 font-bold rounded hover:bg-[#00ffcc]/20 transition">SKIP</button>
+                        <button onclick="upStep3(false)" class="bg-[#00ffcc] text-black px-4 font-bold rounded hover:bg-[#00ffcc]/80 transition">SEND</button>
+                    </div>
+                </div>`);
+            }, 800);
+        }
+
+        function upStep3(skipped = false) {
+            if (skipped) {
+                uploadData.description = '';
+                fMsg("Skipped description.", 'user');
+            } else {
+                const val = document.getElementById('up-desc').value.trim();
+                uploadData.description = val || '';
+                fMsg(val || "No description provided.", 'user');
+            }
+            
             setFInput(`<div class="text-[#00ffcc] text-xs animate-pulse">Processing...</div>`);
             setTimeout(() => {
                 fMsg("Great. Now, please upload an image or video for your Artifact.");
@@ -1196,6 +1271,7 @@
 
             const newItem = {
                 title: uploadData.name,
+                description: uploadData.description || '',
                 category: guild,
                 price_flow: parseInt(uploadData.price) * 100,
                 price_fiat: parseFloat(uploadData.price),

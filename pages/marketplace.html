@@ -733,15 +733,38 @@
             setFInput(`<div class="text-[#00ffcc] text-xs animate-pulse">Processing...</div>`);
             setTimeout(() => {
                 fMsg(`Ah, "${val}". Excellent. How much Karma/Credits should it cost?`);
-                setFInput(`<div class="flex gap-2"><input type="number" id="up-price" class="flex-1 bg-black/50 border border-[#00ffcc]/30 text-white px-3 py-2 rounded" placeholder="e.g. 50"><button onclick="upStep3()" class="bg-[#00ffcc] text-black px-4 font-bold rounded">SEND</button></div>`);
+                setFInput(`<div class="flex gap-2"><input type="number" id="up-price" class="flex-1 bg-black/50 border border-[#00ffcc]/30 text-white px-3 py-2 rounded" placeholder="e.g. 50"><button onclick="upStepDesc()" class="bg-[#00ffcc] text-black px-4 font-bold rounded">SEND</button></div>`);
             }, 800);
         }
 
-        function upStep3() {
-            const val = document.getElementById('up-price').value;
+        function upStepDesc() {
+            const val = document.getElementById('up-price').value.trim();
             if(!val) return;
             uploadData.price = val;
             fMsg(val, 'user');
+            setFInput(`<div class="text-[#00ffcc] text-xs animate-pulse">Processing...</div>`);
+            setTimeout(() => {
+                fMsg(`Understood. Could you provide a short description for "${uploadData.name}"?`);
+                setFInput(`<div class="flex gap-2 w-full flex-col">
+                    <input type="text" id="up-desc" class="w-full bg-black/50 border border-[#00ffcc]/30 text-white px-3 py-2 rounded" placeholder="Describe your item...">
+                    <div class="flex justify-end gap-2 mt-2">
+                        <button onclick="upStep3(true)" class="bg-transparent border border-[#00ffcc]/50 text-[#00ffcc] px-4 py-1 font-bold rounded hover:bg-[#00ffcc]/20">SKIP</button>
+                        <button onclick="upStep3(false)" class="bg-[#00ffcc] text-black px-4 font-bold rounded hover:bg-[#00ffcc]/80">SEND</button>
+                    </div>
+                </div>`);
+            }, 800);
+        }
+
+        function upStep3(skipped = false) {
+            if (skipped) {
+                uploadData.description = '';
+                fMsg("Skipped description.", 'user');
+            } else {
+                const val = document.getElementById('up-desc').value.trim();
+                uploadData.description = val || '';
+                fMsg(val || "No description provided.", 'user');
+            }
+            
             setFInput(`<div class="text-[#00ffcc] text-xs animate-pulse">Processing...</div>`);
             setTimeout(() => {
                 fMsg("Great. Now, please upload an image or video for your Artifact.");
@@ -815,6 +838,7 @@
 
             const newItem = {
                 title: uploadData.name,
+                description: uploadData.description || '',
                 category: guild,
                 price_flow: parseInt(uploadData.price) * 100,
                 price_fiat: parseFloat(uploadData.price),
