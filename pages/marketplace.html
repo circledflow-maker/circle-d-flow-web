@@ -781,6 +781,59 @@
             fMsg(guild, 'user');
             setFInput(`<div class="text-[#00ffcc] text-xs animate-pulse">Syncing to Bazaar...</div>`);
             
+            let currentUserId = 'anonymous';
+            let imageUrl = null;
+            let vendorName = 'Guest Traveler';
+
+            try {
+                if (window.supabaseClient) {
+                    const { data: { user } } = await window.supabaseClient.auth.getUser();
+                    if (user) {
+                        currentUserId = user.id;
+                        const { data: profile } = await window.supabaseClient.from('profiles').select('username').eq('id', user.id).single();
+                        if (profile && profile.username) vendorName = profile.username;
+                    }
+
+                    if (uploadData.file) {
+                        const fileExt = uploadData.file.name.split('.').pop();
+                        const fileName = `artifacts/${currentUserId}_${Date.now()}.${fileExt}`;
+                        const { error: uploadError } = await window.supabaseClient.storage
+                            .from('artifact-visuals')
+                            .upload(fileName, uploadData.file);
+                        
+                        if (!uploadError) {
+                            const { data: { publicUrl } } = window.supabaseClient.storage
+                                .from('artifact-visuals')
+                                .getPublicUrl(fileName);
+                            imageUrl = publicUrl;
+                        }
+                    }
+                }
+            } catch(e) {
+                console.warn("Upload or Auth error:", e);
+            }
+
+            const newItem = {
+                title: uploadData.name,
+                category: guild,
+                price_flow: parseInt(uploadData.price) * 100,
+                price_fiat: parseFloat(uploadData.price),
+                vendor_id: 'anonymous',
+                vendor_name: vendorName,
+                creator_id: currentUserId,
+                image_url: imageUrl,
+                is_active: true,
+                created_at: new Date().toISOString()
+            };
+
+            try {
+                if (window.supabaseClient) {
+                    await window.supabaseClient.from('market_items').insert([newItem]);
+                }
+            } catch(e) {
+                console.warn("DB save failed", e);
+            }
+
             setTimeout(() => {
                 fMsg(`Artifact "${uploadData.name}" has been minted in the Guild of ${guild} for ${uploadData.price} Credits!`);
                 if(window.Pusher) window.Pusher.showToast("+50 RP (Artifact Minted)", "xp");
