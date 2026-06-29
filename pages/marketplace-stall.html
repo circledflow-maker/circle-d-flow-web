@@ -444,10 +444,10 @@
                         ${isOut ? '<div class="absolute top-2 right-2 bg-black/80 text-orange-500 text-[10px] px-2 py-1 rounded font-bold uppercase">OUT OF STOCK</div>' : ''}
                     </div>
                     <div class="p-4">
-                        <div class="text-[9px] text-[#FFAE42] uppercase tracking-widest mb-1">${item.category || item.guild_category || 'Artifact'}</div>
+                        <div class="text-[9px] text-[#FFAE42] uppercase tracking-widest mb-1">${item.guild_category || item.category || 'Artifact'}</div>
                         <h3 class="font-bold text-lg text-white mb-2 line-clamp-1">${item.title}</h3>
                         <div class="flex justify-between items-center mb-4">
-                            <span class="font-mono text-[#5A2A84] font-bold">${item.price_flow} FC</span>
+                            <span class="font-mono text-[#5A2A84] font-bold">${item.price_credits || item.price_flow || 0} FC</span>
                             <span class="text-xs text-white/40 border border-white/10 px-2 py-0.5 rounded">Stock: ${item.stock_count !== undefined ? item.stock_count : 1}</span>
                         </div>
                         <div class="flex gap-2">
@@ -510,8 +510,8 @@
                     .update({
                         title: title,
                         description: desc,
-                        price_fc: parseInt(price),
-                        category: category,
+                        price_credits: parseInt(price),
+                        guild_category: category.toLowerCase(),
                         stock_count: parseInt(stock),
                         is_active: active
                     })

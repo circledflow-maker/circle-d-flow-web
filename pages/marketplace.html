@@ -839,11 +839,9 @@
             const newItem = {
                 title: uploadData.name,
                 description: uploadData.description || '',
-                category: guild,
-                price_flow: parseInt(uploadData.price) * 100,
+                guild_category: guild.toLowerCase(),
+                price_credits: parseInt(uploadData.price) * 100,
                 price_fiat: parseFloat(uploadData.price),
-                vendor_id: 'anonymous',
-                vendor_name: vendorName,
                 creator_id: currentUserId,
                 image_url: imageUrl,
                 is_active: true,
