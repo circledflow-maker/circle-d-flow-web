@@ -1,0 +1,34 @@
+---
+description: Grand Bazaar marketplace rules — DB schema, guilds, payments, stall pages
+globs: pages/marketplace*.html,pages/*_stall.html,js/**/market*.js,api/create-payment-intent.js
+alwaysApply: false
+---
+
+# Grand Bazaar (Marketplace)
+
+## Datenbank (`market_items`)
+- `creator_id` (UUID, auth user) — nicht `vendor_id`
+- `guild_category`: `Arts` | `Sounds` | `Skills` | `Products` | `Healing` | `Services`
+- `price_credits` (INTEGER, 100 = 1€) — nicht `price_flow`
+- `price_fiat` (DECIMAL)
+- View `market_items_with_vendor` aliasiert Spalten für Read-Only Queries
+
+## Supabase Queries
+```javascript
+.from('market_items')
+.eq('guild_category', 'Arts')  // Title Case
+.eq('is_active', true)
+```
+
+## Seiten-Flow
+`marketplace_3d.html` → Cinematic Dive → Guild Stall (`arts_stall.html` etc.) → Checkout
+
+## Payments
+- Production: `POST /api/create-payment-intent`
+- Local dev: `dice_server.js` → `http://localhost:3000/create-payment-intent`
+- Publishable Key: `window.STRIPE_PUBLISHABLE_KEY` oder Test-Key aus `pricing.html`
+
+## Vor Änderungen prüfen
+- `js/modules/marketplace_core.js` (FLOW-Trades)
+- `js/agents/market_agent.js` (Forge, Rotation)
+- `pages/marketplace-upload.html` (korrektes Insert-Pattern)

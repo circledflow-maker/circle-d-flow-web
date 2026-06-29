@@ -288,8 +288,7 @@
 
             <!-- Stripe Element Mount Point -->
             <div id="payment-element" class="mb-6 bg-white/5 p-4 rounded border border-white/10 text-center text-sm text-white/50">
-                (Stripe Payment Element Placeholder)<br>
-                <span class="text-xs text-gold">Awaiting backend integration for /api/create-payment-intent</span>
+                Loading secure payment form...
             </div>
             
             <button id="submit-payment" class="btn-primary" onclick="simulateCheckout()">
@@ -758,9 +757,9 @@
 
             try {
                 // Change URL to your production backend if needed
-                const backendUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+                const backendUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
                     ? 'http://localhost:3000/create-payment-intent'
-                    : 'https://circle-d-flow.loca.lt/create-payment-intent'; // adjust to real production URL
+                    : '/api/create-payment-intent';
 
                 const response = await fetch(backendUrl, {
                     method: 'POST',
@@ -773,7 +772,7 @@
 
                 if(clientSecret) {
                      // IMPORTANT: Replace with your actual live/test publishable key
-                     const pk = 'pk_live_51Sdeb3RWAOCIX9wG8qGnzcs53quZQxnBeDTAfBmnuVM8d18wDRwBtHSvwFpWzAdIkLiziv2QPR6lHRM4xn287BTu00HFpRWT2w'; 
+                     const pk = window.STRIPE_PUBLISHABLE_KEY || 'pk_test_51SdebPDeSUihf09RzlBFNrIjuQnfGMixv5aeyxp7Qb8VA8seoEVuHYWb4MBM6Kvfel5N3JMyLly8zzdURworgXJg00ocwKiVGR';
                      if(!stripeInstance) stripeInstance = Stripe(pk);
                      
                      const appearance = { 
@@ -836,18 +835,37 @@
             document.getElementById('flowee-overlay').classList.remove('hidden');
             startUploadFlow();
         }
+        const GUILD_STALL_MAP = {
+            arts: 'arts_stall.html',
+            sounds: 'sound_stall.html',
+            products: 'product_stall.html',
+            skills: 'skills_stall.html',
+            healing: 'healing_stall.html',
+            services: 'services_stall.html'
+        };
+
+        function guildToDbCategory(guild) {
+            if (!guild) return '';
+            const key = guild.toLowerCase();
+            return key.charAt(0).toUpperCase() + key.slice(1);
+        }
+
+        function resolveStallPage(guild) {
+            return GUILD_STALL_MAP[(guild || '').toLowerCase()] || 'marketplace.html';
+        }
+
+        function openZoneItems() {
+            if (!currentGuild) return;
+            const stallFile = resolveStallPage(currentGuild);
+            document.getElementById('integrated-iframe').src = stallFile;
+            document.getElementById('iframe-modal').showModal();
+        }
+
         function openCatalog() {
             if (window.activeGuild) {
-                let stallFile = 'arts_stall.html';
-                if (window.activeGuild === 'sounds') stallFile = 'sound_stall.html';
-                if (window.activeGuild === 'products') stallFile = 'product_stall.html';
-                if (window.activeGuild === 'skills') stallFile = 'skills_stall.html';
-                if (window.activeGuild === 'healing') stallFile = 'healing_stall.html';
-                if (window.activeGuild === 'services') stallFile = 'services_stall.html';
-                if (window.activeGuild === 'arts') stallFile = 'arts_stall.html';
-                window.location.href = stallFile;
+                window.location.href = resolveStallPage(window.activeGuild);
             } else {
-                window.location.href = `marketplace.html`;
+                window.location.href = 'marketplace.html';
             }
         }
 
@@ -974,13 +992,13 @@
             try {
                 if (window.supabaseClient) {
                     const { data } = await window.supabaseClient.from('market_items')
-                        .select('title, price_flow')
-                        .eq('category', guild)
+                        .select('title, price_credits')
+                        .eq('guild_category', guildToDbCategory(guild))
                         .eq('is_active', true)
                         .order('created_at', { ascending: false })
                         .limit(3);
                     if (data && data.length > 0) {
-                        items = data.map(i => ({ name: i.title, price: i.price_flow + " FC" }));
+                        items = data.map(i => ({ name: i.title, price: (i.price_credits || 0) + ' FC' }));
                     }
                 }
             } catch(e) {
@@ -1121,14 +1139,14 @@
                 if (window.supabaseClient) {
                     const { data, error } = await window.supabaseClient
                         .from('market_items')
-                        .select('title, price_flow')
+                        .select('title, price_credits')
                         .order('created_at', { ascending: false })
                         .limit(1);
                         
                     if (data && data.length > 0) {
                         const latest = data[0];
                         setTimeout(() => {
-                            fMsg(`The latest artifact brought into the market is "${latest.title}" for ${latest.price_flow} Credits. Feel free to explore the Guild Huts!`);
+                            fMsg(`The latest artifact brought into the market is "${latest.title}" for ${latest.price_credits} Credits. Feel free to explore the Guild Huts!`);
                             setFInput(`<button onclick="document.getElementById('flowee-overlay').classList.add('hidden'); isFloweeActive=false;" class="w-full bg-[#00ffcc]/20 border border-[#00ffcc]/50 text-[#00ffcc] py-3 rounded font-bold uppercase tracking-widest text-xs mt-2 hover:bg-[#00ffcc]/40 transition">Explore Bazaar</button>`);
                         }, 800);
                         return;
@@ -1269,21 +1287,25 @@
                 console.warn("Upload or Auth error:", e);
             }
 
+            const credits = parseInt(uploadData.price, 10) || 0;
             const newItem = {
                 title: uploadData.name,
                 description: uploadData.description || '',
+                guild_category: guild,
                 category: guild,
-                price_flow: parseInt(uploadData.price) * 100,
-                price_fiat: parseFloat(uploadData.price),
-                vendor_id: currentUserId,
+                price_credits: credits,
+                price_fiat: parseFloat((credits / 100).toFixed(2)),
+                creator_id: currentUserId !== 'anonymous' ? currentUserId : null,
                 image_url: imageUrl,
-                is_active: true,
-                created_at: new Date().toISOString()
+                is_active: true
             };
 
             try {
-                if (window.supabaseClient) {
-                    await window.supabaseClient.from('market_items').insert([newItem]);
+                if (window.supabaseClient && currentUserId !== 'anonymous') {
+                    const { error } = await window.supabaseClient.from('market_items').insert([newItem]);
+                    if (error) throw error;
+                } else {
+                    throw new Error('Not authenticated');
                 }
             } catch(e) {
                 console.warn("DB save failed, saving locally", e);

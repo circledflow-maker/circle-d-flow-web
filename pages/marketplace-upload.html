@@ -400,6 +400,7 @@
                     title: formData.get('title'),
                     description: formData.get('description'),
                     guild_category: formData.get('category'),
+                    category: formData.get('category'),
                     price_credits: parseInt(formData.get('price_flow')),
                     price_fiat: parseFloat((parseInt(formData.get('price_flow')) / 100).toFixed(2)),
                     image_url: imageUrl || document.getElementById('preview-img').src, // Use base64 if no URL

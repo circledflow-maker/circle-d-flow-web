@@ -240,7 +240,7 @@
             const { data, error } = await window.supabaseClient
                 .from('market_items')
                 .select('*, profiles(username, preferred_contact_method, contact_details)')
-                .eq('category', 'Arts')
+                .eq('guild_category', 'Arts')
                 .eq('is_active', true);
 
             if (error || !data || data.length === 0) {
