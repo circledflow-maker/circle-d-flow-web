@@ -179,16 +179,43 @@ def concat_videos(segments: list[Path], out: Path) -> bool:
 
 
 def add_music(video: Path, audio: Path, out: Path, vol: float = 0.35) -> bool:
+    if not video.exists() or video.stat().st_size < 1000:
+        return False
+    # detect audio stream
+    probe = subprocess.run(
+        [ff(), "-v", "error", "-select_streams", "a", "-show_entries", "stream=codec_type", "-of", "csv=p=0", str(video)],
+        capture_output=True, text=True,
+    )
+    has_audio = "audio" in (probe.stdout or "")
+
     if not audio.exists():
-        return run([ff(), "-y", "-i", str(video), "-c", "copy", str(out)])
-    return run([
-        ff(), "-y", "-i", str(video), "-i", str(audio),
-        "-filter_complex",
-        f"[1:a]aloop=loop=-1:size=2e+09,volume={vol}[bg];[0:a][bg]amix=inputs=2:duration=first:dropout_transition=2[a]",
-        "-map", "0:v", "-map", "[a]",
-        "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-shortest",
-        str(out),
-    ], timeout=300)
+        if video.resolve() != out.resolve():
+            import shutil
+            shutil.copy2(video, out)
+        return out.exists()
+
+    if has_audio:
+        ok = run([
+            ff(), "-y", "-i", str(video), "-i", str(audio),
+            "-filter_complex",
+            f"[1:a]aloop=loop=-1:size=2e+09,volume={vol}[bg];[0:a][bg]amix=inputs=2:duration=first:dropout_transition=2[a]",
+            "-map", "0:v", "-map", "[a]",
+            "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-shortest",
+            str(out),
+        ], timeout=300)
+    else:
+        ok = run([
+            ff(), "-y", "-i", str(video), "-i", str(audio),
+            "-filter_complex", f"[1:a]aloop=loop=-1:size=2e+09,volume={vol},atrim=0:300[a]",
+            "-map", "0:v", "-map", "[a]",
+            "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-shortest",
+            str(out),
+        ], timeout=300)
+
+    if not ok or not out.exists() or out.stat().st_size < 1000:
+        import shutil
+        shutil.copy2(video, out)
+    return out.exists() and out.stat().st_size > 1000
 
 
 def media_for_artist(artist: str, folder: str | None, buckets: dict) -> list[Path]:
