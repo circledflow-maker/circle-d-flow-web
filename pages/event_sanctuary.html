@@ -165,6 +165,7 @@
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     <script src="../js/api_config.js"></script>
     <script src="../js/agents/supabase_client.js?v=4.1"></script>
+    <script src="../js/modules/share_export.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -631,7 +632,7 @@
             }, 100);
         }
         
-        function downloadMangaShare() {
+        async function downloadMangaShare() {
             const element = document.getElementById('download-composite-card');
             element.classList.add('exporting');
             
@@ -660,17 +661,24 @@
             const teamContainer = document.getElementById('composite-crew');
             teamContainer.innerHTML = '';
             if (window.currentEventData && window.currentEventData.needs && window.currentEventData.needs.team) {
-                window.currentEventData.needs.team.forEach(t => {
+                for (const t of window.currentEventData.needs.team) {
+                    let avatarHtml = `<div style="width: 30px; height: 30px; border-radius: 50%; background: #333;"></div>`;
+                    if (t.imgUrl) {
+                        try {
+                            const safe = window.ShareExport ? ShareExport.proxyUrl(t.imgUrl) : t.imgUrl;
+                            avatarHtml = `<img src="${safe}" crossorigin="anonymous" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;">`;
+                        } catch (_) { /* placeholder */ }
+                    }
                     teamContainer.innerHTML += `
                         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                            ${t.imgUrl ? `<img src="${t.imgUrl}" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;">` : `<div style="width: 30px; height: 30px; border-radius: 50%; background: #333;"></div>`}
+                            ${avatarHtml}
                             <div>
                                 <div style="color: #00ffcc; font-weight: bold; text-transform: uppercase;">${t.name}</div>
                                 <div style="font-size: 8px; color: #aaa;">${t.artist_type || 'Artist'} | ${t.status || 'Pending'}</div>
                             </div>
                         </div>
                     `;
-                });
+                }
             } else {
                 teamContainer.innerHTML = '<div>No crew synced yet.</div>';
             }
@@ -679,31 +687,39 @@
                 margin:       0,
                 filename:     `CDF_Flyer_${document.getElementById('event-title').innerText.replace(/\s+/g, '_')}.pdf`,
                 image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true },
+                html2canvas:  { scale: 2, useCORS: true, allowTaint: false, logging: false },
                 jsPDF:        { unit: 'px', format: [794, 1123], orientation: 'portrait' }
             };
-            
+
+            let cleanup = () => {};
+            if (window.ShareExport) {
+                try { cleanup = await ShareExport.inlineImages(element); } catch (e) { console.warn(e); }
+            }
+
             html2pdf().set(opt).from(element).save().then(() => {
+                cleanup();
                 element.classList.remove('exporting');
-            }).catch(() => element.classList.remove('exporting'));
+            }).catch((err) => {
+                console.error('PDF export failed', err);
+                cleanup();
+                element.classList.remove('exporting');
+                alert('Flyer export failed. Try Download Flyer again or use Share for PNG.');
+            });
         }
 
         async function downloadMangaPng() {
             const card = document.getElementById('manga-share-card');
-            if (!card || typeof html2canvas === 'undefined') {
-                return downloadMangaShare();
+            if (!card) return downloadMangaShare();
+            const title = (document.getElementById('event-title')?.innerText || 'C4C').replace(/\s+/g, '_');
+            if (window.ShareExport && typeof html2canvas !== 'undefined') {
+                try {
+                    await ShareExport.capturePng(card, `CDF_Flyer_${title}.png`);
+                    return;
+                } catch (e) {
+                    console.warn('ShareExport PNG failed', e);
+                }
             }
-            try {
-                const canvas = await html2canvas(card, { scale: 2, useCORS: true, backgroundColor: '#ffffff' });
-                const link = document.createElement('a');
-                const title = (document.getElementById('event-title')?.innerText || 'C4C').replace(/\s+/g, '_');
-                link.download = `CDF_Flyer_${title}.png`;
-                link.href = canvas.toDataURL('image/png');
-                link.click();
-            } catch (e) {
-                console.warn('PNG export failed, falling back to PDF', e);
-                downloadMangaShare();
-            }
+            return downloadMangaShare();
         }
 
         async function shareToInstagram() {
@@ -724,9 +740,10 @@
 
         function setCanvasImage(url) {
             const imageLayer = document.getElementById('canvas-image-layer');
+            const safeUrl = (window.ShareExport && ShareExport.isExternal(url)) ? ShareExport.proxyUrl(url) : url;
             imageLayer.innerHTML = `
-                <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('${url}');"></div>
-                <div class="absolute inset-0 border-2 border-gold-accent opacity-50"></div>
+                <img src="${safeUrl}" crossorigin="anonymous" class="absolute inset-0 w-full h-full object-cover" alt="Event flyer">
+                <div class="absolute inset-0 border-2 border-gold-accent opacity-50 pointer-events-none"></div>
             `;
         }
 
@@ -2268,10 +2285,8 @@
 
     <!-- Hidden Composite Card for Full Flyer Download -->
     <div id="download-composite-card" class="absolute top-0 left-0 w-[794px] h-[1123px] bg-[#09090b] text-white z-[-50] opacity-100 pointer-events-none font-sans overflow-hidden" style="font-family: 'Plus Jakarta Sans', sans-serif;">
-        <!-- Background Image -->
-        <div class="absolute inset-0 z-0">
-            <img src="../Event/Concert%20Poster%20and%20Event%20Poster%20TemplateEvent%20Poster_%20A4%20(1).jpg" class="w-full h-full object-cover opacity-60">
-        </div>
+        <!-- Background — gradient only (no external CORS images) -->
+        <div class="absolute inset-0 z-0 bg-gradient-to-br from-[#1a1510] via-[#09090b] to-[#0a1210]"></div>
         
         <!-- Gradient Overlay for readability -->
         <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent z-0"></div>

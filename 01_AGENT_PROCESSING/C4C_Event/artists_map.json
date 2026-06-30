@@ -8,7 +8,7 @@
     "Akwabafood": "Akwaba — Taste",
     "Sandu": "Sandu — Gatekeeper",
     "O.I.D": "O.I.D",
-    "A": "C-Fitz",
+    "A": "C-Riz",
     "Toni": "Secret Garden LX",
     "Jannes": "Kael",
     "SeMaria": "SeMaria",
@@ -19,7 +19,7 @@
   },
   "artists": [
     { "name": "HempyRoots Lisboa Crew", "roles": ["music", "warmup"], "dsc_ranges": [[8909, 8960]], "folders": [] },
-    { "name": "C-Fitz", "roles": ["concert"], "dsc_ranges": [[8960, 9005]], "folders": ["A"] },
+    { "name": "C-Riz", "roles": ["concert"], "dsc_ranges": [[8960, 9005]], "folders": ["A"] },
     { "name": "Kael", "roles": ["concert"], "dsc_ranges": [[9005, 9035]], "folders": ["Jannes"] },
     { "name": "Willpower", "roles": ["concert"], "dsc_ranges": [[9035, 9065]], "folders": ["Willpower"] },
     { "name": "Naru the Token", "roles": ["concert"], "dsc_ranges": [[9065, 9095]], "folders": ["Naru"] },
