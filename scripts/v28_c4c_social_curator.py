@@ -139,7 +139,8 @@ def cut_video_clip(src: Path, dest: Path, ffmpeg: str, max_sec: float = 8.0) -> 
         "-t", str(max_sec),
         "-vf", "eq=contrast=1.08:brightness=0.02:saturation=1.05,scale=1080:-2",
         "-c:v", "libx264", "-preset", "fast", "-crf", "22",
-        "-an", str(dest),
+        "-c:a", "aac", "-b:a", "128k", "-ar", "44100",
+        str(dest),
     ]
     try:
         subprocess.run(cmd, capture_output=True, check=True, timeout=120)
@@ -171,6 +172,44 @@ def collect_files(source: Path) -> list[dict]:
 def assign_items(items: list, artist_map: dict) -> dict[str, list]:
     buckets: dict[str, list] = defaultdict(list)
     aliases = artist_map.get("folder_aliases", {})
+
+    # Prefer face-based buckets if v30 ran
+    face_file = META_DIR / "face_buckets.json"
+    if face_file.exists():
+        face_data = json.loads(face_file.read_text(encoding="utf-8"))
+        for key, entries in face_data.items():
+            for e in entries:
+                p = Path(e["path"])
+                if not p.exists():
+                    continue
+                item = {
+                    "path": p,
+                    "rel": str(p.relative_to(SOURCE)) if p.is_relative_to(SOURCE) else p.name,
+                    "top": e.get("folder", "root"),
+                    "name": p.name,
+                    "dsc": dsc_num(p.name),
+                    "type": e.get("type", "photo"),
+                    "score": e.get("score", 0.5),
+                }
+                buckets[key].append(item)
+        # moments from unassigned root (no artist in face data)
+        assigned_paths = {e["path"] for entries in face_data.values() for e in entries}
+        for item in items:
+            if str(item["path"]) in assigned_paths:
+                continue
+            if item["top"] != "root":
+                continue
+            for moment in artist_map.get("moments", []):
+                mkey = moment["name"]
+                folders = moment.get("folders", [])
+                if item["top"] in folders or in_ranges(item["dsc"], moment.get("dsc_ranges", [])):
+                    item = {**item, "score": score_video(item["path"]) if item["type"] == "video" else score_image(item["path"])}
+                    buckets[f"moment_{mkey}"].append(item)
+                    break
+            else:
+                item = {**item, "score": score_video(item["path"]) if item["type"] == "video" else score_image(item["path"])}
+                buckets["moment_venue"].append(item)
+        return buckets
 
     for item in items:
         path = item["path"]
@@ -292,7 +331,12 @@ def main():
     parser.add_argument("--source", type=Path, default=SOURCE)
     parser.add_argument("--output", type=Path, default=OUTPUT_BASE)
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--rebuild", action="store_true", help="Clear output folder before rebuild")
     args = parser.parse_args()
+
+    if args.rebuild and args.output.exists():
+        print(f"Clearing {args.output}...")
+        shutil.rmtree(args.output)
 
     if not args.source.exists():
         print(f"Source not found: {args.source}")
