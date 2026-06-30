@@ -4,7 +4,7 @@
   "date": "2026-06-27",
   "folder_aliases": {
     "A": "C-Riz",
-    "Jannes": "Kael",
+    "Jannes": "Jannes",
     "Willpower": "Willpower",
     "Naru": "Naru the Token",
     "O.I.D": "O.I.D",
@@ -19,7 +19,8 @@
   },
   "artists": [
     { "name": "C-Riz", "roles": ["concert"], "folders": ["A"] },
-    { "name": "Kael", "roles": ["concert"], "folders": ["Jannes"] },
+    { "name": "Jannes", "roles": ["tattoo", "visual"], "folders": ["Jannes"], "flow": "Tattoo-Flow", "location": "Secret Garden LX" },
+    { "name": "Kael", "roles": ["concert"], "folders": [], "flow": "Audio-Flow" },
     { "name": "Willpower", "roles": ["concert"], "folders": ["Willpower"] },
     { "name": "Naru the Token", "roles": ["concert"], "folders": ["Naru"] },
     { "name": "O.I.D", "roles": ["performance"], "folders": ["O.I.D"] },

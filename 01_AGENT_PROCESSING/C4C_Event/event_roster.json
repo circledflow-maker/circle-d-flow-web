@@ -1,0 +1,22 @@
+{
+  "event_id": "80035a20-956c-4fe7-a7ec-264e79b31ff6",
+  "title": "C for C — Culture for Community",
+  "location": "Secret Garden LX / ClimaLabs Warehouse, Lisbon",
+  "tagline": "One beat. One microphone. One stage.",
+  "presenter": "Circle D Flow — Community for Connections presents",
+  "sequence": [
+    { "time": "14:00", "label": "Doors & Artmarket", "moment": "venue" },
+    { "time": "14:30", "label": "Warm-up", "artist": "HempyRoots Lisboa Crew", "flow": "Audio-Flow" },
+    { "time": "16:30", "label": "Concert", "artist": "C-Riz", "folder": "A", "flow": "Audio-Flow" },
+    { "time": "17:00", "label": "Concert", "artist": "Kael", "folder": null, "flow": "Audio-Flow" },
+    { "time": "17:30", "label": "Concert", "artist": "Willpower", "folder": "Willpower", "flow": "Audio-Flow" },
+    { "time": "18:00", "label": "Concert", "artist": "Naru the Token", "folder": "Naru", "flow": "Audio-Flow" },
+    { "time": "18:30", "label": "Special Guest", "artist": "O.I.D", "folder": "O.I.D", "flow": "Audio-Flow" },
+    { "time": "19:00", "label": "Jam Session", "artist": "Secret Garden LX Crew", "folders": ["Toni", "Dennis", "elisa"], "flow": "Audio-Flow" },
+    { "time": "ongoing", "label": "Tattoo & Visual Art", "artist": "Jannes", "folder": "Jannes", "flow": "Tattoo-Flow", "location": "Secret Garden LX" },
+    { "time": "ongoing", "label": "Visual Flow", "artist": "Kreativlon.Art", "folder": "Kreativlon.Art", "flow": "Visual-Flow" },
+    { "time": "ongoing", "label": "Visual Flow", "artist": "Rayan", "folder": null, "flow": "Visual-Flow" },
+    { "time": "ongoing", "label": "Taste", "artist": "Akwaba", "folder": "Akwabafood", "flow": "Community-Flow" },
+    { "time": "21:00", "label": "Connect & Together", "moment": "emotion" }
+  ]
+}
