@@ -265,12 +265,8 @@
                         <p class="text-xs text-white/40 mb-3 line-clamp-1">${item.description}</p>
                         <div class="flex justify-between items-center">
                             <div class="price-tag">${item.price_credits || item.price_fc || 0} FC / €${item.price_fiat || item.price_eur || 0}</div>
-                            <button class="buy-btn text-[10px]">Order</button>
+                            ${BazaarTrade.buildStallActions(item)}
                         </div>
-                    </div>
-                `;
-                  div.querySelector('.buy-btn').onclick = () => openOrderModal(encodeURIComponent(JSON.stringify(item)));
-                  grid.appendChild(div);
             });
         }
 
@@ -316,6 +312,9 @@
             }
         });
     </script>
+<script src="../js/gamification.js"></script>
+<script src="../js/modules/marketplace_core.js"></script>
+<script src="../js/modules/bazaar_trade.js"></script>
 <script src="../js/order_modal.js"></script>
 </body>
 </html>

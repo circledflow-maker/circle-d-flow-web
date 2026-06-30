@@ -262,7 +262,7 @@
                         <p class="text-xs text-white/40 mb-3 line-clamp-1">${item.description}</p>
                         <div class="flex justify-between items-center">
                             <div class="price-tag">${item.price_credits || item.price_fc || 0} FC</div>
-                            <button class="buy-btn text-[10px]">Enroll</button>
+                            ${BazaarTrade.buildStallActions(item)}
                         </div>
                     </div>
                 `;
@@ -312,6 +312,9 @@
             }
         });
     </script>
+<script src="../js/gamification.js"></script>
+<script src="../js/modules/marketplace_core.js"></script>
+<script src="../js/modules/bazaar_trade.js"></script>
 <script src="../js/order_modal.js"></script>
 </body>
 </html>
