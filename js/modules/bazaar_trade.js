@@ -162,12 +162,25 @@ window.BazaarTrade = {
         }
     },
 
-    async buyWithEuro(item) {
+    async openEuroCheckout(item) {
         const normalized = this.normalizeItem(item);
         const amount = normalized.price_fiat;
-        if (!amount) return alert('No fiat price available for this artifact.');
+        if (!amount || amount <= 0) return alert('No Euro price set for this artifact.');
 
-        if (!window.Stripe) return alert('Stripe not loaded on this page.');
+        if (!window.Stripe) {
+            const s = document.createElement('script');
+            s.src = 'https://js.stripe.com/v3/';
+            document.head.appendChild(s);
+            await new Promise((res) => { s.onload = res; });
+        }
+
+        this._ensureEuroModal();
+        const modal = document.getElementById('bazaar-euro-modal');
+        document.getElementById('bazaar-euro-item').textContent = normalized.title;
+        document.getElementById('bazaar-euro-price').textContent = `€${amount.toFixed(2)}`;
+        const mount = document.getElementById('bazaar-payment-element');
+        mount.innerHTML = '<span class="text-[#00ffcc] text-xs animate-pulse">Connecting...</span>';
+        modal.classList.remove('hidden');
 
         const pk = window.STRIPE_PUBLISHABLE_KEY || 'pk_test_51SdebPDeSUihf09RzlBFNrIjuQnfGMixv5aeyxp7Qb8VA8seoEVuHYWb4MBM6Kvfel5N3JMyLly8zzdURworgXJg00ocwKiVGR';
         const backendUrl = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
@@ -182,20 +195,59 @@ window.BazaarTrade = {
             });
             if (!res.ok) throw new Error('Payment service unavailable');
             const { clientSecret } = await res.json();
-            if (!clientSecret) throw new Error('No payment session');
-
             const stripe = window._bazaarStripe || Stripe(pk);
             window._bazaarStripe = stripe;
-            const { error } = await stripe.confirmPayment({
-                elements: stripe.elements({ clientSecret }),
-                confirmParams: { return_url: window.location.href },
-                redirect: 'if_required'
+            this._stripeElements = stripe.elements({
+                clientSecret,
+                appearance: { theme: 'night', variables: { colorPrimary: '#d2691e' } }
             });
-            if (error) alert(error.message);
-            else if (window.Pusher) window.Pusher.showToast('Payment complete!', 'success');
+            mount.innerHTML = '';
+            const paymentElement = this._stripeElements.create('payment');
+            paymentElement.mount('#bazaar-payment-element');
+            this._pendingEuroItem = normalized;
         } catch (err) {
-            alert('Checkout failed: ' + err.message);
+            mount.innerHTML = `<span class="text-red-400 text-xs">${err.message}</span>`;
         }
+    },
+
+    async confirmEuroCheckout() {
+        if (!this._stripeElements || !window._bazaarStripe) return;
+        const btn = document.getElementById('bazaar-euro-submit');
+        btn.disabled = true;
+        btn.textContent = 'Processing...';
+        const { error } = await window._bazaarStripe.confirmPayment({
+            elements: this._stripeElements,
+            confirmParams: { return_url: window.location.href },
+            redirect: 'if_required'
+        });
+        btn.disabled = false;
+        btn.textContent = 'Pay with Card';
+        if (error) alert(error.message);
+        else {
+            document.getElementById('bazaar-euro-modal').classList.add('hidden');
+            if (window.Pusher) window.Pusher.showToast('Payment complete!', 'success');
+        }
+    },
+
+    _ensureEuroModal() {
+        if (document.getElementById('bazaar-euro-modal')) return;
+        const el = document.createElement('div');
+        el.id = 'bazaar-euro-modal';
+        el.className = 'hidden fixed inset-0 z-[200] bg-black/90 flex items-center justify-center p-4';
+        el.innerHTML = `
+            <div class="bg-[#1a0a18] border border-[#d2691e] rounded-xl p-6 w-full max-w-md text-white relative">
+                <button type="button" onclick="document.getElementById('bazaar-euro-modal').classList.add('hidden')" class="absolute top-3 right-3 text-white/50 material-symbols-outlined">close</button>
+                <h3 class="font-cinzel text-[#ffaa44] text-lg mb-1">Secure Checkout</h3>
+                <p id="bazaar-euro-item" class="text-sm mb-1"></p>
+                <p id="bazaar-euro-price" class="text-[#ffaa44] font-mono font-bold mb-4"></p>
+                <div id="bazaar-payment-element" class="mb-4 min-h-[120px] bg-white/5 rounded p-3"></div>
+                <button type="button" id="bazaar-euro-submit" onclick="BazaarTrade.confirmEuroCheckout()" class="w-full py-3 bg-[#d2691e] text-white font-bold rounded uppercase text-sm">Pay with Card</button>
+            </div>`;
+        document.body.appendChild(el);
+    },
+
+    async buyWithEuro(item) {
+        return this.openEuroCheckout(item);
     },
 
     encodeItem(item) {
@@ -204,11 +256,17 @@ window.BazaarTrade = {
 
     buildStallActions(item) {
         const key = this.cacheItem(item);
-        const credits = this.getCachedItem(key).price_credits;
-        const encoded = this.encodeItem(this.getCachedItem(key));
+        const norm = this.getCachedItem(key);
+        const credits = norm.price_credits;
+        const eur = norm.price_fiat;
+        const encoded = this.encodeItem(norm);
+        const eurBtn = eur > 0
+            ? `<button type="button" class="buy-btn text-[10px] opacity-90" onclick="BazaarTrade.openEuroCheckout(BazaarTrade.getCachedItem('${key}'))">€${eur.toFixed(0)}</button>`
+            : '';
         return `
             <div class="flex gap-2 flex-wrap justify-end">
                 <button type="button" class="buy-btn text-[10px]" onclick="BazaarTrade.buyWithFlow(BazaarTrade.getCachedItem('${key}'))">${credits} FC</button>
+                ${eurBtn}
                 <button type="button" class="buy-btn text-[10px] opacity-80" onclick="openOrderModal('${encoded}')">Contact</button>
             </div>`;
     }

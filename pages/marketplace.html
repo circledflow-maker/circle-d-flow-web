@@ -10,65 +10,17 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&family=Cinzel:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <link rel="stylesheet" href="../css/styles.css?v=2">
+    <link rel="stylesheet" href="../css/bazaar-marketplace.css?v=1" />
+    <link rel="stylesheet" href="../css/bazaar-mobile.css?v=1" />
     <style>
-        /* AFRO-FUTURISTIC BAZAAR AESTHETICS */
-        body {
-            background-color: #120818; /* Pure Void */
-            overflow-x: hidden; 
-            color: #FDFBF7;
-        }
-
-        /* RESONANCE BRIDGES (Background SVG) */
-        .bazaar-map {
-            display: grid; /* Changed from none to grid for visibility */
-            grid-template-areas: 
-                    "center center"
-                    "arts skills"
-                    "sounds healing"
-                    "products services" !important;
-                grid-template-columns: 1fr 1fr !important;
-                grid-template-rows: auto !important;
-                height: auto !important;
-                min-height: 100vh;
-                padding-top: 80px !important;
-                gap: 10px !important;
-                padding-bottom: 60px !important;
-                overflow-x: hidden !important;
-                overflow-y: auto !important;
-                align-items: center;
-                justify-items: center;
-            }
-            .gild-island {
-                width: 140px;
-                height: 120px;
-                margin: 0 auto;
-            }
-            .gild-island::after {
-                width: 80px;
-                bottom: -15px;
-            }
-            .totem-icon {
-                font-size: 2rem;
-            }
-            .gild-title {
-                font-size: 0.6rem;
-            }
-            .center-hub {
-                margin: 10px 0;
-                padding: 10px;
-                background: radial-gradient(circle, rgba(90, 42, 132, 0.4) 0%, rgba(0,0,0,0) 80%);
-            }
-            /* Make header buttons smaller on mobile */
-            header.fixed .flex.items-center.justify-end.gap-2 a {
-                padding: 4px 8px;
-                font-size: 8px;
-            }
-        }
+        body { margin: 0; color: #FDFBF7; overflow-x: hidden; background: #120818; }
     </style>
 </head>
 
 <body>
+
+    <div class="bazaar-atmosphere" aria-hidden="true"></div>
+    <canvas id="market-3d-canvas" aria-hidden="true"></canvas>
 
     <!-- Fullscreen Mobile Menu Overlay -->
     <div id="mobile-menu" class="fixed inset-0 bg-black/95 z-[1000] opacity-0 pointer-events-none transition-opacity duration-300 flex flex-col items-center justify-center">
@@ -86,80 +38,27 @@
     </div>
 
     <style>
-        
-        html, body {
-            margin: 0; padding: 0;
-            width: 100%;
-            height: 100vh;
-            background: #000 url('../benin_bg.png') no-repeat center center fixed;
-            background-size: cover;
-        }
-        @media (max-width: 768px) {
-            html, body {
-                overflow-x: hidden !important;
-                overflow-y: auto !important;
-                position: static !important;
-                height: auto !important;
-                min-height: 100vh;
-            }
-        }
-
-
-        /* DARK OVERLAY FOR READABILITY */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: radial-gradient(circle at center, rgba(18, 8, 24, 0.4) 0%, rgba(0, 0, 0, 0.9) 100%);
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        #market-3d-canvas {
-            position: fixed; top: 0; left: 0;
-            width: 100%; height: 100vh;
-            z-index: 5; /* Above background, below UI */
-            image-rendering: auto;
-            pointer-events: auto;
-            opacity: 1;
-            display: block;
-        }
-
-        /* RESPONSIVE HEADER - STABLE 3-COLUMN GRID */
-        .horizon-bar {
-            display: grid !important;
-            grid-template-columns: 1fr 2fr auto !important;
-            align-items: center;
-            padding: 0 20px;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
-            border-bottom: none;
-            z-index: 100;
-        }
-        .header-section { display: flex; align-items: center; min-width: 0; }
-        .header-left { justify-content: flex-start; }
-        .header-center { justify-content: center; }
-        .header-right { justify-content: flex-end; gap: 10px; }
+        #market-feed-section { position: relative; z-index: 15; }
     </style>
 
-    <header class="horizon-bar fixed top-0 w-full h-16">
+    <header class="bazaar-horizon fixed top-0 w-full">
         <div class="header-section header-left">
-            <a href="dashboard.html" class="flex items-center gap-2 text-white hover:text-[#d4af37] transition">
-                <span class="material-symbols-outlined">arrow_back</span>
-                <span class="font-cinzel tracking-widest text-sm">Dashboard</span>
+            <a href="dashboard.html" class="flex items-center gap-2 text-white/80 hover:text-[#ffaa44] transition min-h-[44px]">
+                <span class="material-symbols-outlined text-lg">arrow_back</span>
+                <span class="font-cinzel tracking-widest text-xs hidden sm:inline">Dashboard</span>
             </a>
         </div>
-        <div class="header-section header-center">
-            <h1 class="font-cinzel text-xl text-[#d4af37] tracking-widest"><a href="marketplace_3d.html" class="hover:text-white underline">Enter 3D Bazaar</a></h1>
+        <div class="bazaar-horizon-center">
+            <a href="marketplace_3d.html">Enter 3D Bazaar</a>
         </div>
-        <div class="header-section header-right" style="gap: 15px;">
-            <a href="marketplace-stall.html" class="flex flex-col items-center text-white/70 hover:text-[#d4af37] transition">
-                <span class="material-symbols-outlined text-[18px]">storefront</span>
-                <span class="text-[8px] uppercase font-bold tracking-widest mt-1">My Stall</span>
+        <div class="bazaar-horizon-actions">
+            <a href="marketplace-stall.html">
+                <span class="material-symbols-outlined text-lg">storefront</span>
+                <span>My Stall</span>
             </a>
-            <a href="marketplace-upload.html" class="flex flex-col items-center text-white/70 hover:text-[#d4af37] transition">
-                <span class="material-symbols-outlined text-[18px]">upload</span>
-                <span class="text-[8px] uppercase font-bold tracking-widest mt-1">Upload</span>
+            <a href="marketplace_3d.html?intent=upload">
+                <span class="material-symbols-outlined text-lg">auto_fix</span>
+                <span>Forge</span>
             </a>
         </div>
     </header>
@@ -167,51 +66,48 @@
     <!-- THE GRAND BAZAAR MAP (Grid) -->
     <main class="bazaar-map">
         
-        <!-- TOP LEFT: ARTS -->
         <div class="gild-island" style="grid-area: arts;" onclick="window.MarketplaceCore.enterGild('arts')">
             <span class="material-symbols-outlined totem-icon">palette</span>
             <span class="gild-title">Guild of Arts</span>
-            <span class="text-[9px] text-white/30 mt-1">Design & NFTs</span>
+            <span class="gild-sub">Designer's Attic</span>
         </div>
 
-        <!-- TOP RIGHT: SKILLS -->
         <div class="gild-island" style="grid-area: skills;" onclick="window.MarketplaceCore.enterGild('skills')">
             <span class="material-symbols-outlined totem-icon">school</span>
             <span class="gild-title">Guild of Skills</span>
-            <span class="text-[9px] text-white/30 mt-1">Coding & Strategy</span>
+            <span class="gild-sub">Craftsman's Workshop</span>
         </div>
 
-        <!-- MIDDLE LEFT: SOUNDS -->
         <div class="gild-island" style="grid-area: sounds;" onclick="window.MarketplaceCore.enterGild('sounds')">
             <span class="material-symbols-outlined totem-icon">headphones</span>
             <span class="gild-title">Guild of Sounds</span>
-            <span class="text-[9px] text-white/30 mt-1">Beats & Audio</span>
+            <span class="gild-sub">Beats & Audio</span>
         </div>
 
-        <!-- CENTER: THE HUB -->
-        <div class="center-hub flex flex-col items-center justify-center h-full">
-            <img src="../Assets/images/purple_tree_logo_black_connection.png" alt="Circle D Flow" class="gold-logo-glow" style="width: 120px;" />
+        <div class="center-hub flex flex-col items-center justify-center">
+            <div class="bazaar-logo-wrap">
+                <img src="../Assets/images/purple_tree_logo_black_connection.png" alt="Circle D Flow" />
+            </div>
+            <p class="bazaar-tagline">Lisbon · Wu Wei · Pure Flow</p>
+            <a href="marketplace_3d.html" class="mt-3 text-[10px] uppercase tracking-widest text-[#00ffcc]/80 hover:text-[#00ffcc] border border-[#00ffcc]/30 px-3 py-1 rounded-full">Immersive 3D →</a>
         </div>
 
-        <!-- MIDDLE RIGHT: HEALING -->
         <div class="gild-island" style="grid-area: healing;" onclick="window.MarketplaceCore.enterGild('healing')">
             <span class="material-symbols-outlined totem-icon">self_improvement</span>
             <span class="gild-title">Guild of Healing</span>
-            <span class="text-[9px] text-white/30 mt-1">Wellness & Soul</span>
+            <span class="gild-sub">Holistic Wellness</span>
         </div>
 
-        <!-- BOTTOM LEFT: PRODUCTS -->
         <div class="gild-island" style="grid-area: products;" onclick="window.MarketplaceCore.enterGild('products')">
             <span class="material-symbols-outlined totem-icon">diamond</span>
             <span class="gild-title">Guild of Products</span>
-            <span class="text-[9px] text-white/30 mt-1">Physical Artifacts</span>
+            <span class="gild-sub">Physical Artifacts</span>
         </div>
 
-        <!-- BOTTOM RIGHT: VISION -->
-        <div class="gild-island" style="grid-area: services;" onclick="window.MarketplaceCore.enterGild('vision')">
-            <span class="material-symbols-outlined totem-icon">visibility</span>
-            <span class="gild-title">Guild of Vision</span>
-            <span class="text-[9px] text-white/30 mt-1">Sight & Media</span>
+        <div class="gild-island" style="grid-area: services;" onclick="window.MarketplaceCore.enterGild('services')">
+            <span class="material-symbols-outlined totem-icon">handshake</span>
+            <span class="gild-title">Guild of Services</span>
+            <span class="gild-sub">Community Gateway</span>
         </div>
 
     <!-- Flowee Fullscreen Chat Overlay (Upload Intent) -->
@@ -224,8 +120,12 @@
                 <!-- Chat messages here -->
             </div>
             <div class="bg-[#1A1622] rounded-xl p-4 border border-[#00ffcc]/30 shadow-[0_0_30px_rgba(0,255,204,0.1)] flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full border border-[#00ffcc] overflow-hidden flex-shrink-0 animate-pulse">
-                    <img src="../Assets/images/logo.png" class="w-full h-full object-cover opacity-80" alt="Flowee">
+                <div class="w-10 h-10 rounded-full border border-[#00ffcc] flex-shrink-0 flex items-center justify-center overflow-visible">
+                    <svg viewBox="0 0 100 100" width="40" height="40" style="filter: drop-shadow(0 0 8px rgba(0,255,204,0.8));">
+                        <path d="M40,50 C10,20 -10,60 15,75 C25,80 40,65 40,50 Z" fill="#00ffcc" opacity="0.8"><animateTransform attributeName="transform" type="rotate" values="0 40 50;-20 40 50;0 40 50" dur="0.8s" repeatCount="indefinite"/></path>
+                        <path d="M60,50 C90,20 110,60 85,75 C75,80 60,65 60,50 Z" fill="#00ffcc" opacity="0.8"><animateTransform attributeName="transform" type="rotate" values="0 60 50;20 60 50;0 60 50" dur="0.8s" repeatCount="indefinite"/></path>
+                        <circle cx="50" cy="50" r="16" fill="#00ffcc"><animate attributeName="r" values="16;18;16" dur="2s" repeatCount="indefinite"/></circle>
+                    </svg>
                 </div>
                 <div id="flowee-input-zone" class="flex-1">
                     <button class="w-full bg-[#00ffcc]/20 border border-[#00ffcc]/50 text-[#00ffcc] py-2 rounded font-bold uppercase tracking-widest text-xs hover:bg-[#00ffcc]/40 transition">Loading Flowee...</button>
@@ -458,6 +358,9 @@
     
     <!-- INDIVIDUAL AGENTS -->
     <script src="../js/agents/market_agent.js?v=5.0"></script>
+    <script src="../js/agents/marketplace_3d.js?v=5.1"></script>
+    <script src="../js/modules/marketplace_core.js"></script>
+    <script src="../js/modules/bazaar_flowee.js"></script>
 
     <script src="../js/agents/sound_engineer.js?v=5.0"></script>
     <script src="../js/agents/tutorial_core.js?v=5.0" defer></script>
@@ -630,40 +533,46 @@
                         'sounds': 'sound_stall.html',
                         'healing': 'healing_stall.html',
                         'products': 'product_stall.html',
-                        'vision': 'vision_stall.html'
+                        'services': 'services_stall.html'
                     };
-                    
-                    // Fade out the 2D HTML Bazaar Map for cinematic effect
+
+                    const canvas = document.getElementById('market-3d-canvas');
                     const bazaarMap = document.querySelector('.bazaar-map');
+                    if (canvas) canvas.classList.add('bazaar-3d-active');
                     if (bazaarMap) {
-                        bazaarMap.style.transition = 'opacity 0.8s ease';
-                        bazaarMap.style.opacity = '0';
-                        bazaarMap.style.pointerEvents = 'none';
+                        bazaarMap.classList.add('bazaar-map-hidden');
+                    }
+
+                    if (window.Marketplace3D && !window.Marketplace3D.isInitialized) {
+                        window.Marketplace3D.init();
                     }
 
                     if (window.Marketplace3D && window.Marketplace3D.isInitialized) {
-                        const targetNode = window.Marketplace3D.nodes.find(n => n.userData.guild && n.userData.guild.toLowerCase() === gild.toLowerCase());
+                        const guildMap = { arts: 'Arts', skills: 'Skills', sounds: 'Sounds', healing: 'Healing', products: 'Products', services: 'Services' };
+                        const targetNode = window.Marketplace3D.nodes.find(n =>
+                            n.userData.guild && n.userData.guild.toLowerCase() === (guildMap[gild] || gild).toLowerCase()
+                        );
                         if (targetNode) {
                             window.Marketplace3D.isZooming = true;
                             window.Marketplace3D.zoomProgress = 0;
                             window.Marketplace3D.targetNode = targetNode;
-                            if(window.SoundEngineer) window.SoundEngineer.playSFX('ui_click_hover');
-                            return; // Navigation will be handled by the 3D animation loop
+                            if (window.SoundEngineer) window.SoundEngineer.playSFX('ui_click_hover');
+                            return;
                         }
                     }
 
-                    // Fallback to direct navigation if 3D isn't ready
                     setTimeout(() => {
-                        if (pages[gild]) {
-                            window.location.href = pages[gild];
-                        } else {
-                            // Fallback logic
+                        if (pages[gild]) window.location.href = pages[gild];
+                        else {
                             filterMarket(gild.charAt(0).toUpperCase() + gild.slice(1));
                             document.getElementById('market-feed-section').scrollIntoView({ behavior: 'smooth' });
                         }
-                    }, 500);
+                    }, 600);
                 }
             };
+
+            if (window.Flowee) window.Flowee.renderVessel();
+            if (window.BazaarFlowee) BazaarFlowee.injectFab();
 
             // BURGER MENU LOGIC
             const burgerBtn = document.getElementById('burger-btn');
