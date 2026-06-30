@@ -1,0 +1,19 @@
+{
+  "_comment": "Map DSC number ranges or folder paths to artist names. Copy to artists_map.json and edit after review.",
+  "event": "C for C — Culture for Community",
+  "location": "ClimaLabs Warehouse, Lisbon",
+  "artists": [
+    {
+      "name": "Artist Name",
+      "roles": ["performance", "cipher"],
+      "dsc_ranges": [[9000, 9050]],
+      "folders": [],
+      "notes": "Optional: assign after face-review or lineup confirmation"
+    }
+  ],
+  "crew": [
+    { "name": "Rayan", "role": "Visuals" },
+    { "name": "Sandu", "role": "Gatekeeper" },
+    { "name": "Akwaba", "role": "Taste / Food" }
+  ]
+}
