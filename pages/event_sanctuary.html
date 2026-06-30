@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&family=Cinzel:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/event-sanctuary.css">
     <style>
         body {
             background-color: #09090b; /* bg-zinc-950 */
@@ -164,10 +165,11 @@
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     <script src="../js/api_config.js"></script>
     <script src="../js/agents/supabase_client.js?v=4.1"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
-<body>
+<body class="event-sanctuary">
 
     <!-- Header Navigation -->
     <div class="fixed top-0 left-0 w-full bg-black/80 backdrop-blur-md z-50 border-b border-white/10 h-[80px]">
@@ -208,6 +210,11 @@
         
         <!-- SECTION 1: THE CANVAS -->
         <div class="swipe-section flex flex-col items-center justify-center text-center">
+            <div class="sanctuary-connect">
+                <a href="coop.html" class="link-coop"><span class="material-symbols-outlined text-sm">diamond</span> Coop</a>
+                <a href="calendar.html" class="link-cal"><span class="material-symbols-outlined text-sm">calendar_month</span> Calendar</a>
+                <a href="#" id="sanctuary-impact-link" class="link-impact"><span class="material-symbols-outlined text-sm">public</span> Public</a>
+            </div>
             <div class="w-full max-w-sm aspect-[4/5] bg-black/50 border border-white/10 rounded-xl mb-6 relative overflow-hidden group">
                 <!-- Image Layer -->
                 <div id="canvas-image-layer" class="absolute inset-0 flex flex-col items-center justify-center">
@@ -509,6 +516,10 @@
                     populateMangaShare(event);
                     renderTeamChecklist(event);
                     renderSyncMatrix(event);
+                    const impactLink = document.getElementById('sanctuary-impact-link');
+                    if (impactLink && currentEventId) {
+                        impactLink.href = `create_impact.html?id=${currentEventId}`;
+                    }
                 }
                 
                 // Load user's created events for the switcher
@@ -579,6 +590,10 @@
             document.getElementById('manga-loc').innerText = `Loc: ${event.address || 'Unknown'}`;
             
             let needsStr = Array.isArray(event.needs) ? event.needs.join(' • ') : event.needs;
+            if (event.needs && event.needs.syncMatrix && Array.isArray(event.needs.syncMatrix)) {
+                const program = event.needs.syncMatrix.slice(0, 4).map(m => `${m.time} ${m.label}`).join(' · ');
+                needsStr = program || needsStr;
+            }
             if(!needsStr || needsStr === "NONE") needsStr = "All souls welcome. Bring your flow.";
             document.getElementById('manga-needs').innerText = needsStr;
             
@@ -618,6 +633,7 @@
         
         function downloadMangaShare() {
             const element = document.getElementById('download-composite-card');
+            element.classList.add('exporting');
             
             // Populate Dynamic Data before downloading
             document.getElementById('composite-title').innerText = document.getElementById('event-title').innerText;
@@ -643,8 +659,8 @@
             // Populate Artists
             const teamContainer = document.getElementById('composite-crew');
             teamContainer.innerHTML = '';
-            if (window.currentQuestData && window.currentQuestData.needs && window.currentQuestData.needs.team) {
-                window.currentQuestData.needs.team.forEach(t => {
+            if (window.currentEventData && window.currentEventData.needs && window.currentEventData.needs.team) {
+                window.currentEventData.needs.team.forEach(t => {
                     teamContainer.innerHTML += `
                         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
                             ${t.imgUrl ? `<img src="${t.imgUrl}" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover;">` : `<div style="width: 30px; height: 30px; border-radius: 50%; background: #333;"></div>`}
@@ -667,11 +683,43 @@
                 jsPDF:        { unit: 'px', format: [794, 1123], orientation: 'portrait' }
             };
             
-            html2pdf().set(opt).from(element).save();
+            html2pdf().set(opt).from(element).save().then(() => {
+                element.classList.remove('exporting');
+            }).catch(() => element.classList.remove('exporting'));
         }
-        
-        function shareToInstagram() {
-            alert("To share on Instagram, click 'Download Flyer' to save the Manga Comic image, then post it to your Story with the link sticker!");
+
+        async function downloadMangaPng() {
+            const card = document.getElementById('manga-share-card');
+            if (!card || typeof html2canvas === 'undefined') {
+                return downloadMangaShare();
+            }
+            try {
+                const canvas = await html2canvas(card, { scale: 2, useCORS: true, backgroundColor: '#ffffff' });
+                const link = document.createElement('a');
+                const title = (document.getElementById('event-title')?.innerText || 'C4C').replace(/\s+/g, '_');
+                link.download = `CDF_Flyer_${title}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            } catch (e) {
+                console.warn('PNG export failed, falling back to PDF', e);
+                downloadMangaShare();
+            }
+        }
+
+        async function shareToInstagram() {
+            const title = document.getElementById('event-title')?.innerText || 'Circle D Flow Event';
+            const impactUrl = currentEventId
+                ? `${window.location.origin}/pages/create_impact.html?id=${currentEventId}`
+                : window.location.href;
+            const text = `${title} — Culture for Community. Join the flow: ${impactUrl}`;
+            if (navigator.share) {
+                try {
+                    await navigator.share({ title, text, url: impactUrl });
+                    return;
+                } catch (_) { /* user cancelled */ }
+            }
+            await downloadMangaPng();
+            alert('Flyer saved! Open Instagram, add the image to Story/Feed, and paste the event link as sticker or in caption.');
         }
 
         function setCanvasImage(url) {
@@ -2575,6 +2623,34 @@
             </div>
         </div>
     </div>
+
+    <script src="../js/agents/flowee.js"></script>
+    <script>
+        const SANCTUARY_FLOWEE_HINTS = [
+            'Upload or forge your event flyer on Canvas. Link Calendar & Cooperation above.',
+            'Blueprint shows your program. Tap edit on any slot to sync the matrix.',
+            'Ledger: ping artists, add guests, track crew status. Gamification XP flows from check-ins.',
+            'Tickets sync to Supabase. Enable Pay What You Dice for flow-based pricing.',
+            'Share tab: Download Flyer (PNG/PDF) or use Share for Instagram + public link.'
+        ];
+
+        function openSanctuaryFlowee() {
+            const swipe = document.getElementById('main-swipe');
+            const tab = swipe ? Math.round(swipe.scrollLeft / Math.max(window.innerWidth, 1)) : 0;
+            const hint = SANCTUARY_FLOWEE_HINTS[tab] || SANCTUARY_FLOWEE_HINTS[0];
+            if (window.Flowee) {
+                window.Flowee.toggleChat(true);
+                const bubble = document.querySelector('#flowee-chat-box p, #flowee-agent .flowee-bubble p');
+                if (bubble) bubble.textContent = hint;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                if (window.Flowee) window.Flowee.renderVessel();
+            }, 800);
+        });
+    </script>
 
 </body>
 </html>

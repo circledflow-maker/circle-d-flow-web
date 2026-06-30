@@ -1,0 +1,44 @@
+{
+  "event": "C for C — Culture for Community",
+  "location": "ClimaLabs Warehouse, Lisbon",
+  "date": "2026-06-27",
+  "folder_aliases": {
+    "Naru": "Naru the Token",
+    "Kreativlon.Art": "Sarah / Kreativlon.Art",
+    "Akwabafood": "Akwaba — Taste",
+    "Sandu": "Sandu — Gatekeeper",
+    "O.I.D": "O.I.D",
+    "A": "C-Fitz",
+    "Toni": "Secret Garden LX",
+    "Jannes": "Kael",
+    "SeMaria": "SeMaria",
+    "Micky": "Micky",
+    "Dennis": "Dennis",
+    "elisa": "Elisa",
+    "Willpower": "Willpower"
+  },
+  "artists": [
+    { "name": "HempyRoots Lisboa Crew", "roles": ["music", "warmup"], "dsc_ranges": [[8909, 8960]], "folders": [] },
+    { "name": "C-Fitz", "roles": ["concert"], "dsc_ranges": [[8960, 9005]], "folders": ["A"] },
+    { "name": "Kael", "roles": ["concert"], "dsc_ranges": [[9005, 9035]], "folders": ["Jannes"] },
+    { "name": "Willpower", "roles": ["concert"], "dsc_ranges": [[9035, 9065]], "folders": ["Willpower"] },
+    { "name": "Naru the Token", "roles": ["concert"], "dsc_ranges": [[9065, 9095]], "folders": ["Naru"] },
+    { "name": "Special Guest", "roles": ["concert"], "dsc_ranges": [[9095, 9120]], "folders": ["O.I.D", "Micky"] },
+    { "name": "Secret Garden LX Crew", "roles": ["jam"], "dsc_ranges": [[9120, 9165]], "folders": ["Toni", "Dennis", "elisa"] },
+    { "name": "SeMaria", "roles": ["performance"], "dsc_ranges": [], "folders": ["SeMaria"] },
+    { "name": "Kreativlon.Art", "roles": ["visual", "art"], "dsc_ranges": [], "folders": ["Kreativlon.Art"] }
+  ],
+  "moments": [
+    { "name": "venue", "label": "Venue & Atmosphere", "dsc_ranges": [[8909, 8925], [9127, 9140]] },
+    { "name": "crowd", "label": "Audience & Energy", "dsc_ranges": [[9023, 9045], [9140, 9170]] },
+    { "name": "emotion", "label": "Emotional Moments", "dsc_ranges": [[9170, 9205]] },
+    { "name": "details_locals", "label": "Details & Local Culture", "dsc_ranges": [[8764, 8885], [9205, 9234]] },
+    { "name": "food_community", "label": "Community & Taste", "folders": ["Akwabafood"], "dsc_ranges": [] },
+    { "name": "backstage", "label": "Behind the Scenes", "folders": ["Sandu"], "dsc_ranges": [[643, 752]] }
+  ],
+  "crew": [
+    { "name": "Rayan", "role": "Visuals" },
+    { "name": "Sandu", "role": "Gatekeeper" },
+    { "name": "Akwaba", "role": "Taste / Food" }
+  ]
+}

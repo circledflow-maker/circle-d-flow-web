@@ -1,0 +1,652 @@
+{
+  "calendar": [
+    {
+      "post_date": "2026-07-01",
+      "platform": "instagram",
+      "slug": "crowd",
+      "format": "Audience & Energy",
+      "folder": "2026-07-01_instagram_Audience & Energy_crowd",
+      "caption_en": "The room moves as one. Pure Lisbon underground energy. #CircleDFlow #CforC #NightCulture"
+    },
+    {
+      "post_date": "2026-07-03",
+      "platform": "instagram",
+      "slug": "emotion",
+      "format": "Emotional Moments",
+      "folder": "2026-07-03_instagram_Emotional Moments_emotion",
+      "caption_en": "Moments that stay. Gratitude, flow, connection. #CircleDFlow #CforC #Community"
+    },
+    {
+      "post_date": "2026-07-05",
+      "platform": "instagram",
+      "slug": "details_locals",
+      "format": "Details & Local Culture",
+      "folder": "2026-07-05_instagram_Details & Local Culture_details_locals",
+      "caption_en": "Details tell the story. Local culture, raw texture. #CircleDFlow #CforC #LisbonCulture"
+    },
+    {
+      "post_date": "2026-07-07",
+      "platform": "instagram",
+      "slug": "food_community",
+      "format": "Community & Taste",
+      "folder": "2026-07-07_instagram_Community & Taste_food_community",
+      "caption_en": "Taste meets tribe. Community at the table. #CircleDFlow #CforC #Akwaba"
+    },
+    {
+      "post_date": "2026-07-09",
+      "platform": "instagram",
+      "slug": "backstage",
+      "format": "Behind the Scenes",
+      "folder": "2026-07-09_instagram_Behind the Scenes_backstage",
+      "caption_en": "Behind the signal. Gatekeepers & builders. #CircleDFlow #CforC #BTS"
+    },
+    {
+      "post_date": "2026-07-11",
+      "platform": "instagram",
+      "slug": "HempyRoots Lisboa Crew",
+      "format": "artist_reel",
+      "folder": "2026-07-11_instagram_artist_reel_HempyRoots_Lisboa_Crew",
+      "caption_en": "C for C \u2014 HempyRoots Lisboa Crew. Culture for Community, Lisbon. #CircleDFlow #CforC"
+    },
+    {
+      "post_date": "2026-07-13",
+      "platform": "tiktok",
+      "slug": "HempyRoots Lisboa Crew",
+      "format": "artist_short",
+      "folder": "2026-07-13_tiktok_artist_short_HempyRoots_Lisboa_Crew",
+      "caption_en": "C for C \u2014 HempyRoots Lisboa Crew. Culture for Community, Lisbon. #CircleDFlow #CforC"
+    },
+    {
+      "post_date": "2026-07-15",
+      "platform": "instagram",
+      "slug": "C-Fitz",
+      "format": "artist_reel",
+      "folder": "2026-07-15_instagram_artist_reel_C-Fitz",
+      "caption_en": "C for C \u2014 C-Fitz. Culture for Community, Lisbon. #CircleDFlow #CforC"
+    },
+    {
+      "post_date": "2026-07-17",
+      "platform": "tiktok",
+      "slug": "C-Fitz",
+      "format": "artist_short",
+      "folder": "2026-07-17_tiktok_artist_short_C-Fitz",
+      "caption_en": "C for C \u2014 C-Fitz. Culture for Community, Lisbon. #CircleDFlow #CforC"
+    },
+    {
+      "post_date": "2026-07-19",
+      "platform": "instagram",
+      "slug": "Kael",
+      "format": "artist_reel",
+      "folder": "2026-07-19_instagram_artist_reel_Kael",
+      "caption_en": "C for C \u2014 Kael. Culture for Community, Lisbon. #CircleDFlow #CforC"
+    },
+    {
+      "post_date": "2026-07-21",
+      "platform": "tiktok",
+      "slug": "Kael",
+      "format": "artist_short",
+      "folder": "2026-07-21_tiktok_artist_short_Kael",
+      "caption_en": "C for C \u2014 Kael. Culture for Community, Lisbon. #CircleDFlow #CforC"
+    },
+    {
+      "post_date": "2026-07-23",
+      "platform": "instagram",
+      "slug": "Willpower",
+      "format": "artist_reel",
+      "folder": "2026-07-23_instagram_artist_reel_Willpower",
+      "caption_en": "C for C \u2014 Willpower. Culture for Community, Lisbon. #CircleDFlow #CforC"
+    },
+    {
+      "post_date": "2026-07-25",
+      "platform": "tiktok",
+      "slug": "Willpower",
+      "format": "artist_short",
+      "folder": "2026-07-25_tiktok_artist_short_Willpower",
+      "caption_en": "C for C \u2014 Willpower. Culture for Community, Lisbon. #CircleDFlow #CforC"
+    },
+    {
+      "post_date": "2026-07-27",
+      "platform": "instagram",
+      "slug": "Naru the Token",
+      "format": "artist_reel",
+      "folder": "2026-07-27_instagram_artist_reel_Naru_the_Token",
+      "caption_en": "C for C \u2014 Naru the Token. Culture for Community, Lisbon. #CircleDFlow #CforC"
+    },
+    {
+      "post_date": "2026-07-29",
+      "platform": "tiktok",
+      "slug": "Naru the Token",
+      "format": "artist_short",
+      "folder": "2026-07-29_tiktok_artist_short_Naru_the_Token",
+      "caption_en": "C for C \u2014 Naru the Token. Culture for Community, Lisbon. #CircleDFlow #CforC"
+    },
+    {
+      "post_date": "2026-07-31",
+      "platform": "instagram",
+      "slug": "Special Guest",
+      "format": "artist_reel",
+      "folder": "2026-07-31_instagram_artist_reel_Special_Guest",
+      "caption_en": "C for C \u2014 Special Guest. Culture for Community, Lisbon. #CircleDFlow #CforC"
+    },
+    {
+      "post_date": "2026-08-02",
+      "platform": "tiktok",
+      "slug": "Special Guest",
+      "format": "artist_short",
+      "folder": "2026-08-02_tiktok_artist_short_Special_Guest",
+      "caption_en": "C for C \u2014 Special Guest. Culture for Community, Lisbon. #CircleDFlow #CforC"
+    },
+    {
+      "post_date": "2026-08-04",
+      "platform": "instagram",
+      "slug": "Secret Garden LX Crew",
+      "format": "artist_reel",
+      "folder": "2026-08-04_instagram_artist_reel_Secret_Garden_LX_Crew",
+      "caption_en": "C for C \u2014 Secret Garden LX Crew. Culture for Community, Lisbon. #CircleDFlow #CforC"
+    },
+    {
+      "post_date": "2026-08-06",
+      "platform": "tiktok",
+      "slug": "Secret Garden LX Crew",
+      "format": "artist_short",
+      "folder": "2026-08-06_tiktok_artist_short_Secret_Garden_LX_Crew",
+      "caption_en": "C for C \u2014 Secret Garden LX Crew. Culture for Community, Lisbon. #CircleDFlow #CforC"
+    },
+    {
+      "post_date": "2026-08-08",
+      "platform": "instagram",
+      "slug": "SeMaria",
+      "format": "artist_reel",
+      "folder": "2026-08-08_instagram_artist_reel_SeMaria",
+      "caption_en": "C for C \u2014 SeMaria. Culture for Community, Lisbon. #CircleDFlow #CforC"
+    },
+    {
+      "post_date": "2026-08-10",
+      "platform": "tiktok",
+      "slug": "SeMaria",
+      "format": "artist_short",
+      "folder": "2026-08-10_tiktok_artist_short_SeMaria",
+      "caption_en": "C for C \u2014 SeMaria. Culture for Community, Lisbon. #CircleDFlow #CforC"
+    },
+    {
+      "post_date": "2026-08-12",
+      "platform": "instagram",
+      "slug": "Kreativlon.Art",
+      "format": "artist_reel",
+      "folder": "2026-08-12_instagram_artist_reel_Kreativlon.Art",
+      "caption_en": "C for C \u2014 Kreativlon.Art. Culture for Community, Lisbon. #CircleDFlow #CforC"
+    },
+    {
+      "post_date": "2026-08-14",
+      "platform": "tiktok",
+      "slug": "Kreativlon.Art",
+      "format": "artist_short",
+      "folder": "2026-08-14_tiktok_artist_short_Kreativlon.Art",
+      "caption_en": "C for C \u2014 Kreativlon.Art. Culture for Community, Lisbon. #CircleDFlow #CforC"
+    },
+    {
+      "post_date": "2026-08-16",
+      "platform": "youtube",
+      "slug": "C4C",
+      "format": "aftermovie_teaser",
+      "folder": "2026-08-16_youtube_aftermovie_teaser_C4C",
+      "caption_en": "C for C \u2014 C4C. Culture for Community, Lisbon. #CircleDFlow #CforC"
+    }
+  ],
+  "buckets": {
+    "2026-07-11_instagram_artist_reel_HempyRoots_Lisboa_Crew": {
+      "bucket": "artist_HempyRoots Lisboa Crew",
+      "files": [
+        {
+          "source": "DSC_8949.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-11_instagram_artist_reel_HempyRoots_Lisboa_Crew\\01_photo.jpg",
+          "score": 2.99
+        },
+        {
+          "source": "DSC_8937.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-11_instagram_artist_reel_HempyRoots_Lisboa_Crew\\02_photo.jpg",
+          "score": 2.84
+        },
+        {
+          "source": "DSC_8955.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-11_instagram_artist_reel_HempyRoots_Lisboa_Crew\\03_photo.jpg",
+          "score": 2.77
+        },
+        {
+          "source": "DSC_8929.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-11_instagram_artist_reel_HempyRoots_Lisboa_Crew\\04_photo.jpg",
+          "score": 2.65
+        },
+        {
+          "source": "DSC_8909.MOV",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-11_instagram_artist_reel_HempyRoots_Lisboa_Crew\\05_video.mp4",
+          "score": 1.84
+        }
+      ]
+    },
+    "2026-07-13_tiktok_artist_short_HempyRoots_Lisboa_Crew": {
+      "bucket": "artist_HempyRoots Lisboa Crew",
+      "files": [
+        {
+          "source": "DSC_8949.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-13_tiktok_artist_short_HempyRoots_Lisboa_Crew\\01_photo.jpg",
+          "score": 2.99
+        },
+        {
+          "source": "DSC_8937.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-13_tiktok_artist_short_HempyRoots_Lisboa_Crew\\02_photo.jpg",
+          "score": 2.84
+        },
+        {
+          "source": "DSC_8955.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-13_tiktok_artist_short_HempyRoots_Lisboa_Crew\\03_photo.jpg",
+          "score": 2.77
+        },
+        {
+          "source": "DSC_8929.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-13_tiktok_artist_short_HempyRoots_Lisboa_Crew\\04_photo.jpg",
+          "score": 2.65
+        },
+        {
+          "source": "DSC_8909.MOV",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-13_tiktok_artist_short_HempyRoots_Lisboa_Crew\\05_video.mp4",
+          "score": 1.84
+        }
+      ]
+    },
+    "2026-07-15_instagram_artist_reel_C-Fitz": {
+      "bucket": "artist_C-Fitz",
+      "files": [
+        {
+          "source": "DSC_9002.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-15_instagram_artist_reel_C-Fitz\\01_photo.jpg",
+          "score": 2.07
+        },
+        {
+          "source": "A\\DSC_9222.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-15_instagram_artist_reel_C-Fitz\\02_photo.jpg",
+          "score": 2.04
+        },
+        {
+          "source": "DSC_9001.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-15_instagram_artist_reel_C-Fitz\\03_photo.jpg",
+          "score": 2.01
+        },
+        {
+          "source": "DSC_8967.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-15_instagram_artist_reel_C-Fitz\\04_photo.jpg",
+          "score": 1.62
+        },
+        {
+          "source": "A\\DSC_9224.MOV",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-15_instagram_artist_reel_C-Fitz\\05_video.mp4",
+          "score": 2.0
+        }
+      ]
+    },
+    "2026-07-17_tiktok_artist_short_C-Fitz": {
+      "bucket": "artist_C-Fitz",
+      "files": [
+        {
+          "source": "DSC_9002.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-17_tiktok_artist_short_C-Fitz\\01_photo.jpg",
+          "score": 2.07
+        },
+        {
+          "source": "A\\DSC_9222.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-17_tiktok_artist_short_C-Fitz\\02_photo.jpg",
+          "score": 2.04
+        },
+        {
+          "source": "DSC_9001.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-17_tiktok_artist_short_C-Fitz\\03_photo.jpg",
+          "score": 2.01
+        },
+        {
+          "source": "DSC_8967.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-17_tiktok_artist_short_C-Fitz\\04_photo.jpg",
+          "score": 1.62
+        },
+        {
+          "source": "A\\DSC_9224.MOV",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-17_tiktok_artist_short_C-Fitz\\05_video.mp4",
+          "score": 2.0
+        }
+      ]
+    },
+    "2026-07-19_instagram_artist_reel_Kael": {
+      "bucket": "artist_Kael",
+      "files": [
+        {
+          "source": "DSC_9021.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-19_instagram_artist_reel_Kael\\01_photo.jpg",
+          "score": 1.81
+        },
+        {
+          "source": "DSC_9022.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-19_instagram_artist_reel_Kael\\02_photo.jpg",
+          "score": 1.58
+        },
+        {
+          "source": "DSC_9010.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-19_instagram_artist_reel_Kael\\03_photo.jpg",
+          "score": 1.41
+        },
+        {
+          "source": "DSC_9011.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-19_instagram_artist_reel_Kael\\04_photo.jpg",
+          "score": 1.37
+        },
+        {
+          "source": "DSC_9023.MOV",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-19_instagram_artist_reel_Kael\\05_video.mp4",
+          "score": 2.0
+        },
+        {
+          "source": "DSC_9026.MOV",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-19_instagram_artist_reel_Kael\\06_video.mp4",
+          "score": 2.0
+        }
+      ],
+      "reel": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-19_instagram_artist_reel_Kael\\reel_montage.mp4"
+    },
+    "2026-07-21_tiktok_artist_short_Kael": {
+      "bucket": "artist_Kael",
+      "files": [
+        {
+          "source": "DSC_9021.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-21_tiktok_artist_short_Kael\\01_photo.jpg",
+          "score": 1.81
+        },
+        {
+          "source": "DSC_9022.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-21_tiktok_artist_short_Kael\\02_photo.jpg",
+          "score": 1.58
+        },
+        {
+          "source": "DSC_9010.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-21_tiktok_artist_short_Kael\\03_photo.jpg",
+          "score": 1.41
+        },
+        {
+          "source": "DSC_9011.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-21_tiktok_artist_short_Kael\\04_photo.jpg",
+          "score": 1.37
+        },
+        {
+          "source": "DSC_9023.MOV",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-21_tiktok_artist_short_Kael\\05_video.mp4",
+          "score": 2.0
+        },
+        {
+          "source": "DSC_9026.MOV",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-21_tiktok_artist_short_Kael\\06_video.mp4",
+          "score": 2.0
+        }
+      ],
+      "reel": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-21_tiktok_artist_short_Kael\\reel_montage.mp4"
+    },
+    "2026-07-23_instagram_artist_reel_Willpower": {
+      "bucket": "artist_Willpower",
+      "files": [
+        {
+          "source": "DSC_9049.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-23_instagram_artist_reel_Willpower\\01_photo.jpg",
+          "score": 1.7
+        },
+        {
+          "source": "DSC_9056.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-23_instagram_artist_reel_Willpower\\02_photo.jpg",
+          "score": 1.61
+        },
+        {
+          "source": "DSC_9058.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-23_instagram_artist_reel_Willpower\\03_photo.jpg",
+          "score": 1.53
+        },
+        {
+          "source": "DSC_9057.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-23_instagram_artist_reel_Willpower\\04_photo.jpg",
+          "score": 1.43
+        }
+      ]
+    },
+    "2026-07-25_tiktok_artist_short_Willpower": {
+      "bucket": "artist_Willpower",
+      "files": [
+        {
+          "source": "DSC_9049.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-25_tiktok_artist_short_Willpower\\01_photo.jpg",
+          "score": 1.7
+        },
+        {
+          "source": "DSC_9056.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-25_tiktok_artist_short_Willpower\\02_photo.jpg",
+          "score": 1.61
+        },
+        {
+          "source": "DSC_9058.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-25_tiktok_artist_short_Willpower\\03_photo.jpg",
+          "score": 1.53
+        },
+        {
+          "source": "DSC_9057.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-25_tiktok_artist_short_Willpower\\04_photo.jpg",
+          "score": 1.43
+        }
+      ]
+    },
+    "2026-07-27_instagram_artist_reel_Naru_the_Token": {
+      "bucket": "artist_Naru the Token",
+      "files": [
+        {
+          "source": "DSC_9081.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-27_instagram_artist_reel_Naru_the_Token\\01_photo.jpg",
+          "score": 3.69
+        },
+        {
+          "source": "DSC_9080.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-27_instagram_artist_reel_Naru_the_Token\\02_photo.jpg",
+          "score": 2.9
+        },
+        {
+          "source": "DSC_9091.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-27_instagram_artist_reel_Naru_the_Token\\03_photo.jpg",
+          "score": 2.64
+        },
+        {
+          "source": "DSC_9083.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-27_instagram_artist_reel_Naru_the_Token\\04_photo.jpg",
+          "score": 2.39
+        }
+      ]
+    },
+    "2026-07-29_tiktok_artist_short_Naru_the_Token": {
+      "bucket": "artist_Naru the Token",
+      "files": [
+        {
+          "source": "DSC_9081.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-29_tiktok_artist_short_Naru_the_Token\\01_photo.jpg",
+          "score": 3.69
+        },
+        {
+          "source": "DSC_9080.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-29_tiktok_artist_short_Naru_the_Token\\02_photo.jpg",
+          "score": 2.9
+        },
+        {
+          "source": "DSC_9091.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-29_tiktok_artist_short_Naru_the_Token\\03_photo.jpg",
+          "score": 2.64
+        },
+        {
+          "source": "DSC_9083.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-29_tiktok_artist_short_Naru_the_Token\\04_photo.jpg",
+          "score": 2.39
+        }
+      ]
+    },
+    "2026-07-31_instagram_artist_reel_Special_Guest": {
+      "bucket": "artist_Special Guest",
+      "files": [
+        {
+          "source": "DSC_9100.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-31_instagram_artist_reel_Special_Guest\\01_photo.jpg",
+          "score": 3.42
+        },
+        {
+          "source": "DSC_9106.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-31_instagram_artist_reel_Special_Guest\\02_photo.jpg",
+          "score": 3.13
+        },
+        {
+          "source": "DSC_9103.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-31_instagram_artist_reel_Special_Guest\\03_photo.jpg",
+          "score": 2.85
+        },
+        {
+          "source": "DSC_9102.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-07-31_instagram_artist_reel_Special_Guest\\04_photo.jpg",
+          "score": 2.21
+        }
+      ]
+    },
+    "2026-08-02_tiktok_artist_short_Special_Guest": {
+      "bucket": "artist_Special Guest",
+      "files": [
+        {
+          "source": "DSC_9100.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-08-02_tiktok_artist_short_Special_Guest\\01_photo.jpg",
+          "score": 3.42
+        },
+        {
+          "source": "DSC_9106.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-08-02_tiktok_artist_short_Special_Guest\\02_photo.jpg",
+          "score": 3.13
+        },
+        {
+          "source": "DSC_9103.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-08-02_tiktok_artist_short_Special_Guest\\03_photo.jpg",
+          "score": 2.85
+        },
+        {
+          "source": "DSC_9102.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-08-02_tiktok_artist_short_Special_Guest\\04_photo.jpg",
+          "score": 2.21
+        }
+      ]
+    },
+    "2026-08-04_instagram_artist_reel_Secret_Garden_LX_Crew": {
+      "bucket": "artist_Secret Garden LX Crew",
+      "files": [
+        {
+          "source": "DSC_9137.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-08-04_instagram_artist_reel_Secret_Garden_LX_Crew\\01_photo.jpg",
+          "score": 10.41
+        },
+        {
+          "source": "DSC_9136.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-08-04_instagram_artist_reel_Secret_Garden_LX_Crew\\02_photo.jpg",
+          "score": 10.23
+        },
+        {
+          "source": "DSC_9138.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-08-04_instagram_artist_reel_Secret_Garden_LX_Crew\\03_photo.jpg",
+          "score": 8.49
+        },
+        {
+          "source": "DSC_9135.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-08-04_instagram_artist_reel_Secret_Garden_LX_Crew\\04_photo.jpg",
+          "score": 6.2
+        },
+        {
+          "source": "DSC_9141.MOV",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-08-04_instagram_artist_reel_Secret_Garden_LX_Crew\\05_video.mp4",
+          "score": 2.0
+        },
+        {
+          "source": "DSC_9142.MOV",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-08-04_instagram_artist_reel_Secret_Garden_LX_Crew\\06_video.mp4",
+          "score": 2.0
+        }
+      ],
+      "reel": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-08-04_instagram_artist_reel_Secret_Garden_LX_Crew\\reel_montage.mp4"
+    },
+    "2026-08-06_tiktok_artist_short_Secret_Garden_LX_Crew": {
+      "bucket": "artist_Secret Garden LX Crew",
+      "files": [
+        {
+          "source": "DSC_9137.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-08-06_tiktok_artist_short_Secret_Garden_LX_Crew\\01_photo.jpg",
+          "score": 10.41
+        },
+        {
+          "source": "DSC_9136.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-08-06_tiktok_artist_short_Secret_Garden_LX_Crew\\02_photo.jpg",
+          "score": 10.23
+        },
+        {
+          "source": "DSC_9138.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-08-06_tiktok_artist_short_Secret_Garden_LX_Crew\\03_photo.jpg",
+          "score": 8.49
+        },
+        {
+          "source": "DSC_9135.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-08-06_tiktok_artist_short_Secret_Garden_LX_Crew\\04_photo.jpg",
+          "score": 6.2
+        },
+        {
+          "source": "DSC_9141.MOV",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-08-06_tiktok_artist_short_Secret_Garden_LX_Crew\\05_video.mp4",
+          "score": 2.0
+        },
+        {
+          "source": "DSC_9142.MOV",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-08-06_tiktok_artist_short_Secret_Garden_LX_Crew\\06_video.mp4",
+          "score": 2.0
+        }
+      ],
+      "reel": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-08-06_tiktok_artist_short_Secret_Garden_LX_Crew\\reel_montage.mp4"
+    },
+    "2026-08-08_instagram_artist_reel_SeMaria": {
+      "bucket": "artist_SeMaria",
+      "files": [
+        {
+          "source": "SeMaria\\DSC_8928.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-08-08_instagram_artist_reel_SeMaria\\01_photo.jpg",
+          "score": 2.19
+        }
+      ]
+    },
+    "2026-08-10_tiktok_artist_short_SeMaria": {
+      "bucket": "artist_SeMaria",
+      "files": [
+        {
+          "source": "SeMaria\\DSC_8928.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-08-10_tiktok_artist_short_SeMaria\\01_photo.jpg",
+          "score": 2.19
+        }
+      ]
+    },
+    "2026-08-12_instagram_artist_reel_Kreativlon.Art": {
+      "bucket": "artist_Kreativlon.Art",
+      "files": [
+        {
+          "source": "Kreativlon.Art\\DSC_9181.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-08-12_instagram_artist_reel_Kreativlon.Art\\01_photo.jpg",
+          "score": 0.66
+        }
+      ]
+    },
+    "2026-08-14_tiktok_artist_short_Kreativlon.Art": {
+      "bucket": "artist_Kreativlon.Art",
+      "files": [
+        {
+          "source": "Kreativlon.Art\\DSC_9181.JPG",
+          "output": "D:\\KYHeart_Social_Media\\C4C_ReadyToPost\\2026-08-14_tiktok_artist_short_Kreativlon.Art\\01_photo.jpg",
+          "score": 0.66
+        }
+      ]
+    }
+  }
+}

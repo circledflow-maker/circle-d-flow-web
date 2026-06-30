@@ -1,0 +1,148 @@
+/* Event Sanctuary — mobile polish, background, overflow fixes */
+
+html, body {
+    max-width: 100vw;
+    overflow-x: hidden;
+}
+
+.swipe-container {
+    width: 100%;
+    max-width: 100vw;
+}
+
+.swipe-section {
+    flex: 0 0 100%;
+    width: 100%;
+    max-width: 100vw;
+    padding: 16px;
+    padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+}
+
+/* Atmospheric background — no bleed from hidden flyer */
+body.event-sanctuary {
+    background-color: #09090b;
+    background-image:
+        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(212, 175, 55, 0.08), transparent),
+        radial-gradient(ellipse 60% 40% at 100% 100%, rgba(0, 255, 204, 0.05), transparent),
+        linear-gradient(180deg, #0a0a0c 0%, #09090b 40%, #050506 100%);
+    background-attachment: fixed;
+}
+
+/* Hidden composite flyer — fully off-screen until export */
+#download-composite-card {
+    position: fixed !important;
+    left: -9999px !important;
+    top: 0 !important;
+    visibility: hidden;
+    pointer-events: none;
+    z-index: -9999;
+}
+
+#download-composite-card.exporting {
+    left: 0 !important;
+    visibility: visible;
+}
+
+/* Blueprint timeline — readable on mobile */
+#sync-matrix-container {
+    position: relative;
+    z-index: 2;
+    background: rgba(9, 9, 11, 0.85);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 16px;
+    padding: 16px;
+}
+
+.timeline-node h3 {
+    font-size: 0.95rem;
+    line-height: 1.35;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+/* Share manga card */
+#manga-share-card {
+    max-width: 100%;
+    border-radius: 12px;
+}
+
+/* Connection strip — Calendar + Cooperation */
+.sanctuary-connect {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+    max-width: 28rem;
+    margin: 0 auto 16px;
+}
+
+.sanctuary-connect a {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 8px;
+    border-radius: 10px;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.sanctuary-connect .link-coop {
+    border: 1px solid rgba(34, 197, 94, 0.4);
+    color: #22c55e;
+    background: rgba(34, 197, 94, 0.08);
+}
+
+.sanctuary-connect .link-cal {
+    border: 1px solid rgba(59, 130, 246, 0.4);
+    color: #3b82f6;
+    background: rgba(59, 130, 246, 0.08);
+}
+
+.sanctuary-connect .link-impact {
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    color: #d4af37;
+    background: rgba(212, 175, 55, 0.08);
+}
+
+/* Flowee FAB on sanctuary */
+#sanctuary-flowee-fab {
+    position: fixed;
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    right: 16px;
+    z-index: 200;
+    width: 56px;
+    height: 56px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+}
+
+#sanctuary-flowee-fab .flowee-vessel {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 0 12px rgba(0, 255, 204, 0.5));
+}
+
+@media (max-width: 430px) {
+    #tab-nav {
+        font-size: 8px;
+        letter-spacing: 0.08em;
+    }
+
+    .nav-pill {
+        padding-left: 4px !important;
+        padding-right: 4px !important;
+    }
+
+    #event-title {
+        max-width: 120px;
+        font-size: 0.85rem;
+    }
+}
