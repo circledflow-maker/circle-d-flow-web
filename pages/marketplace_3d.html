@@ -173,7 +173,13 @@
             width: 100%;
         }
         .btn-primary:active { transform: scale(0.95); }
+
+        @media (max-width: 768px) {
+            .horizon-bar h1 { display: none; }
+            #main-ui header .flex.gap-4 { gap: 12px; }
+        }
     </style>
+    <link rel="stylesheet" href="../css/bazaar-mobile.css">
 </head>
 <body>
     
@@ -337,6 +343,9 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- Fallback client info, adjust to your actual init -->
     <script src="../js/agents/supabase_client.js?v=4.1"></script>
+    <script src="../js/gamification.js"></script>
+    <script src="../js/modules/marketplace_core.js"></script>
+    <script src="../js/modules/bazaar_flowee.js"></script>
 
     <script>
         // --- 1. THREE.JS SETUP: GOLDEN HOUR & TATA-SOMBA ---
@@ -1088,88 +1097,14 @@
         initArtistData();
 
         function fMsg(text, sender = 'ai') {
-            const log = document.getElementById('flowee-chat-log');
-            if (!log) return;
-            const div = document.createElement('div');
-            div.className = sender === 'user' 
-                ? "ml-auto bg-white/10 p-3 rounded-xl border border-white/20 text-white max-w-[80%] text-right text-sm"
-                : "mr-auto bg-[#00ffcc]/10 p-3 rounded-xl border border-[#00ffcc]/20 text-[#00ffcc] max-w-[90%] text-sm";
-            div.innerHTML = text;
-            log.appendChild(div);
-            log.scrollTop = log.scrollHeight;
+            if (window.BazaarFlowee) BazaarFlowee.fMsg(text, sender);
         }
 
         function setFInput(html) {
-            const inputZone = document.getElementById('flowee-input-zone');
-            if (inputZone) inputZone.innerHTML = html;
+            if (window.BazaarFlowee) BazaarFlowee.setInput(html);
         }
 
         let isFloweeActive = false;
-
-        function startMarketplaceIntroFlow() {
-            if (isFloweeActive) return;
-            isFloweeActive = true;
-            document.getElementById('flowee-overlay').classList.remove('hidden');
-            document.getElementById('flowee-chat-log').innerHTML = '';
-            
-            const firstTime = !localStorage.getItem('visited_marketplace');
-            if (firstTime) {
-                fMsg("Welcome to the Grand Bazaar! Here, creators and seekers meet to exchange Artifacts of Power.");
-                localStorage.setItem('visited_marketplace', 'true');
-            } else {
-                fMsg("Welcome back to the Bazaar.");
-            }
-            
-            setTimeout(() => {
-                fMsg("Are you here to explore the stalls, or do you wish to offer your own services?");
-                setFInput(`
-                    <div class="flex gap-2 w-full">
-                        <button onclick="introVisit()" class="flex-1 bg-black/50 border border-[#00ffcc]/30 text-[#00ffcc] py-2 rounded hover:bg-[#00ffcc]/20 transition text-xs font-bold uppercase tracking-widest">VISIT</button>
-                        <button onclick="introSell()" class="flex-1 bg-[#00ffcc] text-black py-2 rounded hover:bg-[#00ffcc]/80 transition text-xs font-bold uppercase tracking-widest">SELL</button>
-                    </div>
-                `);
-            }, 1000);
-        }
-
-        async function introVisit() {
-            fMsg("Visit", 'user');
-            setFInput(`<div class="text-[#00ffcc] text-xs animate-pulse">Syncing with Bazaar records...</div>`);
-            
-            try {
-                if (window.supabaseClient) {
-                    const { data, error } = await window.supabaseClient
-                        .from('market_items')
-                        .select('title, price_credits')
-                        .order('created_at', { ascending: false })
-                        .limit(1);
-                        
-                    if (data && data.length > 0) {
-                        const latest = data[0];
-                        setTimeout(() => {
-                            fMsg(`The latest artifact brought into the market is "${latest.title}" for ${latest.price_credits} Credits. Feel free to explore the Guild Huts!`);
-                            setFInput(`<button onclick="document.getElementById('flowee-overlay').classList.add('hidden'); isFloweeActive=false;" class="w-full bg-[#00ffcc]/20 border border-[#00ffcc]/50 text-[#00ffcc] py-3 rounded font-bold uppercase tracking-widest text-xs mt-2 hover:bg-[#00ffcc]/40 transition">Explore Bazaar</button>`);
-                        }, 800);
-                        return;
-                    }
-                }
-            } catch(e) {}
-            
-            setTimeout(() => {
-                fMsg("The stalls are open and waiting for you. Feel free to explore the Guild Huts!");
-                setFInput(`<button onclick="document.getElementById('flowee-overlay').classList.add('hidden'); isFloweeActive=false;" class="w-full bg-[#00ffcc]/20 border border-[#00ffcc]/50 text-[#00ffcc] py-3 rounded font-bold uppercase tracking-widest text-xs mt-2 hover:bg-[#00ffcc]/40 transition">Explore Bazaar</button>`);
-            }, 800);
-        }
-
-        function introSell() {
-            fMsg("Sell", 'user');
-            setFInput('');
-            setTimeout(() => {
-                fMsg("Excellent. Remember, 1 Euro equals 100 Flow Credits.");
-                setTimeout(() => {
-                    startUploadFlow(false);
-                }, 1500);
-            }, 500);
-        }
 
         function startUploadFlow(isDirect = true) {
             isFloweeActive = true;
@@ -1325,20 +1260,16 @@
             }, 1500);
         }
 
-        // Check Upload Intent on Load
+        // Flowee: FAB + first-visit intro (returning users tap FAB)
         setTimeout(() => {
+            if (window.BazaarFlowee) BazaarFlowee.injectFab();
             if (urlParams.get('intent') === 'upload') {
                 document.getElementById('flowee-overlay').classList.remove('hidden');
                 startUploadFlow(true);
-            } else {
-                // If not upload intent, wait 5 seconds and open Intro Flow if not already active
-                setTimeout(() => {
-                    if (!isFloweeActive && !document.getElementById('iframe-modal').open && document.getElementById('flowee-overlay').classList.contains('hidden')) {
-                        startMarketplaceIntroFlow();
-                    }
-                }, 5000);
+            } else if (!localStorage.getItem('visited_marketplace')) {
+                BazaarFlowee.open3DIntro(false);
             }
-        }, 1000);
+        }, 1200);
 
         animate();
     </script>

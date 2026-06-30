@@ -148,6 +148,7 @@
         .inventory-side::-webkit-scrollbar-thumb { background: #00FFD4; border-radius: 10px; }
     </style>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="../css/bazaar-mobile.css" />
 </head>
 <body>
 
@@ -268,9 +269,14 @@
                 `;
                 grid.appendChild(div);
             });
+
+            if (window.BazaarFlowee) BazaarFlowee.onStallItemsLoaded(data.length);
         }
 
-        window.onload = loadSkills;
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.BazaarFlowee) BazaarFlowee.initStallPage('Skills');
+            loadSkills();
+        });
     </script>
     <script>
         const merchants = [
@@ -315,6 +321,7 @@
 <script src="../js/gamification.js"></script>
 <script src="../js/modules/marketplace_core.js"></script>
 <script src="../js/modules/bazaar_trade.js"></script>
+<script src="../js/modules/bazaar_flowee.js"></script>
 <script src="../js/order_modal.js"></script>
 </body>
 </html>

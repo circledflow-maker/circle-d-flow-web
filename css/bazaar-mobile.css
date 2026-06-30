@@ -1,0 +1,93 @@
+/* Grand Bazaar — mobile & safe-area polish */
+@media (max-width: 768px) {
+    .bazaar-viewport {
+        bottom: max(8px, env(safe-area-inset-bottom));
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .stalls-track {
+        padding: 0 42vw;
+    }
+
+    .stall-card {
+        width: min(78vw, 240px);
+        padding: 14px 16px;
+        margin: 0 6px;
+    }
+
+    .stall-card .guild-icon {
+        font-size: 36px;
+        margin-bottom: 6px;
+    }
+
+    .stall-card h3 {
+        font-size: 0.95rem;
+    }
+
+    .stall-card .btn-primary {
+        padding: 10px 16px;
+        font-size: 0.8rem;
+    }
+
+    #ghost-bubble {
+        max-width: min(72vw, 200px);
+        font-size: 11px;
+        padding: 8px 12px;
+    }
+
+    #bazaar-inzone-ui {
+        flex-wrap: wrap;
+        justify-content: center;
+        width: 92%;
+        gap: 8px;
+    }
+
+    #bazaar-inzone-ui button {
+        font-size: 10px;
+        padding: 8px 14px;
+    }
+
+    .horizon-bar {
+        padding-left: max(12px, env(safe-area-inset-left));
+        padding-right: max(12px, env(safe-area-inset-right));
+        height: 56px;
+    }
+
+    #flowee-overlay .flex-1 {
+        padding-bottom: max(1rem, env(safe-area-inset-bottom));
+    }
+
+    /* Guild stalls */
+    .shop-container .merchant-side {
+        min-height: auto;
+        height: auto;
+        max-height: 42vh;
+        padding-bottom: 12px;
+    }
+
+    .shop-container .merchant-img {
+        height: 28vh;
+        max-height: 220px;
+    }
+
+    .dialogue-bubble {
+        font-size: 0.8rem;
+        line-height: 1.45;
+        padding: 10px 14px;
+        margin-top: 8px;
+    }
+
+    .inventory-side h2 {
+        font-size: 1.5rem;
+    }
+
+    .clay-slab {
+        padding: 14px;
+    }
+
+    .buy-btn {
+        padding: 10px 14px;
+        min-height: 40px;
+        font-size: 10px;
+    }
+}
