@@ -396,7 +396,7 @@
                     .from('market_items')
                     .select('*')
                     .eq('creator_id', currentUser.id)
-                    .neq('guild_category', '__deleted__')
+                    .eq('is_active', true)
                     .order('created_at', { ascending: false });
                 
                 if (res.error) throw res.error;
@@ -409,7 +409,8 @@
             try {
                 const offlineItems = JSON.parse(localStorage.getItem('cqr_offline_items') || '[]');
                 const myOfflineItems = offlineItems.filter(item =>
-                    item.creator_id === currentUser.id || item.vendor_id === currentUser.id
+                    (item.creator_id === currentUser.id || item.vendor_id === currentUser.id) &&
+                    !BazaarTrade.isTombstoned(item.id)
                 );
                 const mappedLocal = myOfflineItems.map(item => BazaarTrade.normalizeItem(item));
                 data = [...mappedLocal, ...data];

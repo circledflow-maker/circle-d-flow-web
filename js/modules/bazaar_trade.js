@@ -3,6 +3,26 @@
  */
 window.BazaarTrade = {
     LOCAL_KEYS: ['cqr_offline_items', 'cdf_listings'],
+    TOMBSTONE_KEY: 'bazaar_deleted_ids',
+
+    markDeleted(id) {
+        if (!id) return;
+        try {
+            const ids = JSON.parse(localStorage.getItem(this.TOMBSTONE_KEY) || '[]');
+            if (!ids.includes(id)) {
+                ids.push(id);
+                localStorage.setItem(this.TOMBSTONE_KEY, JSON.stringify(ids));
+            }
+        } catch (e) { /* ignore */ }
+    },
+
+    isTombstoned(id) {
+        try {
+            return JSON.parse(localStorage.getItem(this.TOMBSTONE_KEY) || '[]').includes(id);
+        } catch (e) {
+            return false;
+        }
+    },
 
     normalizeItem(item) {
         const credits = parseInt(item.price_credits ?? item.price_flow ?? item.price_fc ?? 0, 10) || 0;
@@ -39,6 +59,7 @@ window.BazaarTrade = {
         if (!id) throw new Error('No artifact id');
 
         this.purgeFromLocalCaches(id, title);
+        this.markDeleted(id);
 
         if (this.isLocalOnlyId(id) || !window.supabaseClient) {
             return { mode: 'local' };
@@ -55,10 +76,10 @@ window.BazaarTrade = {
 
         if (!deleteError) return { mode: 'deleted' };
 
-        // RLS may block hard delete — soft-delete so it vanishes from all public stalls
+        // RLS may block hard delete — hide from all public stalls
         const { error: softError } = await window.supabaseClient
             .from('market_items')
-            .update({ is_active: false, category: '__deleted__', guild_category: '__deleted__' })
+            .update({ is_active: false })
             .eq('id', id)
             .eq('creator_id', user.id);
 
@@ -75,19 +96,19 @@ window.BazaarTrade = {
             price_fiat: parseFloat((credits / 100).toFixed(2)),
             guild_category: payload.guild_category || payload.category,
             category: payload.category || payload.guild_category,
-            is_active: payload.is_active !== false,
-            stock_count: payload.stock_count != null ? parseInt(payload.stock_count, 10) : 1
+            is_active: payload.is_active !== false
         };
 
         if (this.isLocalOnlyId(id)) {
-            this._patchLocalItem(id, update);
+            this._patchLocalItem(id, { ...update, stock_count: payload.stock_count });
             return { mode: 'local' };
         }
 
         const { error } = await window.supabaseClient
             .from('market_items')
             .update(update)
-            .eq('id', id);
+            .eq('id', id)
+            .eq('creator_id', (await window.supabaseClient.auth.getUser()).data.user?.id);
 
         if (error) throw error;
         return { mode: 'updated' };
