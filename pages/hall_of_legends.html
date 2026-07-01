@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CQR | THE BROTHERHOOD</title>
-    <link rel="stylesheet" href="../css/styles.css"> 
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/quest-triad.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/agents/agent.js?v=3.2"></script>
@@ -27,8 +28,12 @@
     <script src="../js/agents/flowee.js?v=3.2"></script>
     <script src="../js/agents/supabase_client.js?v=3.2"></script>
     <script src="../js/agents/points_sync.js?v=1.0"></script>
-    <script src="../js/data/lisbon_quests.js?v=1.0"></script>
-    <script src="../js/agents/quest_engine.js?v=4.3"></script>
+    <script src="../js/data/lisbon_quests.js?v=1.1"></script>
+    <script src="../js/data/lisbon_venues.js?v=1.0"></script>
+    <script src="../js/agents/fitable_sync.js?v=1.0"></script>
+    <script src="../js/agents/flowee_notify.js?v=1.0"></script>
+    <script src="../js/agents/quest_triad.js?v=1.0"></script>
+    <script src="../js/agents/quest_engine.js?v=4.4"></script>
 </head>
 <body class="animus-ui min-h-screen bg-black text-white font-mono">
 
@@ -65,7 +70,7 @@
             <img src="../Assets/images/cqr-logo-gold.png" style="width: 80px; filter: drop-shadow(0 0 10px gold);" class="mx-auto animate-pulse-slow">
             <h1 class="animus-title text-4xl md:text-6xl my-4 glitch-text" data-text="THE BROTHERHOOD" style="color:white; font-family:'Cinzel', serif;">THE BROTHERHOOD</h1>
             <p style="letter-spacing: 5px; color: #666; font-size: 0.9em; text-transform:uppercase;">LISBON CELL HIERARCHY</p>
-            <a href="/pages/dashboard.html" class="inline-block mt-4 text-xs text-white/50 hover:text-gold no-underline">[ RETURN TO D MAP ]</a>
+            <a href="quest_map.html" id="bro-return-link" class="inline-block mt-4 text-xs text-white/50 hover:text-gold no-underline">[ RETURN TO ATLAS ]</a>
         </div>
 
         <!-- USER DOSSIER CARD -->
@@ -123,6 +128,19 @@
             100% { transform: scale(1); opacity: 0.5; }
         }
         </style>
+
+        <!-- ADINKRA CODEX (High Palast runes) -->
+        <div id="adinkra-codex-section" style="margin-bottom: 40px; background: rgba(10,10,10,0.85); border: 1px solid #cd7f32; padding: 24px; border-radius: 4px;">
+            <div style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+                <h3 class="font-tech" style="color: #cd7f32; margin: 0; font-size: 1.2em; text-transform: uppercase;">Adinkra Codex</h3>
+                <span style="font-size:0.7em; color:#666;">Bronze → Silver → Gold</span>
+            </div>
+            <p style="color:#888; font-size:0.85em; margin-bottom:12px;">Runes collected on the Lisbon Atlas. Walk, scan, and anchor symbols in your High Palast.</p>
+            <div id="adinkra-codex-grid" class="adinkra-codex-grid">
+                <p style="color:#555; font-size:0.8em; grid-column:1/-1;">No runes yet — explore the Atlas.</p>
+            </div>
+            <div id="level-unlocks" style="margin-top:16px; padding-top:12px; border-top:1px dashed #333; font-size:0.75em; color:#888;"></div>
+        </div>
 
         <!-- MY ANCHORS (FLOW AREAS) -->
         <div id="my-anchors-ui" style="margin-bottom: 40px; background: rgba(10,10,10,0.8); border: 1px solid #d4af37; padding: 30px; border-radius: 4px;">
@@ -217,7 +235,7 @@
         <button onclick="window.location.href='hall_of_legends.html'" class="nav-btn active" id="nav-bro"><span class="icon">🏛️</span><br>BROTHERHOOD</button>
         <div class="nav-divider"></div>
         <button onclick="window.QuestEngine.toggleComms()" class="nav-btn"><span class="icon">💬</span><br>COMMS</button>
-        <button onclick="window.location.href='/pages/dashboard.html'" class="nav-btn exit"><span class="icon">🗺️</span><br>D MAP</button>
+        <button onclick="window.location.href='dashboard.html'" class="nav-btn exit"><span class="icon">⚡</span><br>MAIN</button>
     </nav>
 
     <!-- COMMS TERMINAL (Slide-in) -->
@@ -259,6 +277,10 @@
 
     <script>
         window.addEventListener('load', async () => {
+             const fromAtlas = new URLSearchParams(location.search).get('from') === 'atlas';
+             const ret = document.getElementById('bro-return-link');
+             if (ret) ret.textContent = fromAtlas ? '[ ← BACK TO ATLAS ]' : '[ RETURN TO ATLAS ]';
+
              if(window.QuestEngine) {
                  if(window.initEngine) await window.initEngine(); // User Profile Load
                  

@@ -6,7 +6,8 @@
     <title>CQR | THE ATLAS</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="../css/styles.css"> 
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/quest-triad.css">
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/agents/agent.js?v=3.2"></script>
@@ -28,8 +29,13 @@
     <script src="../js/agents/visual_integrity.js" defer></script>
     <script src="../js/agents/flowee.js?v=3.2"></script>
     <script src="../js/agents/supabase_client.js?v=3.2"></script>
-    <script src="../js/data/lisbon_quests.js?v=1.0"></script>
-    <script src="../js/agents/quest_engine.js?v=4.2"></script>
+    <script src="../js/data/lisbon_quests.js?v=1.1"></script>
+    <script src="../js/data/lisbon_venues.js?v=1.0"></script>
+    <script src="../js/agents/fitable_sync.js?v=1.0"></script>
+    <script src="../js/agents/flowee_notify.js?v=1.0"></script>
+    <script src="../js/agents/atlas_engine.js?v=1.0"></script>
+    <script src="../js/agents/quest_triad.js?v=1.0"></script>
+    <script src="../js/agents/quest_engine.js?v=4.4"></script>
     <script src="../js/data/akademie_data.js"></script>
     
     <style>
@@ -225,10 +231,10 @@
     <nav class="animus-global-nav" style="z-index: 9999;">
         <button onclick="window.location.href='quest_map.html'" class="nav-btn active" id="nav-map"><span class="icon">📍</span><br>ATLAS</button>
         <button onclick="window.location.href='quest_board.html'" class="nav-btn" id="nav-board"><span class="icon">📖</span><br>CODEX</button>
-        <button onclick="window.location.href='hall_of_legends.html'" class="nav-btn" id="nav-bro"><span class="icon">🏛️</span><br>BROTHERHOOD</button>
+        <button onclick="window.location.href='hall_of_legends.html?from=atlas'" class="nav-btn" id="nav-bro"><span class="icon">🏛️</span><br>BROTHERHOOD</button>
         <div class="nav-divider"></div>
         <button onclick="window.QuestEngine.toggleComms()" class="nav-btn"><span class="icon">💬</span><br>COMMS</button>
-        <button onclick="window.location.href='../pages/dashboard.html'" class="nav-btn exit"><span class="icon">⚡</span><br>MAIN</button>
+        <button onclick="window.location.href='dashboard.html'" class="nav-btn exit"><span class="icon">⚡</span><br>MAIN</button>
     </nav>
 
     <script>
@@ -291,6 +297,8 @@
 
             // CHECK PROXIMITY TO MISSIONS
             checkMissionProximity(lat, lng);
+            if (window.AtlasEngine) window.AtlasEngine.onPosition(lat, lng);
+            if (window.QuestEngine) window.QuestEngine.checkActiveQuestsGPS(lat, lng);
         });
 
         map.on('locationerror', function(e) {
@@ -538,7 +546,7 @@
 
         // INIT
         window.addEventListener('load', async () => {
-            if(window.QuestEngine && window.initEngine) await window.initEngine();
+            if (window.AtlasEngine) window.AtlasEngine.init(map);
             loadFlowAreas();
         });
     </script>

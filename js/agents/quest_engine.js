@@ -244,24 +244,87 @@ class QuestEngine {
     }
 
     attemptSync(questLat, questLng, questId, rewardExp, creatorId) {
-        if (!navigator.geolocation) return alert("ANIMUS FEHLER: GPS Offline.");
-        
-        if(window.Pusher) window.Pusher.showToast("📡 SCANNE UMGEBUNG...", "default");
-
+        if (!navigator.geolocation) return alert("GPS offline. Enable location services.");
+        if(window.Pusher) window.Pusher.showToast("Scanning environment...", "default");
         navigator.geolocation.getCurrentPosition(async (pos) => {
             const dist = this.getDistance(pos.coords.latitude, pos.coords.longitude, questLat, questLng);
-            
-            if (dist <= 100) { 
+            if (dist <= 100) {
                 await this.grantReward(questId, rewardExp);
-                
-                // Set Karma Target and Open Modal
-                this.pendingKarmaTarget = creatorId; // Store content creator ID
-                document.getElementById('karma-modal').style.display = 'flex';
-                
+                this.pendingKarmaTarget = creatorId;
+                const km = document.getElementById('karma-modal');
+                if (km) km.style.display = 'flex';
             } else {
-                alert(`SYNC FEHLGESCHLAGEN. Distanz: ${Math.round(dist)}m. Gehe näher ran (<100m).`);
+                alert(`Too far (${Math.round(dist)}m). Move within 100m to sync.`);
             }
-        }, err => alert("GPS BLOCKIERT: " + err.message));
+        }, () => alert("GPS blocked. Allow location for quest verification."));
+    }
+
+    getAcceptedQuests() {
+        return JSON.parse(localStorage.getItem('cdf_accepted_quests') || '[]');
+    }
+
+    isQuestAccepted(id) {
+        return this.getAcceptedQuests().includes(id);
+    }
+
+    isQuestComplete(id) {
+        return (this.profile?.completed_quests || []).includes(id);
+    }
+
+    acceptQuest(questId) {
+        const list = this.getAcceptedQuests();
+        if (list.includes(questId)) {
+            if (window.Pusher) window.Pusher.showToast('Quest already active', 'info');
+            return;
+        }
+        list.push(questId);
+        localStorage.setItem('cdf_accepted_quests', JSON.stringify(list));
+        localStorage.setItem('cdf_quests_touched_today', String(parseInt(localStorage.getItem('cdf_quests_touched_today') || '0', 10) + 1));
+        const q = (window.LISBON_QUESTS || []).find((x) => x.id === questId);
+        const title = q?.title || questId;
+        if (window.Pusher) window.Pusher.showToast(`Quest accepted: ${title}`, 'success');
+        if (window.FloweeNotify) window.FloweeNotify.questAccepted(title);
+        if (window.Flowee) window.Flowee.talk(true, `Quest "${title}" accepted. Go to the Atlas pin and tap VERIFY GPS when you arrive.`, 'guide');
+        if (window.AtlasEngine) window.AtlasEngine.refreshQuestMarkers();
+        if (questId === 'LQ-010') this.grantReward(questId, 50, 'Codex Awakening');
+    }
+
+    async fulfillAtGPS(questId) {
+        const q = (window.LISBON_QUESTS || []).find((x) => x.id === questId);
+        if (!q || !q.lat) return alert('This quest has no GPS target.');
+        if (!this.isQuestAccepted(questId)) return alert('Accept the quest in Codex or Atlas first.');
+        if (this.isQuestComplete(questId)) return alert('Quest already completed.');
+        navigator.geolocation.getCurrentPosition(async (pos) => {
+            const dist = this.getDistance(pos.coords.latitude, pos.coords.longitude, q.lat, q.lng);
+            const radius = q.radiusM || 120;
+            if (dist <= radius) {
+                await this.grantReward(questId, q.reward_exp, q.title);
+                if (q.reward_rune && window.AtlasEngine) {
+                    const venue = (window.getAllVenues?.() || []).find((v) => v.rune === q.reward_rune);
+                    if (venue) window.AtlasEngine.saveRune(venue.id, 'silver', { rune: q.reward_rune, quest: questId });
+                }
+                if (window.FloweeNotify) window.FloweeNotify.questComplete(q.title, q.reward_exp);
+                if (window.AtlasEngine) window.AtlasEngine.refreshQuestMarkers();
+            } else {
+                alert(`Not at target yet (${Math.round(dist)}m / need ${radius}m). Keep walking.`);
+            }
+        }, () => alert('Enable GPS to verify quest location.'));
+    }
+
+    checkActiveQuestsGPS(lat, lng) {
+        this.getAcceptedQuests().forEach((id) => {
+            if (this.isQuestComplete(id)) return;
+            const q = (window.LISBON_QUESTS || []).find((x) => x.id === id);
+            if (!q?.lat) return;
+            const dist = this.getDistance(lat, lng, q.lat, q.lng);
+            if (dist <= (q.radiusM || 120) * 1.5 && window.Flowee) {
+                const key = `proximity_${id}_${new Date().toISOString().slice(0, 10)}`;
+                if (!sessionStorage.getItem(key)) {
+                    sessionStorage.setItem(key, '1');
+                    window.Flowee.talk(true, `You are near "${q.title}". Tap VERIFY GPS on the map pin.`, 'guide');
+                }
+            }
+        });
     }
 
     async grantReward(questId, xp, titleOverride = null) {
@@ -279,13 +342,28 @@ class QuestEngine {
             const label = titleOverride || "QUEST COMPLETE";
             if(window.Pusher) window.Pusher.showToast(`✅ ${label}: +${xp} XP`, "success");
             if(window.SoundEngineer) window.SoundEngineer.playSFX('mission_complete');
-            
-            // Sync with Vitality Agent if present
-            if (window.VitalityAgent) {
-                window.VitalityAgent.addEXP(parseInt(xp));
-            }
-
+            if (window.VitalityAgent) window.VitalityAgent.addEXP(parseInt(xp));
+            const accepted = this.getAcceptedQuests().filter((id) => id !== questId);
+            localStorage.setItem('cdf_accepted_quests', JSON.stringify(accepted));
             await this.loadProfile();
+            this.checkLevelUp();
+            window.dispatchEvent(new CustomEvent('POINTS_SYNCED', { detail: this.profile }));
+        }
+    }
+
+    checkLevelUp() {
+        if (!this.profile) return;
+        const exp = this.profile.exp || 0;
+        const level = Math.max(1, Math.floor(exp / 200) + 1);
+        const prev = parseInt(localStorage.getItem('cdf_last_level') || '1', 10);
+        if (level > prev) {
+            localStorage.setItem('cdf_last_level', String(level));
+            const unlock = window.LEVEL_UNLOCKS?.[level];
+            const msg = unlock
+                ? `Level ${level} — ${unlock.feature}! ${unlock.desc}`
+                : `Resonance Level ${level} reached!`;
+            if (window.Flowee) window.Flowee.talk(true, msg, 'celebrate');
+            if (window.FloweeNotify && unlock) window.FloweeNotify.levelUp(level, unlock.feature);
         }
     }
 
@@ -442,22 +520,30 @@ class QuestEngine {
 
         this.allQuests = quests;
         this.renderCodexList(this.allQuests);
+        this.renderLisbonAtlasQuests();
 
         // 2. Check Auto-Flip from Map
         const targetId = sessionStorage.getItem('target_codex_id');
         if (targetId) {
-            const target = this.allQuests.find(q => q.id === targetId);
-            if (target) {
+            const lisbonQ = (window.LISBON_QUESTS || []).find((q) => q.id === targetId);
+            if (lisbonQ) {
                 setTimeout(() => {
-                    this.showQuestDetails(target);
-                    // Scroll to item
-                    const el = document.getElementById('codex-item-' + targetId);
-                    if(el) {
-                        el.scrollIntoView({behavior: 'smooth', block: 'center'});
-                        el.style.background = 'rgba(255,215,0,0.2)';
-                    }
+                    this.showLisbonQuestInCodex(lisbonQ);
                     sessionStorage.removeItem('target_codex_id');
                 }, 500);
+            } else {
+                const target = this.allQuests.find(q => q.id === targetId);
+                if (target) {
+                    setTimeout(() => {
+                        this.showQuestDetails(target);
+                        const el = document.getElementById('codex-item-' + targetId);
+                        if(el) {
+                            el.scrollIntoView({behavior: 'smooth', block: 'center'});
+                            el.style.background = 'rgba(255,215,0,0.2)';
+                        }
+                        sessionStorage.removeItem('target_codex_id');
+                    }, 500);
+                }
             }
         }
     }
@@ -516,8 +602,19 @@ class QuestEngine {
         if(btn) {
             btn.style.display = 'block';
             
-            // REDIRECTION LOGIC
-            if (quest.page) {
+            if (this.isQuestComplete(quest.id)) {
+                btn.innerHTML = '✅ COMPLETED';
+                btn.onclick = null;
+            } else if (quest.lat || quest.latitude) {
+                const qid = quest.id;
+                if (this.isQuestAccepted(qid)) {
+                    btn.innerHTML = '📡 VERIFY GPS (+XP)';
+                    btn.onclick = () => this.fulfillAtGPS(qid);
+                } else {
+                    btn.innerHTML = '✓ ACCEPT QUEST';
+                    btn.onclick = () => { this.acceptQuest(qid); this.showQuestDetails(quest); };
+                }
+            } else if (quest.page) {
                 btn.innerHTML = "📂 INITIATE SEQUENCE";
                 btn.onclick = () => {
                     // Normalize path
@@ -549,6 +646,8 @@ class QuestEngine {
     async initBrotherhood() {
         console.log("🏛️ [Brotherhood] Hierarchy Loaded.");
         if (window.PointsSync) await window.PointsSync.refresh();
+        window.addEventListener('RUNE_COLLECTED', () => this.renderAdinkraCodex());
+        window.addEventListener('POINTS_SYNCED', () => { this.renderLevelUnlocks(); this.renderAdinkraCodex(); });
 
         let agents = [];
         try {
@@ -590,7 +689,111 @@ class QuestEngine {
         const myExp = document.getElementById('brotherhood-my-exp');
         if (myExp && this.profile) myExp.textContent = (this.profile.exp || 0).toLocaleString();
 
-        if(this.profile) this.renderBadges(this.profile.exp, 'my-badge-case');
+        if(this.profile) {
+            this.renderBadges(this.profile.exp, 'my-badge-case');
+            this.renderAdinkraCodex();
+            this.renderLevelUnlocks();
+        }
+    }
+
+    renderLisbonAtlasQuests() {
+        const list = document.getElementById('lisbon-quest-list');
+        if (!list || !window.LISBON_QUESTS) return;
+        list.innerHTML = '';
+        window.LISBON_QUESTS.forEach((q) => {
+            const li = document.createElement('li');
+            li.className = 'quest-item';
+            li.id = 'codex-item-' + q.id;
+            const done = this.isQuestComplete(q.id);
+            const active = this.isQuestAccepted(q.id);
+            const badge = done ? '<span style="color:#0f0;font-size:0.65em">DONE</span>'
+                : active ? '<span style="color:#d4af37;font-size:0.65em">ACTIVE</span>'
+                : '<span style="color:#666;font-size:0.65em">GPS</span>';
+            li.innerHTML = `${badge} <strong style="color:#fff">${q.title}</strong><div style="font-size:0.75em;color:#888">+${q.reward_exp} XP</div>`;
+            li.onclick = () => this.showLisbonQuestInCodex(q);
+            list.appendChild(li);
+        });
+        const targetId = sessionStorage.getItem('target_codex_id');
+        if (targetId) {
+            const q = window.LISBON_QUESTS.find((x) => x.id === targetId);
+            if (q) setTimeout(() => { this.showLisbonQuestInCodex(q); sessionStorage.removeItem('target_codex_id'); }, 400);
+        }
+    }
+
+    showLisbonQuestInCodex(q) {
+        document.getElementById('protocol-empty').style.display = 'none';
+        const display = document.getElementById('protocol-display');
+        if (display) display.style.display = 'flex';
+        const title = document.getElementById('proto-title');
+        const text = document.getElementById('proto-text');
+        const status = document.getElementById('proto-status');
+        if (title) { title.innerText = q.title; title.style.color = '#06b6d4'; }
+        if (status) status.innerText = 'LISBON_ATLAS_QUEST';
+        if (text) {
+            text.innerHTML = `${q.description}<br><br>
+                <span style="color:gold">+${q.reward_exp} XP</span>
+                ${q.reward_flow ? ` · <span style="color:#00f0ff">+${q.reward_flow} FLOW</span>` : ''}
+                ${q.reward_rune ? `<br>Rune unlock: <b>${q.reward_rune}</b>` : ''}`;
+        }
+        const btn = document.getElementById('proto-action-btn');
+        const mapBtn = document.getElementById('proto-map-btn');
+        if (mapBtn) {
+            mapBtn.style.display = 'block';
+            mapBtn.onclick = () => {
+                sessionStorage.setItem('target_codex_id', q.id);
+                window.location.href = 'quest_map.html';
+            };
+        }
+        if (!btn) return;
+        btn.disabled = false;
+        if (this.isQuestComplete(q.id)) {
+            btn.innerText = '[ QUEST COMPLETED ]';
+            btn.style.color = '#0f0';
+            btn.onclick = null;
+        } else if (this.isQuestAccepted(q.id)) {
+            btn.innerText = '[ VERIFY GPS AT LOCATION ]';
+            btn.style.color = '#0f0';
+            btn.onclick = () => this.fulfillAtGPS(q.id);
+        } else {
+            btn.innerText = '[ ACCEPT QUEST ]';
+            btn.style.color = 'gold';
+            btn.onclick = () => { this.acceptQuest(q.id); this.showLisbonQuestInCodex(q); };
+        }
+        if (mapBtn) mapBtn.innerText = '[ OPEN MAP ]';
+        document.querySelectorAll('#lisbon-quest-list .quest-item').forEach((el) => el.style.background = '');
+        const el = document.getElementById('codex-item-' + q.id);
+        if (el) { el.style.background = 'rgba(6,182,212,0.15)'; el.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+    }
+
+    renderAdinkraCodex() {
+        const grid = document.getElementById('adinkra-codex-grid');
+        if (!grid) return;
+        const runes = JSON.parse(localStorage.getItem('cdf_adinkra_runes') || '{}');
+        const entries = Object.entries(runes);
+        if (!entries.length) {
+            grid.innerHTML = '<p style="color:#555;font-size:0.8em;grid-column:1/-1">No runes yet — walk the Atlas and collect Bronze symbols.</p>';
+            return;
+        }
+        grid.innerHTML = '';
+        entries.forEach(([venueId, data]) => {
+            const venue = (window.getAllVenues?.() || []).find((v) => v.id === venueId);
+            const chip = document.createElement('div');
+            chip.className = `adinkra-chip ${data.tier || 'bronze'}`;
+            chip.innerHTML = `<div style="font-size:1.2em;margin-bottom:4px">◈</div>${data.name || venue?.runeName || venueId}<br><span style="opacity:0.7">${(data.tier || 'bronze').toUpperCase()}</span>`;
+            grid.appendChild(chip);
+        });
+    }
+
+    renderLevelUnlocks() {
+        const el = document.getElementById('level-unlocks');
+        if (!el || !window.LEVEL_UNLOCKS) return;
+        const exp = this.profile?.exp || 0;
+        const level = Math.max(1, Math.floor(exp / 200) + 1);
+        const rows = Object.entries(window.LEVEL_UNLOCKS).map(([lv, u]) => {
+            const ok = level >= parseInt(lv, 10);
+            return `<div style="margin:4px 0;color:${ok ? '#d4af37' : '#444'}">Lv${lv} ${u.feature} — ${u.desc}</div>`;
+        }).join('');
+        el.innerHTML = `<strong style="color:#d4af37">Resonance Lv ${level}</strong> · Unlocks:<br>${rows}`;
     }
 
     openNeighborOrbit(userId, username) {
@@ -779,10 +982,12 @@ class QuestEngine {
     }
     // --- Helper for Badges (Stub) ---
     renderBadges(xp, containerId) {
-        // Simple implementation for now
         const container = document.getElementById(containerId);
-        if(!container) return;
-        // Logic to add badges based on XP would go here
+        if (container) {
+            const level = Math.max(1, Math.floor((xp || 0) / 200) + 1);
+            container.innerHTML = `<span style="color:gold;font-size:0.8em">Resonance Lv ${level}</span>`;
+        }
+        this.renderAdinkraCodex();
     }
 }
 

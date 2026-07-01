@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CQR | THE CODEX</title>
-    <link rel="stylesheet" href="../css/styles.css"> 
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/quest-triad.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/agents/agent.js?v=3.2"></script>
@@ -26,8 +27,12 @@
     <script src="../js/agents/visual_integrity.js" defer></script>
     <script src="../js/agents/flowee.js?v=3.2"></script>
     <script src="../js/agents/supabase_client.js?v=3.2"></script>
-    <script src="../js/data/lisbon_quests.js?v=1.0"></script>
-    <script src="../js/agents/quest_engine.js?v=4.2"></script> <!-- Updated Version -->
+    <script src="../js/data/lisbon_quests.js?v=1.1"></script>
+    <script src="../js/data/lisbon_venues.js?v=1.0"></script>
+    <script src="../js/agents/fitable_sync.js?v=1.0"></script>
+    <script src="../js/agents/flowee_notify.js?v=1.0"></script>
+    <script src="../js/agents/quest_triad.js?v=1.0"></script>
+    <script src="../js/agents/quest_engine.js?v=4.4"></script>
     <style>
         select { color: white; background: #111; }
         select option { background: #111; color: #fff; }
@@ -124,6 +129,14 @@
                     </ul>
                     
                     <div style="display: flex; justify-content: space-between; align-items: baseline; border-bottom:1px solid #333; padding-bottom:10px; margin-bottom:15px; margin-top:30px;">
+                        <h3 style="color:#06b6d4; margin: 0; font-size:0.9em;">LISBON ATLAS QUESTS</h3>
+                        <a href="quest_map.html" style="font-size:0.65em; color:#06b6d4; text-decoration:none;">OPEN MAP →</a>
+                    </div>
+                    <ul id="lisbon-quest-list" class="codex-list" style="list-style: none; padding: 0; margin: 0 0 20px 0;">
+                        <!-- GPS quests from LISBON_QUESTS -->
+                    </ul>
+
+                    <div style="display: flex; justify-content: space-between; align-items: baseline; border-bottom:1px solid #333; padding-bottom:10px; margin-bottom:15px; margin-top:10px;">
                         <h3 style="color:#d4af37; margin: 0; font-size:0.9em;">COMMUNITY FORGE</h3>
                     </div>
                     <ul id="user-quests-list" class="codex-list" style="list-style: none; padding: 0; margin: 0;">
@@ -146,6 +159,9 @@
 
                         <button id="proto-action-btn" onclick="completeProtocol()" style="background: transparent; border: 1px solid gold; color: gold; padding: 15px; font-family: 'Courier New'; font-weight: bold; width: 100%; cursor: pointer; transition: 0.3s; margin-top: 20px; flex-shrink: 0;">
                             [ INITIATE UPLINK & ACCESS TARGET ]
+                        </button>
+                        <button id="proto-map-btn" type="button" style="display:none; background: transparent; border: 1px solid #06b6d4; color: #06b6d4; padding: 12px; font-family: 'Courier New'; width: 100%; cursor: pointer; margin-top: 10px;">
+                            [ OPEN MAP ]
                         </button>
                     </div>
 

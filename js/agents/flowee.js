@@ -1017,6 +1017,31 @@ class FloweeAgent {
         // World navigation keywords (Quest Log, High Palast, etc.)
         if (window.WorldAccess && window.WorldAccess.handleFloweeKeyword(text)) return;
 
+        const lower = text.toLowerCase().trim();
+        if (lower === 'notify on' || lower === 'notifications on' || lower.includes('enable notifications')) {
+            if (window.FloweeNotify) {
+                window.FloweeNotify.requestPermission().then((ok) => {
+                    this.addChatMessage(ok
+                        ? 'Notifications enabled. Flowee will alert you for quests, runes, and level-ups.'
+                        : 'Notifications blocked. Enable them in browser settings, then type "notify on" again.', 'ai');
+                });
+            } else {
+                this.addChatMessage('Notification agent offline on this page.', 'ai');
+            }
+            return;
+        }
+        if (lower === 'notify off' || lower === 'notifications off') {
+            localStorage.setItem('cdf_notify_enabled', 'false');
+            if (window.FloweeNotify) window.FloweeNotify.enabled = false;
+            this.addChatMessage('Notifications paused. Type "notify on" to re-enable.', 'ai');
+            return;
+        }
+        if (lower.includes('high palast') || lower.includes('adinkra') || lower.includes('rune')) {
+            const n = Object.keys(JSON.parse(localStorage.getItem('cdf_adinkra_runes') || '{}')).length;
+            this.addChatMessage(`Your Adinkra Codex holds ${n} rune(s). Bronze = walk-by, Silver = scan on site, Gold = community mastery. Open Brotherhood to view.`, 'ai');
+            return;
+        }
+
         // Dispatch Global Event for Agentic Brain
         window.dispatchEvent(new CustomEvent('CDF_USER_CHAT', { detail: { text } }));
 
