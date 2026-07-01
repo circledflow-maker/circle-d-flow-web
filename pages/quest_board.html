@@ -30,9 +30,10 @@
     <script src="../js/data/lisbon_quests.js?v=1.1"></script>
     <script src="../js/data/lisbon_venues.js?v=1.0"></script>
     <script src="../js/agents/fitable_sync.js?v=1.0"></script>
-    <script src="../js/agents/flowee_notify.js?v=2.0" defer></script>
-    <script src="../js/agents/flowee_quest_tour.js?v=1.0" defer></script>
-    <script src="../js/agents/quest_triad.js?v=2.0" defer></script>
+    <script src="../js/agents/flowee_voice.js?v=1.0" defer></script>
+    <script src="../js/agents/flowee_notify.js?v=2.1" defer></script>
+    <script src="../js/agents/flowee_quest_tour.js?v=1.1" defer></script>
+    <script src="../js/agents/quest_triad.js?v=2.1" defer></script>
     <script src="../js/agents/quest_engine.js?v=4.5" defer></script>
     <style>
         select { color: white; background: #111; }
@@ -68,6 +69,12 @@
     <div style="position:fixed; inset:0; background: radial-gradient(circle, rgba(20,20,20,1) 0%, rgba(0,0,0,1) 90%); z-index:-1;"></div>
 
     <!-- MAIN CODEX CONTAINER (THE BOOK) -->
+    <div class="codex-mobile-tabs" id="codex-mobile-tabs">
+        <button type="button" class="codex-mobile-tab active" data-tab="read" onclick="switchTab('read')">QUESTS</button>
+        <button type="button" class="codex-mobile-tab" data-tab="write" onclick="switchTab('write')">FORGE</button>
+        <button type="button" class="codex-mobile-tab" data-tab="area" onclick="switchTab('area')">AREA</button>
+        <button type="button" class="codex-mobile-tab" data-tab="event" onclick="window.location.href='quest-create.html'">EVENT</button>
+    </div>
     <div id="codex-container" style="
         width: 90vw; max-width: 1200px; height: 85vh; 
         background: rgba(10, 10, 10, 0.95); 
@@ -387,6 +394,10 @@
             document.getElementById('tab-write').classList.toggle('active', tabName === 'write');
             const tabArea = document.getElementById('tab-area');
             if (tabArea) tabArea.classList.toggle('active', tabName === 'area');
+
+            document.querySelectorAll('.codex-mobile-tab').forEach((btn) => {
+                btn.classList.toggle('active', btn.dataset.tab === tabName);
+            });
         };
 
         window.submitNewQuest = async function() {

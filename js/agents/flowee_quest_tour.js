@@ -12,6 +12,7 @@ class FloweeQuestTour {
     speak(text, mood) {
         if (!window.Flowee) return;
         window.Flowee.talk(true, text, mood || 'guide');
+        if (window.FloweeVoice) window.FloweeVoice.speak(text);
     }
 
     delay(ms) {
@@ -77,11 +78,16 @@ class FloweeQuestTour {
             this.speak('This is the Codex — your mission log. Protocols teach the system; Lisbon quests grant GPS XP.');
         }
         await this.delay(4000);
+        this.highlight('#codex-mobile-tabs, #codex-protocols-section');
+        this.speak('Use QUESTS, FORGE, or AREA tabs on mobile. Protocols 1 to 3 mirror MAP, QUESTS, and RANK.');
+        await this.delay(4500);
         this.highlight('#lisbon-quest-list');
-        this.speak('Pick a quest → Accept → Open Map → walk to the pin → Verify GPS. I will notify you if you enabled alerts.');
+        this.speak('Pick a quest, tap Accept, open MAP, walk to the pin, then Verify GPS. I will notify you if alerts are on.');
         await this.delay(5000);
-        this.highlight('#codex-protocols-section');
-        this.speak('Protocols 1–3 sync with MAP, QUESTS, and RANK. Complete them in order for bonus XP.');
+        this.highlight('#quest-protocol-1');
+        this.speak('Start Protocol 1 if you have not finished the Atlas awakening. Then climb the Brotherhood Rank.');
+        this.highlight('#nav-bro');
+        await this.delay(3500);
         localStorage.setItem('cdf_codex_tour_v2', '1');
     }
 

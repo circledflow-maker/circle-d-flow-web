@@ -81,6 +81,15 @@
         if (nav) {
             nav.querySelectorAll('.nav-divider').forEach((d) => { d.style.display = 'none'; });
         }
+
+        const commsBtn = document.getElementById('nav-comms');
+        if (commsBtn) {
+            commsBtn.onclick = (e) => {
+                e.preventDefault();
+                if (window.Flowee?.toggleChat) window.Flowee.toggleChat();
+                else if (window.QuestEngine?.toggleComms) window.QuestEngine.toggleComms();
+            };
+        }
     }
 
     if (document.body) boot();

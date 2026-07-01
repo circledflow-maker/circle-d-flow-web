@@ -104,6 +104,10 @@ body.quest-triad-page .relative.z-10 { padding-top: 44px; }
     padding: 4px 2px !important;
     max-width: 20%;
   }
+  .animus-global-nav .nav-btn:hover,
+  .animus-global-nav .nav-btn.active {
+    transform: none !important;
+  }
   .animus-global-nav .nav-btn .icon { font-size: 1.25em !important; display: block; margin-bottom: 2px; }
   .animus-global-nav .nav-label { display: block; font-size: 8px; letter-spacing: 0; line-height: 1.1; }
   .animus-global-nav .nav-divider { display: none !important; }
@@ -129,11 +133,12 @@ body.quest-triad-page .relative.z-10 { padding-top: 44px; }
   font-family: monospace; font-size: 11px; cursor: pointer; text-align: left;
 }
 .flowee-tour-highlight { outline: 2px solid #d4af37 !important; box-shadow: 0 0 20px rgba(212,175,55,0.5) !important; }
-.codex-mobile-tabs { display: none; }
 @media (max-width: 768px) {
-  .codex-mobile-tabs { display: flex; gap: 6px; padding: 8px; background: #000; border-bottom: 1px solid #333; }
-  .codex-mobile-tab { flex: 1; padding: 8px 4px; font-size: 9px; font-family: monospace; border: 1px solid #444; background: transparent; color: #888; border-radius: 8px; }
-  .codex-mobile-tab.active { border-color: #d4af37; color: #d4af37; }
+  .codex-mobile-tabs { display: flex; gap: 6px; padding: 8px; background: #000; border-bottom: 1px solid #333; position: sticky; top: 0; z-index: 20; }
+  .codex-mobile-tab { flex: 1; padding: 8px 4px; font-size: 9px; font-family: monospace; border: 1px solid #444; background: transparent; color: #888; border-radius: 8px; cursor: pointer; }
+  .codex-mobile-tab.active { border-color: #d4af37; color: #d4af37; background: rgba(212,175,55,0.08); }
+  #codex-sidebar { display: none !important; }
+  #codex-container { flex-direction: column !important; }
   body.quest-triad-page #hud-top { top: 48px; }
   body.quest-triad-page .atlas-filter-bar { top: 108px; }
 }

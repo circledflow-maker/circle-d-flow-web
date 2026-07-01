@@ -12,6 +12,7 @@ class FloweeNotifyAgent {
 
     speak(text, mood) {
         if (window.Flowee) window.Flowee.talk(true, text, mood || 'guide');
+        if (window.FloweeVoice) window.FloweeVoice.speak(text);
     }
 
     shouldAskAgain() {
@@ -45,16 +46,35 @@ class FloweeNotifyAgent {
 
     injectNotifyButtons() {
         if (document.getElementById('flowee-notify-actions')) return;
-        const host = document.getElementById('flowee-chat-messages') || document.querySelector('.flowee-chat-body');
-        if (!host) return;
+        if (window.Flowee && !document.getElementById('flowee-messages')) {
+            window.Flowee.renderChatInterface();
+        }
+        const host = document.getElementById('flowee-messages')
+            || document.getElementById('flowee-chat-log')
+            || document.getElementById('flowee-chat-messages')
+            || document.querySelector('.flowee-chat-body');
+        if (!host) {
+            if (window.Flowee) {
+                window.Flowee.talk(true, 'Tap ALLOW in chat when you open FLOWEE, or type "notify on".', 'guide', [
+                    { label: 'ALLOW', action: async () => { await this.requestPermission(); } },
+                    { label: 'NOT NOW', action: () => { localStorage.setItem('cdf_notify_enabled', 'false'); } },
+                ]);
+            }
+            return;
+        }
+        const denied = Notification.permission === 'denied';
         const box = document.createElement('div');
         box.id = 'flowee-notify-actions';
         box.style.cssText = 'display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;padding:8px;';
         box.innerHTML = `
-            <button type="button" id="flowee-notify-allow" style="flex:1;min-width:100px;padding:10px;background:#d4af37;color:#000;border:none;border-radius:8px;font-weight:bold;cursor:pointer;font-size:11px;">ALLOW</button>
-            <button type="button" id="flowee-notify-later" style="flex:1;min-width:100px;padding:10px;background:transparent;color:#888;border:1px solid #444;border-radius:8px;cursor:pointer;font-size:11px;">NOT NOW</button>
+            <button type="button" id="flowee-notify-allow" style="flex:1;min-width:90px;padding:10px;background:#d4af37;color:#000;border:none;border-radius:8px;font-weight:bold;cursor:pointer;font-size:11px;">ALLOW</button>
+            <button type="button" id="flowee-notify-later" style="flex:1;min-width:90px;padding:10px;background:transparent;color:#888;border:1px solid #444;border-radius:8px;cursor:pointer;font-size:11px;">NOT NOW</button>
+            ${denied ? '<button type="button" id="flowee-notify-retry" style="flex:1;min-width:90px;padding:10px;background:transparent;color:#06b6d4;border:1px solid #06b6d4;border-radius:8px;cursor:pointer;font-size:11px;">ASK AGAIN</button>' : ''}
         `;
         host.appendChild(box);
+        if (window.Flowee?.toggleChat && document.getElementById('flowee-chat')?.style.display === 'none') {
+            window.Flowee.toggleChat();
+        }
         document.getElementById('flowee-notify-allow')?.addEventListener('click', async () => {
             const ok = await this.requestPermission();
             box.remove();
@@ -66,6 +86,12 @@ class FloweeNotifyAgent {
             box.remove();
             localStorage.setItem('cdf_notify_enabled', 'false');
             this.speak('Understood. I will remind you later. You can always type "notify on" in chat.');
+        });
+        document.getElementById('flowee-notify-retry')?.addEventListener('click', () => {
+            localStorage.setItem('cdf_notify_last_ask', '0');
+            box.remove();
+            this.speak('I will ask again when the browser allows. You can also enable notifications in site settings.');
+            setTimeout(() => this.promptViaFlowee(), 800);
         });
     }
 
