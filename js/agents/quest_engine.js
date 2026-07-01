@@ -26,56 +26,57 @@ class QuestEngine {
         // SYSTEM QUEST REGISTRY (Tutorials)
         // SYSTEM QUEST REGISTRY (Tutorials)
         this.SYSTEM_QUESTS = [
-            // 1. LEVEL 1: AWAKENING (Unlocks Map & Sound)
-            { 
-                id: 'Q-PROTO-01', 
+            {
+                id: 'Q-PROTO-01',
                 index: 1,
-                title: 'THE FIRST BREATH', 
-                description: 'Initialize your connection. Visit the Quest Map and secure a signal.', 
-                reward_exp: 100, 
-                type: 'story', 
+                title: 'ATLAS AWAKENING',
+                description: 'Open the Lisbon Atlas, enable GPS, and scan your first mission.',
+                reward_exp: 100,
+                type: 'story',
                 page: 'quest_map.html',
                 targetUrl: 'quest_map.html',
                 nextLevel: 2,
-                text: `Welcome to the Matrix of Lisbon, Navigator.<br><br>
-                       You have joined the <b>Circle-D-Flow</b>. We are not an app, we are a network. We connect the physical world (Hip-Hop, Arthouse, Rhythm) with the digital Matrix.<br><br>
-                       Your first lesson: <b>The Atlas & The Sound World</b>.<br>
-                       Once you confirm this uplink, the system will calibrate your GPS signals and unlock the nodes for Live-Events and Beats (Sound World) in your Dashboard.<br><br>
-                       Let the flow move through you.`
+                text: `<b>Protocol 1 — Lisbon Atlas</b><br><br>
+                    The Atlas maps real Lisbon to quests and Adinkra runes.<br><br>
+                    1. Allow GPS<br>
+                    2. Tap <b>NEARBY</b> for closest missions<br>
+                    3. Use filters: Sanctuary, Views (miradouros), Sound, Vision, Kitchen<br>
+                    4. Walk to a pin → Accept → <b>Verify GPS</b><br><br>
+                    Flowee will guide your first tour automatically.`
             },
-            // 2. LEVEL 2: COMMERCE (Unlocks Bazaar)
-            { 
-                id: 'Q-PROTO-02', 
+            {
+                id: 'Q-PROTO-02',
                 index: 2,
-                title: 'MARKET ONBOARDING PROTOCOL', 
-                description: 'Master the economy. Learn to Navigate, Forge, and Trade.', 
-                reward_exp: 230, // Total possible (50+30+150)
-                type: 'tutorial', 
-                page: 'marketplace.html?tutorial=active',
-                targetUrl: 'marketplace.html?tutorial=active',
+                title: 'CODEX MISSION LOG',
+                description: 'Accept a Lisbon quest in the Codex and complete it on site.',
+                reward_exp: 150,
+                type: 'story',
+                page: 'quest_board.html',
+                targetUrl: 'quest_board.html',
                 nextLevel: 3,
-                text: `The economy of the Matrix awaits.<br><br>
-                       Before you engage in turf wars, you must understand the flow of credits.<br>
-                       <b>PHASE 1: Reconnaissance (+50 XP)</b><br>Scan the Bazaar by using a Guild Filter.<br><br>
-                       <b>PHASE 2: The Blueprint (+30 XP)</b><br>Visit the Forge and test the Currency Converter.<br><br>
-                       <b>PHASE 3: The Artisan (+150 XP)</b><br>Forge your first artifact (Optional).<br><br>
-                       <button onclick="window.location.href='marketplace.html?tutorial=active'" style="color:gold; border:1px solid gold; background:transparent; padding:5px;">ENTER THE BAZAAR 🚀</button>`
+                text: `<b>Protocol 2 — The Codex</b><br><br>
+                    Your mission log lives here.<br><br>
+                    • <b>Lisbon Atlas Quests</b> — GPS missions with XP + runes<br>
+                    • <b>Protocols</b> — system tutorials (this sequence)<br>
+                    • Accept <i>The Hidden Oasis</i> or any LQ quest → Open Map → Verify on site<br><br>
+                    <button onclick="window.location.href='quest_board.html'" style="color:#06b6d4;border:1px solid #06b6d4;background:transparent;padding:8px 12px;cursor:pointer;margin-top:8px;">OPEN CODEX</button>`
             },
-            // 3. LEVEL 3: WARFARE (Unlocks Brotherhood)
-            { 
-                id: 'Q-PROTO-03', 
+            {
+                id: 'Q-PROTO-03',
                 index: 3,
-                title: 'THE ART OF WAR', 
-                description: 'Prove your worth. Enter the Hall of Legends.', 
-                reward_exp: 500, 
-                type: 'story', 
+                title: 'BROTHERHOOD RANK',
+                description: 'View your Adinkra Codex and live Navigator rankings.',
+                reward_exp: 200,
+                type: 'story',
                 page: 'hall_of_legends.html',
                 targetUrl: 'hall_of_legends.html',
                 nextLevel: 4,
-                text: `The streets belong to no one, until someone claims them.<br><br>
-                       Welcome to the <b>Turf Wars</b>. On your Atlas, you now see red nodes (e.g. Favela LX). To capture them, you must physically navigate there, use your 5 Pillars (Animus Stats), and hack the firewalls.<br><br>
-                       Control the nodes for your future Guild and farm passive Flow Credits. The War for Lisbon begins now.<br><br>
-                       Complete this final protocol to spin up the weapon systems and become a fully sanctioned Agent.`
+                text: `<b>Protocol 3 — Brotherhood Rank</b><br><br>
+                    Bronze → Silver → Gold runes sync here from the Atlas.<br><br>
+                    • Live leaderboard (real profiles)<br>
+                    • Adinkra Codex & level unlocks (Lv5 Place Cinema, Lv10 Battlefield vote)<br>
+                    • Syndicate tools when you reach Warlord rank<br><br>
+                    <button onclick="window.location.href='hall_of_legends.html'" style="color:gold;border:1px solid gold;background:transparent;padding:8px 12px;cursor:pointer;margin-top:8px;">OPEN RANK</button>`
             }
         ];
 
@@ -655,23 +656,18 @@ class QuestEngine {
             if(error) throw error;
             agents = data || [];
         } catch(e) {
-             console.warn("[Brotherhood] Connection fluctuation. Demo roster.", e);
-        }
-
-        if(agents.length === 0) {
-            agents = [
-                { id: 'bot-1', username: 'FlowMaster_Zero', exp: 9001, karma: 50 },
-                { id: 'bot-2', username: 'Neon_Ninja', exp: 5000, karma: 20 },
-                { id: 'bot-3', username: 'Cyber_Muse', exp: 3200, karma: 30 },
-                { id: 'bot-me', username: (this.profile?.username || 'Initiate'), exp: (this.profile?.exp || 0), karma: 0 }
-            ];
-            agents.sort((a,b) => b.exp - a.exp);
-            if(window.Pusher) window.Pusher.showToast("DEMO MODE: SIMULATED AGENTS", "error");
+             console.warn("[Brotherhood] Connection fluctuation.", e);
         }
 
         const list = document.getElementById('leaderboard-list');
         if(list) {
             list.innerHTML = '';
+            if (agents.length === 0) {
+                list.innerHTML = `<div style="text-align:center;padding:40px 20px;color:#666;font-family:'Courier New',monospace;">
+                    <p style="color:#d4af37;margin-bottom:8px;">NO OPERATIVES YET</p>
+                    <p style="font-size:0.85em;">Complete Atlas quests to appear on the live register.</p>
+                </div>`;
+            } else {
             agents.forEach((ag, idx) => {
                  const div = document.createElement('div');
                  div.className = 'leaderboard-item';
@@ -684,6 +680,7 @@ class QuestEngine {
                  `;
                  list.appendChild(div);
             });
+            }
         }
 
         const myExp = document.getElementById('brotherhood-my-exp');

@@ -1,26 +1,72 @@
 /**
- * Flowee Notify — browser push (no n8n). Future: WhatsApp bridge.
+ * Flowee Notify — browser push; Flowee always asks (retry if denied).
  */
 class FloweeNotifyAgent {
     constructor() {
         this.enabled = localStorage.getItem('cdf_notify_enabled') === 'true';
         window.FloweeNotify = this;
-        document.addEventListener('DOMContentLoaded', () => this.maybePrompt());
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => this.promptViaFlowee(), 6000);
+        });
     }
 
-    async maybePrompt() {
-        if (!('Notification' in window)) return;
+    speak(text, mood) {
+        if (window.Flowee) window.Flowee.talk(true, text, mood || 'guide');
+    }
+
+    shouldAskAgain() {
+        const last = parseInt(localStorage.getItem('cdf_notify_last_ask') || '0', 10);
+        const denied = Notification.permission === 'denied';
+        const wait = denied ? 4 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000;
+        return Date.now() - last > wait;
+    }
+
+    async promptViaFlowee() {
+        if (!('Notification' in window)) {
+            this.speak('Notifications are not supported in this browser. I will still guide you in chat.');
+            return;
+        }
         if (Notification.permission === 'granted') {
             this.enabled = true;
             localStorage.setItem('cdf_notify_enabled', 'true');
             return;
         }
-        if (Notification.permission === 'denied') return;
-        setTimeout(() => {
-            if (window.Flowee) {
-                window.Flowee.talk(true, 'Enable notifications? Flowee can send quest updates and rune alerts. Type "notify on" in chat.', 'guide');
-            }
-        }, 8000);
+        if (!this.shouldAskAgain()) return;
+
+        localStorage.setItem('cdf_notify_last_ask', String(Date.now()));
+        this.injectNotifyButtons();
+
+        if (Notification.permission === 'denied') {
+            this.speak('Notifications were blocked earlier. Enable them in browser settings, or tap "Ask again" — I can retry when you are ready.');
+        } else {
+            this.speak('Navigator, may I send you quest updates, rune alerts, and Lisbon news? Tap Allow below or type "notify on" in chat.');
+        }
+    }
+
+    injectNotifyButtons() {
+        if (document.getElementById('flowee-notify-actions')) return;
+        const host = document.getElementById('flowee-chat-messages') || document.querySelector('.flowee-chat-body');
+        if (!host) return;
+        const box = document.createElement('div');
+        box.id = 'flowee-notify-actions';
+        box.style.cssText = 'display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;padding:8px;';
+        box.innerHTML = `
+            <button type="button" id="flowee-notify-allow" style="flex:1;min-width:100px;padding:10px;background:#d4af37;color:#000;border:none;border-radius:8px;font-weight:bold;cursor:pointer;font-size:11px;">ALLOW</button>
+            <button type="button" id="flowee-notify-later" style="flex:1;min-width:100px;padding:10px;background:transparent;color:#888;border:1px solid #444;border-radius:8px;cursor:pointer;font-size:11px;">NOT NOW</button>
+        `;
+        host.appendChild(box);
+        document.getElementById('flowee-notify-allow')?.addEventListener('click', async () => {
+            const ok = await this.requestPermission();
+            box.remove();
+            this.speak(ok
+                ? 'Signal linked. I will ping you for quests and runes.'
+                : 'Permission denied. I will ask again later — or type "notify on" when ready.', ok ? 'celebrate' : 'guide');
+        });
+        document.getElementById('flowee-notify-later')?.addEventListener('click', () => {
+            box.remove();
+            localStorage.setItem('cdf_notify_enabled', 'false');
+            this.speak('Understood. I will remind you later. You can always type "notify on" in chat.');
+        });
     }
 
     async requestPermission() {
@@ -28,6 +74,7 @@ class FloweeNotifyAgent {
         const p = await Notification.requestPermission();
         this.enabled = p === 'granted';
         localStorage.setItem('cdf_notify_enabled', String(this.enabled));
+        localStorage.setItem('cdf_notify_last_ask', String(Date.now()));
         return this.enabled;
     }
 
@@ -35,21 +82,13 @@ class FloweeNotifyAgent {
         if (!this.enabled || Notification.permission !== 'granted') return;
         try {
             new Notification(title, { body, icon: '/Assets/images/logo.png', tag: tag || 'cdf', silent: false });
-        } catch (_) { /* mobile quirks */ }
+        } catch (_) {}
         if (window.ImperialHUD) window.ImperialHUD.pushMessage(body, 'flowee');
     }
 
-    questAccepted(title) {
-        this.send('Quest accepted', title, 'quest');
-    }
-
-    questComplete(title, xp) {
-        this.send('Quest complete', `${title}: +${xp} XP`, 'quest-done');
-    }
-
-    levelUp(level, feature) {
-        this.send('Level up!', `Nexus Level ${level}. Unlocked: ${feature}`, 'level');
-    }
+    questAccepted(title) { this.send('Quest accepted', title, 'quest'); }
+    questComplete(title, xp) { this.send('Quest complete', `${title}: +${xp} XP`, 'quest-done'); }
+    levelUp(level, feature) { this.send('Level up!', `Level ${level} — ${feature}`, 'level'); }
 }
 
 new FloweeNotifyAgent();

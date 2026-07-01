@@ -54,12 +54,19 @@ class AtlasEngine {
         bar.className = 'atlas-filter-bar';
         bar.innerHTML = `
             <button type="button" class="atlas-filter active" data-f="all">ALL</button>
+            <button type="button" class="atlas-filter" data-f="miradouro">VIEWS</button>
+            <button type="button" class="atlas-filter" data-f="sanctuary">SANCTUARY</button>
             <button type="button" class="atlas-filter" data-f="sound">SOUND</button>
             <button type="button" class="atlas-filter" data-f="vision">VISION</button>
             <button type="button" class="atlas-filter" data-f="kitchen">KITCHEN</button>
+            <button type="button" class="atlas-filter atlas-nearby-btn" id="atlas-nearby-btn" data-f="nearby">NEARBY</button>
         `;
         document.body.appendChild(bar);
         bar.querySelectorAll('.atlas-filter').forEach((btn) => {
+            if (btn.id === 'atlas-nearby-btn') {
+                btn.onclick = (e) => { e.stopPropagation(); this.showNearestMissions(4); };
+                return;
+            }
             btn.onclick = () => {
                 bar.querySelectorAll('.atlas-filter').forEach((b) => b.classList.remove('active'));
                 btn.classList.add('active');
@@ -69,8 +76,17 @@ class AtlasEngine {
         });
     }
 
+    matchesFilter(v) {
+        if (this.filter === 'all') return true;
+        if (this.filter === 'miradouro') return v.zone === 'high_flow' || (v.id || '').includes('mir_');
+        if (this.filter === 'sanctuary') {
+            return v.zone === 'community' || ['secret_garden_lx', 'hempy_roots', 'village_underground'].includes(v.id);
+        }
+        return (v.filter || []).includes(this.filter);
+    }
+
     venueVisible(v) {
-        if (this.filter !== 'all' && !(v.filter || []).includes(this.filter)) return false;
+        if (this.filter !== 'all' && this.filter !== 'nearby' && !this.matchesFilter(v)) return false;
         const revealed = this.steps >= (v.stepsReveal || 0);
         if (this.userPos && v.lat) {
             const d = this.dist(this.userPos.lat, this.userPos.lng, v.lat, v.lng);
@@ -199,6 +215,60 @@ class AtlasEngine {
     }
 
     refreshQuestMarkers() { this.renderQuests(); }
+
+    showNearestMissions(max = 4) {
+        if (!this.userPos) {
+            if (window.Flowee) window.Flowee.talk(true, 'Enable GPS so I can find the nearest missions.', 'guide');
+            if (navigator.geolocation && this.map) {
+                this.map.locate({ setView: true, maxZoom: 15 });
+            }
+            return;
+        }
+        const { lat, lng } = this.userPos;
+        const items = [];
+        (window.getAllVenues?.() || []).forEach((v) => {
+            if (!v.lat) return;
+            items.push({ type: 'venue', name: v.name, lat: v.lat, lng: v.lng, dist: this.dist(lat, lng, v.lat, v.lng), meta: v });
+        });
+        (window.LISBON_QUESTS || []).forEach((q) => {
+            if (!q.lat) return;
+            items.push({ type: 'quest', name: q.title, lat: q.lat, lng: q.lng, dist: this.dist(lat, lng, q.lat, q.lng), meta: q });
+        });
+        items.sort((a, b) => a.dist - b.dist);
+        const nearest = items.slice(0, max);
+        if (!nearest.length) return;
+
+        this.removeNearbyPanel();
+        const panel = document.createElement('div');
+        panel.id = 'atlas-nearby-panel';
+        panel.className = 'atlas-nearby-panel';
+        panel.innerHTML = `<div class="atlas-nearby-title">NEAREST MISSIONS</div>` +
+            nearest.map((it, i) => `
+                <button type="button" class="atlas-nearby-row" data-i="${i}">
+                    <span>${it.type === 'quest' ? '◈' : '●'} ${it.name}</span>
+                    <span>${Math.round(it.dist)}m</span>
+                </button>`).join('');
+        document.body.appendChild(panel);
+        panel.querySelectorAll('.atlas-nearby-row').forEach((btn, i) => {
+            btn.onclick = () => {
+                const it = nearest[i];
+                this.map.flyTo([it.lat, it.lng], 16, { duration: 1 });
+                if (it.type === 'quest' && window.QuestEngine) {
+                    window.QuestEngine.acceptQuest(it.meta.id);
+                }
+                const m = it.type === 'quest' ? this.questMarkers[it.meta.id] : this.markers[it.meta.id];
+                if (m) setTimeout(() => m.openPopup(), 1200);
+            };
+        });
+
+        this.map.flyTo([nearest[0].lat, nearest[0].lng], 15, { duration: 1 });
+        if (window.FloweeQuestTour) window.FloweeQuestTour.onNearbyPressed();
+        else if (window.Flowee) window.Flowee.talk(true, `Nearest: ${nearest[0].name} (${Math.round(nearest[0].dist)}m). Tap a row to fly there.`, 'guide');
+    }
+
+    removeNearbyPanel() {
+        document.getElementById('atlas-nearby-panel')?.remove();
+    }
 }
 
 new AtlasEngine();

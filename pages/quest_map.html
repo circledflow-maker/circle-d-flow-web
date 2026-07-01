@@ -31,11 +31,6 @@
     <script src="../js/agents/supabase_client.js?v=3.2"></script>
     <script src="../js/data/lisbon_quests.js?v=1.1"></script>
     <script src="../js/data/lisbon_venues.js?v=1.0"></script>
-    <script src="../js/agents/fitable_sync.js?v=1.0"></script>
-    <script src="../js/agents/flowee_notify.js?v=1.0"></script>
-    <script src="../js/agents/atlas_engine.js?v=1.0"></script>
-    <script src="../js/agents/quest_triad.js?v=1.0"></script>
-    <script src="../js/agents/quest_engine.js?v=4.4"></script>
     <script src="../js/data/akademie_data.js"></script>
     
     <style>
@@ -233,8 +228,8 @@
         <button onclick="window.location.href='quest_board.html'" class="nav-btn" id="nav-board"><span class="icon">📖</span><br>CODEX</button>
         <button onclick="window.location.href='hall_of_legends.html?from=atlas'" class="nav-btn" id="nav-bro"><span class="icon">🏛️</span><br>BROTHERHOOD</button>
         <div class="nav-divider"></div>
-        <button onclick="window.QuestEngine.toggleComms()" class="nav-btn"><span class="icon">💬</span><br>COMMS</button>
-        <button onclick="window.location.href='dashboard.html'" class="nav-btn exit"><span class="icon">⚡</span><br>MAIN</button>
+        <button onclick="window.QuestEngine?.toggleComms()" class="nav-btn" id="nav-comms"><span class="icon">💬</span><span class="nav-label">FLOWEE</span></button>
+        <button onclick="window.location.href='dashboard.html'" class="nav-btn exit"><span class="icon">⚡</span><span class="nav-label">ORBIT</span></button>
     </nav>
 
     <script>
@@ -550,5 +545,11 @@
             loadFlowAreas();
         });
     </script>
+    <script src="../js/agents/fitable_sync.js?v=1.0" defer></script>
+    <script src="../js/agents/flowee_notify.js?v=2.0" defer></script>
+    <script src="../js/agents/atlas_engine.js?v=1.1" defer></script>
+    <script src="../js/agents/quest_engine.js?v=4.5" defer></script>
+    <script src="../js/agents/quest_triad.js?v=2.0" defer></script>
+    <script src="../js/agents/flowee_quest_tour.js?v=1.0" defer></script>
 </body>
 </html>
