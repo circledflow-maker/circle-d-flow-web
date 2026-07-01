@@ -2458,6 +2458,417 @@ const AkademieData = [
         ]
     },
     {
+        "name": "C4C",
+        "id": "1BT8y4cCwRBljJe8xkJ1abfiKhP_yJAJR",
+        "chapters": [
+            {
+                "title": "cdfevent",
+                "files": [
+                    {
+                        "id": "14Ajt0LrlqF4faMAaK3pr5yMhEGn4VbFm",
+                        "type": "video"
+                    },
+                    {
+                        "id": "10jjg83MA9FK_USVMhhKLM4GUWGBbaiKe",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1TIcZHcaFULUpm3GDoJ2q1yNVoXRfKhWu",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1IYHHMVI8Ea_lCkIbOBDGuBvtruiC95fr",
+                        "type": "image"
+                    },
+                    {
+                        "id": "175yojayDw1LpSHoTGP9HmfOht073D7Ak",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1upAF2UXzPjvXgxKyYhxEt3G-jYXdwvTY",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1n3vAJn46esuwD1i_t5xQrULmBahTsKxD",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1SB13WWPYZ9qSCr7HQjn9gSPGSzxfSHV7",
+                        "type": "video"
+                    },
+                    {
+                        "id": "13KikF01-TjXmmyIQAv2_1worvAQQb0MO",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1pFro-LPoN2eknlDnPPaqphpSGAIRZwTU",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1zqc71qivGn1hCHskokHM-YHWVzQwNHFM",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1ce9JbgDy0ZZdAIOnQOPR6OyK2ecPn9pd",
+                        "type": "video"
+                    },
+                    {
+                        "id": "11310US97g7us7kV7xEyA_zIwwA58VBzm",
+                        "type": "video"
+                    },
+                    {
+                        "id": "19EEhMMuFmkb9EKuVaDUxxVt06_7MwVJC",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1xJSZuwc0AfJxSIdGMnNg6FP8NvHTnf4J",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1xGFMxW18aX0Vd7FzOBu_etrJceHcKTzT",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1YVoQZvxd27TzQopTVV5sNWC9bgzO7L9C",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1u74q6MWnVIxrXAFTuHosA2AmvI2MqWgT",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1fhzy5zD9JOdGQ95auXO19NSgPTxzWFkf",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1IyrGGP7t4O0KQDv2qPCcs_CGlnqAtyZ_",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1LlHcku2vIIZlZj_pNchFaWd4s2xKR-Tm",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1-8-F0Rjc-j8TfUcLM6vitNQ2inIfjXC_",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1Nu--isfU8s52S4U363kcFqXIm0Abk7pj",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1G8IxSZ6qpv-5rMMfVvVfPXT69XnBEKqc",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1_Gjch3k5wbYB89aL3anWk_btd0VxD9Xn",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1RhCnTXOKO2Ix9CBjQxuV5yH3-FRfPJsT",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1U5R5YXMdz1ISklbi9gSjKXLoSB69wu_B",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1Eh7AEDFE88Q0egvRSJWwSnAFboakvwJs",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1oukU-zUvEvNUdx_ikTE1g4HH_IfGhXSw",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1aAfih_Dmw6Fk5V5tmIVT4VKRClp0iT4w",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1ftFw4w7TAnpej5pq0bREyh_HHitSYgrP",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1sSzzwyMnHaHGX0CrRh6iuB-HWMkevDze",
+                        "type": "video"
+                    },
+                    {
+                        "id": "16efr368XOX7YdxEwGqJyIu393KC41gwv",
+                        "type": "image"
+                    },
+                    {
+                        "id": "11psDwk3ftH9AwzaI8SDdgFXCiR5cJe71",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1SoT6pdJrSOgfk7tEhBqFCRSknfVt2tmO",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1EDgfEIPqZRu76eBDrwFRLFlQ7PDpcP6i",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1ruS4x192FZx-1ZRwwqHcChRFukfAN8Rw",
+                        "type": "image"
+                    },
+                    {
+                        "id": "13v-wMqTsB8ZH2yUtTkg7LR_aFt2H4Krf",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1on7Eq54qi-Pa30a44bwc_ZL8jFZZgHxs",
+                        "type": "image"
+                    },
+                    {
+                        "id": "11sNC0qcYUhqUlBWxj72YLN_dyJ86NYr4",
+                        "type": "video"
+                    },
+                    {
+                        "id": "10OJyL20ZBgg4RBCaznAYAmr7Higq_mao",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1NAp7QcuP0jAJ6xE-2pkzCF2wDoXt-GUh",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1hqbedJYnlkSFGFoxIRwD3B1N2obGoB7S",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1cKUpHamPrsTwaxX8v95ZDsX3CzAGcc_c",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1kxm9BhPW-xiCVfeSuie5uXYoP33UKpSm",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1aWb29v9aU1VBfEauQfvu7uw8aTYSbNGG",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1A5Nc7UUf9XRKtLaeUkW2tt2F6Ooh0DSL",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1MFojv1jixAqZ5GkzMByKibgz_HiQZupz",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1RKgE9lgnUuDo--Qm8mgzOX3MnKpkkONy",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1nB4caCRJaPxVtdPOCw4KHUorGOKdnUFB",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1Xf6tKTM9cgkLFb0WGxo-RCCi20eb0Bd1",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1OmmDdJCTah4qmoc_EQ2VqmHGtgBMD7h9",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1_AoNV575KwiEWu-WEeo6M04NCASH0jIR",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1JXeJI0A5_s7CgZqbgsLTkX6m8BBI-S_H",
+                        "type": "video"
+                    },
+                    {
+                        "id": "12bJrnHIGjv1gOJ5bQckLMqyNmDO-c4M3",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1wcmDGaqizHkTOFSIMyDeHdRyMVBKjIS5",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1EeP4Es_38o_zHAKw4oUiz2Gr1-YUTPfj",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1PxIdCNg2F-_e9WjT008B-_RXZVWWYkl-",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1gRX3ghZtH57DY0T4eXWzfXw5VnLZN_e6",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1aj_W7N8FHQRGdxNqYRNYcODR47i4WBuj",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1R570h-QBuDrwm-c2p0f_KL29OdNAAein",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1rylwmhIckweKgpuKYBz7Vz9iyCtbNydv",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1nZz1MYRdVUi7_ihyqeNS7CHI7KSLEpQl",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1hXz7pBxb4yo-mv9WsP4mozl2jxps3y2Q",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1JX6n43REXvFdIN2mGlHIUEiDwgyO0Scm",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1Tl1ydRehFbZ-UCx4GrO8UU0W1v8iwafr",
+                        "type": "video"
+                    },
+                    {
+                        "id": "14gRdKGgE3iao2brId3yvqotNLRRUmwJ_",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1_uMVZkbOGqYQR176mUPZBQP6bPQnBsLN",
+                        "type": "image"
+                    },
+                    {
+                        "id": "15gs6l2b35KtkR689W36U8SsVHTnaOwo6",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1-bXSdEJGRVXAT2iQk0g0kRdsaP58NN7I",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1Az3ZsBaDoOYuGTh9oaohUjWr71Fwf-wU",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1Ii3ImNZ-lHfFx76IpEB5O19OEqngTXbN",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1i7arL1bUxKXrBilGUg_Ad4uuHE5RJ_4M",
+                        "type": "video"
+                    },
+                    {
+                        "id": "1lzO4Vt5OsrLPHMjpyXvUDLueqI5bU1WE",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1YFENef2scQ_rxh8MwXPjYLCmTFs8AzkF",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1oWX0Vo-15zRUAw6_uwInIz26X_DCl0nj",
+                        "type": "image"
+                    },
+                    {
+                        "id": "159KglX-U3GYz4fHxOo9mh6Wo1AsfRcYl",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1K_TSfZsS9uEoFSzhsmoOFmQ11i82BCvB",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1ASaiZhMG3AafA-FjAZrFjvU1qWd6Z7oe",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1GpDTUWhRPk_HkifJUw_rki9SYPwDXtlH",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1S-DOjkLgAnGQP98YeLO__rSKvFaVWGUL",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1XfAhQsc_xqYbayo79JNKHpQ3L-ZyirAb",
+                        "type": "image"
+                    },
+                    {
+                        "id": "15bBA0vimsalJqbl7YB9VXmT6W1GfCbSQ",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1VVekGv1mynoypmy0IssageILxFj04NiK",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1oN-bbwcXjPkfYqPIN3p_hMz7l4DKZiSc",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1jsewQPXjwMkgslvO7wQ3HNsVjg7I-JWj",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1xOEaDjqFGihVp8vNzqsS2T1jWiBvKaGF",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1zLh8B1iGE26v3xQhqbKPKJqH83PKXyyh",
+                        "type": "image"
+                    },
+                    {
+                        "id": "16UbhD1bMUScVcP-xyjXK8TUcuxgNGPQt",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1XVJNlSaG59xk1BHT3LaokjxCOAbSWZ5m",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1JKk2iIVfY-Sn2Aa617KtFbfifP_Z6N_v",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1YR7pxG-DpiwM_1mP6vT-w7X018V2dKWa",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1e5oFjFXEQ_O6scArvyNF0u2YFUGgxM45",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1IMuGvAjok9lYylk0qdEKlS6JWVhVloX5",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1djg9bUnyT5tqwHls1KXI7ew1dykCMbgg",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1H3gYqHWifpqgl9R3lLEVJcD5xITGQ2z3",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1HZY72ddOy2EiwGmIPzzle42UBkDgW0ts",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1rfHqSG_tpr5gD8c2zkVMQZgokhEtuBkQ",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1C19WuOo8XiNL3uFCkX82wzjmrJdtNC2j",
+                        "type": "image"
+                    },
+                    {
+                        "id": "1CX1BiqmZHH_9tJ7VHvBIwmXrQkPMa39n",
+                        "type": "image"
+                    }
+                ]
+            }
+        ]
+    },
+    {
         "name": "Circle D Flow Clips",
         "id": "1sqF3XgJsgIeimREnm5eblsKC_tRwsq0S",
         "chapters": [
