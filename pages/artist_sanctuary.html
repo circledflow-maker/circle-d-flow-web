@@ -210,6 +210,9 @@
             <button onclick="goToMarketplace()" class="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-[#d4af37] hover:bg-white/10 transition shadow-[0_0_15px_rgba(212,175,55,0.3)] border border-[#d4af37]/30 mt-4">
                 <span class="material-symbols-outlined">storefront</span>
             </button>
+            <button onclick="window.Flowee?.toggleChat()" class="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-[#00ffcc] hover:bg-white/10 transition shadow-[0_0_15px_rgba(0,255,204,0.4)] border border-[#00ffcc]/40 mt-2" title="Flowee Guide">
+                <span class="material-symbols-outlined">smart_toy</span>
+            </button>
         </div>
         
         <!-- Mobile Camera Controls (Removed for now) -->
@@ -803,8 +806,18 @@
                     }
                     document.getElementById('data-content').innerHTML = contentHtml;
 
-                    // Trigger Flowee Deep Flow if not complete
-                    if(!deepFlowCompleted && artistData.artist_type !== 'traveler') {
+                    // Flowee sanctuary guide (synced with global Flowee agent)
+                    if (window.FloweeSanctuaryGuide) {
+                        let navProfile = null;
+                        try {
+                            const { data: { user: navUser } } = await window.supabaseClient.auth.getUser();
+                            if (navUser) {
+                                const { data: prof } = await window.supabaseClient.from('profiles').select('*').eq('id', navUser.id).single();
+                                navProfile = prof;
+                            }
+                        } catch (_) {}
+                        setTimeout(() => window.FloweeSanctuaryGuide.start(artistData, navProfile), 3000);
+                    } else if (!deepFlowCompleted && artistData.artist_type !== 'traveler') {
                         setTimeout(startInSanctuaryDeepFlow, 2000);
                     }
                 }
@@ -2680,5 +2693,16 @@
         });
 
     </script>
+    <div id="flowee-agent" style="position:fixed;bottom:88px;right:12px;z-index:99999;pointer-events:auto;width:48px;height:48px"></div>
+    <script src="../js/agents/agent.js?v=3.2"></script>
+    <script src="../js/agents/helper.js?v=3.2"></script>
+    <script src="../js/agents/pusher.js?v=3.2"></script>
+    <script src="../js/agents/flowee.js?v=3.3"></script>
+    <script src="../js/data/lisbon_quests.js?v=1.1"></script>
+    <script src="../js/data/adinkra_catalog.js?v=1.0"></script>
+    <script src="../js/agents/flowee_voice.js?v=1.1"></script>
+    <script src="../js/agents/flowee_notify.js?v=2.1"></script>
+    <script src="../js/agents/flowee_sanctuary_guide.js?v=1.0"></script>
+    <script src="../js/agents/adinkra_sync.js?v=1.0"></script>
 </body>
 </html>

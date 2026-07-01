@@ -89,6 +89,9 @@ class FloweeAgent {
             "dashboard.html": { mode: "guide", intro: "Welcome to your Command Center.", action: "Complete your profile to light up the grid." },
             "academy.html": { mode: "guide", intro: "The Academy lists every participant.", action: "Tap a manga panel — edit your bio and media descriptions." },
             "hall_of_legends.html": { mode: "guide", intro: "The Brotherhood ranks Navigators by XP.", action: "Rise in the Atlas, then return here to see your rank sync." },
+            "artist_sanctuary.html": { mode: "guide", intro: "Welcome to the Artist Sanctuary — Akwaba zone, Stage, and Archive await.", action: "I can route you to the Lisbon Atlas or your nearest quest." },
+            "quest_map.html": { mode: "guide", intro: "The Lisbon Atlas links streets to quests and Adinkra runes.", action: "Tap NEARBY for closest missions." },
+            "quest_board.html": { mode: "guide", intro: "The Codex holds protocols and GPS quests.", action: "Accept a quest, then verify on the Atlas." },
             "marketplace.html": { mode: "active", intro: "The Bazaar. Where skills become currency.", target: "#upload-btn" },
             "battle.html": { mode: "active", intro: "The Arena. Prove your resonance.", target: "#leaderboard" },
             "default": { mode: "guide", intro: "The Flow is strong here..." }

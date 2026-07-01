@@ -774,9 +774,13 @@ class QuestEngine {
         grid.innerHTML = '';
         entries.forEach(([venueId, data]) => {
             const venue = (window.getAllVenues?.() || []).find((v) => v.id === venueId);
+            const runeId = data.rune || venue?.rune || venueId;
+            const meta = window.getAdinkraMeta?.(runeId) || { name: data.name || venue?.runeName, meaning: '', glyph: '◈' };
+            const glyph = window.renderAdinkraGlyph?.(runeId, data.tier) || `<span style="font-size:1.2em">◈</span>`;
             const chip = document.createElement('div');
             chip.className = `adinkra-chip ${data.tier || 'bronze'}`;
-            chip.innerHTML = `<div style="font-size:1.2em;margin-bottom:4px">◈</div>${data.name || venue?.runeName || venueId}<br><span style="opacity:0.7">${(data.tier || 'bronze').toUpperCase()}</span>`;
+            chip.title = meta.meaning || '';
+            chip.innerHTML = `${glyph}<div style="font-size:0.65em;margin-top:4px">${meta.name}</div><span style="opacity:0.7;font-size:0.55em">${(data.tier || 'bronze').toUpperCase()}</span>`;
             grid.appendChild(chip);
         });
     }

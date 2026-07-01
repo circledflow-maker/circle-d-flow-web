@@ -184,7 +184,7 @@ class AtlasEngine {
     collectBronze(venueId, silent) {
         const v = window.getAllVenues().find((x) => x.id === venueId);
         if (!v) return;
-        if (!this.saveRune(venueId, 'bronze', { rune: v.rune, name: v.runeName })) return;
+        if (!this.saveRune(venueId, 'bronze', { rune: v.rune, name: v.runeName, sphere: 'Map' })) return;
         const xp = 50;
         if (window.QuestEngine) window.QuestEngine.grantReward(`RUNE-BRONZE-${venueId}`, xp, `Bronze: ${v.runeName}`);
         if (!silent && window.Flowee) window.Flowee.talk(true, `Bronze rune ${v.runeName} collected! +${xp} Wander EXP. Anchor Silver with a scan on site.`, 'celebrate');
