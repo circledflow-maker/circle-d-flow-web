@@ -1,0 +1,7 @@
+{
+  "scan_date": "2026-06-30",
+  "pages_checked": 0,
+  "errors_open": 0,
+  "fixed_count": 0,
+  "notes": "Run scripts/daily_system_health_agent.py to populate this file."
+}

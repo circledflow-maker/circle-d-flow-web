@@ -134,6 +134,25 @@ class FlowCompassAgent {
             .beaming-menu.active { opacity: 1; transform: translate(-50%, -50%) scale(1); pointer-events: auto; backdrop-filter: blur(4px); }
             .beam-option { position: absolute; background: rgba(5,5,5,0.95); border: 1px solid var(--haki-gold); color: var(--haki-gold); padding: 7px 16px; border-radius: 25px; font-size: 11px; font-family: 'Space Mono', monospace; font-weight: bold; cursor: pointer; transition: 0.3s; white-space: nowrap; box-shadow: 0 5px 15px rgba(0,0,0,0.6); }
             .beam-option:hover { background: var(--haki-gold); color: black; transform: scale(1.15) translateY(-5px); box-shadow: 0 0 20px var(--haki-gold); }
+            .daily-activity-pill { position: absolute; top: -48px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.75); border: 1px solid rgba(212,175,55,0.35); color: #ccc; font-size: 10px; padding: 6px 14px; border-radius: 20px; white-space: nowrap; z-index: 400; display: flex; align-items: center; gap: 6px; font-family: 'Space Mono', monospace; }
+            @media (max-width: 640px) { .daily-activity-pill { top: -42px; font-size: 9px; padding: 5px 10px; } }
+
+            /* SPHERE WORLD SHEET (mobile-friendly hub list) */
+            .sphere-sheet-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 800; opacity: 0; pointer-events: none; transition: 0.3s; }
+            .sphere-sheet-backdrop.active { opacity: 1; pointer-events: auto; }
+            .sphere-world-sheet { position: fixed; left: 0; right: 0; bottom: 0; z-index: 900; max-height: 78vh; background: linear-gradient(to top, #0a0a0a, #111); border-top: 2px solid var(--haki-gold); border-radius: 16px 16px 0 0; transform: translateY(105%); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; padding: 0 0 env(safe-area-inset-bottom); }
+            .sphere-world-sheet.active { transform: translateY(0); }
+            .sphere-sheet-header { padding: 16px 20px 8px; border-bottom: 1px solid rgba(212,175,55,0.2); display: flex; justify-content: space-between; align-items: center; }
+            .sphere-sheet-title { font-family: 'Cinzel', serif; color: var(--haki-gold); font-size: 1rem; letter-spacing: 0.12em; }
+            .sphere-sheet-close { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #aaa; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; }
+            .sphere-sheet-hint { padding: 0 20px 8px; font-size: 10px; color: #666; font-family: 'Space Mono', monospace; }
+            .sphere-world-list { overflow-y: auto; padding: 8px 12px 16px; display: flex; flex-direction: column; gap: 8px; -webkit-overflow-scrolling: touch; }
+            .sphere-world-btn { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; padding: 14px 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(212,175,55,0.25); border-radius: 12px; color: #e8e8e8; cursor: pointer; transition: 0.2s; }
+            .sphere-world-btn:hover, .sphere-world-btn:active { background: rgba(212,175,55,0.12); border-color: var(--haki-gold); }
+            .sphere-world-btn .sw-icon { color: var(--haki-gold); font-size: 22px; flex-shrink: 0; }
+            .sphere-world-btn .sw-label { font-family: 'Space Mono', monospace; font-size: 11px; font-weight: bold; letter-spacing: 0.08em; color: var(--haki-gold); }
+            .sphere-world-btn .sw-desc { font-size: 10px; color: #888; margin-top: 2px; }
+            .sphere-sheet-enter-hub { margin: 0 12px 12px; padding: 12px; background: rgba(212,175,55,0.15); border: 1px dashed var(--haki-gold); border-radius: 10px; color: var(--haki-gold); font-family: 'Cinzel', serif; font-size: 12px; cursor: pointer; text-align: center; }
             
             #flowee-guide-msg { position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.85); border: 1px solid var(--haki-gold); padding: 12px 25px; border-radius: 12px; color: var(--haki-gold); font-family: 'Cinzel', serif; font-size: 1rem; text-align: center; opacity: 0; transition: 0.5s; pointer-events: none; z-index: 500; min-width: 320px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
             #flowee-guide-msg.visible { opacity: 1; }
@@ -219,35 +238,76 @@ class FlowCompassAgent {
                     </div>
                 </div>
             </div>
+            <div id="daily-activity-pill" class="daily-activity-pill">
+                <span class="material-symbols-outlined" style="font-size:14px;">footprint</span>
+                <span id="daily-steps-display">0</span> steps · <span id="daily-distance-display">0.00 km</span>
+            </div>
             <div id="flowee-guide-msg"></div>
         `;
 
         this.container = parent.querySelector('.orrery-container');
 
-        const innerOrbit = [
-            { id: 'HighPalast', icon: 'temple_hindu', angle: 270, label: 'High Palast', color: '#FFD700', options: [{l:'THE PALAST', u:'high_palast.html'}, {l:'Museum', u:'palast_museum.html'}, {l:'Library', u:'palast_library.html'}] },
-            { id: 'Bazaar', icon: 'storefront', angle: 30, label: 'BAZAAR', color: '#cd7f32', options: [{l:'THE BAZAAR', u:'marketplace.html'}, {l:'MY STALL', u:'marketplace-stall.html'}, {l:'THE FORGE', u:'marketplace-upload.html'}] },
-            { id: 'Battle', icon: 'swords', angle: 150, label: 'Battleground', color: '#ef4444', options: [{l:'THE COLOSSEUM', u:'battle.html'}, {l:'Arena', u:'arena.html'}, {l:'Hall of Legends', u:'hall_of_legends.html'}] }
-        ];
-
-        // Determine path prefix based on location
         const isSubDir = window.location.pathname.includes('/pages/');
-        const prefix = isSubDir ? '../' : '';
+        const prefix = isSubDir ? '../' : 'pages/';
+        const worlds = window.getSphereWorlds ? window.getSphereWorlds(prefix) : {};
 
-        const outerOrbit = [
-            { id: 'Vision', icon: 'visibility', angle: 0, label: 'Vision', color: '#a855f7', options: [{l:'THE VISION', u: prefix + 'pages/vision_oasis.html'}, {l:'SACRED GARDEN', u: prefix + 'pages/kiss-your-heart.html'}, {l:'GOALS', u: prefix + 'pages/goal_purpose.html'}] },
-            { id: 'Sound', icon: 'headphones', angle: 72, label: 'Sound', color: '#06b6d4', options: [{l:'THE SIGNAL', u: prefix + 'pages/outbreak_tunes.html'}, {l:'SANCTUARY', u: prefix + 'pages/qters_sanctuary.html'}, {l:'LABORATORY', u: prefix + 'pages/live_lab.html'}] },
-            { id: 'Taste', icon: 'restaurant', angle: 144, label: 'Taste', color: '#22c55e', options: [{l:'THE KITCHEN', u: prefix + 'pages/african-queen-kitchen.html'}, {l:'FLAVOR QUEST', u: prefix + 'pages/flavor_quest.html'}, {l:'INVESTORS', u: prefix + 'pages/investor_portal.html'}] },
-            { id: 'Connection', icon: 'hub', angle: 216, label: 'Connection', color: '#ec4899', options: [{l:'RESONANCE BAR', u: prefix + 'pages/coop.html'}, {l:'THE SANCTUARY', u: prefix + 'pages/chat.html'}, {l:'FLOW FINDER', u: prefix + 'pages/partner-scanner.html'}] },
-            { id: 'Quest', icon: 'explore', angle: 288, label: 'Quest Log', color: '#94a3b8', options: [
-                {l:'QUEST BOARD', u: prefix + 'pages/quest_board.html'}, 
-                {l:'MAP', u: prefix + 'pages/quest_map.html'},
-                {l:'CALENDAR', u: prefix + 'pages/calendar.html'}
-            ] }
-        ];
+        const innerIds = ['HighPalast', 'Academy', 'Bazaar', 'Battle'];
+        const outerIds = ['Vision', 'Sound', 'Taste', 'Connection', 'Quest'];
+        const angles = { HighPalast: 270, Academy: 0, Bazaar: 90, Battle: 180, Vision: 0, Sound: 72, Taste: 144, Connection: 216, Quest: 288 };
+
+        const innerOrbit = innerIds.map(id => this.buildPlanetNode(id, worlds[id], angles[id]));
+        const outerOrbit = outerIds.map(id => this.buildPlanetNode(id, worlds[id], angles[id]));
+
+        this.planetDefaults = {};
+        this.planetOptions = {};
+        this.planetMeta = {};
+        [...innerOrbit, ...outerOrbit].forEach(p => {
+            this.planetDefaults[p.id] = p.hub;
+            this.planetOptions[p.id] = p.options;
+            this.planetMeta[p.id] = { label: p.label, flowee: p.flowee };
+        });
+
+        this.ensureSphereSheet();
 
         this.renderOrbit(innerOrbit, 'inner');
         this.renderOrbit(outerOrbit, 'outer');
+    }
+
+    buildPlanetNode(id, world, angle) {
+        if (!world) return { id, icon: 'public', angle, label: id, color: '#d4af37', options: [], hub: '#' };
+        return {
+            id,
+            icon: world.icon,
+            angle,
+            label: world.label,
+            color: world.color,
+            hub: world.hub,
+            flowee: world.flowee,
+            options: world.destinations.map(d => ({ ...d }))
+        };
+    }
+
+    ensureSphereSheet() {
+        if (document.getElementById('sphere-sheet-backdrop')) return;
+        const backdrop = document.createElement('div');
+        backdrop.id = 'sphere-sheet-backdrop';
+        backdrop.className = 'sphere-sheet-backdrop';
+        backdrop.onclick = () => this.closeSphereSheet();
+        const sheet = document.createElement('div');
+        sheet.id = 'sphere-world-sheet';
+        sheet.className = 'sphere-world-sheet';
+        sheet.innerHTML = `
+            <div class="sphere-sheet-header">
+                <div class="sphere-sheet-title" id="sphere-sheet-title">WORLD</div>
+                <button type="button" class="sphere-sheet-close" aria-label="Close">&times;</button>
+            </div>
+            <div class="sphere-sheet-hint" id="sphere-sheet-hint">Tap a destination · tap sphere again for main hub</div>
+            <div class="sphere-world-list" id="sphere-world-list"></div>
+            <button type="button" class="sphere-sheet-enter-hub" id="sphere-sheet-hub">Enter Main Hub</button>
+        `;
+        sheet.querySelector('.sphere-sheet-close').onclick = () => this.closeSphereSheet();
+        document.body.appendChild(backdrop);
+        document.body.appendChild(sheet);
     }
 
     renderOrbit(planets, type) {
@@ -268,55 +328,145 @@ class FlowCompassAgent {
         });
     }
 
-    toggleMenu(planetId, options = []) {
-        // Immediate Transitions for all 8 Worlds
-        const urlMap = {
-            'HighPalast': 'akademie.html',
-            'Bazaar': 'marketplace.html',
-            'Battle': 'colosseum.html',
-            'Vision': 'vision_oasis.html',
-            'Sound': 'sound_dashboard.html',
-            'Taste': 'taste_world_entry.html',
-            'Connection': 'modal',
-            'Quest': 'quest_map.html',
-            'Core': null // Core stays on dashboard
-        };
+    resolveUrl(u) {
+        if (!u || u.startsWith('http')) return u;
+        const isSubDir = window.location.pathname.includes('/pages/');
+        if (isSubDir && u.startsWith('pages/')) return u.replace(/^pages\//, '');
+        if (!isSubDir && !u.startsWith('pages/') && !u.startsWith('../')) return 'pages/' + u;
+        return u;
+    }
 
+    toggleMenu(planetId, options = []) {
         if (planetId === 'Core') {
             this.resetFocus();
             this.activePlanet = 'Core';
-            if (window.SoulPass) { 
-                document.querySelector('.orrery-container').classList.add('master-active'); 
-                window.SoulPass.open(); 
-                this.updateFlowee('Core'); 
+            if (window.SoulPass) {
+                document.querySelector('.orrery-container').classList.add('master-active');
+                window.SoulPass.open();
+                this.updateFlowee('Core');
             } else {
                 console.error("SoulPass agent is offline or missing.");
             }
             return;
         }
 
-          if (planetId === 'Connection') {
-              const modal = document.getElementById('connection-modal');
-              if (modal) {
-                  modal.classList.remove('opacity-0', 'pointer-events-none');
-                  this.resetFocus();
-              }
-              return;
-          }
-
-          const isSubDir = window.location.pathname.includes('/pages/');
-          const prefix = isSubDir ? '' : 'pages/';
-          const targetUrl = prefix + urlMap[planetId];
-
-        if (planetId === 'Vision') {
-            this.triggerVisionOasis(targetUrl);
-        } else {
-            this.beamTo(targetUrl);
+        const opts = options.length ? options : (this.planetOptions[planetId] || []);
+        if (this.activePlanet === planetId) {
+            const hub = this.planetDefaults[planetId];
+            if (hub) {
+                if (planetId === 'Vision') this.triggerVisionOasis(this.resolveUrl(hub));
+                else this.beamTo(this.resolveUrl(hub));
+            }
+            return;
         }
+
+        this.showSphereSheet(planetId, opts);
+    }
+
+    showSphereSheet(planetId, options) {
+        this.resetFocus();
+        this.activePlanet = planetId;
+        const planet = document.getElementById(`planet-${planetId}`);
+        if (planet) planet.classList.add('focused');
+        const container = document.querySelector('.orrery-container');
+        if (container) container.classList.add('focus-mode');
+
+        const meta = this.planetMeta[planetId] || {};
+        const title = document.getElementById('sphere-sheet-title');
+        const list = document.getElementById('sphere-world-list');
+        const hubBtn = document.getElementById('sphere-sheet-hub');
+        const backdrop = document.getElementById('sphere-sheet-backdrop');
+        const sheet = document.getElementById('sphere-world-sheet');
+
+        if (title) title.textContent = (meta.label || planetId).toUpperCase();
+        if (list) {
+            list.innerHTML = '';
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'sphere-world-btn';
+                btn.innerHTML = `
+                    <span class="material-symbols-outlined sw-icon">${opt.icon || 'arrow_forward'}</span>
+                    <div><div class="sw-label">${opt.l}</div><div class="sw-desc">${opt.desc || ''}</div></div>`;
+                btn.onclick = (e) => {
+                    e.stopPropagation();
+                    this.navigateDestination(planetId, opt);
+                };
+                list.appendChild(btn);
+            });
+        }
+        if (hubBtn) {
+            hubBtn.onclick = () => {
+                const hub = this.planetDefaults[planetId];
+                if (hub) this.navigateDestination(planetId, { u: hub, transition: planetId === 'Vision' ? 'vision' : null });
+            };
+        }
+        backdrop.classList.add('active');
+        sheet.classList.add('active');
+        this.updateFlowee(planetId);
+    }
+
+    closeSphereSheet() {
+        document.getElementById('sphere-sheet-backdrop')?.classList.remove('active');
+        document.getElementById('sphere-world-sheet')?.classList.remove('active');
+    }
+
+    navigateDestination(planetId, opt) {
+        const url = this.resolveUrl(opt.u);
+        this.closeSphereSheet();
+        if (opt.gate) { this.showPasswordGate(); return; }
+        if (opt.transition === 'vision' || planetId === 'Vision' && opt.l.includes('PLACE')) {
+            this.triggerVisionOasis(url);
+            return;
+        }
+        this.beamTo(url);
+    }
+
+    showBeamingMenu(planetId, options) {
+        /* Radial menu for desktop when few options; sheet is default for rich worlds */
+        if (options.length <= 3 && window.innerWidth > 768) {
+            this._showRadialMenu(planetId, options);
+        } else {
+            this.showSphereSheet(planetId, options);
+        }
+    }
+
+    _showRadialMenu(planetId, options) {
+        this.resetFocus();
+        this.activePlanet = planetId;
+        const planet = document.getElementById(`planet-${planetId}`);
+        if (!planet || !options.length) return;
+        planet.classList.add('focused');
+        const container = document.querySelector('.orrery-container');
+        if (container) container.classList.add('focus-mode');
+
+        const menu = document.createElement('div');
+        menu.className = 'beaming-menu active';
+        menu.id = `beam-${planetId}`;
+        const count = options.length;
+        options.forEach((opt, i) => {
+            const angle = (i / count) * Math.PI * 2 - Math.PI / 2;
+            const r = count > 3 ? 95 : 80;
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'beam-option';
+            btn.textContent = opt.l;
+            btn.style.left = `calc(50% + ${Math.cos(angle) * r}px)`;
+            btn.style.top = `calc(50% + ${Math.sin(angle) * r}px)`;
+            btn.style.transform = 'translate(-50%, -50%)';
+            btn.onclick = (e) => {
+                e.stopPropagation();
+                this.navigateDestination(planetId, opt);
+            };
+            menu.appendChild(btn);
+        });
+        planet.appendChild(menu);
+        this.updateFlowee(planetId);
     }
 
     resetFocus() {
         this.activePlanet = null;
+        this.closeSphereSheet();
         const c = document.querySelector('.orrery-container');
         if(c) c.classList.remove('focus-mode', 'master-active');
         document.querySelectorAll('.planet-node').forEach(n => n.classList.remove('focused'));
@@ -327,8 +477,12 @@ class FlowCompassAgent {
     updateFlowee(p, req, lab) {
         const msg = document.getElementById('flowee-guide-msg');
         let txt = "Awaiting Navigation Coordinates.";
-        if(p === 'Locked') txt = `Access Denied. Reach Level ${req} to unlock ${lab}.`;
-        else { const ms = { 'Bazaar': "Captain, the merchants have fresh artifacts from Alfama!", 'HighPalast': "The High Palast. Your Legacy, sovereign.", 'Battle': "The Arena awaits champions. Ready to spar?", 'Sound': "DJ Qter is broadcasting on a new frequency.", 'Vision': "Visual archives of the Golden Age.", 'Core': "Accessing Neural Profile and Security." }; txt = ms[p] || txt; }
+        if (p === 'Locked') txt = `Access Denied. Reach Level ${req} to unlock ${lab}.`;
+        else if (this.planetMeta[p]?.flowee) txt = this.planetMeta[p].flowee;
+        else {
+            const ms = { 'Bazaar': "Captain, the merchants have fresh artifacts from Alfama!", 'HighPalast': "The High Palast. Your Legacy, sovereign.", 'Academy': "The Academy archives every Navigator — tap a manga panel to explore.", 'Battle': "The Arena awaits champions. Ready to spar?", 'Sound': "DJ Qter is broadcasting on a new frequency.", 'Vision': "Visual archives of the Golden Age.", 'Taste': "AkwabaLX — taste the flow.", 'Connection': "Sanctuaries and resonance links await.", 'Quest': "Atlas, Codex, Quiz — pick your path.", 'Core': "Accessing Neural Profile and Security." };
+            txt = ms[p] || txt;
+        }
         msg.innerText = `FLOWEE: "${txt}"`; msg.classList.add('visible');
     }
 
@@ -361,11 +515,18 @@ class FlowCompassAgent {
         }, 1800);
     }
 
-    bindEvents() { document.addEventListener('click', (e) => { if (!e.target.closest('.planet-node') && !e.target.closest('.master-core') && !e.target.closest('.beaming-menu')) { this.resetFocus(); } }); }
+    bindEvents() {
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.planet-node') && !e.target.closest('.master-core') && !e.target.closest('.beaming-menu') && !e.target.closest('.sphere-world-sheet')) {
+                this.resetFocus();
+            }
+        });
+        window.addEventListener('resize', () => { this.isMobile = window.innerWidth < 768; });
+    }
     showPasswordGate() { document.getElementById('sound-gate').classList.add('visible'); setTimeout(() => document.getElementById('gate-pass').focus(), 100); }
     closeGate() { document.getElementById('sound-gate').classList.remove('visible'); }
     checkGate(c) {
-        if(['QTER', '1988', 'FLOW', '1234'].includes(c.toUpperCase())) window.location.href = 'sound_dashboard.html';
+        if(['QTER', '1988', 'FLOW', '1234'].includes(c.toUpperCase())) this.beamTo(this.resolveUrl('pages/sound_dashboard.html'));
         else { const b = document.querySelector('.gate-box'); b.classList.add('shake'); document.getElementById('gate-error').style.display = 'block'; setTimeout(() => { b.classList.remove('shake'); document.getElementById('gate-error').style.display = 'none'; }, 2000); document.getElementById('gate-pass').value = ''; }
     }
 }

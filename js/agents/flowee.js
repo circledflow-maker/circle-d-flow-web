@@ -70,6 +70,8 @@ class FloweeAgent {
         this.dialogueMatrix = {
             "index.html": { mode: "scan", intro: "Frequency detected! I am Flowee. Your resonance is weak, Drifter." },
             "dashboard.html": { mode: "guide", intro: "Welcome to your Command Center.", action: "Complete your profile to light up the grid." },
+            "academy.html": { mode: "guide", intro: "The Academy lists every participant.", action: "Tap a manga panel — edit your bio and media descriptions." },
+            "hall_of_legends.html": { mode: "guide", intro: "The Brotherhood ranks Navigators by XP.", action: "Rise in the Atlas, then return here to see your rank sync." },
             "marketplace.html": { mode: "active", intro: "The Bazaar. Where skills become currency.", target: "#upload-btn" },
             "battle.html": { mode: "active", intro: "The Arena. Prove your resonance.", target: "#leaderboard" },
             "default": { mode: "guide", intro: "The Flow is strong here..." }
@@ -775,7 +777,7 @@ class FloweeAgent {
         // FIX: Z-Index 10000 to beat Overlay
         const isMobile = window.innerWidth < 768;
         container.style.position = 'fixed';
-        container.style.bottom = isMobile ? '120px' : '40px';
+        container.style.bottom = isMobile ? 'calc(88px + env(safe-area-inset-bottom))' : '40px';
         container.style.right = isMobile ? '20px' : '40px';
         container.style.zIndex = '999999';
         container.style.display = 'flex';

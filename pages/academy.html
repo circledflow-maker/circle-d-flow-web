@@ -2,219 +2,106 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Kingdom of Science | Circle D Flow</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>The Academy | Circle D Flow</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Reenie+Beanie&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <link rel="stylesheet" href="../css/styles.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        stone: '#8A8A8C',
-                        blueprint: '#0047AB',
-                        scienceGreen: '#00FF41',
-                        chalk: '#F0F0F0',
-                    },
-                    fontFamily: {
-                        hand: ['"Reenie Beanie"', 'cursive'],
-                        code: ['"Share Tech Mono"', 'monospace'],
-                    },
-                    backgroundImage: {
-                        'stone-texture': "url('https://www.transparenttextures.com/patterns/concrete-wall.png')",
-                        'blueprint-grid': "linear-gradient(#0047AB 1px, transparent 1px), linear-gradient(90deg, #0047AB 1px, transparent 1px)",
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        /* PETRIFICATION EFFECT */
-        .petrified-layer {
-            position: absolute;
-            inset: 0;
-            background-color: #5a5a5a;
-            background-image: url('https://www.transparenttextures.com/patterns/cracked-concrete.png');
-            z-index: 10;
-            transition: all 1.5s cubic-bezier(0.4, 0, 0.2, 1);
-            clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
-        }
-
-        .depetrified {
-            clip-path: polygon(0 0, 100% 0, 100% 0, 0 0); /* Reveals underneath */
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .science-glow {
-            box-shadow: 0 0 15px #00FF41, inset 0 0 10px #00FF41;
-        }
-
-        /* Blueprint Card Hover */
-        .blueprint-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .blueprint-card:hover {
-            transform: translateY(-5px) rotate(1deg);
-            box-shadow: 10px 10px 0px #0047AB;
-        }
-    </style>
+    <link rel="stylesheet" href="../css/academy-world.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/agents/supabase_client.js?v=4.1"></script>
 </head>
-<body class="bg-[#1a1a1a] text-white min-h-screen relative overflow-x-hidden">
+<body class="academy-page has-imperial-hud">
 
-    <!-- Mobile Header & Burger Menu -->
-    <div class="fixed top-6 left-6 z-[100]">
-        <button id="burger-btn" class="w-10 h-10 flex flex-col justify-center items-center gap-1.5 bg-black border border-[#d4af37]/50 rounded cursor-pointer z-[101]">
-            <span class="w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
-            <span class="w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
-            <span class="w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
-        </button>
-    </div>
-
-    <!-- Fullscreen Mobile Menu Overlay -->
-    <div id="mobile-menu" class="fixed inset-0 bg-black/95 z-[90] opacity-0 pointer-events-none transition-opacity duration-300 flex flex-col items-center justify-center">
-        <nav class="flex flex-col gap-6 text-center">
-            <a href="../index.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">Zum Orbit</a>
-            <a href="bantaba.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">Nach Bantaba</a>
-            <a href="about.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">About Us</a>
-            <a href="portfolio_anime_reality.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">Portfolio</a>
-            <a href="heart.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">Heart</a>
-            <a href="luvo.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">Luvo</a>
-        </nav>
-    </div>
-
-
-    <!-- NAVIGATION (Standard) -->
-    <nav class="fixed top-0 w-full z-50 bg-black/80 backdrop-blur border-b border-white/10 h-16 flex items-center justify-between px-6">
-        <a href="dashboard.html" class="font-code text-scienceGreen tracking-widest text-xs hover:underline flex items-center gap-2">
-            <span class="material-symbols-outlined text-sm">science</span> KINGDOM OF SCIENCE
+    <nav class="academy-nav-top">
+        <a href="dashboard.html" class="academy-nav-btn">
+            <span class="material-symbols-outlined" style="font-size:18px">orbit</span> Orbit
         </a>
-        <div class="flex gap-4">
-             <a href="dashboard.html" class="text-white/50 hover:text-white font-code text-xs">HUB</a>
-             <a href="codex.html" class="text-white/50 hover:text-white font-code text-xs">CHRONO-RECORD</a>
-        </div>
+        <span style="font-family:Cinzel,serif;color:#d4af37;font-size:12px;letter-spacing:0.2em">THE ACADEMY</span>
+        <a href="hall_of_legends.html" class="academy-nav-btn">
+            Brotherhood <span class="material-symbols-outlined" style="font-size:18px">military_tech</span>
+        </a>
     </nav>
 
-    <!-- HEADER SECTION (The Stone World) -->
-    <section class="relative h-[60vh] flex items-center justify-center overflow-hidden">
-        <!-- Background (Techno) -->
-        <div class="absolute inset-0 bg-blueprint bg-opacity-20 bg-[size:40px_40px] opacity-50 z-0" style="background-image: linear-gradient(#0047AB 1px, transparent 1px), linear-gradient(90deg, #0047AB 1px, transparent 1px);"></div>
-        
-        <!-- Foreground (Stone Overlay) -->
-        <div id="hero-stone" class="petrified-layer flex items-center justify-center">
-            <h1 class="text-8xl md:text-9xl font-hand text-stone-300 tracking-tighter drop-shadow-xl select-none">STONE WORLD</h1>
-        </div>
+    <div class="academy-sync-bar">
+        <span class="academy-sync-pill">LVL <span id="sync-level">1</span></span>
+        <span class="academy-sync-pill"><span id="academy-sync-exp">0</span> XP</span>
+        <span class="academy-sync-pill"><span id="academy-sync-flow">0</span> FLOW</span>
+        <span class="academy-sync-pill"><span id="sync-karma">0</span> Karma</span>
+    </div>
 
-        <!-- Hidden Tech Title -->
-        <div class="relative z-0 text-center">
-            <h1 class="text-7xl md:text-8xl font-code text-scienceGreen font-bold tracking-tight animate-pulse">KINGDOM OF SCIENCE</h1>
-            <p class="font-hand text-2xl text-white mt-4 rotate-2">"From Stone to Stars... We rebuild everything!"</p>
-        </div>
+    <header class="academy-header">
+        <h1>NAVIGATOR ACADEMY</h1>
+        <p style="font-size:12px;color:#888;max-width:480px;margin:8px auto 0;font-family:'Space Mono',monospace">
+            Manga portfolios · locations visited · roles &amp; shared identity from the Circle system.
+        </p>
+    </header>
 
-        <div class="absolute bottom-10 animate-bounce cursor-pointer z-50 text-white mixer-blend-difference" onclick="KingdomScience.crackStone()">
-            <span class="material-symbols-outlined text-4xl">keyboard_double_arrow_down</span>
-        </div>
-    </section>
+    <div class="academy-filters">
+        <button type="button" class="academy-filter-btn active" data-filter="all">ALL</button>
+        <button type="button" class="academy-filter-btn" data-filter="artist">ARTISTS</button>
+        <button type="button" class="academy-filter-btn" data-filter="crew">CREW</button>
+        <button type="button" class="academy-filter-btn" data-filter="navigator">NAVIGATORS</button>
+        <a href="akademie.html" class="academy-filter-btn" style="text-decoration:none;display:inline-flex;align-items:center">MANGA ARCHIVES →</a>
+    </div>
 
-    <!-- CONTENT: THE BLUEPRINT ENGINE -->
-    <section class="py-24 px-6 md:px-24 relative z-20 bg-[#111]">
-        <div class="flex justify-between items-end mb-12 border-b-2 border-dashed border-white/20 pb-4">
-            <div>
-                <span class="font-hand text-4xl text-yellow-400 -rotate-2 inline-block">Roadmap of Inventions</span>
-                <h2 class="font-code text-4xl text-white">THE BLUEPRINT ENGINE</h2>
+    <div id="academy-manga-grid" class="academy-manga-grid"></div>
+
+    <!-- Detail sheet -->
+    <div id="academy-detail-sheet" class="academy-detail-sheet">
+        <div class="academy-detail-inner">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
+                <div>
+                    <h2 id="academy-detail-name" style="font-family:Cinzel,serif;color:#d4af37;font-size:1.25rem"></h2>
+                    <p id="academy-detail-role" style="font-size:11px;color:#888;margin-top:4px"></p>
+                </div>
+                <button type="button" id="academy-detail-close" class="academy-nav-btn" style="padding:6px 10px">✕</button>
             </div>
-            <div class="text-right hidden md:block">
-                <p class="font-code text-xs text-scienceGreen">SYS.STATUS: ONLINE</p>
-                <p class="font-code text-xs text-white/50">RES: 10,000,000%</p>
-            </div>
-        </div>
+            <div id="academy-detail-stats" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px"></div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="blueprint-grid">
-            <!-- Cards Injected by JS -->
-            <!-- Example Static Card -->
-            <div class="blueprint-card bg-blueprint/10 border-2 border-blueprint p-6 relative group overflow-hidden">
-                <div class="absolute top-2 right-2 text-blueprint opacity-50 font-code text-6xl font-bold">01</div>
-                <h3 class="font-hand text-3xl text-white mb-2 rotate-1">Kit-Kat's Truck</h3>
-                <div class="h-32 bg-blueprint/20 my-4 border border-dashed border-white/30 flex items-center justify-center">
-                    <span class="material-symbols-outlined text-6xl text-white/20">local_shipping</span>
-                </div>
-                <p class="font-code text-xs text-white/70 mb-4 h-12">Mobile food unit. Requires: Engine parts, Oil, and heavy metal plating.</p>
-                
-                <div class="w-full bg-black h-2 rounded-full overflow-hidden mb-2">
-                    <div class="bg-scienceGreen h-full w-[45%]"></div>
-                </div>
-                <div class="flex justify-between text-[10px] font-code text-white/50 mb-4">
-                    <span>PROGRESS</span>
-                    <span>45%</span>
-                </div>
+            <section class="academy-section">
+                <h3>LOCATIONS VISITED</h3>
+                <div id="academy-detail-locations" class="academy-locations"></div>
+            </section>
 
-                <button class="w-full py-2 bg-blueprint text-white font-code font-bold hover:bg-white hover:text-blueprint transition-colors uppercase">
-                    Donate Material
-                </button>
-            </div>
-        </div>
-    </section>
+            <section class="academy-section">
+                <h3>ABOUT · EDITABLE</h3>
+                <textarea id="academy-bio-edit" class="academy-desc-edit" placeholder="Share your story…"></textarea>
+                <button type="button" id="academy-save-bio" class="academy-save-btn">Save Bio</button>
+            </section>
 
-    <!-- CONTENT: LABORATORY QUIZ -->
-    <section class="py-24 px-6 md:px-24 bg-stone-900 relative overflow-hidden">
-        <div class="absolute top-0 right-0 p-24 opacity-5 pointer-events-none">
-            <span class="material-symbols-outlined text-[300px]">biotech</span>
-        </div>
+            <section class="academy-section">
+                <h3>PORTFOLIO · TAP TO PLAY</h3>
+                <div id="academy-detail-portfolio" class="academy-portfolio-grid"></div>
+            </section>
 
-        <div class="max-w-3xl mx-auto bg-black/50 border-4 border-white p-8 md:p-12 relative">
-            <!-- Tape Effect -->
-            <div class="absolute -top-6 left-1/2 -translate-x-1/2 w-32 h-10 bg-yellow-400/80 rotate-1 shadow-lg"></div>
-
-            <h2 class="font-hand text-5xl text-center text-white mb-8">The Laboratory of Knowledge</h2>
-            
-            <div id="quiz-container" class="space-y-6">
-                <!-- Question -->
-                <div class="bg-white/5 p-6 border-l-4 border-scienceGreen">
-                    <p class="font-code text-lg text-white mb-4">Q1: Which frequency resonates best with the Circle's Core Value?</p>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <button onclick="KingdomScience.checkAnswer(this, false)" class="p-3 border border-white/20 hover:bg-white/10 text-left font-hand text-xl transition-all">A. 440Hz (Standard)</button>
-                        <button onclick="KingdomScience.checkAnswer(this, true)" class="p-3 border border-white/20 hover:bg-white/10 text-left font-hand text-xl transition-all">B. 432Hz (Natural Flow)</button>
-                    </div>
-                </div>
-            </div>
-
-            <div id="quiz-reward" class="hidden mt-8 text-center animate-bounce">
-                <div class="inline-block p-4 border-2 border-scienceGreen rounded-full bg-scienceGreen/10">
-                    <span class="material-symbols-outlined text-4xl text-scienceGreen">science</span>
-                </div>
-                <p class="font-code text-scienceGreen mt-2">NEW FORMULA ACQUIRED!</p>
+            <div style="display:flex;gap:8px;margin-top:12px">
+                <a href="quest_map.html" class="academy-nav-btn" style="flex:1;justify-content:center">Atlas</a>
+                <a href="quiz.html" class="academy-nav-btn" style="flex:1;justify-content:center">Science Quiz</a>
+                <a href="laboratory.html" class="academy-nav-btn" style="flex:1;justify-content:center">Lab</a>
             </div>
         </div>
-    </section>
+    </div>
 
-    <!-- Flowee Container -->
-    <div id="flowee-lab" class="fixed bottom-8 left-8 z-50 pointer-events-none"></div>
+    <!-- Media player -->
+    <div id="academy-player-modal" class="academy-player-modal">
+        <div class="academy-player-top">
+            <button type="button" id="academy-player-close" class="academy-nav-btn">← Back</button>
+            <span style="font-size:11px;color:#d4af37;font-family:'Space Mono',monospace">SYSTEM PLAYER</span>
+        </div>
+        <div class="academy-player-media" id="academy-player-wrap"></div>
+        <label style="font-size:10px;color:#888;margin-top:12px">DESCRIPTION (editable)</label>
+        <textarea id="academy-desc-edit" class="academy-desc-edit"></textarea>
+        <button type="button" id="academy-save-desc" class="academy-save-btn">Save Description</button>
+    </div>
 
-    <script src="../js/kingdom_science.js"></script>
-    <script src="../js/agents/visual_eye.js"></script>
-    <script src="../js/agents/helper.js"></script>
+    <script src="../js/data/academy_participants.js"></script>
+    <script src="../js/data/akademie_data.js"></script>
+    <script src="../js/agents/points_sync.js"></script>
+    <script src="../js/agents/academy_world.js"></script>
     <script src="../js/agents/pusher.js"></script>
-    <script src="../js/agents/bridge_pusher.js"></script>
-    <script src="../js/agents/global_ticker.js" defer></script>
-    <script src="../js/agents/network_hub.js" defer></script>
-    <script src="../js/agents/constructor_bot.js" defer></script>
-    <script src="../js/agents/resonance_bridge.js" defer></script>
-    <script src="../js/agents/vault_space.js" defer></script>
-    <script src="../js/agents/orbital_menu.js" defer></script>
-    <script src="../js/agents/tutorial_core.js" defer></script>
-    <script src="../js/agents/visual_integrity.js" defer></script>
-    <script src="../js/agents/sound_engineer.js" defer></script>
-    <script src="../js/agents/horizon_bar.js" defer></script>
-    <script src="../js/agents/social_matrix.js" defer></script>
-    <script src="../js/agents/flowee.js"></script>
-    <script src="../js/agents/quest_controller.js"></script> <!-- INJECTED -->
-    <div id="flowee-agent" class="fixed bottom-8 left-8 z-50 flex flex-col items-center group cursor-pointer"></div>
-
-    <!-- AUTOMATED AGENT INJECTION -->
-
-    <!-- AUTOMATED AGENT INJECTION -->
+    <script src="../js/agents/flowee.js?v=4.6"></script>
     <script src="../js/agents/imperial_hud.js" defer></script>
+    <script src="../js/agents/fitable_sync.js?v=1.0" defer></script>
 </body>
 </html>

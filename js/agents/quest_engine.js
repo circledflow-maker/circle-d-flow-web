@@ -79,7 +79,29 @@ class QuestEngine {
             }
         ];
 
+        this.mergeLocationQuests();
         this.init();
+    }
+
+    mergeLocationQuests() {
+        const lisbon = window.LISBON_QUESTS || [];
+        lisbon.forEach(lq => {
+            if (this.SYSTEM_QUESTS.some(q => q.id === lq.id)) return;
+            this.SYSTEM_QUESTS.push({
+                id: lq.id,
+                title: lq.title,
+                description: lq.description,
+                reward_exp: lq.reward_exp,
+                reward_flow: lq.reward_flow,
+                reward_rune: lq.reward_rune,
+                type: lq.type || 'location',
+                page: lq.page,
+                latitude: lq.lat,
+                longitude: lq.lng,
+                radiusM: lq.radiusM,
+                isLocation: true
+            });
+        });
     }
 
     async init() {
@@ -141,7 +163,27 @@ class QuestEngine {
         const { data: quests, error } = await this.supabase.from('user_quests').select('*');
         if(error) return console.error("Radar Fehler", error);
 
-        quests.forEach(q => this.addPinToMap(map, q));
+        const locationQuests = (window.LISBON_QUESTS || []).map(lq => ({
+            id: lq.id,
+            title: lq.title,
+            description: lq.description,
+            reward_exp: lq.reward_exp,
+            type: lq.type,
+            latitude: lq.lat,
+            longitude: lq.lng,
+            creator_id: null,
+            likes: 0,
+            isLocation: true
+        })).filter(q => q.latitude && q.longitude);
+
+        [...(quests || []), ...locationQuests].forEach(q => this.addPinToMap(map, q));
+
+        if (window.LISBON_VENUES) {
+            Object.values(window.LISBON_VENUES).flat().forEach(v => {
+                if (!v.lat) return;
+                this.addVenuePin(map, v);
+            });
+        }
 
         this.supabase
             .channel('public:user_quests')
@@ -151,6 +193,17 @@ class QuestEngine {
                 if(window.Pusher) window.Pusher.showToast("NEUES SIGNAL ENTDECKT", "xp");
             })
             .subscribe();
+    }
+
+    addVenuePin(map, venue) {
+        const icon = L.divIcon({
+            className: 'venue-node-pin',
+            html: '<div style="width:10px;height:10px;border-radius:50%;background:#06b6d4;box-shadow:0 0 8px #06b6d4;border:1px solid #fff;"></div>',
+            iconSize: [10, 10]
+        });
+        L.marker([venue.lat, venue.lng], { icon }).addTo(map).bindPopup(
+            `<strong>${venue.name}</strong><br><span style="color:#888;font-size:11px;">${venue.zone || 'Lisbon'}</span>`
+        );
     }
 
     addPinToMap(map, quest) {
@@ -363,16 +416,28 @@ class QuestEngine {
         }
 
         // SYSTEM PROTOCOL FALLBACK (If Database Empty)
+        const locationQuests = (window.LISBON_QUESTS || []).map(lq => ({
+            ...lq,
+            latitude: lq.lat,
+            longitude: lq.lng,
+            reward_exp: lq.reward_exp,
+            likes: Math.floor(Math.random() * 50) + 10,
+            type: lq.type || 'location'
+        }));
+
         if (quests.length === 0) {
             console.log("[Codex] System Protocol Active. Loading Standard Tutorial Sequence.");
-            quests = this.SYSTEM_QUESTS.map(q => ({
+            quests = [...this.SYSTEM_QUESTS.map(q => ({
                 ...q,
-                latitude: 38.71, // Mock coords for map
-                longitude: -9.14,
+                latitude: q.latitude || 38.71,
+                longitude: q.longitude || -9.14,
                 likes: Math.floor(Math.random() * 500)
-            }));
+            })), ...locationQuests];
             
             if(window.Pusher) window.Pusher.showToast("SYSTEM PROTOCOLS LOADED", "success");
+        } else {
+            const ids = new Set(quests.map(q => q.id));
+            locationQuests.forEach(lq => { if (!ids.has(lq.id)) quests.push(lq); });
         }
 
         this.allQuests = quests;
@@ -483,59 +548,58 @@ class QuestEngine {
     // --- 3. THE BROTHERHOOD (Leaderboard) ---
     async initBrotherhood() {
         console.log("🏛️ [Brotherhood] Hierarchy Loaded.");
-        
+        if (window.PointsSync) await window.PointsSync.refresh();
+
         let agents = [];
         try {
-            // 1. Leaderboard
-            const { data, error } = await this.supabase.from('profiles').select('*').order('exp', { ascending: false }).limit(20);
+            const { data, error } = await this.supabase.from('profiles').select('*').order('exp', { ascending: false }).limit(30);
             if(error) throw error;
             agents = data || [];
         } catch(e) {
-             console.warn("[Brotherhood] Connection Fluctuation. Accessing Local Cache (Demo Mode).", e);
+             console.warn("[Brotherhood] Connection fluctuation. Demo roster.", e);
         }
 
-        // DEMO MODE FALLBACK
         if(agents.length === 0) {
-            console.log("[Brotherhood] No agents found. Simulating Roster.");
             agents = [
                 { id: 'bot-1', username: 'FlowMaster_Zero', exp: 9001, karma: 50 },
                 { id: 'bot-2', username: 'Neon_Ninja', exp: 5000, karma: 20 },
                 { id: 'bot-3', username: 'Cyber_Muse', exp: 3200, karma: 30 },
                 { id: 'bot-me', username: (this.profile?.username || 'Initiate'), exp: (this.profile?.exp || 0), karma: 0 }
             ];
-            // Sort simulated
             agents.sort((a,b) => b.exp - a.exp);
-            if(window.Pusher) window.Pusher.showToast("DEMO MODE ACTIVE: SIMULATED AGENTS LOADED", "error");
+            if(window.Pusher) window.Pusher.showToast("DEMO MODE: SIMULATED AGENTS", "error");
         }
 
         const list = document.getElementById('leaderboard-list');
         if(list) {
             list.innerHTML = '';
-            
             agents.forEach((ag, idx) => {
                  const div = document.createElement('div');
                  div.className = 'leaderboard-item';
                  div.innerHTML = `
-                    <div class="agent-link" onclick="QuestEngine.openNeighborOrbit('${ag.id}', '${ag.username}')" style="cursor:pointer; display:flex; align-items:center;">
-                        <span class="rank-num" style="color:${idx < 3 ? 'gold' : '#aaa'}; width:30px;">#${idx+1}</span>
+                    <div class="agent-link" style="cursor:pointer;display:flex;align-items:center;gap:8px;" onclick="window.location.href='academy.html?user=${ag.id}'">
+                        <span class="rank-num" style="color:${idx < 3 ? 'gold' : '#aaa'};width:30px;">#${idx+1}</span>
                         <span class="agent-name hover:text-cyan-400 transition-colors">${ag.username || 'Unknown'}</span>
                     </div>
-                    <div style="color:gold">${ag.exp} XP</div>
+                    <div style="color:gold">${(ag.exp || 0).toLocaleString()} XP</div>
                  `;
                  list.appendChild(div);
             });
         }
-        
-        // Auto-load my own badges
-        if(this.profile) this.renderBadges(this.profile.exp, 'my-badge-case'); // Assuming this ID exists in HTML
+
+        const myExp = document.getElementById('brotherhood-my-exp');
+        if (myExp && this.profile) myExp.textContent = (this.profile.exp || 0).toLocaleString();
+
+        if(this.profile) this.renderBadges(this.profile.exp, 'my-badge-case');
     }
 
     openNeighborOrbit(userId, username) {
-        if(userId === this.user.id) return alert("Das bist du selbst.");
-        
-        // Open Comms directly
-        if(window.confirm(`Vebindung zu ${username} herstellen?`)) {
-            this.sendFriendRequest(userId);
+        if(this.user && userId === this.user.id) {
+            window.location.href = 'academy.html';
+            return;
+        }
+        if(window.confirm(`Open ${username} in the Academy?`)) {
+            window.location.href = `academy.html?user=${userId}`;
         }
     }
 
