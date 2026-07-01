@@ -248,7 +248,7 @@ class FlowCompassAgent {
         this.container = parent.querySelector('.orrery-container');
 
         const isSubDir = window.location.pathname.includes('/pages/');
-        const prefix = isSubDir ? '../' : 'pages/';
+        const prefix = isSubDir ? '' : 'pages/';
         const worlds = window.getSphereWorlds ? window.getSphereWorlds(prefix) : {};
 
         const innerIds = ['HighPalast', 'Academy', 'Bazaar', 'Battle'];
@@ -330,10 +330,23 @@ class FlowCompassAgent {
 
     resolveUrl(u) {
         if (!u || u.startsWith('http')) return u;
-        const isSubDir = window.location.pathname.includes('/pages/');
-        if (isSubDir && u.startsWith('pages/')) return u.replace(/^pages\//, '');
-        if (!isSubDir && !u.startsWith('pages/') && !u.startsWith('../')) return 'pages/' + u;
-        return u;
+        let path = u.replace(/^\.\.\//, '').replace(/^pages\//, '');
+        if (!path.includes('.') && !path.includes('?')) path += '.html';
+        const inPages = window.location.pathname.includes('/pages/');
+        return inPages ? path : `pages/${path}`;
+    }
+
+    navigateDestination(planetId, opt) {
+        const url = this.resolveUrl(opt.u);
+        if (window.WorldAccess && !window.WorldAccess.canAccess(url, planetId, opt)) return;
+        this.closeSphereSheet();
+        if (opt.gate) { this.showPasswordGate(); return; }
+        if (opt.transition === 'vision' || (planetId === 'Vision' && opt.l && opt.l.includes('PLACE'))) {
+            this.triggerVisionOasis(url);
+            return;
+        }
+        if (window.WorldAccess) window.WorldAccess.dailyCheckIn(planetId);
+        this.beamTo(url);
     }
 
     toggleMenu(planetId, options = []) {
@@ -409,17 +422,6 @@ class FlowCompassAgent {
     closeSphereSheet() {
         document.getElementById('sphere-sheet-backdrop')?.classList.remove('active');
         document.getElementById('sphere-world-sheet')?.classList.remove('active');
-    }
-
-    navigateDestination(planetId, opt) {
-        const url = this.resolveUrl(opt.u);
-        this.closeSphereSheet();
-        if (opt.gate) { this.showPasswordGate(); return; }
-        if (opt.transition === 'vision' || planetId === 'Vision' && opt.l.includes('PLACE')) {
-            this.triggerVisionOasis(url);
-            return;
-        }
-        this.beamTo(url);
     }
 
     showBeamingMenu(planetId, options) {

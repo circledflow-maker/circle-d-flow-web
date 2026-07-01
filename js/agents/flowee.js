@@ -15,7 +15,24 @@ class FloweeAgent {
         // --- KNOWLEDGE BASE (FAQ) ---
         this.knowledgeBase = [
             {
-                keywords: ["certificate", "rank", "nen", "class", "adinkra", "level"],
+                keywords: ["quest log", "atlas", "codex", "scriptorium", "brotherhood", "quest map"],
+                question: "How does the Quest Log work?",
+                answer: "Quest Log workflow: 1) ATLAS — Lisbon map missions. 2) CODEX — active quests. 3) SCRIPTORIUM — lore (Level 2+). 4) BROTHERHOOD — rankings (Level 3+). Type 'atlas' or 'codex' to warp there.",
+                deep_link: "pages/quest_map.html"
+            },
+            {
+                keywords: ["high palast", "palast", "museum", "treasury", "bibliothek", "curator"],
+                question: "What is the High Palast?",
+                answer: "High Palast workflow: Hub → Museum (Lv2) → Library → Treasury (Lv3, 20 trust). Type 'museum' or 'palast' and I'll guide you. Restricted areas show why you're blocked.",
+                deep_link: "pages/high_palast.html"
+            },
+            {
+                keywords: ["restrict", "blocked", "access", "trust", "karma", "level"],
+                question: "Why am I blocked?",
+                answer: "Some worlds need higher Level or Karma trust. Check the Bibliothec for role requirements. Complete Atlas quests for XP and help others for Karma.",
+                deep_link: "pages/library.html"
+            },
+            {
                 question: "What is my Flow Certificate?",
                 answer: "It’s your digital DNA! It tracks your Resonance Level (RP), Nen-class, and Karma. Level up to unlock features.",
                 deep_link: "/dashboard/identity"
@@ -996,6 +1013,9 @@ class FloweeAgent {
             }, 600);
             return;
         }
+
+        // World navigation keywords (Quest Log, High Palast, etc.)
+        if (window.WorldAccess && window.WorldAccess.handleFloweeKeyword(text)) return;
 
         // Dispatch Global Event for Agentic Brain
         window.dispatchEvent(new CustomEvent('CDF_USER_CHAT', { detail: { text } }));

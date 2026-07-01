@@ -106,7 +106,9 @@ class FitableSyncAgent {
             steps: this.steps,
             distance_m: Math.round(this.distanceM),
             updated_at: new Date().toISOString()
-        }, { onConflict: 'id,activity_date' });
+        }, { onConflict: 'id,activity_date' }).then(({ error }) => {
+            if (error && error.code !== 'PGRST205' && error.code !== '42P01') console.warn('[Fitable] cloud sync:', error.message);
+        });
     }
 
     async fetchCloud() {

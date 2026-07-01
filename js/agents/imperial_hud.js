@@ -73,13 +73,18 @@ class ImperialHUDAgent {
             /* Responsive Shrink */
             @media (max-width: 768px) {
                 .imperial-hud {
-                    padding: 0 15px;
+                    padding: 0 8px;
                     height: 60px;
                     bottom: 10px;
                     top: auto;
+                    left: 1%;
+                    right: 1%;
                     width: 98%;
+                    max-width: 100vw;
+                    box-sizing: border-box;
                 }
-                .hud-center { display: none; } /* Hide Ticker on mobile portrait to save space, or make it smaller */
+                .hud-main-row { padding: 0 8px; }
+                .hud-center { display: none; }
                 .cqr-logo span { display: none; }
             }
 

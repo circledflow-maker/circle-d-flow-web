@@ -404,6 +404,31 @@
     <script src="../js/agents/helper.js"></script>
     <script src="../js/agents/pusher.js"></script>
     <script src="../js/agents/imperial_hud.js" defer></script>
+    <script src="../js/data/world_roles.js"></script>
+    <script src="../js/agents/world_access.js"></script>
     <script src="../js/agents/library_agent.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const list = document.getElementById('glossary-list');
+            if (!list || !window.WORLD_ROLES) return;
+            const section = document.createElement('div');
+            section.innerHTML = '<h3 class="font-cinzel text-lg mt-4 mb-2">World Roles & Restrictions</h3>';
+            Object.entries(window.WORLD_ROLES).forEach(([id, world]) => {
+                const block = document.createElement('div');
+                block.className = 'mb-3 text-sm';
+                block.innerHTML = `<strong>${world.label}</strong>`;
+                const ul = document.createElement('ul');
+                ul.className = 'list-disc pl-4 text-xs mt-1';
+                Object.entries(world.destinations || {}).forEach(([file, r]) => {
+                    const li = document.createElement('li');
+                    li.textContent = `${r.role}: ${file} — Lv${r.minLevel || 1}, trust ${r.trust || 0}${r.karma ? `, karma ${r.karma}` : ''}`;
+                    ul.appendChild(li);
+                });
+                block.appendChild(ul);
+                section.appendChild(block);
+            });
+            list.appendChild(section);
+        });
+    </script>
 </body>
 </html>
