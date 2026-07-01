@@ -16,16 +16,80 @@ class SoulPassAgent {
             name: localStorage.getItem('cdf_user_username') || "Drifter",
             rank: localStorage.getItem('cdf_user_rank') || "Voyager",
             guild: "",
+            exp: 0,
+            karma: 0,
+            level: 1,
+            steps: 0,
+            runes: 0,
             preferred_contact_method: "system_chat",
             contact_details: "{}"
         };
 
+        window.addEventListener('POINTS_SYNCED', (e) => this.onPointsSynced(e.detail));
+        window.addEventListener('DAILY_ACTIVITY_UPDATED', (e) => {
+            this.userData.steps = e.detail?.steps || 0;
+            this.refreshIdentityStats();
+        });
+        window.addEventListener('RUNE_COLLECTED', () => {
+            this.userData.runes = Object.keys(JSON.parse(localStorage.getItem('cdf_adinkra_runes') || '{}')).length;
+            this.refreshIdentityStats();
+        });
+
         this.init();
+    }
+
+    onPointsSynced(profile) {
+        if (!profile) return;
+        this.userData.name = profile.username || this.userData.name;
+        this.userData.exp = profile.exp || 0;
+        this.userData.karma = profile.karma || 0;
+        this.userData.level = profile.level || Math.max(1, Math.floor((profile.exp || 0) / 200) + 1);
+        const fc = profile.flow_class || 'Navigator';
+        const admin = (fc.toLowerCase() === 'adminmaster') || localStorage.getItem('cdf_role') === 'AdminMaster';
+        this.userData.rank = admin
+            ? `LEVEL ${this.userData.level} · AdminMaster`
+            : `LEVEL ${this.userData.level} · ${fc}`;
+        this.userData.guild = profile.guild || '';
+        const nameDisp = document.getElementById('sn-display-name');
+        if (nameDisp) nameDisp.innerText = (this.userData.name || 'Navigator').toUpperCase();
+        this.refreshIdentityStats();
+    }
+
+    refreshIdentityStats() {
+        const set = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
+        set('sn-stat-exp', (this.userData.exp || 0).toLocaleString());
+        set('sn-stat-karma', (this.userData.karma || 0).toLocaleString());
+        set('sn-stat-steps', (this.userData.steps || 0).toLocaleString());
+        set('sn-stat-runes', String(this.userData.runes || 0));
+        const rankEl = document.getElementById('sn-stat-rank');
+        if (rankEl) rankEl.textContent = this.userData.rank || 'LEVEL 1';
+        const guildDisp = document.getElementById('sn-display-guild');
+        if (guildDisp) {
+            const g = this.userData.guild;
+            guildDisp.innerText = g
+                ? `Guild of ${g.charAt(0).toUpperCase() + g.slice(1)}`
+                : 'Unassigned';
+        }
+        const badge = document.getElementById('sn-admin-badge');
+        if (badge) {
+            const isAdmin = localStorage.getItem('cdf_role') === 'AdminMaster' || (this.userData.rank || '').includes('AdminMaster');
+            badge.style.display = isAdmin ? 'inline-block' : 'none';
+        }
+    }
+
+    loadDailySteps() {
+        const key = `cdf_daily_${new Date().toISOString().slice(0, 10)}`;
+        try {
+            const d = JSON.parse(localStorage.getItem(key) || '{}');
+            this.userData.steps = d.steps || 0;
+        } catch (_) {}
+        this.userData.runes = Object.keys(JSON.parse(localStorage.getItem('cdf_adinkra_runes') || '{}')).length;
     }
 
     async init() {
         console.log(`[${this.name}] Forging the Soul Nexus...`);
         this.injectStyles();
+        this.loadDailySteps();
         
         if (!this.userData.preferred_contact_method) {
             this.userData.preferred_contact_method = 'system_chat';
@@ -40,22 +104,14 @@ class SoulPassAgent {
                     this.userData.email = user.email;
                     const { data: profile, error: dbErr } = await window.supabaseClient.from('profiles').select('*').eq('id', user.id).single();
                     if(profile && !dbErr) {
-                        this.userData.name = profile.username || profile.full_name || this.userData.name;
-                        this.userData.rank = "LEVEL " + (profile.level || 1) + " " + (profile.flow_class || "AGENT");
-                        this.userData.guild = profile.guild || '';
+                        if (window.WorldAccess) {
+                            window.WorldAccess.profile = profile;
+                            await window.WorldAccess.ensureAdminMaster(user, profile);
+                        }
+                        this.onPointsSynced(profile);
                         this.userData.preferred_contact_method = profile.preferred_contact_method || 'system_chat';
                         this.userData.contact_details = typeof profile.contact_details === 'string' ? profile.contact_details : JSON.stringify(profile.contact_details || {});
                         
-                        // Update UI if already rendered
-                        const nameDisp = document.getElementById('sn-display-name');
-                        if(nameDisp) nameDisp.innerText = this.userData.name.toUpperCase();
-                        
-                        const rankCard = document.querySelector('.sp-stat-val.text-white');
-                        if(rankCard) rankCard.innerText = this.userData.rank;
-                        
-                        const guildDisp = document.getElementById('sn-display-guild');
-                        if(guildDisp) guildDisp.innerText = this.userData.guild ? "Guild of " + this.userData.guild.charAt(0).toUpperCase() + this.userData.guild.slice(1) : "None";
-
                         const crystal = document.querySelector('.sp-crystal');
                         if(crystal) {
                             let detailsObj = {};
@@ -70,6 +126,7 @@ class SoulPassAgent {
                 console.warn("[SoulPass] Offline or init error:", e);
             }
         }
+        if (window.PointsSync) window.PointsSync.refresh();
     }
 
     injectStyles() {
@@ -86,12 +143,27 @@ class SoulPassAgent {
             .sn-overlay.active { opacity: 1; pointer-events: auto; }
 
             .sn-modal {
-                width: 95vw; max-width: 1000px; height: 85vh; max-height: 750px;
+                width: 100vw; max-width: 1000px; height: 100dvh; max-height: 100dvh;
                 background: linear-gradient(135deg, rgba(10,10,10,0.95), rgba(20,20,20,0.95));
                 border: 1px solid rgba(212,175,55,0.3); border-radius: 20px;
                 box-shadow: 0 0 50px rgba(0,0,0,0.8), 0 0 30px rgba(212,175,55,0.1);
                 display: flex; flex-direction: column; overflow: hidden;
                 transform: scale(0.95) translateY(20px); transition: all 0.5s cubic-bezier(0.16,1,0.3,1);
+                box-sizing: border-box;
+            }
+            @media (min-width: 769px) {
+                .sn-modal { width: 95vw; height: 85vh; max-height: 750px; border-radius: 20px; }
+            }
+            @media (max-width: 768px) {
+                .sn-modal { border-radius: 0; border-left: none; border-right: none; }
+                .sn-overlay { padding: 0; align-items: stretch; }
+                .sn-header { padding: 14px 16px; }
+                .sn-title { font-size: 1.1rem; letter-spacing: 2px; }
+                .sn-content-area { padding: 16px; }
+                .sp-crystal { width: 110px !important; height: 110px !important; }
+                .sp-stats-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+                .sn-tab { font-size: 0.7rem; padding: 10px 12px; white-space: nowrap; }
+                .sn-tab .material-symbols-outlined { display: none; }
             }
             .sn-overlay.active .sn-modal { transform: scale(1) translateY(0); }
 
@@ -210,16 +282,16 @@ class SoulPassAgent {
         sidebar.className = 'sn-sidebar';
         sidebar.innerHTML = `
             <div class="sn-tab active" onclick="SoulPass.switchTab('pane-identity', this)">
-                <span class="material-symbols-outlined">badge</span> Identity
+                <span class="material-symbols-outlined">badge</span> Profile
             </div>
             <div class="sn-tab" onclick="SoulPass.switchTab('pane-synapse', this)">
-                <span class="material-symbols-outlined">settings_input_component</span> The Synapse
+                <span class="material-symbols-outlined">settings_input_component</span> Synapse
             </div>
             <div class="sn-tab" onclick="SoulPass.switchTab('pane-network', this)">
-                <span class="material-symbols-outlined">hub</span> Network
+                <span class="material-symbols-outlined">hub</span> Comms
             </div>
             <div class="sn-tab" onclick="SoulPass.switchTab('pane-settings', this)">
-                <span class="material-symbols-outlined">settings</span> Settings
+                <span class="material-symbols-outlined">settings</span> Account
             </div>
         `;
 
@@ -239,20 +311,33 @@ class SoulPassAgent {
         paneIdentity.id = 'pane-identity';
         paneIdentity.className = 'sn-pane active';
         paneIdentity.innerHTML = `
-            <div class="sp-crystal-container">
+            <div class="sp-crystal-container" style="text-align:center;">
                 <div class="sp-crystal" ${avatarStyle}></div>
-                <h2 style="font-family: 'Cinzel', serif; font-size: 2.5rem; color: #fff; text-shadow: 0 0 15px rgba(255,255,255,0.3); margin-top: 20px;" id="sn-display-name">${(this.userData.name || "Drifter").toUpperCase()}</h2>
-                <p style="font-family: 'Space Mono', monospace; color: #d4af37; letter-spacing: 2px;">${this.userData.hashId}</p>
+                <h2 style="font-family: 'Cinzel', serif; font-size: clamp(1.5rem, 6vw, 2.5rem); color: #fff; text-shadow: 0 0 15px rgba(255,255,255,0.3); margin-top: 16px;" id="sn-display-name">${(this.userData.name || "Navigator").toUpperCase()}</h2>
+                <span id="sn-admin-badge" style="display:none; font-size:10px; color:#10b981; border:1px solid #10b981; padding:3px 8px; border-radius:12px; letter-spacing:1px;">ADMIN MASTER · ALL WORLDS</span>
+                <p style="font-family: 'Space Mono', monospace; color: #d4af37; letter-spacing: 2px; font-size: 0.75rem; margin-top: 8px;" id="sn-stat-rank">${this.userData.rank || 'LEVEL 1'}</p>
             </div>
             
             <div class="sp-stats-grid">
                 <div class="sp-stat-card">
-                    <div class="sp-stat-label">Current Rank</div>
-                    <div class="sp-stat-val text-white">${this.userData.rank}</div>
+                    <div class="sp-stat-label">Experience</div>
+                    <div class="sp-stat-val" id="sn-stat-exp">${(this.userData.exp || 0).toLocaleString()}</div>
+                </div>
+                <div class="sp-stat-card">
+                    <div class="sp-stat-label">Karma</div>
+                    <div class="sp-stat-val" id="sn-stat-karma">${this.userData.karma || 0}</div>
+                </div>
+                <div class="sp-stat-card">
+                    <div class="sp-stat-label">Steps Today</div>
+                    <div class="sp-stat-val" id="sn-stat-steps">${(this.userData.steps || 0).toLocaleString()}</div>
+                </div>
+                <div class="sp-stat-card">
+                    <div class="sp-stat-label">Adinkra Runes</div>
+                    <div class="sp-stat-val" id="sn-stat-runes">${this.userData.runes || 0}</div>
                 </div>
                 <div class="sp-stat-card">
                     <div class="sp-stat-label">Allegiance</div>
-                    <div class="sp-stat-val text-haki-gold" id="sn-display-guild">${this.userData.guild ? "Guild of " + this.userData.guild.charAt(0).toUpperCase() + this.userData.guild.slice(1) : "None"}</div>
+                    <div class="sp-stat-val text-haki-gold" id="sn-display-guild" style="font-size:0.9rem;">${this.userData.guild ? "Guild of " + this.userData.guild.charAt(0).toUpperCase() + this.userData.guild.slice(1) : "Unassigned"}</div>
                 </div>
             </div>
         `;
@@ -612,26 +697,24 @@ class SoulPassAgent {
     }
 
     open() {
-        this.init(); // Refresh data just in case
-        let overlay = document.getElementById('sp-root-overlay');
-        if (!overlay) overlay = this.renderArtifact();
-        
-        // Use requestAnimationFrame for smooth transition
-        requestAnimationFrame(() => {
-            overlay.classList.add('active');
+        this.loadDailySteps();
+        this.init().then(() => {
+            let overlay = document.getElementById('sp-root-overlay');
+            if (!overlay) overlay = this.renderArtifact();
+            else this.refreshIdentityStats();
+            requestAnimationFrame(() => overlay.classList.add('active'));
+            this.isOpen = true;
+            if (window.SoundEngineer) window.SoundEngineer.playSFX('menu_open');
+            document.body.style.overflow = 'hidden';
+            console.log(`[SoulPass] Soul Nexus Opened.`);
         });
-        this.isOpen = true;
-        if(window.SoundEngineer) window.SoundEngineer.playSFX('menu_open');
-        console.log(`[SoulPass] Soul Nexus Opened.`);
     }
 
     close() {
         const overlay = document.getElementById('sp-root-overlay');
-        if (overlay) {
-            overlay.classList.remove('active');
-            // Allow animation to finish before hiding/removing if necessary
-        }
+        if (overlay) overlay.classList.remove('active');
         this.isOpen = false;
+        document.body.style.overflow = '';
         
         const orreryContainer = document.querySelector('.orrery-container');
         if (orreryContainer) {

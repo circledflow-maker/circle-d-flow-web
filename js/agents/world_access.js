@@ -17,7 +17,39 @@ class WorldAccessAgent {
         const { data: { session } } = await sb.auth.getSession();
         if (!session) return;
         const { data } = await sb.from('profiles').select('*').eq('id', session.user.id).maybeSingle();
-        if (data) this.profile = data;
+        if (data) {
+            this.profile = data;
+            await this.ensureAdminMaster(session.user, data);
+        }
+    }
+
+  /** AdminMaster: all sphere access, normal XP/level progression */
+    isAdminMaster() {
+        if (localStorage.getItem('cdf_role') === 'AdminMaster') return true;
+        const fc = (this.profile?.flow_class || '').toLowerCase();
+        const role = (this.profile?.role || '').toLowerCase();
+        if (fc === 'adminmaster' || role === 'admin_master' || role === 'adminmaster') return true;
+        const un = (this.profile?.username || '').toLowerCase();
+        const em = (this.profile?.email || '').toLowerCase();
+        if (un === 'dark' || em === 'circle.d.flow@gmail.com') return true;
+        return false;
+    }
+
+    async ensureAdminMaster(user, profile) {
+        const un = (profile?.username || user.email?.split('@')[0] || '').toLowerCase();
+        const em = (user.email || '').toLowerCase();
+        const isOwner = un === 'dark' || em === 'circle.d.flow@gmail.com';
+        if (!isOwner) return;
+        localStorage.setItem('cdf_role', 'AdminMaster');
+        window.CDF_ADMIN_MASTER = true;
+        if ((profile.flow_class || '').toLowerCase() !== 'adminmaster') {
+            try {
+                await window.supabaseClient.from('profiles')
+                    .update({ flow_class: 'AdminMaster' })
+                    .eq('id', user.id);
+                this.profile = { ...profile, flow_class: 'AdminMaster' };
+            } catch (_) { /* RLS may block — client flag still works */ }
+        }
     }
 
     getLevel() {
@@ -42,6 +74,7 @@ class WorldAccessAgent {
     }
 
     canAccess(url, planetId, opt) {
+        if (this.isAdminMaster()) return true;
         const rule = this.ruleFor(url);
         if (!rule) return true;
         const lvl = this.getLevel();

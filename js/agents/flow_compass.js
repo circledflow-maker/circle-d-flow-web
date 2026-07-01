@@ -41,8 +41,14 @@ class FlowCompassAgent {
             try {
                 const { data: { user } } = await client.auth.getUser();
                 if(user) {
-                    const { data: profile } = await client.from('profiles').select('level, exp').eq('id', user.id).single();
-                    if(profile) this.userLevel = profile.level || this.userLevel;
+                    const { data: profile } = await client.from('profiles').select('level, exp, flow_class, username, karma').eq('id', user.id).single();
+                    if (profile) {
+                        this.userLevel = profile.level || Math.max(1, Math.floor((profile.exp || 0) / 200) + 1);
+                        if (window.WorldAccess) {
+                            window.WorldAccess.profile = profile;
+                            this.isAdminMaster = window.WorldAccess.isAdminMaster();
+                        }
+                    }
                 }
             } catch (e) { console.warn("[Orrery] Offline mode: using local level."); }
         }
@@ -340,7 +346,10 @@ class FlowCompassAgent {
         const url = this.resolveUrl(opt.u);
         if (window.WorldAccess && !window.WorldAccess.canAccess(url, planetId, opt)) return;
         this.closeSphereSheet();
-        if (opt.gate) { this.showPasswordGate(); return; }
+        if (opt.gate && !this.isAdminMaster && !(window.WorldAccess && window.WorldAccess.isAdminMaster())) {
+            this.showPasswordGate();
+            return;
+        }
         if (opt.transition === 'vision' || (planetId === 'Vision' && opt.l && opt.l.includes('PLACE'))) {
             this.triggerVisionOasis(url);
             return;
