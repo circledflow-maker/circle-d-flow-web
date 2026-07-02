@@ -1,0 +1,42 @@
+#sphere-mobile-nav {
+    position: fixed;
+    bottom: calc(72px + env(safe-area-inset-bottom));
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9990;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 6px 14px;
+    background: rgba(8, 4, 12, 0.92);
+    border: 1px solid rgba(212, 175, 55, 0.35);
+    border-radius: 999px;
+    backdrop-filter: blur(8px);
+    pointer-events: auto;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+#sphere-mobile-nav button {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 255, 204, 0.4);
+    background: rgba(0, 255, 204, 0.1);
+    color: #00ffcc;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+#sphere-nav-label {
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(212, 175, 55, 0.8);
+    min-width: 48px;
+    text-align: center;
+}
+
+@media (min-width: 769px) {
+    #sphere-mobile-nav { display: none !important; }
+}

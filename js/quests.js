@@ -8,7 +8,7 @@ class DailyQuestManager {
         this.quests = [
             { id: 1, type: 'quiz', text: 'What is the core philosophy of Circle?', options: ['Connection', 'Money', 'Fame'], correct: 0, xp: 50 },
             { id: 2, type: 'action', text: 'Check the vibe at Outbreak Tunes.', actionLink: 'outbreak_tunes.html', actionText: 'Go to Sound', xp: 50 },
-            { id: 3, type: 'action', text: 'Check the menu at African Queen.', actionLink: 'african-queen-kitchen.html', actionText: 'Go to Taste', xp: 50 },
+            { id: 3, type: 'action', text: 'Check the menu at AkwabaLX.', actionLink: 'akwaba_kitchen.html', actionText: 'Go to Taste', xp: 50 },
             { id: 4, type: 'ticker', text: 'Broadcast a status update to the network.', xp: 75 },
             { id: 5, type: 'quiz', text: 'What level unlocks the Scouter?', options: ['Level 1', 'Level 3', 'Level 5'], correct: 1, xp: 50 }
         ];

@@ -138,6 +138,9 @@ class AtlasEngine {
         } else if (!fog) {
             actions = `<button onclick="QuestEngine.acceptQuest('LQ-VENUE-${v.id}')" style="width:100%;margin-top:8px;padding:8px;background:#d4af37;color:#000;border:none;border-radius:6px;font-size:11px;cursor:pointer">ACCEPT NEARBY QUEST</button>`;
         }
+        if (v.kitchenPage) {
+            actions += `<a href="pages/${v.kitchenPage}" style="display:block;width:100%;margin-top:8px;padding:8px;background:#22c55e;color:#000;text-align:center;border-radius:6px;font-weight:bold;text-decoration:none;font-size:11px">OPEN KITCHEN MENU</a>`;
+        }
         if (tier) body += `<p style="color:${this.tierColor(tier)};font-size:11px;margin-top:6px">Tier: ${tier.toUpperCase()}</p>`;
         return `<div style="min-width:200px;font-family:monospace"><strong style="color:#d4af37">${v.name}</strong>${body}${actions}</div>`;
     }
@@ -187,7 +190,11 @@ class AtlasEngine {
         if (!this.saveRune(venueId, 'bronze', { rune: v.rune, name: v.runeName, sphere: 'Map' })) return;
         const xp = 50;
         if (window.QuestEngine) window.QuestEngine.grantReward(`RUNE-BRONZE-${venueId}`, xp, `Bronze: ${v.runeName}`);
-        if (!silent && window.Flowee) window.Flowee.talk(true, `Bronze rune ${v.runeName} collected! +${xp} Wander EXP. Anchor Silver with a scan on site.`, 'celebrate');
+        if (!silent && window.FloweeReward) {
+            window.FloweeReward.grantRune(v.rune, 'bronze');
+        } else if (!silent && window.Flowee) {
+            window.Flowee.talk(true, `Bronze rune ${v.runeName} collected! +${xp} Wander EXP. Anchor Silver with a scan on site.`, 'celebrate');
+        }
         if (window.FloweeNotify) window.FloweeNotify.send('Rune collected', `${v.runeName} — Bronze at ${v.name}`);
         this.renderVenues();
     }

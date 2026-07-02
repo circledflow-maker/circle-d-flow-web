@@ -131,9 +131,12 @@ class FloweeAgent {
                  { text: "Select a Tome from the shelf to begin learning.", target: ".library-shelf" }
             ],
             // KITCHEN
+            "akwaba_kitchen.html": [
+                 { text: "AkwabaLX at Secret Garden — soul food and pickup at the bar.", target: "h1" },
+                 { text: "Browse the menu, add pickup, and share the kitchen QR!", target: "#menu-grid" }
+            ],
             "african-queen-kitchen.html": [
-                 { text: "Smells like home! The African Queen Kitchen feeds the soul.", target: "h1" },
-                 { text: "Check the Jamtruck Progress to see when we roll out!", target: "#jamtruck-meter" }
+                 { text: "Redirecting to AkwabaLX — our first live kitchen.", target: "h1" },
             ],
             // QUEST CREATOR
             "quest-create.html": [
@@ -179,7 +182,7 @@ class FloweeAgent {
             { id: 1, page: "index.html", text: "Welcome, Traveler. Choose your tongue (Top Right) and Identify Yourself to enter the Flow.", target: ".lang-selector", check: () => localStorage.getItem('cdf_user_username') },
             { id: 2, page: "marketplace.html", text: "The Bazaar. Click on an Artifact to inspect its value.", target: ".grid", check: () => localStorage.getItem('cdf_initiation_market_visited') },
             { id: 3, page: "outbreak_tunes.html", text: "Listen... The Wisdom Rune appears after 30 seconds of resonance.", target: "#video-bg", check: () => localStorage.getItem('cdf_initiation_rune_found') },
-            { id: 4, page: "african-queen-kitchen.html", text: "Fuel for the Soul. Check the Jamtruck Progress and simulate an order.", target: "#jamtruck-slider", check: () => localStorage.getItem('cdf_initiation_kitchen_visited') },
+            { id: 4, page: "akwaba_kitchen.html", text: "Fuel for the Soul. Browse AkwabaLX menu and place a pickup order.", target: "#menu-grid", check: () => localStorage.getItem('cdf_initiation_kitchen_visited') },
             { id: 5, page: "dashboard.html", text: "The Mission Board. Open your Quests to see your path.", target: "#quest-log-btn", check: () => localStorage.getItem('cdf_initiation_quests_viewed') },
             { id: 6, page: "dashboard.html", text: "Psst... This is not for everyone. 3 clicks on the Vision-Icon... only for the Architect.", target: "#planet-Vision", check: () => localStorage.getItem('cdf_initiation_vision_found') },
             { id: 7, page: "/pages/dashboard.html", text: "The Captain's Eye. Toggle the 'Flow Sync' lever to master the system.", target: "#flow-sync-toggle", check: () => localStorage.getItem('cdf_artifact_genesis') }
@@ -360,6 +363,14 @@ class FloweeAgent {
             this.bubble.style.pointerEvents = 'none';
             if(this.talkTimeout) clearTimeout(this.talkTimeout);
         }
+    }
+
+    updateVoiceIcon() {
+        const el = document.getElementById('flowee-voice-toggle');
+        if (!el || !window.FloweeVoice) return;
+        const on = window.FloweeVoice.enabled;
+        el.textContent = on ? 'volume_up' : 'volume_off';
+        el.style.color = on ? 'rgba(0,255,204,0.8)' : 'rgba(255,255,255,0.35)';
     }
 
     highlight(selector) {
@@ -938,6 +949,7 @@ class FloweeAgent {
                          <span style="font-family: 'Cinzel', serif; color: var(--haki-gold); font-size: 0.8rem; letter-spacing: 2px; font-weight: bold;">Flowee AI</span>
                     </div>
                     <div style="display: flex; gap: 12px; align-items: center;">
+                        <span id="flowee-voice-toggle" onclick="window.FloweeVoice && window.FloweeVoice.toggle(); window.Flowee.updateVoiceIcon();" style="cursor: pointer; color: rgba(0,255,204,0.8); font-size: 18px;" class="material-symbols-outlined" title="Toggle voice">volume_up</span>
                         <span id="flowee-dismiss-btn" onclick="window.Flowee.dismissCommunityTutorial()" style="display: none; cursor: pointer; color: #EF4444; font-size: 10px; text-transform: uppercase; font-weight: bold; letter-spacing: 1px; border: 1px solid #EF4444; padding: 2px 4px; border-radius: 4px;">Dismiss Training</span>
                         <span onclick="window.Flowee.toggleChat()" style="cursor: pointer; color: rgba(255,255,255,0.5); font-size: 18px;" class="material-symbols-outlined">close</span>
                     </div>
@@ -1295,7 +1307,7 @@ class FloweeAgent {
                 }
             }},
             { triggers: ["log entry", "record", "history"], text: "Recording history... What legendary feat did you achieve?", link: "vault_event.html" },
-            { triggers: ["order fuel", "hungry", "food", "kitchen"], text: "The kitchen is hot! What's the flavor of your journey?", link: "african-queen-kitchen.html" },
+            { triggers: ["order fuel", "hungry", "food", "kitchen"], text: "AkwabaLX is live at Secret Garden! Open the kitchen menu?", link: "akwaba_kitchen.html" },
             { triggers: ["call captain", "help captain", "sos"], text: "Sending a flare to the bridge. Captain Hope will be alerted.", action: () => {
                 this.talk(true, "Flare Sent! The Captain is monitoring the sector.", "success");
                 // Mock Backend Call

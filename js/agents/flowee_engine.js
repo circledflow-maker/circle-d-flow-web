@@ -30,7 +30,7 @@ const TutorialQuests = [
         triggerAction: "PLAY_MUSIC",
         textAfterActionKey: "quest_vibe_success",
         actionBtnKey: "quest_vibe_btn",
-        targetUrl: "african-queen-kitchen.html"
+        targetUrl: "akwaba_kitchen.html"
     }
 ];
 

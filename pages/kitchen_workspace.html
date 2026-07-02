@@ -256,6 +256,18 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/agents/supabase_client.js?v=4.1"></script>
+    <script src="../js/agents/agent.js?v=3.2"></script>
+    <script src="../js/agents/flowee.js?v=3.4"></script>
+    <script src="../js/agents/flowee_voice.js?v=1.1"></script>
+    <script src="../js/agents/flowee_reward.js?v=1.0"></script>
+    <script src="../js/data/lisbon_quests.js?v=1.1"></script>
+    <script src="../js/agents/quest_engine.js?v=4.6"></script>
+    <script src="../js/data/akwaba_kitchen_data.js?v=1.0"></script>
+    <script src="../js/agents/kitchen_engine.js?v=1.0"></script>
+    <script src="../js/agents/flowee_kitchen_tour.js?v=1.0" defer></script>
+    <div id="flowee-agent" style="position:fixed;bottom:20px;right:20px;z-index:9998"></div>
     <script>
         // POS Switch Logic
         const posToggle = document.getElementById('pos-toggle');
@@ -293,10 +305,12 @@
             document.getElementById('ticket-status').style.color = 'var(--sage)';
             
             const dialog = document.getElementById('flowee-dialog');
-            dialog.innerText = "Soul Food secured! Tap me to rate the vibe or tag @akwabafoodlx on IG for +15 EXP! 📸";
+            dialog.innerText = "Soul Food secured! Tap me to rate the vibe or tag @akwabafoodlx on IG for +15 EXP!";
             dialog.classList.add('active');
             
-            alert('SYSTEM: Ticket AKW-492 Handshake Complete.\n+20 Taste EXP granted to Guest.\n+5 Trust Points granted to Kitchen.');
+            if (window.QuestEngine) window.QuestEngine.fulfillTasteQuest('LQ-T04');
+            if (window.FloweeReward) window.FloweeReward.xpToast('Soul Ticket handshake', 20);
+            else if (window.Flowee) window.Flowee.talk(true, 'Ticket AKW-492 handshake complete. +20 Taste EXP to guest, +5 Trust to kitchen.', 'celebrate');
         }
 
         // Flame Rating Simulation

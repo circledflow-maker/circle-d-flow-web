@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AkwabaLX | Secret Garden Kitchen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="../css/mobile-sphere-nav.css">
+    <script src="../js/agents/mobile_sphere_nav.js?v=1.0" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+    <script src="../js/agents/supabase_client.js?v=4.1"></script>
+    <script src="../js/agents/agent.js?v=3.2"></script>
+    <script src="../js/agents/pusher.js?v=3.2"></script>
+    <script src="../js/agents/flowee.js?v=3.4"></script>
+    <script src="../js/data/adinkra_catalog.js?v=1.0"></script>
+    <script src="../js/data/akwaba_kitchen_data.js?v=1.0"></script>
+    <script src="../js/agents/flowee_voice.js?v=1.1"></script>
+    <script src="../js/agents/flowee_reward.js?v=1.0"></script>
+    <script src="../js/agents/kitchen_engine.js?v=1.0"></script>
+    <script src="../js/agents/quest_engine.js?v=4.6"></script>
+    <script src="../js/agents/flowee_kitchen_tour.js?v=1.0" defer></script>
+    <style>
+        :root { --gold:#D4AF37; --sage:#8A9A5B; --terra:#E2725B; }
+        body { background:#0a0806; color:#fdfbf7; font-family:'Plus Jakarta Sans',sans-serif; padding-bottom:88px; }
+        .cinzel { font-family:'Cinzel',serif; }
+        .menu-card { background:rgba(20,15,10,0.9); border:1px solid rgba(212,175,55,0.25); border-radius:12px; overflow:hidden; }
+        .menu-card img { width:100%; height:120px; object-fit:cover; }
+        #cart-bar { position:fixed; bottom:72px; left:0; right:0; z-index:90; }
+        .flowee-tour-highlight { outline:2px solid #00ffcc; box-shadow:0 0 20px rgba(0,255,204,0.4); border-radius:12px; }
+    </style>
+</head>
+<body class="quest-triad-page">
+    <header class="sticky top-0 z-50 bg-black/80 backdrop-blur border-b border-[var(--gold)]/20 px-4 py-3 flex items-center gap-3">
+        <img id="kitchen-logo" src="../Assets/kitchens/akwabalx/logo.png" alt="AkwabaLX" class="w-12 h-12 rounded-full object-cover border border-[var(--gold)]/40" onerror="this.style.display='none'">
+        <div class="flex-1 min-w-0">
+            <h1 class="cinzel text-lg text-[var(--gold)] truncate">AkwabaLX</h1>
+            <p class="text-[10px] text-[var(--sage)] uppercase tracking-widest truncate">Secret Garden LX</p>
+        </div>
+        <a href="taste_world_entry.html" class="text-white/40 text-xs">← Taste</a>
+    </header>
+
+    <section class="relative">
+        <video id="hero-reel" class="w-full max-h-48 object-cover" muted loop playsinline poster="../Assets/kitchens/akwabalx/hero-1.jpg">
+            <source src="../Assets/kitchens/akwabalx/reel-hero.mp4" type="video/mp4">
+        </video>
+        <button type="button" onclick="document.getElementById('hero-reel').play()" class="absolute bottom-2 right-2 bg-black/60 px-2 py-1 text-[10px] rounded border border-white/20">▶ REEL</button>
+    </section>
+
+    <section class="px-4 py-4">
+        <p id="kitchen-tagline" class="text-sm text-white/70 italic mb-4"></p>
+        <div class="flex flex-wrap gap-2 mb-4">
+            <a href="artist_sanctuary.html" class="text-[10px] px-3 py-1.5 border border-[var(--sage)]/50 rounded-full text-[var(--sage)]">3D Sanctuary</a>
+            <a href="quest_map.html?focus=secret_garden_lx" class="text-[10px] px-3 py-1.5 border border-cyan-500/50 rounded-full text-cyan-400">Atlas Pin</a>
+            <button type="button" onclick="shareKitchen()" class="text-[10px] px-3 py-1.5 border border-[var(--gold)]/50 rounded-full text-[var(--gold)]">Share WhatsApp</button>
+        </div>
+        <div class="grid grid-cols-3 gap-2 mb-6" id="gallery-strip"></div>
+    </section>
+
+    <section class="px-4 pb-4">
+        <h2 class="cinzel text-[var(--gold)] text-sm mb-3 tracking-widest">MENU — PICKUP AT BAR</h2>
+        <div id="menu-grid" class="grid gap-3 sm:grid-cols-2"></div>
+    </section>
+
+    <section class="px-4 py-4 border-t border-white/10">
+        <h2 class="cinzel text-[var(--gold)] text-sm mb-2">NAVIGATOR OFFERS</h2>
+        <p id="discount-note" class="text-xs text-[var(--sage)] italic bg-white/5 border border-[var(--sage)]/30 rounded-lg p-3"></p>
+    </section>
+
+    <section class="px-4 py-6 border-t border-white/10">
+        <h2 class="cinzel text-[var(--gold)] text-sm mb-3">KITCHEN QR</h2>
+        <p class="text-xs text-white/50 mb-3">Scan to open menu · Share at events · Link to Secret Garden</p>
+        <div class="flex flex-col items-center gap-3">
+            <canvas id="kitchen-qr" class="bg-white p-2 rounded"></canvas>
+            <button type="button" onclick="downloadQR()" class="text-xs px-4 py-2 border border-[var(--gold)] text-[var(--gold)] rounded">Download QR</button>
+        </div>
+    </section>
+
+    <div id="cart-bar" class="hidden px-4">
+        <div class="bg-black/95 border border-[var(--gold)] rounded-xl p-3 flex items-center justify-between gap-2">
+            <span id="cart-summary" class="text-xs text-white/80"></span>
+            <button type="button" onclick="placeOrder()" class="bg-[var(--gold)] text-black text-xs font-bold px-4 py-2 rounded">ORDER PICKUP</button>
+        </div>
+    </div>
+
+    <div id="flowee-agent" style="position:fixed;bottom:90px;right:12px;z-index:9998;pointer-events:auto"></div>
+    <nav class="animus-global-nav">
+        <button onclick="location.href='quest_map.html'" class="nav-btn" id="nav-map"><span class="icon">📍</span><span class="nav-label">MAP</span></button>
+        <button onclick="location.href='quest_board.html'" class="nav-btn" id="nav-board"><span class="icon">📖</span><span class="nav-label">QUESTS</span></button>
+        <button onclick="location.href='hall_of_legends.html'" class="nav-btn" id="nav-bro"><span class="icon">🏛️</span><span class="nav-label">RANK</span></button>
+        <button onclick="window.Flowee?.toggleChat()" class="nav-btn" id="nav-comms"><span class="icon">💬</span><span class="nav-label">FLOWEE</span></button>
+        <button onclick="location.href='dashboard.html'" class="nav-btn exit"><span class="icon">⚡</span><span class="nav-label">ORBIT</span></button>
+    </nav>
+    <script src="../js/agents/quest_triad.js?v=2.1" defer></script>
+
+    <script>
+        let engine;
+        function shareKitchen() {
+            const url = window.AKWABA_KITCHEN?.whatsapp_share || location.href;
+            window.open(url, '_blank');
+        }
+        function renderMenu() {
+            const grid = document.getElementById('menu-grid');
+            grid.innerHTML = '';
+            engine.menu.forEach((item) => {
+                const card = document.createElement('div');
+                card.className = 'menu-card';
+                card.innerHTML = `
+                    ${item.image ? `<img src="${item.image}" alt="${item.name}" loading="lazy">` : ''}
+                    <div class="p-3">
+                        <div class="flex justify-between gap-2">
+                            <strong class="text-sm">${item.name}</strong>
+                            <span class="text-[var(--gold)] text-sm">€${item.price_eur.toFixed(2)}</span>
+                        </div>
+                        <p class="text-[10px] text-white/50 mt-1">${item.description || ''}</p>
+                        <button type="button" class="mt-2 w-full text-xs py-2 border border-[var(--sage)]/60 text-[var(--sage)] rounded" data-id="${item.id}">+ ADD PICKUP</button>
+                    </div>`;
+                card.querySelector('button').onclick = () => engine.addToCart(item.id);
+                grid.appendChild(card);
+            });
+        }
+        function updateCart() {
+            const bar = document.getElementById('cart-bar');
+            if (!engine.cart.length) { bar.classList.add('hidden'); return; }
+            bar.classList.remove('hidden');
+            document.getElementById('cart-summary').textContent = `${engine.cart.length} item(s) · €${engine.cartTotal().toFixed(2)}`;
+        }
+        async function placeOrder() {
+            const note = prompt('Pickup name or note (optional):') || '';
+            await engine.placeOrder(note);
+            updateCart();
+        }
+        function downloadQR() {
+            const c = document.getElementById('kitchen-qr');
+            const link = document.createElement('a');
+            link.download = 'AkwabaLX-QR.png';
+            link.href = c.toDataURL('image/png');
+            link.click();
+            if (window.QuestEngine) window.QuestEngine.fulfillTasteQuest('LQ-T03');
+        }
+        window.addEventListener('KITCHEN_CART_UPDATED', updateCart);
+        document.addEventListener('DOMContentLoaded', async () => {
+            engine = window.KitchenEngine;
+            await engine.load('akwabalx');
+            const k = engine.kitchen;
+            document.getElementById('kitchen-tagline').textContent = k.tagline || k.tagline;
+            const disc = document.getElementById('discount-note');
+            if (disc) disc.textContent = k.discount_note || window.AKWABA_KITCHEN.discount_note || 'Navigator discounts coming soon — collect Akoma rune for early access.';
+            const gal = document.getElementById('gallery-strip');
+            (k.gallery || window.AKWABA_KITCHEN.gallery).slice(0, 6).forEach((src) => {
+                const img = document.createElement('img');
+                img.src = src;
+                img.className = 'rounded-lg h-16 w-full object-cover border border-white/10';
+                gal.appendChild(img);
+            });
+            renderMenu();
+            updateCart();
+            const qrUrl = k.qr_code_data || k.qr_url || location.href;
+            QRCode.toCanvas(document.getElementById('kitchen-qr'), qrUrl, { width: 160, margin: 1 });
+            const runTutorial = () => {
+                if (!window.QuestEngine?.profile) return;
+                const tut = new URLSearchParams(location.search).get('tutorial');
+                window.QuestEngine.fulfillTasteQuest('LQ-T01');
+                if (tut) window.QuestEngine.acceptQuest(tut);
+            };
+            if (window.QuestEngine?.profile) runTutorial();
+            else window.addEventListener('PROFILE_UPDATED', runTutorial, { once: true });
+        });
+    </script>
+</body>
+</html>

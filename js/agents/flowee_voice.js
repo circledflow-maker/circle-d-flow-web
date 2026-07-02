@@ -1,5 +1,5 @@
 /**
- * Flowee Voice — English TTS with paced tour support
+ * Flowee Voice — warmer, empathetic TTS with mute toggle
  */
 (function () {
     function stripForSpeech(text) {
@@ -13,19 +13,32 @@
 
     function pickVoice() {
         const voices = window.speechSynthesis?.getVoices() || [];
-        return voices.find((v) => v.lang.startsWith('en') && /female|samantha|zira|google us english/i.test(v.name))
+        return voices.find((v) => v.lang.startsWith('en') && /samantha|zira|karen|google uk english female|microsoft.*female/i.test(v.name))
+            || voices.find((v) => v.lang.startsWith('en') && !/david|male|daniel/i.test(v.name))
             || voices.find((v) => v.lang.startsWith('en'))
             || voices[0];
     }
 
     function estimateMs(text) {
         const words = stripForSpeech(text).split(/\s+/).filter(Boolean).length;
-        return Math.max(2800, Math.min(18000, words * 480 + 800));
+        return Math.max(2600, Math.min(16000, words * 420 + 700));
     }
 
     window.FloweeVoice = {
         enabled: localStorage.getItem('cdf_flowee_voice') !== 'false',
         isSpeaking: false,
+
+        setEnabled(on) {
+            this.enabled = !!on;
+            localStorage.setItem('cdf_flowee_voice', on ? 'true' : 'false');
+            if (!on) this.stop();
+            window.dispatchEvent(new CustomEvent('FLOWEE_VOICE_TOGGLED', { detail: { enabled: on } }));
+        },
+
+        toggle() {
+            this.setEnabled(!this.enabled);
+            return this.enabled;
+        },
 
         speak(text) {
             if (!this.enabled || !('speechSynthesis' in window)) return Promise.resolve(0);
@@ -52,8 +65,9 @@
                 const voice = pickVoice();
                 if (voice) msg.voice = voice;
                 msg.lang = 'en-US';
-                msg.rate = 0.82;
-                msg.pitch = 1.02;
+                msg.rate = 0.88;
+                msg.pitch = 1.18;
+                msg.volume = 0.92;
 
                 let done = false;
                 const finish = () => {
@@ -65,13 +79,13 @@
 
                 msg.onend = finish;
                 msg.onerror = finish;
-                setTimeout(finish, est + 600);
+                setTimeout(finish, est + 500);
 
                 window.speechSynthesis.speak(msg);
             });
         },
 
-        waitAfterSpeech(extraMs = 600) {
+        waitAfterSpeech(extraMs = 500) {
             return new Promise((r) => setTimeout(r, extraMs));
         },
 

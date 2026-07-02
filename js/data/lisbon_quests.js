@@ -1,36 +1,7 @@
 /**
- * Lisbon Atlas — venues + location quests (English)
- * Sync with map nodes / gamification EXP + FLOW
+ * Lisbon Atlas — location quests (English)
+ * Venues: see lisbon_venues.js
  */
-window.LISBON_VENUES = {
-  miradouros: [
-    { id: 'mir_senhora_monte', name: 'Miradouro da Senhora do Monte', lat: 38.7193, lng: -9.1339, zone: 'high_flow' },
-    { id: 'mir_graca', name: 'Miradouro da Graça', lat: 38.7167, lng: -9.1315, zone: 'high_flow' },
-    { id: 'mir_alcantara', name: 'Miradouro de São Pedro de Alcântara', lat: 38.7156, lng: -9.1442, zone: 'high_flow' },
-    { id: 'mir_portas_sol', name: 'Miradouro das Portas do Sol', lat: 38.7118, lng: -9.1300, zone: 'high_flow' },
-    { id: 'mir_santa_luzia', name: 'Miradouro de Santa Luzia', lat: 38.7116, lng: -9.1301, zone: 'high_flow' },
-    { id: 'mir_santa_catarina', name: 'Miradouro de Santa Catarina', lat: 38.7120, lng: -9.1465, zone: 'high_flow' },
-  ],
-  parks: [
-    { id: 'parque_eduardo', name: 'Parque Eduardo VII', lat: 38.7274, lng: -9.1537, zone: 'grounding' },
-    { id: 'monsanto', name: 'Monsanto Forest Park', lat: 38.7570, lng: -9.1940, zone: 'grounding' },
-    { id: 'jardim_botanico', name: 'Jardim Botânico', lat: 38.7062, lng: -9.1444, zone: 'grounding' },
-    { id: 'estufa_fria', name: 'Estufa Fria', lat: 38.7298, lng: -9.1556, zone: 'grounding' },
-    { id: 'jardim_estrela', name: 'Jardim da Estrela', lat: 38.7158, lng: -9.1595, zone: 'grounding' },
-    { id: 'jardim_torel', name: 'Jardim do Torel', lat: 38.7205, lng: -9.1445, zone: 'grounding' },
-  ],
-  historic: [
-    { id: 'castelo', name: 'Castelo de São Jorge', lat: 38.7139, lng: -9.1334, zone: 'cultural' },
-    { id: 'belem_tower', name: 'Belém Tower', lat: 38.6916, lng: -9.2160, zone: 'cultural' },
-    { id: 'jeronimos', name: 'Jerónimos Monastery', lat: 38.6979, lng: -9.2067, zone: 'cultural' },
-    { id: 'praca_comercio', name: 'Praça do Comércio', lat: 38.7078, lng: -9.1366, zone: 'cultural' },
-    { id: 'carmo', name: 'Convento do Carmo', lat: 38.7121, lng: -9.1405, zone: 'cultural' },
-    { id: 'se_lisboa', name: 'Sé de Lisboa', lat: 38.7098, lng: -9.1332, zone: 'cultural' },
-    { id: 'lx_factory', name: 'LX Factory', lat: 38.7037, lng: -9.1782, zone: 'creative' },
-    { id: 'secret_garden_lx', name: 'Secret Garden LX', lat: 38.7200, lng: -9.1450, zone: 'community' },
-  ],
-};
-
 window.LISBON_QUESTS = [
   {
     id: 'LQ-001',
@@ -102,7 +73,70 @@ window.LISBON_QUESTS = [
     targetVenue: 'secret_garden_lx',
     lat: 38.7200, lng: -9.1450, radiusM: 60,
     reward_exp: 100, reward_flow: 15, reward_rune: 'akoma',
-    type: 'taste', page: 'african-queen-kitchen.html',
+    type: 'taste', page: 'akwaba_kitchen.html',
+  },
+  {
+    id: 'LQ-T01',
+    title: 'Taste Tutorial: Open Kitchen',
+    description: 'Open AkwabaLX kitchen profile at Secret Garden. Flowee will guide menu, QR, and pickup.',
+    targetVenue: 'akwabalx_kitchen',
+    lat: 38.72005, lng: -9.14495, radiusM: 80,
+    reward_exp: 30, reward_flow: 10, reward_rune: 'duafe',
+    type: 'taste', page: 'akwaba_kitchen.html',
+  },
+  {
+    id: 'LQ-T02',
+    title: 'Taste Tutorial: Build Pickup',
+    description: 'Add one dish to cart and tap ORDER PICKUP. Pay at the bar on arrival.',
+    targetVenue: 'akwabalx_kitchen',
+    lat: 38.72005, lng: -9.14495, radiusM: 80,
+    reward_exp: 40, reward_flow: 15, reward_rune: 'bese_saka',
+    type: 'taste', page: 'akwaba_kitchen.html',
+  },
+  {
+    id: 'LQ-T03',
+    title: 'Taste Tutorial: Share QR',
+    description: 'Download kitchen QR and share via WhatsApp — your link opens menu + Secret Garden pin.',
+    targetVenue: 'akwabalx_kitchen',
+    lat: 38.72005, lng: -9.14495, radiusM: 80,
+    reward_exp: 35, reward_flow: 10, reward_rune: 'nkonsonnkonson',
+    type: 'taste', page: 'akwaba_kitchen.html',
+  },
+  {
+    id: 'LQ-T04',
+    title: 'Taste Tutorial: Kitchen Ops',
+    description: 'Kitchen owners: open Kitchen Ops, flip Soul Ticket QR, simulate a Navigator scan.',
+    targetVenue: 'akwabalx_kitchen',
+    lat: 38.72005, lng: -9.14495, radiusM: 80,
+    reward_exp: 50, reward_flow: 20, reward_rune: 'nea_onnim',
+    type: 'taste', page: 'kitchen_workspace.html',
+  },
+  {
+    id: 'LQ-M01',
+    title: 'Bazaar Tutorial: Enter a Guild',
+    description: 'Open Grand Bazaar 3D, swipe to a guild, and tap Enter. Six guilds — one flow.',
+    targetVenue: null,
+    lat: null, lng: null, radiusM: 0,
+    reward_exp: 50, reward_flow: 15, reward_rune: 'adinkrahene',
+    type: 'bazaar', page: 'marketplace_3d.html',
+  },
+  {
+    id: 'LQ-V01',
+    title: 'Vision Tutorial: Daily Photo Mission',
+    description: 'Open Vision Studio, read today\'s mission, upload one photo or video.',
+    targetVenue: null,
+    lat: null, lng: null, radiusM: 0,
+    reward_exp: 40, reward_flow: 10, reward_rune: 'sankofa',
+    type: 'vision', page: 'vision_studio.html',
+  },
+  {
+    id: 'LQ-S01',
+    title: 'Sound Tutorial: Upload to Radio',
+    description: 'Upload a track to your sound library and add it to System Radio queue.',
+    targetVenue: null,
+    lat: null, lng: null, radiusM: 0,
+    reward_exp: 45, reward_flow: 15, reward_rune: 'nyansapo',
+    type: 'sound', page: 'system_radio.html',
   },
   {
     id: 'LQ-009',

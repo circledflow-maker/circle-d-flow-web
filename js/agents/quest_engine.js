@@ -344,6 +344,8 @@ class QuestEngine {
             if(window.Pusher) window.Pusher.showToast(`✅ ${label}: +${xp} XP`, "success");
             if(window.SoundEngineer) window.SoundEngineer.playSFX('mission_complete');
             if (window.VitalityAgent) window.VitalityAgent.addEXP(parseInt(xp));
+            if (window.FloweeReward) window.FloweeReward.xpToast(label, parseInt(xp));
+            else if (window.Flowee) window.Flowee.talk(true, `${label}: +${xp} XP`, 'celebrate');
             const accepted = this.getAcceptedQuests().filter((id) => id !== questId);
             localStorage.setItem('cdf_accepted_quests', JSON.stringify(accepted));
             await this.loadProfile();
@@ -360,10 +362,12 @@ class QuestEngine {
         if (level > prev) {
             localStorage.setItem('cdf_last_level', String(level));
             const unlock = window.LEVEL_UNLOCKS?.[level];
-            const msg = unlock
-                ? `Level ${level} — ${unlock.feature}! ${unlock.desc}`
-                : `Resonance Level ${level} reached!`;
-            if (window.Flowee) window.Flowee.talk(true, msg, 'celebrate');
+            const feature = unlock?.feature || `Level ${level}`;
+            if (window.FloweeReward) window.FloweeReward.celebrate(
+                unlock ? `Level ${level} — ${unlock.feature}! ${unlock.desc}` : `Resonance Level ${level} reached!`,
+                'celebrate'
+            );
+            else if (window.Flowee) window.Flowee.talk(true, unlock ? `Level ${level} — ${unlock.feature}!` : `Level ${level}!`, 'celebrate');
             if (window.FloweeNotify && unlock) window.FloweeNotify.levelUp(level, unlock.feature);
         }
     }
@@ -451,10 +455,13 @@ class QuestEngine {
             
             if(btn) btn.innerText = "[ ACCESS GRANTED ]";
 
-            setTimeout(() => {
-                alert(`LEVEL UP: You are now Level ${newLevel}.\nRedirecting to Mission Area...`);
-                window.Helper ? window.Helper.safeRedirect(proto.targetUrl) : window.location.href = proto.targetUrl;
-            }, 1000);
+            if (window.FloweeReward) {
+                await window.FloweeReward.levelUp(newLevel, `Protocol ${protocolIndex}`, proto.targetUrl);
+            } else {
+                setTimeout(() => {
+                    window.Helper ? window.Helper.safeRedirect(proto.targetUrl) : window.location.href = proto.targetUrl;
+                }, 1000);
+            }
 
         } catch (e) {
             console.error("[QuestEngine] Uplink Failed:", e);
@@ -743,10 +750,18 @@ class QuestEngine {
         }
         if (!btn) return;
         btn.disabled = false;
+        const isAction = ['taste', 'bazaar', 'vision', 'sound'].includes(q.type);
         if (this.isQuestComplete(q.id)) {
             btn.innerText = '[ QUEST COMPLETED ]';
             btn.style.color = '#0f0';
             btn.onclick = null;
+        } else if (isAction && q.page) {
+            btn.innerText = '[ OPEN PAGE ]';
+            btn.style.color = '#22c55e';
+            btn.onclick = () => {
+                if (!this.isQuestAccepted(q.id)) this.acceptQuest(q.id);
+                window.location.href = q.page + (q.page.includes('?') ? '&' : '?') + 'tutorial=' + q.id;
+            };
         } else if (this.isQuestAccepted(q.id)) {
             btn.innerText = '[ VERIFY GPS AT LOCATION ]';
             btn.style.color = '#0f0';
@@ -760,6 +775,17 @@ class QuestEngine {
         document.querySelectorAll('#lisbon-quest-list .quest-item').forEach((el) => el.style.background = '');
         const el = document.getElementById('codex-item-' + q.id);
         if (el) { el.style.background = 'rgba(6,182,212,0.15)'; el.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+    }
+
+    async fulfillTasteQuest(questId) {
+        const q = (window.LISBON_QUESTS || []).find((x) => x.id === questId);
+        if (!q || q.type !== 'taste') return;
+        if (this.isQuestComplete(questId)) return;
+        if (!this.isQuestAccepted(questId)) this.acceptQuest(questId);
+        await this.grantReward(questId, q.reward_exp, q.title);
+        if (q.reward_rune && window.FloweeReward) await window.FloweeReward.grantRune(q.reward_rune, 'bronze');
+        this.renderLisbonAtlasQuests();
+        if (window.AtlasEngine) window.AtlasEngine.refreshQuestMarkers();
     }
 
     renderAdinkraCodex() {

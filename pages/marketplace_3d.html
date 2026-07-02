@@ -87,6 +87,25 @@
         }
         
         .stall-card.active { transform: scale(1.05); border-color: #ffaa44; }
+
+        .carousel-nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 20;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid #ffaa44;
+            background: rgba(8, 4, 12, 0.9);
+            color: #ffaa44;
+            font-size: 24px;
+            cursor: pointer;
+            pointer-events: auto;
+        }
+        .carousel-prev { left: 8px; }
+        .carousel-next { right: 8px; }
+        .bazaar-viewport { position: relative; }
         
         .guild-icon {
             font-size: 48px;
@@ -180,6 +199,7 @@
         }
     </style>
     <link rel="stylesheet" href="../css/bazaar-mobile.css">
+    <link rel="stylesheet" href="../css/mobile-sphere-nav.css">
 </head>
 <body>
     
@@ -215,6 +235,7 @@
 
         <!-- BAZAAR CAROUSEL -->
         <div class="bazaar-viewport pointer-events-auto" id="bazaar-viewport">
+            <button type="button" class="carousel-nav-btn carousel-prev" id="carousel-prev" aria-label="Previous guild">‹</button>
             <div class="stalls-track" id="stalls-track">
                 
                 <!-- Arts -->
@@ -260,6 +281,7 @@
                 </div>
 
             </div>
+            <button type="button" class="carousel-nav-btn carousel-next" id="carousel-next" aria-label="Next guild">›</button>
         </div>
 
         <!-- BAZAAR IN-ZONE UI (Visible after Dive) -->
@@ -346,6 +368,10 @@
     <script src="../js/gamification.js"></script>
     <script src="../js/modules/marketplace_core.js"></script>
     <script src="../js/modules/bazaar_flowee.js"></script>
+    <link rel="stylesheet" href="../css/mobile-sphere-nav.css">
+    <script src="../js/agents/mobile_sphere_nav.js?v=1.0" defer></script>
+    <script src="../js/agents/flowee_voice.js?v=1.1"></script>
+    <script src="../js/agents/flowee_marketplace_tour.js?v=1.0" defer></script>
 
     <script>
         // --- 1. THREE.JS SETUP: GOLDEN HOUR & TATA-SOMBA ---
@@ -357,10 +383,10 @@
 
         const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
         
-        // Initial Sky View (looking down at the bazaar)
-        const skyPos = new THREE.Vector3(0, 40, 80);
+        // Initial Sky View — huts framed above guild carousel
+        const skyPos = new THREE.Vector3(0, 14, 38);
         camera.position.copy(skyPos);
-        camera.lookAt(0, 0, -50);
+        camera.lookAt(0, 4, -28);
 
         const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
         renderer.setSize(window.innerWidth, window.innerHeight);
@@ -491,13 +517,19 @@
             return group;
         }
 
-        // Build the Bazaar Guild Huts (6 Stands)
-        createClayBuilding(-12, -20, 10, 10, 12, 'arts', '#ff5500', 0x8b3e2f); 
-        createClayBuilding(12, -20, 10, 10, 12, 'sounds', '#00ddee', 0x5c2e16);
-        createClayBuilding(-12, -40, 10, 10, 14, 'skills', '#00ff66', 0x8b3e2f);
-        createClayBuilding(12, -40, 10, 10, 14, 'healing', '#ff00aa', 0xcd5c5c); // Indian Red (Food/Healing)
-        createClayBuilding(-12, -60, 10, 10, 12, 'products', '#ffaa00', 0x9370db); // Purple (Fashion/Products)
-        createClayBuilding(12, -60, 10, 10, 12, 'services', '#00ffcc', 0x005544); // Teal/Cyan (Services)
+        // Build the Bazaar Guild Huts — static row visible above carousel
+        const guildHutDefs = [
+            { id: 'arts', x: -22, sym: 'arts', color: '#ff5500' },
+            { id: 'skills', x: -13, sym: 'skills', color: '#00ff66' },
+            { id: 'sounds', x: -4, sym: 'sounds', color: '#00ddee' },
+            { id: 'healing', x: 5, sym: 'healing', color: '#ff00aa' },
+            { id: 'products', x: 14, sym: 'products', color: '#ffaa00' },
+            { id: 'services', x: 23, sym: 'services', color: '#00ffcc' },
+        ];
+        const guildHutMeshes = {};
+        guildHutDefs.forEach((g) => {
+            guildHutMeshes[g.id] = createClayBuilding(g.x, -28, 7, 7, 11, g.sym, g.color);
+        });
 
         // Community Hubs
         // 1. Akwaba Kitchen
@@ -641,13 +673,13 @@
 
         // --- 5. CINEMATIC DIVE & CAMERA LERP ---
         const bazaarZones = {
-            arts: { x: -12, z: -20 },
-            sounds: { x: 12, z: -20 },
-            skills: { x: -12, z: -40 },
-            healing: { x: 12, z: -40 },
-            products: { x: -12, z: -60 },
-            services: { x: 12, z: -60 },
-            auctionCenter: { x: 0, z: -70 }
+            arts: { x: -22, z: -28 },
+            sounds: { x: -4, z: -28 },
+            skills: { x: -13, z: -28 },
+            healing: { x: 5, z: -28 },
+            products: { x: 14, z: -28 },
+            services: { x: 23, z: -28 },
+            auctionCenter: { x: 0, z: -35 }
         };
 
         let isCinematicDive = false;
@@ -655,7 +687,7 @@
         let currentGuild = "";
         let targetCameraPos = new THREE.Vector3();
         let targetLookAt = new THREE.Vector3();
-        let currentLookAt = new THREE.Vector3(0, 0, -50);
+        let currentLookAt = new THREE.Vector3(0, 4, -28);
 
         function triggerCinematicEntry(guildName) {
             const zone = bazaarZones[guildName] || bazaarZones.auctionCenter;
@@ -679,7 +711,7 @@
             currentGuild = "";
             
             targetCameraPos.copy(skyPos);
-            targetLookAt.set(0, 0, -50);
+            targetLookAt.set(0, 4, -28);
             
             isCinematicDive = true;
             isSkyView = true;
@@ -978,13 +1010,10 @@
                 }
             }
 
-            // Animate Holograms
-            steles.forEach(s => {
+            // Steles static (no rotation)
+            steles.forEach((s) => {
                 const holo = s.userData.hologram;
-                if(holo) {
-                    holo.rotation.y += Math.PI * 0.5 * delta;
-                    holo.position.y = 5 + Math.sin(time * 0.003) * 0.2;
-                }
+                if (holo) holo.position.y = 5 + Math.sin(time * 0.003) * 0.15;
             });
 
             renderer.render(scene, camera);
@@ -1041,6 +1070,23 @@
 
         // Scroll Sync for Carousel
         const viewport = document.getElementById('bazaar-viewport');
+        const guildCardOrder = ['arts', 'skills', 'sounds', 'healing', 'products', 'services'];
+        function scrollToGuildCard(guildId) {
+            const card = document.getElementById('card-' + guildId);
+            if (!card || !viewport) return;
+            const left = card.offsetLeft - (viewport.clientWidth - card.clientWidth) / 2;
+            viewport.scrollTo({ left, behavior: 'smooth' });
+        }
+        document.getElementById('carousel-prev')?.addEventListener('click', () => {
+            const active = guildCardOrder.find((id) => document.getElementById('card-' + id)?.classList.contains('active')) || 'arts';
+            const idx = guildCardOrder.indexOf(active);
+            scrollToGuildCard(guildCardOrder[(idx - 1 + guildCardOrder.length) % guildCardOrder.length]);
+        });
+        document.getElementById('carousel-next')?.addEventListener('click', () => {
+            const active = guildCardOrder.find((id) => document.getElementById('card-' + id)?.classList.contains('active')) || 'arts';
+            const idx = guildCardOrder.indexOf(active);
+            scrollToGuildCard(guildCardOrder[(idx + 1) % guildCardOrder.length]);
+        });
         viewport.addEventListener('scroll', () => {
             const center = viewport.scrollLeft + viewport.clientWidth / 2;
             document.querySelectorAll('.stall-card').forEach(card => {

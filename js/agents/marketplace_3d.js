@@ -71,46 +71,43 @@ window.Marketplace3D = {
 
     createVillage: function() {
         const guilds = [
-            { name: 'Arts', color: 0xFF00EA, info: 'Royal Gild Stall', target: '/pages/arts_stall.html' },
-            { name: 'Skills', color: 0x00FFD4, info: 'Gild Academy Counter', target: '/pages/skills_stall.html' },
-            { name: 'Sounds', color: 0xFFAE42, info: 'Sound Atelier Desk', target: '/pages/sound_stall.html' },
-            { name: 'Products', color: 0xCD7F32, info: 'Bazaar Artifacts', target: '/pages/product_stall.html' },
-            { name: 'Services', color: 0x5A2A84, info: 'Community Gateway', target: '/pages/services_stall.html' },
-            { name: 'Healing', color: 0x00FF00, info: 'The Oracle\'s Altar', target: '/pages/healing_stall.html' }
+            { name: 'Arts', color: 0xFF00EA, info: 'Royal Gild Stall', target: '/pages/arts_stall.html', x: -15, z: 2 },
+            { name: 'Skills', color: 0x00FFD4, info: 'Gild Academy Counter', target: '/pages/skills_stall.html', x: -9, z: 0 },
+            { name: 'Sounds', color: 0xFFAE42, info: 'Sound Atelier Desk', target: '/pages/sound_stall.html', x: -3, z: -1 },
+            { name: 'Healing', color: 0x00FF00, info: "The Oracle's Altar", target: '/pages/healing_stall.html', x: 3, z: -1 },
+            { name: 'Products', color: 0xCD7F32, info: 'Bazaar Artifacts', target: '/pages/product_stall.html', x: 9, z: 0 },
+            { name: 'Services', color: 0x5A2A84, info: 'Community Gateway', target: '/pages/services_stall.html', x: 15, z: 2 },
         ];
 
         guilds.forEach((guild, i) => {
-            const angle = (i / guilds.length) * Math.PI * 2;
-            const radius = 8;
-            
             const group = new THREE.Group();
             
-            // TATA SOMBA BASE (Clay)
             const baseGeo = new THREE.CylinderGeometry(0.8, 1, 1.5, 8);
             const baseMat = new THREE.MeshLambertMaterial({ color: 0x3E2723 });
             const base = new THREE.Mesh(baseGeo, baseMat);
             group.add(base);
             
-            // THATCH ROOF (Cone)
             const roofGeo = new THREE.ConeGeometry(1.2, 1.2, 8);
             const roofMat = new THREE.MeshLambertMaterial({ color: 0x5D4037 });
             const roof = new THREE.Mesh(roofGeo, roofMat);
             roof.position.y = 1.2;
             group.add(roof);
 
-            // GLOWING EMBLEM
             const emblemGeo = new THREE.SphereGeometry(0.3, 16, 16);
             const emblemMat = new THREE.MeshBasicMaterial({ color: guild.color });
             const emblem = new THREE.Mesh(emblemGeo, emblemMat);
             emblem.position.y = 2;
             group.add(emblem);
 
-            group.position.set(Math.cos(angle) * radius, 0, Math.sin(angle) * radius);
-            group.userData = { guild: guild.name, info: guild.info, target: guild.target, angle: angle };
+            group.position.set(guild.x, 0, guild.z);
+            group.userData = { guild: guild.name, info: guild.info, target: guild.target, bobOffset: i * 0.7 };
             
             this.scene.add(group);
             this.nodes.push(group);
         });
+
+        this.camera.position.set(0, 8, 22);
+        this.camera.lookAt(0, 1, 0);
     },
 
     createTooltip: function() {
@@ -131,14 +128,12 @@ window.Marketplace3D = {
         if(!this.isInitialized) return;
         requestAnimationFrame(() => this.animate());
         
-        // Orbital Rotation
+        // Static huts — gentle bob only (no orbital rotation)
         if (!this.isZooming) {
-            this.nodes.forEach(node => {
-                node.userData.angle += 0.002;
-                const radius = 8;
-                node.position.x = Math.cos(node.userData.angle) * radius;
-                node.position.z = Math.sin(node.userData.angle) * radius;
-                node.rotation.y += 0.01;
+            const t = Date.now() * 0.001;
+            this.nodes.forEach((node) => {
+                const off = node.userData.bobOffset || 0;
+                node.position.y = Math.sin(t + off) * 0.06;
             });
         } else {
             // ZOOM ANIMATION LOGIC

@@ -186,29 +186,32 @@
             {
                 id: 'k1',
                 kitchen: 'AkwabaLX',
-                dish: 'Red Red Stew',
-                price: '€12.50',
-                desc: 'A powerful frequency of black-eyed peas, plantains, and rich palm oil.',
-                img: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=600&q=80',
-                tags: ['Vegan', 'Gluten-Free']
+                dish: 'Jollof Rice Bowl',
+                price: '€12.00',
+                desc: 'Smoky tomato jollof with plantain & salad — Secret Garden LX.',
+                img: '../Assets/kitchens/akwabalx/dish-table.jpg',
+                tags: ['Pickup', 'Soul Food'],
+                page: 'akwaba_kitchen.html'
             },
             {
                 id: 'k2',
-                kitchen: 'Outbreak Sushi',
-                dish: 'Neon Roll',
-                price: '€18.00',
-                desc: 'Cyber-fresh salmon, avocado, and spicy mayo drops.',
-                img: 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=600&q=80',
-                tags: ['Seafood', 'Spicy']
+                kitchen: 'AkwabaLX',
+                dish: 'KitKat Special',
+                price: '€14.00',
+                desc: 'Chef signature — sweet heat fusion plate at the garden bar.',
+                img: '../Assets/kitchens/akwabalx/dish-kitkat.jpg',
+                tags: ['Chef Pick', 'Spicy'],
+                page: 'akwaba_kitchen.html'
             },
             {
                 id: 'k3',
-                kitchen: 'African Queen',
-                dish: 'Jollof Empire',
-                price: '€15.00',
-                desc: 'The legendary rice dish. Spiced up, smoked out.',
-                img: 'https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=600&q=80',
-                tags: ['Meat', 'Spicy']
+                kitchen: 'Secret Garden',
+                dish: 'Garden Vegan Plate',
+                price: '€11.00',
+                desc: 'Seasonal greens from the patio — palms, shade, pure vibe.',
+                img: '../Assets/kitchens/akwabalx/hero-3.jpg',
+                tags: ['Vegan', 'Garden'],
+                page: 'akwaba_kitchen.html'
             }
         ];
 
@@ -227,11 +230,11 @@
                     slideChange: function() {
                         const dialog = document.getElementById('flowee-dialog');
                         if(this.activeIndex === 0) {
-                            dialog.innerText = "AkwabaLX. High resonance vegan food. The energy is pure.";
+                            dialog.innerText = "AkwabaLX Jollof — first live kitchen at Secret Garden. Tap to open menu.";
                         } else if(this.activeIndex === 1) {
-                            dialog.innerText = "Outbreak Sushi. Precision cuts, sharp flavors.";
+                            dialog.innerText = "KitKat Special — chef signature. Order pickup at the bar.";
                         } else {
-                            dialog.innerText = "The African Queen. Legendary status confirmed.";
+                            dialog.innerText = "Garden Vegan Plate — palms, patio, pure Lisbon flow.";
                         }
                     }
                 }
@@ -310,8 +313,9 @@
             const dialog = document.getElementById('flowee-dialog');
             dialog.innerText = `Transmission successful. ${selectedItem.kitchen} is forging your order. +15 EXP!`;
             dialog.classList.add('active');
-            
-            alert(`ORDER CONFIRMED!\nDish: ${selectedItem.dish}\nKitchen: ${selectedItem.kitchen}\nWait for the WhatsApp Ping!`);
+            if (window.FloweeReward) window.FloweeReward.xpToast(`${selectedItem.dish} ordered`, 15);
+            else if (window.Flowee) window.Flowee.talk(true, `Order confirmed: ${selectedItem.dish} at ${selectedItem.kitchen}. Pick up at the bar!`, 'celebrate');
+            setTimeout(() => { location.href = selectedItem.page || 'akwaba_kitchen.html'; }, 2200);
         }
     </script>
 </body>

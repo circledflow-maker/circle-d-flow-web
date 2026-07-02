@@ -184,7 +184,7 @@
         </div>
 
         <!-- 2D Holographic Map Radar (Flow Radar) -->
-        <div id="radar-container" onclick="window.location.href='quest_map.html'" class="absolute bottom-44 left-4 w-28 h-28 rounded-full glass-panel border border-[#00ffcc]/30 shadow-[0_0_15px_rgba(0,255,204,0.2)] overflow-hidden pointer-events-auto flex items-center justify-center cursor-pointer">
+        <div id="radar-container" class="absolute bottom-44 left-4 w-28 h-28 rounded-full glass-panel border border-[#00ffcc]/30 shadow-[0_0_15px_rgba(0,255,204,0.2)] overflow-hidden pointer-events-auto flex items-center justify-center cursor-pointer">
             <canvas id="radar-canvas" width="112" height="112"></canvas>
         </div>
 
@@ -494,6 +494,32 @@
             }, 1000);
         }
 
+        function openTasteWorld() {
+            if (window.Flowee) window.Flowee.talk(true, 'Routing you to AkwabaLX — menu, pickup, pay at the bar. Secret Garden awaits!', 'guide');
+            setTimeout(() => { window.location.href = 'akwaba_kitchen.html?from=sanctuary'; }, 900);
+        }
+
+        document.getElementById('radar-canvas')?.addEventListener('click', (e) => {
+            const canvas = e.target;
+            const rect = canvas.getBoundingClientRect();
+            const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+            const y = (e.clientY - rect.top) * (canvas.height / rect.height);
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2;
+            const px = playerGroup?.position?.x || 0;
+            const pz = playerGroup?.position?.z || 0;
+            const scale = (cx - 4) / 45;
+            let hit = null;
+            checkpoints.forEach((cp) => {
+                const rx = cx + (cp.x - px) * scale;
+                const ry = cy + (cp.z - pz) * scale;
+                if (Math.hypot(x - rx, y - ry) < 14) hit = cp;
+            });
+            if (hit?.page) openTasteWorld();
+            else if (hit?.name === 'Stage') closeZoneUI('buehne');
+            else window.location.href = 'quest_map.html?focus=secret_garden_lx';
+        });
+
         async function openLedger() {
             toggleModal('ledger-modal');
             
@@ -679,8 +705,13 @@
                 if(artistData) {
                     document.getElementById('artist-name').innerText = artistData.name;
                     document.getElementById('artist-type').innerText = artistData.artist_type === 'performance' ? 'Performance Soul' : (artistData.artist_type === 'traveler' ? 'Nexus Traveler' : 'Service Weaver');
-                    document.getElementById('artist-exp').innerText = `${artistData.exp || 0} EXP`;
-                    document.getElementById('artist-flow').innerText = `${artistData.flow_credits || 0} FLOW`;
+                    const profileXp = window.QuestEngine?.user?.exp ?? window.QuestEngine?.profile?.exp;
+                    const displayExp = Math.max(artistData.exp || 0, profileXp || 0);
+                    const displayFlow = Math.max(artistData.flow_credits || 0, window.QuestEngine?.user?.flow || window.QuestEngine?.profile?.flow || 0);
+                    artistData.exp = displayExp;
+                    artistData.flow_credits = displayFlow;
+                    document.getElementById('artist-exp').innerText = `${displayExp} EXP`;
+                    document.getElementById('artist-flow').innerText = `${displayFlow} FLOW`;
 
                     // Bidirectional Profile Sync (only if we have profile and real artist row)
                     if (artistId && artistData.artist_type !== 'traveler') {
@@ -744,8 +775,8 @@
 
                     if(artistData.artist_type === 'performance') {
                         try {
-                            const { data: perf } = await window.supabaseClient.from('performance_details').select('*').eq('artist_id', artistId).limit(1).single();
-                            if(perf && perf.artifact_of_power) {
+                            const { data: perf, error: perfErr } = await window.supabaseClient.from('performance_details').select('*').eq('artist_id', artistId).limit(1).maybeSingle();
+                            if(!perfErr && perf && perf.artifact_of_power) {
                                 contentHtml += `<div class="mb-2"><strong class="text-[#d4af37]">Category:</strong> ${perf.performance_category || 'Completed Post-Sync'}</div>`;
                                 contentHtml += `<div class="mb-2"><strong class="text-[#d4af37]">Tech Rider:</strong> ${perf.technical_needs || 'None'}</div>`;
                                 contentHtml += `<div class="mb-2"><strong class="text-[#d4af37]">Artifact:</strong> ${perf.artifact_of_power}</div>`;
@@ -764,8 +795,8 @@
                         }
                     } else if (artistData.artist_type !== 'traveler') {
                         try {
-                            const { data: inv } = await window.supabaseClient.from('service_inventories').select('*').eq('artist_id', artistId);
-                            if(artistData.community_cut_percentage !== null) {
+                            const { data: inv, error: invErr } = await window.supabaseClient.from('service_inventories').select('*').eq('artist_id', artistId);
+                            if(!invErr && artistData.community_cut_percentage !== null) {
                                 contentHtml += `<div class="mb-4 text-[#00ffcc]">Community Cut: ${artistData.community_cut_percentage}%</div>`;
                                 if(inv && inv.length > 0) {
                                     contentHtml += `<div class="mt-4 bg-white/5 border border-white/10 rounded-lg p-3">
@@ -1326,7 +1357,7 @@
 
         // --- Flow Radar Settings & Logic ---
         const checkpoints = [
-            { name: 'Kitchen', x: -10, z: -5, color: '#00ffcc', label: 'KTCHN' },
+            { name: 'Kitchen', x: -10, z: -5, color: '#00ffcc', label: 'KTCHN', page: 'akwaba_kitchen.html' },
             { name: 'Stage', x: 0, z: -30, color: '#ff00cc', label: 'STAGE' },
             { name: 'Theater', x: 15, z: -15, color: '#33ccff', label: 'THTR' }
         ];
@@ -1875,7 +1906,24 @@
             scene.add(building);
         }
 
-        // Gasse aufbauen (Widened to 44 units)
+        // Gasse aufbauen — Secret Garden district (wider lanes + cobble strips)
+        const cobbleMat = new THREE.MeshStandardMaterial({ color: 0x6b4a32, roughness: 0.95 });
+        for (let lane = -1; lane <= 1; lane += 2) {
+            const strip = new THREE.Mesh(new THREE.PlaneGeometry(3.5, 200), cobbleMat);
+            strip.rotation.x = -Math.PI / 2;
+            strip.position.set(lane * 10, 0.02, -50);
+            strip.receiveShadow = true;
+            scene.add(strip);
+        }
+        // Cross streets toward garden patio
+        [-30, -10, 10].forEach((z) => {
+            const cross = new THREE.Mesh(new THREE.PlaneGeometry(44, 2.5), cobbleMat);
+            cross.rotation.x = -Math.PI / 2;
+            cross.position.set(0, 0.025, z);
+            cross.receiveShadow = true;
+            scene.add(cross);
+        });
+
         for (let i = 0; i < 5; i++) {
             createClayBuilding(-22, -i * 20, 10, 15 + Math.random()*5, 18); 
             createClayBuilding(22, -i * 20, 10, 15 + Math.random()*5, 18);  
@@ -1992,6 +2040,47 @@
             hubGroup.add(barkeeperLight);
 
             scene.add(hubGroup);
+        }
+
+        function buildGardenPlants() {
+            const trunkMat = new THREE.MeshStandardMaterial({ color: 0x5c3d1e, roughness: 0.9 });
+            const leafMat = new THREE.MeshStandardMaterial({ color: 0x2d6a3e, roughness: 0.85, side: THREE.DoubleSide });
+            const bushMat = new THREE.MeshStandardMaterial({ color: 0x3d7a4a, roughness: 0.95 });
+            const palmSpots = [
+                { x: -8, z: -5, h: 5.5 }, { x: 8, z: -8, h: 6 }, { x: -5, z: -18, h: 5 },
+                { x: 12, z: -22, h: 6.5 }, { x: -12, z: -28, h: 5.8 }, { x: 4, z: -32, h: 5.2 },
+                { x: -18, z: -14, h: 4.8 }, { x: 18, z: -12, h: 5.4 },
+            ];
+            palmSpots.forEach((p) => {
+                const g = new THREE.Group();
+                g.position.set(p.x, 0, p.z);
+                const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.28, p.h, 8), trunkMat);
+                trunk.position.y = p.h / 2;
+                trunk.castShadow = true;
+                g.add(trunk);
+                for (let f = 0; f < 6; f++) {
+                    const frond = new THREE.Mesh(new THREE.BoxGeometry(0.08, 2.8, 0.5), leafMat);
+                    frond.position.y = p.h - 0.2;
+                    frond.rotation.y = (f / 6) * Math.PI * 2;
+                    frond.rotation.z = 0.6;
+                    frond.castShadow = true;
+                    g.add(frond);
+                }
+                scene.add(g);
+            });
+            for (let i = 0; i < 14; i++) {
+                const bush = new THREE.Mesh(new THREE.SphereGeometry(0.5 + Math.random() * 0.4, 8, 8), bushMat);
+                bush.position.set(-20 + Math.random() * 40, 0.35, -5 - Math.random() * 35);
+                bush.scale.y = 0.7 + Math.random() * 0.3;
+                bush.castShadow = true;
+                scene.add(bush);
+            }
+            const fernMat = new THREE.MeshStandardMaterial({ color: 0x4a8f5c, roughness: 0.9 });
+            for (let i = 0; i < 10; i++) {
+                const fern = new THREE.Mesh(new THREE.ConeGeometry(0.35, 1.2, 6), fernMat);
+                fern.position.set(-14 + Math.random() * 28, 0.6, -8 - Math.random() * 28);
+                scene.add(fern);
+            }
         }
 
         function buildStageHub() {
@@ -2256,6 +2345,7 @@
         }
 
         buildKitchenHub();
+        buildGardenPlants();
         buildStageHub();
         let videoScreen = buildVideoArchiveHub();
 
@@ -2406,7 +2496,7 @@
                         </div>
                         <p class="text-xs text-white/70 italic mb-4">"Greetings, traveler. I am the Barkeeper Soul. Welcome to AkwabaLX. Choose your path:"</p>
                         <div class="grid grid-cols-2 gap-2">
-                            <button class="zone-btn mt-0 mb-0" onclick="document.getElementById('akwaba-menu-viewer').style.display='flex'">Taste the Art<br><span class="text-[9px] opacity-60">(Akwaba Menu)</span></button>
+                            <button class="zone-btn mt-0 mb-0" onclick="openTasteWorld()">Taste World<br><span class="text-[9px] opacity-60">AkwabaLX · Secret Garden</span></button>
                             <button class="zone-btn mt-0 mb-0" onclick="goToMarketplace()">Trade the Flow<br><span class="text-[9px] opacity-60">(Go to Bazaar)</span></button>
                         </div>
                     </div>

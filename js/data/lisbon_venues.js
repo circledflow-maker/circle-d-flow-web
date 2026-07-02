@@ -3,7 +3,11 @@
  */
 window.LISBON_VENUES = {
   community: [
-    { id: 'secret_garden_lx', name: 'Secret Garden LX', lat: 38.7200, lng: -9.1450, zone: 'community', filter: ['sound', 'vision'], rune: 'boa_me', runeName: 'Boa Me Na Me Mmoa Wo', stepsReveal: 0, vibe: 'Jam sessions & C4C community' },
+    { id: 'secret_garden_lx', name: 'Secret Garden LX', lat: 38.7200, lng: -9.1450, zone: 'community', filter: ['sound', 'vision', 'sanctuary'], rune: 'boa_me', runeName: 'Boa Me Na Me Mmoa Wo', stepsReveal: 0, vibe: 'Hidden garden courtyard — palms, jam, C4C' },
+    { id: 'akwabalx_kitchen', name: 'AkwabaLX Kitchen Bar', lat: 38.72005, lng: -9.14495, zone: 'community', filter: ['kitchen', 'sanctuary'], rune: 'akoma', runeName: 'Akoma', stepsReveal: 0, vibe: 'First live kitchen — pickup at bar', kitchenPage: 'akwaba_kitchen.html' },
+    { id: 'sg_calçada_norte', name: 'Calçada do Jardim (N)', lat: 38.72025, lng: -9.14520, zone: 'community', filter: ['vision'], rune: 'aya', runeName: 'Aya', stepsReveal: 200, vibe: 'Cobble lane north of garden' },
+    { id: 'sg_calçada_sul', name: 'Calçada do Jardim (S)', lat: 38.71975, lng: -9.14480, zone: 'community', filter: ['vision'], rune: 'aya', runeName: 'Aya', stepsReveal: 200, vibe: 'Cobble lane south — palm alley' },
+    { id: 'sg_patio_palms', name: 'Patio das Palmeiras', lat: 38.71990, lng: -9.14530, zone: 'community', filter: ['sanctuary', 'vision'], rune: 'fihankra', runeName: 'Fihankra', stepsReveal: 100, vibe: 'Palm circle & shade' },
     { id: 'hempy_roots', name: 'Hempy Roots Lisboa', lat: 38.7155, lng: -9.1420, zone: 'community', filter: ['sound'], rune: 'akoben', runeName: 'Akoben', stepsReveal: 800, vibe: 'Intimate listening parties' },
     { id: 'village_underground', name: 'Village Underground', lat: 38.7045, lng: -9.1680, zone: 'community', filter: ['sound', 'vision'], rune: 'ananse', runeName: 'Ananse Ntontan', stepsReveal: 1200, vibe: 'Urban art in shipping containers' },
     { id: 'fabrica_braco', name: 'Fábrica Braço de Prata', lat: 38.7440, lng: -9.1060, zone: 'community', filter: ['sound', 'vision'], rune: 'nkyinkyim', runeName: 'Nkyinkyim', stepsReveal: 2000, vibe: 'Labyrinth art centre' },

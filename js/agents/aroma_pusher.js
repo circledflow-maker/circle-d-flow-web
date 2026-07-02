@@ -75,7 +75,7 @@ window.AromaPusher = {
 // Auto-Init
 document.addEventListener('DOMContentLoaded', () => {
     // Only init if we are on the kitchen page
-    if (window.location.href.includes('african-queen-kitchen')) {
+    if (window.location.href.includes('akwaba_kitchen') || window.location.href.includes('african-queen-kitchen')) {
         window.AromaPusher.init();
     }
 });

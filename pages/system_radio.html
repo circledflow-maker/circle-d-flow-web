@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>System Radio | Circle D Flow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&family=Cinzel:wght@700&family=Andika&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="../css/quest-triad.css">
+    <link rel="stylesheet" href="../css/mobile-sphere-nav.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/agents/supabase_client.js?v=4.1"></script>
+    <script src="../js/data/adinkra_catalog.js?v=1.0"></script>
+    <script src="../js/agents/flowee.js?v=3.5"></script>
+    <script src="../js/agents/flowee_voice.js?v=1.1"></script>
+    <script src="../js/agents/flowee_reward.js?v=1.0"></script>
+    <script src="../js/agents/sound_library_engine.js?v=1.0"></script>
+    <script src="../js/agents/quest_engine.js?v=4.6"></script>
+    <script src="../js/agents/flowee_sound_tour.js?v=1.0" defer></script>
+    <script src="../js/agents/mobile_sphere_nav.js?v=1.0" defer></script>
+    <style>
+        body { background:#08040a; color:#f4e4bc; font-family:'Plus Jakarta Sans',sans-serif; padding-bottom:100px; }
+        .cinzel { font-family:'Cinzel',serif; }
+    </style>
+</head>
+<body class="quest-triad-page">
+    <header class="sticky top-0 z-50 bg-black/90 border-b border-cyan-500/30 px-4 py-3 flex justify-between items-center">
+        <a href="dashboard.html" class="text-cyan-400 text-xs">← Orbit</a>
+        <h1 class="cinzel text-cyan-300 text-sm tracking-widest">SYSTEM RADIO</h1>
+        <a href="sound_dashboard.html" class="text-[10px] text-amber-400/80">Atelier</a>
+    </header>
+
+    <section class="px-4 py-6 text-center border-b border-white/10">
+        <div class="w-24 h-24 mx-auto rounded-full border-2 border-cyan-400 flex items-center justify-center mb-4 shadow-[0_0_30px_rgba(6,182,212,0.3)]">
+            <span class="material-symbols-outlined text-5xl text-cyan-400" id="radio-icon">radio</span>
+        </div>
+        <p class="text-xs text-white/50 italic max-w-xs mx-auto">Mihaly Flow — challenge matches skill. Upload, license, rotate on community radio.</p>
+        <audio id="radio-player" controls class="w-full max-w-sm mx-auto mt-4 h-10"></audio>
+        <p class="text-[10px] text-cyan-400/70 mt-2" id="now-playing">Queue empty — add tracks below</p>
+    </section>
+
+    <section class="px-4 py-4 grid grid-cols-2 gap-2">
+        <a href="https://open.spotify.com" target="_blank" rel="noopener" class="text-[10px] text-center py-3 border border-green-500/40 rounded-lg text-green-400">Spotify Connect</a>
+        <a href="https://soundcloud.com" target="_blank" rel="noopener" class="text-[10px] text-center py-3 border border-orange-500/40 rounded-lg text-orange-400">SoundCloud</a>
+    </section>
+
+    <section class="px-4 py-4">
+        <label class="block border border-dashed border-cyan-500/40 rounded-xl p-6 text-center cursor-pointer">
+            <span class="material-symbols-outlined text-3xl text-cyan-400">upload_file</span>
+            <p class="text-[10px] mt-2 text-white/50">Upload MP3 / WAV</p>
+            <input type="file" id="track-upload" accept="audio/*" class="hidden">
+        </label>
+        <div class="grid grid-cols-2 gap-2 mt-2">
+            <input id="track-title" placeholder="Track title" class="bg-black/50 border border-white/10 rounded px-2 py-2 text-xs">
+            <select id="track-role" class="bg-black/50 border border-white/10 rounded px-2 py-2 text-xs">
+                <option value="producer">Producer</option>
+                <option value="dj">DJ</option>
+                <option value="artist">Artist</option>
+                <option value="instrumentalist">Instrumentalist</option>
+                <option value="multi">Multi-artist</option>
+            </select>
+        </div>
+        <label class="flex items-center gap-2 mt-2 text-[10px] text-white/60">
+            <input type="checkbox" id="track-license" checked> I grant Navigator use with credit (+XP)
+        </label>
+    </section>
+
+    <section class="px-4 py-4">
+        <h3 class="cinzel text-amber-400 text-xs tracking-widest mb-3">YOUR LIBRARY</h3>
+        <div id="track-list" class="space-y-2"></div>
+    </section>
+
+    <section class="px-4 py-4 border-t border-white/10">
+        <h3 class="cinzel text-xs text-white/50 mb-2">GROUP MASTERING (SOON)</h3>
+        <p class="text-[10px] text-white/40">Share stems with guild mates · collaborative mixdown · radio premiere slots.</p>
+    </section>
+
+    <div id="flowee-agent"></div>
+    <nav class="animus-global-nav">
+        <button onclick="location.href='quest_map.html'" class="nav-btn"><span class="icon">📍</span><span class="nav-label">MAP</span></button>
+        <button onclick="location.href='quest_board.html'" class="nav-btn"><span class="icon">📖</span><span class="nav-label">QUESTS</span></button>
+        <button onclick="location.href='hall_of_legends.html'" class="nav-btn"><span class="icon">🏛️</span><span class="nav-label">RANK</span></button>
+        <button onclick="window.Flowee?.toggleChat()" class="nav-btn"><span class="icon">💬</span><span class="nav-label">FLOWEE</span></button>
+        <button onclick="location.href='dashboard.html'" class="nav-btn exit"><span class="icon">⚡</span><span class="nav-label">ORBIT</span></button>
+    </nav>
+    <script src="../js/agents/quest_triad.js?v=2.1" defer></script>
+    <script>
+        let tracks = [];
+        let queueIdx = 0;
+        function playQueue() {
+            const q = window.SoundLibraryEngine.radioQueue();
+            if (!q.length) return;
+            const t = tracks.find((x) => x.id === q[queueIdx % q.length]);
+            if (!t) return;
+            const player = document.getElementById('radio-player');
+            player.src = t.url;
+            document.getElementById('now-playing').textContent = `▶ ${t.title} — ${t.artist} (${t.role})`;
+            player.play().catch(() => {});
+        }
+        async function renderTracks() {
+            tracks = await window.SoundLibraryEngine.loadTracks();
+            const list = document.getElementById('track-list');
+            list.innerHTML = tracks.length ? '' : '<p class="text-xs text-white/40">No tracks yet. Upload your first frequency.</p>';
+            tracks.forEach((t) => {
+                const row = document.createElement('div');
+                row.className = 'flex items-center gap-2 bg-white/5 border border-white/10 rounded-lg p-2';
+                row.innerHTML = `
+                    <span class="adinkra text-[#d4af37] text-lg">♪</span>
+                    <div class="flex-1 min-w-0">
+                        <div class="text-xs font-bold truncate">${t.title}</div>
+                        <div class="text-[9px] text-white/50">${t.artist} · ${t.role}</div>
+                    </div>
+                    <button type="button" class="text-[9px] px-2 py-1 border border-cyan-500/50 text-cyan-400 rounded" data-id="${t.id}">+ RADIO</button>`;
+                row.querySelector('button').onclick = () => {
+                    window.SoundLibraryEngine.addToRadio(t.id);
+                    playQueue();
+                    if (window.FloweeReward) window.FloweeReward.xpToast('Added to System Radio', 10);
+                };
+                list.appendChild(row);
+            });
+        }
+        document.getElementById('track-upload').onchange = async (e) => {
+            const file = e.target.files?.[0];
+            if (!file) return;
+            await window.SoundLibraryEngine.uploadTrack(file, {
+                title: document.getElementById('track-title').value,
+                role: document.getElementById('track-role').value,
+                licensed: document.getElementById('track-license').checked,
+            });
+            window.SoundLibraryEngine.grantFlowUpload();
+            if (window.QuestEngine) window.QuestEngine.grantReward('LQ-S01', 45, 'Sound Tutorial');
+            await renderTracks();
+        };
+        document.getElementById('radio-player').addEventListener('ended', () => { queueIdx++; playQueue(); });
+        document.addEventListener('DOMContentLoaded', async () => {
+            await renderTracks();
+            playQueue();
+            if (window.Flowee) window.Flowee.renderVessel();
+        });
+    </script>
+</body>
+</html>

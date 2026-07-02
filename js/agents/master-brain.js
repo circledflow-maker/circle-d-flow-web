@@ -15,7 +15,7 @@ const SystemConfig = {
             exp: 50
         },
         {
-            targetUrl: "african-queen-kitchen.html",
+            targetUrl: "akwaba_kitchen.html"
             elementId: ".jamtruck-progress-bar",
             text: "new_feature_jamtruck", // Key for i18n
             exp: 50
