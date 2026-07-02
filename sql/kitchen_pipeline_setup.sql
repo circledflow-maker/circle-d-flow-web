@@ -1,6 +1,11 @@
 -- =============================================================================
 -- Circle D Flow — Kitchen / Taste Pipeline
 -- Run AFTER sql/triad_pipeline_setup.sql
+--
+-- IMPORTANT (Supabase SQL Editor):
+-- Paste and RUN the FULL contents of this file — not just the comment lines.
+-- First run: sql/triad_pipeline_setup.sql (entire file)
+-- Then run:  this file (entire file)
 -- =============================================================================
 
 -- -----------------------------------------------------------------------------

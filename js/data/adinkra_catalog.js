@@ -50,3 +50,15 @@ window.renderAdinkraGlyph = function (runeId, tier) {
   const c = colors[tier] || '#d4af37';
   return `<span style="font-size:1.4em;color:${c};line-height:1" title="${m.meaning}">${m.glyph}</span>`;
 };
+
+/** Paint rune glyph via DOM (avoids innerHTML escaping in strict contexts). */
+window.paintAdinkraElement = function (el, runeId, tier) {
+  if (!el) return;
+  const m = window.getAdinkraMeta(runeId);
+  const colors = { bronze: '#cd7f32', silver: '#c0c0c0', gold: '#d4af37' };
+  el.textContent = m.glyph || '◈';
+  el.title = m.meaning || '';
+  el.style.fontSize = '1.4em';
+  el.style.lineHeight = '1';
+  el.style.color = colors[tier] || '#d4af37';
+};

@@ -41,9 +41,8 @@
         },
 
         async grantRune(runeId, tier) {
-            const meta = window.getAdinkraMeta?.(runeId) || { name: runeId, meaning: 'Adinkra symbol' };
-            const glyph = window.renderAdinkraGlyph?.(runeId, tier) || '◈';
-            await speak(`${glyph} Adinkra ${meta.name} anchored in ${tier}. ${meta.meaning}`, 'celebrate');
+            const meta = window.getAdinkraMeta?.(runeId) || { name: runeId, meaning: 'Adinkra symbol', glyph: '◈' };
+            await speak(`${meta.glyph || '◈'} Adinkra ${meta.name} anchored in ${tier}. ${meta.meaning}`, 'celebrate');
         },
     };
 })();
