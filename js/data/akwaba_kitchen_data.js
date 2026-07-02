@@ -21,8 +21,8 @@ window.AKWABA_KITCHEN = {
     '../Assets/kitchens/akwabalx/menu-board.png',
     '../Assets/kitchens/akwabalx/dish-table.jpg',
   ],
-  qr_url: 'https://circle-d-flow-web.vercel.app/pages/akwaba_kitchen.html',
-  whatsapp_share: 'https://wa.me/?text=' + encodeURIComponent('AkwabaLX at Secret Garden LX — taste the flow! https://circle-d-flow-web.vercel.app/pages/akwaba_kitchen.html'),
+  qr_url: 'https://circle-d-flow-web.vercel.app/pages/akwaba_kitchen',
+  whatsapp_share: 'https://wa.me/?text=' + encodeURIComponent('AkwabaLX at Secret Garden LX — taste the flow! https://circle-d-flow-web.vercel.app/pages/akwaba_kitchen'),
   discount_note: 'Navigator discounts coming soon — collect Akoma rune for early access.',
   menu: [
     { id: 'm1', name: 'Jollof Rice Bowl', description: 'Smoky tomato jollof with plantain & salad', category: 'main', price_eur: 12, image: '../Assets/kitchens/akwabalx/dish-table.jpg' },

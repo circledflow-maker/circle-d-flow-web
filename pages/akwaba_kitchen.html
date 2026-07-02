@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&family=Cinzel:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="../css/quest-triad.css">
     <link rel="stylesheet" href="../css/mobile-sphere-nav.css">
     <script src="../js/agents/mobile_sphere_nav.js?v=1.0" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -98,8 +99,9 @@
     <script>
         let engine;
         function shareKitchen() {
-            const url = window.AKWABA_KITCHEN?.whatsapp_share || location.href;
-            window.open(url, '_blank');
+            const url = 'https://circle-d-flow-web.vercel.app/pages/akwaba_kitchen';
+            const text = encodeURIComponent('AkwabaLX at Secret Garden LX — taste the flow! ' + url);
+            window.open('https://wa.me/?text=' + text, '_blank');
         }
         function renderMenu() {
             const grid = document.getElementById('menu-grid');
@@ -157,8 +159,11 @@
             });
             renderMenu();
             updateCart();
-            const qrUrl = k.qr_code_data || k.qr_url || location.href;
-            QRCode.toCanvas(document.getElementById('kitchen-qr'), qrUrl, { width: 160, margin: 1 });
+            const qrUrl = 'https://circle-d-flow-web.vercel.app/pages/akwaba_kitchen';
+            try {
+                if (window.QRCode) QRCode.toCanvas(document.getElementById('kitchen-qr'), qrUrl, { width: 160, margin: 1 });
+            } catch (e) { console.warn('[Kitchen] QR render skipped', e); }
+            if (window.Flowee) window.Flowee.renderVessel();
             const runTutorial = () => {
                 if (!window.QuestEngine?.profile) return;
                 const tut = new URLSearchParams(location.search).get('tutorial');

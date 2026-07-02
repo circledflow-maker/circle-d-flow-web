@@ -107,7 +107,7 @@ INSERT INTO public.kitchens (
     '/Assets/kitchens/akwabalx/logo.png',
     '/Assets/kitchens/akwabalx/hero-1.jpg',
     '/Assets/kitchens/akwabalx/reel-hero.mp4',
-    'https://circle-d-flow-web.vercel.app/pages/akwaba_kitchen.html',
+    'https://circle-d-flow-web.vercel.app/pages/akwaba_kitchen',
     NULL,
     'Navigator discounts coming soon — collect Akoma rune for early access.',
     true
@@ -143,7 +143,7 @@ BEGIN
             'AkwabaLX',
             'akwabalx@secretgardenlx.pt',
             'vendor',
-            'https://circle-d-flow-web.vercel.app/pages/akwaba_kitchen.html',
+            'https://circle-d-flow-web.vercel.app/pages/akwaba_kitchen',
             0, 0
         ) ON CONFLICT (id) DO UPDATE SET
             name = EXCLUDED.name,

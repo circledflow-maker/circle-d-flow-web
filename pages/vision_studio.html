@@ -81,7 +81,9 @@
             document.getElementById('mission-prompt').textContent = m.prompt;
             document.getElementById('mission-reward').textContent = `+${m.xp} XP · Rune: ${m.rune}`;
             const glyph = window.renderAdinkraGlyph?.(m.rune, 'bronze');
-            if (glyph) document.getElementById('mission-rune').textContent = glyph;
+            const el = document.getElementById('mission-rune');
+            if (glyph && el) el.innerHTML = glyph;
+            else if (el) el.textContent = m.glyph || '◈';
         }
         async function renderGallery() {
             const items = await window.VisionMissionEngine.loadUploads();
