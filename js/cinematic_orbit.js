@@ -62,6 +62,8 @@ class OrbitEngine {
         this.worldLabels = [];
         this.doors = [];
         this.isTransitioning = false;
+        this.treeRotationPaused = false;
+        this._hoveredWorldId = null;
 
         window.OrbitEngine = this;
         this.init();
@@ -84,14 +86,18 @@ class OrbitEngine {
         pointLight.position.set(0, 50, 50);
         this.scene.add(pointLight);
 
+        const worldLight = new THREE.PointLight(0xd4af37, 3, 120);
+        worldLight.position.set(0, 45, 30);
+        this.scene.add(worldLight);
+
         window.addEventListener('resize', () => this.onResize());
         if (window.visualViewport) {
             window.visualViewport.addEventListener('resize', () => this.onResize());
         }
-        window.addEventListener('mousemove', (e) => this.onMouseMove(e));
+        window.addEventListener('mousemove', (e) => this._setPointerFromEvent(e));
+        window.addEventListener('mousemove', (e) => this._setPointerFromEvent(e));
         window.addEventListener('pointerdown', (e) => {
-            this.mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-            this.mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+            this._setPointerFromEvent(e);
             this.onClick();
         });
 
@@ -151,8 +157,8 @@ class OrbitEngine {
             gsap.to(welcome, { opacity: 0, duration: 1.5, delay: 5 });
         }
 
-        // Frame the Tree
-        gsap.to(this.camera.position, { y: 20, z: 100, duration: 1.5, ease: "power2.out" });
+        // Frame the Tree — all four worlds visible
+        this.frameTreeForInteraction();
         
         // Reset Transition Flag (Crucial Fix)
         this.isTransitioning = false;
@@ -302,22 +308,25 @@ class OrbitEngine {
     }
 
     createAdinkraLeaves() {
+        // Front-facing arc — all four worlds visible to camera at z ≈ 88
+        const isMobile = window.innerWidth < 768;
+        const spread = isMobile ? 1.15 : 1;
         const classes = [
-            { id: 'luvo', color: 0xd4af37, pos: [10, 60, -15] },
-            { id: 'bantaba', color: 0x00ff88, pos: [-15, 50, 15] },
-            { id: 'archive', color: 0x00f0ff, pos: [20, 40, 10] },
-            { id: 'heart', color: 0xff5522, pos: [-25, 30, -5] }
+            { id: 'luvo', label: 'LUVO', color: 0xd4af37, pos: [-14 * spread, 50, 24] },
+            { id: 'bantaba', label: 'BANTABA', color: 0x00ff88, pos: [14 * spread, 50, 24] },
+            { id: 'archive', label: 'ARCHIVE', color: 0x00f0ff, pos: [-16 * spread, 34, 20] },
+            { id: 'heart', label: 'HEART', color: 0xff5522, pos: [16 * spread, 34, 20] },
         ];
 
         this.leaves = [];
-        classes.forEach(c => {
-            const leafGeo = new THREE.IcosahedronGeometry(3, 0);
-            const leafMat = new THREE.MeshStandardMaterial({ 
-                color: c.color, 
-                emissive: c.color, 
-                emissiveIntensity: 2,
+        classes.forEach((c) => {
+            const leafGeo = new THREE.IcosahedronGeometry(isMobile ? 4.2 : 3.5, 0);
+            const leafMat = new THREE.MeshStandardMaterial({
+                color: c.color,
+                emissive: c.color,
+                emissiveIntensity: 2.5,
                 transparent: true,
-                opacity: 0.8
+                opacity: 0.95,
             });
             const leaf = new THREE.Mesh(leafGeo, leafMat);
             leaf.position.set(...c.pos);
@@ -325,28 +334,26 @@ class OrbitEngine {
             this.treeGroup.add(leaf);
             this.leaves.push(leaf);
 
-            // Portal ring (larger tap target)
-            const ringGeo = new THREE.TorusGeometry(4.5, 0.1, 16, 32);
-            const ringMat = new THREE.MeshBasicMaterial({ color: c.color, transparent: true, opacity: 0.8 });
+            const ringGeo = new THREE.TorusGeometry(isMobile ? 6 : 5, 0.12, 16, 32);
+            const ringMat = new THREE.MeshBasicMaterial({ color: c.color, transparent: true, opacity: 0.9 });
             const portalRing = new THREE.Mesh(ringGeo, ringMat);
             portalRing.position.set(...c.pos);
-            portalRing.name = "portal_ring_" + c.id;
+            portalRing.name = 'portal_ring_' + c.id;
             portalRing.userData = { id: c.id };
             this.treeGroup.add(portalRing);
             this.portalRings.push(portalRing);
-            
-            // Animate Pulse
-            gsap.to(portalRing.scale, { x: 1.5, y: 1.5, z: 1.5, duration: 2, repeat: -1, ease: "sine.inOut" });
-            gsap.to(portalRing.material, { opacity: 0, duration: 2, repeat: -1, ease: "power1.in" });
 
-            // Pulse effect for the leaf itself
-            gsap.to(leaf.scale, { x: 1.2, y: 1.2, z: 1.2, duration: 2, repeat: -1, yoyo: true, ease: "sine.inOut" });
+            gsap.to(portalRing.scale, { x: 1.35, y: 1.35, z: 1.35, duration: 2, repeat: -1, ease: 'sine.inOut' });
+            gsap.to(portalRing.material, { opacity: 0.35, duration: 2, repeat: -1, ease: 'power1.in' });
+            gsap.to(leaf.scale, { x: 1.15, y: 1.15, z: 1.15, duration: 2, repeat: -1, yoyo: true, ease: 'sine.inOut' });
 
-            // WORLD LABEL (Text Sprite)
-            const label = this.makeTextSprite(c.id.toUpperCase());
-            label.position.set(c.pos[0], c.pos[1] + 8, c.pos[2]);
-            label.scale.set(10, 2.5, 1);
+            const label = this.makeTextSprite(c.label, '', this._hexColor(c.color));
+            label.position.set(c.pos[0], c.pos[1] + (isMobile ? 10 : 8), c.pos[2]);
+            const lw = isMobile ? 18 : 14;
+            const lh = isMobile ? 4.5 : 3.5;
+            label.scale.set(lw, lh, 1);
             label.userData = { id: c.id };
+            label.renderOrder = 999;
             this.treeGroup.add(label);
             this.worldLabels.push(label);
         });
@@ -379,9 +386,33 @@ class OrbitEngine {
         }
     }
 
-    onMouseMove(e) {
-        this.mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-        this.mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+    frameTreeForInteraction() {
+        this.treeRotationPaused = true;
+        if (this.treeGroup) this.treeGroup.rotation.y = 0;
+        const isMobile = window.innerWidth < 768;
+        const camY = isMobile ? 32 : 38;
+        const camZ = isMobile ? 95 : 88;
+        gsap.to(this.camera.position, {
+            x: 0, y: camY, z: camZ,
+            duration: 1.8,
+            ease: 'power2.out',
+            onUpdate: () => this.camera.lookAt(0, 40, 5),
+        });
+        gsap.delayedCall(1.9, () => this.camera.lookAt(0, 40, 5));
+    }
+
+    _setPointerFromEvent(e) {
+        const rect = this.renderer.domElement.getBoundingClientRect();
+        const cx = e.clientX ?? e.touches?.[0]?.clientX ?? 0;
+        const cy = e.clientY ?? e.touches?.[0]?.clientY ?? 0;
+        const x = (cx - rect.left) / rect.width;
+        const y = (cy - rect.top) / rect.height;
+        this.mouse.x = x * 2 - 1;
+        this.mouse.y = -(y * 2 - 1);
+    }
+
+    _hexColor(c) {
+        return '#' + c.toString(16).padStart(6, '0');
     }
 
     onClick() {
@@ -410,7 +441,7 @@ class OrbitEngine {
                 return;
             }
             if (id) {
-                this.showWorldOverlay(id);
+                this.enterWorld(id);
                 return;
             }
 
@@ -418,6 +449,12 @@ class OrbitEngine {
                 this.transitionToLuvo(obj);
             }
         }
+    }
+
+    enterWorld(id) {
+        if (!id || this.isTransitioning) return;
+        this.showWorldOverlay(id);
+        this.handleOverlayClick(id);
     }
 
     handleOverlayClick(id) {
@@ -491,6 +528,7 @@ class OrbitEngine {
         tl.to(this.camera.position, { x: 0, y: 20, z: 100, duration: 2, ease: "back.out(1)" }, 14);
         tl.call(() => {
             this.isTransitioning = false;
+            this.frameTreeForInteraction();
             gsap.to('#title-overlay', { opacity: 1, duration: 2 });
             // Auto-hide title after 6s
             gsap.to('#title-overlay', { opacity: 0, duration: 2, delay: 6 });
@@ -518,8 +556,8 @@ class OrbitEngine {
         title.setAttribute('data-i18n', `world_${id}_tit`);
         desc.setAttribute('data-i18n', `world_${id}_desc`);
         if(hint) hint.innerHTML = window.matchMedia('(max-width: 768px)').matches
-            ? "[ TAP TO EXPLORE ]"
-            : "[ CLICK TO EXPLORE ]";
+            ? "[ TAP TO ENTER ]"
+            : "[ CLICK TO ENTER ]";
 
         // Trigger Localized Update
         if(window.refreshLanguages) window.refreshLanguages();
@@ -849,7 +887,7 @@ class OrbitEngine {
 
         if (this.africaSource) this.africaSource.material.uniforms.time.value = time;
         if (this.stars) this.stars.rotation.y += 0.0005;
-        if (this.treeGroup) this.treeGroup.rotation.y += 0.002;
+        if (this.treeGroup && !this.treeRotationPaused) this.treeGroup.rotation.y += 0.001;
         if (this.companion) this.companion.update(time);
         
         // Interactive Hover check for Worlds and Doors
@@ -877,8 +915,11 @@ class OrbitEngine {
                 }
             }
 
-            if (hoveredLeafId) {
+            if (hoveredLeafId && hoveredLeafId !== this._hoveredWorldId) {
+                this._hoveredWorldId = hoveredLeafId;
                 this.showWorldOverlay(hoveredLeafId);
+            } else if (!hoveredLeafId) {
+                this._hoveredWorldId = null;
             }
 
             if(this.doorSystems) {
@@ -905,20 +946,18 @@ class OrbitEngine {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
         canvas.width = 1024;
-        canvas.height = 256; 
-        
-        ctx.textAlign = "center";
-        
-        // Massive glowing Gold Title
-        ctx.font = "Bold 70px Cinzel, serif";
-        ctx.fillStyle = typeof customColor === 'number' ? '#' + customColor.toString(16).padStart(6, '0') : customColor;
-        ctx.shadowColor = "rgba(0,0,0,1)";
-        ctx.shadowBlur = 15;
-        // Text Outline 
+        canvas.height = 280;
+
+        ctx.textAlign = 'center';
+        ctx.font = 'Bold 82px Cinzel, Georgia, serif';
+        const fill = typeof customColor === 'number' ? '#' + customColor.toString(16).padStart(6, '0') : customColor;
+        ctx.fillStyle = fill;
+        ctx.shadowColor = 'rgba(0,0,0,0.95)';
+        ctx.shadowBlur = 20;
         ctx.strokeStyle = '#000';
-        ctx.lineWidth = 6;
-        ctx.strokeText(title, 512, 100);
-        ctx.fillText(title, 512, 100);
+        ctx.lineWidth = 8;
+        ctx.strokeText(title, 512, 110);
+        ctx.fillText(title, 512, 110);
         
         // White description below it
         if(desc) {

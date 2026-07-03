@@ -498,7 +498,7 @@
             .luvo-path-btn { padding: 20px 24px; font-size: 0.95rem; min-height: 44px; }
             #luvo-decision-ui { flex-direction: column; gap: 16px; width: calc(100% - 32px); }
             .landing-logo-text { display: none; }
-            #world-info-overlay { padding: 16px 18px; bottom: calc(72px + var(--safe-bottom)); }
+            #world-info-overlay { padding: 16px 18px; bottom: calc(148px + var(--safe-bottom)); }
             .auth-input-group input { font-size: 16px; /* prevents iOS zoom */ }
         }
 
@@ -515,6 +515,52 @@
         @media (hover: none) {
             .group:hover .lang-dropdown { display: none !important; }
             .lang-dropdown.open { display: block !important; }
+        }
+
+        /* World quick-nav — always readable on mobile */
+        #world-quick-nav {
+            position: fixed;
+            bottom: calc(70px + var(--safe-bottom));
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 30;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            justify-content: center;
+            max-width: calc(100vw - 12px);
+            padding: 6px 8px;
+            background: rgba(0,0,0,0.75);
+            border: 1px solid rgba(212,175,55,0.35);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+        #world-quick-nav.visible { opacity: 1; pointer-events: auto; }
+        .world-pill {
+            font-family: 'Cinzel', serif;
+            font-size: 10px;
+            letter-spacing: 1px;
+            padding: 10px 12px;
+            min-height: 44px;
+            border-radius: 12px;
+            border: 1px solid;
+            background: rgba(0,0,0,0.5);
+            color: #fff;
+            cursor: pointer;
+            touch-action: manipulation;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .world-pill:active { transform: scale(0.96); }
+        .world-pill.luvo { border-color: #d4af37; color: #d4af37; }
+        .world-pill.bantaba { border-color: #00ff88; color: #00ff88; }
+        .world-pill.archive { border-color: #00f0ff; color: #00f0ff; }
+        .world-pill.heart { border-color: #ff5522; color: #ff5522; }
+        @media (min-width: 769px) {
+            #world-quick-nav { bottom: calc(24px + var(--safe-bottom)); }
+            .world-pill { font-size: 11px; padding: 10px 16px; }
         }
     </style>
 </head>
@@ -591,6 +637,14 @@
 
     <div class="scroll-down" data-i18n="scroll_hint">SCROLL TO NAVIGATE</div>
 
+    <!-- 2D world bar — LUVO · BANTABA · ARCHIVE · HEART -->
+    <nav id="world-quick-nav" aria-label="Choose a world">
+        <button type="button" class="world-pill luvo" data-world="luvo">✦ LUVO</button>
+        <button type="button" class="world-pill bantaba" data-world="bantaba">BANTABA</button>
+        <button type="button" class="world-pill archive" data-world="archive">ARCHIVE</button>
+        <button type="button" class="world-pill heart" data-world="heart">HEART</button>
+    </nav>
+
     <!-- LUVO Inner Cathedral Decision (REPLACED BY 3D DOORS) -->
 
     <!-- CINEMATIC LOGIN MODAL -->
@@ -658,7 +712,7 @@
     <script src="js/auth-handler.js" defer></script>
     
     <!-- The actual Core 3D Cinematic Logic -->
-    <script type="module" src="js/cinematic_orbit.js"></script>
+    <script type="module" src="js/cinematic_orbit.js?v=3.0"></script>
 
     <!-- Language Dictionary & Logic -->
     <script>
@@ -672,8 +726,8 @@
                 world_archive_desc: "Portfolio & system knowledge — lore, pillars, records.",
                 world_heart_tit: "HEART",
                 world_heart_desc: "Kiss Your Heart — resonance, healing, emotional frequency.",
-                dive_hint: "[ TOUCH LUVO ]",
-                dive_hint_mobile: "[ TAP TO EXPLORE ]",
+                dive_hint: "[ TAP TO ENTER ]",
+                dive_hint_mobile: "[ TAP TO ENTER ]",
                 scroll_hint: "SCROLL TO WITNESS THE GROWTH",
                 scroll_hint_mobile: "TAP WORLDS · SWIPE TO NAVIGATE",
                 skip_intro: "SKIP INTRO",
@@ -856,9 +910,22 @@
             if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
                 document.documentElement.classList.add('reduce-motion');
             }
-        });
-        window.addEventListener('resize', () => {
-            if (window.refreshLanguages) window.refreshLanguages();
+
+            window.addEventListener('resize', () => {
+                if (window.refreshLanguages) window.refreshLanguages();
+            });
+
+            const worldNav = document.getElementById('world-quick-nav');
+            const showWorldNav = () => worldNav?.classList.add('visible');
+            window.addEventListener('LANDING_INTRO_COMPLETE', showWorldNav, { once: true });
+            setTimeout(showWorldNav, 20000);
+            worldNav?.querySelectorAll('[data-world]').forEach((btn) => {
+                btn.addEventListener('click', () => {
+                    const id = btn.getAttribute('data-world');
+                    if (window.OrbitEngine?.enterWorld) window.OrbitEngine.enterWorld(id);
+                    else if (window.OrbitEngine?.handleOverlayClick) window.OrbitEngine.handleOverlayClick(id);
+                });
+            });
         });
     </script>
     <script>
