@@ -45,11 +45,11 @@ class OrbitEngine {
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color(0x000000);
         
-        this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 2000);
+        this.camera = new THREE.PerspectiveCamera(60, 1, 0.1, 2000);
         this.camera.position.set(0, 10, 120);
 
         this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-        this.renderer.setSize(window.innerWidth, window.innerHeight);
+        this._applyRendererSize();
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
         this.container.appendChild(this.renderer.domElement);
@@ -803,12 +803,21 @@ class OrbitEngine {
         }
     }
 
-    onResize() {
-        const width = window.visualViewport?.width || window.innerWidth;
-        const height = window.visualViewport?.height || window.innerHeight;
+    _viewportSize() {
+        const w = this.container?.clientWidth || window.visualViewport?.width || window.innerWidth;
+        const h = this.container?.clientHeight || window.visualViewport?.height || window.innerHeight;
+        return { width: Math.max(1, w), height: Math.max(1, h) };
+    }
+
+    _applyRendererSize() {
+        const { width, height } = this._viewportSize();
         this.camera.aspect = width / height;
         this.camera.updateProjectionMatrix();
-        this.renderer.setSize(width, height);
+        this.renderer.setSize(width, height, false);
+    }
+
+    onResize() {
+        this._applyRendererSize();
     }
 
     animate() {
