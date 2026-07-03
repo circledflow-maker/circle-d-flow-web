@@ -584,8 +584,8 @@
 
     <!-- Dynamic Focus Overlay for Worlds -->
     <div id="world-info-overlay" onclick="window.OrbitEngine?.handleOverlayClick(document.getElementById('world-title')?.getAttribute('data-world-id'))">
-        <h2 id="world-title" data-world-id="visionary" data-i18n="world_visionary_tit">...</h2>
-        <p id="world-slogan" data-i18n="world_visionary_desc">...</p>
+        <h2 id="world-title" data-world-id="luvo" data-i18n="world_luvo_tit">...</h2>
+        <p id="world-slogan" data-i18n="world_luvo_desc">...</p>
         <div class="dive-hint" data-i18n="dive_hint" data-i18n-mobile="dive_hint_mobile" style="cursor: pointer; min-height: 44px; display: flex; align-items: center; justify-content: center;">[ CLICK TO EXPLORE ]</div>
     </div>
 
@@ -652,7 +652,7 @@
     <script src="js/agents/visual_integrity.js" defer></script>
     <script src="js/agents/sound_engineer.js" defer></script>
     <script src="js/agents/flowee.js?v=4.6" defer></script>
-    <script src="js/agents/flowee_landing_guide.js?v=1.0" defer></script>
+    <script src="js/agents/flowee_landing_guide.js?v=1.1" defer></script>
     <script src="js/agents/agentic_brain.js" defer></script>
     <script src="js/agents/gatekeeper.js" defer></script>
     <script src="js/auth-handler.js" defer></script>
@@ -664,14 +664,14 @@
     <script>
         window.i18n = {
             en: {
-                world_visionary_tit: "VISION",
-                world_visionary_desc: "Photo & video studio — daily Lisbon missions, uploads, Adinkra runes.",
-                world_arcane_tit: "BAZAAR",
-                world_arcane_desc: "Grand 3D Bazaar — six guild huts, stalls, artifact forge.",
-                world_kinetic_tit: "SOUND",
-                world_kinetic_desc: "System Radio — upload tracks, Mihaly Flow, community queue.",
-                world_harmonizer_tit: "CONNECTION",
-                world_harmonizer_desc: "Connection hub — cooperation, calendar, Bantaba gathering.",
+                world_luvo_tit: "LUVO",
+                world_luvo_desc: "Community hub — roots of existence, login & initiation doors.",
+                world_bantaba_tit: "BANTABA",
+                world_bantaba_desc: "Sacred gathering — market, events, Guild of Destiny.",
+                world_archive_tit: "ARCHIVE",
+                world_archive_desc: "Portfolio & system knowledge — lore, pillars, records.",
+                world_heart_tit: "HEART",
+                world_heart_desc: "Kiss Your Heart — resonance, healing, emotional frequency.",
                 dive_hint: "[ TOUCH LUVO ]",
                 dive_hint_mobile: "[ TAP TO EXPLORE ]",
                 scroll_hint: "SCROLL TO WITNESS THE GROWTH",
@@ -698,8 +698,14 @@
             },
 
             fr: {
-                world_visionary_tit: "LA SOURCE",
-                world_visionary_desc: "Les racines de l'existence. Touchez la source pour commencer le rituel.",
+                world_luvo_tit: "LUVO",
+                world_luvo_desc: "Hub communautaire — racines, login et portes d'initiation.",
+                world_bantaba_tit: "BANTABA",
+                world_bantaba_desc: "Rassemblement sacré — marché, événements, guilde du destin.",
+                world_archive_tit: "ARCHIVE",
+                world_archive_desc: "Portfolio et savoir — lore, piliers, archives.",
+                world_heart_tit: "HEART",
+                world_heart_desc: "Kiss Your Heart — résonance, guérison, fréquence émotionnelle.",
                 dive_hint: "[ TOUCHER LUVO ]",
                 dive_hint_mobile: "[ APPUYER POUR EXPLORER ]",
                 scroll_hint: "DÉFILEZ POUR VOIR LA CROISSANCE",
@@ -717,8 +723,14 @@
                 world_initiation_desc: "Passerelle vers l'Oracle. Entrez pour concevoir votre destin."
             },
             it: {
-                world_visionary_tit: "LA SORGENTE",
-                world_visionary_desc: "Le radici dell'esistenza. Tocca la sorgente per iniziare il rituale.",
+                world_luvo_tit: "LUVO",
+                world_luvo_desc: "Hub della comunità — radici, login e porte di iniziazione.",
+                world_bantaba_tit: "BANTABA",
+                world_bantaba_desc: "Raduno sacro — mercato, eventi, gilda del destino.",
+                world_archive_tit: "ARCHIVE",
+                world_archive_desc: "Portfolio e conoscenza — lore, pilastri, archivi.",
+                world_heart_tit: "HEART",
+                world_heart_desc: "Kiss Your Heart — risonanza, guarigione, frequenza emotiva.",
                 dive_hint: "[ TOCCA LUVO ]",
                 scroll_hint: "SCORRI PER VEDERE LA CRESCITA",
                 skip_intro: "SALTA INTRO",
@@ -735,8 +747,14 @@
                 world_initiation_desc: "Varco verso l'Oracolo. Entra per disegnare il tuo destino."
             },
             de: {
-                world_visionary_tit: "LUVO",
-                world_visionary_desc: "Die Wurzeln der Existenz. Berühre die Quelle, um das Ritual des Wachstums zu beginnen.",
+                world_luvo_tit: "LUVO",
+                world_luvo_desc: "Community-Hub — Wurzeln, Login und Initiations-Tore.",
+                world_bantaba_tit: "BANTABA",
+                world_bantaba_desc: "Heiliger Treffpunkt — Markt, Events, Schicksals-Gilde.",
+                world_archive_tit: "ARCHIVE",
+                world_archive_desc: "Portfolio & Systemwissen — Lore, Säulen, Aufzeichnungen.",
+                world_heart_tit: "HEART",
+                world_heart_desc: "Kiss Your Heart — Resonanz, Heilung, emotionale Frequenz.",
                 dive_hint: "[ BERÜHRE DIE QUELLE ]",
                 dive_hint_mobile: "[ TIPPEN ZUM ERKUNDEN ]",
                 scroll_hint: "SCROLLEN FÜR DAS WACHSTUM",
@@ -755,8 +773,14 @@
                 world_initiation_desc: "Tor zum Orakel. Tritt ein, um dein Schicksal zu gestalten."
             },
             pt: {
-                world_visionary_tit: "LUVO",
-                world_visionary_desc: "As raízes da existência. Toca em Luvo para começar o ritual.",
+                world_luvo_tit: "LUVO",
+                world_luvo_desc: "Hub da comunidade — raízes, login e portas de iniciação.",
+                world_bantaba_tit: "BANTABA",
+                world_bantaba_desc: "Encontro sagrado — mercado, eventos, guilda do destino.",
+                world_archive_tit: "ARCHIVE",
+                world_archive_desc: "Portfólio e conhecimento — lore, pilares, registos.",
+                world_heart_tit: "HEART",
+                world_heart_desc: "Kiss Your Heart — ressonância, cura, frequência emocional.",
                 dive_hint: "[ TOCA EM LUVO ]",
                 dive_hint_mobile: "[ TOCA PARA EXPLORAR ]",
                 scroll_hint: "DESLIZA PARA VER O CRESCIMENTO",

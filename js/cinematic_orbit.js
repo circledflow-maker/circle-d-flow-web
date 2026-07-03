@@ -303,10 +303,10 @@ class OrbitEngine {
 
     createAdinkraLeaves() {
         const classes = [
-            { id: 'arcane', color: 0x00f0ff, pos: [20, 40, 10] },
-            { id: 'kinetic', color: 0xff5522, pos: [-25, 30, -5] },
-            { id: 'visionary', color: 0xd4af37, pos: [10, 60, -15] },
-            { id: 'harmonizer', color: 0x00ff88, pos: [-15, 50, 15] }
+            { id: 'luvo', color: 0xd4af37, pos: [10, 60, -15] },
+            { id: 'bantaba', color: 0x00ff88, pos: [-15, 50, 15] },
+            { id: 'archive', color: 0x00f0ff, pos: [20, 40, 10] },
+            { id: 'heart', color: 0xff5522, pos: [-25, 30, -5] }
         ];
 
         this.leaves = [];
@@ -354,10 +354,10 @@ class OrbitEngine {
 
     _worldRoutes() {
         return {
-            visionary: { url: 'pages/vision_studio.html', msg: 'Entering Vision Studio…', color: '#d4af37' },
-            arcane: { url: 'pages/marketplace_3d.html', msg: 'Entering the Grand Bazaar…', color: '#00f0ff' },
-            kinetic: { url: 'pages/system_radio.html', msg: 'Tuning System Radio…', color: '#ff5522' },
-            harmonizer: { modal: true, msg: 'Opening Connection hub…', color: '#00ff88' },
+            luvo: { luvo: true, msg: 'Entering Luvo Chamber…', color: '#d4af37' },
+            bantaba: { url: 'pages/bantaba.html', msg: 'Entering Bantaba…', color: '#00ff88' },
+            archive: { url: 'pages/archive.html', msg: 'Entering The Archive…', color: '#00f0ff' },
+            heart: { url: 'pages/heart.html', msg: 'Entering the Heart…', color: '#ff5522' },
         };
     }
 
@@ -425,6 +425,12 @@ class OrbitEngine {
 
         const routes = this._worldRoutes();
         const route = routes[id];
+
+        if (route?.luvo) {
+            const leaf = this.leaves.find((l) => l.userData.id === 'luvo');
+            this.transitionToLuvo(leaf || null);
+            return;
+        }
 
         if (route?.modal) {
             const modal = document.getElementById('connection-modal');

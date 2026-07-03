@@ -1,42 +1,36 @@
 /**
  * Flowee Landing Guide — post-intro world explainer for index.html
+ * Landing worlds: Luvo, Bantaba, Archive, Heart
  */
 (function () {
     const WORLDS = [
         {
-            id: 'visionary',
-            label: 'Vision Studio',
-            icon: '👁',
-            desc: 'Daily photo missions across Lisbon. Upload shots, earn XP, collect Adinkra runes, tag Atlas pins.',
-            url: 'pages/vision_studio.html',
+            id: 'luvo',
+            label: 'Luvo',
+            icon: '✦',
+            desc: 'Community hub at the roots — login, initiation doors, Navigator identity and the Oracle chamber.',
+            action: 'luvo',
         },
         {
-            id: 'arcane',
-            label: 'Grand Bazaar',
-            icon: '🏛',
-            desc: 'Six guild huts in 3D — browse stalls, forge artifacts, trade with Navigators. Alfama meets Web3.',
-            url: 'pages/marketplace_3d.html',
+            id: 'bantaba',
+            label: 'Bantaba',
+            icon: '🌍',
+            desc: 'Sacred gathering space — local market, event map, Guild of Destiny, first IRL connection.',
+            url: 'pages/bantaba.html',
         },
         {
-            id: 'kinetic',
-            label: 'System Radio',
-            icon: '🎧',
-            desc: 'Upload MP3/WAV, license tracks to the community, Mihaly Flow queue, future Spotify bridge.',
-            url: 'pages/system_radio.html',
+            id: 'archive',
+            label: 'Archive',
+            icon: '📜',
+            desc: 'Portfolio and system knowledge — pillars of light, lore records, creative artifacts.',
+            url: 'pages/archive.html',
         },
         {
-            id: 'harmonizer',
-            label: 'Connection',
-            icon: '🤝',
-            desc: 'Cooperation portal, event calendar, Bantaba gathering — where Navigators meet IRL.',
-            action: 'connection',
-        },
-        {
-            id: 'taste',
-            label: 'Taste · AkwabaLX',
-            icon: '🍲',
-            desc: 'Secret Garden kitchen — live menu, pickup orders, QR share, Navigator discounts.',
-            url: 'pages/akwaba_kitchen.html',
+            id: 'heart',
+            label: 'Heart',
+            icon: '♥',
+            desc: 'Kiss Your Heart world — resonance, healing frequency, emotional pulse of the Flow.',
+            url: 'pages/heart.html',
         },
     ];
 
@@ -54,11 +48,12 @@
     }
 
     function enterWorld(flowee, world) {
-        if (world.action === 'connection') {
-            const modal = document.getElementById('connection-modal');
-            if (modal) {
-                modal.classList.remove('opacity-0', 'pointer-events-none');
-                flowee.talk(true, 'Connection hub open — pick Cooperation, Bantaba, Calendar, or Taste.', 'guide', closeOpts(flowee));
+        if (world.action === 'luvo') {
+            if (window.OrbitEngine?.transitionToLuvo) {
+                flowee.talk(true, 'Opening the Luvo chamber — choose Return (login) or Initiation.', 'guide', closeOpts(flowee));
+                window.OrbitEngine.transitionToLuvo();
+            } else if (window.Gatekeeper) {
+                window.Gatekeeper.openLoginModal();
             }
             return;
         }
@@ -87,21 +82,23 @@
             action: () => showWorldDetail(flowee, w),
         }));
         opts.push(
-            { label: 'Explore the 3D Tree', action: () => {
-                dismiss(flowee);
-                if (window.OrbitEngine) {
-                    flowee.talk(true, 'Tap any glowing crystal on the tree — then tap the card to enter.', 'guide', closeOpts(flowee));
-                }
-            }},
-            { label: 'Login / Return', action: () => {
-                if (window.OrbitEngine?.transitionToLuvo) window.OrbitEngine.transitionToLuvo();
-                else if (window.Gatekeeper) window.Gatekeeper.openLoginModal();
-            }},
+            {
+                label: 'Explore the 3D Tree',
+                action: () => {
+                    localStorage.setItem('cdf_landing_flowee_state', 'dismissed');
+                    flowee.talk(
+                        true,
+                        'Tap a glowing crystal — Luvo, Bantaba, Archive, or Heart — then tap the card to enter.',
+                        'guide',
+                        closeOpts(flowee)
+                    );
+                },
+            },
             ...closeOpts(flowee)
         );
         flowee.talk(
             true,
-            'Four spheres orbit this tree — plus Taste at Secret Garden. Pick a realm and I will guide you in:',
+            'Four realms orbit this tree: <strong>Luvo</strong>, <strong>Bantaba</strong>, <strong>Archive</strong>, and <strong>Heart</strong>. Where should I guide you?',
             'guide',
             opts
         );
@@ -112,23 +109,30 @@
         const hello = { en: 'Welcome', de: 'Willkommen', fr: 'Bienvenue', pt: 'Bem-vindo' }[lang] || 'Welcome';
         flowee.talk(
             true,
-            `${hello} to Circle D Flow. I am <strong>Flowee</strong> — your Navigator guide.<br><br>`
-            + 'After the intro: <em>tap a glowing world</em> on the tree, read the card, tap again to enter. '
+            `${hello} to Circle D Flow. I am <strong>Flowee</strong>, your Navigator guide.<br><br>`
+            + 'Tap a glowing world on the tree — <em>Luvo, Bantaba, Archive, or Heart</em> — read the card, tap again to enter. '
             + 'Or let me explain each realm below.',
             'guide',
             [
-                { label: 'Show me the realms', action: () => {
-                    localStorage.setItem('cdf_landing_flowee_state', 'step2_worlds');
-                    showWorldPicker(flowee);
-                }},
-                { label: 'Explore tree myself', action: () => {
-                    localStorage.setItem('cdf_landing_flowee_state', 'dismissed');
-                    flowee.talk(true, 'Tap a crystal on Yggdrasil — Vision, Bazaar, Sound, or Connection. I am here if you need me.', 'guide', closeOpts(flowee));
-                }},
-                { label: 'Login / Return', action: () => {
-                    if (window.OrbitEngine?.transitionToLuvo) window.OrbitEngine.transitionToLuvo();
-                    else if (window.Gatekeeper) window.Gatekeeper.openLoginModal();
-                }},
+                {
+                    label: 'Show me the realms',
+                    action: () => {
+                        localStorage.setItem('cdf_landing_flowee_state', 'step2_worlds');
+                        showWorldPicker(flowee);
+                    },
+                },
+                {
+                    label: 'Explore tree myself',
+                    action: () => {
+                        localStorage.setItem('cdf_landing_flowee_state', 'dismissed');
+                        flowee.talk(
+                            true,
+                            'Tap a crystal on Yggdrasil. I am here if you need me.',
+                            'guide',
+                            closeOpts(flowee)
+                        );
+                    },
+                },
                 ...closeOpts(flowee),
             ]
         );
@@ -152,6 +156,7 @@
         },
         reset() {
             localStorage.setItem('cdf_landing_flowee_state', 'step1_arrival');
+            this._started = false;
         },
     };
 })();
