@@ -83,6 +83,9 @@ class OrbitEngine {
         this.scene.add(pointLight);
 
         window.addEventListener('resize', () => this.onResize());
+        if (window.visualViewport) {
+            window.visualViewport.addEventListener('resize', () => this.onResize());
+        }
         window.addEventListener('mousemove', (e) => this.onMouseMove(e));
         window.addEventListener('pointerdown', (e) => {
             this.mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
@@ -491,7 +494,9 @@ class OrbitEngine {
         // Set Data
         title.setAttribute('data-i18n', `world_${id}_tit`);
         desc.setAttribute('data-i18n', `world_${id}_desc`);
-        if(hint) hint.innerHTML = "[ CLICK TO EXPLORE ]";
+        if(hint) hint.innerHTML = window.matchMedia('(max-width: 768px)').matches
+            ? "[ TAP TO EXPLORE ]"
+            : "[ CLICK TO EXPLORE ]";
 
         // Trigger Localized Update
         if(window.refreshLanguages) window.refreshLanguages();
@@ -799,8 +804,8 @@ class OrbitEngine {
     }
 
     onResize() {
-        const width = window.innerWidth;
-        const height = window.innerHeight;
+        const width = window.visualViewport?.width || window.innerWidth;
+        const height = window.visualViewport?.height || window.innerHeight;
         this.camera.aspect = width / height;
         this.camera.updateProjectionMatrix();
         this.renderer.setSize(width, height);
