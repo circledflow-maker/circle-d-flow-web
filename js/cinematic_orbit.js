@@ -58,6 +58,8 @@ class OrbitEngine {
         this.raycaster = new THREE.Raycaster();
         this.mouse = new THREE.Vector2();
         
+        this.portalRings = [];
+        this.worldLabels = [];
         this.doors = [];
         this.isTransitioning = false;
 
@@ -120,6 +122,10 @@ class OrbitEngine {
 
     skipIntro() {
         console.log("⏩ [Oracle] Skipping Narrative...");
+        if (this._storyTl) {
+            this._storyTl.kill();
+            this._storyTl = null;
+        }
         const overlays = [
             document.getElementById('flowee-intro'),
             document.getElementById('hold-hint'),
@@ -151,6 +157,7 @@ class OrbitEngine {
         // Reset Transition Flag (Crucial Fix)
         this.isTransitioning = false;
         console.log("🔓 [Oracle] Interaction Unlocked.");
+        this._signalIntroComplete();
     }
 
     createStars() {
@@ -318,14 +325,15 @@ class OrbitEngine {
             this.treeGroup.add(leaf);
             this.leaves.push(leaf);
 
-            // NEW: Portal Pulse (Visual Entrance)
+            // Portal ring (larger tap target)
             const ringGeo = new THREE.TorusGeometry(4.5, 0.1, 16, 32);
             const ringMat = new THREE.MeshBasicMaterial({ color: c.color, transparent: true, opacity: 0.8 });
             const portalRing = new THREE.Mesh(ringGeo, ringMat);
             portalRing.position.set(...c.pos);
             portalRing.name = "portal_ring_" + c.id;
-            portalRing.userData = { id: c.id }; // Add interaction ID
+            portalRing.userData = { id: c.id };
             this.treeGroup.add(portalRing);
+            this.portalRings.push(portalRing);
             
             // Animate Pulse
             gsap.to(portalRing.scale, { x: 1.5, y: 1.5, z: 1.5, duration: 2, repeat: -1, ease: "sine.inOut" });
@@ -338,9 +346,37 @@ class OrbitEngine {
             const label = this.makeTextSprite(c.id.toUpperCase());
             label.position.set(c.pos[0], c.pos[1] + 8, c.pos[2]);
             label.scale.set(10, 2.5, 1);
-            label.userData = { id: c.id }; // Add interaction ID
+            label.userData = { id: c.id };
             this.treeGroup.add(label);
+            this.worldLabels.push(label);
         });
+    }
+
+    _worldRoutes() {
+        return {
+            visionary: { url: 'pages/vision_studio.html', msg: 'Entering Vision Studio…', color: '#d4af37' },
+            arcane: { url: 'pages/marketplace_3d.html', msg: 'Entering the Grand Bazaar…', color: '#00f0ff' },
+            kinetic: { url: 'pages/system_radio.html', msg: 'Tuning System Radio…', color: '#ff5522' },
+            harmonizer: { modal: true, msg: 'Opening Connection hub…', color: '#00ff88' },
+        };
+    }
+
+    _signalIntroComplete() {
+        window.dispatchEvent(new CustomEvent('LANDING_INTRO_COMPLETE'));
+    }
+
+    navigateToWorld(url, msg, color) {
+        if (!url) { this.isTransitioning = false; return; }
+        const overlay = document.getElementById('flowee-intro');
+        if (overlay) {
+            overlay.style.display = 'flex';
+            overlay.innerHTML = `<h2 style="color:${color};font-family:Cinzel,serif;text-align:center;padding:24px">${msg}</h2>`;
+            gsap.to(overlay, { opacity: 1, duration: 0.6, onComplete: () => {
+                window.location.href = url;
+            }});
+        } else {
+            window.location.href = url;
+        }
     }
 
     onMouseMove(e) {
@@ -353,7 +389,7 @@ class OrbitEngine {
 
         this.raycaster.setFromCamera(this.mouse, this.camera);
         
-        const targets = [...this.leaves, ...this.doors];
+        const targets = [...this.leaves, ...(this.portalRings || []), ...(this.worldLabels || []), ...this.doors];
         if(this.sourceAnchor) targets.push(this.sourceAnchor);
         
         const intersects = this.raycaster.intersectObjects(targets, true); // true for deep checking
@@ -369,64 +405,41 @@ class OrbitEngine {
             console.log("🎯 Intersected:", obj.userData.id || obj.userData.doorType || "Source");
             
             const id = obj.userData.id;
-            if(id === 'visionary') {
-                this.transitionToLuvo(obj);
-            } else if(obj.userData.doorType) {
+            if (obj.userData.doorType) {
                 this.animateDoorOpen(obj);
                 return;
-            } else if(id) {
+            }
+            if (id) {
                 this.showWorldOverlay(id);
+                return;
             }
 
-            if(obj === this.sourceAnchor) {
-                this.runStorySequence();
+            if (obj === this.sourceAnchor) {
+                this.transitionToLuvo(obj);
             }
         }
     }
 
     handleOverlayClick(id) {
-        if(this.isTransitioning) return;
-        this.isTransitioning = true;
-        
-        let targetUrl = '';
-        let overlayMsg = '';
-        let overlayColor = '#fff';
+        if (!id || this.isTransitioning) return;
 
-        if(id === 'visionary') {
-            const leaf = this.leaves.find(l => l.userData.id === 'visionary');
-            if(leaf) this.transitionToLuvo(leaf);
-            return;
-        } else if(id === 'arcane') {
-            targetUrl = 'pages/archive.html';
-            overlayMsg = 'Entering The Archive...';
-            overlayColor = '#00f0ff';
-        } else if(id === 'harmonizer') {
+        const routes = this._worldRoutes();
+        const route = routes[id];
+
+        if (route?.modal) {
             const modal = document.getElementById('connection-modal');
-            if (modal) {
-                modal.classList.remove('opacity-0', 'pointer-events-none');
-                return;
-            }
-            targetUrl = 'pages/coop.html';
-            overlayMsg = 'Entering the Bantaba...';
-            overlayColor = '#00ff88';
-        } else if(id === 'kinetic') {
-            targetUrl = 'pages/heart.html';
-            overlayMsg = 'Entering the Heart...';
-            overlayColor = '#ff5522';
-        } else {
-            targetUrl = 'index.html';
+            if (modal) modal.classList.remove('opacity-0', 'pointer-events-none');
+            this.isTransitioning = false;
+            return;
         }
 
-        const overlay = document.getElementById('flowee-intro');
-        if(overlay && targetUrl) {
-            overlay.style.display = 'flex';
-            overlay.innerHTML = `<h2 style='color:${overlayColor}; font-family:Cinzel; text-align:center'>${overlayMsg}</h2>`;
-            gsap.to(overlay, { opacity: 1, duration: 1, onComplete: () => {
-                window.location.href = targetUrl;
-            }});
-        } else if(targetUrl) {
-            window.location.href = targetUrl;
+        if (!route?.url) {
+            this.isTransitioning = false;
+            return;
         }
+
+        this.isTransitioning = true;
+        this.navigateToWorld(route.url, route.msg, route.color);
     }
 
     runStorySequence() {
@@ -437,6 +450,7 @@ class OrbitEngine {
         const dict = window.i18n[lang] || window.i18n.en;
         
         const tl = gsap.timeline();
+        this._storyTl = tl;
         const textOverlay = document.getElementById('narrative-overlay');
         const textEl = document.getElementById('narrative-text');
         
@@ -476,7 +490,9 @@ class OrbitEngine {
             gsap.to('#title-overlay', { opacity: 0, duration: 2, delay: 6 });
             
             gsap.to('#btn-skip', { opacity: 0, duration: 0.5, onComplete: () => {
-                document.getElementById('btn-skip').style.display = 'none';
+                const btn = document.getElementById('btn-skip');
+                if (btn) btn.style.display = 'none';
+                this._signalIntroComplete();
             }});
         }, null, 15);
         
@@ -492,6 +508,7 @@ class OrbitEngine {
         if(!overlay || !title || !desc) return;
 
         // Set Data
+        title.setAttribute('data-world-id', id);
         title.setAttribute('data-i18n', `world_${id}_tit`);
         desc.setAttribute('data-i18n', `world_${id}_desc`);
         if(hint) hint.innerHTML = window.matchMedia('(max-width: 768px)').matches
@@ -844,8 +861,9 @@ class OrbitEngine {
             }
 
             let hoveredLeafId = null;
-            if(this.leaves && this.leaves.length > 0) {
-                const leafHits = this.raycaster.intersectObjects(this.leaves, true);
+            const worldTargets = [...(this.leaves || []), ...(this.portalRings || []), ...(this.worldLabels || [])];
+            if (worldTargets.length > 0) {
+                const leafHits = this.raycaster.intersectObjects(worldTargets, true);
                 if (leafHits.length > 0) {
                     let hitLeaf = leafHits[0].object;
                     while(hitLeaf && !hitLeaf.userData.id) hitLeaf = hitLeaf.parent;
@@ -853,9 +871,7 @@ class OrbitEngine {
                 }
             }
 
-            if (hoveredDoorType) {
-                this.showWorldOverlay(hoveredDoorType);
-            } else if (hoveredLeafId) {
+            if (hoveredLeafId) {
                 this.showWorldOverlay(hoveredLeafId);
             }
 

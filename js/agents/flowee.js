@@ -503,14 +503,14 @@ class FloweeAgent {
             // AUTO-TUTORIAL (Page Specific)
             const pathName = window.location.pathname.split('/').pop() || 'index.html';
             if (pathName === 'index.html' || pathName === '') {
-                // Wait for the cinematic intro to finish (i.e. SKIP INTRO button is gone)
-                const checkIntro = setInterval(() => {
-                    const skipBtn = document.getElementById('btn-skip');
-                    if (!skipBtn || skipBtn.style.display === 'none' || skipBtn.style.opacity === '0') {
-                        clearInterval(checkIntro);
-                        this.runLandingOnboarding();
-                    }
-                }, 1000);
+                let landingStarted = false;
+                const startLandingGuide = () => {
+                    if (landingStarted) return;
+                    landingStarted = true;
+                    if (window.FloweeLandingGuide) window.FloweeLandingGuide.run(this);
+                };
+                window.addEventListener('LANDING_INTRO_COMPLETE', startLandingGuide, { once: true });
+                setTimeout(startLandingGuide, 24000);
             } else {
                 this.checkPageTutorial();
             }
@@ -584,6 +584,10 @@ class FloweeAgent {
 
     // --- LANDING PAGE ZERO-TYPING ONBOARDING ---
     runLandingOnboarding(forceShow = false) {
+        if (window.FloweeLandingGuide) {
+            window.FloweeLandingGuide.run(this, forceShow);
+            return;
+        }
         this.tutorialActive = true;
         let currentState = localStorage.getItem('cdf_landing_flowee_state') || 'step1_arrival';
         
@@ -892,7 +896,12 @@ class FloweeAgent {
             bubble.style.transition = 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
             bubble.style.transform = 'translateY(20px) scale(0.9)';
             bubble.style.transformOrigin = 'bottom right';
-            bubble.innerHTML = `<div class="flowee-text-content" style="line-height: 1.5; font-family: 'Space Mono', monospace;"></div><div class="flowee-options-container" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;"></div>`;
+            bubble.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-size:9px;letter-spacing:2px;color:rgba(0,255,204,0.6);text-transform:uppercase">Flowee</span><button type="button" id="flowee-bubble-close" aria-label="Close" style="background:transparent;border:none;color:rgba(255,255,255,0.45);cursor:pointer;font-size:16px;line-height:1;padding:4px 6px">✕</button></div><div class="flowee-text-content" style="line-height: 1.5; font-family: 'Space Mono', monospace;"></div><div class="flowee-options-container" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;"></div>`;
+
+            bubble.querySelector('#flowee-bubble-close')?.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.shush();
+            });
 
             // Swipe to dismiss
             let touchStartY = 0;

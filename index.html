@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="description" content="Circle D Flow — Lisbon's culture-tech RPG. Explore Vision, Bazaar, Sound & Taste worlds at Secret Garden LX.">
     <meta name="theme-color" content="#050505">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <title>Circle D Flow | The Singularity</title>
     <meta name="google" content="notranslate">
@@ -582,8 +583,8 @@
     </div>
 
     <!-- Dynamic Focus Overlay for Worlds -->
-    <div id="world-info-overlay" onclick="if(window.OrbitEngine && !window.OrbitEngine.isTransitioning) { const leafId = document.getElementById('world-title').getAttribute('data-i18n').replace('world_', '').replace('_tit', ''); window.OrbitEngine.handleOverlayClick(leafId); }">
-        <h2 id="world-title" data-i18n="world_visionary_tit">...</h2>
+    <div id="world-info-overlay" onclick="window.OrbitEngine?.handleOverlayClick(document.getElementById('world-title')?.getAttribute('data-world-id'))">
+        <h2 id="world-title" data-world-id="visionary" data-i18n="world_visionary_tit">...</h2>
         <p id="world-slogan" data-i18n="world_visionary_desc">...</p>
         <div class="dive-hint" data-i18n="dive_hint" data-i18n-mobile="dive_hint_mobile" style="cursor: pointer; min-height: 44px; display: flex; align-items: center; justify-content: center;">[ CLICK TO EXPLORE ]</div>
     </div>
@@ -650,7 +651,8 @@
     <script src="js/agents/quest_controller.js" defer></script>
     <script src="js/agents/visual_integrity.js" defer></script>
     <script src="js/agents/sound_engineer.js" defer></script>
-    <script src="js/agents/flowee.js?v=4.5" defer></script>
+    <script src="js/agents/flowee.js?v=4.6" defer></script>
+    <script src="js/agents/flowee_landing_guide.js?v=1.0" defer></script>
     <script src="js/agents/agentic_brain.js" defer></script>
     <script src="js/agents/gatekeeper.js" defer></script>
     <script src="js/auth-handler.js" defer></script>
@@ -663,13 +665,13 @@
         window.i18n = {
             en: {
                 world_visionary_tit: "VISION",
-                world_visionary_desc: "The realm of digital artistry and manifestation.",
+                world_visionary_desc: "Photo & video studio — daily Lisbon missions, uploads, Adinkra runes.",
                 world_arcane_tit: "BAZAAR",
-                world_arcane_desc: "The marketplace for creative exchange.",
+                world_arcane_desc: "Grand 3D Bazaar — six guild huts, stalls, artifact forge.",
                 world_kinetic_tit: "SOUND",
-                world_kinetic_desc: "The pulse of the community and audio frequency.",
+                world_kinetic_desc: "System Radio — upload tracks, Mihaly Flow, community queue.",
                 world_harmonizer_tit: "CONNECTION",
-                world_harmonizer_desc: "Guild of Destiny. The gathering of flow.",
+                world_harmonizer_desc: "Connection hub — cooperation, calendar, Bantaba gathering.",
                 dive_hint: "[ TOUCH LUVO ]",
                 dive_hint_mobile: "[ TAP TO EXPLORE ]",
                 scroll_hint: "SCROLL TO WITNESS THE GROWTH",
@@ -827,8 +829,8 @@
                 });
             }
 
-            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches && window.OrbitEngine?.skipIntro) {
-                setTimeout(() => window.OrbitEngine.skipIntro(), 800);
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.documentElement.classList.add('reduce-motion');
             }
         });
         window.addEventListener('resize', () => {
@@ -874,26 +876,41 @@
         });
     </script>
     <!-- Connection Modal -->
-    <div id="connection-modal" class="fixed inset-0 bg-black/95 z-[9999] opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center">
-        <div class="bg-[#111] border border-[#d4af37]/40 rounded-xl p-8 max-w-md w-11/12 text-center relative shadow-[0_0_30px_rgba(212,175,55,0.2)]">
-            <button onclick="document.getElementById('connection-modal').classList.add('opacity-0', 'pointer-events-none')" class="absolute top-4 right-4 text-white/50 hover:text-[#d4af37] transition-colors">
-                <span class="material-symbols-outlined">close</span>
+    <div id="connection-modal" class="fixed inset-0 bg-black/95 z-[9999] opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-4">
+        <div class="bg-[#111] border border-[#d4af37]/40 rounded-xl p-6 sm:p-8 max-w-md w-full text-center relative shadow-[0_0_30px_rgba(212,175,55,0.2)]">
+            <button type="button" onclick="window.closeConnectionModal?.()" class="absolute top-4 right-4 text-white/50 hover:text-[#d4af37] transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center">
+                <span class="material-symbols-outlined" aria-hidden="true">close</span>
             </button>
-            <h2 class="text-3xl font-cinzel text-[#d4af37] tracking-widest mb-2 glow-gold">CONNECTION</h2>
-            <p class="text-xs font-mono text-white/60 uppercase tracking-widest mb-8">Choose your path</p>
+            <h2 class="text-2xl sm:text-3xl font-cinzel text-[#d4af37] tracking-widest mb-2 glow-gold">CONNECTION</h2>
+            <p class="text-xs font-mono text-white/60 uppercase tracking-widest mb-6">Choose your path</p>
             
-            <div class="flex flex-col gap-4">
-                <a href="pages/coop.html" class="bg-black/40 border border-[#22c55e]/50 hover:bg-[#22c55e]/20 hover:shadow-[0_0_15px_rgba(34,197,94,0.3)] text-[#22c55e] py-4 rounded-lg font-bold tracking-[0.2em] uppercase transition-all flex items-center justify-center gap-3">
-                    <span class="material-symbols-outlined">handshake</span>
+            <div class="flex flex-col gap-3">
+                <a href="pages/akwaba_kitchen.html" class="bg-black/40 border border-[#d4af37]/50 hover:bg-[#d4af37]/15 text-[#d4af37] py-4 rounded-lg font-bold tracking-[0.15em] uppercase transition-all flex items-center justify-center gap-3 min-h-[48px]">
+                    <span aria-hidden="true">🍲</span>
+                    Taste · AkwabaLX
+                </a>
+                <a href="pages/coop.html" class="bg-black/40 border border-[#22c55e]/50 hover:bg-[#22c55e]/20 hover:shadow-[0_0_15px_rgba(34,197,94,0.3)] text-[#22c55e] py-4 rounded-lg font-bold tracking-[0.15em] uppercase transition-all flex items-center justify-center gap-3 min-h-[48px]">
+                    <span class="material-symbols-outlined" aria-hidden="true">handshake</span>
                     Cooperation
                 </a>
-                <a href="pages/calendar.html" class="bg-black/40 border border-[#3b82f6]/50 hover:bg-[#3b82f6]/20 hover:shadow-[0_0_15px_rgba(59,130,246,0.3)] text-[#3b82f6] py-4 rounded-lg font-bold tracking-[0.2em] uppercase transition-all flex items-center justify-center gap-3">
-                    <span class="material-symbols-outlined">calendar_month</span>
+                <a href="pages/bantaba.html" class="bg-black/40 border border-[#00ff88]/50 hover:bg-[#00ff88]/15 text-[#00ff88] py-4 rounded-lg font-bold tracking-[0.15em] uppercase transition-all flex items-center justify-center gap-3 min-h-[48px]">
+                    <span aria-hidden="true">🌍</span>
+                    Bantaba
+                </a>
+                <a href="pages/calendar.html" class="bg-black/40 border border-[#3b82f6]/50 hover:bg-[#3b82f6]/20 text-[#3b82f6] py-4 rounded-lg font-bold tracking-[0.15em] uppercase transition-all flex items-center justify-center gap-3 min-h-[48px]">
+                    <span class="material-symbols-outlined" aria-hidden="true">calendar_month</span>
                     Calendar
                 </a>
             </div>
         </div>
     </div>
+    <script>
+        window.closeConnectionModal = function () {
+            const modal = document.getElementById('connection-modal');
+            if (modal) modal.classList.add('opacity-0', 'pointer-events-none');
+            if (window.OrbitEngine) window.OrbitEngine.isTransitioning = false;
+        };
+    </script>
 </body>
 </html>
 
