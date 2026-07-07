@@ -69,19 +69,30 @@ const GamificationEngine = {
         const quest = this.state.quests.find(q => q.id === id);
         if (quest && quest.status !== 'completed') {
             quest.status = 'completed';
-            
-            // Local update first (Optimistic UI)
-            this.state.exp += quest.reward || 50;
+            const reward = quest.reward || 50;
+            this.state.exp += reward;
             this.state.trust_points += 10;
+            localStorage.setItem('cdf_xp', String(this.state.exp));
+            localStorage.setItem('cdf_user_xp', String(this.state.exp));
+            localStorage.setItem('cdf_trust_points', String(this.state.trust_points));
             this.saveLocal();
             this.renderQuests();
             this.updateHUD();
+            if (window.CoopBarkeeper) window.CoopBarkeeper.renderResonanceBar();
 
-            // Notify UI
-            if (window.FloweeAgent) {
-                window.FloweeAgent.speak(`Quest completed: ${id}. Resonance expanded.`);
-            } else {
-                alert(`Quest Completed! +${quest.reward || 50} EXP`);
+            const level = Math.max(1, Math.floor(this.state.exp / 200) + 1);
+            const prev = parseInt(localStorage.getItem('cdf_last_level') || '1', 10);
+            if (level > prev) {
+                localStorage.setItem('cdf_last_level', String(level));
+                if (window.AdinkraEngine) window.AdinkraEngine.onLevelUp(level, prev);
+            }
+
+            if (window.FloweeReward) {
+                await window.FloweeReward.xpToast(quest.title, reward);
+            } else if (window.Flowee) {
+                window.Flowee.talk(true, `Quest sealed: +${reward} EXP, +10 Trust.`, 'celebrate');
+            } else if (window.Pusher) {
+                window.Pusher.showToast(`+${reward} EXP · ${quest.title}`, 'success');
             }
 
             // Sync with Supabase if online
@@ -182,9 +193,14 @@ const GamificationEngine = {
     updateHUD: function() {
         const expEl = document.getElementById('res-bar-exp');
         const tpEl = document.getElementById('res-bar-tp');
+        const flowEl = document.getElementById('res-bar-flow');
+        const lvlEl = document.getElementById('res-bar-level');
         
         if (expEl) expEl.innerText = this.state.exp;
         if (tpEl) tpEl.innerText = this.state.trust_points;
+        if (flowEl) flowEl.innerText = localStorage.getItem('cdf_wallet_flow') || '0';
+        if (lvlEl) lvlEl.innerText = Math.max(1, Math.floor(this.state.exp / 200) + 1);
+        if (window.CoopBarkeeper) window.CoopBarkeeper.renderResonanceBar();
     }
 };
 

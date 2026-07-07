@@ -13,6 +13,7 @@ class ResonanceSystem {
 
         // Bind global access
         window.Resonance = this;
+        window.ResonanceSystem = this;
     }
 
     /**

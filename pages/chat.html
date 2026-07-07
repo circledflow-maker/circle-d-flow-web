@@ -599,9 +599,27 @@
             
             feed.appendChild(msgDiv);
             input.value = '';
-            
-            // Scroll to bottom
             feed.scrollTop = feed.scrollHeight;
+
+            if (/(@flowee|flowee,)/i.test(text) && window.askFloweeBarkeeper) {
+                const reply = window.askFloweeBarkeeper(text);
+                setTimeout(() => {
+                    const fDiv = document.createElement('div');
+                    fDiv.className = 'flex items-start gap-4 animate-fadeIn';
+                    fDiv.innerHTML = `
+                        <div class="w-8 h-8 rounded-full bg-tao-earth flex items-center justify-center border border-tao-fire flex-shrink-0 text-xs">◈</div>
+                        <div>
+                            <div class="flex items-baseline gap-2 mb-1">
+                                <span class="font-bold text-sm text-tao-fire">Flowee · Barkeeper</span>
+                                <span class="text-[10px] text-white/30 font-mono">${timeStr}</span>
+                            </div>
+                            <div class="bg-black/40 border border-tao-fire/30 rounded-lg rounded-tl-none p-3 text-sm text-white/90 max-w-md whitespace-pre-wrap">${reply.replace(/</g,'&lt;')}</div>
+                        </div>`;
+                    feed.appendChild(fDiv);
+                    feed.scrollTop = feed.scrollHeight;
+                    if (window.Flowee) window.Flowee.talk(false, reply.slice(0, 100), 'guide');
+                }, 500);
+            }
         }
     </script>
     <script src="../js/agents/pusher.js" defer></script>
@@ -619,6 +637,11 @@
     <script src="../js/agents/quest_controller.js" defer></script>
     <script src="../js/agents/visual_integrity.js" defer></script>
     <script src="../js/agents/sound_engineer.js" defer></script>
+    <script src="../js/data/coop_roles.js?v=1.0"></script>
+    <script src="../js/data/coop_equipment.js?v=1.0"></script>
+    <script src="../js/data/adinkra_nature_cycle.js?v=1.0"></script>
+    <script src="../js/data/adinkra_catalog.js?v=2.0"></script>
+    <script src="../js/agents/coop_barkeeper.js?v=1.0"></script>
     <script src="../js/agents/flowee.js"></script>
 </body>
 </html>

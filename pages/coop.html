@@ -48,11 +48,41 @@
             100% { box-shadow: 0 0 35px rgba(212, 126, 61, 0.8); } 
         }
         
-        .nature-border {
-            border: 1px solid rgba(138, 154, 91, 0.2);
-            background: linear-gradient(135deg, rgba(82, 110, 72, 0.1) 0%, rgba(11, 15, 13, 0.9) 100%);
-            backdrop-filter: blur(10px);
+        .section-label {
+            font-family: Cinzel, serif; font-size: 0.7rem; letter-spacing: 0.2em;
+            text-transform: uppercase; color: #D47E3D; margin-bottom: 8px;
         }
+        .coop-label { display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.15em; color: rgba(255,255,255,0.4); margin-bottom: 6px; }
+        .coop-input { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px 12px; color: #fff; font-size: 13px; }
+        .coop-chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+        .coop-chip, .coop-role-chip, .coop-eq-chip { font-size: 10px; padding: 6px 12px; border-radius: 99px; border: 1px solid rgba(255,255,255,0.15); background: rgba(0,0,0,0.3); color: rgba(255,255,255,0.7); cursor: pointer; transition: all 0.2s; }
+        .coop-chip.on, .coop-role-chip.on, .coop-eq-chip.on { border-color: #D47E3D; background: rgba(212,126,61,0.2); color: #fff; }
+        .coop-role-chip { font-size: 9px; padding: 4px 8px; margin: 2px; }
+        .coop-eq-chip { display: flex; align-items: center; gap: 6px; border-radius: 8px; font-size: 10px; text-align: left; }
+        .coop-seal-btn { width: 100%; padding: 12px; background: linear-gradient(135deg, #5C4033, #D47E3D); border: 1px solid #D47E3D; border-radius: 10px; color: #fff; font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em; font-weight: 700; cursor: pointer; }
+        .coop-seal-btn:hover { filter: brightness(1.1); }
+        .coop-phase-step { display: flex; align-items: center; gap: 6px; padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08); background: rgba(0,0,0,0.3); color: rgba(255,255,255,0.5); font-size: 10px; cursor: pointer; white-space: nowrap; }
+        .coop-phase-step.active { border-color: #D47E3D; color: #fff; background: rgba(212,126,61,0.15); }
+        .coop-phase-step.done { border-color: rgba(34,197,94,0.4); color: #86efac; }
+        .coop-crew-card { padding: 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); background: rgba(0,0,0,0.25); }
+        .coop-gap { display: flex; align-items: center; gap: 8px; font-size: 11px; padding: 8px 12px; border-radius: 8px; margin-bottom: 12px; }
+        .coop-gap.warn { background: rgba(234,179,8,0.1); border: 1px solid rgba(234,179,8,0.3); color: #fde047; }
+        .coop-gap.ok { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3); color: #86efac; }
+        .coop-guest-tag { font-size: 10px; padding: 4px 10px; border-radius: 99px; background: rgba(44,73,87,0.4); border: 1px solid rgba(44,73,87,0.6); }
+        .coop-brief { background: rgba(0,0,0,0.4); padding: 12px; border-radius: 8px; border: 1px solid rgba(212,175,55,0.2); }
+        #coop-bar-chat { max-height: 220px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding: 8px 0; }
+        .coop-chat-msg.flowee .coop-chat-bubble { background: rgba(212,126,61,0.15); border: 1px solid rgba(212,126,61,0.3); }
+        .coop-chat-msg.user .coop-chat-bubble { background: rgba(44,73,87,0.3); border: 1px solid rgba(44,73,87,0.5); }
+        .coop-chat-who { font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.4); }
+        .coop-chat-bubble { font-size: 12px; padding: 8px 12px; border-radius: 10px; margin-top: 4px; line-height: 1.5; }
+        .resonance-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 24px; }
+        @media (max-width: 640px) { .resonance-strip { grid-template-columns: repeat(2, 1fr); } }
+        .res-stat { text-align: center; padding: 10px; border-radius: 10px; background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.06); }
+        .res-progress-wrap { grid-column: 1 / -1; padding: 12px; border-radius: 10px; background: rgba(0,0,0,0.35); border: 1px solid rgba(212,126,61,0.2); }
+        .res-progress-track { height: 6px; background: rgba(255,255,255,0.08); border-radius: 99px; overflow: hidden; margin-top: 8px; }
+        .res-progress-fill { height: 100%; background: linear-gradient(90deg, #5C4033, #D47E3D); transition: width 0.4s; }
+        .flowee-barkeeper { display: flex; gap: 16px; align-items: flex-start; }
+        .flowee-barkeeper-avatar { width: 56px; height: 56px; border-radius: 50%; border: 2px solid #D47E3D; background: rgba(212,126,61,0.15); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     </style>
 </head>
 <body class="bg-tao-void text-white min-h-screen font-body overflow-x-hidden relative">
@@ -106,172 +136,142 @@
     </button>
 
     <!-- MAIN CONTENT -->
-    <main class="relative z-10 pt-24 pb-20 px-4 max-w-6xl mx-auto flex flex-col gap-10">
+    <main id="coop-bar-root" class="relative z-10 pt-24 pb-20 px-4 max-w-6xl mx-auto flex flex-col gap-8">
         
-        <!-- HEADER -->
         <div class="text-center relative">
             <h1 class="text-4xl md:text-6xl font-display font-medium text-transparent bg-clip-text bg-gradient-to-r from-tao-metal via-white to-tao-earth mb-3 tracking-wide">
                 THE RESONANCE BAR
             </h1>
             <p class="text-white/50 font-body text-sm md:text-base tracking-widest max-w-xl mx-auto italic">
-                "Where action is natural, and non-action bears fruit."
+                Flowee tends the bar — plan events, assign roles, earn resonance.
             </p>
         </div>
 
-        <!-- DASHBOARD GRID -->
+        <!-- RESONANCE BAR HUD -->
+        <div class="resonance-strip nature-border rounded-2xl p-4">
+            <div class="res-stat"><div class="text-lg font-bold text-tao-fire" id="res-bar-level">1</div><div class="text-[9px] text-white/40 uppercase">Resonance Lv</div></div>
+            <div class="res-stat"><div class="text-lg font-bold text-tao-metal" id="res-bar-exp">0</div><div class="text-[9px] text-white/40 uppercase">EXP</div></div>
+            <div class="res-stat"><div class="text-lg font-bold text-tao-earth" id="res-bar-tp">100</div><div class="text-[9px] text-white/40 uppercase">Trust</div></div>
+            <div class="res-stat"><div class="text-lg font-bold text-tao-water" id="res-bar-flow">0</div><div class="text-[9px] text-white/40 uppercase">Flow</div></div>
+            <div class="res-progress-wrap">
+                <div class="flex justify-between text-[10px] text-white/50 font-mono"><span>Resonance Bar</span><span id="resonance-progress-label">0 / 200 XP</span></div>
+                <div class="res-progress-track"><div class="res-progress-fill" id="resonance-progress-bar" style="width:0%"></div></div>
+            </div>
+        </div>
+
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            
-            <!-- LEFT: FLOW IDENTITY -->
+            <!-- LEFT: Profile + Flowee Bar Chat -->
             <div class="lg:col-span-1 flex flex-col gap-6">
-                <!-- User Profile Card -->
-                <div class="nature-border rounded-2xl p-6 relative overflow-hidden group">
-                    <div class="absolute top-0 right-0 p-3 opacity-50 view-profile-btn cursor-pointer hover:opacity-100 transition-opacity" onclick="window.location.href='profile-full.html'">
-                        <span class="material-symbols-outlined text-sm">settings</span>
-                    </div>
-                    
-                    <div class="flex items-center gap-4 mb-6">
-                        <div class="w-16 h-16 rounded-full border-2 border-tao-fire/50 overflow-hidden relative">
-                            <img src="../Assets/images/logo.png" alt="Avatar" class="w-full h-full object-cover opacity-80" id="res-bar-avatar">
+                <div class="nature-border rounded-2xl p-6 relative overflow-hidden">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-14 h-14 rounded-full border-2 border-tao-fire/50 overflow-hidden">
+                            <img src="../Assets/images/logo.png" alt="Avatar" class="w-full h-full object-cover" id="res-bar-avatar">
                         </div>
                         <div>
-                            <h2 class="text-xl font-display text-white tracking-wide" id="res-bar-name">Initiate</h2>
-                            <span class="text-xs font-mono text-tao-fire uppercase tracking-widest px-2 py-0.5 bg-tao-fire/10 rounded border border-tao-fire/20 mt-1 inline-block" id="res-bar-role">Visual Flow</span>
+                            <h2 class="text-lg font-display text-white" id="res-bar-name">Navigator</h2>
+                            <span class="text-[10px] font-mono text-tao-fire uppercase tracking-widest px-2 py-0.5 bg-tao-fire/10 rounded border border-tao-fire/20" id="res-bar-role">Crew</span>
                         </div>
                     </div>
-
-                    <div class="grid grid-cols-2 gap-4 text-center">
-                        <div class="bg-black/30 rounded-lg p-3 border border-white/5">
-                            <div class="text-2xl font-body font-bold text-tao-metal" id="res-bar-tp">120</div>
-                            <div class="text-[10px] text-white/40 uppercase tracking-wider font-mono">Trust Points</div>
-                        </div>
-                        <div class="bg-black/30 rounded-lg p-3 border border-white/5">
-                            <div class="text-2xl font-body font-bold text-tao-earth" id="res-bar-exp">850</div>
-                            <div class="text-[10px] text-white/40 uppercase tracking-wider font-mono">Resonance EXP</div>
-                        </div>
-                    </div>
-
-                    <!-- Flow Tags -->
-                    <div class="mt-6">
-                        <div class="text-xs text-white/30 uppercase tracking-widest mb-3">Your Aura</div>
-                        <div class="flex flex-wrap gap-2" id="res-bar-tags">
-                            <span class="text-[10px] px-2 py-1 rounded bg-tao-water/20 border border-tao-water/30 text-white/80">Cinematographer</span>
-                            <span class="text-[10px] px-2 py-1 rounded bg-tao-earth/20 border border-tao-earth/30 text-white/80">Hip-Hop Vibe</span>
-                            <span class="text-[10px] px-2 py-1 rounded bg-white/5 border border-white/10 text-white/50 cursor-pointer hover:text-white" onclick="window.location.href='profile-full.html'">+ Add Vibe</span>
-                        </div>
-                    </div>
+                    <div class="flex flex-wrap gap-2" id="res-bar-tags"></div>
                 </div>
 
-                <!-- Guidance / Onboarding Prompt -->
-                <div class="nature-border rounded-xl p-5 border-l-2 border-l-tao-fire cursor-pointer hover:bg-white/5 transition-colors" onclick="window.location.href='partner-scanner.html'">
-                    <div class="flex justify-between items-center mb-2">
-                        <h3 class="text-sm font-bold text-tao-fire">Flow Questionnaire</h3>
+                <!-- FLOWEE BARKEEPER CHAT -->
+                <div class="nature-border rounded-2xl p-5 flex flex-col">
+                    <div class="flowee-barkeeper mb-4">
+                        <div class="flowee-barkeeper-avatar">
+                            <svg viewBox="0 0 40 40" width="36" height="36" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="none" stroke="#D47E3D" stroke-width="1.5"/><path d="M12 22 Q20 10 28 22" fill="none" stroke="#D47E3D" stroke-width="1.5"/><ellipse cx="20" cy="24" rx="8" ry="5" fill="rgba(212,126,61,0.3)"/></svg>
+                        </div>
+                        <div>
+                            <div class="text-sm font-display text-tao-fire">Flowee · Barkeeper</div>
+                            <div class="text-[10px] text-white/40 italic">Tags @Flowee in the bar chat</div>
+                        </div>
+                    </div>
+                    <div id="coop-bar-chat"></div>
+                    <form id="coop-chat-form" class="flex gap-2 mt-3" onsubmit="event.preventDefault(); const i=document.getElementById('coop-chat-input'); if(i.value.trim()){ window.CoopBarkeeper.sendChat(i.value.trim()); i.value=''; }">
+                        <input id="coop-chat-input" type="text" class="coop-input flex-1" placeholder="@Flowee roles, location, gear…" autocomplete="off">
+                        <button type="submit" class="px-3 bg-tao-earth rounded-lg border border-tao-earth text-white"><span class="material-symbols-outlined text-sm">send</span></button>
+                    </form>
+                </div>
+
+                <div class="nature-border rounded-xl p-4 border-l-2 border-l-tao-fire cursor-pointer hover:bg-white/5" onclick="window.location.href='partner-scanner.html'">
+                    <div class="flex justify-between items-center mb-1">
+                        <h3 class="text-sm font-bold text-tao-fire">Onboard New Crew</h3>
                         <span class="text-[10px] bg-tao-fire/20 text-tao-fire px-2 py-0.5 rounded font-mono">+50 EXP</span>
                     </div>
-                    <p class="text-xs text-white/50 leading-relaxed">
-                        Refine your harmony with the community. Complete the optional questionnaire to better align with potential collaborators.
-                    </p>
+                    <p class="text-xs text-white/50">Flow Finder — scan collaborators and assign roles for new Navigators.</p>
                 </div>
             </div>
 
-            <!-- RIGHT: THE EVENT VILLAGE (3-SLOT VISUALIZER) -->
-            <div class="lg:col-span-2 nature-border rounded-3xl p-8 relative overflow-hidden flex flex-col">
-                <div class="flex justify-between items-start mb-6 z-10">
-                    <div>
-                        <h2 class="text-2xl font-display text-white tracking-wide flex items-center gap-3">
-                            <span class="material-symbols-outlined text-tao-fire text-3xl">landscape</span> 
-                            The Event Village
-                        </h2>
-                        <p class="text-xs text-white/40 mt-1 max-w-sm">Manage your focus. You may host 1 primary event (Campfire) and participate in up to 2 collaborations (Lanterns).</p>
-                    </div>
-                    <div>
-                        <button class="px-5 py-2.5 bg-tao-earth/80 hover:bg-tao-earth text-white rounded-lg transition-all border border-tao-earth shadow-[0_0_15px_rgba(46,59,50,0.5)] flex items-center gap-2 text-sm uppercase tracking-widest font-semibold" onclick="window.location.href='quest-create.html'">
-                            <span class="material-symbols-outlined text-sm">add_circle</span> Manifest Event
-                        </button>
-                    </div>
+            <!-- RIGHT: Project Pipeline + Event Village -->
+            <div class="lg:col-span-2 flex flex-col gap-6">
+                <!-- 5-PHASE PLANNER -->
+                <div class="nature-border rounded-3xl p-6">
+                    <p class="section-label">Project Pipeline · KyheartLx × Naru × C-riz</p>
+                    <div id="coop-gap-alert" class="coop-gap ok"></div>
+                    <div id="coop-phase-steps" class="flex gap-2 overflow-x-auto pb-4 mb-4 hide-scrollbar"></div>
+                    <div id="coop-phase-form"></div>
                 </div>
 
-                <!-- 3-Slot Visual Area (Swipeable on Mobile) -->
-                <div class="flex-1 min-h-[350px] relative bg-black/20 rounded-2xl border border-white/5 py-6 px-4 flex flex-row overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-8 md:gap-16 items-center lg:justify-center">
-                    
-                    <!-- Collaboration Lantern 1 (Slot 2) -->
-                    <div class="snap-center shrink-0 flex flex-col items-center gap-4 group cursor-pointer" onclick="window.location.href='chat.html'">
-                        <div class="w-16 h-16 rounded-full bg-tao-wood/20 border border-tao-wood/40 flex items-center justify-center float-organic transition-all group-hover:border-tao-water group-hover:bg-tao-water/20">
-                             <span class="material-symbols-outlined text-tao-wood/60 group-hover:text-tao-water text-2xl">wb_incandescent</span>
+                <!-- Event Village -->
+                <div class="nature-border rounded-3xl p-6">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h2 class="text-xl font-display text-white flex items-center gap-2">
+                                <span class="material-symbols-outlined text-tao-fire">local_fire_department</span> Campfire Focus
+                            </h2>
+                            <p class="text-xs text-white/40 mt-1">1 primary session + 2 collaboration lanterns</p>
                         </div>
-                        <div class="text-center">
-                            <div class="text-xs font-bold text-white/70">Support Role</div>
-                            <div class="text-[10px] text-white/40">Nature Walk (Empty)</div>
-                        </div>
+                        <button class="px-4 py-2 bg-tao-earth/80 hover:bg-tao-earth text-white rounded-lg text-xs uppercase tracking-widest flex items-center gap-2" onclick="localStorage.removeItem('cdf_coop_project'); location.reload();">
+                            <span class="material-symbols-outlined text-sm">refresh</span> New Plan
+                        </button>
                     </div>
-
-                    <!-- The Campfire (Primary Focus Slot 1) -->
-                    <div class="snap-center shrink-0 flex flex-col items-center gap-5 relative group cursor-pointer" onclick="window.location.href='chat.html'">
-                        <div class="w-32 h-32 rounded-full bg-tao-fire/10 border border-tao-fire/30 flex items-center justify-center pulse-fire relative z-10 transition-all group-hover:bg-tao-fire/20">
-                            <!-- Simulated Fire Graphic -->
-                            <span class="material-symbols-outlined text-tao-fire text-5xl">local_fire_department</span>
-                            
-                            <!-- Current Event Badge -->
-                            <div class="absolute -bottom-3 bg-black border border-tao-fire/50 rounded-full px-3 py-1 text-[10px] font-mono text-tao-fire whitespace-nowrap">
-                                MAIN FOCUS
+                    <div class="flex justify-center py-6">
+                        <div class="text-center">
+                            <div class="w-24 h-24 rounded-full bg-tao-fire/10 border border-tao-fire/30 flex items-center justify-center pulse-fire mx-auto mb-3">
+                                <span class="material-symbols-outlined text-tao-fire text-4xl">local_fire_department</span>
                             </div>
-                        </div>
-                        <div class="text-center mt-2">
-                            <div id="coop-focus-title" class="text-sm font-display font-bold text-white">Loading...</div>
-                            <div id="coop-focus-subtitle" class="text-[10px] text-white/50 font-mono mt-1">Checking matrix...</div>
+                            <div id="coop-focus-title" class="text-sm font-display font-bold text-white">New Session</div>
+                            <div id="coop-focus-subtitle" class="text-[10px] text-white/50 font-mono mt-1">Phase 1/5</div>
                         </div>
                     </div>
-
-                    <!-- Collaboration Lantern 2 (Slot 3) -->
-                    <div class="snap-center shrink-0 flex flex-col items-center gap-4 group cursor-pointer">
-                        <div class="w-16 h-16 rounded-full bg-black/40 border border-white/10 border-dashed flex items-center justify-center float-organic transition-all group-hover:border-white/30">
-                             <span class="material-symbols-outlined text-white/20 text-xl group-hover:text-white/40">add</span>
-                        </div>
-                        <div class="text-center">
-                            <div class="text-xs font-bold text-white/30">Empty Lantern</div>
-                            <div class="text-[10px] text-white/20">Available Space</div>
-                        </div>
-                    </div>
-
-                </div>
-                
-                <div class="mt-8 flex flex-col gap-4 z-10 w-full">
-                    <button class="w-full bg-tao-water/20 border border-tao-water/50 hover:bg-tao-water/40 text-white py-4 rounded-xl text-sm font-bold uppercase tracking-widest transition-all shadow-[0_0_15px_rgba(44,73,87,0.3)] hover:shadow-[0_0_25px_rgba(44,73,87,0.5)] flex items-center justify-center gap-2" onclick="window.location.href='partner-scanner.html'">
-                        <span class="material-symbols-outlined">radar</span> Explore Full Community Grid
+                    <button class="w-full bg-tao-water/20 border border-tao-water/50 hover:bg-tao-water/40 text-white py-3 rounded-xl text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2" onclick="window.CoopBarkeeper?.openSanctuary()">
+                        <span class="material-symbols-outlined">forum</span> Enter Sanctuary Chatroom
                     </button>
-                    <div class="flex justify-end mt-2">
-                        <button class="text-xs text-white/40 hover:text-white uppercase tracking-widest flex items-center gap-1 transition-colors" onclick="window.location.href='chat.html'">
-                            The Sanctuary <span class="material-symbols-outlined text-xs">arrow_forward</span>
-                        </button>
-                    </div>
                 </div>
             </div>
-            
+        </div>
+
+        <!-- EVENT LEDGER -->
+        <div class="nature-border rounded-3xl p-8">
+            <div class="flex justify-between items-start mb-6">
+                <div>
+                    <h2 class="text-2xl font-display text-white flex items-center gap-3">
+                        <span class="material-symbols-outlined text-[#d4af37]">assignment</span> Event Ledger
+                    </h2>
+                    <p class="text-xs text-white/40 mt-1">Complete tasks for EXP, Trust, and Museum symbols.</p>
+                </div>
+            </div>
+            <div id="quest-board-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
         </div>
 
     </main>
 
-            <!-- EVENT LEDGER / GAMIFICATION HYBRID -->
-        <div class="mt-12 nature-border rounded-3xl p-8 relative overflow-hidden">
-            <div class="flex justify-between items-start mb-6">
-                <div>
-                    <h2 class="text-2xl font-display text-white tracking-wide flex items-center gap-3">
-                        <span class="material-symbols-outlined text-[#d4af37] text-3xl">assignment</span> 
-                        The Event Ledger
-                    </h2>
-                    <p class="text-xs text-white/40 mt-1 max-w-xl">Command Center: Assign tasks to human collaborators and digital AI agents (Automated Reel Production, etc.).</p>
-                </div>
-                <button onclick="window.location.href='quest-create.html'" class="px-4 py-2 bg-black/40 border border-[#d4af37]/30 hover:bg-[#d4af37]/20 text-[#d4af37] rounded transition-colors text-xs font-mono uppercase tracking-widest flex items-center gap-2">
-                    <span class="material-symbols-outlined text-sm">add</span> Add Quest
-                </button>
-            </div>
-            
-            <div id="quest-board-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <!-- Quests rendered by GamificationEngine -->
-            </div>
-        </div>
+    <div id="flowee-agent" class="fixed z-[999999]" style="bottom: calc(88px + env(safe-area-inset-bottom, 0px)); right: 16px;"></div>
 
     <!-- AGENTS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/agents/supabase_client.js?v=1.0"></script>
     <script src="../js/agents/agent.js"></script>
+    <script src="../js/agents/level_logic.js?v=1.0"></script>
+    <script src="../js/agents/points_sync.js?v=1.0"></script>
+    <script src="../js/data/adinkra_glossar_100.js?v=1.0"></script>
+    <script src="../js/data/adinkra_nature_cycle.js?v=1.0"></script>
+    <script src="../js/data/adinkra_catalog.js?v=2.0"></script>
+    <script src="../js/data/coop_roles.js?v=1.0"></script>
+    <script src="../js/data/coop_equipment.js?v=1.0"></script>
+    <script src="../js/data/coop_pipeline.js?v=1.0"></script>
+    <script src="../js/agents/adinkra_engine.js?v=1.0"></script>
+    <script src="../js/agents/coop_barkeeper.js?v=1.0"></script>
     <script src="../js/agents/imperial_hud.js"></script>
     <script src="../js/agents/pusher.js"></script>
     <script src="../js/agents/helper.js"></script>
@@ -279,7 +279,6 @@
     <script src="../js/agents/global_ticker.js"></script>
     <script src="../js/agents/constructor_bot.js" defer></script>
     <script src="../js/agents/kingdom_science.js" defer></script>
-    <script src="../js/agents/resonance_bridge.js" defer></script>
     <script src="../js/agents/vault_space.js" defer></script>
     <script src="../js/agents/horizon_bar.js" defer></script>
     <script src="../js/agents/social_matrix.js" defer></script>
@@ -288,79 +287,53 @@
     <script src="../js/agents/quest_controller.js" defer></script>
     <script src="../js/agents/visual_integrity.js" defer></script>
     <script src="../js/agents/sound_engineer.js" defer></script>
-    <script src="../js/agents/flowee.js"></script>
+    <script src="../js/agents/flowee.js?v=5.1"></script>
+    <script src="../js/agents/flowee_reward.js?v=1.0"></script>
     
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
-            // Load Base Profile (Fallback)
-            let name = localStorage.getItem('cdf_user_username') || 'Kylar';
-            let role = localStorage.getItem('cdf_user_role') || 'Visual Flow';
-            const tp = localStorage.getItem('cdf_trust_points') || '100';
-            const exp = localStorage.getItem('cdf_xp') || '0';
+            let name = localStorage.getItem('cdf_user_username') || localStorage.getItem('cdf_name') || 'KyheartLx';
+            let role = localStorage.getItem('cdf_user_role') || 'Coordinator';
 
-            const savedName = localStorage.getItem('cdf_name');
-            if(savedName) name = savedName;
-
-            const partnerDataStr = localStorage.getItem('circle_partner_details');
-            if(partnerDataStr) {
-                try {
-                    const pd = JSON.parse(partnerDataStr);
-                    if(pd.email) name = pd.email.split('@')[0];
-                    if(pd.role) role = pd.role;
-                } catch(e) {}
-            }
-            
-            document.getElementById('res-bar-name').innerText = name;
-            document.getElementById('res-bar-role').innerText = role;
-            document.getElementById('res-bar-tp').innerText = tp;
-            document.getElementById('res-bar-exp').innerText = exp;
-
-            // Load Profile and Dynamic Focus Event
             if (window.supabaseClient) {
                 const { data: { session } } = await window.supabaseClient.auth.getSession();
                 if (session) {
-                    // Fetch real profile data
                     const { data: profile } = await window.supabaseClient
-                        .from('profiles')
-                        .select('*')
-                        .eq('id', session.user.id)
-                        .single();
-                        
+                        .from('profiles').select('*').eq('id', session.user.id).maybeSingle();
                     if (profile) {
-                        document.getElementById('res-bar-name').innerText = profile.username || 'Initiate';
-                        document.getElementById('res-bar-role').innerText = profile.role_calling || 'Visual Flow';
-                        document.getElementById('res-bar-exp').innerText = profile.exp || '0';
-                        document.getElementById('res-bar-tp').innerText = profile.trust_points || '100';
-                        
-                        if (profile.avatar_url) {
-                            document.getElementById('res-bar-avatar').src = profile.avatar_url;
-                        }
-                    }
-
-                    // Fetch latest event hosted by user without relying on created_at column to avoid 400 errors
-                    const { data: quests, error } = await window.supabaseClient
-                        .from('quests')
-                        .select('*')
-                        .eq('creator_id', session.user.id);
-                    
-                    if (quests && quests.length > 0) {
-                        // Pick the last one created (highest index) as the latest
-                        const evt = quests[quests.length - 1];
-                        document.getElementById('coop-focus-title').innerText = evt.title;
-                        document.getElementById('coop-focus-subtitle').innerText = `${evt.address || 'Matrix'} • ${evt.event_date || 'TBA'}`;
-                    } else {
-                        document.getElementById('coop-focus-title').innerText = "No Active Focus";
-                        document.getElementById('coop-focus-subtitle').innerText = "Awaiting Orders";
+                        name = profile.username || name;
+                        role = profile.role_calling || role;
+                        document.getElementById('res-bar-exp').textContent = profile.exp || 0;
+                        document.getElementById('res-bar-tp').textContent = profile.trust_points || profile.karma || 100;
+                        if (profile.avatar_url) document.getElementById('res-bar-avatar').src = profile.avatar_url;
                     }
                 }
-            } else {
-                // Fallback UI
-                document.getElementById('coop-focus-title').innerText = "System Offline";
-                document.getElementById('coop-focus-subtitle').innerText = "Reconnect to Matrix";
+            }
+
+            document.getElementById('res-bar-name').textContent = name;
+            document.getElementById('res-bar-role').textContent = role;
+
+            const tagsEl = document.getElementById('res-bar-tags');
+            const crewMember = (window.COOP_CORE_CREW || []).find((c) => name.toLowerCase().includes(c.id) || name.toLowerCase().includes(c.name.toLowerCase()));
+            const tags = crewMember?.tags || ['Navigator', 'Connection Sphere'];
+            tagsEl.innerHTML = tags.map((t) => `<span class="text-[10px] px-2 py-1 rounded bg-tao-water/20 border border-tao-water/30 text-white/80">${t}</span>`).join('');
+
+            if (window.PointsSync) await window.PointsSync.refresh();
+            if (window.CoopBarkeeper) window.CoopBarkeeper.renderResonanceBar();
+
+            if (window.Flowee) {
+                setTimeout(() => {
+                    window.Flowee.talk(true, "Welcome to the Resonance Bar. I'm your barkeeper — let's plan your next session. Start Phase 1 or ask me @Flowee anything.", 'guide');
+                }, 1200);
             }
         });
     </script>
     <style>
+        .nature-border {
+            border: 1px solid rgba(138, 154, 91, 0.2);
+            background: linear-gradient(135deg, rgba(82, 110, 72, 0.1) 0%, rgba(11, 15, 13, 0.9) 100%);
+            backdrop-filter: blur(10px);
+        }
         .hide-scrollbar::-webkit-scrollbar {
             display: none;
         }
@@ -369,7 +342,7 @@
             scrollbar-width: none;
         }
     </style>
-    <script src="../js/gamification_engine.js"></script>
+    <script src="../js/gamification_engine.js?v=2.0"></script>
 </body>
 </html>
 
