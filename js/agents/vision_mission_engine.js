@@ -27,8 +27,28 @@ window.VisionMissionEngine = {
         try {
             const { data: { user } } = await window.supabaseClient.auth.getUser();
             if (!user) return local;
-            const { data } = await window.supabaseClient.from('theater_media').select('*').eq('user_id', user.id).order('created_at', { ascending: false }).limit(24);
-            if (data?.length) return data.map((r) => ({ id: r.id, url: r.media_url, title: r.title, at: r.created_at, source: 'supabase' }));
+            const { data, error } = await window.supabaseClient
+                .from('theater_media')
+                .select('*')
+                .eq('uploader_id', user.id)
+                .order('created_at', { ascending: false })
+                .limit(24);
+            if (error) {
+                if (error.code !== 'PGRST205' && error.code !== '42P01') {
+                    console.warn('[VisionMission] theater_media:', error.message);
+                }
+                return local;
+            }
+            if (data?.length) {
+                return data.map((r) => ({
+                    id: r.id,
+                    url: r.media_url,
+                    title: r.title,
+                    at: r.created_at,
+                    source: 'supabase',
+                    type: r.media_type,
+                }));
+            }
         } catch (e) { /* offline */ }
         return local;
     },
@@ -50,10 +70,27 @@ window.VisionMissionEngine = {
                 const { data: { user } } = await window.supabaseClient.auth.getUser();
                 if (user) {
                     const path = `vision/${user.id}/${Date.now()}_${file.name}`;
-                    const { data: up } = await window.supabaseClient.storage.from('sanctuary_media').upload(path, file);
-                    if (up) {
+                    const { data: up, error: upErr } = await window.supabaseClient.storage
+                        .from('sanctuary_media')
+                        .upload(path, file);
+                    if (!upErr && up) {
                         const { data: pub } = window.supabaseClient.storage.from('sanctuary_media').getPublicUrl(path);
-                        await window.supabaseClient.from('theater_media').insert([{ title: entry.title, media_url: pub.publicUrl, user_id: user.id, media_type: entry.type }]);
+                        const { data: profile } = await window.supabaseClient
+                            .from('profiles')
+                            .select('username')
+                            .eq('id', user.id)
+                            .maybeSingle();
+                        const row = {
+                            title: entry.title,
+                            media_url: pub.publicUrl,
+                            uploader_id: user.id,
+                            uploader_name: profile?.username || user.email?.split('@')[0] || 'Navigator',
+                            media_type: entry.type,
+                        };
+                        const { error: insErr } = await window.supabaseClient.from('theater_media').insert([row]);
+                        if (insErr && insErr.code !== 'PGRST205' && insErr.code !== '42P01') {
+                            console.warn('[VisionMission] insert:', insErr.message);
+                        }
                     }
                 }
             } catch (e) { console.warn('[VisionMission]', e.message); }

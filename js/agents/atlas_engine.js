@@ -18,6 +18,10 @@ class AtlasEngine {
         this.renderVenues();
         this.renderQuests();
         this.injectFilterBar();
+        window.VisionCinemaEngine?.loadStages().then(() => {
+            window.VisionCinemaEngine?.renderOnMap(this.map);
+            window.VisionCinemaEngine?.focusFromQuery();
+        });
         window.addEventListener('DAILY_ACTIVITY_UPDATED', (e) => {
             this.steps = e.detail?.steps || 0;
             this.updateFog();
@@ -58,6 +62,7 @@ class AtlasEngine {
             <button type="button" class="atlas-filter" data-f="sanctuary">SANCTUARY</button>
             <button type="button" class="atlas-filter" data-f="sound">SOUND</button>
             <button type="button" class="atlas-filter" data-f="vision">VISION</button>
+            <button type="button" class="atlas-filter" data-f="cinema">CINEMA</button>
             <button type="button" class="atlas-filter" data-f="kitchen">KITCHEN</button>
             <button type="button" class="atlas-filter atlas-nearby-btn" id="atlas-nearby-btn" data-f="nearby">NEARBY</button>
         `;
@@ -72,12 +77,14 @@ class AtlasEngine {
                 btn.classList.add('active');
                 this.filter = btn.dataset.f;
                 this.renderVenues();
+                window.VisionCinemaEngine?.renderOnMap(this.map);
             };
         });
     }
 
     matchesFilter(v) {
         if (this.filter === 'all') return true;
+        if (this.filter === 'cinema') return false;
         if (this.filter === 'miradouro') return v.zone === 'high_flow' || (v.id || '').includes('mir_');
         if (this.filter === 'sanctuary') {
             return v.zone === 'community' || ['secret_garden_lx', 'hempy_roots', 'village_underground'].includes(v.id);
@@ -177,6 +184,7 @@ class AtlasEngine {
         this.userPos = { lat, lng };
         this.renderVenues();
         if (window.QuestEngine) window.QuestEngine.checkActiveQuestsGPS(lat, lng);
+        window.VisionCinemaEngine?.checkProximityVisit(lat, lng);
         (window.getAllVenues?.() || []).forEach((v) => {
             if (!v.lat) return;
             const d = this.dist(lat, lng, v.lat, v.lng);

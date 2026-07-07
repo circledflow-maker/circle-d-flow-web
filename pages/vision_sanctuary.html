@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Vision Sanctuary | Circle D Flow</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../css/vision-mobile.css?v=1.0">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Space+Mono&family=Andika&display=swap" rel="stylesheet">
-    <style>
     <style>
         :root {
             --vision-violet: #5A2A84;
@@ -51,6 +51,7 @@
             position: relative;
             z-index: 20;
             margin-top: 64px;
+            padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
         }
 
         .clay-slab {
@@ -75,7 +76,7 @@
         }
     </style>
 </head>
-<body>
+<body class="vision-sphere-page">
 
     <!-- Mobile Header & Burger Menu -->
     <div class="fixed top-6 left-6 z-[100]">

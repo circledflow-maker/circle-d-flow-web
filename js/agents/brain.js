@@ -17,7 +17,12 @@ class BrainAgent extends Agent {
         // Knowledge Bank (Mock Data + Custom)
         this.defaultKnowledge = [
             { q: "What is the primary currency of the Circle?", a: "Flow", options: ["Gold", "Flow", "Respect", "Vibe"] },
-            // ... (rest implied, or just matching closing brace)
+            { q: "Which city is the Circle D Flow Atlas built around?", a: "Lisbon", options: ["Paris", "Lisbon", "Accra", "Berlin"] },
+            { q: "What does the Sankofa symbol teach?", a: "Return and get it", options: ["Strength", "Return and get it", "Unity", "War"] },
+            { q: "Where do Navigators sync real-world steps?", a: "Fitable", options: ["Fitable", "Stripe", "Discord", "Archive"] },
+            { q: "Which sphere holds Vision Studio and the gallery?", a: "Vision", options: ["Sound", "Vision", "Taste", "Heart"] },
+            { q: "What is the community gathering market called?", a: "Bazaar", options: ["Bazaar", "Archive", "Orbit", "Codex"] },
+            { q: "GPS quests on the map are called the…", a: "Atlas", options: ["Atlas", "Trinity", "Brain", "Fog"] },
         ];
 
         // Load Custom Questions

@@ -108,7 +108,9 @@ class FitableSyncAgent {
             quests_touched: parseInt(localStorage.getItem('cdf_quests_touched_today') || '0', 10),
             updated_at: new Date().toISOString()
         }, { onConflict: 'id,activity_date' }).then(({ error }) => {
-            if (error && error.code !== 'PGRST205' && error.code !== '42P01') console.warn('[Fitable] cloud sync:', error.message);
+            if (error && error.code !== 'PGRST205' && error.code !== '42P01' && !String(error.message).includes('Failed to fetch')) {
+                console.warn('[Fitable] cloud sync:', error.message);
+            }
         });
     }
 

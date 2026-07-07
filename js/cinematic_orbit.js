@@ -64,6 +64,8 @@ class OrbitEngine {
         this.isTransitioning = false;
         this.treeRotationPaused = false;
         this._hoveredWorldId = null;
+        this._fitCameraState = null;
+        this._treeBaseScale = 1;
 
         window.OrbitEngine = this;
         this.init();
@@ -94,6 +96,8 @@ class OrbitEngine {
         if (window.visualViewport) {
             window.visualViewport.addEventListener('resize', () => this.onResize());
         }
+        window.addEventListener('LANDING_CHROME_SYNC', () => this.onResize());
+        window.addEventListener('LANDING_INTRO_COMPLETE', () => this.onResize());
         window.addEventListener('mousemove', (e) => this._setPointerFromEvent(e));
         window.addEventListener('mousemove', (e) => this._setPointerFromEvent(e));
         window.addEventListener('pointerdown', (e) => {
@@ -107,11 +111,18 @@ class OrbitEngine {
 
         this.animate();
 
-        // Initial Cinematic Reveal: Zoom in from Infinity
-        gsap.fromTo(this.camera.position, 
-            { z: 1000 }, 
-            { z: 150, duration: 3, ease: "expo.out" }
-        );
+        // Initial reveal — zoom into a viewport-fitted frame (full tree visible)
+        this._adaptTreeScale();
+        const fit = this.fitTreeInView({ padding: 1.38, animate: false });
+        const startZ = fit.position.z * 2.6;
+        this.camera.position.set(fit.position.x, fit.position.y, startZ);
+        this.camera.lookAt(fit.target);
+        gsap.to(this.camera.position, {
+            z: fit.position.z,
+            duration: 3,
+            ease: 'expo.out',
+            onUpdate: () => this.camera.lookAt(fit.target),
+        });
                // Auto-fade the first hint and ensure it disappears completely
         setTimeout(() => {
             const hint = document.getElementById('hold-hint');
@@ -369,6 +380,7 @@ class OrbitEngine {
     }
 
     _signalIntroComplete() {
+        window.__landingIntroDone = true;
         window.dispatchEvent(new CustomEvent('LANDING_INTRO_COMPLETE'));
     }
 
@@ -386,19 +398,120 @@ class OrbitEngine {
         }
     }
 
+    _getUiInsets() {
+        const { width, height } = this._viewportSize();
+        const isMobile = width < 768;
+        const short = height < 520;
+        const worldNav = document.getElementById('world-quick-nav');
+        const navVisible = worldNav?.classList.contains('visible');
+        const bubbleOpen = document.body.classList.contains('flowee-bubble-open');
+        let bottom = isMobile ? 20 : 32;
+        if (isMobile) {
+            if (bubbleOpen) bottom = short ? 72 : 80;
+            else if (navVisible) bottom = short ? 100 : 112;
+            else bottom = short ? 56 : 64;
+        }
+        return {
+            top: isMobile ? 50 : 40,
+            bottom: Math.min(bottom, height * 0.28),
+            left: 0,
+            right: isMobile ? 32 : 0,
+        };
+    }
+
+    _applyViewOffset() {
+        const { width, height } = this._viewportSize();
+        const ins = this._getUiInsets();
+        const viewW = Math.max(1, width - ins.left - ins.right);
+        const viewH = Math.max(1, height - ins.top - ins.bottom);
+        this.camera.clearViewOffset();
+        this.camera.setViewOffset(width, height, ins.left, ins.top, viewW, viewH);
+        this.camera.updateProjectionMatrix();
+    }
+
+    _adaptTreeScale() {
+        if (!this.treeGroup) return;
+        const { width, height } = this._viewportSize();
+        let s = 1;
+        if (height < 460) s = 0.52;
+        else if (height < 520) s = 0.62;
+        else if (height < 600) s = 0.72;
+        else if (height < 720) s = 0.82;
+        else if (width < 768) s = 0.9;
+        this._treeBaseScale = s;
+        this.treeGroup.scale.setScalar(s);
+        if (this.africaSource) {
+            this.africaSource.scale.setScalar(s);
+            this.africaSource.position.y = -60 * s;
+        }
+        if (this.sourceAnchor) {
+            this.sourceAnchor.scale.setScalar(s);
+            this.sourceAnchor.position.y = -60 * s;
+        }
+    }
+
+    _getTreeBounds() {
+        const box = new THREE.Box3();
+        if (this.treeGroup) box.setFromObject(this.treeGroup);
+        if (this.africaSource) box.expandByObject(this.africaSource);
+        if (box.isEmpty()) {
+            box.set(new THREE.Vector3(-22, -70, -12), new THREE.Vector3(22, 68, 32));
+        }
+        return box;
+    }
+
+    /**
+     * Fit the entire Weltenbaum into the visible viewport (above bottom UI chrome).
+     */
+    fitTreeInView(opts = {}) {
+        const padding = opts.padding ?? 1.18;
+        const animate = opts.animate ?? false;
+        const duration = opts.duration ?? 1.8;
+
+        this._adaptTreeScale();
+        this._applyViewOffset();
+
+        const { width, height } = this._viewportSize();
+        const ins = this._getUiInsets();
+        const viewAspect = (width - ins.left - ins.right) / Math.max(1, height - ins.top - ins.bottom);
+
+        const box = this._getTreeBounds();
+        const size = box.getSize(new THREE.Vector3());
+        const center = box.getCenter(new THREE.Vector3());
+        const target = center.clone();
+        target.y += size.y * 0.04;
+
+        const vfov = (this.camera.fov * Math.PI) / 180;
+        const hfov = 2 * Math.atan(Math.tan(vfov / 2) * viewAspect);
+        const distY = (size.y / 2) / Math.tan(vfov / 2);
+        const distX = (size.x / 2) / Math.tan(hfov / 2);
+        const distance = Math.max(distX, distY) * padding;
+
+        const camPos = new THREE.Vector3(center.x, center.y, center.z + distance);
+        this._fitCameraState = { position: camPos.clone(), target: target.clone(), distance };
+
+        const aim = () => this.camera.lookAt(target);
+        if (animate) {
+            gsap.to(this.camera.position, {
+                x: camPos.x,
+                y: camPos.y,
+                z: camPos.z,
+                duration,
+                ease: 'power2.out',
+                onUpdate: aim,
+                onComplete: aim,
+            });
+        } else {
+            this.camera.position.copy(camPos);
+            aim();
+        }
+        return this._fitCameraState;
+    }
+
     frameTreeForInteraction() {
         this.treeRotationPaused = true;
         if (this.treeGroup) this.treeGroup.rotation.y = 0;
-        const isMobile = window.innerWidth < 768;
-        const camY = isMobile ? 32 : 38;
-        const camZ = isMobile ? 95 : 88;
-        gsap.to(this.camera.position, {
-            x: 0, y: camY, z: camZ,
-            duration: 1.8,
-            ease: 'power2.out',
-            onUpdate: () => this.camera.lookAt(0, 40, 5),
-        });
-        gsap.delayedCall(1.9, () => this.camera.lookAt(0, 40, 5));
+        this.fitTreeInView({ padding: 1.16, animate: true, duration: 1.8 });
     }
 
     _setPointerFromEvent(e) {
@@ -499,33 +612,44 @@ class OrbitEngine {
         
         // Phase 0: Fade out intro hints
         tl.to(['#hold-hint', '#flowee-intro'], { opacity: 0, duration: 1 });
-        
-        // Phase 1: Zoom to Base
-        tl.to(this.camera.position, { y: -40, z: 80, duration: 3, ease: "power2.inOut" }, 0);
+
+        const fit = this.fitTreeInView({ padding: 1.24, animate: false });
+        const p = fit.position;
+        const look = fit.target;
+        const aim = () => this.camera.lookAt(look);
+
+        // Phase 1–3: subtle orbit — tree always stays in frame
+        tl.to(this.camera.position, {
+            x: p.x - 6, y: p.y + 4, z: p.z * 1.04,
+            duration: 2.5, ease: 'power2.inOut', onUpdate: aim,
+        }, 0);
         tl.call(() => {
             textEl.innerHTML = dict.intro_1;
             gsap.to(textOverlay, { opacity: 1, duration: 1 });
-        }, null, 1);
-        tl.to(textOverlay, { opacity: 0, duration: 1 }, 4);
- 
-        // Phase 2: Ascend the Trunk
-        tl.to(this.camera.position, { y: 20, z: 120, duration: 4, ease: "power1.inOut" }, 5);
+        }, null, 0.8);
+        tl.to(textOverlay, { opacity: 0, duration: 1 }, 3.5);
+
+        tl.to(this.camera.position, {
+            x: p.x + 6, y: p.y + 6, z: p.z,
+            duration: 3, ease: 'power1.inOut', onUpdate: aim,
+        }, 4);
         tl.call(() => {
             textEl.innerHTML = dict.intro_2;
             gsap.to(textOverlay, { opacity: 1, duration: 1 });
-        }, null, 6);
-        tl.to(textOverlay, { opacity: 0, duration: 1 }, 9);
- 
-        // Phase 3: Panning the Worlds
-        tl.to(this.camera.position, { x: 30, y: 40, z: 100, duration: 3, ease: "sine.inOut" }, 10);
+        }, null, 4.5);
+        tl.to(textOverlay, { opacity: 0, duration: 1 }, 7);
+
+        tl.to(this.camera.position, {
+            x: p.x, y: p.y + 2, z: p.z * 0.97,
+            duration: 2.5, ease: 'sine.inOut', onUpdate: aim,
+        }, 8);
         tl.call(() => {
             textEl.innerHTML = dict.intro_3;
             gsap.to(textOverlay, { opacity: 1, duration: 1 });
-        }, null, 11);
-        tl.to(textOverlay, { opacity: 0, duration: 1 }, 13);
+        }, null, 8.5);
+        tl.to(textOverlay, { opacity: 0, duration: 1 }, 10.5);
 
-        // Phase 4: Final Framing
-        tl.to(this.camera.position, { x: 0, y: 20, z: 100, duration: 2, ease: "back.out(1)" }, 14);
+        // Phase 4: snap to device-perfect final frame
         tl.call(() => {
             this.isTransitioning = false;
             this.frameTreeForInteraction();
@@ -538,7 +662,7 @@ class OrbitEngine {
                 if (btn) btn.style.display = 'none';
                 this._signalIntroComplete();
             }});
-        }, null, 15);
+        }, null, 12);
         
         if(window.Pusher) window.Pusher.showToast("The Source Awakens...", "mystic");
     }
@@ -873,12 +997,19 @@ class OrbitEngine {
     _applyRendererSize() {
         const { width, height } = this._viewportSize();
         this.camera.aspect = width / height;
+        const isMobile = width < 768;
+        const short = height < 560;
+        this.camera.fov = isMobile ? (short ? 68 : 64) : 60;
         this.camera.updateProjectionMatrix();
         this.renderer.setSize(width, height, false);
+        this._applyViewOffset();
     }
 
     onResize() {
         this._applyRendererSize();
+        if (this.treeGroup && window.__landingIntroDone && !this.isTransitioning) {
+            this.fitTreeInView({ padding: 1.16, animate: false });
+        }
     }
 
     animate() {

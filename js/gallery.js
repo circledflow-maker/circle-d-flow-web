@@ -248,20 +248,25 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Confirm Booking
+    // Confirm Booking — redirect to Stripe / calendar by service
+    const STRIPE_LINKS = {
+        portrait: 'https://calendar.app.google/XbmJUDtaSWecgEXHA',
+        event: 'https://calendar.app.google/XbmJUDtaSWecgEXHA',
+        brand: 'https://calendar.app.google/XbmJUDtaSWecgEXHA',
+        default: 'https://calendar.app.google/XbmJUDtaSWecgEXHA',
+    };
+
     document.getElementById('confirm-booking').addEventListener('click', () => {
-        // Here we would send data to backend
         console.log("Booking Confirmed:", bookingState);
         
-        // Simulate loading
         const btn = document.getElementById('confirm-booking');
-        const originalText = btn.textContent;
-        btn.textContent = "Processing...";
+        btn.textContent = "Redirecting…";
         btn.disabled = true;
 
-        setTimeout(() => {
-            window.location.href = 'thankyou.html';
-        }, 1500);
+        const svc = (bookingState.service || 'default').toLowerCase();
+        const key = Object.keys(STRIPE_LINKS).find((k) => svc.includes(k)) || 'default';
+        const url = STRIPE_LINKS[key];
+        window.location.href = url;
     });
 
 });

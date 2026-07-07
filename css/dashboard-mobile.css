@@ -1,0 +1,54 @@
+/* Dashboard mobile integrity — prevents horizontal bleed on narrow viewports */
+html {
+    overflow-x: hidden;
+    max-width: 100%;
+}
+
+.cdf-universe,
+.orbit-system,
+#os-outer,
+#imperial-hud-root {
+    max-width: 100vw;
+    overflow-x: clip;
+}
+
+.cdf-meteor {
+    max-width: 100vw;
+}
+
+#sphere-world-sheet,
+.sphere-sheet-backdrop,
+#mobile-menu,
+#connection-modal,
+#sound-gate,
+.password-gate-overlay {
+    max-width: 100vw;
+    box-sizing: border-box;
+}
+
+.sphere-sheet-hint {
+    word-break: break-word;
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 480px) {
+  .dashboard-sanctuary-link span:last-child {
+    display: none;
+  }
+
+  .dashboard-sanctuary-link {
+    padding-left: 0.65rem !important;
+    padding-right: 0.65rem !important;
+  }
+
+  #flowee-agent #flowee-bubble {
+    width: min(260px, calc(100vw - 32px)) !important;
+    max-width: calc(100vw - 32px) !important;
+    margin-right: 12px !important;
+  }
+
+  .orbit-system.os-outer {
+    transform: scale(0.92);
+    transform-origin: center top;
+  }
+}

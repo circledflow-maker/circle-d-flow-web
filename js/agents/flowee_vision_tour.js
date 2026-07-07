@@ -16,9 +16,9 @@ class FloweeVisionTour {
     async start() {
         if (!location.pathname.includes('vision_studio')) return;
         if (localStorage.getItem('cdf_vision_studio_tour_v1')) return;
-        await this.speak('Your Vision Studio — every photo and reel you upload lives here. Tag places on the Atlas for bonus runes.');
-        await this.speak('One daily mission drops each morning: graffiti, plants, buildings, locals. Shoot it, upload, claim XP.');
-        await this.speak('Future contests will crown best Lisbon frames. For now, build your portfolio — Flowee will guide contests soon.');
+        await this.speak('Your Vision Studio — upload a frame, then tag it as a <strong>Cinema Stage</strong> on the Atlas (GPS within 50m).');
+        await this.speak('Visitors who walk into your stage zone earn XP and see who planted it. Share the QR from the map pin.');
+        await this.speak('Daily missions still drop each morning. Build your archive — contests and D Gallery bookings live in the studio paths.');
         localStorage.setItem('cdf_vision_studio_tour_v1', '1');
     }
 }

@@ -29,6 +29,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link rel="stylesheet" href="css/quest-triad.css?v=1.1">
+    <link rel="stylesheet" href="css/landing-mobile.css?v=1.1">
     <style>
         :root {
             --haki-gold: #d4af37;
@@ -498,7 +499,7 @@
             .luvo-path-btn { padding: 20px 24px; font-size: 0.95rem; min-height: 44px; }
             #luvo-decision-ui { flex-direction: column; gap: 16px; width: calc(100% - 32px); }
             .landing-logo-text { display: none; }
-            #world-info-overlay { padding: 16px 18px; bottom: calc(148px + var(--safe-bottom)); }
+            #world-info-overlay { padding: 16px 18px; }
             .auth-input-group input { font-size: 16px; /* prevents iOS zoom */ }
         }
 
@@ -520,7 +521,7 @@
         /* World quick-nav — always readable on mobile */
         #world-quick-nav {
             position: fixed;
-            bottom: calc(70px + var(--safe-bottom));
+            bottom: calc(12px + var(--safe-bottom));
             left: 50%;
             transform: translateX(-50%);
             z-index: 30;
@@ -564,7 +565,7 @@
         }
     </style>
 </head>
-<body class="notranslate">
+<body class="notranslate landing-page">
 
     <!-- Standardized Header: Burger, Logo, Language -->
     <div class="fixed top-4 left-4 sm:top-6 sm:left-6 z-[1002]" style="padding-top: var(--safe-top);">
@@ -687,7 +688,7 @@
 
 
     <!-- FLOWEE AGENT CONTAINER -->
-    <div id="flowee-agent" class="fixed z-[999999] pointer-events-none" style="bottom: calc(24px + var(--safe-bottom)); right: 16px;"></div>
+    <div id="flowee-agent" class="fixed z-[999999] pointer-events-none flowee-landing-vessel" style="bottom: calc(72px + var(--safe-bottom)); right: 16px; left: 10px;"></div>
 
     <!-- AGENT MESH -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -696,7 +697,8 @@
     <script src="js/agents/agent.js" defer></script>
     <script src="js/agents/pusher.js" defer></script>
     <script src="js/agents/helper.js" defer></script>
-    <script src="js/agents/whatsapp_agent.js" defer></script>
+    <script src="js/agents/whatsapp_agent.js?v=2.0" defer></script>
+    <script src="js/agents/flowee_whatsapp_bridge.js?v=1.0" defer></script>
     <script src="js/agents/network_hub.js" defer></script>
     <script src="js/agents/constructor_bot.js" defer></script>
     <script src="js/agents/kingdom_science.js" defer></script>
@@ -705,14 +707,14 @@
     <script src="js/agents/quest_controller.js" defer></script>
     <script src="js/agents/visual_integrity.js" defer></script>
     <script src="js/agents/sound_engineer.js" defer></script>
-    <script src="js/agents/flowee.js?v=4.6" defer></script>
-    <script src="js/agents/flowee_landing_guide.js?v=1.1" defer></script>
+    <script src="js/agents/flowee.js?v=4.7" defer></script>
+    <script src="js/agents/flowee_landing_guide.js?v=1.2" defer></script>
     <script src="js/agents/agentic_brain.js" defer></script>
     <script src="js/agents/gatekeeper.js" defer></script>
     <script src="js/auth-handler.js" defer></script>
     
     <!-- The actual Core 3D Cinematic Logic -->
-    <script type="module" src="js/cinematic_orbit.js?v=3.0"></script>
+    <script type="module" src="js/cinematic_orbit.js?v=3.2"></script>
 
     <!-- Language Dictionary & Logic -->
     <script>
@@ -916,9 +918,23 @@
             });
 
             const worldNav = document.getElementById('world-quick-nav');
-            const showWorldNav = () => worldNav?.classList.add('visible');
-            window.addEventListener('LANDING_INTRO_COMPLETE', showWorldNav, { once: true });
-            setTimeout(showWorldNav, 20000);
+            const syncWorldNav = () => {
+                if (!worldNav || !window.__landingIntroDone) return;
+                const dismissed = localStorage.getItem('cdf_landing_flowee_state') === 'dismissed';
+                const bubbleOpen = document.body.classList.contains('flowee-bubble-open');
+                if (!bubbleOpen && dismissed) worldNav.classList.add('visible');
+            };
+            window.addEventListener('LANDING_INTRO_COMPLETE', () => {
+                if (!document.body.classList.contains('flowee-bubble-open')) {
+                    worldNav?.classList.add('visible');
+                }
+            }, { once: true });
+            window.addEventListener('LANDING_CHROME_SYNC', syncWorldNav);
+            setTimeout(() => {
+                if (window.__landingIntroDone && localStorage.getItem('cdf_landing_flowee_state') === 'dismissed') {
+                    worldNav?.classList.add('visible');
+                }
+            }, 18000);
             worldNav?.querySelectorAll('[data-world]').forEach((btn) => {
                 btn.addEventListener('click', () => {
                     const id = btn.getAttribute('data-world');

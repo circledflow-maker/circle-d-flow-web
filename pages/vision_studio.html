@@ -2,35 +2,38 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Vision Studio | Circle D Flow</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&family=Cinzel:wght@700&family=Andika&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link rel="stylesheet" href="../css/quest-triad.css?v=1.1">
     <link rel="stylesheet" href="../css/mobile-sphere-nav.css">
+    <link rel="stylesheet" href="../css/vision-mobile.css?v=1.0">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/agents/supabase_client.js?v=4.1"></script>
     <script src="../js/data/adinkra_catalog.js?v=1.1"></script>
-    <script src="../js/agents/flowee.js?v=3.5"></script>
+    <script src="../js/agents/points_sync.js?v=1.1"></script>
+    <script src="../js/agents/flowee.js?v=4.8"></script>
     <script src="../js/agents/flowee_voice.js?v=1.1"></script>
     <script src="../js/agents/flowee_reward.js?v=1.0"></script>
-    <script src="../js/agents/vision_mission_engine.js?v=1.0"></script>
+    <script src="../js/agents/vision_mission_engine.js?v=1.2"></script>
+    <script src="../js/agents/vision_cinema_engine.js?v=1.0"></script>
     <script src="../js/agents/quest_engine.js?v=4.6"></script>
-    <script src="../js/agents/flowee_vision_tour.js?v=1.0" defer></script>
+    <script src="../js/agents/flowee_vision_tour.js?v=1.1" defer></script>
     <script src="../js/agents/mobile_sphere_nav.js?v=1.0" defer></script>
     <style>
-        body { background:#0a0610; color:#fdfbf7; font-family:'Plus Jakarta Sans',sans-serif; padding-bottom:100px; }
+        body { background:#0a0610; color:#fdfbf7; font-family:'Plus Jakarta Sans',sans-serif; }
         .cinzel { font-family:'Cinzel',serif; }
         .adinkra { font-family:'Andika',sans-serif; }
         .gallery-item { aspect-ratio:1; object-fit:cover; border-radius:8px; border:1px solid rgba(212,175,55,0.2); }
     </style>
 </head>
-<body class="quest-triad-page">
+<body class="quest-triad-page vision-sphere-page">
     <header class="sticky top-0 z-50 bg-black/85 backdrop-blur border-b border-purple-500/30 px-4 py-3 flex items-center justify-between">
-        <a href="dashboard.html" class="text-purple-300 text-xs">← Orbit</a>
+        <a href="dashboard.html" class="text-purple-300 text-xs min-h-[44px] flex items-center">← Orbit</a>
         <h1 class="cinzel text-purple-300 text-sm tracking-widest">VISION STUDIO</h1>
-        <a href="goal_purpose.html" class="text-[10px] text-gold/70">Purpose</a>
+        <a href="goal_purpose.html" class="text-[10px] text-gold/70 min-h-[44px] flex items-center">Purpose</a>
     </header>
 
     <section class="px-4 py-5 border-b border-white/10">
@@ -46,12 +49,27 @@
     </section>
 
     <section class="px-4 py-4">
-        <label for="vision-upload" class="block w-full border-2 border-dashed border-purple-500/40 rounded-xl p-8 text-center cursor-pointer hover:bg-purple-500/10 transition">
+        <label for="vision-upload" class="block w-full border-2 border-dashed border-purple-500/40 rounded-xl p-6 sm:p-8 text-center cursor-pointer hover:bg-purple-500/10 transition touch-manipulation">
             <span class="material-symbols-outlined text-4xl text-purple-400" aria-hidden="true">add_a_photo</span>
             <p class="text-xs mt-2 text-white/60">Upload photo or video</p>
+            <p class="text-[10px] mt-1 text-cyan-400/80">GPS on → tag as Cinema Stage on Atlas</p>
             <input type="file" id="vision-upload" accept="image/*,video/*" class="hidden">
         </label>
-        <input type="text" id="upload-title" placeholder="Title (optional)" class="w-full mt-3 bg-black/50 border border-white/10 rounded px-3 py-2 text-sm">
+        <input type="text" id="upload-title" placeholder="Title (optional)" class="w-full mt-3 bg-black/50 border border-white/10 rounded px-3 py-2 text-sm min-h-[44px]">
+        <label class="flex items-center gap-2 mt-3 text-[10px] text-white/50">
+            <input type="checkbox" id="tag-cinema" checked class="accent-purple-500">
+            Plant / upload to nearest Cinema Stage (50m radius, on-site only)
+        </label>
+    </section>
+
+    <section class="px-4 py-4 border-t border-white/10 vision-cinema-card mx-4">
+        <h3 class="cinzel text-purple-300 text-xs tracking-widest mb-2">CINEMA STAGE</h3>
+        <p class="text-[10px] text-white/50 mb-3">Tag your frame on the Atlas. Each stage has a 50m zone — visitors earn XP; you get a QR link to share.</p>
+        <div class="flex flex-wrap gap-2">
+            <a href="quest_map.html?filter=cinema" class="vision-cta-stripe border-purple-500/50 text-purple-300">Open Atlas Cinema →</a>
+            <a href="gallery.html" class="vision-cta-stripe">Book Photography →</a>
+        </div>
+        <p id="cinema-status" class="text-[10px] text-cyan-400 mt-3"></p>
     </section>
 
     <section class="px-4 py-4">
@@ -60,18 +78,21 @@
     </section>
 
     <section class="px-4 py-4 border-t border-white/10">
-        <h3 class="cinzel text-xs text-white/50 mb-2">COMING SOON</h3>
-        <p class="text-[10px] text-white/40">Photo & video contests · best-of-Lisbon submissions · minigame: tag content to Atlas pins.</p>
-        <a href="quest_map.html" class="inline-block mt-3 text-[10px] text-cyan-400 border border-cyan-500/40 px-3 py-1.5 rounded-full">Tag on Atlas →</a>
+        <h3 class="cinzel text-xs text-white/50 mb-2">VISION PATHS</h3>
+        <div class="grid grid-cols-2 gap-2 vision-cinema-grid text-[10px]">
+            <a href="vision_sanctuary.html" class="vision-cinema-card text-purple-300">Sanctuary →</a>
+            <a href="vision_oasis.html" class="vision-cinema-card text-cyan-300">Oasis →</a>
+            <a href="gallery.html" class="vision-cinema-card text-[#d4af37] col-span-2 text-center">D Gallery · Stripe Booking</a>
+        </div>
     </section>
 
     <div id="flowee-agent"></div>
     <nav class="animus-global-nav">
-        <button onclick="location.href='quest_map.html'" class="nav-btn"><span class="icon">📍</span><span class="nav-label">MAP</span></button>
-        <button onclick="location.href='quest_board.html'" class="nav-btn"><span class="icon">📖</span><span class="nav-label">QUESTS</span></button>
-        <button onclick="location.href='hall_of_legends.html'" class="nav-btn"><span class="icon">🏛️</span><span class="nav-label">RANK</span></button>
-        <button onclick="window.Flowee?.toggleChat()" class="nav-btn"><span class="icon">💬</span><span class="nav-label">FLOWEE</span></button>
-        <button onclick="location.href='dashboard.html'" class="nav-btn exit"><span class="icon">⚡</span><span class="nav-label">ORBIT</span></button>
+        <button type="button" onclick="location.href='quest_map.html'" class="nav-btn"><span class="icon">📍</span><span class="nav-label">MAP</span></button>
+        <button type="button" onclick="location.href='quest_board.html'" class="nav-btn"><span class="icon">📖</span><span class="nav-label">QUESTS</span></button>
+        <button type="button" onclick="location.href='hall_of_legends.html'" class="nav-btn"><span class="icon">🏛️</span><span class="nav-label">RANK</span></button>
+        <button type="button" onclick="window.Flowee?.toggleChat()" class="nav-btn"><span class="icon">💬</span><span class="nav-label">FLOWEE</span></button>
+        <button type="button" onclick="location.href='dashboard.html'" class="nav-btn exit"><span class="icon">⚡</span><span class="nav-label">ORBIT</span></button>
     </nav>
     <script src="../js/agents/quest_triad.js?v=2.1" defer></script>
     <script>
@@ -89,7 +110,7 @@
             items.forEach((item) => {
                 const el = item.type === 'video'
                     ? `<video src="${item.url}" class="gallery-item w-full" muted playsinline></video>`
-                    : `<img src="${item.url || item.media_url}" alt="${item.title}" class="gallery-item w-full" loading="lazy">`;
+                    : `<img src="${item.url || item.media_url}" alt="${item.title || ''}" class="gallery-item w-full" loading="lazy">`;
                 g.innerHTML += `<div class="relative">${el}</div>`;
             });
         }
@@ -97,14 +118,27 @@
             const file = e.target.files?.[0];
             if (!file) return;
             const title = document.getElementById('upload-title').value;
-            await window.VisionMissionEngine.saveUpload(file, title);
-            await window.VisionMissionEngine.completeDaily();
-            await renderGallery();
-            if (window.Flowee) window.Flowee.talk(true, 'Frame secured! Your studio archive grows. Tag it on the Atlas for bonus runes.', 'celebrate');
+            const status = document.getElementById('cinema-status');
+            try {
+                if (document.getElementById('tag-cinema').checked && window.VisionCinemaEngine) {
+                    status.textContent = 'Locating GPS for Cinema Stage…';
+                    const result = await window.VisionCinemaEngine.tagPendingUpload(file, title);
+                    status.textContent = result?.mediaUrl ? 'Tagged on Atlas Cinema Stage!' : 'Cinema Stage planted on Atlas.';
+                }
+                await window.VisionMissionEngine.saveUpload(file, title);
+                await window.VisionMissionEngine.completeDaily();
+                await renderGallery();
+                if (window.Flowee) window.Flowee.talk(true, 'Frame secured! Your studio archive grows. Share the Cinema QR from the Atlas.', 'celebrate');
+            } catch (err) {
+                status.textContent = err.message || 'Upload failed';
+                if (window.Flowee) window.Flowee.talk(true, err.message || 'GPS or distance check failed.', 'guide');
+            }
+            e.target.value = '';
         };
         document.addEventListener('DOMContentLoaded', async () => {
             await renderMission();
             await renderGallery();
+            await window.VisionCinemaEngine?.loadStages();
             if (window.Flowee) window.Flowee.renderVessel();
         });
     </script>

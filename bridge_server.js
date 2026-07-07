@@ -87,7 +87,7 @@ const server = http.createServer((req, res) => {
 
                 const options = {
                     hostname: 'graph.facebook.com',
-                    path: `/v21.0/${config.PHONE_NUMBER_ID}/messages`,
+                    path: `/v22.0/${config.PHONE_NUMBER_ID || config.WHATSAPP_PHONE_ID}/messages`,
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -124,6 +124,40 @@ const server = http.createServer((req, res) => {
         res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
         res.end(JSON.stringify(lastMessage));
         lastMessage = null;
+    }
+
+    // 5. Bridge status (local dev)
+    else if (req.method === 'GET' && parsedUrl.pathname === '/status') {
+        const token = config.WHATSAPP_TOKEN || config.WHATSAPP_ACCESS_TOKEN;
+        const phoneId = config.PHONE_NUMBER_ID || config.WHATSAPP_PHONE_ID || '1011847962012735';
+        if (!token) {
+            res.writeHead(503, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+            res.end(JSON.stringify({ connected: false, error: 'WHATSAPP_TOKEN missing in .env' }));
+            return;
+        }
+        const opts = {
+            hostname: 'graph.facebook.com',
+            path: `/v22.0/${phoneId}`,
+            method: 'GET',
+            headers: { Authorization: `Bearer ${token}` },
+        };
+        const metaReq = https.request(opts, (metaRes) => {
+            let out = '';
+            metaRes.on('data', (d) => { out += d; });
+            metaRes.on('end', () => {
+                res.writeHead(metaRes.statusCode, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+                res.end(JSON.stringify({
+                    connected: metaRes.statusCode === 200,
+                    simDevice: config.FLOWEE_SIM_ROOT || 'E:\\',
+                    raw: out,
+                }));
+            });
+        });
+        metaReq.on('error', () => {
+            res.writeHead(503, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+            res.end(JSON.stringify({ connected: false }));
+        });
+        metaReq.end();
     }
 
     else {

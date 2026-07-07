@@ -15,7 +15,7 @@ const SystemConfig = {
             exp: 50
         },
         {
-            targetUrl: "akwaba_kitchen.html"
+            targetUrl: "akwaba_kitchen.html",
             elementId: ".jamtruck-progress-bar",
             text: "new_feature_jamtruck", // Key for i18n
             exp: 50
@@ -114,5 +114,14 @@ window.addEventListener('load', () => {
 // Expose
 window.MasterBrain = {
     triggerMysticFog,
-    checkSystemUpdates
+    checkSystemUpdates,
+    SystemConfig,
 };
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.location.pathname.includes('dashboard')) {
+        setTimeout(() => {
+            try { checkSystemUpdates(); } catch (e) { console.warn('[MasterBrain]', e.message); }
+        }, 4000);
+    }
+});

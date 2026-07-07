@@ -58,32 +58,37 @@ class RefereeAgent {
         const { data: { user } } = await window.supabaseClient.auth.getUser();
         if (!user) return;
 
-        console.log(`[Referee] Syncing Fitable Stats for ${user.id}...`);
-
-        const { data, error } = await window.supabaseClient
-            .from('fitable')
-            .select('*')
+        const { data: profile, error } = await window.supabaseClient
+            .from('profiles')
+            .select('exp, karma, metadata')
             .eq('id', user.id)
-            .single();
+            .maybeSingle();
 
-        if (error) {
-            console.error("[Referee] Sync Error:", error.message);
+        if (!error && profile) {
+            const meta = typeof profile.metadata === 'object' ? profile.metadata : {};
+            this.xp = profile.exp || 0;
+            this.wins = meta.battle_wins || 0;
+            this.streak = meta.battle_streak || 0;
+            if (window.Helper) {
+                window.Helper.saveData('cdf_battle_records', JSON.stringify({ wins: this.wins, losses: meta.battle_losses || 0, streak: this.streak }));
+            }
             return;
         }
 
-        if (data) {
-            // Update Local state for faster UI reaction
-            this.xp = data.xp;
-            this.wins = data.wins;
-            this.streak = data.streak;
-            
-            // Sync to LocalStorage for offline/legacy support
-            localStorage.setItem('cdf_xp', data.xp.toString());
-            localStorage.setItem('cdf_wins', data.wins.toString());
-            localStorage.setItem('cdf_streak', data.streak.toString());
-            
-            console.log("[Referee] Fitable Stats Synchronized.");
-        }
+        const { data } = await window.supabaseClient
+            .from('fitable')
+            .select('*')
+            .eq('id', user.id)
+            .maybeSingle();
+
+        if (!data) return;
+
+        this.xp = data.xp;
+        this.wins = data.wins;
+        this.streak = data.streak;
+        localStorage.setItem('cdf_xp', String(data.xp));
+        localStorage.setItem('cdf_wins', String(data.wins));
+        localStorage.setItem('cdf_streak', String(data.streak));
     }
 
     syncTournament() {
@@ -424,18 +429,33 @@ class RefereeAgent {
         const { data: { user } } = await window.supabaseClient.auth.getUser();
         if (!user) return;
 
+        const { data: profile } = await window.supabaseClient
+            .from('profiles')
+            .select('metadata')
+            .eq('id', user.id)
+            .maybeSingle();
+
+        const meta = typeof profile?.metadata === 'object' && profile.metadata ? { ...profile.metadata } : {};
+        meta.battle_wins = wins;
+        meta.battle_streak = streak;
+        meta.last_battle_at = new Date().toISOString();
+
         const { error } = await window.supabaseClient
-            .from('fitable')
-            .update({ 
-                xp: xp, 
-                wins: wins, 
-                streak: streak,
-                last_battle_at: new Date().toISOString()
-            })
+            .from('profiles')
+            .update({ exp: xp, metadata: meta })
             .eq('id', user.id);
 
-        if (error) console.error("[Referee] DB Update Failed:", error.message);
-        else console.log("[Referee] DB Synced.");
+        if (error) console.warn("[Referee] Profile sync:", error.message);
+
+        await window.supabaseClient
+            .from('fitable')
+            .update({ xp, wins, streak, last_battle_at: meta.last_battle_at })
+            .eq('id', user.id)
+            .then(({ error: fitErr }) => {
+                if (fitErr && fitErr.code !== 'PGRST205' && fitErr.code !== '42P01') {
+                    console.warn("[Referee] Fitable table optional:", fitErr.message);
+                }
+            });
     }
 
     renderVerdict(win, data) {

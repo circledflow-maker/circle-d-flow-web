@@ -1,0 +1,48 @@
+/* Vision sphere pages — mobile-first shared layout */
+body.vision-sphere-page {
+    padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+    min-height: 100dvh;
+    overflow-x: hidden;
+}
+
+body.vision-sphere-page #flowee-agent {
+    bottom: calc(88px + env(safe-area-inset-bottom, 0px)) !important;
+    right: 12px !important;
+    z-index: 99990 !important;
+}
+
+body.vision-sphere-page #flowee-bubble {
+    max-width: calc(100vw - 24px) !important;
+    max-height: min(45vh, 300px);
+    overflow-y: auto;
+}
+
+.vision-cinema-card {
+    border: 1px solid rgba(168, 85, 247, 0.35);
+    border-radius: 12px;
+    background: rgba(10, 6, 16, 0.85);
+    padding: 14px;
+}
+
+.vision-cta-stripe {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 18px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border: 1px solid #d4af37;
+    color: #d4af37;
+    background: rgba(212, 175, 55, 0.08);
+    min-height: 44px;
+    touch-action: manipulation;
+}
+
+.vision-cta-stripe:active { transform: scale(0.98); }
+
+@media (max-width: 768px) {
+    .vision-cinema-grid { grid-template-columns: 1fr !important; }
+}

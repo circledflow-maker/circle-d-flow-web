@@ -4,7 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Captain's Quarters | Circle D Flow</title>
+    <script>
+        const _twWarn = console.warn;
+        console.warn = function (...args) {
+            if (args[0] && String(args[0]).includes('cdn.tailwindcss.com')) return;
+            _twWarn.apply(console, args);
+        };
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../css/dashboard-mobile.css?v=1.0">
     <link
         href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
         rel="stylesheet">
@@ -92,6 +100,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+
+        #flowee-agent #flowee-bubble {
+            max-width: min(320px, calc(100vw - 32px));
+            max-height: min(42vh, 280px);
+            overflow-y: auto;
         }
     </style>
     <script>
@@ -241,8 +255,8 @@
         <div id="system-offline-overlay" style="display:none;"></div>
 
         <!-- Global Navigation Actions -->
-        <div class="fixed top-6 right-6 z-[100]">
-            <a href="artist_sanctuary.html" class="flex items-center gap-2 bg-[#d4af37]/20 hover:bg-[#d4af37]/40 border border-[#d4af37] text-[#d4af37] px-4 py-2 rounded-full backdrop-blur-md transition-all shadow-[0_0_15px_rgba(212,175,55,0.3)]">
+        <div class="fixed top-4 right-4 sm:top-6 sm:right-6 z-[100] max-w-[calc(100vw-1rem)]">
+            <a href="artist_sanctuary.html" class="dashboard-sanctuary-link flex items-center gap-2 bg-[#d4af37]/20 hover:bg-[#d4af37]/40 border border-[#d4af37] text-[#d4af37] px-3 sm:px-4 py-2 rounded-full backdrop-blur-md transition-all shadow-[0_0_15px_rgba(212,175,55,0.3)]">
                 <span class="material-symbols-outlined text-sm">fort</span>
                 <span class="text-xs font-bold tracking-widest uppercase font-mono">To the Sanctuary</span>
             </a>
@@ -307,6 +321,8 @@
 
     </main>
 
+    <div id="flowee-agent" class="fixed z-[999999] pointer-events-none" style="bottom: calc(88px + env(safe-area-inset-bottom, 0px)); right: 16px;"></div>
+
     <!-- AGENT MESH -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/agents/supabase_client.js?v=4.1" defer></script>
@@ -330,18 +346,20 @@
     <script src="../js/agents/resonance_bridge.js?v=4.1" defer></script>
     <script src="../js/agents/vault_space.js?v=4.1" defer></script>
     <script src="../js/agents/quest_controller.js?v=4.1" defer></script>
-    <script src="../js/agents/visual_integrity.js?v=4.1" defer></script>
-    <script src="../js/agents/flowee.js?v=4.5" defer></script>
+    <script src="../js/agents/visual_integrity.js?v=4.2" defer></script>
+    <script src="../js/agents/flowee.js?v=4.9" defer></script>
     <script src="../js/agents/fitable_sync.js?v=1.0" defer></script>
-    <script src="../js/agents/flowee_daily_brief.js?v=1.0" defer></script>
+    <script src="../js/agents/flowee_daily_brief.js?v=1.1" defer></script>
+    <script src="../js/agents/flowee_dashboard_guide.js?v=1.0" defer></script>
     <script src="../js/agents/pusher.js?v=4.1" defer></script>
     <script src="../js/dashboard_nexus.js?v=4.2" defer></script> <!-- CRITICAL: Dashboard Core Logic -->
 
     <!-- NEW AGENTS -->
     <script src="../js/api_config.js" defer></script>
-    <script src="../js/agents/whatsapp_agent.js" defer></script>
-    <script src="../js/agents/brain.js" defer></script>
-    <script src="../js/agents/master-brain.js" defer></script>
+    <script src="../js/agents/whatsapp_agent.js?v=2.0" defer></script>
+    <script src="../js/agents/flowee_whatsapp_bridge.js?v=1.0" defer></script>
+    <script src="../js/agents/brain.js?v=1.1" defer></script>
+    <script src="../js/agents/master-brain.js?v=1.2" defer></script>
     <script src="../js/agents/sentinel.js" defer></script>
     <script src="../js/agents/soul_pass.js?v=2.0" defer></script>
     <script src="../js/agents/onboarding.js" defer></script>
@@ -401,7 +419,8 @@
         <!-- Token Settings Modal (Nested Hidden) -->
         <div id="wa-settings" class="hidden absolute bottom-full left-0 mb-4 w-[300px] bg-[#0a0a0f] border border-white/20 p-5 rounded-2xl shadow-2xl backdrop-blur-3xl z-[1000020]">
              <h3 class="text-xs font-cinzel text-white mb-4 tracking-widest uppercase">Bridge Configuration</h3>
-             <label class="block text-[10px] text-white/50 uppercase mb-2">Meta Access Token</label>
+             <p class="text-[9px] text-white/40 mb-3 leading-relaxed">Production token lives in <strong>Vercel → Environment Variables</strong> as <code class="text-[#25D366]">WHATSAPP_ACCESS_TOKEN</code>. Run <code class="text-[#25D366]">sql/whatsapp_bridge.sql</code> in Supabase for inbound polling.</p>
+             <label class="block text-[10px] text-white/50 uppercase mb-2">Meta Access Token (local override)</label>
              <textarea id="wa-token-input" class="w-full h-24 bg-black/60 border border-white/10 rounded p-3 text-[10px] text-white font-mono focus:border-[#25D366] outline-none mb-4" placeholder="Paste your fresh token here..."></textarea>
              <div class="flex gap-2">
                  <button onclick="saveWaToken()" class="flex-1 py-2 bg-[#25D366] text-black font-bold text-[10px] rounded uppercase hover:bg-white transition-colors">Apply Seal</button>

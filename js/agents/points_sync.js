@@ -32,17 +32,12 @@ class PointsSyncAgent {
         if (!session) return;
 
         const { data: profile } = await sb.from('profiles').select('*').eq('id', session.user.id).maybeSingle();
-        let fp = 0;
-        try {
-            const { data: fit } = await sb.from('fitable').select('xp, fp').eq('id', session.user.id).maybeSingle();
-            if (fit) fp = fit.fp || 0;
-        } catch (_) { /* table may not exist yet */ }
 
         const merged = {
             ...(profile || {}),
             id: session.user.id,
-            fp: fp || profile?.flow_credits || 0,
-            flow_credits: profile?.flow_credits || fp || 0,
+            fp: profile?.flow_credits || profile?.fp || 0,
+            flow_credits: profile?.flow_credits || profile?.fp || 0,
         };
         this.applyProfile(merged);
         window.userProfile = merged;

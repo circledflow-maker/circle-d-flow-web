@@ -1,0 +1,101 @@
+/* Landing page mobile layout — Flowee + world nav + tree visibility */
+body.landing-page {
+    min-height: 100dvh;
+    overflow: hidden;
+}
+
+body.landing-page.flowee-bubble-open #world-quick-nav {
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+body.landing-page #world-quick-nav {
+    bottom: calc(12px + var(--safe-bottom, env(safe-area-inset-bottom)));
+    z-index: 35;
+}
+
+body.landing-page #flowee-agent.flowee-landing-vessel {
+    left: 10px;
+    right: 10px;
+    align-items: stretch;
+    z-index: 999998;
+}
+
+body.landing-page #flowee-agent.flowee-landing-vessel #flowee-bubble {
+    width: 100% !important;
+    max-width: none !important;
+    max-height: min(40vh, 260px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-right: 0 !important;
+    transform-origin: bottom center;
+    border-bottom-right-radius: 16px;
+}
+
+body.landing-page #flowee-agent.flowee-landing-vessel #flowee-visual {
+    align-self: flex-end;
+    margin-top: 6px;
+}
+
+body.landing-page #world-info-overlay {
+    bottom: calc(72px + var(--safe-bottom, env(safe-area-inset-bottom)));
+    max-width: calc(100vw - 20px);
+}
+
+body.landing-page.flowee-bubble-open #world-info-overlay {
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+@media (max-width: 768px) {
+    body.landing-page #narrative-overlay {
+        top: 22%;
+        width: 94%;
+    }
+    body.landing-page #narrative-text {
+        font-size: 0.95rem;
+        line-height: 1.45;
+    }
+    body.landing-page .world-pill {
+        font-size: 9px;
+        padding: 8px 10px;
+        min-height: 40px;
+    }
+    body.landing-page #world-info-overlay {
+        bottom: auto;
+        top: calc(52px + var(--safe-top, env(safe-area-inset-top)));
+        max-height: 38vh;
+        overflow-y: auto;
+        padding: 12px 16px;
+    }
+    body.landing-page #world-title {
+        font-size: 1.1rem;
+        margin-bottom: 6px;
+    }
+    body.landing-page #world-slogan {
+        font-size: 0.75rem;
+        margin-bottom: 8px;
+    }
+}
+
+@media (max-height: 520px) and (max-width: 768px) {
+    body.landing-page #world-quick-nav {
+        gap: 4px;
+        padding: 4px 6px;
+        max-width: calc(100vw - 8px);
+    }
+    body.landing-page .world-pill {
+        font-size: 8px;
+        padding: 6px 8px;
+        min-height: 34px;
+        letter-spacing: 0;
+    }
+    body.landing-page #flowee-agent.flowee-landing-vessel #flowee-visual {
+        transform: scale(0.72);
+        transform-origin: bottom right;
+    }
+    body.landing-page #world-info-overlay {
+        top: calc(48px + var(--safe-top, env(safe-area-inset-top)));
+        max-height: 32vh;
+    }
+}

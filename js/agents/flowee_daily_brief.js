@@ -24,6 +24,7 @@ class FloweeDailyBrief {
 
     async maybeRun() {
         if (this.alreadyShown()) return;
+        if (window.location.pathname.includes('dashboard') && window.FloweeDashboardGuide) return;
         if (!window.Flowee || typeof window.Flowee.talk !== 'function') {
             setTimeout(() => this.maybeRun(), 1500);
             return;
@@ -53,16 +54,6 @@ class FloweeDailyBrief {
                 }
             }
         } catch (_) { /* offline */ }
-
-        const sb = window.supabaseClient;
-        if (sb) {
-            const since = new Date();
-            since.setHours(0, 0, 0, 0);
-            const { count } = await sb.from('profiles')
-                .select('*', { count: 'exact', head: true })
-                .gte('created_at', since.toISOString());
-            if (count > 0) this.queue.push(`${count} new Navigator(s) joined the Circle today.`);
-        }
 
         if (window.LISBON_QUESTS) {
             const open = window.LISBON_QUESTS.filter(q => q.type !== 'system').length;

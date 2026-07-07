@@ -38,6 +38,8 @@
         localStorage.setItem('cdf_landing_flowee_state', 'dismissed');
         flowee.tutorialActive = false;
         flowee.shush();
+        const worldNav = document.getElementById('world-quick-nav');
+        if (worldNav && window.__landingIntroDone) worldNav.classList.add('visible');
     }
 
     function closeOpts(flowee) {
@@ -104,37 +106,49 @@
         );
     }
 
+    function isMobile() {
+        return window.matchMedia('(max-width: 768px)').matches;
+    }
+
     function showWelcome(flowee) {
         const lang = localStorage.getItem('cqr_lang') || 'en';
         const hello = { en: 'Welcome', de: 'Willkommen', fr: 'Bienvenue', pt: 'Bem-vindo' }[lang] || 'Welcome';
+        const mobile = isMobile();
         flowee.talk(
             true,
-            `${hello} to Circle D Flow. I am <strong>Flowee</strong>, your Navigator guide.<br><br>`
-            + 'Tap a glowing world on the tree — <em>Luvo, Bantaba, Archive, or Heart</em> — read the card, tap again to enter. '
-            + 'Or let me explain each realm below.',
+            mobile
+                ? `<strong>Flowee</strong> — tap a crystal on the tree, or pick a realm below.`
+                : `${hello} to Circle D Flow. I am <strong>Flowee</strong>, your Navigator guide.<br><br>`
+                + 'Tap a glowing world — <em>Luvo, Bantaba, Archive, or Heart</em> — read the card, tap again to enter.',
             'guide',
-            [
-                {
-                    label: 'Show me the realms',
-                    action: () => {
-                        localStorage.setItem('cdf_landing_flowee_state', 'step2_worlds');
-                        showWorldPicker(flowee);
+            mobile
+                ? [
+                    { label: 'Pick a realm', action: () => { localStorage.setItem('cdf_landing_flowee_state', 'step2_worlds'); showWorldPicker(flowee); } },
+                    { label: 'Explore tree', action: () => { localStorage.setItem('cdf_landing_flowee_state', 'dismissed'); flowee.talk(true, 'Tap a crystal on Yggdrasil. I am here if you need me.', 'guide', closeOpts(flowee)); } },
+                    ...closeOpts(flowee).slice(0, 1),
+                ]
+                : [
+                    {
+                        label: 'Show me the realms',
+                        action: () => {
+                            localStorage.setItem('cdf_landing_flowee_state', 'step2_worlds');
+                            showWorldPicker(flowee);
+                        },
                     },
-                },
-                {
-                    label: 'Explore tree myself',
-                    action: () => {
-                        localStorage.setItem('cdf_landing_flowee_state', 'dismissed');
-                        flowee.talk(
-                            true,
-                            'Tap a crystal on Yggdrasil. I am here if you need me.',
-                            'guide',
-                            closeOpts(flowee)
-                        );
+                    {
+                        label: 'Explore tree myself',
+                        action: () => {
+                            localStorage.setItem('cdf_landing_flowee_state', 'dismissed');
+                            flowee.talk(
+                                true,
+                                'Tap a crystal on Yggdrasil. I am here if you need me.',
+                                'guide',
+                                closeOpts(flowee)
+                            );
+                        },
                     },
-                },
-                ...closeOpts(flowee),
-            ]
+                    ...closeOpts(flowee),
+                ]
         );
     }
 

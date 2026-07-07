@@ -389,21 +389,20 @@ window.ApexNexus = {
             modal.style.cssText = "outline: none; border: none; background: transparent;";
             
             modal.innerHTML = `
-                <div class="w-[800px] h-[550px] relative flex flex-col items-center justify-center p-8 text-center rounded-3xl overflow-hidden shadow-2xl" 
-                     style="background: rgba(20, 15, 25, 0.85); backdrop-filter: blur(50px); border: 1px solid rgba(212, 175, 55, 0.6); box-shadow: 0 0 100px rgba(212,175,55,0.15), inset 0 0 40px rgba(212, 175, 55, 0.2); transform: perspective(1000px) rotateX(2deg); transform-style: preserve-3d; margin: auto;">
+                <div class="w-[min(100vw-1.5rem,800px)] max-h-[min(92dvh,600px)] overflow-y-auto relative flex flex-col items-center justify-center p-5 sm:p-8 text-center rounded-3xl shadow-2xl" 
+                     style="background: rgba(20, 15, 25, 0.92); backdrop-filter: blur(50px); border: 1px solid rgba(212, 175, 55, 0.6); box-shadow: 0 0 100px rgba(212,175,55,0.15), inset 0 0 40px rgba(212, 175, 55, 0.2); margin: auto;">
                     
-                    <!-- 3D Floating Heart Logo -->
-                    <div class="absolute inset-0 flex items-center justify-center pointer-events-none" style="transform: translateZ(-50px);">
-                         <img src="../Assets/images/cqr-logo-gold.png" class="w-[450px] opacity-15 drop-shadow-[0_0_30px_rgba(212,175,55,0.8)] animate-pulse" />
+                    <div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-30">
+                         <img src="../Assets/images/cqr-logo-gold.png" class="w-[min(70vw,280px)] opacity-40 animate-pulse" alt="" />
                     </div>
 
-                    <h2 class="text-4xl font-serif font-bold text-[#d4af37] uppercase tracking-widest mb-4" style="transform: translateZ(30px); text-shadow: 0 0 15px rgba(212,175,55,0.8), 2px 2px 4px rgba(0,0,0,0.8);">Greetings, Flow Creator.</h2>
+                    <h2 class="text-2xl sm:text-4xl font-serif font-bold text-[#d4af37] uppercase tracking-widest mb-3 sm:mb-4 relative z-10" style="text-shadow: 0 0 15px rgba(212,175,55,0.8);">Greetings, Flow Creator.</h2>
                     
-                    <p class="text-white max-w-lg mb-10 leading-relaxed font-serif text-lg" style="transform: translateZ(20px); text-shadow: 0 0 10px rgba(0,0,0,1);">
+                    <p class="text-white max-w-lg mb-6 sm:mb-10 leading-relaxed font-serif text-sm sm:text-lg relative z-10" style="text-shadow: 0 0 10px rgba(0,0,0,1);">
                         You have reached the core of the Yggdrasil-Matrix. Here, your path is no longer solitary. You stand before the three pillars that hold our world together.
                     </p>
 
-                    <div class="grid grid-cols-3 gap-8 w-full max-w-2xl mb-10" style="transform: translateZ(40px);">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-8 w-full max-w-2xl mb-6 sm:mb-10 relative z-10">
                         <!-- Vis -->
                         <div class="group flex flex-col items-center gap-3 p-4 rounded-xl border border-pink-500/20 bg-pink-500/5 hover:border-pink-500 hover:bg-pink-500/20 transition-all hover:-translate-y-2 cursor-crosshair shadow-[0_0_15px_rgba(236,72,153,0.1)]">
                             <span class="material-symbols-outlined text-5xl text-pink-400 drop-shadow-[0_0_15px_rgba(236,72,153,0.8)] group-hover:animate-pulse">visibility</span>
@@ -425,8 +424,7 @@ window.ApexNexus = {
                     </div>
 
                     <button onclick="window.ApexNexus.closeTrinityModal()" 
-                            class="relative px-12 py-4 border-2 border-[#d4af37] bg-[#d4af37]/10 text-white font-bold uppercase tracking-widest rounded-lg hover:text-black hover:bg-[#d4af37] transition-all hover:-translate-y-1 shadow-[0_0_20px_rgba(212,175,55,0.3)] hover:shadow-[0_0_40px_rgba(212,175,55,0.8)]"
-                            style="transform: translateZ(50px); text-shadow: 0 2px 4px rgba(0,0,0,0.5);">
+                            class="relative z-10 w-full sm:w-auto px-8 sm:px-12 py-4 min-h-[48px] border-2 border-[#d4af37] bg-[#d4af37]/10 text-white font-bold uppercase tracking-widest rounded-lg hover:text-black hover:bg-[#d4af37] transition-all shadow-[0_0_20px_rgba(212,175,55,0.3)]">
                         Enter the Council
                     </button>
                 </div>

@@ -1,6 +1,6 @@
 /**
  * Agent: WhatsApp Agent (The Messenger)
- * Role: Handles communication via the Meta WhatsApp Cloud API.
+ * Outbound via /api/whatsapp proxy — token never in browser.
  */
 
 class WhatsAppAgent extends Agent {
@@ -11,157 +11,167 @@ class WhatsAppAgent extends Agent {
     init() {
         this.log("Messenger Synapses Connected.");
         window.WhatsApp = this;
+        this.proxyUrl = this.getProxyUrl();
 
-        // Listen for Inbound signals from n8n (via NetworkHub or Pusher)
         window.addEventListener('CDF_WHATSAPP_INBOUND', (e) => {
-            const data = e.detail;
-            const text = data.text || "(Media/Other)";
+            const data = e.detail || {};
+            const text = data.text || data.body || "(Media/Other)";
             this.log(`📥 Inbound Signal: ${data.sender} -> ${text}`);
             if (window.showInboundActivity) {
                 window.showInboundActivity(`Echo: ${text}`);
             }
         });
 
-        // --- LOCAL BRIDGE POLLING ---
-        // Best way to stay connected while PikaPods is being fixed.
         this.startBridgePolling();
+        this.checkServerStatus();
+    }
+
+    getProxyUrl() {
+        const cfg = window.API_CONFIG?.whatsapp || {};
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            return 'http://localhost:3001';
+        }
+        return cfg.proxyUrl || '/api/whatsapp';
+    }
+
+    isLocalBridge() {
+        return this.proxyUrl.includes('localhost');
+    }
+
+    async checkServerStatus() {
+        try {
+            const url = this.isLocalBridge()
+                ? `${this.proxyUrl}/status`
+                : `${this.proxyUrl}?action=status`;
+            const res = await fetch(url);
+            const data = await res.json();
+            if (data.connected) {
+                this.log('✅ Meta bridge online.');
+            } else {
+                this.log(`⚠️ Meta bridge offline: ${data.error || 'check Vercel env'}`);
+            }
+            return data;
+        } catch {
+            this.log('⚠️ Bridge unreachable.');
+            return { connected: false };
+        }
     }
 
     async startBridgePolling() {
-        const POLL_INTERVAL = 3000; // 3 seconds
-        if (window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1") return;
-        const BRIDGE_URL = "http://localhost:3001/poll";
+        if (window.FloweeWhatsAppBridge) return;
+        const POLL_INTERVAL = 5000;
+        const pollUrl = this.isLocalBridge()
+            ? `${this.proxyUrl}/poll`
+            : `${this.proxyUrl}?action=poll`;
 
-        this.log(`📡 Local Bridge Polling started at ${BRIDGE_URL}`);
-        
+        this.log(`📡 Bridge polling: ${pollUrl}`);
+
         setInterval(async () => {
             try {
-                const response = await fetch(BRIDGE_URL);
-                if (response.status === 200) {
-                    const data = await response.json();
-                    if (data && data.text) {
-                        this.log(`⚡ Signal captured from Local Bridge: ${data.text}`);
-                        // Dispatch event to trigger the inbound listener above
-                        window.dispatchEvent(new CustomEvent('CDF_WHATSAPP_INBOUND', { 
-                            detail: data 
-                        }));
-                    }
+                const response = await fetch(pollUrl);
+                if (!response.ok) return;
+                const data = await response.json();
+                const text = data?.text || data?.message?.body;
+                const sender = data?.sender || data?.message?.sender;
+                if (text) {
+                    window.dispatchEvent(new CustomEvent('CDF_WHATSAPP_INBOUND', {
+                        detail: { sender, text }
+                    }));
                 }
-            } catch (e) {
-                // Silently ignore if bridge is down
+            } catch {
+                /* bridge down */
             }
         }, POLL_INTERVAL);
     }
 
+    async proxyRequest(payload) {
+        if (this.isLocalBridge()) {
+            const res = await fetch(`${this.proxyUrl}/notify`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: payload.text || payload.message }),
+            });
+            const data = await res.json().catch(() => ({}));
+            return { ok: res.ok, data };
+        }
+
+        const res = await fetch(this.proxyUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+        });
+        const data = await res.json().catch(() => ({}));
+        return { ok: res.ok, status: res.status, data };
+    }
+
     async sendMessage(text, to = null) {
         const config = window.API_CONFIG.whatsapp;
-        const localToken = localStorage.getItem('whatsapp_access_token');
-        const token = localToken || config.accessToken;
-        
         const target = to || config.recipientPhone;
-        const url = `${config.apiUrl}/${config.phoneId}/messages`;
-
-        const payload = {
-            messaging_product: "whatsapp",
-            recipient_type: "individual",
-            to: target.replace(/\+/g, ''),
-            type: "text",
-            text: { preview_url: false, body: text }
-        };
 
         try {
             this.log(`Attempting to send message to ${target}...`);
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(payload)
+            const { ok, data } = await this.proxyRequest({
+                action: 'send',
+                text,
+                to: target,
             });
 
-            const data = await response.json();
-            if (response.ok) {
+            if (ok) {
                 this.log("✅ Message Sent Successfully.");
                 if (window.Pusher) window.Pusher.showToast("WhatsApp Message Sent", "success");
                 return true;
-            } else {
-                const errorMsg = data.error?.message || "Unknown Meta Error";
-                this.log(`❌ Meta API Error: ${errorMsg}`);
-                if (window.Pusher) window.Pusher.showToast(`WhatsApp Error: ${errorMsg}`, "error");
-                
-                if (errorMsg.includes("verified") || errorMsg.includes("sandbox")) {
-                    window.Flowee?.talk(true, "⚠️ **SIGNAL BLOCKED**: Your number is not yet verified in the Meta Sandbox. Please add it to your 'Allowed Numbers' in the Meta Portal.", "error");
-                }
-                return false;
             }
+
+            const errorMsg = data?.error?.message || data?.error || "Unknown Meta Error";
+            this.log(`❌ Meta API Error: ${errorMsg}`);
+            if (window.Pusher) window.Pusher.showToast(`WhatsApp Error: ${errorMsg}`, "error");
+
+            if (String(errorMsg).includes('token') || String(errorMsg).includes('WHATSAPP_ACCESS_TOKEN')) {
+                window.Flowee?.talk(true, "⚠️ **TOKEN**: Set `WHATSAPP_ACCESS_TOKEN` in Vercel → Settings → Environment Variables, then redeploy.", "error");
+            }
+            return false;
         } catch (error) {
-            console.error("[WhatsApp] Fetch Failed (Network/CORS):", error);
+            console.error("[WhatsApp] Proxy Failed:", error);
+            if (window.Pusher) window.Pusher.showToast("WhatsApp bridge unreachable", "error");
             return false;
         }
     }
 
-    /**
-     * Sends a Template Message (Required for Sandbox first-contact)
-     * @param {string} templateName - (Optional) Name of the template (default: hello_world)
-     */
     async sendTemplateMessage(templateName = "hello_world", to = null) {
         const config = window.API_CONFIG.whatsapp;
-        const localToken = localStorage.getItem('whatsapp_access_token');
-        const token = localToken || config.accessToken;
-        
         const target = to || config.recipientPhone;
-        const url = `${config.apiUrl}/${config.phoneId}/messages`;
-
-        const payload = {
-            messaging_product: "whatsapp",
-            to: target.replace(/\+/g, ''),
-            type: "template",
-            template: {
-                name: templateName,
-                language: { code: "en_US" }
-            }
-        };
 
         try {
             this.log(`🚀 Sending Template [${templateName}] to ${target}...`);
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(payload)
+            const { ok, data } = await this.proxyRequest({
+                action: 'template',
+                template: templateName,
+                to: target,
             });
 
-            const data = await response.json();
-            if (response.ok) {
+            if (ok) {
                 this.log("✅ Template Sent Successfully.");
                 if (window.Pusher) window.Pusher.showToast("Template [HELLO WORLD] Sent", "success");
                 return true;
-            } else {
-                const errorMsg = data.error?.message || "Unknown Template Error";
-                this.log(`❌ Template Error: ${errorMsg}`);
-                
-                if (errorMsg.includes("expired") || errorMsg.includes("token")) {
-                    window.Flowee?.talk(true, "⚠️ **SESSION EXPIRED**: Your Meta Access Token has expired. Please generate a new one in the Developer Portal and update the Bridge.", "error");
-                    if (window.Pusher) window.Pusher.showToast("Meta Token Expired", "error");
-                } else if (errorMsg.includes("verified") || errorMsg.includes("sandbox")) {
-                    window.Flowee?.talk(true, "⚠️ **HANDSHAKE FAILED**: Meta refuses to talk to this number until you add it to your Sandbox 'Allowed Numbers'.", "error");
-                } else {
-                    if (window.Pusher) window.Pusher.showToast(`Template Error: ${errorMsg}`, "error");
-                }
-                return false;
             }
+
+            const errorMsg = data?.error?.message || data?.error || "Unknown Template Error";
+            this.log(`❌ Template Error: ${errorMsg}`);
+
+            if (String(errorMsg).includes('expired') || String(errorMsg).includes('token')) {
+                window.Flowee?.talk(true, "⚠️ **SESSION EXPIRED**: Generate a new Meta token → Vercel env `WHATSAPP_ACCESS_TOKEN`.", "error");
+            } else if (String(errorMsg).includes('verified') || String(errorMsg).includes('sandbox')) {
+                window.Flowee?.talk(true, "⚠️ **HANDSHAKE FAILED**: Add your number to Meta Sandbox allowed list.", "error");
+            } else {
+                if (window.Pusher) window.Pusher.showToast(`Template Error: ${errorMsg}`, "error");
+            }
+            return false;
         } catch (error) {
-            console.error("[WhatsApp] Template Fetch Failed:", error);
+            console.error("[WhatsApp] Template Proxy Failed:", error);
             return false;
         }
     }
 
-    /**
-     * Sends a notification alert for specific system events
-     */
     async sendAlert(type, data = {}) {
         let msg = "";
         switch (type) {
@@ -175,12 +185,10 @@ class WhatsAppAgent extends Agent {
                 msg = `⚠️ ADMIN ALERT: ${data.msg}\nImmediate review required in Orbit.`;
                 break;
             default:
-                msg = `🔔 System Notification: ${data.msg || "General Update"}`;
+                msg = `🔔 Flowee: ${data.msg || "General Update"}`;
         }
-
         return await this.sendMessage(msg);
     }
 }
 
-// Global Instance
 new WhatsAppAgent();

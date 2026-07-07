@@ -294,26 +294,52 @@ class FloweeAgent {
         }
     }
 
+    _isLandingPage() {
+        const path = window.location.pathname.toLowerCase();
+        return path.endsWith('index.html') || path.endsWith('/') || path === '';
+    }
+
+    _syncLandingChrome(visible) {
+        if (!this._isLandingPage()) return;
+        document.body.classList.toggle('flowee-bubble-open', !!visible);
+        const worldNav = document.getElementById('world-quick-nav');
+        if (worldNav && window.__landingIntroDone) {
+            if (visible) worldNav.classList.remove('visible');
+            else worldNav.classList.add('visible');
+        }
+        this.recalculateBubblePosition();
+        window.dispatchEvent(new CustomEvent('LANDING_CHROME_SYNC'));
+    }
+
     talk(visible, text, type="neutral", options=[]) {
         if(!this.bubble) return;
+
+        if (this._talkContentTimer) {
+            clearTimeout(this._talkContentTimer);
+            this._talkContentTimer = null;
+        }
+        if (this.talkTimeout) {
+            clearTimeout(this.talkTimeout);
+            this.talkTimeout = null;
+        }
         
         const contentDiv = this.bubble.querySelector('.flowee-text-content');
         const optionsDiv = this.bubble.querySelector('.flowee-options-container');
         
         if (visible && text) {
+            this._syncLandingChrome(true);
             this.bubble.style.opacity = '1';
             this.bubble.style.transform = 'translateY(0) scale(1)';
             this.bubble.style.pointerEvents = 'auto';
             
-            // "Thinking" Indicator
             if (contentDiv) {
                 contentDiv.innerHTML = `<span style="animation: pulse-op 1s infinite;">...</span>`;
-                optionsDiv.innerHTML = ''; // clear options
+                optionsDiv.innerHTML = '';
                 
-                setTimeout(() => {
+                this._talkContentTimer = setTimeout(() => {
+                    this._talkContentTimer = null;
                     contentDiv.innerHTML = text;
                     
-                    // Render Options (Zero-Typing Pills)
                     if (options && options.length > 0) {
                         options.forEach(opt => {
                             const btn = document.createElement('button');
@@ -333,23 +359,18 @@ class FloweeAgent {
                             
                             btn.onclick = () => {
                                 this.shush();
-                                if (typeof opt.action === 'function') {
-                                    opt.action();
-                                }
+                                if (typeof opt.action === 'function') opt.action();
                             };
                             optionsDiv.appendChild(btn);
                         });
                     }
-                }, 1200); // 1.2s thinking time
+                }, 400);
             }
             
-            // Auto-hide only if no options are present
-            if(this.talkTimeout) clearTimeout(this.talkTimeout);
             if (!options || options.length === 0) {
                 this.talkTimeout = setTimeout(() => this.shush(), 8000);
             }
             
-            // Log to Chat
             this.addChatMessage(text, 'ai');
         } else {
             this.shush();
@@ -357,12 +378,17 @@ class FloweeAgent {
     }
 
     shush() {
+        if (this._talkContentTimer) {
+            clearTimeout(this._talkContentTimer);
+            this._talkContentTimer = null;
+        }
         if(this.bubble) {
             this.bubble.style.opacity = '0';
             this.bubble.style.transform = 'translateY(20px) scale(0.9)';
             this.bubble.style.pointerEvents = 'none';
             if(this.talkTimeout) clearTimeout(this.talkTimeout);
         }
+        this._syncLandingChrome(false);
     }
 
     updateVoiceIcon() {
@@ -466,22 +492,11 @@ class FloweeAgent {
             const tourStarted = localStorage.getItem('cdf_tour_started');
             
             if(window.location.pathname.includes('dashboard.html')) {
-                // BETA OVERRIDE: Disabled Loop (User Request)
-                console.log("[Flowee] Auto-Start Protocol Paused. Waiting for User Init.");
-                /*
-                if(window.Helper) window.Helper.saveData('cdf_tour_started', 'true');
-                else localStorage.setItem('cdf_tour_started', 'true');
-                this.talk(true, "Initialization Complete. Starting Ghost-Run Protocol in 3 seconds...", "guide");
-                
-                setTimeout(() => {
-                    this.tutorialActive = true; 
-                    this.initiateTutorialProtocol();
-                }, 3000);
-                */
+                console.log("[Flowee] Dashboard — FloweeDashboardGuide handles routing.");
             }
 
-            // BETA LAUNCH: Mission #1 - The Grand Line Awakening
-            if (!localStorage.getItem('cdf_beta_mission_1')) {
+            // BETA LAUNCH: Mission #1 — only when dashboard guide is not loaded
+            if (!window.location.pathname.includes('dashboard.html') && !localStorage.getItem('cdf_beta_mission_1')) {
                 console.log("[Flowee] Beta Protocol: Mission #1 Assigning...");
                 setTimeout(() => {
                     this.talk(true, "🏴CQR Captain! The Brain is online. I have a mission for you.", "guide");
@@ -510,7 +525,7 @@ class FloweeAgent {
                     if (window.FloweeLandingGuide) window.FloweeLandingGuide.run(this);
                 };
                 window.addEventListener('LANDING_INTRO_COMPLETE', startLandingGuide, { once: true });
-                setTimeout(startLandingGuide, 24000);
+                setTimeout(startLandingGuide, 16000);
             } else {
                 this.checkPageTutorial();
             }
@@ -526,15 +541,46 @@ class FloweeAgent {
 
     recalculateBubblePosition() {
         const bubble = document.getElementById('flowee-bubble');
-        if(!bubble) return;
-        
-        // Simple distinct positioning based on screen size
-        if(window.innerWidth < 768) {
-            bubble.style.bottom = '80px';
-            bubble.style.right = '20px';
+        const container = this.container || document.getElementById('flowee-agent');
+        if (!bubble) return;
+
+        const isMobile = window.innerWidth < 768;
+        const isLanding = this._isLandingPage();
+        const worldNav = document.getElementById('world-quick-nav');
+        const navVisible = worldNav?.classList.contains('visible') && !document.body.classList.contains('flowee-bubble-open');
+        const safeBottom = 'env(safe-area-inset-bottom, 0px)';
+
+        if (isLanding && isMobile) {
+            bubble.style.width = '100%';
+            bubble.style.maxWidth = 'none';
+            bubble.style.maxHeight = 'min(40vh, 260px)';
+            bubble.style.overflowY = 'auto';
+            bubble.style.marginRight = '0';
+            bubble.style.transformOrigin = 'bottom center';
+            const navH = navVisible ? 58 : 0;
+            const bottomPx = 52 + navH;
+            if (container) {
+                container.style.left = '10px';
+                container.style.right = '10px';
+                container.style.bottom = `calc(${bottomPx}px + ${safeBottom})`;
+            }
+        } else if (isMobile) {
+            bubble.style.width = '260px';
+            bubble.style.maxWidth = 'calc(100vw - 40px)';
+            bubble.style.maxHeight = '';
+            bubble.style.overflowY = '';
+            bubble.style.marginRight = '16px';
+            if (container) {
+                container.style.left = '';
+                container.style.right = '20px';
+                container.style.bottom = `calc(88px + ${safeBottom})`;
+            }
         } else {
-            bubble.style.bottom = '100px';
-            bubble.style.right = '30px';
+            if (container) {
+                container.style.left = '';
+                container.style.right = '40px';
+                container.style.bottom = '40px';
+            }
         }
     }
 
@@ -665,6 +711,9 @@ class FloweeAgent {
 
     // --- IMPERIAL INITIATION LOGIC ---
     checkImperialInitiation() {
+        const path = window.location.pathname.split('/').pop() || 'index.html';
+        if (path.includes('dashboard') && window.FloweeDashboardGuide) return;
+
         const step = parseInt(localStorage.getItem('cdf_imperial_step') || 1);
         const maxSteps = 7;
         
@@ -811,15 +860,16 @@ class FloweeAgent {
         // FIX: Increased bottom margin to avoid overlapping with Footer Banners (was bottom-4)
         // FIX: Z-Index 10000 to beat Overlay
         const isMobile = window.innerWidth < 768;
+        const isLanding = this._isLandingPage();
         container.style.position = 'fixed';
-        container.style.bottom = isMobile ? 'calc(88px + env(safe-area-inset-bottom))' : '40px';
+        container.style.bottom = isMobile ? `calc(88px + env(safe-area-inset-bottom, 0px))` : '40px';
         container.style.right = isMobile ? '20px' : '40px';
         container.style.zIndex = '999999';
         container.style.display = 'flex';
         container.style.flexDirection = 'column';
         container.style.alignItems = 'flex-end';
         container.style.pointerEvents = 'none';
-        container.className = 'group transition-all duration-500';
+        container.className = 'group transition-all duration-500' + (isLanding && isMobile ? ' flowee-landing-vessel' : '');
         
         this.container = container;
 

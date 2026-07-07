@@ -1,19 +1,19 @@
 /**
- * Circle D Flow - API Configuration
- * Securely stores endpoint and credential mappings for the Agentic Bridge.
+ * Circle D Flow - API Configuration (public IDs only — tokens live on server)
  */
 
 const API_CONFIG = {
-    // Meta WhatsApp Cloud API
     whatsapp: {
         apiUrl: "https://graph.facebook.com/v22.0",
+        proxyUrl: "/api/whatsapp",
         phoneId: "1011847962012735",
         whatsappId: "2287277265092772",
-        accessToken: "EAANdoxVBbuYBRNuLSHi0hvwYsrbGLiAFZAg1GXqg0DrO97cmhHCvmjXmDVxvZAwiUj3R2Y6Wi8tUliXM5NqKLx0XkpY9LdHGUTfvgZBViKoYSBAecObKfI85KOv5oKIZAjoC2gmJZBAqv3x8Bcphw34EdrTFILFolMGoyy1MuqzXgZBbwMZB8mi0y2qXtguorXhHpLxzbQWVrgykpFLGloH67ThHkaTzCQByqZA1MAuS8vdZBhuVd9GPq3CbsworAW2SWobhxlvnB1dDGj0UPmG2V",
-        recipientPhone: "+391912828940" // User WhatsApp Number
+        recipientPhone: "+391912828940",
+        /** Physical SIM / device root on this PC (Flowee comms lane) */
+        simDeviceRoot: "E:\\",
+        verifyToken: "CDF_NEXUS_2026"
     },
-    
-    // Vision Oasis Categories (v5.0 - High-Tech Soul)
+
     vision: {
         categories: [
             { id: 'circle_d_jam', label: 'Circle D Jam', topics: ['Tiny Desk Concept', 'Community Beats', 'Live Sessions'] },
@@ -22,8 +22,7 @@ const API_CONFIG = {
         ],
         postingCycle: 'Daily (User Validation Required)'
     },
-    
-    // n8n PikaPod (Weltenbaum-Reaktor)
+
     google: {
         clientId: 'YOUR_GOOGLE_CLIENT_ID',
         apiKey: 'YOUR_GOOGLE_API_KEY',
@@ -37,4 +36,3 @@ const API_CONFIG = {
 };
 
 window.API_CONFIG = API_CONFIG;
-
