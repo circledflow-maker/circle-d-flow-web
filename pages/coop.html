@@ -83,6 +83,10 @@
         .res-progress-fill { height: 100%; background: linear-gradient(90deg, #5C4033, #D47E3D); transition: width 0.4s; }
         .flowee-barkeeper { display: flex; gap: 16px; align-items: flex-start; }
         .flowee-barkeeper-avatar { width: 56px; height: 56px; border-radius: 50%; border: 2px solid #D47E3D; background: rgba(212,126,61,0.15); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .coop-team-pill { padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+        .coop-team-pill.linked { border-color: rgba(34,197,94,0.4); background: rgba(34,197,94,0.08); }
+        .coop-team-pill.pending { border-color: rgba(234,179,8,0.3); background: rgba(234,179,8,0.06); }
+        .coop-invite-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px; border-radius: 8px; background: rgba(0,0,0,0.25); }
         #flowee-guide-card { border-left: 3px solid #D47E3D; }
         #flowee-guide-cta { font-size: 10px; padding: 8px 14px; border-radius: 99px; border: 1px solid #D47E3D; background: rgba(212,126,61,0.2); color: #fff; text-transform: uppercase; letter-spacing: 0.12em; }
         .coop-swipe-hint { text-align: center; opacity: 0.5; }
@@ -180,6 +184,34 @@
                 <div class="flex justify-between text-[10px] text-white/50 font-mono"><span>Resonance Bar</span><span id="resonance-progress-label">0 / 200 XP</span></div>
                 <div class="res-progress-track"><div class="res-progress-fill" id="resonance-progress-bar" style="width:0%"></div></div>
             </div>
+        </div>
+
+        <!-- FLOWEE TUTORIAL CARD -->
+        <div id="flowee-tutorial-card" class="hidden nature-border rounded-2xl p-4 border border-tao-fire/40 mb-2">
+            <div class="flex justify-between items-start gap-2 mb-2">
+                <span class="text-[10px] font-mono text-tao-fire" id="flowee-tutorial-progress">Step 1 / 7</span>
+                <button type="button" class="text-white/40 text-xs" onclick="document.getElementById('flowee-tutorial-card').classList.add('hidden')">✕</button>
+            </div>
+            <h3 id="flowee-tutorial-title" class="font-display text-sm text-white mb-2">Coop Tutorial</h3>
+            <p id="flowee-tutorial-body" class="text-xs text-white/70 mb-3"></p>
+            <button type="button" id="flowee-tutorial-next" class="coop-seal-btn">Start</button>
+        </div>
+
+        <!-- TEAM INVITES -->
+        <div class="nature-border rounded-2xl p-4">
+            <p class="section-label">Team · Invite to Project</p>
+            <div id="coop-team-status" class="flex flex-col gap-2 mb-3"></div>
+            <div class="flex flex-wrap gap-2 mb-3">
+                <button type="button" class="coop-chip on" data-quick-invite="naru">+ Naru</button>
+                <button type="button" class="coop-chip on" data-quick-invite="c-riz">+ C-riz</button>
+                <button type="button" class="coop-chip" onclick="window.CoopFloweeTutorial?.start(true)">Start Tutorial</button>
+            </div>
+            <div class="flex gap-2 mb-2">
+                <input id="coop-invite-input" class="coop-input flex-1" placeholder="Username to invite…" autocomplete="off">
+                <button type="button" id="coop-invite-btn" class="coop-chip on px-4">Invite</button>
+            </div>
+            <div id="coop-invite-list" class="space-y-2"></div>
+            <p class="text-[10px] text-white/30 mt-2">Synced via Supabase · run sql/coop_collaboration.sql once for team EXP rewards</p>
         </div>
 
         <!-- FLOWEE INTERACTIVE GUIDE -->
@@ -365,8 +397,10 @@
     <script src="../js/data/coop_equipment.js?v=1.0"></script>
     <script src="../js/data/coop_pipeline.js?v=1.0"></script>
     <script src="../js/agents/adinkra_engine.js?v=1.0"></script>
-    <script src="../js/agents/coop_barkeeper.js?v=1.1"></script>
+    <script src="../js/agents/coop_barkeeper.js?v=1.2"></script>
     <script src="../js/agents/coop_mobile.js?v=1.0"></script>
+    <script src="../js/agents/coop_sync.js?v=1.0"></script>
+    <script src="../js/agents/coop_flowee_tutorial.js?v=1.0"></script>
     <script src="../js/agents/imperial_hud.js"></script>
     <script src="../js/agents/pusher.js"></script>
     <script src="../js/agents/helper.js"></script>
@@ -400,7 +434,8 @@
                         name = profile.username || name;
                         role = profile.role_calling || role;
                         document.getElementById('res-bar-exp').textContent = profile.exp || 0;
-                        document.getElementById('res-bar-tp').textContent = profile.trust_points || profile.karma || 100;
+                        const trust = profile.karma ?? profile.trust_points ?? 100;
+                        document.getElementById('res-bar-tp').textContent = trust;
                         if (profile.avatar_url) document.getElementById('res-bar-avatar').src = profile.avatar_url;
                     }
                 }
@@ -425,6 +460,18 @@
             if (window.CoopBarkeeper) {
                 window.CoopBarkeeper.renderResonanceBar();
                 window.CoopBarkeeper.syncMobileMirrors();
+            }
+            if (window.CoopSync) {
+                window.CoopSync.renderTeamStatus();
+                document.getElementById('coop-invite-btn')?.addEventListener('click', async () => {
+                    const inp = document.getElementById('coop-invite-input');
+                    const res = await window.CoopSync.inviteUser(inp?.value || '');
+                    if (!res.ok && window.Pusher) window.Pusher.showToast(res.msg, 'error');
+                    if (inp && res.ok) inp.value = '';
+                });
+                document.querySelectorAll('[data-quick-invite]').forEach((btn) => {
+                    btn.addEventListener('click', () => window.CoopSync.inviteUser(btn.dataset.quickInvite));
+                });
             }
             if (window.FloweeNotify && Notification.permission === 'granted') {
                 window.FloweeNotify.enabled = true;

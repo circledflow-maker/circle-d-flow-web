@@ -27,6 +27,7 @@ window.COOP_CORE_CREW = [
     tags: ['Coordinator', 'Photographer', 'Host'],
     defaultRoles: ['coordinator', 'photographer', 'host'],
     strengths: 'Event coordination, photography, Lisbon network',
+    usernameHints: ['kyheartlx', 'kyheart', 'dark'],
   },
   {
     id: 'naru',
@@ -35,6 +36,8 @@ window.COOP_CORE_CREW = [
     tags: ['Visionary', 'Multi-Artist', 'Rapper', 'Streamer', 'Fashion'],
     defaultRoles: ['creative_director', 'streamer', 'fashion_stylist', 'host'],
     strengths: 'Vision, performance, stream, fashion design',
+    usernameHints: ['naru', 'naru_the_token', 'naruthetoken'],
+    inviteDefault: true,
   },
   {
     id: 'criz',
@@ -43,6 +46,8 @@ window.COOP_CORE_CREW = [
     tags: ['Rapper', 'Philosopher'],
     defaultRoles: ['host', 'philosopher', 'audio_engineer'],
     strengths: 'Lyrics, philosophy, mic presence',
+    usernameHints: ['c-riz', 'criz', 'c_riz'],
+    inviteDefault: true,
   },
 ];
 

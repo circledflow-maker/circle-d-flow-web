@@ -206,8 +206,29 @@ GEAR: ${gear || 'TBD'}
       return buildBriefing(project);
     }
 
+    if (q.includes('tutorial') || q.includes('walkthrough') || q.includes('anleitung')) {
+      if (window.CoopFloweeTutorial) {
+        window.CoopFloweeTutorial.start(true);
+        return 'Starting the Resonance Bar tutorial — 7 steps: vibe, crew invites, roles, location, calendar, briefing. Naru & C-riz can follow the same flow when they accept your invite.';
+      }
+      return 'Tap Start Tutorial on the guide card — I walk you through coop planning in about 2 minutes.';
+    }
+
+    if (q.includes('invite') || q.includes('einlad') || q.includes('team')) {
+      const crew = project.crew || {};
+      const linked = (window.COOP_CORE_CREW || []).map((m) => {
+        const c = crew[m.id];
+        return c?.userId || c?.username ? `${m.name} ✓` : `${m.name} — send invite`;
+      }).join(' · ');
+      return `Team sync: ${linked}. Use the invite box above — search Naru or C-riz by username. Everyone sees the same plan once linked in Supabase.`;
+    }
+
+    if (q.includes('coop') || q.includes('resonance bar') || q.includes('zusammen')) {
+      return 'Coop = shared event planning in 5 phases. You earn EXP, Trust (Karma), and Flow per sealed phase. KyheartLx coordinates, Naru vision/stream, C-riz host/MC. Invites sync roles and briefing to the whole crew.';
+    }
+
     if (q.includes('help') || q.includes('hilfe')) {
-      return 'Commands: ask about roles, location, equipment, guests, calendar, Adinkra, or "summary". Tag @Flowee anytime. Complete each phase for EXP + Trust + Flow.';
+      return 'Commands: coop, tutorial, invite team, roles, location, equipment, guests, calendar, Adinkra, or "summary". Tag @Flowee anytime. Complete each phase for EXP + Trust + Flow.';
     }
 
     return `Noted. For "${text.slice(0, 40)}…" — check Phase ${project.phase} on the bar. Tag @Flowee with roles, location, gear, or summary questions.`;
@@ -241,7 +262,14 @@ GEAR: ${gear || 'TBD'}
         this.guide();
       });
       window.addEventListener('POINTS_SYNCED', () => this.renderResonanceBar());
+      window.addEventListener('COOP_TEAM_LOADED', () => {
+        if (window.CoopSync) window.CoopSync.renderTeamStatus();
+      });
       if (window.CoopMobile) window.CoopMobile.refresh();
+      if (window.CoopSync) window.CoopSync.init();
+      if (window.CoopFloweeTutorial && !window.CoopFloweeTutorial.isDone()) {
+        window.CoopFloweeTutorial.offer();
+      }
     },
 
     getProject() {
@@ -483,6 +511,7 @@ GEAR: ${gear || 'TBD'}
       this.renderFocus();
       this.guide();
       this.syncMobileMirrors();
+      if (window.CoopSync) window.CoopSync.renderTeamStatus();
     },
 
     renderResonanceBar() {

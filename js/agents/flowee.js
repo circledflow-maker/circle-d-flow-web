@@ -190,7 +190,7 @@ class FloweeAgent {
 
         // --- COMMUNITY CONNECTION MATRIX ---
         this.communitySteps = [
-            { id: 1, page: "coop.html", text: "Welcome to the Resonance Bar! Flowee is your barkeeper — start Phase 1 or ask @Flowee in the chat.", target: "#coop-phase-steps" },
+            { id: 1, page: "coop.html", text: "Welcome to the Resonance Bar! Tap Start Tutorial — I'll show you and the team how to plan together. Invite Naru & C-riz when ready.", target: "#flowee-tutorial-card" },
             { id: 2, page: "quest-create.html", text: "Welcome to The Forge! Fill out your event details, location needs, and hit Manifest Event.", target: "button[onclick='manifestEvent()']" },
             { id: 3, page: "chat.html", text: "Success! You are now in The Sanctuary. Make sure to open your 'Event Ledger'.", target: "button[onclick=\"switchTab('tasks')\"]" },
             { id: 4, page: "chat.html", text: "Welcome to the Ledger! Scroll down to The Wisdom Wall and engrave a note for the next Master Flow.", target: "#wisdom-form" }
