@@ -83,6 +83,29 @@
         .res-progress-fill { height: 100%; background: linear-gradient(90deg, #5C4033, #D47E3D); transition: width 0.4s; }
         .flowee-barkeeper { display: flex; gap: 16px; align-items: flex-start; }
         .flowee-barkeeper-avatar { width: 56px; height: 56px; border-radius: 50%; border: 2px solid #D47E3D; background: rgba(212,126,61,0.15); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        #flowee-guide-card { border-left: 3px solid #D47E3D; }
+        #flowee-guide-cta { font-size: 10px; padding: 8px 14px; border-radius: 99px; border: 1px solid #D47E3D; background: rgba(212,126,61,0.2); color: #fff; text-transform: uppercase; letter-spacing: 0.12em; }
+        .coop-swipe-hint { text-align: center; opacity: 0.5; }
+        .coop-dot { width: 8px; height: 8px; border-radius: 50%; border: none; background: rgba(255,255,255,0.2); padding: 0; }
+        .coop-dot.active { background: #D47E3D; transform: scale(1.2); }
+        .coop-dots { display: flex; justify-content: center; gap: 8px; padding: 10px 0; }
+        .coop-swipe-viewport { overflow: hidden; touch-action: pan-y; }
+        #coop-panel-viewport { overflow: hidden; touch-action: pan-y; }
+        #coop-panel-track { display: flex; transition: transform 0.35s cubic-bezier(0.25, 0.8, 0.25, 1); will-change: transform; }
+        #coop-panel-track > section { flex: 0 0 100%; min-width: 100%; padding: 0 2px; box-sizing: border-box; }
+        .coop-crew-track { display: flex; transition: transform 0.35s ease; }
+        .coop-crew-slide { flex: 0 0 100%; min-width: 100%; padding-right: 8px; box-sizing: border-box; }
+        @media (min-width: 1024px) {
+            #coop-panel-viewport, #coop-panel-dots { display: none !important; }
+            .coop-mobile-only { display: none !important; }
+        }
+        @media (max-width: 1023px) {
+            .coop-desktop-only { display: none !important; }
+            #coop-phase-steps { display: none !important; }
+            .captain-btn { top: 5.5rem; left: 4.5rem; font-size: 11px; padding: 6px 10px; }
+            #coop-bar-chat { max-height: 160px; }
+            .coop-role-chip { font-size: 8px; padding: 3px 6px; }
+        }
     </style>
 </head>
 <body class="bg-tao-void text-white min-h-screen font-body overflow-x-hidden relative">
@@ -131,7 +154,7 @@
     </div>
 
     <!-- RETURN BUTTON -->
-    <button onclick="window.location.href='dashboard.html'" class="absolute top-20 md:top-6 left-4 md:left-6 z-50 flex items-center gap-2 text-white/50 hover:text-white transition-colors bg-black/40 px-4 py-2 rounded-full border border-white/10 hover:border-white/30 text-sm font-mono tracking-wide">
+    <button onclick="window.location.href='dashboard.html'" class="captain-btn absolute top-20 md:top-6 left-4 md:left-6 z-50 flex items-center gap-2 text-white/50 hover:text-white transition-colors bg-black/40 px-4 py-2 rounded-full border border-white/10 hover:border-white/30 text-sm font-mono tracking-wide">
         <span class="material-symbols-outlined text-sm">arrow_back</span> Captain's Quarters
     </button>
 
@@ -159,7 +182,75 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- FLOWEE INTERACTIVE GUIDE -->
+        <div id="flowee-guide-card" class="nature-border rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center gap-4">
+            <div class="flex items-center gap-3 flex-1">
+                <div class="flowee-barkeeper-avatar shrink-0">
+                    <svg viewBox="0 0 40 40" width="32" height="32" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="none" stroke="#D47E3D" stroke-width="1.5"/><path d="M12 22 Q20 10 28 22" fill="none" stroke="#D47E3D" stroke-width="1.5"/></svg>
+                </div>
+                <div>
+                    <div class="text-[10px] font-mono text-tao-fire uppercase tracking-widest" id="flowee-guide-step">Phase 1 / 5</div>
+                    <p id="flowee-guide-text" class="text-sm text-white/80 mt-1 leading-relaxed">Flowee is loading your plan…</p>
+                </div>
+            </div>
+            <button type="button" id="flowee-guide-cta" class="shrink-0">Continue</button>
+        </div>
+
+        <p class="coop-swipe-hint coop-mobile-only text-[10px] uppercase tracking-widest text-white/40 text-center">Swipe panels ← →</p>
+        <div id="coop-panel-dots" class="coop-dots coop-mobile-only"></div>
+
+        <!-- MOBILE: swipe panels -->
+        <div id="coop-panel-viewport" class="coop-mobile-only">
+            <div id="coop-panel-track">
+                <section><!-- panel 0: profile + chat -->
+                    <div class="flex flex-col gap-4">
+                        <div class="nature-border rounded-2xl p-5">
+                            <div class="flex items-center gap-4 mb-3">
+                                <img src="../Assets/images/logo.png" class="w-12 h-12 rounded-full border border-tao-fire/50 object-cover" id="res-bar-avatar-m">
+                                <div><h2 class="font-display text-white" id="res-bar-name-m">Navigator</h2><span class="text-[10px] text-tao-fire font-mono" id="res-bar-role-m">Crew</span></div>
+                            </div>
+                            <div id="res-bar-tags-m" class="flex flex-wrap gap-2"></div>
+                        </div>
+                        <div class="nature-border rounded-2xl p-4">
+                            <div id="coop-bar-chat-m"></div>
+                            <form class="flex gap-2 mt-3" onsubmit="event.preventDefault(); const i=document.getElementById('coop-chat-input-m'); if(i.value.trim()){ window.CoopBarkeeper.sendChat(i.value.trim()); i.value=''; }">
+                                <input id="coop-chat-input-m" type="text" class="coop-input flex-1" placeholder="@Flowee …" autocomplete="off">
+                                <button type="submit" class="px-3 bg-tao-earth rounded-lg text-white"><span class="material-symbols-outlined text-sm">send</span></button>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+                <section><!-- panel 1: planner -->
+                    <div class="nature-border rounded-3xl p-4">
+                        <p class="section-label">Pipeline</p>
+                        <div id="coop-gap-alert-m" class="coop-gap ok mb-3"></div>
+                        <div id="coop-phase-dots" class="coop-dots mb-3"></div>
+                        <p class="coop-swipe-hint text-[10px] mb-2">Swipe phases ← →</p>
+                        <div id="coop-phase-form-m"></div>
+                    </div>
+                </section>
+                <section><!-- panel 2: campfire -->
+                    <div class="nature-border rounded-3xl p-6 text-center">
+                        <div class="w-20 h-20 rounded-full bg-tao-fire/10 border border-tao-fire/30 flex items-center justify-center pulse-fire mx-auto mb-3">
+                            <span class="material-symbols-outlined text-tao-fire text-3xl">local_fire_department</span>
+                        </div>
+                        <div id="coop-focus-title-m" class="font-display font-bold">New Session</div>
+                        <div id="coop-focus-subtitle-m" class="text-[10px] text-white/50 font-mono mt-1 mb-4">Phase 1/5</div>
+                        <button type="button" class="w-full coop-seal-btn mb-2" onclick="window.CoopBarkeeper?.openSanctuary()">Sanctuary Chat</button>
+                        <button type="button" class="w-full coop-chip on py-3" onclick="if(confirm('Reset plan?')){ localStorage.removeItem('cdf_coop_project'); location.reload(); }">New Plan</button>
+                    </div>
+                </section>
+                <section><!-- panel 3: ledger -->
+                    <div class="nature-border rounded-3xl p-4">
+                        <h2 class="font-display text-lg mb-3 flex items-center gap-2"><span class="material-symbols-outlined text-[#d4af37]">assignment</span> Event Ledger</h2>
+                        <div id="quest-board-container-m" class="flex flex-col gap-3"></div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- DESKTOP layout -->
+        <div class="coop-desktop-only grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- LEFT: Profile + Flowee Bar Chat -->
             <div class="lg:col-span-1 flex flex-col gap-6">
                 <div class="nature-border rounded-2xl p-6 relative overflow-hidden">
@@ -208,8 +299,11 @@
                 <div class="nature-border rounded-3xl p-6">
                     <p class="section-label">Project Pipeline · KyheartLx × Naru × C-riz</p>
                     <div id="coop-gap-alert" class="coop-gap ok"></div>
-                    <div id="coop-phase-steps" class="flex gap-2 overflow-x-auto pb-4 mb-4 hide-scrollbar"></div>
-                    <div id="coop-phase-form"></div>
+                    <div id="coop-phase-dots-desktop" class="coop-dots hidden lg:flex mb-2"></div>
+                    <div id="coop-phase-steps" class="flex gap-2 overflow-x-auto pb-4 mb-4 hide-scrollbar coop-desktop-only"></div>
+                    <div id="coop-phase-viewport" class="coop-swipe-viewport lg:!overflow-visible">
+                        <div id="coop-phase-form"></div>
+                    </div>
                 </div>
 
                 <!-- Event Village -->
@@ -241,8 +335,8 @@
             </div>
         </div>
 
-        <!-- EVENT LEDGER -->
-        <div class="nature-border rounded-3xl p-8">
+        <!-- EVENT LEDGER desktop -->
+        <div class="coop-desktop-only nature-border rounded-3xl p-8">
             <div class="flex justify-between items-start mb-6">
                 <div>
                     <h2 class="text-2xl font-display text-white flex items-center gap-3">
@@ -271,7 +365,8 @@
     <script src="../js/data/coop_equipment.js?v=1.0"></script>
     <script src="../js/data/coop_pipeline.js?v=1.0"></script>
     <script src="../js/agents/adinkra_engine.js?v=1.0"></script>
-    <script src="../js/agents/coop_barkeeper.js?v=1.0"></script>
+    <script src="../js/agents/coop_barkeeper.js?v=1.1"></script>
+    <script src="../js/agents/coop_mobile.js?v=1.0"></script>
     <script src="../js/agents/imperial_hud.js"></script>
     <script src="../js/agents/pusher.js"></script>
     <script src="../js/agents/helper.js"></script>
@@ -287,8 +382,9 @@
     <script src="../js/agents/quest_controller.js" defer></script>
     <script src="../js/agents/visual_integrity.js" defer></script>
     <script src="../js/agents/sound_engineer.js" defer></script>
-    <script src="../js/agents/flowee.js?v=5.1"></script>
+    <script src="../js/agents/flowee.js?v=5.2"></script>
     <script src="../js/agents/flowee_reward.js?v=1.0"></script>
+    <script src="../js/agents/flowee_notify.js?v=1.0"></script>
     
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
@@ -312,19 +408,26 @@
 
             document.getElementById('res-bar-name').textContent = name;
             document.getElementById('res-bar-role').textContent = role;
+            const nm = document.getElementById('res-bar-name-m');
+            const rm = document.getElementById('res-bar-role-m');
+            if (nm) nm.textContent = name;
+            if (rm) rm.textContent = role;
 
             const tagsEl = document.getElementById('res-bar-tags');
+            const tagsElM = document.getElementById('res-bar-tags-m');
             const crewMember = (window.COOP_CORE_CREW || []).find((c) => name.toLowerCase().includes(c.id) || name.toLowerCase().includes(c.name.toLowerCase()));
             const tags = crewMember?.tags || ['Navigator', 'Connection Sphere'];
-            tagsEl.innerHTML = tags.map((t) => `<span class="text-[10px] px-2 py-1 rounded bg-tao-water/20 border border-tao-water/30 text-white/80">${t}</span>`).join('');
+            const tagHtml = tags.map((t) => `<span class="text-[10px] px-2 py-1 rounded bg-tao-water/20 border border-tao-water/30 text-white/80">${t}</span>`).join('');
+            if (tagsEl) tagsEl.innerHTML = tagHtml;
+            if (tagsElM) tagsElM.innerHTML = tagHtml;
 
             if (window.PointsSync) await window.PointsSync.refresh();
-            if (window.CoopBarkeeper) window.CoopBarkeeper.renderResonanceBar();
-
-            if (window.Flowee) {
-                setTimeout(() => {
-                    window.Flowee.talk(true, "Welcome to the Resonance Bar. I'm your barkeeper — let's plan your next session. Start Phase 1 or ask me @Flowee anything.", 'guide');
-                }, 1200);
+            if (window.CoopBarkeeper) {
+                window.CoopBarkeeper.renderResonanceBar();
+                window.CoopBarkeeper.syncMobileMirrors();
+            }
+            if (window.FloweeNotify && Notification.permission === 'granted') {
+                window.FloweeNotify.enabled = true;
             }
         });
     </script>
@@ -342,7 +445,7 @@
             scrollbar-width: none;
         }
     </style>
-    <script src="../js/gamification_engine.js?v=2.0"></script>
+    <script src="../js/gamification_engine.js?v=2.1"></script>
 </body>
 </html>
 

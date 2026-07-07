@@ -66,7 +66,8 @@ const GamificationEngine = {
     },
 
     completeQuest: async function(id) {
-        const quest = this.state.quests.find(q => q.id === id);
+        const sid = String(id);
+        const quest = this.state.quests.find(q => String(q.id) === sid);
         if (quest && quest.status !== 'completed') {
             quest.status = 'completed';
             const reward = quest.reward || 50;
@@ -152,41 +153,40 @@ const GamificationEngine = {
     },
 
     renderQuests: function() {
-        const container = document.getElementById('quest-board-container');
-        if (!container) return;
+        const containers = [
+            document.getElementById('quest-board-container'),
+            document.getElementById('quest-board-container-m'),
+        ].filter(Boolean);
+        if (!containers.length) return;
 
-        container.innerHTML = '';
-        
-        this.state.quests.forEach(quest => {
+        const buildCard = (quest) => {
             const isCompleted = quest.status === 'completed';
             const icon = quest.type === 'system' ? 'smart_toy' : 'person';
             const colorClass = quest.type === 'system' ? 'text-blue-400 border-blue-500/30 bg-blue-900/10' : 'text-green-400 border-green-500/30 bg-green-900/10';
             const opacityClass = isCompleted ? 'opacity-50 grayscale' : '';
-            
-            const questEl = document.createElement('div');
-            questEl.className = "flex items-center justify-between p-4 rounded-lg border " + colorClass + " " + opacityClass + " transition-all mb-3";
-            
-            let btnHTML = '';
-            if (!isCompleted) {
-                btnHTML = `<button onclick="GamificationEngine.completeQuest('${quest.id}')" class="px-3 py-1 bg-white/10 hover:bg-white/20 text-white text-xs uppercase tracking-widest rounded border border-white/20 transition-all shadow-[0_0_10px_rgba(255,255,255,0.1)] hover:shadow-[0_0_15px_rgba(255,255,255,0.3)]">Complete</button>`;
-            } else {
-                btnHTML = `<span class="text-[10px] text-white/50 uppercase tracking-widest font-mono">Completed</span>`;
-            }
-
-            questEl.innerHTML = `
-                <div class="flex items-center gap-3">
-                    <span class="material-symbols-outlined">${icon}</span>
-                    <div>
-                        <h4 class="font-bold text-sm tracking-wide text-white">${quest.title}</h4>
-                        <div class="flex gap-2 text-[10px] mt-1 font-mono uppercase">
-                            <span class="text-[#d4af37]">Reward: +${quest.reward} EXP</span>
-                            <span class="text-white/40">| Assigned: ${quest.assignee}</span>
-                        </div>
-                    </div>
+            const qid = String(quest.id).replace(/'/g, "\\'");
+            const btnHTML = !isCompleted
+                ? `<button type="button" data-quest-id="${qid}" class="coop-quest-complete px-3 py-1 bg-white/10 hover:bg-white/20 text-white text-xs uppercase tracking-widest rounded border border-white/20">Complete</button>`
+                : `<span class="text-[10px] text-white/50 uppercase tracking-widest font-mono">Completed</span>`;
+            return `<div class="flex items-center justify-between p-4 rounded-lg border ${colorClass} ${opacityClass} transition-all mb-3">
+                <div class="flex items-center gap-3 min-w-0">
+                    <span class="material-symbols-outlined shrink-0">${icon}</span>
+                    <div class="min-w-0"><h4 class="font-bold text-sm tracking-wide text-white truncate">${quest.title}</h4>
+                    <div class="flex gap-2 text-[10px] mt-1 font-mono uppercase flex-wrap">
+                        <span class="text-[#d4af37]">+${quest.reward} EXP</span>
+                        <span class="text-white/40">${quest.assignee}</span>
+                    </div></div>
                 </div>
-                <div>${btnHTML}</div>
-            `;
-            container.appendChild(questEl);
+                <div class="shrink-0">${btnHTML}</div>
+            </div>`;
+        };
+
+        const html = this.state.quests.map(buildCard).join('');
+        containers.forEach((container) => {
+            container.innerHTML = html;
+            container.querySelectorAll('.coop-quest-complete').forEach((btn) => {
+                btn.addEventListener('click', () => GamificationEngine.completeQuest(btn.dataset.questId));
+            });
         });
     },
 

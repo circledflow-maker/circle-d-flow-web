@@ -114,6 +114,7 @@ class FloweeNotifyAgent {
 
     questAccepted(title) { this.send('Quest accepted', title, 'quest'); }
     questComplete(title, xp) { this.send('Quest complete', `${title}: +${xp} XP`, 'quest-done'); }
+    coopReminder(title, body) { this.send(title, body, 'coop'); }
     levelUp(level, feature) { this.send('Level up!', `Level ${level} — ${feature}`, 'level'); }
 }
 
