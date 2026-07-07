@@ -7,13 +7,16 @@
 const META_VERSION = 'v22.0';
 
 function metaConfig() {
+  const token = String(
+    process.env.WHATSAPP_ACCESS_TOKEN || process.env.META_WHATSAPP_TOKEN || ''
+  ).trim();
   return {
-    token: process.env.WHATSAPP_ACCESS_TOKEN || process.env.META_WHATSAPP_TOKEN,
-    phoneId: process.env.WHATSAPP_PHONE_ID || '1011847962012735',
-    defaultTo: process.env.WHATSAPP_RECIPIENT || '+391912828940',
-    verifyToken: process.env.WHATSAPP_VERIFY_TOKEN || 'CDF_NEXUS_2026',
-    supabaseUrl: process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL,
-    supabaseKey: process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY,
+    token,
+    phoneId: String(process.env.WHATSAPP_PHONE_ID || '1011847962012735').trim(),
+    defaultTo: String(process.env.WHATSAPP_RECIPIENT || '+391912828940').trim(),
+    verifyToken: String(process.env.WHATSAPP_VERIFY_TOKEN || 'CDF_NEXUS_2026').trim(),
+    supabaseUrl: String(process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || '').trim(),
+    supabaseKey: String(process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || '').trim(),
   };
 }
 
