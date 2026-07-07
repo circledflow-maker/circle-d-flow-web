@@ -6,10 +6,14 @@
 
 const META_VERSION = 'v22.0';
 
+function cleanToken(value) {
+  return String(value || '').replace(/\s/g, '');
+}
+
 function cfg() {
   return {
     verifyToken: String(process.env.WHATSAPP_VERIFY_TOKEN || 'CDF_NEXUS_2026').trim(),
-    token: String(process.env.WHATSAPP_ACCESS_TOKEN || process.env.META_WHATSAPP_TOKEN || '').trim(),
+    token: cleanToken(process.env.WHATSAPP_ACCESS_TOKEN || process.env.META_WHATSAPP_TOKEN),
     phoneId: String(process.env.WHATSAPP_PHONE_ID || '1011847962012735').trim(),
     supabaseUrl: String(process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || '').trim(),
     supabaseKey: String(process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || '').trim(),

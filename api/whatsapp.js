@@ -6,10 +6,12 @@
 
 const META_VERSION = 'v22.0';
 
+function cleanToken(value) {
+  return String(value || '').replace(/\s/g, '');
+}
+
 function metaConfig() {
-  const token = String(
-    process.env.WHATSAPP_ACCESS_TOKEN || process.env.META_WHATSAPP_TOKEN || ''
-  ).trim();
+  const token = cleanToken(process.env.WHATSAPP_ACCESS_TOKEN || process.env.META_WHATSAPP_TOKEN);
   return {
     token,
     phoneId: String(process.env.WHATSAPP_PHONE_ID || '1011847962012735').trim(),
