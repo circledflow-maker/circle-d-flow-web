@@ -6,13 +6,6 @@
 
 const META_VERSION = 'v22.0';
 
-function json(res, status, body) {
-  res.statusCode = status;
-  res.setHeader('Content-Type', 'application/json');
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.end(JSON.stringify(body));
-}
-
 function metaConfig() {
   return {
     token: process.env.WHATSAPP_ACCESS_TOKEN || process.env.META_WHATSAPP_TOKEN,
@@ -24,8 +17,8 @@ function metaConfig() {
   };
 }
 
-async function metaPost(path, payload, token) {
-  const res = await fetch(`https://graph.facebook.com/${META_VERSION}/${path}`, {
+async function metaPost(apiPath, payload, token) {
+  const res = await fetch(`https://graph.facebook.com/${META_VERSION}/${apiPath}`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -47,7 +40,8 @@ async function verifyMetaToken(token, phoneId) {
     });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) {
-      return { ok: false, error: data?.error?.message || `Meta HTTP ${res.status}` };
+      const msg = data && data.error && data.error.message ? data.error.message : `Meta HTTP ${res.status}`;
+      return { ok: false, error: msg };
     }
     return { ok: true, data };
   } catch (e) {
@@ -88,7 +82,7 @@ async function pollInbound(cfg) {
     );
     if (!res.ok) return null;
     const rows = await res.json();
-    const row = rows?.[0];
+    const row = rows && rows[0];
     if (!row) return null;
 
     await fetch(`${cfg.supabaseUrl}/rest/v1/whatsapp_signals?id=eq.${row.id}`, {
@@ -108,14 +102,18 @@ async function pollInbound(cfg) {
   }
 }
 
-module.exports = async function handler(req, res) {
+function simDeviceLabel() {
+  const raw = process.env.FLOWEE_SIM_ROOT || 'E:/';
+  return String(raw).replace(/\\/g, '/');
+}
+
+export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
   if (req.method === 'OPTIONS') {
-    res.statusCode = 200;
-    return res.end();
+    return res.status(200).end();
   }
 
   const cfg = metaConfig();
@@ -126,20 +124,20 @@ module.exports = async function handler(req, res) {
 
       if (action === 'poll') {
         const row = await pollInbound(cfg);
-        return json(res, 200, { message: row });
+        return res.status(200).json({ message: row });
       }
 
       const check = await verifyMetaToken(cfg.token, cfg.phoneId);
-      return json(res, 200, {
+      return res.status(200).json({
         connected: !!check.ok,
         phoneId: cfg.phoneId,
-        simDevice: process.env.FLOWEE_SIM_ROOT || 'E:\\',
-        error: check.ok ? null : (check.error || check.data?.error?.message || 'Bridge offline'),
+        simDevice: simDeviceLabel(),
+        error: check.ok ? null : (check.error || 'Bridge offline'),
       });
     }
 
     if (req.method !== 'POST') {
-      return json(res, 405, { error: 'Method not allowed' });
+      return res.status(405).json({ error: 'Method not allowed' });
     }
 
     const body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
@@ -147,12 +145,12 @@ module.exports = async function handler(req, res) {
     const to = (body.to || cfg.defaultTo || '').replace(/\+/g, '');
 
     if (!cfg.token) {
-      return json(res, 503, { error: 'WHATSAPP_ACCESS_TOKEN missing in Vercel env' });
+      return res.status(503).json({ error: 'WHATSAPP_ACCESS_TOKEN missing in Vercel env' });
     }
 
     if (action === 'status') {
       const check = await verifyMetaToken(cfg.token, cfg.phoneId);
-      return json(res, check.ok ? 200 : 401, check);
+      return res.status(check.ok ? 200 : 401).json(check);
     }
 
     if (action === 'template') {
@@ -167,12 +165,12 @@ module.exports = async function handler(req, res) {
         },
         cfg.token
       );
-      return json(res, result.ok ? 200 : result.status, result.data);
+      return res.status(result.ok ? 200 : result.status).json(result.data);
     }
 
     if (action === 'send') {
       const text = body.text || body.message;
-      if (!text) return json(res, 400, { error: 'text required' });
+      if (!text) return res.status(400).json({ error: 'text required' });
 
       const result = await metaPost(
         `${cfg.phoneId}/messages`,
@@ -196,12 +194,12 @@ module.exports = async function handler(req, res) {
         });
       }
 
-      return json(res, result.ok ? 200 : result.status, result.data);
+      return res.status(result.ok ? 200 : result.status).json(result.data);
     }
 
-    return json(res, 400, { error: 'Unknown action' });
+    return res.status(400).json({ error: 'Unknown action' });
   } catch (e) {
     console.error('[api/whatsapp]', e);
-    return json(res, 200, { connected: false, error: e.message });
+    return res.status(200).json({ connected: false, error: e.message || 'Bridge error' });
   }
-};
+}
