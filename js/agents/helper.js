@@ -37,7 +37,7 @@ class HelperAgent extends Agent {
     }
 
     init() {
-        console.log(`[${this.name}] Feedback Siphon Active (v2.1). Utilities Loaded.`);
+        console.log(`[${this.name}] Feedback Siphon Active (v2.2). Utilities Loaded.`);
         this.injectUI();
         this.checkMobileView();
         window.addEventListener('resize', () => this.checkMobileView());
@@ -71,16 +71,149 @@ class HelperAgent extends Agent {
 
         const btn = document.createElement('button');
         btn.id = "feedback-siphon-btn";
+        btn.type = 'button';
+        btn.setAttribute('aria-label', 'Report Glitch');
         btn.className = "fixed bottom-24 left-8 w-10 h-10 bg-red-500/20 border border-red-500/50 rounded-full flex items-center justify-center text-red-500 hover:bg-red-500 hover:text-white transition-all z-50 group shadow-[0_0_15px_rgba(255,42,81,0.2)]";
-        btn.onclick = () => this.captureGlitch('MANUAL_REPORT', 'User Feedback Button');
+        btn.onclick = () => this.openGlitchModal('MANUAL_REPORT', 'User Feedback Button');
         
         btn.innerHTML = `
-            <span class="material-symbols-outlined text-sm animate-pulse-fast">bug_report</span>
-            <div class="absolute left-full ml-2 bg-black/80 text-red-500 text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 whitespace-nowrap border border-red-500/20 pointer-events-none transition-opacity">
+            <span class="material-symbols-outlined text-sm">bug_report</span>
+            <div class="absolute left-full ml-2 bg-black/80 text-red-500 text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 whitespace-nowrap border border-red-500/20 pointer-events-none transition-opacity">
                 Report Glitch
             </div>
         `;
         document.body.appendChild(btn);
+        this.positionGlitchButton(btn);
+        this.ensureGlitchModal();
+    }
+
+    positionGlitchButton(btn) {
+        if (!btn) return;
+        const path = window.location.pathname.toLowerCase();
+        if (path.includes('artist_sanctuary')) return;
+        if (path.includes('dashboard')) {
+            btn.style.bottom = 'calc(7rem + env(safe-area-inset-bottom, 0px))';
+            btn.style.left = '4.85rem';
+            btn.style.width = '42px';
+            btn.style.height = '42px';
+        }
+    }
+
+    ensureGlitchModal() {
+        if (document.getElementById('glitch-report-modal')) return;
+
+        const modal = document.createElement('div');
+        modal.id = 'glitch-report-modal';
+        modal.className = 'fixed inset-0 z-[1000001] hidden items-end sm:items-center justify-center p-4 bg-black/70 backdrop-blur-sm';
+        modal.innerHTML = `
+            <div class="w-full max-w-md bg-[#0d0502] border border-red-500/30 rounded-2xl p-4 shadow-2xl" role="dialog" aria-labelledby="glitch-modal-title">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 id="glitch-modal-title" class="text-red-400 text-xs uppercase tracking-widest font-bold">Report Glitch</h3>
+                    <button type="button" id="glitch-modal-close" class="text-white/50 hover:text-white text-lg leading-none px-2" aria-label="Close">✕</button>
+                </div>
+                <p class="text-[11px] text-white/60 mb-3 leading-relaxed">Describe what broke or felt wrong. You can queue it for <strong class="text-[#d4af37]">Main evening review</strong> to track progress updates.</p>
+                <textarea id="glitch-details-input" rows="4" class="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-sm text-white placeholder-white/30 outline-none focus:border-red-400/50 resize-none" placeholder="What happened? Which icon, zone, or step failed?"></textarea>
+                <label class="flex items-start gap-2 mt-3 text-[11px] text-white/75 cursor-pointer">
+                    <input type="checkbox" id="glitch-queue-main" class="mt-0.5 accent-red-500" checked>
+                    <span>Send to <strong>Main</strong> for evening evaluation &amp; progress update</span>
+                </label>
+                <div class="flex gap-2 mt-4">
+                    <button type="button" id="glitch-submit-btn" class="flex-1 bg-red-500/80 hover:bg-red-500 text-white text-xs font-bold uppercase tracking-widest py-2.5 rounded-lg transition">Send Report</button>
+                    <button type="button" id="glitch-cancel-btn" class="px-4 bg-white/5 hover:bg-white/10 text-white/70 text-xs uppercase tracking-widest py-2.5 rounded-lg border border-white/10 transition">Cancel</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) this.closeGlitchModal();
+        });
+        modal.querySelector('#glitch-modal-close')?.addEventListener('click', () => this.closeGlitchModal());
+        modal.querySelector('#glitch-cancel-btn')?.addEventListener('click', () => this.closeGlitchModal());
+        modal.querySelector('#glitch-submit-btn')?.addEventListener('click', () => this.submitGlitchModal());
+    }
+
+    openGlitchModal(type = 'MANUAL_REPORT', defaultDetails = 'User Initiated') {
+        this.ensureGlitchModal();
+        this._pendingGlitchType = type;
+        this._pendingGlitchDefault = defaultDetails;
+        const modal = document.getElementById('glitch-report-modal');
+        const input = document.getElementById('glitch-details-input');
+        const queue = document.getElementById('glitch-queue-main');
+        if (input) input.value = type === 'MANUAL_REPORT' ? '' : defaultDetails;
+        if (queue) queue.checked = true;
+        if (modal) {
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            input?.focus();
+        }
+    }
+
+    closeGlitchModal() {
+        const modal = document.getElementById('glitch-report-modal');
+        if (modal) {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+    }
+
+    async submitGlitchModal() {
+        const details = document.getElementById('glitch-details-input')?.value?.trim()
+            || this._pendingGlitchDefault
+            || 'User report';
+        const queueMain = document.getElementById('glitch-queue-main')?.checked ?? true;
+        const snapshot = await this.captureGlitch(this._pendingGlitchType || 'MANUAL_REPORT', details, window.location.pathname, { queueMain });
+        this.closeGlitchModal();
+        if (window.Pusher) {
+            window.Pusher.showToast(
+                queueMain ? 'Glitch queued for Main evening review.' : 'Glitch captured locally.',
+                'success'
+            );
+        }
+        if (window.Flowee) {
+            window.Flowee.talk(false, queueMain
+                ? 'Signal logged. Main will review tonight and push a progress update.'
+                : 'Glitch noted. Thank you for sharpening the sanctuary.');
+        }
+        return snapshot;
+    }
+
+    async queueForMainReview(snapshot) {
+        let queue = [];
+        try {
+            queue = JSON.parse(localStorage.getItem('cdf_glitch_main_queue') || '[]');
+            if (queue.length > 40) queue = queue.slice(-40);
+            queue.push(snapshot);
+            localStorage.setItem('cdf_glitch_main_queue', JSON.stringify(queue));
+        } catch (e) {
+            console.warn('[Helper] Main queue save failed', e);
+        }
+
+        const client = window.supabaseClient || (window.QuestEngine && window.QuestEngine.supabase);
+        if (!client) return false;
+
+        try {
+            const { data: sessionData } = await client.auth.getSession();
+            const userId = sessionData?.session?.user?.id || null;
+            const { error } = await client.from('system_reports').insert({
+                report_type: 'glitch',
+                status: 'queued_evening',
+                payload: {
+                    ...snapshot,
+                    user_id: userId,
+                    page: window.location.pathname,
+                    queued_for_main: true
+                }
+            });
+            if (error) {
+                console.warn('[Helper] system_reports insert failed:', error.message);
+                return false;
+            }
+            return true;
+        } catch (e) {
+            console.warn('[Helper] Supabase glitch queue error', e);
+            return false;
+        }
     }
 
     registerAlignment() {
@@ -95,12 +228,14 @@ class HelperAgent extends Agent {
         }
     }
 
-    captureGlitch(type = 'MANUAL_REPORT', details = 'User Initiated', context = 'Global') {
+    async captureGlitch(type = 'MANUAL_REPORT', details = 'User Initiated', context = 'Global', options = {}) {
         const snapshot = {
             id: 'GLITCH-' + Math.random().toString(36).substr(2, 5).toUpperCase(),
             type: type,
             details: details,
             context: context,
+            page: window.location.pathname,
+            queuedForMain: !!options.queueMain,
             timestamp: new Date().toISOString()
         };
 
@@ -117,12 +252,18 @@ class HelperAgent extends Agent {
             localStorage.removeItem(this.glitchLog);
         }
 
+        if (snapshot.queuedForMain) {
+            await this.queueForMainReview(snapshot);
+        }
+
         // Notify (throttled)
         if(window.Pusher && !this.isSpamming) {
             this.isSpamming = true;
             setTimeout(() => this.isSpamming = false, 2000);
             console.log(`Glitch Captured: ${type}`);
         }
+
+        return snapshot;
     }
 
     /**
@@ -185,12 +326,16 @@ class HelperAgent extends Agent {
     checkMobileView() {
         if (window.innerWidth < 768) {
             document.body.classList.add('mobile-optimized');
-            // Adjust Flowee if present
             const flowee = document.getElementById('flowee-agent');
-            if(flowee) {
+            if (flowee && !document.body.classList.contains('artist-sanctuary')) {
                 flowee.classList.remove('bottom-8', 'right-8');
-                flowee.classList.add('bottom-4', 'right-4', 'scale-75'); 
+                flowee.classList.add('bottom-4', 'right-4', 'scale-75');
             }
+            if (flowee && document.body.classList.contains('artist-sanctuary')) {
+                flowee.classList.remove('bottom-4', 'right-4', 'scale-75', 'bottom-8', 'right-8');
+            }
+            const glitchBtn = document.getElementById('feedback-siphon-btn');
+            if (glitchBtn) this.positionGlitchButton(glitchBtn);
         }
     }
 

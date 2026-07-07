@@ -47,8 +47,76 @@ html {
     margin-right: 12px !important;
   }
 
+  #flowee-agent #flowee-visual {
+    width: 64px !important;
+    height: 64px !important;
+  }
+
   .orbit-system.os-outer {
     transform: scale(0.92);
     transform-origin: center top;
+  }
+}
+
+/* Dashboard bottom dock — separate Comm (WA) from Glitch from Flowee */
+body.dashboard-page #feedback-siphon-btn {
+  bottom: calc(7rem + env(safe-area-inset-bottom, 0px));
+  left: 4.85rem;
+  width: 42px;
+  height: 42px;
+  z-index: 1000009;
+}
+
+body.dashboard-page #wa-fab-stack {
+  bottom: calc(7rem + env(safe-area-inset-bottom, 0px));
+}
+
+body.dashboard-page #flowee-agent {
+  bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px)) !important;
+  right: 12px !important;
+}
+
+#dashboard-star-legend {
+  position: fixed;
+  left: 12px;
+  top: calc(72px + env(safe-area-inset-top, 0px));
+  z-index: 40;
+  max-width: 170px;
+  pointer-events: auto;
+}
+#dashboard-star-legend summary {
+  list-style: none;
+  cursor: pointer;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(212, 175, 55, 0.85);
+  background: rgba(10, 10, 10, 0.7);
+  border: 1px solid rgba(212, 175, 55, 0.22);
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-family: 'Space Mono', monospace;
+}
+#dashboard-star-legend .legend-body {
+  background: rgba(8, 8, 8, 0.9);
+  border: 1px solid rgba(212, 175, 55, 0.18);
+  border-top: none;
+  border-radius: 0 0 10px 10px;
+  padding: 10px;
+  font-size: 10px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.75);
+  font-family: 'Space Mono', monospace;
+}
+#dashboard-star-legend .legend-body li { margin-bottom: 5px; }
+#dashboard-star-legend .legend-body strong { color: #00ffcc; }
+
+@media (min-width: 768px) {
+  body.dashboard-page #feedback-siphon-btn {
+    bottom: 2rem;
+    left: 5.5rem;
+  }
+  body.dashboard-page #wa-fab-stack {
+    bottom: 2rem;
   }
 }

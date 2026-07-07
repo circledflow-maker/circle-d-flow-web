@@ -165,9 +165,147 @@
             color: #fff;
             box-shadow: 0 0 10px rgba(0, 255, 204, 0.3);
         }
+
+        /* --- Artist Sanctuary Mobile Dock --- */
+        body.artist-sanctuary { --dock-safe-bottom: env(safe-area-inset-bottom, 0px); }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            line-height: 1;
+        }
+        .filled-icon {
+            font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .sanctuary-dock {
+            position: fixed;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 55;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: auto;
+            padding-bottom: calc(72px + var(--dock-safe-bottom));
+        }
+
+        .sanctuary-dock-btn {
+            position: relative;
+            width: 48px;
+            height: 48px;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(10, 5, 0, 0.72);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(212, 175, 55, 0.28);
+            color: #fff;
+            transition: all 0.25s ease;
+            box-shadow: 0 0 12px rgba(0, 0, 0, 0.35);
+        }
+        .sanctuary-dock-btn:hover,
+        .sanctuary-dock-btn:focus-visible {
+            transform: scale(1.05);
+            border-color: rgba(0, 255, 204, 0.55);
+            box-shadow: 0 0 16px rgba(0, 255, 204, 0.25);
+        }
+        .sanctuary-dock-btn[data-accent="vision"] { color: #33ccff; border-color: rgba(51, 204, 255, 0.45); }
+        .sanctuary-dock-btn[data-accent="akademiy"] { color: #ff99cc; border-color: rgba(255, 153, 204, 0.45); }
+        .sanctuary-dock-btn[data-accent="ledger"] { color: #ff00cc; border-color: rgba(255, 0, 204, 0.35); }
+        .sanctuary-dock-btn[data-accent="gold"] { color: #d4af37; border-color: rgba(212, 175, 55, 0.45); }
+        .sanctuary-dock-btn[data-accent="flow"] { color: #00ffcc; border-color: rgba(0, 255, 204, 0.45); }
+
+        .sanctuary-dock-btn::after {
+            content: attr(data-label);
+            position: absolute;
+            right: calc(100% + 8px);
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.82);
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 9px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            padding: 4px 8px;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            opacity: 0;
+            pointer-events: none;
+            white-space: nowrap;
+            transition: opacity 0.2s ease;
+        }
+        .sanctuary-dock-btn:hover::after,
+        .sanctuary-dock-btn:focus-visible::after { opacity: 1; }
+
+        .flowee-icon-svg { display: block; filter: drop-shadow(0 0 8px rgba(0, 255, 204, 0.65)); }
+
+        #flowee-agent {
+            position: fixed !important;
+            bottom: calc(96px + var(--dock-safe-bottom)) !important;
+            right: 12px !important;
+            width: 52px !important;
+            height: 52px !important;
+            z-index: 99999 !important;
+            pointer-events: auto !important;
+            transform: none !important;
+        }
+
+        body.artist-sanctuary #feedback-siphon-btn {
+            bottom: calc(148px + var(--dock-safe-bottom));
+            left: 128px;
+            width: 44px;
+            height: 44px;
+            z-index: 56;
+        }
+
+        #constellation-legend {
+            position: fixed;
+            left: 12px;
+            top: 88px;
+            z-index: 45;
+            max-width: 168px;
+            pointer-events: auto;
+        }
+        #constellation-legend summary {
+            list-style: none;
+            cursor: pointer;
+            font-size: 9px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: rgba(212, 175, 55, 0.9);
+            background: rgba(10, 5, 0, 0.65);
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            border-radius: 999px;
+            padding: 6px 10px;
+        }
+        #constellation-legend[open] summary { border-radius: 10px 10px 0 0; }
+        #constellation-legend .legend-body {
+            background: rgba(8, 4, 2, 0.88);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+            padding: 10px;
+            font-size: 10px;
+            line-height: 1.45;
+            color: rgba(255, 255, 255, 0.78);
+        }
+        #constellation-legend .legend-body li { margin-bottom: 6px; }
+        #constellation-legend .legend-body strong { color: #00ffcc; font-weight: 700; }
+
+        #radar-container { bottom: calc(176px + var(--dock-safe-bottom)); }
+        #joystick-zone { bottom: calc(24px + var(--dock-safe-bottom)); left: 20px; }
+
+        @media (max-width: 480px) {
+            .sanctuary-dock { right: 8px; gap: 8px; }
+            .sanctuary-dock-btn { width: 44px; height: 44px; }
+            #constellation-legend { max-width: 150px; }
+            body.artist-sanctuary #feedback-siphon-btn { left: 118px; }
+        }
     </style>
 </head>
-<body>
+<body class="artist-sanctuary mobile-optimized">
     <div id="canvas-container"></div>
 
     <div id="ui-layer" class="flex flex-col justify-between p-4 pb-8">
@@ -188,32 +326,52 @@
             <canvas id="radar-canvas" width="112" height="112"></canvas>
         </div>
 
-        <!-- Action Buttons (Right Side) -->
-        <div class="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col gap-4 pointer-events-auto">
-            <!-- Flowee Menu Button -->
-            <button onclick="openFloweeMenu()" class="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-white hover:bg-white/10 transition shadow-[0_0_15px_rgba(0,255,204,0.3)] bg-gradient-to-br from-[#00ffcc]/30 to-black font-bold border border-[#00ffcc]/50">
-                F
+        <!-- Constellation / Navigator Notes -->
+        <details id="constellation-legend" class="pointer-events-auto">
+            <summary>✦ Star Map & Notes</summary>
+            <div class="legend-body">
+                <ul class="list-none p-0 m-0">
+                    <li><strong>Navigator</strong> — your soul path through the sanctuary lanes.</li>
+                    <li><strong>Armillary</strong> — Lisbon heritage axis (Kitchen ↔ Theater).</li>
+                    <li><strong>Flowee</strong> — winged guide bottom-right; not the robot icon.</li>
+                    <li><strong>Vision</strong> — theater archive & creative lens (THTR on radar).</li>
+                    <li><strong>Akademiy</strong> — skills, quests & academy progression.</li>
+                    <li><strong>Report Glitch</strong> — tap bug near radar; queue for Main evening review.</li>
+                </ul>
+            </div>
+        </details>
+
+        <!-- Action Dock (Right Side) -->
+        <nav id="sanctuary-dock" class="sanctuary-dock" aria-label="Sanctuary tools">
+            <button type="button" onclick="openVisionHub()" class="sanctuary-dock-btn" data-accent="vision" data-label="Vision" title="The Vision — Theater & Archive">
+                <span class="material-symbols-outlined filled-icon" aria-hidden="true">visibility</span>
             </button>
-            <!-- Program / Ledger Button -->
-            <button onclick="openLedger()" class="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-[#ff00cc] hover:bg-white/10 transition shadow-[0_0_15px_rgba(255,0,204,0.3)]">
-                <span class="material-symbols-outlined">menu_book</span>
+            <button type="button" onclick="openAkademiy()" class="sanctuary-dock-btn" data-accent="akademiy" data-label="Akademiy" title="Akademiy — Skills & Quests">
+                <span class="material-symbols-outlined filled-icon" aria-hidden="true">school</span>
             </button>
-            <button onclick="toggleModal('data-modal')" class="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-[#00ffcc] hover:bg-white/10 transition shadow-[0_0_15px_rgba(0,255,204,0.3)]">
-                <span class="material-symbols-outlined">inventory_2</span>
+            <button type="button" onclick="openLedger()" class="sanctuary-dock-btn" data-accent="ledger" data-label="Ledger" title="Sanctuary Ledger">
+                <span class="material-symbols-outlined filled-icon" aria-hidden="true">menu_book</span>
             </button>
-            <button onclick="toggleModal('qr-modal')" class="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-[#d4af37] hover:bg-white/10 transition shadow-[0_0_15px_rgba(212,175,55,0.3)]">
-                <span class="material-symbols-outlined">qr_code_2</span>
+            <button type="button" onclick="toggleModal('data-modal')" class="sanctuary-dock-btn" data-accent="flow" data-label="Vault" title="Inventory Vault">
+                <span class="material-symbols-outlined filled-icon" aria-hidden="true">inventory_2</span>
             </button>
-            <button onclick="openCameraModal()" class="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-white hover:bg-white/10 transition shadow-[0_0_15px_rgba(255,255,255,0.3)] border border-white/30">
-                <span class="material-symbols-outlined">photo_camera</span>
+            <button type="button" onclick="toggleModal('qr-modal')" class="sanctuary-dock-btn" data-accent="gold" data-label="Soul Seal" title="Soul Seal QR">
+                <span class="material-symbols-outlined filled-icon" aria-hidden="true">qr_code_2</span>
             </button>
-            <button onclick="goToMarketplace()" class="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-[#d4af37] hover:bg-white/10 transition shadow-[0_0_15px_rgba(212,175,55,0.3)] border border-[#d4af37]/30 mt-4">
-                <span class="material-symbols-outlined">storefront</span>
+            <button type="button" onclick="openCameraModal()" class="sanctuary-dock-btn" data-label="Capture" title="Camera & Scan">
+                <span class="material-symbols-outlined filled-icon" aria-hidden="true">photo_camera</span>
             </button>
-            <button onclick="window.Flowee?.toggleChat()" class="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-[#00ffcc] hover:bg-white/10 transition shadow-[0_0_15px_rgba(0,255,204,0.4)] border border-[#00ffcc]/40 mt-2" title="Flowee Guide">
-                <span class="material-symbols-outlined">smart_toy</span>
+            <button type="button" onclick="goToMarketplace()" class="sanctuary-dock-btn" data-accent="gold" data-label="Bazaar" title="Marketplace">
+                <span class="material-symbols-outlined filled-icon" aria-hidden="true">storefront</span>
             </button>
-        </div>
+            <button type="button" onclick="openFloweeMenu()" class="sanctuary-dock-btn" data-accent="flow" data-label="Flow Menu" title="Flowee Sanctuary Menu">
+                <svg class="flowee-icon-svg" viewBox="0 0 100 100" width="26" height="26" aria-hidden="true">
+                    <path d="M40,50 C10,20 -10,60 15,75 C25,80 40,65 40,50 Z" fill="#00ffcc" opacity="0.85"/>
+                    <path d="M60,50 C90,20 110,60 85,75 C75,80 60,65 60,50 Z" fill="#00ffcc" opacity="0.85"/>
+                    <circle cx="50" cy="50" r="16" fill="#00ffcc"/>
+                </svg>
+            </button>
+        </nav>
         
         <!-- Mobile Camera Controls (Removed for now) -->
         <div class="fixed bottom-32 left-6 z-[60] flex flex-col gap-4 items-start pointer-events-auto">
@@ -499,6 +657,20 @@
             setTimeout(() => { window.location.href = 'akwaba_kitchen.html?from=sanctuary'; }, 900);
         }
 
+        function openVisionHub() {
+            if (window.Flowee) window.Flowee.talk(true, 'Opening The Vision — theater archive & creative lens.', 'guide');
+            if (typeof openSystemPlayer === 'function') {
+                openSystemPlayer();
+                return;
+            }
+            window.location.href = 'vision_studio.html?from=sanctuary';
+        }
+
+        function openAkademiy() {
+            if (window.Flowee) window.Flowee.talk(true, 'Akademiy awaits — skills, quests, and progression.', 'guide');
+            setTimeout(() => { window.location.href = 'academy.html?from=sanctuary'; }, 700);
+        }
+
         document.getElementById('radar-canvas')?.addEventListener('click', (e) => {
             const canvas = e.target;
             const rect = canvas.getBoundingClientRect();
@@ -515,7 +687,11 @@
                 const ry = cy + (cp.z - pz) * scale;
                 if (Math.hypot(x - rx, y - ry) < 14) hit = cp;
             });
-            if (hit?.page) openTasteWorld();
+            if (hit?.page) {
+                if (hit.name === 'Theater') openVisionHub();
+                else if (hit.name === 'Akademiy') openAkademiy();
+                else openTasteWorld();
+            }
             else if (hit?.name === 'Stage') closeZoneUI('buehne');
             else window.location.href = 'quest_map.html?focus=secret_garden_lx';
         });
@@ -1329,7 +1505,7 @@
 
                 fMsg(`Sync Complete.`);
                 setTimeout(() => {
-                    fMsg(`Look to your right: <br>• The glowing <strong class="text-[#d4af37]">gold icon</strong> is your Soul Seal (QR). Present it at the gate.<br>• The <strong class="text-[#ff00cc]">pink book icon</strong> is your Sanctuary Ledger (Flyer, Team, Chat).`);
+                    fMsg(`Look to your right dock:<br>• <strong class="text-[#33ccff]">Vision</strong> (eye) — theater archive & creative lens.<br>• <strong class="text-[#ff99cc]">Akademiy</strong> — skills & quests.<br>• <strong class="text-[#d4af37]">Soul Seal</strong> (QR) for the gate.<br>• <strong class="text-[#00ffcc]">Flowee wings</strong> bottom-right — your guide (not a robot).`);
                     setFInput(`<button onclick="document.getElementById('flowee-overlay').classList.add('hidden')" class="w-full bg-[#00ffcc]/20 border border-[#00ffcc]/50 text-[#00ffcc] py-3 rounded font-bold uppercase tracking-widest text-xs mt-2 hover:bg-[#00ffcc]/40 transition">Enter 3D World</button>`);
                 }, 1500);
                 initData(); // refresh UI
@@ -1354,7 +1530,7 @@
                 }
                 fMsg(`Sync Complete. Your inventory is manifested.`);
                 setTimeout(() => {
-                    fMsg(`Look to your right: <br>• The glowing <strong class="text-[#d4af37]">gold icon</strong> is your Soul Seal (QR). Present it at the gate.<br>• The <strong class="text-[#ff00cc]">pink book icon</strong> is your Sanctuary Ledger (Flyer, Team, Chat).`);
+                    fMsg(`Look to your right dock:<br>• <strong class="text-[#33ccff]">Vision</strong> (eye) — theater archive & creative lens.<br>• <strong class="text-[#ff99cc]">Akademiy</strong> — skills & quests.<br>• <strong class="text-[#d4af37]">Soul Seal</strong> (QR) for the gate.<br>• <strong class="text-[#00ffcc]">Flowee wings</strong> bottom-right — your guide (not a robot).`);
                     setFInput(`<button onclick="document.getElementById('flowee-overlay').classList.add('hidden')" class="w-full bg-[#00ffcc]/20 border border-[#00ffcc]/50 text-[#00ffcc] py-3 rounded font-bold uppercase tracking-widest text-xs mt-2 hover:bg-[#00ffcc]/40 transition">Enter 3D World</button>`);
                 }, 1500);
                 initData(); // refresh UI
@@ -1365,7 +1541,8 @@
         const checkpoints = [
             { name: 'Kitchen', x: -10, z: -5, color: '#00ffcc', label: 'KTCHN', page: 'akwaba_kitchen.html' },
             { name: 'Stage', x: 0, z: -30, color: '#ff00cc', label: 'STAGE' },
-            { name: 'Theater', x: 15, z: -15, color: '#33ccff', label: 'THTR' }
+            { name: 'Theater', x: 15, z: -15, color: '#33ccff', label: 'THTR', page: 'vision_studio.html' },
+            { name: 'Akademiy', x: -22, z: -20, color: '#ff99cc', label: 'AKDMY', page: 'academy.html' }
         ];
 
         let radarSweepAngle = 0;
@@ -1856,8 +2033,72 @@
 
         const clock = new THREE.Clock();
         const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x2a0a05);
-        scene.fog = new THREE.FogExp2(0x2a0a05, 0.025);
+        scene.background = new THREE.Color(0x05020a);
+        scene.fog = new THREE.FogExp2(0x1a0a12, 0.018);
+
+        function createStarField() {
+            const starCount = 2400;
+            const positions = new Float32Array(starCount * 3);
+            const colors = new Float32Array(starCount * 3);
+            for (let i = 0; i < starCount; i++) {
+                positions[i * 3] = (Math.random() - 0.5) * 360;
+                positions[i * 3 + 1] = 18 + Math.random() * 140;
+                positions[i * 3 + 2] = (Math.random() - 0.5) * 360;
+                const tint = Math.random();
+                colors[i * 3] = 0.75 + tint * 0.25;
+                colors[i * 3 + 1] = 0.8 + Math.random() * 0.2;
+                colors[i * 3 + 2] = 0.95;
+            }
+            const geo = new THREE.BufferGeometry();
+            geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+            const mat = new THREE.PointsMaterial({
+                size: 0.65,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.92,
+                sizeAttenuation: true,
+                depthWrite: false
+            });
+            const stars = new THREE.Points(geo, mat);
+            scene.add(stars);
+            return stars;
+        }
+
+        const LISBON_CONSTELLATIONS = [
+            { name: 'Navigator', color: 0x00ffcc, points: [[-40, 72, -30], [-22, 88, -18], [-8, 78, -5], [-28, 65, -42]] },
+            { name: 'Armillary', color: 0xd4af37, points: [[28, 95, -55], [42, 82, -48], [55, 90, -38], [36, 70, -62]] },
+            { name: 'Flow Gate', color: 0xff66cc, points: [[-5, 60, -70], [12, 74, -58], [0, 86, -45], [-18, 68, -52]] }
+        ];
+
+        function createConstellations() {
+            const group = new THREE.Group();
+            LISBON_CONSTELLATIONS.forEach((c) => {
+                const verts = [];
+                c.points.forEach((p) => verts.push(p[0], p[1], p[2]));
+                const lineGeo = new THREE.BufferGeometry();
+                lineGeo.setAttribute('position', new THREE.Float32BufferAttribute(verts, 3));
+                const line = new THREE.Line(lineGeo, new THREE.LineBasicMaterial({
+                    color: c.color,
+                    transparent: true,
+                    opacity: 0.45
+                }));
+                group.add(line);
+                c.points.forEach((p) => {
+                    const node = new THREE.Mesh(
+                        new THREE.SphereGeometry(0.35, 8, 8),
+                        new THREE.MeshBasicMaterial({ color: c.color, transparent: true, opacity: 0.85 })
+                    );
+                    node.position.set(p[0], p[1], p[2]);
+                    group.add(node);
+                });
+            });
+            scene.add(group);
+            return group;
+        }
+
+        const starField = createStarField();
+        const constellationGroup = createConstellations();
 
         const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -2777,6 +3018,14 @@
                 soulCore.scale.y = THREE.MathUtils.lerp(soulCore.scale.y, 1, 0.1);
             }
 
+            if (starField) {
+                starField.rotation.y = time * 0.004;
+                starField.material.opacity = 0.82 + Math.sin(time * 0.7) * 0.08;
+            }
+            if (constellationGroup) {
+                constellationGroup.rotation.y = time * 0.002;
+            }
+
             renderer.render(scene, camera);
         }
 
@@ -2789,9 +3038,9 @@
         });
 
     </script>
-    <div id="flowee-agent" style="position:fixed;bottom:88px;right:12px;z-index:99999;pointer-events:auto;width:48px;height:48px"></div>
+    <div id="flowee-agent"></div>
     <script src="../js/agents/agent.js?v=3.2"></script>
-    <script src="../js/agents/helper.js?v=3.2"></script>
+    <script src="../js/agents/helper.js?v=3.3"></script>
     <script src="../js/agents/pusher.js?v=3.2"></script>
     <script src="../js/agents/flowee.js?v=5.0"></script>
     <script src="../js/data/lisbon_quests.js?v=1.1"></script>
