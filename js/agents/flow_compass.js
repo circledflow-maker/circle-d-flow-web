@@ -213,7 +213,7 @@ class FlowCompassAgent {
             star.style.setProperty('--duration', `${Math.random() * 4 + 2}s`); star.style.setProperty('--max-opacity', Math.random() * 0.8 + 0.2);
             universe.appendChild(star);
         }
-        for(let i=0; i<5; i++) {
+        for(let i=0; i<10; i++) {
             const m = document.createElement('div'); m.className = 'cdf-meteor'; m.style.left = `${Math.random() * 100}%`; m.style.top = `${Math.random() * 40}%`; m.style.animationDelay = `${Math.random() * 15}s`;
             universe.appendChild(m);
         }

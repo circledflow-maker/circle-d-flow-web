@@ -11,31 +11,52 @@ class FloweeCompanion {
     constructor(scene) {
         this.scene = scene;
         this.group = new THREE.Group();
-        this.group.position.set(0, 20, -50); 
-        
-        const coreGeo = new THREE.IcosahedronGeometry(1.2, 1);
-        const coreMat = new THREE.MeshStandardMaterial({ 
-            color: 0x9a4dff, 
-            emissive: 0x9a4dff,
-            emissiveIntensity: 2,
-            wireframe: true 
+        this.group.position.set(6, 52, 12);
+
+        const coreGeo = new THREE.SphereGeometry(1.1, 16, 16);
+        const coreMat = new THREE.MeshStandardMaterial({
+            color: 0x00ffcc,
+            emissive: 0x00ffcc,
+            emissiveIntensity: 1.8,
+            transparent: true,
+            opacity: 0.95,
         });
         this.core = new THREE.Mesh(coreGeo, coreMat);
         this.group.add(this.core);
 
-        const ringGeo = new THREE.TorusGeometry(2, 0.05, 16, 100);
-        const ringMat = new THREE.MeshBasicMaterial({ color: 0x00ffff, transparent: true, opacity: 0.8 });
-        this.ring = new THREE.Mesh(ringGeo, ringMat);
-        this.group.add(this.ring);
+        const wingGeo = new THREE.PlaneGeometry(2.4, 1.1);
+        const wingMat = new THREE.MeshBasicMaterial({
+            color: 0x00ffcc,
+            transparent: true,
+            opacity: 0.75,
+            side: THREE.DoubleSide,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+        });
+        this.leftWing = new THREE.Mesh(wingGeo, wingMat);
+        this.leftWing.position.set(-1.5, 0, 0);
+        this.leftWing.rotation.y = 0.4;
+        this.group.add(this.leftWing);
+        this.rightWing = new THREE.Mesh(wingGeo, wingMat);
+        this.rightWing.position.set(1.5, 0, 0);
+        this.rightWing.rotation.y = -0.4;
+        this.group.add(this.rightWing);
+
+        const glow = new THREE.PointLight(0x00ffcc, 2.5, 40);
+        this.group.add(glow);
 
         this.scene.add(this.group);
     }
 
     update(time) {
-        this.group.position.y += Math.sin(time * 2) * 0.02;
-        this.core.rotation.y += 0.01;
-        this.ring.rotation.x += 0.02;
-        this.ring.rotation.z += 0.01;
+        const orbit = 14;
+        this.group.position.x = Math.cos(time * 0.35) * orbit;
+        this.group.position.z = 12 + Math.sin(time * 0.35) * orbit;
+        this.group.position.y = 52 + Math.sin(time * 1.8) * 1.5;
+        this.core.rotation.y = time * 0.6;
+        const flap = Math.sin(time * 4) * 0.35;
+        this.leftWing.rotation.z = 0.25 + flap;
+        this.rightWing.rotation.z = -0.25 - flap;
     }
 }
 
@@ -43,7 +64,8 @@ class OrbitEngine {
     constructor() {
         this.container = document.getElementById('canvas-container');
         this.scene = new THREE.Scene();
-        this.scene.background = new THREE.Color(0x000000);
+        this.scene.background = new THREE.Color(0x020108);
+        this.scene.fog = new THREE.FogExp2(0x020108, 0.00085);
         
         this.camera = new THREE.PerspectiveCamera(60, 1, 0.1, 2000);
         this.camera.position.set(0, 10, 120);
@@ -73,8 +95,22 @@ class OrbitEngine {
 
     init() {
         console.log("🌌 [Oracle] Initializing Weltenbaum Sequence...");
+
+        if (window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches) {
+            this.createStars();
+            this.createConstellations();
+            this.createAfricaSource();
+            this.createYggdrasil();
+            this.createAdinkraLeaves();
+            this.companion = new FloweeCompanion(this.scene);
+            this.animate();
+            setTimeout(() => this.skipIntro(), 400);
+            return;
+        }
         
         this.createStars();
+        this.createConstellations();
+        this.createMeteorSystem();
         this.createAfricaSource();
         this.createYggdrasil();
         this.createAdinkraLeaves();
@@ -179,16 +215,138 @@ class OrbitEngine {
 
     createStars() {
         const geo = new THREE.BufferGeometry();
-        const count = 8000;
+        const count = 10000;
         const pos = new Float32Array(count * 3);
-        for(let i=0; i<count*3; i++) pos[i] = (Math.random() - 0.5) * 3000;
+        const colors = new Float32Array(count * 3);
+        for (let i = 0; i < count; i++) {
+            const i3 = i * 3;
+            const radius = 600 + Math.random() * 900;
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.acos(2 * Math.random() - 1);
+            pos[i3] = radius * Math.sin(phi) * Math.cos(theta);
+            pos[i3 + 1] = Math.abs(radius * Math.cos(phi)) * 0.55 + 80;
+            pos[i3 + 2] = radius * Math.sin(phi) * Math.sin(theta);
+            const tint = 0.75 + Math.random() * 0.25;
+            colors[i3] = tint;
+            colors[i3 + 1] = tint;
+            colors[i3 + 2] = 0.92 + Math.random() * 0.08;
+        }
         geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-        const mat = new THREE.PointsMaterial({ size: 1.2, color: 0xffffff, transparent: true, opacity: 0.8 });
+        geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+        const mat = new THREE.PointsMaterial({
+            size: 1.4,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.92,
+            sizeAttenuation: true,
+            depthWrite: false,
+        });
         this.stars = new THREE.Points(geo, mat);
         this.scene.add(this.stars);
 
-        // Initial Celestial Alignment for Lisbon
         this.updateCelestialRotation();
+    }
+
+    createConstellations() {
+        if (!this.stars) return;
+        this.constellationGroup = new THREE.Group();
+        const defs = [
+            { name: 'Navigator', color: 0x00ffcc, points: [[-120, 280, -80], [-60, 320, -40], [0, 300, 20], [-80, 250, -100]] },
+            { name: 'Armillary', color: 0xd4af37, points: [[100, 350, -120], [160, 330, -90], [200, 280, -60], [140, 260, -130]] },
+            { name: 'Flow Gate', color: 0xff66cc, points: [[-20, 220, -200], [40, 260, -160], [0, 290, -120], [-50, 240, -180]] },
+        ];
+        defs.forEach((c) => {
+            const verts = [];
+            c.points.forEach((p) => verts.push(p[0], p[1], p[2]));
+            const lineGeo = new THREE.BufferGeometry();
+            lineGeo.setAttribute('position', new THREE.Float32BufferAttribute(verts, 3));
+            const line = new THREE.Line(
+                lineGeo,
+                new THREE.LineBasicMaterial({ color: c.color, transparent: true, opacity: 0.5 })
+            );
+            this.constellationGroup.add(line);
+            c.points.forEach((p) => {
+                const node = new THREE.Mesh(
+                    new THREE.SphereGeometry(1.4, 8, 8),
+                    new THREE.MeshBasicMaterial({ color: c.color, transparent: true, opacity: 0.88 })
+                );
+                node.position.set(p[0], p[1], p[2]);
+                this.constellationGroup.add(node);
+            });
+        });
+        this.stars.add(this.constellationGroup);
+    }
+
+    createMeteorSystem() {
+        this._meteors = [];
+        for (let i = 0; i < 14; i++) {
+            const geo = new THREE.BufferGeometry();
+            geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(6), 3));
+            const line = new THREE.Line(
+                geo,
+                new THREE.LineBasicMaterial({
+                    color: 0xffffff,
+                    transparent: true,
+                    opacity: 0,
+                    blending: THREE.AdditiveBlending,
+                })
+            );
+            line.frustumCulled = false;
+            this.scene.add(line);
+            this._meteors.push({
+                line,
+                active: false,
+                t: 0,
+                duration: 1,
+                start: new THREE.Vector3(),
+                end: new THREE.Vector3(),
+                dir: new THREE.Vector3(),
+            });
+        }
+    }
+
+    _spawnMeteor() {
+        const m = this._meteors?.find((x) => !x.active);
+        if (!m) return;
+        const sx = (Math.random() - 0.5) * 1400;
+        const sy = 220 + Math.random() * 420;
+        const sz = (Math.random() - 0.5) * 1400;
+        m.start.set(sx, sy, sz);
+        m.dir.set(-0.35 - Math.random() * 0.35, -0.55 - Math.random() * 0.25, -0.15 + Math.random() * 0.35).normalize();
+        m.end.copy(m.start).addScaledVector(m.dir, 160 + Math.random() * 140);
+        m.t = 0;
+        m.duration = 0.55 + Math.random() * 0.75;
+        m.active = true;
+        m.line.material.opacity = 0.95;
+    }
+
+    _updateMeteors() {
+        if (!this._meteors?.length) return;
+        if (Math.random() < 0.014) this._spawnMeteor();
+        this._meteors.forEach((m) => {
+            if (!m.active) return;
+            m.t += 0.018;
+            const p = Math.min(1, m.t / m.duration);
+            const pos = m.line.geometry.attributes.position;
+            const x = m.start.x + (m.end.x - m.start.x) * p;
+            const y = m.start.y + (m.end.y - m.start.y) * p;
+            const z = m.start.z + (m.end.z - m.start.z) * p;
+            const tail = 42;
+            pos.setXYZ(0, x - m.dir.x * tail, y - m.dir.y * tail, z - m.dir.z * tail);
+            pos.setXYZ(1, x, y, z);
+            pos.needsUpdate = true;
+            m.line.material.opacity = p < 0.8 ? 0.85 : 0.85 * (1 - p);
+            if (p >= 1) {
+                m.active = false;
+                m.line.material.opacity = 0;
+            }
+        });
+    }
+
+    _narrate(text, key) {
+        window.dispatchEvent(new CustomEvent('INTRO_NARRATIVE_LINE', { detail: { key, text } }));
+        const whisper = document.getElementById('flowee-intro-text');
+        if (whisper) whisper.textContent = text;
     }
 
     updateCelestialRotation() {
@@ -297,10 +455,10 @@ class OrbitEngine {
         const trunkMat = new THREE.MeshStandardMaterial({ 
             color: 0xd4af37, 
             emissive: 0xd4af37, 
-            emissiveIntensity: 0.5,
+            emissiveIntensity: 0.85,
             wireframe: true,
             transparent: true,
-            opacity: 0.2
+            opacity: 0.32
         });
         this.trunk = new THREE.Mesh(trunkGeo, trunkMat);
         this.trunk.position.y = -10;
@@ -598,6 +756,26 @@ class OrbitEngine {
         this.navigateToWorld(route.url, route.msg, route.color);
     }
 
+    highlightWorld(id) {
+        if (!id || !this.leaves?.length) return;
+        const leaf = this.leaves.find((l) => l.userData.id === id);
+        if (!leaf) return;
+        const target = new THREE.Vector3();
+        leaf.getWorldPosition(target);
+        const camPos = new THREE.Vector3(target.x, target.y + 6, target.z + 28);
+        gsap.to(this.camera.position, {
+            x: camPos.x,
+            y: camPos.y,
+            z: camPos.z,
+            duration: 1.4,
+            ease: 'power2.out',
+            onUpdate: () => this.camera.lookAt(target),
+            onComplete: () => this.camera.lookAt(target),
+        });
+        gsap.fromTo(leaf.scale, { x: 1, y: 1, z: 1 }, { x: 1.35, y: 1.35, z: 1.35, duration: 0.45, yoyo: true, repeat: 1 });
+        this.showWorldOverlay(id);
+    }
+
     runStorySequence() {
         console.log("🎬 [Oracle] Starting Story Sequence...");
         this.isTransitioning = true;
@@ -610,7 +788,6 @@ class OrbitEngine {
         const textOverlay = document.getElementById('narrative-overlay');
         const textEl = document.getElementById('narrative-text');
         
-        // Phase 0: Fade out intro hints
         tl.to(['#hold-hint', '#flowee-intro'], { opacity: 0, duration: 1 });
 
         const fit = this.fitTreeInView({ padding: 1.24, animate: false });
@@ -618,13 +795,13 @@ class OrbitEngine {
         const look = fit.target;
         const aim = () => this.camera.lookAt(look);
 
-        // Phase 1–3: subtle orbit — tree always stays in frame
         tl.to(this.camera.position, {
             x: p.x - 6, y: p.y + 4, z: p.z * 1.04,
             duration: 2.5, ease: 'power2.inOut', onUpdate: aim,
         }, 0);
         tl.call(() => {
             textEl.innerHTML = dict.intro_1;
+            this._narrate(dict.intro_1, 'intro_1');
             gsap.to(textOverlay, { opacity: 1, duration: 1 });
         }, null, 0.8);
         tl.to(textOverlay, { opacity: 0, duration: 1 }, 3.5);
@@ -635,26 +812,39 @@ class OrbitEngine {
         }, 4);
         tl.call(() => {
             textEl.innerHTML = dict.intro_2;
+            this._narrate(dict.intro_2, 'intro_2');
             gsap.to(textOverlay, { opacity: 1, duration: 1 });
         }, null, 4.5);
         tl.to(textOverlay, { opacity: 0, duration: 1 }, 7);
 
         tl.to(this.camera.position, {
-            x: p.x, y: p.y + 2, z: p.z * 0.97,
-            duration: 2.5, ease: 'sine.inOut', onUpdate: aim,
-        }, 8);
+            x: p.x, y: p.y + 10, z: p.z * 0.92,
+            duration: 2.8, ease: 'sine.inOut', onUpdate: aim,
+        }, 7.5);
         tl.call(() => {
-            textEl.innerHTML = dict.intro_3;
+            const treeLine = dict.intro_tree || dict.intro_2;
+            textEl.innerHTML = treeLine;
+            this._narrate(treeLine, 'intro_tree');
             gsap.to(textOverlay, { opacity: 1, duration: 1 });
-        }, null, 8.5);
+            if (this.trunk?.material) gsap.to(this.trunk.material, { opacity: 0.48, duration: 1.5 });
+        }, null, 8);
         tl.to(textOverlay, { opacity: 0, duration: 1 }, 10.5);
 
-        // Phase 4: snap to device-perfect final frame
+        tl.to(this.camera.position, {
+            x: p.x, y: p.y + 2, z: p.z * 0.97,
+            duration: 2.5, ease: 'sine.inOut', onUpdate: aim,
+        }, 10.5);
+        tl.call(() => {
+            textEl.innerHTML = dict.intro_3;
+            this._narrate(dict.intro_3, 'intro_3');
+            gsap.to(textOverlay, { opacity: 1, duration: 1 });
+        }, null, 11);
+        tl.to(textOverlay, { opacity: 0, duration: 1 }, 13.5);
+
         tl.call(() => {
             this.isTransitioning = false;
             this.frameTreeForInteraction();
             gsap.to('#title-overlay', { opacity: 1, duration: 2 });
-            // Auto-hide title after 6s
             gsap.to('#title-overlay', { opacity: 0, duration: 2, delay: 6 });
             
             gsap.to('#btn-skip', { opacity: 0, duration: 0.5, onComplete: () => {
@@ -662,7 +852,7 @@ class OrbitEngine {
                 if (btn) btn.style.display = 'none';
                 this._signalIntroComplete();
             }});
-        }, null, 12);
+        }, null, 14.5);
         
         if(window.Pusher) window.Pusher.showToast("The Source Awakens...", "mystic");
     }
@@ -1017,7 +1207,13 @@ class OrbitEngine {
         const time = this.clock.getElapsedTime();
 
         if (this.africaSource) this.africaSource.material.uniforms.time.value = time;
-        if (this.stars) this.stars.rotation.y += 0.0005;
+        if (this.stars) {
+            this.stars.rotation.y += 0.00035;
+            if (this.stars.material) {
+                this.stars.material.opacity = 0.86 + Math.sin(time * 0.55) * 0.06;
+            }
+        }
+        this._updateMeteors();
         if (this.treeGroup && !this.treeRotationPaused) this.treeGroup.rotation.y += 0.001;
         if (this.companion) this.companion.update(time);
         

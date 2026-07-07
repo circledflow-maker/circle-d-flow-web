@@ -472,50 +472,31 @@ class FloweeAgent {
         this.currentContext = this.detectContext();
         this.applyMode(this.currentContext.mode);
         
-        // Start Interaction
-        setTimeout(() => {
-            this.talk(true, this.currentContext.intro);
-            if(this.currentContext.target) this.highlight(this.currentContext.target);
+        // Start Interaction — defer on landing until cinematic intro completes
+        const isLanding = this._isLandingPage();
+        const startMainIntro = () => {
+            if (!isLanding) {
+                this.talk(true, this.currentContext.intro);
+            }
+            if (this.currentContext.target) this.highlight(this.currentContext.target);
             this.checkProfileStatus();
-            this.checkMissionBriefing(); 
-            
-            // Check Level Up Progress (Resonance Integration)
-            if(window.Resonance && typeof window.Resonance.getProgress === 'function') {
-                const progress = window.Resonance.getProgress();
-                if(progress && progress.percent >= 90) {
-                     this.talk(true, `Resonance Critical! Only ${progress.remaining} XP to Level ${progress.level + 1}. Push it!`);
-                     this.element.classList.add('animate-pulse');
-                }
-            }
-            
-            // Auto-Start Grand Tour (Resume or Ask)
-            const tourStarted = localStorage.getItem('cdf_tour_started');
-            
-            if(window.location.pathname.includes('dashboard.html')) {
-                console.log("[Flowee] Dashboard — FloweeDashboardGuide handles routing.");
-            }
+            this.checkMissionBriefing();
+        };
 
-            // BETA LAUNCH: Mission #1 — only when dashboard guide is not loaded
-            if (!window.location.pathname.includes('dashboard.html') && !localStorage.getItem('cdf_beta_mission_1')) {
-                console.log("[Flowee] Beta Protocol: Mission #1 Assigning...");
-                setTimeout(() => {
-                    this.talk(true, "🏴CQR Captain! The Brain is online. I have a mission for you.", "guide");
-                    setTimeout(() => {
-                         this.talk(true, "MISSION #1: The Grand Line Awakening. Check your Beta Log for details.", "guide");
-                         this.addChatMessage("MISSION #1 OBJECTIVES:<br>1. Kiss Your Heart - Check Wisdom Rune<br>2. Kitchen - Test Jamtruck<br>3. Outbreak Tunes - Trigger Sound<br>4. Master Dashboard - Send Log", "ai");
-                         localStorage.setItem('cdf_beta_mission_1', 'active');
-                         
-                         // Visual Cue
-                         if(window.BetaLogger) window.BetaLogger.toggle(); 
-                    }, 4000);
-                }, 2000);
-            }
+        if (isLanding && !window.__landingIntroDone) {
+            window.addEventListener('INTRO_NARRATIVE_LINE', (e) => {
+                const whisper = document.getElementById('flowee-intro-text');
+                if (whisper && e.detail?.text) whisper.textContent = e.detail.text;
+            });
+            window.addEventListener('LANDING_INTRO_COMPLETE', startMainIntro, { once: true });
+        } else {
+            setTimeout(startMainIntro, 1000);
+        }
 
-            // Dynamic Bubble Positioning
+        setTimeout(() => {
             this.recalculateBubblePosition();
             window.addEventListener('resize', () => this.recalculateBubblePosition());
 
-            // AUTO-TUTORIAL (Page Specific)
             const pathName = window.location.pathname.split('/').pop() || 'index.html';
             if (pathName === 'index.html' || pathName === '') {
                 let landingStarted = false;
@@ -525,18 +506,42 @@ class FloweeAgent {
                     if (window.FloweeLandingGuide) window.FloweeLandingGuide.run(this);
                 };
                 window.addEventListener('LANDING_INTRO_COMPLETE', startLandingGuide, { once: true });
-                setTimeout(startLandingGuide, 16000);
+                setTimeout(startLandingGuide, 18000);
             } else {
                 this.checkPageTutorial();
             }
 
-            // IMPERIAL INITIATION (Global Quest)
             this.checkImperialInitiation();
-            
-            // COMMUNITY CONNECTION TUTORIAL
             this.checkCommunityTutorial();
 
-        }, 1000);
+            if (isLanding && !window.__landingIntroDone) return;
+
+            if(window.Resonance && typeof window.Resonance.getProgress === 'function') {
+                const progress = window.Resonance.getProgress();
+                if(progress && progress.percent >= 90) {
+                     this.talk(true, `Resonance Critical! Only ${progress.remaining} XP to Level ${progress.level + 1}. Push it!`);
+                     this.element.classList.add('animate-pulse');
+                }
+            }
+            
+            if(window.location.pathname.includes('dashboard.html')) {
+                console.log("[Flowee] Dashboard — FloweeDashboardGuide handles routing.");
+            }
+
+            if (!isLanding && !window.location.pathname.includes('dashboard.html') && !localStorage.getItem('cdf_beta_mission_1')) {
+                console.log("[Flowee] Beta Protocol: Mission #1 Assigning...");
+                setTimeout(() => {
+                    this.talk(true, "🏴CQR Captain! The Brain is online. I have a mission for you.", "guide");
+                    setTimeout(() => {
+                         this.talk(true, "MISSION #1: The Grand Line Awakening. Check your Beta Log for details.", "guide");
+                         this.addChatMessage("MISSION #1 OBJECTIVES:<br>1. Kiss Your Heart - Check Wisdom Rune<br>2. Kitchen - Test Jamtruck<br>3. Outbreak Tunes - Trigger Sound<br>4. Master Dashboard - Send Log", "ai");
+                         localStorage.setItem('cdf_beta_mission_1', 'active');
+                         if(window.BetaLogger) window.BetaLogger.toggle(); 
+                    }, 4000);
+                }, 2000);
+            }
+
+        }, isLanding ? 1200 : 1000);
     }
 
     recalculateBubblePosition() {

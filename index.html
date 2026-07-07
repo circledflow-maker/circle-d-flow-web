@@ -349,19 +349,19 @@
 
         #flowee-intro-text {
             font-family: 'Cinzel', serif;
-            font-size: 1.4rem;
-            color: #fff;
+            font-size: 1.05rem;
+            color: rgba(0, 255, 204, 0.92);
             text-align: center;
-            max-width: 800px;
-            min-height: 120px;
-            letter-spacing: 4px;
-            text-shadow: 0 0 25px rgba(139,92,246,0.6);
-            line-height: 1.8;
-            background: radial-gradient(circle at center, rgba(0,0,0,0.6) 0%, transparent 80%);
-            padding: 40px;
-            border-radius: 50%;
+            max-width: min(520px, 92vw);
+            min-height: 72px;
+            letter-spacing: 1px;
+            text-shadow: 0 0 20px rgba(0, 255, 204, 0.35);
+            line-height: 1.65;
+            background: radial-gradient(circle at center, rgba(0, 0, 0, 0.55) 0%, transparent 78%);
+            padding: 20px 24px;
+            border-radius: 16px;
             pointer-events: none;
-            transition: all 1s ease;
+            transition: opacity 0.6s ease;
         }
 
         #hold-hint {
@@ -610,9 +610,10 @@
     </div>
 
     <!-- Flowee Director Intro -->
-    <div id="flowee-intro" style="background: transparent; z-index: 1000;"> <!-- Let Canvas handle background -->
-        <div id="flowee-intro-text"></div>
+    <div id="flowee-intro" style="background: transparent; z-index: 1000;">
+        <div id="flowee-intro-text" aria-live="polite"></div>
     </div>
+    <div id="hold-hint" data-i18n="intro_hold">[ TOUCH THE SOURCE ]</div>
     <button id="btn-skip" data-i18n="skip_intro" onclick="if(window.OrbitEngine) window.OrbitEngine.skipIntro();">SKIP INTRO</button>
 
     <!-- The 3D Canvas -->
@@ -707,14 +708,14 @@
     <script src="js/agents/quest_controller.js" defer></script>
     <script src="js/agents/visual_integrity.js" defer></script>
     <script src="js/agents/sound_engineer.js" defer></script>
-    <script src="js/agents/flowee.js?v=4.7" defer></script>
-    <script src="js/agents/flowee_landing_guide.js?v=1.2" defer></script>
+    <script src="js/agents/flowee.js?v=5.1" defer></script>
+    <script src="js/agents/flowee_landing_guide.js?v=1.3" defer></script>
     <script src="js/agents/agentic_brain.js" defer></script>
     <script src="js/agents/gatekeeper.js" defer></script>
     <script src="js/auth-handler.js" defer></script>
     
     <!-- The actual Core 3D Cinematic Logic -->
-    <script type="module" src="js/cinematic_orbit.js?v=3.2"></script>
+    <script type="module" src="js/cinematic_orbit.js?v=3.3"></script>
 
     <!-- Language Dictionary & Logic -->
     <script>
@@ -770,6 +771,7 @@
                 intro_1: "Au commencement, il y avait le Flow...",
                 intro_2: "Enracinés dans Yggdrasil, nous nous ramifions à l'infini.",
                 intro_3: "Quatre chemins. Un seul destin. Quel rythme est le vôtre ?",
+                intro_tree: "Nous sommes les feuilles d'un arbre cosmique. Enracinés dans l'origine, reliés par le Flow.",
                 path_return: "LOGIN: CHEMIN DU RETOUR",
                 path_initiation: "INSCRIPTION: CHEMIN D'INITIATION",
                 choose_path_hint: "CHOISISSEZ VOTRE DESTIN",
@@ -794,6 +796,7 @@
                 intro_1: "In principio, c'era il Flow...",
                 intro_2: "Radicati in Yggdrasil, ci ramifichiamo nell'infinito.",
                 intro_3: "Quattro percorsi. Un unico destino. Qual è il tuo ritmo?",
+                intro_tree: "Siamo le foglie di un albero cosmico. Radicati nell'origine, connessi dal Flow.",
                 path_return: "ACCESSO: SENTIERO DEL RITORNO",
                 path_initiation: "REGISTRAZIONE: SENTIERO DI INIZIAZIONE",
                 choose_path_hint: "SCEGLI IL TUO DESTINO",
@@ -845,6 +848,7 @@
                 intro_1: "No princípio, havia o Flow...",
                 intro_2: "Enraizados em Yggdrasil, ramificamo-nos para o infinito.",
                 intro_3: "Quatro caminhos. Um destino. Qual ritmo é o seu?",
+                intro_tree: "Somos as folhas de uma árvore cósmica. Enraizados na origem, ligados pelo Flow.",
                 path_return: "LOGIN: CAMINHO DO REGRESSO",
                 path_initiation: "REGISTO: CAMINHO DA INICIAÇÃO",
                 choose_path_hint: "ESCOLHA O SEU CAMINHO",

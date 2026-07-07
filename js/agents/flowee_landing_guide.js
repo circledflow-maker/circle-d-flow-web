@@ -34,6 +34,25 @@
         },
     ];
 
+    function langLine(key) {
+        const lang = localStorage.getItem('cqr_lang') || 'en';
+        const dict = {
+            welcome: {
+                en: 'I am <strong>Flowee</strong>, your Navigator. The <strong>Weltenbaum</strong> is awake — four crystals orbit its crown under the Lisbon stars.',
+                de: 'Ich bin <strong>Flowee</strong>, dein Navigator. Der <strong>Weltenbaum</strong> ist erwacht — vier Kristalle kreisen unter dem Lissabon-Sternenhimmel.',
+                fr: 'Je suis <strong>Flowee</strong>, ton Navigateur. L\'<strong>arbre-monde</strong> est éveillé — quatre cristaux sous les étoiles de Lisbonne.',
+                pt: 'Sou <strong>Flowee</strong>, teu Navigator. A <strong>Árvore-Mundo</strong> despertou — quatro cristais sob as estrelas de Lisboa.',
+            },
+            tour: {
+                en: 'Realm {n}/4: <strong>{label}</strong><br>{desc}',
+                de: 'Reich {n}/4: <strong>{label}</strong><br>{desc}',
+                fr: 'Royaume {n}/4: <strong>{label}</strong><br>{desc}',
+                pt: 'Reino {n}/4: <strong>{label}</strong><br>{desc}',
+            },
+        };
+        return (dict[key] && dict[key][lang]) || dict[key].en;
+    }
+
     function dismiss(flowee) {
         localStorage.setItem('cdf_landing_flowee_state', 'dismissed');
         flowee.tutorialActive = false;
@@ -66,6 +85,7 @@
     }
 
     function showWorldDetail(flowee, world) {
+        if (window.OrbitEngine?.highlightWorld) window.OrbitEngine.highlightWorld(world.id);
         flowee.talk(
             true,
             `${world.icon} <strong>${world.label}</strong><br><br>${world.desc}`,
@@ -84,6 +104,10 @@
             action: () => showWorldDetail(flowee, w),
         }));
         opts.push(
+            {
+                label: '🎬 Guided realm tour',
+                action: () => startGuidedTour(flowee, 0),
+            },
             {
                 label: 'Explore the 3D Tree',
                 action: () => {
@@ -106,28 +130,54 @@
         );
     }
 
+    function startGuidedTour(flowee, index) {
+        if (index >= WORLDS.length) {
+            localStorage.setItem('cdf_landing_flowee_state', 'step2_worlds');
+            showWorldPicker(flowee);
+            return;
+        }
+        const w = WORLDS[index];
+        if (window.OrbitEngine?.highlightWorld) window.OrbitEngine.highlightWorld(w.id);
+        const line = langLine('tour')
+            .replace('{n}', String(index + 1))
+            .replace('{label}', w.label)
+            .replace('{desc}', w.desc);
+        flowee.talk(true, line, 'guide', [
+            { label: index < WORLDS.length - 1 ? 'Next realm →' : 'Finish tour', action: () => startGuidedTour(flowee, index + 1) },
+            { label: `Enter ${w.label}`, action: () => enterWorld(flowee, w) },
+            { label: 'Skip tour', action: () => showWorldPicker(flowee) },
+            ...closeOpts(flowee).slice(0, 1),
+        ]);
+    }
+
     function isMobile() {
         return window.matchMedia('(max-width: 768px)').matches;
     }
 
     function showWelcome(flowee) {
-        const lang = localStorage.getItem('cqr_lang') || 'en';
-        const hello = { en: 'Welcome', de: 'Willkommen', fr: 'Bienvenue', pt: 'Bem-vindo' }[lang] || 'Welcome';
         const mobile = isMobile();
+        const welcome = langLine('welcome');
         flowee.talk(
             true,
             mobile
-                ? `<strong>Flowee</strong> — tap a crystal on the tree, or pick a realm below.`
-                : `${hello} to Circle D Flow. I am <strong>Flowee</strong>, your Navigator guide.<br><br>`
-                + 'Tap a glowing world — <em>Luvo, Bantaba, Archive, or Heart</em> — read the card, tap again to enter.',
+                ? `${welcome}<br><br>Tap a crystal or pick a realm below.`
+                : `${welcome}<br><br>Tap a glowing world — <em>Luvo, Bantaba, Archive, or Heart</em> — or let me walk you through each realm.`,
             'guide',
             mobile
                 ? [
+                    { label: '🎬 Guided tour', action: () => { localStorage.setItem('cdf_landing_flowee_state', 'step2_worlds'); startGuidedTour(flowee, 0); } },
                     { label: 'Pick a realm', action: () => { localStorage.setItem('cdf_landing_flowee_state', 'step2_worlds'); showWorldPicker(flowee); } },
                     { label: 'Explore tree', action: () => { localStorage.setItem('cdf_landing_flowee_state', 'dismissed'); flowee.talk(true, 'Tap a crystal on Yggdrasil. I am here if you need me.', 'guide', closeOpts(flowee)); } },
                     ...closeOpts(flowee).slice(0, 1),
                 ]
                 : [
+                    {
+                        label: '🎬 Guide me through all realms',
+                        action: () => {
+                            localStorage.setItem('cdf_landing_flowee_state', 'step2_worlds');
+                            startGuidedTour(flowee, 0);
+                        },
+                    },
                     {
                         label: 'Show me the realms',
                         action: () => {
@@ -150,6 +200,8 @@
                     ...closeOpts(flowee),
                 ]
         );
+        const worldNav = document.getElementById('world-quick-nav');
+        if (worldNav) worldNav.classList.add('visible');
     }
 
     window.FloweeLandingGuide = {
@@ -165,7 +217,7 @@
             if (state === 'step2_worlds') {
                 setTimeout(() => showWorldPicker(flowee), 600);
             } else {
-                setTimeout(() => showWelcome(flowee), 800);
+                setTimeout(() => showWelcome(flowee), 900);
             }
         },
         reset() {
