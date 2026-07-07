@@ -10,6 +10,11 @@ function cleanToken(value) {
   return String(value || '').replace(/\s/g, '');
 }
 
+function safeError(message) {
+  if (!message) return message;
+  return String(message).replace(/EAAN[A-Za-z0-9]+/g, '[redacted]');
+}
+
 function metaConfig() {
   const token = cleanToken(process.env.WHATSAPP_ACCESS_TOKEN || process.env.META_WHATSAPP_TOKEN);
   return {
@@ -46,11 +51,11 @@ async function verifyMetaToken(token, phoneId) {
     const data = await res.json().catch(() => ({}));
     if (!res.ok) {
       const msg = data && data.error && data.error.message ? data.error.message : `Meta HTTP ${res.status}`;
-      return { ok: false, error: msg };
+      return { ok: false, error: safeError(msg) };
     }
     return { ok: true, data };
   } catch (e) {
-    return { ok: false, error: e.message };
+    return { ok: false, error: safeError(e.message) };
   }
 }
 
@@ -137,7 +142,7 @@ export default async function handler(req, res) {
         connected: !!check.ok,
         phoneId: cfg.phoneId,
         simDevice: simDeviceLabel(),
-        error: check.ok ? null : (check.error || 'Bridge offline'),
+        error: check.ok ? null : safeError(check.error || 'Bridge offline'),
       });
     }
 
@@ -205,6 +210,6 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Unknown action' });
   } catch (e) {
     console.error('[api/whatsapp]', e);
-    return res.status(200).json({ connected: false, error: e.message || 'Bridge error' });
+    return res.status(200).json({ connected: false, error: safeError(e.message || 'Bridge error') });
   }
 }
