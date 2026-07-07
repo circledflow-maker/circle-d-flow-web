@@ -363,6 +363,7 @@ class QuestEngine {
             localStorage.setItem('cdf_last_level', String(level));
             const unlock = window.LEVEL_UNLOCKS?.[level];
             const feature = unlock?.feature || `Level ${level}`;
+            if (window.AdinkraEngine) window.AdinkraEngine.onLevelUp(level, prev);
             if (window.FloweeReward) window.FloweeReward.celebrate(
                 unlock ? `Level ${level} — ${unlock.feature}! ${unlock.desc}` : `Resonance Level ${level} reached!`,
                 'celebrate'
@@ -792,21 +793,29 @@ class QuestEngine {
         const grid = document.getElementById('adinkra-codex-grid');
         if (!grid) return;
         const runes = JSON.parse(localStorage.getItem('cdf_adinkra_runes') || '{}');
-        const entries = Object.entries(runes);
-        if (!entries.length) {
-            grid.innerHTML = '<p style="color:#555;font-size:0.8em;grid-column:1/-1">No runes yet — walk the Atlas and collect Bronze symbols.</p>';
+        const museum = window.AdinkraEngine?.getMuseum() || JSON.parse(localStorage.getItem('cdf_adinkra_museum') || '{}');
+        const merged = new Map();
+        Object.entries(runes).forEach(([venueId, data]) => {
+            const venue = (window.getAllVenues?.() || []).find((v) => v.id === venueId);
+            const runeId = data.rune || venue?.rune || venueId;
+            merged.set(runeId, { tier: data.tier || 'bronze', source: 'atlas' });
+        });
+        Object.entries(museum).forEach(([id, data]) => {
+            merged.set(id, { tier: data.tier || 'bronze', source: 'museum' });
+        });
+        if (!merged.size) {
+            grid.innerHTML = '<p style="color:#555;font-size:0.8em;grid-column:1/-1">No runes yet — level up for Museum symbols or walk the Atlas.</p>';
             return;
         }
         grid.innerHTML = '';
-        entries.forEach(([venueId, data]) => {
-            const venue = (window.getAllVenues?.() || []).find((v) => v.id === venueId);
-            const runeId = data.rune || venue?.rune || venueId;
-            const meta = window.getAdinkraMeta?.(runeId) || { name: data.name || venue?.runeName, meaning: '', glyph: '◈' };
-            const glyph = window.renderAdinkraGlyph?.(runeId, data.tier) || `<span style="font-size:1.2em">◈</span>`;
+        merged.forEach((data, runeId) => {
+            const meta = window.getAdinkraMeta?.(runeId) || { name: runeId, meaning: '' };
             const chip = document.createElement('div');
             chip.className = `adinkra-chip ${data.tier || 'bronze'}`;
             chip.title = meta.meaning || '';
-            chip.innerHTML = `${glyph}<div style="font-size:0.65em;margin-top:4px">${meta.name}</div><span style="opacity:0.7;font-size:0.55em">${(data.tier || 'bronze').toUpperCase()}</span>`;
+            const glyph = window.renderAdinkraGlyph?.(runeId, data.tier) || '◈';
+            const glossar = meta.glossar ? ` #${meta.glossar}` : '';
+            chip.innerHTML = `${glyph}<div style="font-size:0.65em;margin-top:4px">${meta.name}</div><span style="opacity:0.7;font-size:0.55em">${glossar} · ${(data.tier || 'bronze').toUpperCase()}</span>`;
             grid.appendChild(chip);
         });
     }

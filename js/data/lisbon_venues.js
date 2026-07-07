@@ -42,7 +42,10 @@ window.getAllVenues = function () {
 };
 
 window.LEVEL_UNLOCKS = {
+  2: { feature: 'Museum Symbol I', desc: 'Akoma — your first Adinkra exhibit in the Palast Museum.' },
   5: { feature: 'Place Cinema', desc: 'View community uploads at locations remotely.' },
-  10: { feature: 'Battlefield Vote', desc: 'Vote in weekly content contests.' },
-  20: { feature: 'Netzwerker Request', desc: 'Request a KissYourHeartLx shooting session.' },
+  10: { feature: 'Battlefield Vote', desc: 'Vote in weekly content contests. Silver museum tier.' },
+  14: { feature: 'Flow Companion', desc: 'Adwo — Nature Cycle day 14 unlocked in Museum.' },
+  20: { feature: 'Netzwerker Request', desc: 'Request a KissYourHeartLx shooting session. Gold museum tier.' },
+  28: { feature: 'Nyansapo Crown', desc: 'Full 28-day Nature Cycle complete in Museum.' },
 };

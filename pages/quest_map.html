@@ -544,16 +544,31 @@
         window.addEventListener('load', async () => {
             if (window.AtlasEngine) window.AtlasEngine.init(map);
             loadFlowAreas();
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('filter') === 'cinema' || params.get('cinema')) {
+                setTimeout(() => {
+                    document.querySelector('.atlas-filter[data-f="cinema"]')?.click();
+                    window.VisionCinemaEngine?.focusFromQuery();
+                }, 800);
+            }
         });
     </script>
     <script src="../js/agents/fitable_sync.js?v=1.0" defer></script>
     <script src="../js/agents/flowee_notify.js?v=2.1" defer></script>
-    <script src="../js/data/adinkra_catalog.js?v=1.0" defer></script>
+    <script src="../js/data/adinkra_glossar_100.js?v=1.0" defer></script>
+    <script src="../js/data/adinkra_nature_cycle.js?v=1.0" defer></script>
+    <script src="../js/data/adinkra_catalog.js?v=2.0" defer></script>
+    <script src="../js/data/adinkra_guilds.js?v=1.0" defer></script>
+    <script src="../js/data/lisbon_venues.js?v=1.1" defer></script>
+    <script src="../js/agents/adinkra_glyph_engine.js?v=1.0" defer></script>
+    <script src="../js/agents/adinkra_engine.js?v=1.0" defer></script>
+    <script src="../js/agents/flowee_reward.js?v=1.0" defer></script>
     <script src="../js/agents/adinkra_sync.js?v=1.0" defer></script>
     <script src="../js/agents/flowee_voice.js?v=1.1" defer></script>
     <script src="../js/agents/flowee_quest_tour.js?v=1.1" defer></script>
     <script src="../js/agents/quest_triad.js?v=2.1" defer></script>
-    <script src="../js/agents/atlas_engine.js?v=1.1" defer></script>
-    <script src="../js/agents/quest_engine.js?v=4.5" defer></script>
+    <script src="../js/agents/atlas_engine.js?v=1.2" defer></script>
+    <script src="../js/agents/vision_cinema_engine.js?v=1.0" defer></script>
+    <script src="../js/agents/quest_engine.js?v=4.6" defer></script>
 </body>
 </html>

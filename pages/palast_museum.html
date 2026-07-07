@@ -51,6 +51,45 @@
             pointer-events: none; z-index: -1;
         }
         @keyframes floatClouds { from { background-position: 0 0; } to { background-position: 100% 0; } }
+
+        .guild-banner-inner {
+            display: flex; align-items: center; gap: 16px;
+            padding: 16px 24px; border: 1px solid rgba(212,175,55,0.35);
+            background: rgba(255,255,255,0.9); border-radius: 4px; margin-bottom: 48px;
+        }
+        .adinkra-exhibit.adinkra-locked { opacity: 0.55; filter: grayscale(0.8); }
+        .adinkra-exhibit.adinkra-locked:hover { transform: none; }
+        .adinkra-pedestal { min-height: 140px; }
+        .adinkra-pedestal-locked { display: flex; flex-direction: column; align-items: center; gap: 8px; color: #999; }
+        .cycle-badge {
+            position: absolute; top: 8px; right: 8px; font-size: 10px; font-family: monospace;
+            padding: 2px 8px; border-radius: 99px; background: rgba(0,0,0,0.06);
+        }
+        .cycle-badge.moon { color: #5a4a8a; }
+        .cycle-badge.flow { color: #2a6a4a; }
+        #adinkra-cycle-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 24px; }
+        .glossary-row {
+            display: grid; grid-template-columns: 48px 1fr 2fr; gap: 12px; padding: 10px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.06); font-size: 0.85rem;
+        }
+        .glossary-row.locked .glossary-meaning { opacity: 0.4; font-style: italic; }
+        .glossary-row.unlocked .glossary-name { color: #b8860b; font-weight: 600; }
+        .glossary-no { font-family: monospace; opacity: 0.5; }
+        .challenge-card {
+            border: 1px solid rgba(212,175,55,0.25); padding: 14px; border-radius: 4px;
+            background: rgba(255,255,255,0.7); margin-bottom: 12px;
+        }
+        .challenge-card.done { opacity: 0.65; }
+        .challenge-claim {
+            font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em;
+            padding: 4px 10px; border: 1px solid #d4af37; color: #d4af37; background: transparent;
+            cursor: pointer; font-family: Cinzel, serif;
+        }
+        .challenge-claim:hover { background: #d4af37; color: #fff; }
+        .section-label {
+            font-family: Cinzel, serif; font-size: 0.75rem; letter-spacing: 0.25em;
+            text-transform: uppercase; color: #d4af37; margin-bottom: 16px;
+        }
     </style>
 </head>
 <body class="env-olympus min-h-screen overflow-x-hidden selection:bg-gold selection:text-white">
@@ -91,13 +130,29 @@
 
     <main class="max-w-7xl mx-auto px-6 py-32">
         <!-- HEADER -->
-        <header class="text-center mb-20 relative">
+        <header class="text-center mb-12 relative">
             <h1 class="text-6xl md:text-8xl font-cinzel text-black/80 mb-4">The Museum</h1>
-            <p class="text-gold italic text-xl">"History written in light. Legacy forged in gold."</p>
+            <p class="text-gold italic text-xl">"28 Nature Cycle symbols — earned through resonance, trust, and flow."</p>
             <div class="w-24 h-1 bg-gold mx-auto mt-8"></div>
         </header>
 
-        <!-- EXHIBIT HALL -->
+        <div id="adinkra-guild-banner"></div>
+
+        <!-- NATURE CYCLE HALL -->
+        <section class="mb-24">
+            <p class="section-label">KissYourHeartLx DNA · 13 Moon Cycles + 15 Flow Companions</p>
+            <div id="adinkra-cycle-grid"></div>
+        </section>
+
+        <!-- CHALLENGES -->
+        <section class="mb-24 max-w-2xl">
+            <p class="section-label">Community Challenges · Unlock Symbols</p>
+            <div id="adinkra-challenges"></div>
+        </section>
+
+        <!-- LEGACY ARTIFACTS -->
+        <section class="mb-24">
+            <p class="section-label">Sovereign Artifacts</p>
         <div class="museum-grid">
             
             <!-- Item 1 -->
@@ -135,12 +190,31 @@
              <div class="exhibit-card opacity-50 grayscale flex items-center justify-center border-dashed border-2 border-gray-300">
                 <div class="text-center">
                     <span class="material-symbols-outlined text-4xl mb-2 opacity-50">lock</span>
-                    <p class="font-cinzel text-sm">Empty Pedestal</p>
+                    <p class="font-cinzel text-sm">Reserved Pedestal</p>
                 </div>
             </div>
 
         </div>
+        </section>
+
+        <!-- GLOSSARY -->
+        <section class="mb-32">
+            <p class="section-label">Adinkra Glossar · 100 Symbols</p>
+            <p class="text-sm opacity-60 mb-6 italic">Collect symbols to reveal deeper meaning. Reference: <a href="http://www.adinkra.org/htmls/adinkra_index.htm" class="text-gold underline" target="_blank" rel="noopener">adinkra.org</a></p>
+            <div id="adinkra-glossary-list" class="max-h-[480px] overflow-y-auto pr-2"></div>
+        </section>
     </main>
+
+    <!-- ADINKRA GAMIFICATION -->
+    <script src="../js/data/adinkra_glossar_100.js?v=1.0"></script>
+    <script src="../js/data/adinkra_nature_cycle.js?v=1.0"></script>
+    <script src="../js/data/adinkra_catalog.js?v=2.0"></script>
+    <script src="../js/data/adinkra_guilds.js?v=1.0"></script>
+    <script src="../js/data/adinkra_challenges.js?v=1.0"></script>
+    <script src="../js/data/lisbon_venues.js?v=1.1"></script>
+    <script src="../js/agents/adinkra_glyph_engine.js?v=1.0"></script>
+    <script src="../js/agents/adinkra_engine.js?v=1.0"></script>
+    <script src="../js/agents/adinkra_museum_ui.js?v=1.0"></script>
 
     <!-- AGENTS -->
     <script src="../js/agents/palast_agent.js"></script>
@@ -165,12 +239,14 @@
     <!-- PAGE INIT -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Check Access (Bypassed by User Request)
-            // if(!window.PalastAgent.checkGateAccess('museum')) {
-            //    window.PalastAgent.triggerGateSequence('museum');
-            // } else {
-                if(window.Flowee) window.Flowee.talk(true, "The air here is thin... Breathe in the history.");
-            // }
+            if (window.AdinkraMuseum) window.AdinkraMuseum.mount();
+            if (window.Flowee) {
+                const stats = window.AdinkraEngine?.getMuseumStats();
+                const msg = stats?.cycleOwned
+                  ? `You hold ${stats.cycleOwned} of 28 Nature Cycle symbols. Breathe in the resonance.`
+                  : 'Level up to earn your first Adinkra exhibit — Akoma awaits at Level 2.';
+                window.Flowee.talk(true, msg);
+            }
         });
     </script>
 </body>

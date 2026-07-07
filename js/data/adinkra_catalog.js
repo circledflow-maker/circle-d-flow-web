@@ -40,25 +40,30 @@ window.ADINKRA_CATALOG = {
   mate_masie: { name: 'Mate Masie', meaning: 'I understand — knowledge, wisdom, prudence', category: 'wisdom', glyph: '◈' },
 };
 
+const ADINKRA_ALIASES = {
+  nkonsonnkonson: 'nkonsonkonson',
+  ananse: 'ananse_ntentan',
+  hwe_mu_dua: 'hwehwemudua',
+};
+
 window.getAdinkraMeta = function (runeId) {
-  return window.ADINKRA_CATALOG[runeId] || { name: runeId, meaning: 'Adinkra symbol', category: 'general', glyph: '◈' };
+  const key = ADINKRA_ALIASES[runeId] || runeId;
+  const m = window.ADINKRA_CATALOG[key] || window.ADINKRA_CATALOG[runeId];
+  if (m) return m;
+  const glossar = (window.ADINKRA_GLOSSAR_100 || []).find((g) => g.id === key || g.id === runeId);
+  if (glossar) {
+    return { name: glossar.name, meaning: glossar.meaning, category: glossar.cat, glossar: glossar.n, glyph: '◈' };
+  }
+  return { name: runeId, meaning: 'Adinkra symbol', category: 'general', glyph: '◈' };
 };
 
-window.renderAdinkraGlyph = function (runeId, tier) {
-  const m = window.getAdinkraMeta(runeId);
-  const colors = { bronze: '#cd7f32', silver: '#c0c0c0', gold: '#d4af37' };
-  const c = colors[tier] || '#d4af37';
-  return `<span style="font-size:1.4em;color:${c};line-height:1" title="${m.meaning}">${m.glyph}</span>`;
-};
+if (typeof window.mergeAdinkraGlossar === 'function') window.mergeAdinkraGlossar();
 
-/** Paint rune glyph via DOM (avoids innerHTML escaping in strict contexts). */
-window.paintAdinkraElement = function (el, runeId, tier) {
-  if (!el) return;
-  const m = window.getAdinkraMeta(runeId);
-  const colors = { bronze: '#cd7f32', silver: '#c0c0c0', gold: '#d4af37' };
-  el.textContent = m.glyph || '◈';
-  el.title = m.meaning || '';
-  el.style.fontSize = '1.4em';
-  el.style.lineHeight = '1';
-  el.style.color = colors[tier] || '#d4af37';
-};
+/** Mark Nature Cycle symbols in catalog */
+(window.ADINKRA_NATURE_CYCLE || []).forEach((sym) => {
+  if (window.ADINKRA_CATALOG[sym.id]) {
+    window.ADINKRA_CATALOG[sym.id].natureCycle = true;
+    window.ADINKRA_CATALOG[sym.id].cycleDay = sym.day;
+    window.ADINKRA_CATALOG[sym.id].glossar = sym.glossar;
+  }
+});

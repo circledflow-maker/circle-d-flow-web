@@ -48,6 +48,14 @@ class AtlasEngine {
         all[venueId] = { tier, ...meta, at: Date.now() };
         localStorage.setItem('cdf_adinkra_runes', JSON.stringify(all));
         window.dispatchEvent(new CustomEvent('RUNE_COLLECTED', { detail: all[venueId] }));
+        if (window.AdinkraEngine && meta?.rune) {
+            window.AdinkraEngine.unlockSymbol(meta.rune, {
+                source: `atlas_${venueId}`,
+                tier,
+                museum: true,
+                upgrade: true,
+            });
+        }
         return true;
     }
 
