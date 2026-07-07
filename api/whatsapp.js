@@ -1,13 +1,15 @@
 /**
  * WhatsApp Cloud API proxy — keeps Meta token server-side (Vercel env).
  * POST { action: 'send'|'template'|'status', text?, template?, to? }
- * GET  ?action=poll — latest inbound signal (Supabase)
+ * GET  ?action=poll|status
  */
 
 const META_VERSION = 'v22.0';
 
 function json(res, status, body) {
-  res.status(status).setHeader('Content-Type', 'application/json');
+  res.statusCode = status;
+  res.setHeader('Content-Type', 'application/json');
+  res.setHeader('Access-Control-Allow-Origin', '*');
   res.end(JSON.stringify(body));
 }
 
@@ -36,88 +38,110 @@ async function metaPost(path, payload, token) {
 }
 
 async function verifyMetaToken(token, phoneId) {
-  if (!token) return { ok: false, error: 'WHATSAPP_ACCESS_TOKEN not set on server' };
-  const res = await fetch(`https://graph.facebook.com/${META_VERSION}/${phoneId}`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  const data = await res.json().catch(() => ({}));
-  return { ok: res.ok, data };
+  if (!token) {
+    return { ok: false, error: 'WHATSAPP_ACCESS_TOKEN not set on server' };
+  }
+  try {
+    const res = await fetch(`https://graph.facebook.com/${META_VERSION}/${phoneId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      return { ok: false, error: data?.error?.message || `Meta HTTP ${res.status}` };
+    }
+    return { ok: true, data };
+  } catch (e) {
+    return { ok: false, error: e.message };
+  }
 }
 
 async function storeInbound(cfg, row) {
   if (!cfg.supabaseUrl || !cfg.supabaseKey) return null;
-  const res = await fetch(`${cfg.supabaseUrl}/rest/v1/whatsapp_signals`, {
-    method: 'POST',
-    headers: {
-      apikey: cfg.supabaseKey,
-      Authorization: `Bearer ${cfg.supabaseKey}`,
-      'Content-Type': 'application/json',
-      Prefer: 'return=minimal',
-    },
-    body: JSON.stringify(row),
-  });
-  return res.ok;
+  try {
+    const res = await fetch(`${cfg.supabaseUrl}/rest/v1/whatsapp_signals`, {
+      method: 'POST',
+      headers: {
+        apikey: cfg.supabaseKey,
+        Authorization: `Bearer ${cfg.supabaseKey}`,
+        'Content-Type': 'application/json',
+        Prefer: 'return=minimal',
+      },
+      body: JSON.stringify(row),
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
 }
 
 async function pollInbound(cfg) {
   if (!cfg.supabaseUrl || !cfg.supabaseKey) return null;
-  const res = await fetch(
-    `${cfg.supabaseUrl}/rest/v1/whatsapp_signals?direction=eq.inbound&consumed=eq.false&order=created_at.desc&limit=1`,
-    {
+  try {
+    const res = await fetch(
+      `${cfg.supabaseUrl}/rest/v1/whatsapp_signals?direction=eq.inbound&consumed=eq.false&order=created_at.desc&limit=1`,
+      {
+        headers: {
+          apikey: cfg.supabaseKey,
+          Authorization: `Bearer ${cfg.supabaseKey}`,
+        },
+      }
+    );
+    if (!res.ok) return null;
+    const rows = await res.json();
+    const row = rows?.[0];
+    if (!row) return null;
+
+    await fetch(`${cfg.supabaseUrl}/rest/v1/whatsapp_signals?id=eq.${row.id}`, {
+      method: 'PATCH',
       headers: {
         apikey: cfg.supabaseKey,
         Authorization: `Bearer ${cfg.supabaseKey}`,
+        'Content-Type': 'application/json',
+        Prefer: 'return=minimal',
       },
-    }
-  );
-  if (!res.ok) return null;
-  const rows = await res.json();
-  const row = rows?.[0];
-  if (!row) return null;
+      body: JSON.stringify({ consumed: true }),
+    });
 
-  await fetch(`${cfg.supabaseUrl}/rest/v1/whatsapp_signals?id=eq.${row.id}`, {
-    method: 'PATCH',
-    headers: {
-      apikey: cfg.supabaseKey,
-      Authorization: `Bearer ${cfg.supabaseKey}`,
-      'Content-Type': 'application/json',
-      Prefer: 'return=minimal',
-    },
-    body: JSON.stringify({ consumed: true }),
-  });
-
-  return row;
+    return row;
+  } catch {
+    return null;
+  }
 }
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
-  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method === 'OPTIONS') {
+    res.statusCode = 200;
+    return res.end();
+  }
 
   const cfg = metaConfig();
 
-  if (req.method === 'GET') {
-    const action = req.query?.action || 'status';
+  try {
+    if (req.method === 'GET') {
+      const action = (req.query && req.query.action) || 'status';
 
-    if (action === 'poll') {
-      const row = await pollInbound(cfg);
-      return json(res, 200, { message: row });
+      if (action === 'poll') {
+        const row = await pollInbound(cfg);
+        return json(res, 200, { message: row });
+      }
+
+      const check = await verifyMetaToken(cfg.token, cfg.phoneId);
+      return json(res, 200, {
+        connected: !!check.ok,
+        phoneId: cfg.phoneId,
+        simDevice: process.env.FLOWEE_SIM_ROOT || 'E:\\',
+        error: check.ok ? null : (check.error || check.data?.error?.message || 'Bridge offline'),
+      });
     }
 
-    const check = await verifyMetaToken(cfg.token, cfg.phoneId);
-    return json(res, check.ok ? 200 : 503, {
-      connected: check.ok,
-      phoneId: cfg.phoneId,
-      simDevice: process.env.FLOWEE_SIM_ROOT || 'E:\\',
-      error: check.ok ? null : check.data?.error?.message || check.error,
-    });
-  }
+    if (req.method !== 'POST') {
+      return json(res, 405, { error: 'Method not allowed' });
+    }
 
-  if (req.method !== 'POST') return json(res, 405, { error: 'Method not allowed' });
-
-  try {
     const body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
     const action = body.action || 'send';
     const to = (body.to || cfg.defaultTo || '').replace(/\+/g, '');
@@ -177,6 +201,7 @@ export default async function handler(req, res) {
 
     return json(res, 400, { error: 'Unknown action' });
   } catch (e) {
-    return json(res, 500, { error: e.message });
+    console.error('[api/whatsapp]', e);
+    return json(res, 200, { connected: false, error: e.message });
   }
-}
+};

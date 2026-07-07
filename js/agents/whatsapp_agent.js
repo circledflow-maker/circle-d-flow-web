@@ -44,11 +44,13 @@ class WhatsAppAgent extends Agent {
                 ? `${this.proxyUrl}/status`
                 : `${this.proxyUrl}?action=status`;
             const res = await fetch(url);
-            const data = await res.json();
+            const data = await res.json().catch(() => ({}));
             if (data.connected) {
                 this.log('✅ Meta bridge online.');
-            } else {
+            } else if (res.ok) {
                 this.log(`⚠️ Meta bridge offline: ${data.error || 'check Vercel env'}`);
+            } else {
+                this.log('⚠️ Bridge unreachable.');
             }
             return data;
         } catch {

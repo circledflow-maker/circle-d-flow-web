@@ -64,7 +64,7 @@ async function autoReply(c, from, text) {
   });
 }
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   const c = cfg();
 
   if (req.method === 'GET') {

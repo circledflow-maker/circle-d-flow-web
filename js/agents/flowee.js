@@ -720,7 +720,6 @@ class FloweeAgent {
         if(step > maxSteps) return; // Done
 
         const currentTask = this.imperialSteps.find(s => s.id === step);
-        const path = window.location.pathname.split('/').pop() || 'index.html';
 
         // 1. Check if we are on the right page for the current step
         if(currentTask && path.includes(currentTask.page)) {
