@@ -142,6 +142,7 @@ export default async function handler(req, res) {
         connected: !!check.ok,
         phoneId: cfg.phoneId,
         simDevice: simDeviceLabel(),
+        bridgeBuild: '2026-07-07c',
         error: check.ok ? null : safeError(check.error || 'Bridge offline'),
       });
     }
