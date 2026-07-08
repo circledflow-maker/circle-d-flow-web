@@ -13,7 +13,7 @@
       title: 'Welcome to the Resonance Bar',
       text: 'I am Flowee, your barkeeper. KyheartLx, Naru, and C-riz plan events here — organic jams or social media shoots. Swipe panels on mobile.',
       target: '#flowee-guide-card',
-      action: () => window.CoopMobile?.goPanel?.(0),
+      action: () => window.CoopMobile?.goPanel?.(1),
       cta: 'Next',
     },
     {

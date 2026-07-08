@@ -104,9 +104,9 @@
         .coop-dot.active { background: #D47E3D; transform: scale(1.2); }
         .coop-dots { display: flex; justify-content: center; gap: 8px; padding: 10px 0; }
         .coop-swipe-viewport { overflow: hidden; touch-action: pan-y; }
-        #coop-panel-viewport { overflow: hidden; touch-action: pan-y; }
-        #coop-panel-track { display: flex; transition: transform 0.35s cubic-bezier(0.25, 0.8, 0.25, 1); will-change: transform; }
-        #coop-panel-track > section { flex: 0 0 100%; min-width: 100%; padding: 0 2px; box-sizing: border-box; }
+        #coop-panel-viewport { overflow: hidden; touch-action: pan-x pinch-zoom; }
+        #coop-panel-track { display: flex; transition: transform 0.35s cubic-bezier(0.25, 0.8, 0.25, 1); will-change: transform; height: 100%; }
+        #coop-panel-track > section { flex: 0 0 100%; min-width: 100%; padding: 0 2px; box-sizing: border-box; overflow-y: auto; -webkit-overflow-scrolling: touch; max-height: 100%; }
         .coop-crew-track { display: flex; transition: transform 0.35s ease; }
         .coop-crew-slide { flex: 0 0 100%; min-width: 100%; padding-right: 8px; box-sizing: border-box; }
         @media (min-width: 1024px) {
@@ -114,11 +114,28 @@
             .coop-mobile-only { display: none !important; }
         }
         @media (max-width: 1023px) {
+            html, body.page-coop { overflow: hidden !important; height: 100dvh; max-height: 100dvh; }
+            body.page-coop { padding-top: 0 !important; }
+            body.page-coop .cdf-ticker-wrap { display: none !important; }
+            #coop-hud-anchor, #coop-team-anchor, #coop-tutorial-anchor, #coop-guide-anchor { display: none; }
+            body.page-coop #coop-bar-root {
+                height: calc(100dvh - 4.5rem);
+                max-height: calc(100dvh - 4.5rem);
+                overflow: hidden;
+                padding-top: 4.5rem;
+                padding-bottom: 0.5rem;
+                gap: 0.35rem;
+                display: flex;
+                flex-direction: column;
+            }
+            body.page-coop .coop-mobile-header { flex-shrink: 0; }
+            #coop-panel-viewport { flex: 1; min-height: 0; }
             .coop-desktop-only { display: none !important; }
             #coop-phase-steps { display: none !important; }
-            .captain-btn { top: 5.5rem; left: 4.5rem; font-size: 11px; padding: 6px 10px; }
+            .captain-btn { top: 3.5rem; left: 3.5rem; font-size: 11px; padding: 6px 10px; }
             #coop-bar-chat { max-height: 160px; }
             .coop-role-chip { font-size: 8px; padding: 3px 6px; }
+            #flowee-agent { bottom: calc(8px + env(safe-area-inset-bottom, 0px)) !important; right: 8px !important; left: auto !important; top: auto !important; transform: none !important; }
         }
     </style>
 </head>
@@ -175,7 +192,7 @@
     <!-- MAIN CONTENT -->
     <main id="coop-bar-root" class="relative z-10 pt-24 pb-20 px-4 max-w-6xl mx-auto flex flex-col gap-8">
         
-        <div class="text-center relative">
+        <div class="text-center relative coop-desktop-only">
             <h1 class="text-4xl md:text-6xl font-display font-medium text-transparent bg-clip-text bg-gradient-to-r from-tao-metal via-white to-tao-earth mb-3 tracking-wide">
                 THE RESONANCE BAR
             </h1>
@@ -183,9 +200,14 @@
                 Flowee tends the bar — plan events, assign roles, earn resonance.
             </p>
         </div>
+        <div class="coop-mobile-only coop-mobile-header text-center">
+            <h1 class="text-xl font-display text-tao-fire tracking-widest">RESONANCE BAR</h1>
+            <p class="text-[10px] text-white/40 font-mono uppercase tracking-widest">Swipe panels ← →</p>
+        </div>
 
         <!-- RESONANCE BAR HUD -->
-        <div class="resonance-strip nature-border rounded-2xl p-4">
+        <div id="coop-hud-anchor">
+        <div class="resonance-strip nature-border rounded-2xl p-4" id="coop-hud-block">
             <div class="res-stat"><div class="text-lg font-bold text-tao-fire" id="res-bar-level">1</div><div class="text-[9px] text-white/40 uppercase">Resonance Lv</div></div>
             <div class="res-stat"><div class="text-lg font-bold text-tao-metal" id="res-bar-exp">0</div><div class="text-[9px] text-white/40 uppercase">EXP</div></div>
             <div class="res-stat"><div class="text-lg font-bold text-tao-earth" id="res-bar-tp">100</div><div class="text-[9px] text-white/40 uppercase">Trust</div></div>
@@ -195,8 +217,10 @@
                 <div class="res-progress-track"><div class="res-progress-fill" id="resonance-progress-bar" style="width:0%"></div></div>
             </div>
         </div>
+        </div>
 
         <!-- FLOWEE TUTORIAL CARD -->
+        <div id="coop-tutorial-anchor">
         <div id="flowee-tutorial-card" class="hidden nature-border rounded-2xl p-4 border border-tao-fire/40 mb-2">
             <div class="flex justify-between items-start gap-2 mb-2">
                 <span class="text-[10px] font-mono text-tao-fire" id="flowee-tutorial-progress">Step 1 / 7</span>
@@ -206,9 +230,11 @@
             <p id="flowee-tutorial-body" class="text-xs text-white/70 mb-3"></p>
             <button type="button" id="flowee-tutorial-next" class="coop-seal-btn">Start</button>
         </div>
+        </div>
 
         <!-- TEAM INVITES -->
-        <div class="nature-border rounded-2xl p-4">
+        <div id="coop-team-anchor">
+        <div id="coop-team-block" class="nature-border rounded-2xl p-4">
             <p class="section-label">Team · Invite to Project</p>
             <div id="coop-team-status" class="flex flex-col gap-2 mb-3"></div>
             <div class="flex flex-wrap gap-2 mb-3">
@@ -223,8 +249,10 @@
             <div id="coop-invite-list" class="space-y-2"></div>
             <p class="text-[10px] text-white/30 mt-2">Synced via Supabase · run sql/coop_collaboration.sql once for team EXP rewards</p>
         </div>
+        </div>
 
         <!-- FLOWEE INTERACTIVE GUIDE -->
+        <div id="coop-guide-anchor">
         <div id="flowee-guide-card" class="nature-border rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center gap-4">
             <div class="flex items-center gap-3 flex-1">
                 <div class="flowee-barkeeper-avatar shrink-0">
@@ -237,14 +265,16 @@
             </div>
             <button type="button" id="flowee-guide-cta" class="shrink-0">Continue</button>
         </div>
+        </div>
 
-        <p class="coop-swipe-hint coop-mobile-only text-[10px] uppercase tracking-widest text-white/40 text-center">Swipe panels ← →</p>
         <div id="coop-panel-dots" class="coop-dots coop-mobile-only"></div>
 
         <!-- MOBILE: swipe panels -->
         <div id="coop-panel-viewport" class="coop-mobile-only">
             <div id="coop-panel-track">
-                <section><!-- panel 0: profile + chat -->
+                <section><!-- panel 0: HUD + team + profile + chat -->
+                    <div id="coop-mobile-slot-hud" class="mb-3"></div>
+                    <div id="coop-mobile-slot-team" class="mb-3"></div>
                     <div class="flex flex-col gap-4">
                         <div class="nature-border rounded-2xl p-5">
                             <div class="flex items-center gap-4 mb-3">
@@ -262,7 +292,9 @@
                         </div>
                     </div>
                 </section>
-                <section><!-- panel 1: planner -->
+                <section><!-- panel 1: tutorial + guide + planner -->
+                    <div id="coop-mobile-slot-tutorial" class="mb-3"></div>
+                    <div id="coop-mobile-slot-guide" class="mb-3"></div>
                     <div class="nature-border rounded-3xl p-4">
                         <p class="section-label">Pipeline</p>
                         <div id="coop-gap-alert-m" class="coop-gap ok mb-3"></div>
@@ -408,10 +440,10 @@
     <script src="../js/data/coop_pipeline.js?v=1.1"></script>
     <script src="../js/agents/adinkra_engine.js?v=1.0"></script>
     <script src="../js/agents/coop_barkeeper.js?v=1.4"></script>
-    <script src="../js/agents/coop_mobile.js?v=1.0"></script>
+    <script src="../js/agents/coop_mobile.js?v=1.1"></script>
     <script src="../js/agents/storage_hygiene.js?v=1.0"></script>
     <script src="../js/agents/coop_sync.js?v=1.2"></script>
-    <script src="../js/agents/coop_flowee_tutorial.js?v=1.2"></script>
+    <script src="../js/agents/coop_flowee_tutorial.js?v=1.3"></script>
     <script src="../js/agents/imperial_hud.js"></script>
     <script src="../js/agents/pusher.js"></script>
     <script src="../js/agents/helper.js"></script>

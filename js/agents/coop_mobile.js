@@ -3,9 +3,44 @@
  */
 (function () {
   const MQ = window.matchMedia('(max-width: 1023px)');
+  const mobileMounts = [];
+
+  const MOUNT_PLAN = [
+    { id: 'coop-hud-block', slot: 'coop-mobile-slot-hud', anchor: 'coop-hud-anchor' },
+    { id: 'coop-team-block', slot: 'coop-mobile-slot-team', anchor: 'coop-team-anchor' },
+    { id: 'flowee-tutorial-card', slot: 'coop-mobile-slot-tutorial', anchor: 'coop-tutorial-anchor' },
+    { id: 'flowee-guide-card', slot: 'coop-mobile-slot-guide', anchor: 'coop-guide-anchor' },
+  ];
 
   function isMobile() {
     return MQ.matches;
+  }
+
+  function mountMobileSlots() {
+    if (!isMobile()) return;
+    MOUNT_PLAN.forEach(({ id, slot, anchor }) => {
+      const node = document.getElementById(id);
+      const target = document.getElementById(slot);
+      if (!node || !target || node.dataset.coopMounted === '1') return;
+      mobileMounts.push({
+        node,
+        anchor: document.getElementById(anchor),
+        next: node.nextSibling,
+      });
+      target.appendChild(node);
+      node.dataset.coopMounted = '1';
+      node.classList.remove('hidden');
+    });
+  }
+
+  function restoreDesktopSlots() {
+    mobileMounts.forEach(({ node, anchor, next }) => {
+      if (!anchor) return;
+      if (next) anchor.insertBefore(node, next);
+      else anchor.appendChild(node);
+      delete node.dataset.coopMounted;
+    });
+    mobileMounts.length = 0;
   }
 
   window.CoopMobile = {
@@ -17,8 +52,15 @@
       this.bindMainSwipe();
       this.bindPhaseSwipe();
       this.bindCrewSwipe();
-      MQ.addEventListener('change', () => this.refresh());
+      MQ.addEventListener('change', () => this.onBreakpoint());
+      this.onBreakpoint();
+    },
+
+    onBreakpoint() {
+      if (isMobile()) mountMobileSlots();
+      else restoreDesktopSlots();
       this.refresh();
+      this.goPanel(this.panelIndex);
     },
 
     refresh() {
@@ -94,7 +136,7 @@
         tracking = false;
         const dx = e.changedTouches[0].clientX - startX;
         const dy = e.changedTouches[0].clientY - startY;
-        if (Math.abs(dx) < 48 || Math.abs(dy) > Math.abs(dx)) return;
+        if (Math.abs(dx) < 40 || Math.abs(dy) > Math.abs(dx) * 0.85) return;
         onSwipe(dx < 0 ? 1 : -1);
       }, { passive: true });
     },

@@ -89,18 +89,22 @@ foreach ($rule in $artistRules) {
   if (!(Test-Path $artistDir)) { New-Item -ItemType Directory -Path $artistDir | Out-Null }
 
   $clip = Join-Path $artistDir ($rule.key + "_short.mp4")
-  $title = $rule.title -replace "'", ""
-  Run-FFMpeg @(
-    "-y","-hide_banner","-loglevel","error",
-    "-ss","00:00:06","-t","24",
-    "-i",$src.FullName,
-    "-vf","crop='if(gte(iw/ih,9/16),ih*9/16,iw)':'if(gte(iw/ih,9/16),ih,iw*16/9)',scale=1080:1920:flags=lanczos,fade=t=in:st=0:d=0.8,fade=t=out:st=22:d=1.2,drawbox=x=0:y=h-150:w=iw:h=150:color=black@0.42:t=fill,drawtext=text='$title':x=40:y=h-95:fontcolor=white:fontsize=48:box=0",
-    "-c:v","libx264","-preset","slow","-crf","20","-pix_fmt","yuv420p",
-    "-c:a","aac","-b:a","160k",
-    "-movflags","+faststart",
-    $clip
-  )
-  Add-Content -Path $clipListPath -Value ("file '" + ($clip -replace "\\","/") + "'")
+  try {
+    Run-FFMpeg @(
+      "-y","-hide_banner","-loglevel","error",
+      "-ss","00:00:06","-t","24",
+      "-i",$src.FullName,
+      "-vf","crop='if(gte(iw/ih,9/16),ih*9/16,iw)':'if(gte(iw/ih,9/16),ih,iw*16/9)',scale=1080:1920:flags=lanczos,fade=t=in:st=0:d=0.8,fade=t=out:st=22:d=1.2,drawbox=x=0:y=h-150:w=iw:h=150:color=black@0.42:t=fill",
+      "-c:v","libx264","-preset","slow","-crf","20","-pix_fmt","yuv420p",
+      "-c:a","aac","-b:a","160k",
+      "-movflags","+faststart",
+      $clip
+    )
+    Add-Content -Path $clipListPath -Value ("file '" + ($clip -replace "\\","/") + "'")
+    Write-Host "  clip ok: $($rule.key)"
+  } catch {
+    Write-Warning "  clip skipped ($($rule.key)): $_"
+  }
 }
 
 Write-Host "4) Building YouTube master..."

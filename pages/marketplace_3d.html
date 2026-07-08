@@ -387,12 +387,28 @@
         camera.position.copy(skyPos);
         camera.lookAt(0, 4, -28);
 
-        const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
+        const renderer = (() => {
+            try {
+                const r = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+                if (!r.getContext()) throw new Error('WebGL context unavailable');
+                return r;
+            } catch (err) {
+                console.warn('[Bazaar3D] WebGL unavailable — 2D fallback active.', err);
+                const container = document.getElementById('canvas-container');
+                if (container) {
+                    container.innerHTML = '<div class="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-b from-[#2a0a05] via-[#1a0804] to-[#0a0a0a] text-center px-6"><span class="material-symbols-outlined text-5xl text-[#cd7f32] mb-4">storefront</span><p class="text-[#d4af37] font-cinzel tracking-widest text-sm uppercase">Grand Bazaar</p><p class="text-white/50 text-xs mt-2 max-w-xs">3D view unavailable on this device. Guild stalls and Forge still work below.</p></div>';
+                }
+                return null;
+            }
+        })();
+        const webglReady = !!renderer;
+        if (webglReady) {
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         document.getElementById('canvas-container').appendChild(renderer.domElement);
+        }
 
         // Lighting
         const ambientLight = new THREE.AmbientLight(0x5c2e16, 1.5);
@@ -873,7 +889,8 @@
         }
         function openForge() {
             document.getElementById('flowee-overlay').classList.remove('hidden');
-            startUploadFlow();
+            if (typeof startUploadFlow === 'function') startUploadFlow(true);
+            else window.location.href = 'marketplace_3d.html?intent=upload';
         }
         const GUILD_STALL_MAP = {
             arts: 'arts_stall.html',
@@ -928,6 +945,7 @@
         let activeSpeakerIndex = -1;
 
         function animate() {
+            if (!webglReady) return;
             requestAnimationFrame(animate);
             const time = Date.now();
             const delta = clock.getDelta();
@@ -1099,6 +1117,7 @@
         });
 
         window.addEventListener('resize', () => {
+            if (!webglReady) return;
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
@@ -1316,7 +1335,7 @@
             }
         }, 1200);
 
-        animate();
+        if (webglReady) animate();
     </script>
 </body>
 </html>
