@@ -26,12 +26,27 @@
   }
 
   const FLOWEE_GUIDE = {
-    1: { text: 'Step 1 — Name your session and pick Organic or Social Media. I will set the Adinkra soul.', cta: 'Set title & vibe' },
-    2: { text: 'Step 2 — Assign roles. KyheartLx coordinates, Naru visions, C-riz holds the mic. Swipe crew cards on mobile.', cta: 'Assign crew roles' },
-    3: { text: 'Step 3 — Lock location, guests, and gear pack. Lisbon outdoor? Plan rain backup in Phase 4.', cta: 'Pick location & gear' },
-    4: { text: 'Step 4 — Event date, Plan B, and follow-up for post-production. I will remind you.', cta: 'Set calendar' },
-    5: { text: 'Step 5 — Seal The Bon. Download briefing and enter Sanctuary with the crew.', cta: 'Review & seal' },
+    1: { text: 'Step 1 — Name your session and pick Organic or Social Media. Choose one of six Adinkra souls.', cta: 'Set title & vibe', target: '#coop-phase-form, #coop-phase-form-m' },
+    2: { text: 'Step 2 — Assign roles. KyheartLx coordinates, Naru visions, C-riz holds the mic. Swipe crew cards on mobile.', cta: 'Assign crew roles', target: '#coop-crew-grid, #coop-crew-viewport' },
+    3: { text: 'Step 3 — Lock location, guests, and gear pack. Lisbon outdoor? Plan rain backup in Phase 4.', cta: 'Pick location & gear', target: '#coop-equipment, #coop-location' },
+    4: { text: 'Step 4 — Event date, Plan B, and follow-up for post-production. I will remind you.', cta: 'Set calendar', target: '#coop-event-date, #coop-planb' },
+    5: { text: 'Step 5 — Seal The Bon. Download briefing and enter Sanctuary with the crew.', cta: 'Review & seal', target: '#coop-brief-preview, [data-seal="5"]' },
   };
+
+  function clearSpotlight() {
+    document.querySelectorAll('.coop-flowee-spotlight').forEach((el) => el.classList.remove('coop-flowee-spotlight'));
+  }
+
+  function spotlight(selector) {
+    clearSpotlight();
+    if (!selector) return;
+    const el = document.querySelector(selector.split(',')[0].trim());
+    if (!el) return;
+    el.classList.add('coop-flowee-spotlight');
+    el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  window.coopFloweeSpotlight = spotlight;
 
   function readProject() {
     try {
@@ -190,8 +205,11 @@ GEAR: ${gear || 'TBD'}
     }
 
     if (q.includes('adinkra') || q.includes('symbol') || q.includes('soul')) {
-      const sym = window.getAdinkraMeta?.(project.adinkraSoul);
-      return sym ? `This session carries ${sym.name}: ${sym.meaning}. Earn it in the Museum when you complete phases.` : 'Pick an Adinkra soul in Phase 1 — Nkyemu for Tiny Desk precision, Adwo for organic flow, Akoma for intimate circles.';
+      const sym = window.getCoopAdinkraSoul?.(project.adinkraSoul) || window.getAdinkraMeta?.(project.adinkraSoul);
+      const list = (window.COOP_ADINKRA_SOULS || []).map((s) => s.label).join(', ');
+      return sym
+        ? `Session soul: ${sym.label || sym.name} — ${sym.essence || sym.meaning}. Six coop keys: ${list}.`
+        : `Pick one of six Adinkra souls in Phase 1: ${list}. Organic → Adwo, Social Media → Nkyemu, intimate → Akoma.`;
     }
 
     if (q.includes('calendar') || q.includes('termin') || q.includes('date') || q.includes('follow')) {
@@ -302,13 +320,15 @@ GEAR: ${gear || 'TBD'}
       const step = document.getElementById('flowee-guide-step');
       if (el) el.textContent = g.text;
       if (step) step.textContent = `Phase ${ph} / 5`;
+      spotlight(g.target);
       if (cta) {
         cta.textContent = g.cta;
         cta.onclick = () => {
-          const form = document.getElementById('coop-phase-form');
+          const form = document.getElementById('coop-phase-form') || document.getElementById('coop-phase-form-m');
           form?.scrollIntoView({ behavior: 'smooth', block: 'start' });
           if (window.CoopMobile) window.CoopMobile.goPanel(1);
           if (window.Flowee) window.Flowee.talk(false, g.text, 'guide');
+          this.pushChat('flowee', g.text);
         };
       }
       if (speak && window.Flowee) {
@@ -577,10 +597,11 @@ GEAR: ${gear || 'TBD'}
           <div class="coop-chip-row">${(window.COOP_SCALES || []).map((s) =>
             `<button type="button" class="coop-chip ${p.scale === s.id ? 'on' : ''}" data-scale="${s.id}">${s.label}</button>`
           ).join('')}</div>
-          <label class="coop-label mt-4">Adinkra Soul</label>
-          <select id="coop-adinkra" class="coop-input">${(window.ADINKRA_NATURE_CYCLE || []).map((s) =>
-            `<option value="${s.id}" ${p.adinkraSoul === s.id ? 'selected' : ''}>${escapeHtml(s.label)} — ${escapeHtml(s.essence)}</option>`
-          ).join('')}</select>
+          <label class="coop-label mt-4">Adinkra Soul <span class="text-white/30">(6 resonance keys)</span></label>
+          <div class="coop-chip-row coop-adinkra-row">${(window.COOP_ADINKRA_SOULS || []).map((s) =>
+            `<button type="button" class="coop-chip coop-adinkra-chip ${p.adinkraSoul === s.id ? 'on' : ''}" data-adinkra="${s.id}" title="${escapeHtml(s.essence)}">${escapeHtml(s.label)}</button>`
+          ).join('')}</div>
+          <p id="coop-adinkra-hint" class="text-xs text-tao-fire/80 mt-2">${escapeHtml(window.getCoopAdinkraSoul?.(p.adinkraSoul)?.essence || 'Pick a soul — auto-set by vibe & scale')}</p>
           <button type="button" class="coop-seal-btn mt-6" data-seal="1">Seal Phase 1 · +25 EXP</button>`;
       } else if (ph === 2) {
         html = `<p class="text-xs text-white/50 mb-2 coop-swipe-hint lg:hidden">← Swipe crew cards →</p>
@@ -635,13 +656,16 @@ GEAR: ${gear || 'TBD'}
       const p = this.project;
       el.querySelector('#coop-title')?.addEventListener('input', (e) => this.save({ title: e.target.value }));
       el.querySelector('#coop-title')?.addEventListener('change', (e) => this.saveNow({ title: e.target.value }));
-      el.querySelector('#coop-adinkra')?.addEventListener('change', (e) => this.save({ adinkraSoul: e.target.value }));
+      el.querySelectorAll('[data-adinkra]').forEach((b) => b.addEventListener('click', () => {
+        this.save({ adinkraSoul: b.dataset.adinkra });
+        this.renderPhaseForm();
+      }));
       el.querySelectorAll('[data-type]').forEach((b) => b.addEventListener('click', () => {
         this.save({ projectType: b.dataset.type, adinkraSoul: window.COOP_ADINKRA_BY_VIBE?.[b.dataset.type] || p.adinkraSoul });
         this.renderPhaseForm();
       }));
       el.querySelectorAll('[data-scale]').forEach((b) => b.addEventListener('click', () => {
-        this.save({ scale: b.dataset.scale });
+        this.save({ scale: b.dataset.scale, adinkraSoul: window.COOP_ADINKRA_BY_VIBE?.[b.dataset.scale] || p.adinkraSoul });
         this.renderPhaseForm();
       }));
       el.querySelector('#coop-location')?.addEventListener('change', (e) => this.save({ locationId: e.target.value }));

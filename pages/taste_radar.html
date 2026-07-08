@@ -176,6 +176,7 @@
         </div>
     </dialog>
 
+    <script src="../js/data/akwaba_kitchen_data.js?v=1.1"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../js/agents/supabase_client.js?v=3.2"></script>
@@ -215,9 +216,28 @@
             }
         ];
 
+        function buildRadarItems() {
+            const k = window.AKWABA_KITCHEN;
+            if (!k?.menu?.length) return mockKitchens;
+            return k.menu.map((item, i) => ({
+                id: item.id || `k${i}`,
+                kitchen: k.name,
+                dish: item.name,
+                price: `€${item.price_eur.toFixed(2)}`,
+                desc: item.description,
+                img: item.image,
+                tags: [item.category, 'Pickup'],
+                page: 'akwaba_kitchen.html',
+                menuBoard: k.menu_board,
+            }));
+        }
+
+        let radarItems = [];
+
         let selectedItem = null;
 
         document.addEventListener('DOMContentLoaded', async () => {
+            radarItems = buildRadarItems();
             await renderRadar();
 
             const swiper = new Swiper('.tasteRadarSwiper', {
@@ -229,13 +249,8 @@
                 on: {
                     slideChange: function() {
                         const dialog = document.getElementById('flowee-dialog');
-                        if(this.activeIndex === 0) {
-                            dialog.innerText = "AkwabaLX Jollof — first live kitchen at Secret Garden. Tap to open menu.";
-                        } else if(this.activeIndex === 1) {
-                            dialog.innerText = "KitKat Special — chef signature. Order pickup at the bar.";
-                        } else {
-                            dialog.innerText = "Garden Vegan Plate — palms, patio, pure Lisbon flow.";
-                        }
+                        const item = radarItems[this.activeIndex];
+                        if (item) dialog.innerText = `${item.dish} @ ${item.kitchen} — swipe to scan, tap Order to secure pickup.`;
                     }
                 }
             });
@@ -244,8 +259,22 @@
         async function renderRadar() {
             const container = document.getElementById('radar-container');
             container.innerHTML = '';
+            const board = window.AKWABA_KITCHEN?.menu_board;
+            if (board) {
+                container.innerHTML += `
+                    <div class="swiper-slide bg-black">
+                        <div class="manga-panel w-full max-w-sm p-3">
+                            <img src="${board}" alt="AkwabaLX Menu" class="w-full rounded manga-filter">
+                        </div>
+                        <div class="w-full max-w-sm mt-6 manga-panel-dark p-6 text-center">
+                            <h2 class="cinzel text-xl mb-2">AkwabaLX Menu Card</h2>
+                            <p class="text-xs space-mono text-white/70 mb-4">Full menu at Secret Garden — swipe for dishes.</p>
+                            <button onclick="location.href='akwaba_kitchen.html'" class="manga-btn px-6 py-2">Enter Kitchen</button>
+                        </div>
+                    </div>`;
+            }
 
-            mockKitchens.forEach(item => {
+            radarItems.forEach(item => {
                 const tagsHtml = item.tags.map(t => `<span class="bg-black text-white px-2 py-1 text-[8px] uppercase tracking-widest">${t}</span>`).join('');
 
                 container.innerHTML += `
@@ -285,7 +314,7 @@
         }
 
         function openOrderModal(id) {
-            selectedItem = mockKitchens.find(k => k.id === id);
+            selectedItem = radarItems.find(k => k.id === id);
             if(selectedItem) {
                 document.getElementById('order-title').innerText = selectedItem.dish;
                 document.getElementById('order-kitchen').innerText = "@" + selectedItem.kitchen;

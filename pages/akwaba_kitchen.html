@@ -17,7 +17,8 @@
     <script src="../js/agents/pusher.js?v=3.2"></script>
     <script src="../js/agents/flowee.js?v=3.4"></script>
     <script src="../js/data/adinkra_catalog.js?v=1.0"></script>
-    <script src="../js/data/akwaba_kitchen_data.js?v=1.0"></script>
+    <script src="../js/agents/storage_hygiene.js?v=1.0"></script>
+    <script src="../js/data/akwaba_kitchen_data.js?v=1.1"></script>
     <script src="../js/agents/flowee_voice.js?v=1.1"></script>
     <script src="../js/agents/flowee_reward.js?v=1.0"></script>
     <script src="../js/agents/kitchen_engine.js?v=1.0"></script>
@@ -31,11 +32,22 @@
         .menu-card img { width:100%; height:120px; object-fit:cover; }
         #cart-bar { position:fixed; bottom:72px; left:0; right:0; z-index:90; }
         .flowee-tour-highlight { outline:2px solid #00ffcc; box-shadow:0 0 20px rgba(0,255,204,0.4); border-radius:12px; }
+        #kitchen-menu-board { border:1px solid rgba(212,175,55,0.35); border-radius:12px; background:rgba(0,0,0,0.35); }
+        #kitchen-menu-board img { width:100%; border-radius:12px; display:block; }
+        #kitchen-entry-reel { position:fixed; inset:0; z-index:200; background:#000; display:flex; align-items:center; justify-content:center; }
+        #kitchen-entry-reel.hidden { display:none; }
+        #kitchen-entry-reel video { width:100%; max-height:100vh; object-fit:cover; }
+        #kitchen-entry-reel button { position:absolute; bottom:24px; right:16px; z-index:201; }
     </style>
 </head>
 <body class="quest-triad-page">
+    <div id="kitchen-entry-reel" class="hidden" aria-hidden="true">
+        <video id="entry-reel-video" playsinline muted src="../Assets/kitchens/akwabalx/reel-hero.mp4"></video>
+        <button type="button" onclick="dismissKitchenReel()" class="text-xs px-4 py-2 border border-[var(--gold)] text-[var(--gold)] rounded-full bg-black/70">Enter Kitchen →</button>
+    </div>
+
     <header class="sticky top-0 z-50 bg-black/80 backdrop-blur border-b border-[var(--gold)]/20 px-4 py-3 flex items-center gap-3">
-        <img id="kitchen-logo" src="../Assets/kitchens/akwabalx/logo.png" alt="AkwabaLX" class="w-12 h-12 rounded-full object-cover border border-[var(--gold)]/40" onerror="this.style.display='none'">
+        <img id="kitchen-logo" src="../Assets/kitchens/akwabalx/logo.png" alt="AkwabaLX" class="w-14 h-14 rounded-full object-contain border-2 border-[var(--gold)]/50 bg-black/40 p-1" onerror="this.src='../Assets/kitchens/akwabalx/logo-fallback.png'">
         <div class="flex-1 min-w-0">
             <h1 class="cinzel text-lg text-[var(--gold)] truncate">AkwabaLX</h1>
             <p class="text-[10px] text-[var(--sage)] uppercase tracking-widest truncate">Secret Garden LX</p>
@@ -61,7 +73,11 @@
     </section>
 
     <section class="px-4 pb-4">
-        <h2 class="cinzel text-[var(--gold)] text-sm mb-3 tracking-widest">MENU — PICKUP AT BAR</h2>
+        <h2 class="cinzel text-[var(--gold)] text-sm mb-3 tracking-widest">MENU CARD</h2>
+        <div id="kitchen-menu-board" class="mb-6 p-2">
+            <img id="menu-board-img" src="../Assets/kitchens/akwabalx/menu-board.jpg" alt="AkwabaLX Menu Card" loading="lazy">
+        </div>
+        <h2 class="cinzel text-[var(--gold)] text-sm mb-3 tracking-widest">ORDER — PICKUP AT BAR</h2>
         <div id="menu-grid" class="grid gap-3 sm:grid-cols-2"></div>
     </section>
 
@@ -98,6 +114,28 @@
 
     <script>
         let engine;
+
+        function dismissKitchenReel() {
+            const overlay = document.getElementById('kitchen-entry-reel');
+            const vid = document.getElementById('entry-reel-video');
+            if (vid) { vid.pause(); vid.currentTime = 0; }
+            overlay?.classList.add('hidden');
+            sessionStorage.setItem('cdf_akwaba_reel_seen', '1');
+            document.getElementById('hero-reel')?.play().catch(() => {});
+        }
+
+        function playKitchenEntryReel() {
+            if (sessionStorage.getItem('cdf_akwaba_reel_seen') === '1') return;
+            const overlay = document.getElementById('kitchen-entry-reel');
+            const vid = document.getElementById('entry-reel-video');
+            if (!overlay || !vid) return;
+            overlay.classList.remove('hidden');
+            vid.muted = false;
+            vid.currentTime = 0;
+            vid.play().catch(() => { vid.muted = true; vid.play().catch(() => {}); });
+            vid.onended = () => dismissKitchenReel();
+        }
+
         function shareKitchen() {
             const url = 'https://circle-d-flow-web.vercel.app/pages/akwaba_kitchen';
             const text = encodeURIComponent('AkwabaLX at Secret Garden LX — taste the flow! ' + url);
@@ -147,7 +185,12 @@
             engine = window.KitchenEngine;
             await engine.load('akwabalx');
             const k = engine.kitchen;
+            const logo = document.getElementById('kitchen-logo');
+            if (logo && k.logo) logo.src = k.logo;
+            const board = document.getElementById('menu-board-img');
+            if (board) board.src = k.menu_board || window.AKWABA_KITCHEN.menu_board;
             document.getElementById('kitchen-tagline').textContent = k.tagline || k.tagline;
+            playKitchenEntryReel();
             const disc = document.getElementById('discount-note');
             if (disc) disc.textContent = k.discount_note || window.AKWABA_KITCHEN.discount_note || 'Navigator discounts coming soon — collect Akoma rune for early access.';
             const gal = document.getElementById('gallery-strip');

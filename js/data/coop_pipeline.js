@@ -61,3 +61,17 @@ window.COOP_ADINKRA_BY_VIBE = {
   bigger_event: 'kokuromotie',
   default: 'boa_me',
 };
+
+/** Six coop souls — aligned with vibes, scales, and Lisbon locations */
+window.COOP_ADINKRA_SOULS = [
+  { id: 'adwo', label: 'Adwo', essence: 'Calm organic Flow — garden & jam sessions' },
+  { id: 'nkyemu', label: 'Nkyemu', essence: 'Precision capture — Tiny Desk & reels' },
+  { id: 'akoma', label: 'Akoma', essence: 'Heart circle — intimate get-togethers' },
+  { id: 'kokuromotie', label: 'Kokuromotie', essence: 'Team unity — bigger events & full crew' },
+  { id: 'boa_me', label: 'Boa Me', essence: 'Mutual aid — default coop resonance' },
+  { id: 'fihankra', label: 'Fihankra', essence: 'Safe sanctuary — community & Secret Garden' },
+];
+
+window.getCoopAdinkraSoul = function (id) {
+  return (window.COOP_ADINKRA_SOULS || []).find((s) => s.id === id) || null;
+};

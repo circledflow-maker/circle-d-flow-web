@@ -85,6 +85,7 @@ DROP POLICY IF EXISTS "coop_members_select" ON public.coop_project_members;
 CREATE POLICY "coop_members_select" ON public.coop_project_members FOR SELECT USING (true);
 
 DROP POLICY IF EXISTS "coop_members_upsert" ON public.coop_project_members;
+DROP POLICY IF EXISTS "coop_members_insert" ON public.coop_project_members;
 CREATE POLICY "coop_members_insert" ON public.coop_project_members FOR INSERT
 WITH CHECK (auth.uid() = user_id OR EXISTS (
   SELECT 1 FROM public.coop_projects p WHERE p.id = project_id AND p.created_by = auth.uid()

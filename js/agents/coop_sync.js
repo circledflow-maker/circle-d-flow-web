@@ -24,9 +24,13 @@
     teamProfiles: {},
     cloudProjectId: null,
     pendingInvites: [],
+    _inited: false,
+    _realtimeReady: false,
+    _channel: null,
 
     async init() {
-      if (!window.supabaseClient) return;
+      if (!window.supabaseClient || this._inited) return;
+      this._inited = true;
       await this.loadTeamProfiles();
       await this.resolveCurrentUserSlot();
       await this.pullInvites();
@@ -40,7 +44,7 @@
 
     async loadTeamProfiles() {
       if (!this.sb) return;
-      const { data, error } = await this.sb.from('profiles').select('id,username,exp,karma,flow_credits,avatar_url,level').limit(200);
+      const { data, error } = await this.sb.from('profiles').select('id,username,exp,karma,flow_credits').limit(200);
       if (error) {
         console.warn('[CoopSync] profiles load:', error.message);
         return;
@@ -270,8 +274,14 @@
     },
 
     subscribeRealtime() {
-      if (!this.sb) return;
-      this.sb.channel('coop-sync')
+      if (!this.sb || this._realtimeReady) return;
+      this._realtimeReady = true;
+      if (this._channel) {
+        this.sb.removeChannel(this._channel);
+        this._channel = null;
+      }
+      this._channel = this.sb
+        .channel('coop-sync-' + Date.now())
         .on('postgres_changes', { event: '*', schema: 'public', table: 'coop_projects' }, () => this.pullSharedProject())
         .on('postgres_changes', { event: '*', schema: 'public', table: 'coop_invites' }, () => this.pullInvites())
         .subscribe();
