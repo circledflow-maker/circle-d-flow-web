@@ -1,0 +1,709 @@
+[
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_9145.MOV",
+    "artist": "videos",
+    "score": 0.608,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_9146.MOV",
+    "artist": null,
+    "score": 0.0,
+    "source": "unassigned",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_9147.MOV",
+    "artist": "SeMaria",
+    "score": 0.52,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_9190.MOV",
+    "artist": "HempyRootsCrew",
+    "score": 0.545,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_9191.MOV",
+    "artist": "Hope",
+    "score": 0.905,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_9205.MOV",
+    "artist": "videos",
+    "score": 0.78,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_9206.MOV",
+    "artist": "Jannes",
+    "score": 0.692,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_9208.MOV",
+    "artist": "Naru the Token",
+    "score": 0.655,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_9215.MOV",
+    "artist": null,
+    "score": 0.0,
+    "source": "unassigned",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_9216.MOV",
+    "artist": "O.I.D",
+    "score": 0.748,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_9217.MOV",
+    "artist": null,
+    "score": 0.0,
+    "source": "unassigned",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_9218.MOV",
+    "artist": "SeMaria",
+    "score": 0.731,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_9224.MOV",
+    "artist": "C-Riz",
+    "score": 0.831,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_9225.MOV",
+    "artist": "Corey",
+    "score": 0.516,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_9229.MOV",
+    "artist": "C-Riz",
+    "score": 0.781,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_9230.MOV",
+    "artist": "Dennis",
+    "score": 0.646,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_9231.MOV",
+    "artist": "Sandu",
+    "score": 0.544,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_8909.MOV",
+    "artist": null,
+    "score": 0.273,
+    "source": "unassigned",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_9023.MOV",
+    "artist": "videos",
+    "score": 0.394,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_9024.MOV",
+    "artist": "HempyRootsCrew",
+    "score": 0.821,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_9025.MOV",
+    "artist": "Magical souls",
+    "score": 0.745,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_9026.MOV",
+    "artist": "Evening Tour",
+    "score": 0.65,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_9090.JPG",
+    "artist": "videos",
+    "score": 0.569,
+    "source": "face",
+    "type": "photo"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_9091.JPG",
+    "artist": "Sandu",
+    "score": 0.666,
+    "source": "face",
+    "type": "photo"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_9123.JPG",
+    "artist": null,
+    "score": 0.0,
+    "source": "unassigned",
+    "type": "photo"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_9125.JPG",
+    "artist": "HempyRootsCrew",
+    "score": 0.745,
+    "source": "face",
+    "type": "photo"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_9126.JPG",
+    "artist": "Elisa",
+    "score": 0.712,
+    "source": "face",
+    "type": "photo"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_9127.MOV",
+    "artist": null,
+    "score": 0.0,
+    "source": "unassigned",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_9128.MOV",
+    "artist": "Dennis",
+    "score": 0.762,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_9129.JPG",
+    "artist": "Hope",
+    "score": 0.917,
+    "source": "face",
+    "type": "photo"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_9130.JPG",
+    "artist": "Hope",
+    "score": 0.92,
+    "source": "face",
+    "type": "photo"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_9131.JPG",
+    "artist": "Akwaba \u2014 Taste",
+    "score": 0.576,
+    "source": "face",
+    "type": "photo"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_9132.JPG",
+    "artist": "Hope",
+    "score": 0.957,
+    "source": "face",
+    "type": "photo"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_9133.JPG",
+    "artist": "Hope",
+    "score": 0.919,
+    "source": "face",
+    "type": "photo"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_9134.JPG",
+    "artist": "Hope",
+    "score": 0.955,
+    "source": "face",
+    "type": "photo"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_9135.JPG",
+    "artist": "Jannes",
+    "score": 0.811,
+    "source": "face",
+    "type": "photo"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_9137.JPG",
+    "artist": "C-Riz",
+    "score": 0.596,
+    "source": "face",
+    "type": "photo"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_9140.MOV",
+    "artist": "Jannes",
+    "score": 0.735,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_9141.MOV",
+    "artist": "Kreativlon.Art",
+    "score": 0.669,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_9142.MOV",
+    "artist": null,
+    "score": 0.0,
+    "source": "unassigned",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_9143.MOV",
+    "artist": "Kreativlon.Art",
+    "score": 0.72,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_9144.MOV",
+    "artist": "O.I.D",
+    "score": 0.809,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0650.mp4",
+    "artist": null,
+    "score": 0.0,
+    "source": "unassigned",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0672.mp4",
+    "artist": null,
+    "score": 0.0,
+    "source": "unassigned",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0677.mp4",
+    "artist": "29 May behind the scenes",
+    "score": 0.675,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0678.JPG",
+    "artist": "O.I.D",
+    "score": 0.808,
+    "source": "face",
+    "type": "photo"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0680.mp4",
+    "artist": null,
+    "score": 0.0,
+    "source": "unassigned",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0682.JPG",
+    "artist": "Hope",
+    "score": 0.959,
+    "source": "face",
+    "type": "photo"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0686.mp4",
+    "artist": "HempyRootsCrew",
+    "score": 0.5,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0687.mp4",
+    "artist": "Hope",
+    "score": 0.929,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0688.mp4",
+    "artist": "SeMaria",
+    "score": 0.706,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0689.mp4",
+    "artist": "Hope",
+    "score": 0.859,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0690.mp4",
+    "artist": "O.I.D",
+    "score": 0.706,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0692.mp4",
+    "artist": "29 May behind the scenes",
+    "score": 0.779,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0693.mp4",
+    "artist": null,
+    "score": 0.0,
+    "source": "unassigned",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0697.mp4",
+    "artist": "SeMaria",
+    "score": 0.803,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0698.mp4",
+    "artist": "Hope",
+    "score": 0.864,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0699.mp4",
+    "artist": "Micky",
+    "score": 0.784,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0700.mp4",
+    "artist": "Kreativlon.Art",
+    "score": 0.82,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0701.mp4",
+    "artist": "Jannes",
+    "score": 0.76,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0702.mp4",
+    "artist": "Willpower",
+    "score": 0.865,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0703.mp4",
+    "artist": null,
+    "score": 0.0,
+    "source": "unassigned",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0704.mp4",
+    "artist": "O.I.D",
+    "score": 0.894,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0705.mp4",
+    "artist": "SeMaria",
+    "score": 0.769,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0706.mp4",
+    "artist": "Jannes",
+    "score": 0.821,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0707.mp4",
+    "artist": "O.I.D",
+    "score": 0.692,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0708.mp4",
+    "artist": "Hope",
+    "score": 0.953,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0709.mp4",
+    "artist": "Hope",
+    "score": 0.895,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0710.mp4",
+    "artist": "videos",
+    "score": 0.816,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0711.mp4",
+    "artist": "videos",
+    "score": 0.859,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0712.mp4",
+    "artist": "Hope",
+    "score": 0.777,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0713.JPG",
+    "artist": null,
+    "score": 0.0,
+    "source": "unassigned",
+    "type": "photo"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0720.mp4",
+    "artist": "HempyRootsCrew",
+    "score": 0.715,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0721.mp4",
+    "artist": "HempyRootsCrew",
+    "score": 0.688,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0722.mp4",
+    "artist": "videos",
+    "score": 0.694,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0723.mp4",
+    "artist": "Hope",
+    "score": 0.967,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0724.mp4",
+    "artist": "Toni",
+    "score": 0.804,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0725.mp4",
+    "artist": "Magical souls",
+    "score": 0.735,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0726.mp4",
+    "artist": "C-Riz",
+    "score": 0.711,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0727.mp4",
+    "artist": "C-Riz",
+    "score": 0.851,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0728.mp4",
+    "artist": "29 May behind the scenes",
+    "score": 0.7,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0729.mp4",
+    "artist": "Hope",
+    "score": 0.959,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0730.mp4",
+    "artist": "Micky",
+    "score": 0.834,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0731.mp4",
+    "artist": "videos",
+    "score": 0.88,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0732.mp4",
+    "artist": "SeMaria",
+    "score": 0.825,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0733.mp4",
+    "artist": "SeMaria",
+    "score": 0.841,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0734.mp4",
+    "artist": "29 May behind the scenes",
+    "score": 0.675,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0735.mp4",
+    "artist": "Evening Tour",
+    "score": 0.812,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0736.mp4",
+    "artist": null,
+    "score": 0.0,
+    "source": "unassigned",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0737.mp4",
+    "artist": "29 May behind the scenes",
+    "score": 0.645,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0744.mp4",
+    "artist": "videos",
+    "score": 0.884,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0745.mp4",
+    "artist": null,
+    "score": 0.0,
+    "source": "unassigned",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0746.mp4",
+    "artist": "HempyRootsCrew",
+    "score": 0.687,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0747.mp4",
+    "artist": "videos",
+    "score": 0.8,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0748.JPG",
+    "artist": "Hope",
+    "score": 0.976,
+    "source": "face",
+    "type": "photo"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0749.mp4",
+    "artist": "Magical souls",
+    "score": 0.781,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0750.mp4",
+    "artist": "SeMaria",
+    "score": 0.827,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0751.mp4",
+    "artist": "videos",
+    "score": 0.813,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0752.mp4",
+    "artist": null,
+    "score": 0.0,
+    "source": "unassigned",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0705 - Copy.mp4",
+    "artist": "SeMaria",
+    "score": 0.769,
+    "source": "face",
+    "type": "video"
+  },
+  {
+    "path": "D:\\cdf27jue\\cdfevent\\DSC_0704 - Copy.mp4",
+    "artist": "O.I.D",
+    "score": 0.894,
+    "source": "face",
+    "type": "video"
+  }
+]

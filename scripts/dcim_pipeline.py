@@ -226,15 +226,17 @@ def grade_wakungo_video(src: Path, dst: Path, youtube: bool = False) -> None:
     cmd = [
         "ffmpeg", "-y", "-hide_banner", "-loglevel", "error",
         "-i", str(src),
+    ]
+    if youtube:
+        cmd.extend(["-t", "90"])
+    cmd.extend([
         "-vf", f"{vf},deshake",
         "-af", af,
         "-c:v", "libx264", "-crf", "18", "-preset", "slow", "-pix_fmt", "yuv420p",
         "-c:a", "aac", "-b:a", "192k",
         "-movflags", "+faststart",
         str(dst),
-    ]
-    if youtube:
-        cmd[6:6] = ["-t", "90"]
+    ])
 
     try:
         run(cmd, timeout=10800)
