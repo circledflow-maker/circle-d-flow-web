@@ -177,12 +177,18 @@
     </dialog>
 
     <script src="../js/data/akwaba_kitchen_data.js?v=1.1"></script>
+    <script src="../js/agents/kitchen_engine.js?v=1.2"></script>
+    <script src="../js/agents/flowee.js?v=5.0"></script>
+    <script src="../js/agents/flowee_reward.js?v=1.0"></script>
+    <script src="../js/agents/quest_engine.js?v=4.6"></script>
+    <script src="../js/data/lisbon_quests.js?v=1.1"></script>
+    <script src="../js/agents/flowee_kitchen_tour.js?v=2.0" defer></script>
+    <script src="../js/agents/mobile_sphere_nav.js?v=1.1" defer></script>
+    <link rel="stylesheet" href="../css/mobile-sphere-nav.css">
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../js/agents/supabase_client.js?v=3.2"></script>
-
+    <script src="../js/agents/supabase_client.js?v=4.1"></script>
     <script>
-        // Mock Data since DB might be empty
         const mockKitchens = [
             {
                 id: 'k1',
@@ -325,26 +331,32 @@
 
         async function placeOrder() {
             document.getElementById('order-modal').close();
-            
-            // Gamification logic
-            if (window.supabaseClient) {
-                try {
-                    const { data: { session } } = await window.supabaseClient.auth.getSession();
-                    if (session && session.user) {
-                        const { data: profile } = await window.supabaseClient.from('profiles').select('exp').eq('id', session.user.id).single();
-                        if (profile) {
-                            await window.supabaseClient.from('profiles').update({ exp: (profile.exp || 0) + 15 }).eq('id', session.user.id);
-                        }
-                    }
-                } catch(e) { console.log("Offline mode or no auth"); }
+            if (!selectedItem || !window.KitchenEngine) {
+                setTimeout(() => { location.href = selectedItem?.page || 'akwaba_kitchen.html'; }, 1500);
+                return;
             }
+            const engine = window.KitchenEngine;
+            await engine.load('akwabalx');
+            const menuItem = engine.menu.find((m) => m.id === selectedItem.id || m.name === selectedItem.dish);
+            if (menuItem) {
+                engine.cart = [{ ...menuItem, qty: 1, at: Date.now() }];
+            } else {
+                engine.cart = [{
+                    id: selectedItem.id,
+                    name: selectedItem.dish,
+                    price_eur: parseFloat(String(selectedItem.price).replace(/[^\d.]/g, '')) || 0,
+                    qty: 1,
+                }];
+            }
+            const notes = document.getElementById('order-notes')?.value || '';
+            const order = await engine.placeOrder(notes ? `Radar: ${notes}` : 'Taste Radar pickup');
+            if (order?.id) localStorage.setItem('cdf_last_soul_order', JSON.stringify(order));
 
             const dialog = document.getElementById('flowee-dialog');
-            dialog.innerText = `Transmission successful. ${selectedItem.kitchen} is forging your order. +15 EXP!`;
+            dialog.innerText = `Transmitted to KDS! ${selectedItem.dish} @ ${selectedItem.kitchen}. Soul Ticket ready at kitchen.`;
             dialog.classList.add('active');
             if (window.FloweeReward) window.FloweeReward.xpToast(`${selectedItem.dish} ordered`, 15);
-            else if (window.Flowee) window.Flowee.talk(true, `Order confirmed: ${selectedItem.dish} at ${selectedItem.kitchen}. Pick up at the bar!`, 'celebrate');
-            setTimeout(() => { location.href = selectedItem.page || 'akwaba_kitchen.html'; }, 2200);
+            setTimeout(() => { location.href = 'akwaba_kitchen.html?soul_ticket=1'; }, 2200);
         }
     </script>
 </body>

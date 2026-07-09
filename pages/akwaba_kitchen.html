@@ -21,9 +21,11 @@
     <script src="../js/data/akwaba_kitchen_data.js?v=1.1"></script>
     <script src="../js/agents/flowee_voice.js?v=1.1"></script>
     <script src="../js/agents/flowee_reward.js?v=1.0"></script>
-    <script src="../js/agents/kitchen_engine.js?v=1.0"></script>
+    <script src="../js/agents/kitchen_engine.js?v=1.2"></script>
     <script src="../js/agents/quest_engine.js?v=4.6"></script>
-    <script src="../js/agents/flowee_kitchen_tour.js?v=1.0" defer></script>
+    <script src="../js/agents/flowee_kitchen_tour.js?v=2.0" defer></script>
+    <link rel="stylesheet" href="../css/mobile-sphere-nav.css">
+    <script src="../js/agents/mobile_sphere_nav.js?v=1.1" defer></script>
     <style>
         :root { --gold:#D4AF37; --sage:#8A9A5B; --terra:#E2725B; }
         body { background:#0a0806; color:#fdfbf7; font-family:'Plus Jakarta Sans',sans-serif; padding-bottom:88px; }
@@ -108,6 +110,17 @@
         <div class="bg-black/95 border border-[var(--gold)] rounded-xl p-3 flex items-center justify-between gap-2">
             <span id="cart-summary" class="text-xs text-white/80"></span>
             <button type="button" onclick="placeOrder()" class="bg-[var(--gold)] text-black text-xs font-bold px-4 py-2 rounded">ORDER PICKUP</button>
+        </div>
+    </div>
+
+    <div id="soul-ticket-modal" class="hidden fixed inset-0 z-[300] bg-black/90 flex items-center justify-center p-4">
+        <div class="bg-gradient-to-b from-[#1f1f1f] to-[#0a0806] border border-[var(--gold)]/40 rounded-2xl p-6 max-w-sm w-full text-center">
+            <h3 class="cinzel text-[var(--gold)] text-lg mb-1">Soul Ticket</h3>
+            <p class="text-[10px] text-white/50 uppercase mb-4">Show at bar when READY</p>
+            <div class="bg-white p-2 rounded-lg inline-block mb-3"><img id="guest-ticket-qr" class="w-32 h-32" alt="Ticket QR"></div>
+            <p id="guest-ticket-dish" class="font-bold text-[var(--sage)] text-sm mb-2">—</p>
+            <p id="guest-ticket-pin" class="font-mono text-[var(--terracotta)] text-lg mb-4">—</p>
+            <button type="button" onclick="document.getElementById('soul-ticket-modal').classList.add('hidden')" class="text-xs px-4 py-2 border border-[var(--gold)] text-[var(--gold)] rounded-full">Got it →</button>
         </div>
     </div>
 
@@ -239,10 +252,24 @@
             bar.classList.remove('hidden');
             document.getElementById('cart-summary').textContent = `${engine.cart.length} item(s) · €${engine.cartTotal().toFixed(2)}`;
         }
+        function showSoulTicket(order) {
+            if (!order) return;
+            const items = Array.isArray(order.items) ? order.items : [];
+            const title = items.map((i) => i.name).join(', ') || 'Pickup';
+            const pin = 'AKW-' + String(order.id || Date.now()).replace(/-/g, '').slice(0, 6).toUpperCase();
+            const qr = JSON.stringify({ kitchen: 'akwabalx', order: order.id, pin });
+            document.getElementById('guest-ticket-dish').textContent = title;
+            document.getElementById('guest-ticket-pin').textContent = pin;
+            document.getElementById('guest-ticket-qr').src = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(qr)}`;
+            document.getElementById('soul-ticket-modal').classList.remove('hidden');
+            localStorage.setItem('cdf_last_soul_order', JSON.stringify(order));
+        }
+
         async function placeOrder() {
             const note = prompt('Pickup name or note (optional):') || '';
-            await engine.placeOrder(note);
+            const order = await engine.placeOrder(note);
             updateCart();
+            if (order) showSoulTicket(order);
         }
         function downloadQR() {
             const c = document.getElementById('kitchen-qr');
@@ -275,6 +302,7 @@
             });
             renderMenu();
             updateCart();
+            engine.subscribeMenuRealtime(() => { renderMenu(); if (window.Flowee) window.Flowee.talk(true, 'Menu updated live from kitchen.', 'guide'); });
             const qrUrl = 'https://circle-d-flow-web.vercel.app/pages/akwaba_kitchen';
             try {
                 if (window.QRCode) QRCode.toCanvas(document.getElementById('kitchen-qr'), qrUrl, { width: 160, margin: 1 });
@@ -288,6 +316,9 @@
             };
             if (window.QuestEngine?.profile) runTutorial();
             else window.addEventListener('PROFILE_UPDATED', runTutorial, { once: true });
+            if (new URLSearchParams(location.search).get('soul_ticket')) {
+                try { showSoulTicket(JSON.parse(localStorage.getItem('cdf_last_soul_order'))); } catch (_) {}
+            }
         });
     </script>
 </body>

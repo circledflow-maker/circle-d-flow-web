@@ -5,6 +5,7 @@
     const SPHERE_ROUTES = {
         taste: [
             'taste_world_entry.html',
+            'taste_world_hub.html',
             'akwaba_kitchen.html',
             'flavor_quest.html',
             'taste_radar.html',

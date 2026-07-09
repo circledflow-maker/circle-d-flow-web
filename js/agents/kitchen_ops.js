@@ -1,52 +1,103 @@
 /**
- * Kitchen Ops — KDS board, menu toggles, crew comms (Supabase + local fallback)
+ * Kitchen Ops — KDS, menu CRUD, QR studio, crew comms, soul tickets, gamification
  */
 (function () {
-  const KITCHEN_ID = 'a1b2c3d4-e5f6-7890-abcd-ef1234567890';
+  const DEFAULT_KITCHEN_ID = 'a1b2c3d4-e5f6-7890-abcd-ef1234567890';
 
   function escapeHtml(s) {
-    return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  function kitchenUrl(slug) {
+    const base = window.location.origin.includes('localhost')
+      ? `${window.location.origin}/pages/akwaba_kitchen.html`
+      : 'https://circle-d-flow-web.vercel.app/pages/akwaba_kitchen';
+    return slug && slug !== 'akwabalx' ? `${base}?kitchen=${slug}` : base;
+  }
+
+  function pinFromOrder(order) {
+    const raw = String(order.id || Date.now()).replace(/-/g, '').slice(0, 6).toUpperCase();
+    return `AKW-${raw}`;
   }
 
   window.KitchenOps = {
     kitchen: null,
     orders: [],
+    allOrders: [],
     menu: [],
     messages: [],
     channel: null,
+    selectedOrder: null,
+    stats: { sold: 0, revenue: 0, avgRating: 4.9, ready: 0 },
 
     async init(slug) {
       const params = new URLSearchParams(window.location.search);
-      const kitchenSlug = slug || params.get('kitchen') || 'akwabalx';
+      const kitchenSlug = slug || params.get('kitchen') || localStorage.getItem('cdf_active_kitchen') || 'akwabalx';
       if (window.KitchenEngine) await window.KitchenEngine.load(kitchenSlug);
       this.kitchen = window.KitchenEngine?.kitchen || window.AKWABA_KITCHEN;
-      await Promise.all([this.loadOrders(), this.loadMenu(), this.loadMessages()]);
-      this.renderKDS();
-      this.renderMenuEditor();
-      this.renderComm();
-      this.bindCommForm();
+      localStorage.setItem('cdf_active_kitchen', this.kitchen?.slug || kitchenSlug);
+      await Promise.all([this.loadOrders(), this.loadMenu(), this.loadMessages(), this.loadStats()]);
+      this.renderAll();
+      this.bindPanels();
       this.subscribeRealtime();
-      if (window.FloweeKitchenTour && !localStorage.getItem('cdf_kitchen_ops_tour_v1')) {
-        setTimeout(() => window.FloweeKitchenTour.start(true), 800);
+      const tut = params.get('tutorial');
+      if (window.FloweeKitchenTour && (tut || !localStorage.getItem('cdf_kitchen_ops_tour_v1'))) {
+        setTimeout(() => window.FloweeKitchenTour.start(true), 900);
       }
     },
 
+    renderAll() {
+      this.renderHeader();
+      this.renderKDS();
+      this.renderStats();
+      this.renderMenuEditor();
+      this.renderQRStudio();
+      this.renderKitchenSetup();
+      this.renderComm();
+      this.renderStaffPanel();
+      this.renderSoulTicket();
+      this.renderVoucherPanel();
+    },
+
     async loadOrders() {
-      if (!window.supabaseClient || !this.kitchen?.id) {
-        this.orders = JSON.parse(localStorage.getItem('cdf_kitchen_orders_local') || '[]');
+      const localKey = 'cdf_kitchen_orders_local';
+      const localAll = JSON.parse(localStorage.getItem(localKey) || '[]');
+      const kid = this.kitchen?.id;
+      const localActive = localAll.filter((o) =>
+        o.kitchen_id === kid && ['pending', 'confirmed', 'in_progress', 'ready'].includes(o.status)
+      );
+      if (!window.supabaseClient || !kid) {
+        this.orders = localActive;
+        this.allOrders = [...localAll.filter((o) => o.kitchen_id === kid)];
         return;
       }
       try {
         const { data } = await window.supabaseClient
           .from('kitchen_orders')
           .select('*')
-          .eq('kitchen_id', this.kitchen.id)
-          .in('status', ['pending', 'confirmed', 'in_progress', 'ready'])
-          .order('created_at', { ascending: true });
-        this.orders = data || [];
+          .eq('kitchen_id', kid)
+          .order('created_at', { ascending: false })
+          .limit(120);
+        const dbOrders = data || [];
+        const dbIds = new Set(dbOrders.map((o) => o.id));
+        const mergedLocal = localActive.filter((o) => !dbIds.has(o.id));
+        this.allOrders = [...dbOrders, ...localAll.filter((o) => o.kitchen_id === kid && !dbIds.has(o.id))];
+        this.orders = [...dbOrders.filter((o) => ['pending', 'confirmed', 'in_progress', 'ready'].includes(o.status)), ...mergedLocal];
       } catch (e) {
         console.warn('[KitchenOps] orders', e.message);
-        this.orders = [];
+        this.orders = localActive;
+        this.allOrders = localAll.filter((o) => o.kitchen_id === kid);
+      }
+    },
+
+    async loadStats() {
+      const picked = this.allOrders.filter((o) => o.status === 'picked_up');
+      this.stats.sold = picked.length;
+      this.stats.revenue = picked.reduce((s, o) => s + parseFloat(o.total_eur || 0), 0);
+      this.stats.ready = this.orders.filter((o) => o.status === 'ready').length;
+      const ratings = JSON.parse(localStorage.getItem(`cdf_kitchen_ratings_${this.kitchen?.slug}`) || '[]');
+      if (ratings.length) {
+        this.stats.avgRating = (ratings.reduce((a, b) => a + b, 0) / ratings.length).toFixed(1);
       }
     },
 
@@ -93,12 +144,22 @@
       this.channel = window.supabaseClient
         .channel(`kitchen-ops-${this.kitchen.id}`)
         .on('postgres_changes', { event: '*', schema: 'public', table: 'kitchen_orders', filter: `kitchen_id=eq.${this.kitchen.id}` }, () => {
-          this.loadOrders().then(() => this.renderKDS());
+          this.loadOrders().then(() => { this.renderKDS(); this.renderStats(); this.renderSoulTicket(); });
+        })
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'kitchen_menu_items', filter: `kitchen_id=eq.${this.kitchen.id}` }, () => {
+          this.loadMenu().then(() => this.renderMenuEditor());
         })
         .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'kitchen_messages', filter: `kitchen_id=eq.${this.kitchen.id}` }, () => {
           this.loadMessages().then(() => this.renderComm());
         })
         .subscribe();
+    },
+
+    renderHeader() {
+      const name = document.getElementById('kitchen-ops-name');
+      const sub = document.getElementById('kitchen-ops-sub');
+      if (name) name.textContent = this.kitchen?.name || 'Kitchen';
+      if (sub) sub.textContent = this.kitchen?.location_name || this.kitchen?.slug || 'Command Center';
     },
 
     statusColumns() {
@@ -124,6 +185,12 @@
       board.querySelectorAll('[data-advance]').forEach((btn) => {
         btn.addEventListener('click', () => this.advanceOrder(btn.dataset.advance, btn.dataset.next));
       });
+      board.querySelectorAll('[data-ticket]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const order = this.orders.find((o) => o.id === btn.dataset.ticket);
+          if (order) { this.selectedOrder = order; this.renderSoulTicket(); }
+        });
+      });
     },
 
     orderCard(order) {
@@ -136,58 +203,157 @@
         <div class="font-bold text-sm text-white mt-1">${escapeHtml(names)}</div>
         <div class="text-[10px] text-white/50 mt-1">€${parseFloat(order.total_eur || 0).toFixed(2)}</div>
         ${order.pickup_note ? `<div class="text-[10px] text-[var(--terracotta)] mt-1">${escapeHtml(order.pickup_note)}</div>` : ''}
-        ${next ? `<button type="button" class="kds-advance mt-2" data-advance="${order.id}" data-next="${next}">${nextLabel} →</button>` : ''}
+        <div class="flex gap-1 mt-2 flex-wrap">
+          ${next ? `<button type="button" class="kds-advance flex-1" data-advance="${order.id}" data-next="${next}">${nextLabel} →</button>` : ''}
+          ${order.status === 'ready' ? `<button type="button" class="kds-ticket text-[9px] px-2 py-1 border border-[var(--gold)]/50 rounded" data-ticket="${order.id}">Ticket</button>` : ''}
+        </div>
       </div>`;
     },
 
     async advanceOrder(orderId, nextStatus) {
       if (!orderId || !nextStatus) return;
-      if (window.supabaseClient) {
-        const { error } = await window.supabaseClient
-          .from('kitchen_orders')
-          .update({ status: nextStatus })
-          .eq('id', orderId);
-        if (error) {
-          if (window.Pusher) window.Pusher.showToast(error.message, 'error');
-          return;
-        }
+      const isLocal = String(orderId).startsWith('local-') || !window.supabaseClient;
+      if (window.supabaseClient && !isLocal) {
+        const { error } = await window.supabaseClient.from('kitchen_orders').update({ status: nextStatus }).eq('id', orderId);
+        if (error) { if (window.Pusher) window.Pusher.showToast(error.message, 'error'); return; }
       } else {
         const local = JSON.parse(localStorage.getItem('cdf_kitchen_orders_local') || '[]');
         const idx = local.findIndex((o) => o.id === orderId);
-        if (idx >= 0) {
-          local[idx].status = nextStatus;
-          localStorage.setItem('cdf_kitchen_orders_local', JSON.stringify(local));
-        }
+        if (idx >= 0) { local[idx].status = nextStatus; localStorage.setItem('cdf_kitchen_orders_local', JSON.stringify(local)); }
       }
-      if (nextStatus === 'ready' && window.supabaseClient) {
-        try {
-          const { data: { user } } = await window.supabaseClient.auth.getUser();
-          if (user) await window.supabaseClient.rpc('kitchen_grant_reward', { p_user_id: user.id, p_rule_key: 'order_ready' });
-        } catch (_) { /* optional */ }
-      }
+      if (nextStatus === 'ready') await this.grantKitchenReward('order_ready');
+      if (nextStatus === 'picked_up') await this.grantKitchenReward('first_pickup');
       await this.loadOrders();
+      await this.loadStats();
       this.renderKDS();
+      this.renderStats();
+      this.renderSoulTicket();
       if (window.Pusher) window.Pusher.showToast(`Order → ${nextStatus}`, 'success');
+    },
+
+    renderStats() {
+      const sold = document.getElementById('stat-dishes-sold');
+      const vibe = document.getElementById('stat-vibe');
+      const revenue = document.getElementById('stat-revenue');
+      const ready = document.getElementById('stat-ready');
+      const portions = document.getElementById('portions');
+      if (sold) sold.textContent = String(this.stats.sold);
+      if (vibe) vibe.textContent = String(this.stats.avgRating);
+      if (revenue) revenue.textContent = `€${this.stats.revenue.toFixed(0)}`;
+      if (ready) ready.textContent = String(this.stats.ready);
+      const liveItem = this.menu.find((m) => m.is_available !== false);
+      if (portions && liveItem) {
+        const est = Math.max(0, 42 - this.stats.sold % 50);
+        portions.textContent = String(est);
+        const label = document.getElementById('portions-label');
+        if (label) label.textContent = liveItem.name || 'Portions Left';
+      }
     },
 
     renderMenuEditor() {
       const el = document.getElementById('kitchen-menu-editor');
       if (!el) return;
-      const rows = (this.menu.length ? this.menu : (window.AKWABA_KITCHEN?.menu || [])).map((item) => {
+      const items = this.menu.length ? this.menu : (window.AKWABA_KITCHEN?.menu || []);
+      const rows = items.map((item) => {
         const id = item.id || item.slug || item.name;
         const avail = item.is_available !== false;
-        return `<div class="menu-edit-row">
-          <div class="flex-1">
-            <div class="font-bold text-sm">${escapeHtml(item.name)}</div>
-            <div class="text-[10px] text-white/50">€${parseFloat(item.price_eur || 0).toFixed(2)} · ${escapeHtml(item.category || 'main')}</div>
+        return `<div class="menu-edit-row" data-item-id="${escapeHtml(id)}">
+          <div class="flex-1 min-w-0">
+            <input class="menu-name w-full bg-transparent font-bold text-sm border-b border-white/10 mb-1" value="${escapeHtml(item.name)}" data-field="name">
+            <input class="menu-desc w-full bg-transparent text-[10px] text-white/50 border-b border-white/5 mb-1" value="${escapeHtml(item.description || '')}" data-field="description" placeholder="Description">
+            <div class="flex gap-2 items-center mt-1">
+              <input class="menu-price w-16 bg-black/40 text-[10px] px-2 py-1 rounded border border-white/10" type="number" step="0.01" value="${parseFloat(item.price_eur || 0).toFixed(2)}" data-field="price_eur">
+              <select class="menu-cat text-[10px] bg-black/40 border border-white/10 rounded px-1" data-field="category">
+                ${['main', 'combo', 'vegan', 'drink', 'dessert'].map((c) => `<option value="${c}" ${item.category === c ? 'selected' : ''}>${c}</option>`).join('')}
+              </select>
+              <button type="button" class="menu-save text-[9px] px-2 py-1 border border-[var(--gold)]/50 text-[var(--gold)] rounded" data-save-id="${escapeHtml(id)}">SAVE</button>
+            </div>
           </div>
-          <button type="button" class="menu-toggle ${avail ? 'on' : ''}" data-menu-id="${escapeHtml(id)}">${avail ? 'LIVE' : 'OFF'}</button>
+          <div class="flex flex-col gap-1">
+            <button type="button" class="menu-toggle ${avail ? 'on' : ''}" data-menu-id="${escapeHtml(id)}">${avail ? 'LIVE' : 'OFF'}</button>
+            <button type="button" class="menu-del text-[9px] text-red-400/70" data-del-id="${escapeHtml(id)}">✕</button>
+          </div>
         </div>`;
       }).join('');
-      el.innerHTML = rows || '<p class="text-white/40 text-xs">No menu items — run sql/kitchen_pipeline_setup.sql</p>';
+      el.innerHTML = (rows || '<p class="text-white/40 text-xs p-4">No menu items yet.</p>') + `
+        <div class="p-3 border-t border-white/10 bg-black/20">
+          <p class="text-[9px] uppercase tracking-widest text-[var(--sage)] mb-2">Add dish</p>
+          <div class="flex flex-col gap-2" id="menu-add-form">
+            <input id="new-item-name" class="bg-black/50 border border-white/10 rounded px-2 py-2 text-xs" placeholder="Dish name">
+            <input id="new-item-desc" class="bg-black/50 border border-white/10 rounded px-2 py-2 text-xs" placeholder="Description">
+            <div class="flex gap-2">
+              <input id="new-item-price" type="number" step="0.01" class="flex-1 bg-black/50 border border-white/10 rounded px-2 py-2 text-xs" placeholder="€ price">
+              <button type="button" id="btn-add-menu-item" class="px-3 py-2 bg-[var(--sage)] text-black text-xs font-bold rounded">+ ADD</button>
+            </div>
+          </div>
+        </div>`;
       el.querySelectorAll('.menu-toggle').forEach((btn) => {
         btn.addEventListener('click', () => this.toggleMenuItem(btn.dataset.menuId, btn));
       });
+      el.querySelectorAll('.menu-save').forEach((btn) => {
+        btn.addEventListener('click', () => this.saveMenuItem(btn.dataset.saveId, btn.closest('.menu-edit-row')));
+      });
+      el.querySelectorAll('.menu-del').forEach((btn) => {
+        btn.addEventListener('click', () => this.deleteMenuItem(btn.dataset.delId));
+      });
+      document.getElementById('btn-add-menu-item')?.addEventListener('click', () => this.addMenuItem());
+    },
+
+    rowField(row, field) {
+      const el = row?.querySelector(`[data-field="${field}"]`);
+      return el?.value?.trim() || '';
+    },
+
+    async saveMenuItem(id, row) {
+      const payload = {
+        name: this.rowField(row, 'name'),
+        description: this.rowField(row, 'description'),
+        price_eur: parseFloat(this.rowField(row, 'price_eur')) || 0,
+        category: this.rowField(row, 'category') || 'main',
+      };
+      if (!payload.name) return;
+      if (window.supabaseClient && this.kitchen?.id) {
+        const { error } = await window.supabaseClient.from('kitchen_menu_items').update(payload).eq('id', id);
+        if (error) { if (window.Pusher) window.Pusher.showToast(error.message, 'error'); return; }
+      }
+      await this.loadMenu();
+      this.renderMenuEditor();
+      if (window.Pusher) window.Pusher.showToast(`${payload.name} saved — live on guest menu`, 'success');
+    },
+
+    async addMenuItem() {
+      const name = document.getElementById('new-item-name')?.value?.trim();
+      const description = document.getElementById('new-item-desc')?.value?.trim() || '';
+      const price_eur = parseFloat(document.getElementById('new-item-price')?.value) || 0;
+      if (!name) return;
+      const payload = {
+        kitchen_id: this.kitchen?.id || DEFAULT_KITCHEN_ID,
+        name, description, price_eur, category: 'main', is_available: true,
+        sort_order: (this.menu.length || 0) + 1,
+        image_url: '/Assets/kitchens/akwabalx/logo-fallback.png',
+      };
+      if (window.supabaseClient) {
+        const { error } = await window.supabaseClient.from('kitchen_menu_items').insert([payload]);
+        if (error) { if (window.Pusher) window.Pusher.showToast(error.message, 'error'); return; }
+      } else {
+        payload.id = `local-${Date.now()}`;
+        this.menu.push(payload);
+      }
+      document.getElementById('new-item-name').value = '';
+      document.getElementById('new-item-desc').value = '';
+      document.getElementById('new-item-price').value = '';
+      await this.loadMenu();
+      this.renderMenuEditor();
+      if (window.Flowee) window.Flowee.talk(true, `"${name}" is LIVE on your kitchen page. Guests see it instantly.`, 'celebrate');
+    },
+
+    async deleteMenuItem(id) {
+      if (!confirm('Remove this dish from the menu?')) return;
+      if (window.supabaseClient) {
+        await window.supabaseClient.from('kitchen_menu_items').delete().eq('id', id);
+      }
+      await this.loadMenu();
+      this.renderMenuEditor();
     },
 
     async toggleMenuItem(id, btn) {
@@ -195,13 +361,183 @@
       btn.classList.toggle('on', turningOn);
       btn.textContent = turningOn ? 'LIVE' : 'OFF';
       if (window.supabaseClient && this.kitchen?.id) {
-        await window.supabaseClient
-          .from('kitchen_menu_items')
-          .update({ is_available: turningOn })
-          .eq('kitchen_id', this.kitchen.id)
-          .eq('id', id);
+        await window.supabaseClient.from('kitchen_menu_items').update({ is_available: turningOn }).eq('kitchen_id', this.kitchen.id).eq('id', id);
       }
-      if (window.Pusher) window.Pusher.showToast(turningOn ? 'Item live on menu' : 'Item hidden', 'success');
+      if (window.Pusher) window.Pusher.showToast(turningOn ? 'Item LIVE on guest menu' : 'Item hidden', 'success');
+    },
+
+    renderQRStudio() {
+      const wrap = document.getElementById('kitchen-qr-studio');
+      if (!wrap) return;
+      const url = kitchenUrl(this.kitchen?.slug);
+      wrap.innerHTML = `
+        <p class="text-[10px] text-white/50 mb-3">Guests scan → open menu & order. Better than delivery apps — zero commission, full vibe.</p>
+        <div class="flex flex-col items-center gap-3">
+          <canvas id="kitchen-ops-qr" class="bg-white p-2 rounded-lg"></canvas>
+          <p class="text-[9px] text-white/40 font-mono break-all text-center px-2">${escapeHtml(url)}</p>
+          <div class="flex gap-2 w-full">
+            <button type="button" id="btn-download-qr" class="flex-1 text-xs py-2 border border-[var(--gold)] text-[var(--gold)] rounded-lg">Download QR</button>
+            <button type="button" id="btn-share-qr-wa" class="flex-1 text-xs py-2 border border-[var(--sage)] text-[var(--sage)] rounded-lg">WhatsApp</button>
+          </div>
+          <button type="button" id="btn-print-qr" class="w-full text-xs py-2 bg-white/5 border border-white/10 rounded-lg">Print for bar / event</button>
+        </div>`;
+      if (window.QRCode) {
+        QRCode.toCanvas(document.getElementById('kitchen-ops-qr'), url, { width: 180, margin: 1 });
+      }
+      document.getElementById('btn-download-qr')?.addEventListener('click', () => {
+        const c = document.getElementById('kitchen-ops-qr');
+        const a = document.createElement('a');
+        a.download = `${this.kitchen?.slug || 'kitchen'}-menu-qr.png`;
+        a.href = c.toDataURL('image/png');
+        a.click();
+        if (window.QuestEngine) window.QuestEngine.fulfillTasteQuest('LQ-T03');
+      });
+      document.getElementById('btn-share-qr-wa')?.addEventListener('click', () => {
+        const text = encodeURIComponent(`Order at ${this.kitchen?.name} — scan & pick up! ${url}`);
+        window.open(`https://wa.me/?text=${text}`, '_blank');
+      });
+      document.getElementById('btn-print-qr')?.addEventListener('click', () => window.print());
+    },
+
+    renderKitchenSetup() {
+      const el = document.getElementById('kitchen-setup-panel');
+      if (!el) return;
+      el.innerHTML = `
+        <p class="text-xs text-white/60 mb-3">Forge your own kitchen realm — menu, QR, crew invites in one flow.</p>
+        <form id="kitchen-create-form" class="space-y-2">
+          <input id="new-kitchen-name" class="w-full bg-black/50 border border-white/10 rounded px-3 py-2 text-xs" placeholder="Kitchen name (e.g. Soul Bites LX)" required>
+          <input id="new-kitchen-slug" class="w-full bg-black/50 border border-white/10 rounded px-3 py-2 text-xs" placeholder="slug (e.g. soulbites)" pattern="[a-z0-9-]+">
+          <input id="new-kitchen-tagline" class="w-full bg-black/50 border border-white/10 rounded px-3 py-2 text-xs" placeholder="Tagline">
+          <input id="new-kitchen-location" class="w-full bg-black/50 border border-white/10 rounded px-3 py-2 text-xs" placeholder="Location (Lisbon venue)">
+          <button type="submit" class="w-full py-3 bg-[var(--gold)] text-black text-xs font-bold uppercase tracking-widest rounded-lg">Create Kitchen</button>
+        </form>
+        <p class="text-[9px] text-white/30 mt-2">Requires login. You become owner — crew joins via invite code AKWABA-CREW.</p>`;
+      document.getElementById('kitchen-create-form')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        this.createKitchen();
+      });
+    },
+
+    async createKitchen() {
+      if (!window.supabaseClient) {
+        if (window.Pusher) window.Pusher.showToast('Login required for kitchen creation', 'error');
+        return;
+      }
+      const { data: { user } } = await window.supabaseClient.auth.getUser();
+      if (!user) {
+        window.location.href = `login.html?redirect=${encodeURIComponent('kitchen_workspace.html?tutorial=1')}`;
+        return;
+      }
+      const name = document.getElementById('new-kitchen-name')?.value?.trim();
+      let slug = document.getElementById('new-kitchen-slug')?.value?.trim().toLowerCase().replace(/[^a-z0-9-]/g, '') || name?.toLowerCase().replace(/\s+/g, '').slice(0, 20);
+      const tagline = document.getElementById('new-kitchen-tagline')?.value?.trim() || 'Taste the flow';
+      const location_name = document.getElementById('new-kitchen-location')?.value?.trim() || 'Lisbon';
+      if (!name || !slug) return;
+      const payload = {
+        slug, name, tagline, location_name, address: 'Lisbon, Portugal',
+        lat: 38.72, lng: -9.145, owner_user_id: user.id, is_live: true,
+        logo_url: '/Assets/kitchens/akwabalx/logo.png',
+        cover_url: '/Assets/kitchens/akwabalx/hero-1.jpg',
+        qr_code_data: kitchenUrl(slug),
+        discount_note: 'Navigator discount with Akoma rune — scan QR at bar.',
+      };
+      const { data, error } = await window.supabaseClient.from('kitchens').insert([payload]).select().single();
+      if (error) {
+        if (window.Pusher) window.Pusher.showToast(error.message, 'error');
+        return;
+      }
+      localStorage.setItem('cdf_active_kitchen', slug);
+      if (window.Flowee) window.Flowee.talk(true, `Kitchen "${name}" forged! Add dishes, download QR, invite crew.`, 'celebrate');
+      window.location.href = `kitchen_workspace.html?kitchen=${slug}&tutorial=1`;
+    },
+
+    renderStaffPanel() {
+      const el = document.getElementById('kitchen-staff-panel');
+      if (!el) return;
+      el.innerHTML = `
+        <div class="text-[10px] text-white/50 mb-2">Crew invite code</div>
+        <div class="font-mono text-lg text-[var(--gold)] mb-3">AKWABA-CREW</div>
+        <p class="text-[10px] text-white/40 mb-3">Share with pass, bar & service. Staff sees KDS + comms when logged in.</p>
+        <a href="akwaba_kitchen.html" class="block text-center text-xs py-2 border border-white/20 rounded-lg text-white/70">Preview guest menu →</a>`;
+    },
+
+    renderSoulTicket() {
+      const order = this.selectedOrder || this.orders.find((o) => o.status === 'ready') || this.orders[0];
+      if (!order) {
+        const status = document.getElementById('ticket-status');
+        if (status) status.textContent = 'No active orders';
+        return;
+      }
+      this.selectedOrder = order;
+      const items = Array.isArray(order.items) ? order.items : [];
+      const title = items.map((i) => i.name).join(', ') || 'Pickup Order';
+      const pin = pinFromOrder(order);
+      const qrData = JSON.stringify({ kitchen: this.kitchen?.slug, order: order.id, pin });
+      const titleEl = document.getElementById('ticket-dish-title');
+      const pinEl = document.getElementById('ticket-pin');
+      const status = document.getElementById('ticket-status');
+      if (titleEl) titleEl.textContent = title;
+      if (pinEl) pinEl.textContent = pin;
+      if (status) status.textContent = order.status === 'ready' ? 'Ready for pickup' : order.status;
+      const img = document.getElementById('ticket-qr-img');
+      if (img) img.src = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(qrData)}`;
+    },
+
+    renderVoucherPanel() {
+      const el = document.getElementById('kitchen-voucher-panel');
+      if (!el) return;
+      el.innerHTML = `
+        <input id="voucher-code-input" class="w-full bg-black/50 border border-white/10 rounded px-3 py-2 text-xs font-mono uppercase mb-2" placeholder="NAVIGATOR10" value="NAVIGATOR10">
+        <button type="button" id="btn-apply-voucher" class="w-full py-2 text-xs border border-[var(--sage)] text-[var(--sage)] rounded-lg mb-3">Apply Navigator Voucher</button>
+        <p class="text-[9px] text-white/40">10% off + 15 XP · Trust points for verified pickup scans.</p>`;
+      document.getElementById('btn-apply-voucher')?.addEventListener('click', () => this.applyVoucher());
+    },
+
+    async applyVoucher() {
+      const code = document.getElementById('voucher-code-input')?.value?.trim().toUpperCase();
+      if (!code) return;
+      localStorage.setItem('cdf_kitchen_voucher', code);
+      await this.grantKitchenReward('soul_ticket_scan');
+      if (window.FloweeReward) window.FloweeReward.xpToast(`Voucher ${code} applied`, 15);
+      else if (window.Pusher) window.Pusher.showToast(`Voucher ${code} — 10% at bar`, 'success');
+    },
+
+    async grantKitchenReward(ruleKey) {
+      if (!window.supabaseClient) return;
+      try {
+        const { data: { user } } = await window.supabaseClient.auth.getUser();
+        if (user) await window.supabaseClient.rpc('kitchen_grant_reward', { p_user_id: user.id, p_rule_key: ruleKey, p_kitchen_slug: this.kitchen?.slug || 'akwabalx' });
+      } catch (_) { /* optional */ }
+    },
+
+    async scanSoulTicket() {
+      const order = this.selectedOrder;
+      if (!order) {
+        if (window.Pusher) window.Pusher.showToast('Select a READY order first', 'error');
+        return;
+      }
+      await this.advanceOrder(order.id, 'picked_up');
+      await this.grantKitchenReward('soul_ticket_scan');
+      const trust = parseInt(localStorage.getItem('cdf_kitchen_trust') || '0', 10) + 5;
+      localStorage.setItem('cdf_kitchen_trust', String(trust));
+      const trustEl = document.getElementById('stat-trust');
+      if (trustEl) trustEl.textContent = String(trust);
+      document.getElementById('ticket-status').textContent = 'Delivered';
+      document.getElementById('ticket-status').style.color = 'var(--sage)';
+      if (window.QuestEngine) window.QuestEngine.fulfillTasteQuest('LQ-T04');
+      if (window.FloweeReward) window.FloweeReward.xpToast('Soul Ticket scan — guest +20 XP, kitchen +5 Trust', 20);
+    },
+
+    async submitRating(val) {
+      const key = `cdf_kitchen_ratings_${this.kitchen?.slug}`;
+      const list = JSON.parse(localStorage.getItem(key) || '[]');
+      list.push(val);
+      localStorage.setItem(key, JSON.stringify(list));
+      this.stats.avgRating = (list.reduce((a, b) => a + b, 0) / list.length).toFixed(1);
+      this.renderStats();
+      if (val >= 4) await this.grantKitchenReward('five_star_vibe');
+      if (window.FloweeReward) window.FloweeReward.xpToast(`${val}-flame vibe sent`, 15);
+      document.getElementById('soul-ticket')?.classList.remove('is-flipped');
     },
 
     renderComm() {
@@ -209,8 +545,23 @@
       if (!log) return;
       log.innerHTML = this.messages.map((m) =>
         `<div class="comm-msg"><span class="comm-who">${escapeHtml(m.sender_name)}</span><span class="comm-body">${escapeHtml(m.body)}</span></div>`
-      ).join('') || '<p class="text-white/30 text-xs">No messages yet — Flowee listens here.</p>';
+      ).join('') || '<p class="text-white/30 text-xs">No messages — post rush orders, 86 items, @Flowee briefings.</p>';
       log.scrollTop = log.scrollHeight;
+    },
+
+    bindPanels() {
+      this.bindCommForm();
+      document.getElementById('btn-scan-ticket')?.addEventListener('click', () => this.scanSoulTicket());
+      document.querySelectorAll('.flame').forEach((f, i) => {
+        f.addEventListener('click', () => {
+          document.querySelectorAll('.flame').forEach((el, j) => el.classList.toggle('active', j < i + 1));
+        });
+      });
+      document.getElementById('btn-send-rating')?.addEventListener('click', () => {
+        const active = document.querySelectorAll('.flame.active').length || 3;
+        this.submitRating(active);
+      });
+      window.flipTicket = () => document.getElementById('soul-ticket')?.classList.toggle('is-flipped');
     },
 
     bindCommForm() {
@@ -227,21 +578,13 @@
     },
 
     async sendMessage(body) {
-      const name = localStorage.getItem('cdf_user_username') || localStorage.getItem('cdf_name') || 'Chef';
-      const payload = {
-        kitchen_id: this.kitchen?.id || KITCHEN_ID,
-        sender_name: name,
-        body,
-        channel: 'ops',
-      };
+      const name = localStorage.getItem('cdf_user_username') || 'Chef';
+      const payload = { kitchen_id: this.kitchen?.id || DEFAULT_KITCHEN_ID, sender_name: name, body, channel: 'ops' };
       if (window.supabaseClient) {
         const { data: { user } } = await window.supabaseClient.auth.getUser();
         if (user) payload.sender_id = user.id;
         const { error } = await window.supabaseClient.from('kitchen_messages').insert([payload]);
-        if (error) {
-          if (window.Pusher) window.Pusher.showToast(error.message, 'error');
-          return;
-        }
+        if (error) { if (window.Pusher) window.Pusher.showToast(error.message, 'error'); return; }
       } else {
         const localKey = `cdf_kitchen_msgs_${this.kitchen?.slug || 'akwabalx'}`;
         const list = JSON.parse(localStorage.getItem(localKey) || '[]');
@@ -252,7 +595,7 @@
       }
       await this.loadMessages();
       this.renderComm();
-      if (window.Flowee) window.Flowee.talk(true, `Message relayed to kitchen ops: "${body}"`, 'guide');
+      if (window.Flowee) window.Flowee.talk(true, `Relayed to crew: "${body}"`, 'guide');
     },
   };
 

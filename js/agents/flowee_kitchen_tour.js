@@ -1,19 +1,23 @@
 /**
- * Flowee Kitchen Tour — AkwabaLX onboarding (English)
+ * Flowee Kitchen Tour — guest, staff, Taste World paths
  */
 class FloweeKitchenTour {
     constructor() {
         window.FloweeKitchenTour = this;
-        document.addEventListener('DOMContentLoaded', () => setTimeout(() => this.start(), 2200));
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(location.search);
+            if (params.get('tutorial')) setTimeout(() => this.start(true), 1200);
+            else setTimeout(() => this.start(), 2200);
+        });
     }
 
     async speak(text, mood, options) {
         if (window.Flowee) window.Flowee.talk(true, text, mood || 'guide', options || []);
         if (window.FloweeVoice) {
             await window.FloweeVoice.speakAsync(text);
-            await window.FloweeVoice.waitAfterSpeech(600);
+            await window.FloweeVoice.waitAfterSpeech(500);
         } else {
-            await new Promise((r) => setTimeout(r, Math.max(3000, text.length * 40)));
+            await new Promise((r) => setTimeout(r, Math.max(2500, text.length * 35)));
         }
     }
 
@@ -25,46 +29,72 @@ class FloweeKitchenTour {
 
     async start(force) {
         const path = location.pathname;
-        const isKitchen = path.includes('akwaba_kitchen');
-        const isOps = path.includes('kitchen_workspace');
-        if (!isKitchen && !isOps) return;
+        if (path.includes('taste_world_entry')) return this.entryTour(force);
+        if (path.includes('taste_world_hub')) return this.hubTour(force);
+        if (path.includes('taste_radar')) return this.radarTour(force);
+        if (path.includes('akwaba_kitchen')) return this.guestTour(force);
+        if (path.includes('kitchen_workspace')) return this.ownerTour(force);
+    }
 
-        const key = isOps ? 'cdf_kitchen_ops_tour_v1' : 'cdf_kitchen_tour_v1';
+    tourKey(suffix) {
+        const k = `cdf_kitchen_tour_${suffix}`;
+        return k;
+    }
+
+    async entryTour(force) {
+        const key = this.tourKey('entry_v1');
         if (!force && localStorage.getItem(key)) return;
-
-        if (isKitchen) await this.guestTour();
-        else await this.ownerTour();
+        await this.speak('Taste World splits in two frequencies — Creator forges kitchens, Genießer tastes the flow.');
+        this.highlight('.path-btn');
+        await this.speak('Creators get KDS, live menu, QR codes and crew comms. Guests swipe Taste Radar and order pickup — zero delivery-app fees.');
         localStorage.setItem(key, '1');
     }
 
-    async guestTour() {
-        await this.speak('Welcome to AkwabaLX at Secret Garden. This is the first live kitchen in Circle D Flow.');
-        this.highlight('#hero-reel');
-        await this.speak('Watch the reel for today\'s vibe. Photos and menu board show what is cooking now.');
-        this.highlight('#menu-grid');
-        await this.speak('Browse dishes, tap ADD PICKUP, then ORDER PICKUP. Pay cash or card at the bar when status is READY.');
-        this.highlight('#cart-bar');
-        await this.speak('Pickup orders stay in your cart until you transmit. No online payment yet — closed loop at the garden bar.');
-        this.highlight('#kitchen-qr');
-        await this.speak('Download or share the kitchen QR. Navigators scan it to open this menu from any event.');
-        await this.speak('Share via WhatsApp sends a link with menu, Atlas pin, and your pickup flow ready.');
-        await this.speak('Complete Kitchen Heart on the Atlas to earn the Akoma rune — patience and heart.', 'guide', [
-            { label: 'OPEN ATLAS', action: () => { location.href = 'quest_map.html'; } },
-            { label: 'STAY & ORDER', action: () => window.Flowee?.shush() },
-        ]);
+    async hubTour(force) {
+        const key = this.tourKey('hub_v1');
+        if (!force && localStorage.getItem(key)) return;
+        await this.speak('Taste Hub — every path in one orbit. Radar for discovery, Kitchen for ordering, Workspace for your crew.');
+        this.highlight('.hub-tile');
+        localStorage.setItem(key, '1');
     }
 
-    async ownerTour() {
-        await this.speak('Kitchen Command Center online. Swipe: Delivery Board, Menu Editor, Crew Comms.');
+    async radarTour(force) {
+        const key = this.tourKey('radar_v1');
+        if (!force && localStorage.getItem(key)) return;
+        await this.speak('Swipe up and down — manga-style kitchen scan. Tap Order to transmit pickup to the real KDS board.');
+        localStorage.setItem(key, '1');
+    }
+
+    async guestTour(force) {
+        const key = this.tourKey('guest_v1');
+        if (!force && localStorage.getItem(key)) return;
+        await this.speak('Welcome to the live kitchen. Hero reel, menu board, then ADD PICKUP — pay at the bar when READY.');
+        this.highlight('#menu-grid');
+        await this.speak('Your Soul Ticket appears after order — QR + PIN for the bar handshake. +XP every step.');
+        this.highlight('#kitchen-qr');
+        await this.speak('Share kitchen QR at events — guests land directly on this menu. No commission, full community vibe.', 'guide', [
+            { label: 'OPEN RADAR', action: () => { location.href = 'taste_radar.html?tutorial=1'; } },
+            { label: 'ORDER NOW', action: () => window.Flowee?.shush() },
+        ]);
+        localStorage.setItem('cdf_kitchen_tour_v1', '1');
+        localStorage.setItem('cdf_initiation_kitchen_visited', '1');
+    }
+
+    async ownerTour(force) {
+        const key = 'cdf_kitchen_ops_tour_v1';
+        if (!force && localStorage.getItem(key)) return;
+        await this.speak('Kitchen Command — swipe 5 decks: KDS, Menu, QR, Crew, Soul Ticket.');
         this.highlight('#kitchen-kds-board');
-        await this.speak('Delivery Board — advance tickets New → Confirmed → Cooking → Ready.');
+        await this.speak('Slide 1 — advance orders New → Confirmed → Cooking → Ready. Real-time from guest orders.');
         this.highlight('#kitchen-menu-editor');
-        await this.speak('Menu Editor — toggle LIVE or OFF. Syncs to akwaba_kitchen when Supabase is connected.');
+        await this.speak('Slide 2 — edit dishes live. Name, price, SAVE. LIVE/OFF hides from guests instantly.');
+        this.highlight('#kitchen-qr-studio');
+        await this.speak('Slide 3 — download your menu QR. Print at bar. Create a new kitchen if you are forging a realm.');
         this.highlight('#kitchen-comm-panel');
-        await this.speak('Crew Comms — post updates. Flowee relays status to your team.');
-        this.highlight('.soul-ticket-inner');
-        await this.speak('Soul Ticket QR — guests scan at the bar when order is READY.');
-        await this.speak('Tutorial complete. Run sql/kitchen_pipeline_setup.sql once for full DB sync.', 'celebrate');
+        await this.speak('Slide 4 — crew comms. Rush orders, 86 items, @Flowee briefings sync to team.');
+        this.highlight('#soul-ticket');
+        await this.speak('Slide 5 — Soul Ticket scan grants Trust + Flow Credits. Better than Lieferando — you own the guest relationship.', 'celebrate');
+        localStorage.setItem(key, '1');
     }
 }
 

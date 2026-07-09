@@ -1,6 +1,11 @@
 -- Circle D Flow — Photo Session Bookings
 -- Run in Supabase SQL Editor after profiles exist
 
+-- Columns used by RLS + XP helper (safe if already exist)
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS role_calling TEXT;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS exp INTEGER DEFAULT 0;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS level INTEGER DEFAULT 1;
+
 CREATE TABLE IF NOT EXISTS public.bookings (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     customer_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,

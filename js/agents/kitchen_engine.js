@@ -41,6 +41,18 @@ class KitchenEngine {
         return this;
     }
 
+    subscribeMenuRealtime(onUpdate) {
+        if (!window.supabaseClient || !this.kitchen?.id) return;
+        if (this._menuChannel) window.supabaseClient.removeChannel(this._menuChannel);
+        this._menuChannel = window.supabaseClient
+            .channel(`kitchen-menu-${this.kitchen.id}`)
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'kitchen_menu_items', filter: `kitchen_id=eq.${this.kitchen.id}` }, async () => {
+                await this.load(this.kitchen.slug);
+                if (onUpdate) onUpdate(this.menu);
+            })
+            .subscribe();
+    }
+
     addToCart(itemId) {
         const item = this.menu.find((m) => m.id === itemId);
         if (!item) return;
@@ -48,6 +60,11 @@ class KitchenEngine {
         localStorage.setItem('cdf_kitchen_cart', JSON.stringify(this.cart));
         window.dispatchEvent(new CustomEvent('KITCHEN_CART_UPDATED'));
         if (window.FloweeReward) window.FloweeReward.xpToast(`Added ${item.name} to pickup cart`, 5);
+    }
+
+    async reloadMenu() {
+        if (this.kitchen?.slug) await this.load(this.kitchen.slug);
+        return this.menu;
     }
 
     cartTotal() {
@@ -70,27 +87,28 @@ class KitchenEngine {
             status: 'pending',
             payment_status: 'unpaid',
         };
+        let order = null;
         if (window.supabaseClient) {
             const { data: { user } } = await window.supabaseClient.auth.getUser();
             if (user) {
                 payload.customer_id = user.id;
                 const { data, error } = await window.supabaseClient.from('kitchen_orders').insert([payload]).select().single();
-                if (!error && data) {
-                    this.clearCart();
-                    if (window.QuestEngine) {
-                        await window.QuestEngine.grantReward('LQ-008', 100, 'Kitchen Heart');
-                        await window.QuestEngine.fulfillTasteQuest('LQ-T02');
-                    }
-                    if (window.FloweeReward) await window.FloweeReward.celebrate(`Order sent to ${this.kitchen.name}! Pick up at the bar when status is READY.`, 'celebrate');
-                    return data;
-                }
+                if (!error && data) order = data;
             }
         }
-        localStorage.setItem('cdf_pending_pickup', JSON.stringify({ ...payload, at: Date.now() }));
+        if (!order) {
+            order = { ...payload, id: crypto.randomUUID?.() || `local-${Date.now()}`, created_at: new Date().toISOString() };
+            const local = JSON.parse(localStorage.getItem('cdf_kitchen_orders_local') || '[]');
+            local.push(order);
+            localStorage.setItem('cdf_kitchen_orders_local', JSON.stringify(local));
+        }
         this.clearCart();
-        if (window.QuestEngine) await window.QuestEngine.fulfillTasteQuest('LQ-T02');
-        if (window.FloweeReward) await window.FloweeReward.celebrate('Pickup request saved. Pay at the Akwaba bar when you arrive.', 'guide');
-        return payload;
+        if (window.QuestEngine) {
+            await window.QuestEngine.fulfillTasteQuest('LQ-T02');
+            if (window.QuestEngine.grantReward) await window.QuestEngine.grantReward('LQ-008', 100, 'Kitchen Heart');
+        }
+        if (window.FloweeReward) await window.FloweeReward.celebrate(`Order sent to ${this.kitchen.name}! Pick up at the bar when READY.`, 'celebrate');
+        return order;
     }
 
     isOwner() {
