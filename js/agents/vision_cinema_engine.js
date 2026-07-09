@@ -93,9 +93,12 @@ window.VisionCinemaEngine = {
         if (!sb) return URL.createObjectURL(file);
         const { data: { user } } = await sb.auth.getUser();
         if (!user) return URL.createObjectURL(file);
-        const path = `cinema/${user.id}/${Date.now()}_${file.name}`;
+        const path = `cinema/${user.id}/${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
         const { error } = await sb.storage.from('sanctuary_media').upload(path, file);
-        if (error) throw error;
+        if (error) {
+            console.warn('[VisionCinema] storage upload:', error.message);
+            return URL.createObjectURL(file);
+        }
         const { data: pub } = sb.storage.from('sanctuary_media').getPublicUrl(path);
         return pub.publicUrl;
     },
@@ -259,14 +262,21 @@ window.VisionCinemaEngine = {
     },
 
     async tagPendingUpload(file, title) {
-        const pos = await this.getPosition();
-        if (pos.accuracy > 100) throw new Error('GPS accuracy too low — move outdoors and retry.');
+        let pos;
+        try {
+            pos = await this.getPosition();
+        } catch (e) {
+            return { skipped: true, reason: 'GPS unavailable — archive saved without Cinema tag.' };
+        }
+        if (pos.accuracy > 150) {
+            return { skipped: true, reason: 'GPS accuracy low — archive saved. Move outdoors to plant a Cinema Stage.' };
+        }
         const near = this.nearestStage(pos.lat, pos.lng);
         if (near && near.distanceM <= this.RADIUS_M) {
             return this.addUploadToStage(near.stage.id, file, pos.lat, pos.lng, title);
         }
         if (!this.canCreateAt(pos.lat, pos.lng)) {
-            throw new Error(`Cannot plant here — another stage is within ${this.RADIUS_M}m.`);
+            return { skipped: true, reason: `Another Cinema Stage is within ${this.RADIUS_M}m — archive saved.` };
         }
         return this.createStage(file, title, pos.lat, pos.lng);
     },
