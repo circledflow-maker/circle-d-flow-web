@@ -1,5 +1,16 @@
 {
   "outputDirectory": ".",
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "redirects": [
+    { "source": "/photographer", "destination": "/pages/photographer_hub", "permanent": false },
+    { "source": "/vision", "destination": "/pages/vision_studio", "permanent": false },
+    { "source": "/book", "destination": "/pages/booking", "permanent": false },
+    { "source": "/book-session", "destination": "/pages/booking", "permanent": false },
+    { "source": "/studio", "destination": "/pages/vision_studio", "permanent": false },
+    { "source": "/kitchen-ops", "destination": "/pages/kitchen_workspace?kitchen=akwabalx", "permanent": false },
+    { "source": "/coop", "destination": "/pages/coop", "permanent": false },
+    { "source": "/login", "destination": "/pages/login", "permanent": false },
+    { "source": "/logout", "destination": "/pages/logout", "permanent": false }
+  ]
 }

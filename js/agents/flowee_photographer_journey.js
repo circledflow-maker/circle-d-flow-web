@@ -22,11 +22,18 @@
     async start(force) {
       if (!force && localStorage.getItem(KEY)) return;
       const path = location.pathname;
+      if (path.includes('photographer_hub')) return this.hubTour();
       if (path.includes('booking')) return this.bookingTour();
       if (path.includes('vision_studio')) return this.studioTour();
       if (path.includes('partner-scanner')) return this.communityTour();
       if (path.includes('coop')) return this.coopTour();
       if (path.includes('dashboard')) return this.dashboardTour();
+    },
+
+    async hubTour() {
+      await speak('Vision Hub — solo path: Studio, Gallery, Book. Community: Flow Finder and Resonance Bar.');
+      highlight('.hub-card');
+      localStorage.setItem(KEY, '1');
     },
 
     async dashboardTour() {

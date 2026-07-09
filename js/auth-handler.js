@@ -55,6 +55,15 @@ async function handleResendConfirmation(email) {
     }
 }
 
+// --- HELPER: POST-LOGIN ROUTING ---
+function resolvePostLoginPath(session) {
+    const meta = session?.user?.user_metadata || {};
+    const flowClass = meta.flow_class || localStorage.getItem('userClass') || '';
+    const isVisual = ['CREATOR', 'PATHFINDER', 'visionary'].includes(flowClass);
+    const page = isVisual ? 'pages/photographer_hub.html' : 'pages/dashboard.html';
+    return getRedirectPath(page).replace('.html', '');
+}
+
 // --- 1. LOGIN LOGIC ---
 // --- HELPER: WAIT FOR STORAGE (The Fix for "No Token" bug) ---
 async function waitForSessionAndRedirect(target) {
@@ -117,7 +126,7 @@ async function handleLogin(argEmail, argPassword) {
                 showFeedback("Access Denied: " + error.message, "error");
             }
         } else {
-            const target = getRedirectPath('pages/dashboard.html').replace('.html', '');
+            const target = resolvePostLoginPath(data.session);
             localStorage.setItem('cqr_auth_state', 'logged_in');
             showFeedback(`Identity Confirmed. Calibrating...`, "success");
             waitForSessionAndRedirect(target); // USE NEW HELPER

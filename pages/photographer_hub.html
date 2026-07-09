@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vision Hub | Circle D Flow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Space+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    <style>
+        body { background: #0a0a0f; color: #e8e8e8; font-family: 'Space Mono', monospace; }
+        .hub-card { border: 1px solid rgba(212,175,55,0.25); background: linear-gradient(145deg, rgba(20,10,30,0.9), rgba(5,5,10,0.95)); transition: 0.25s; }
+        .hub-card:hover { border-color: #d4af37; transform: translateY(-2px); box-shadow: 0 8px 30px rgba(168,85,247,0.15); }
+        .cinzel { font-family: Cinzel, serif; }
+    </style>
+</head>
+<body class="min-h-screen px-4 py-8">
+    <header class="max-w-3xl mx-auto mb-8 flex justify-between items-center">
+        <a href="dashboard.html" class="text-xs text-white/50 hover:text-[#d4af37] flex items-center gap-1">
+            <span class="material-symbols-outlined text-sm">arrow_back</span> Orbit
+        </a>
+        <span class="text-[10px] uppercase tracking-[0.2em] text-purple-400">Vision · Photographer</span>
+    </header>
+
+    <main class="max-w-3xl mx-auto">
+        <h1 class="cinzel text-3xl text-[#d4af37] text-center mb-2">Vision Hub</h1>
+        <p class="text-center text-xs text-white/50 mb-8 max-w-md mx-auto">
+            Solo studio work or community shoots — pick your path. Flowee guides each step.
+        </p>
+
+        <p class="text-[10px] uppercase tracking-widest text-purple-400 mb-3">Solo · Create & Book</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
+            <a href="vision_studio.html" class="hub-card rounded-xl p-5 block">
+                <span class="material-symbols-outlined text-purple-400 text-2xl mb-2">photo_camera</span>
+                <div class="cinzel text-sm text-white">Vision Studio</div>
+                <div class="text-[10px] text-white/40 mt-1">Uploads, daily missions, Cinema Stage</div>
+            </a>
+            <a href="gallery.html" class="hub-card rounded-xl p-5 block">
+                <span class="material-symbols-outlined text-[#d4af37] text-2xl mb-2">collections</span>
+                <div class="cinzel text-sm text-white">D Gallery</div>
+                <div class="text-[10px] text-white/40 mt-1">Portfolio & quick book modal</div>
+            </a>
+            <a href="booking.html" class="hub-card rounded-xl p-5 block sm:col-span-2">
+                <span class="material-symbols-outlined text-cyan-400 text-2xl mb-2">event</span>
+                <div class="cinzel text-sm text-white">Book Photo Session</div>
+                <div class="text-[10px] text-white/40 mt-1">Packages, hours, calendar with Kyheart · Lisbon</div>
+            </a>
+        </div>
+
+        <p class="text-[10px] uppercase tracking-widest text-[#22c55e] mb-3">Community · Connect & Co-create</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
+            <a href="partner-scanner.html" class="hub-card rounded-xl p-5 block">
+                <span class="material-symbols-outlined text-[#22c55e] text-2xl mb-2">person_search</span>
+                <div class="cinzel text-sm text-white">Flow Finder</div>
+                <div class="text-[10px] text-white/40 mt-1">Visual Flow · crew matching quiz</div>
+            </a>
+            <a href="coop.html" class="hub-card rounded-xl p-5 block">
+                <span class="material-symbols-outlined text-orange-400 text-2xl mb-2">local_bar</span>
+                <div class="cinzel text-sm text-white">Resonance Bar</div>
+                <div class="text-[10px] text-white/40 mt-1">Plan shoots with Naru, C-riz & crew</div>
+            </a>
+            <a href="chat.html" class="hub-card rounded-xl p-5 block sm:col-span-2">
+                <span class="material-symbols-outlined text-blue-400 text-2xl mb-2">forum</span>
+                <div class="cinzel text-sm text-white">Sanctuary Chat</div>
+                <div class="text-[10px] text-white/40 mt-1">Brief the team before the session</div>
+            </a>
+        </div>
+
+        <div class="text-center">
+            <a href="login.html" class="text-[10px] text-white/30 hover:text-white underline">Switch account / Log in</a>
+        </div>
+    </main>
+
+    <div id="flowee-agent" class="fixed z-[999999]" style="bottom: calc(72px + env(safe-area-inset-bottom, 0px)); right: 16px;"></div>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/agents/supabase_client.js?v=4.1"></script>
+    <script src="../js/agents/flowee.js?v=5.0"></script>
+    <script src="../js/agents/flowee_photographer_journey.js?v=1.0" defer></script>
+    <script src="../js/agents/pusher.js?v=4.1" defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.Flowee) window.Flowee.talk(true, 'Vision Hub ready. Studio for solo work — Coop for crew shoots. Book a session anytime.', 'guide');
+        });
+    </script>
+</body>
+</html>

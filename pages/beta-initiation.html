@@ -393,6 +393,7 @@
                 };
                 localStorage.setItem('cqr_user', JSON.stringify(user));
                 localStorage.setItem('cqr_auth_state', 'logged_in');
+                localStorage.setItem('userClass', winner);
 
                 // Wait 5.5s, then show Password Prompt
                 setTimeout(() => {
@@ -413,8 +414,10 @@
                 const val = document.getElementById('secret-keyword')?.value;
                 if(val === 'MyFlow!') {
                     this.showTalk("Welcome home...", "");
+                    const cls = this.assignedClass || localStorage.getItem('userClass') || '';
+                    const isVisual = ['CREATOR', 'PATHFINDER'].includes(cls);
                     setTimeout(() => {
-                        window.location.href = 'dashboard.html';
+                        window.location.href = isVisual ? 'photographer_hub.html' : 'dashboard.html';
                     }, 1500);
                 } else {
                     const text = document.getElementById('flowee-text');
