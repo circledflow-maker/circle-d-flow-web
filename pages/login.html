@@ -160,9 +160,47 @@
                     data-i18n="nav_spirit">Spirit</a>
             </div>
 
+        </nav>
+
+        <main class="flex-1 flex items-center justify-center px-4 py-24">
+            <div class="w-full max-w-md bg-black/60 border border-white/10 rounded-2xl p-8 backdrop-blur-xl shadow-2xl">
+                <div id="auth-feedback" class="hidden mb-4 text-sm text-center p-3 rounded-lg"></div>
+
+                <div id="login-section">
+                    <h1 class="text-2xl font-bold text-white mb-2 text-center">Navigator Login</h1>
+                    <p class="text-white/50 text-xs text-center mb-6">Photographers, creators & crew — enter the orbit.</p>
+                    <div class="space-y-4">
+                        <input id="auth-email" type="email" placeholder="Email" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:border-primary outline-none" autocomplete="email">
+                        <input id="auth-password" type="password" placeholder="Password" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:border-primary outline-none" autocomplete="current-password">
+                        <button type="button" onclick="localLogin()" class="w-full py-3 bg-primary hover:bg-purple-600 text-white font-bold rounded-lg uppercase tracking-widest text-xs transition">Enter Orbit</button>
+                    </div>
+                    <p class="text-center text-xs text-white/40 mt-4">New Navigator? <button type="button" onclick="toggleAuth('register')" class="text-mystic-gold underline">Create profile</button></p>
+                </div>
+
+                <div id="register-section" class="hidden">
+                    <h1 class="text-2xl font-bold text-white mb-2 text-center">Forge Your Profile</h1>
+                    <p class="text-white/50 text-xs text-center mb-6">Join as photographer, artist, or explorer.</p>
+                    <div class="space-y-4">
+                        <input id="reg-username" type="text" placeholder="Navigator name" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:border-primary outline-none">
+                        <input id="reg-email" type="email" placeholder="Email" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:border-primary outline-none" autocomplete="email">
+                        <input id="reg-password" type="password" placeholder="Password (min 6)" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:border-primary outline-none" autocomplete="new-password">
+                        <button type="button" onclick="localRegister()" class="w-full py-3 bg-mystic-gold hover:bg-yellow-500 text-black font-bold rounded-lg uppercase tracking-widest text-xs transition">Start Initiation</button>
+                    </div>
+                    <p class="text-center text-xs text-white/40 mt-4">Already registered? <button type="button" onclick="toggleAuth('login')" class="text-primary underline">Log in</button></p>
+                </div>
+
+                <div class="mt-6 pt-4 border-t border-white/10 flex flex-col gap-2 text-center">
+                    <a href="vision_studio.html" class="text-[10px] uppercase tracking-widest text-white/50 hover:text-white">Vision Studio →</a>
+                    <a href="booking.html" class="text-[10px] uppercase tracking-widest text-white/50 hover:text-white">Book Photo Session →</a>
+                    <a href="coop.html" class="text-[10px] uppercase tracking-widest text-white/50 hover:text-white">Coop / Community →</a>
+                </div>
+            </div>
+        </main>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../js/agents/supabase_client.js?v=3.2"></script>
-    <script src="../js/auth-handler.js?v=3.2"></script>
+    <script src="../js/agents/supabase_client.js?v=4.1"></script>
+    <script src="../js/auth-handler.js?v=3.3"></script>
     <script>
         function toggleAuth(mode) {
             const loginSec = document.getElementById('login-section');

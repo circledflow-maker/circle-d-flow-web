@@ -256,17 +256,48 @@ document.addEventListener('DOMContentLoaded', () => {
         default: 'https://calendar.app.google/XbmJUDtaSWecgEXHA',
     };
 
-    document.getElementById('confirm-booking').addEventListener('click', () => {
+    document.getElementById('confirm-booking').addEventListener('click', async () => {
         console.log("Booking Confirmed:", bookingState);
         
         const btn = document.getElementById('confirm-booking');
-        btn.textContent = "Redirecting…";
+        btn.textContent = "Saving…";
         btn.disabled = true;
+
+        const payload = {
+            name: bookingState.details?.name || 'Guest',
+            email: bookingState.details?.email || '',
+            service_type: bookingState.service || 'portrait',
+            vision_notes: bookingState.details?.direction || '',
+            duration_hours: 2,
+            total_price: 0,
+            status: 'pending',
+            payment_status: 'unpaid',
+            calendar_url: 'https://calendar.app.google/XbmJUDtaSWecgEXHA',
+            metadata: { source: 'gallery_modal', at: new Date().toISOString() },
+        };
+
+        let saved = false;
+        if (window.supabaseClient) {
+            try {
+                const { data: { user } } = await window.supabaseClient.auth.getUser();
+                if (user) payload.customer_id = user.id;
+                const { error } = await window.supabaseClient.from('bookings').insert([payload]);
+                if (!error) saved = true;
+                else console.warn('[Gallery] booking insert', error.message);
+            } catch (e) { console.warn(e); }
+        }
+        if (!saved) {
+            const local = JSON.parse(localStorage.getItem('cdf_bookings_pending') || '[]');
+            local.push({ ...payload, id: 'local-' + Date.now() });
+            localStorage.setItem('cdf_bookings_pending', JSON.stringify(local));
+        }
+
+        if (window.FloweeReward) window.FloweeReward.xpToast('Session request sent · +25 XP', 25);
+        else if (window.Pusher) window.Pusher.showToast('Session request sent! Pick a time on the calendar.', 'success');
 
         const svc = (bookingState.service || 'default').toLowerCase();
         const key = Object.keys(STRIPE_LINKS).find((k) => svc.includes(k)) || 'default';
-        const url = STRIPE_LINKS[key];
-        window.location.href = url;
+        window.location.href = STRIPE_LINKS[key];
     });
 
 });

@@ -59,6 +59,9 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/agents/supabase_client.js?v=4.1"></script>
+    <script src="../js/auth-handler.js?v=3.3"></script>
     <script>
         const logs = [
             { msg: "> DISCONNECTING NEURAL LINK...", delay: 800 },
@@ -112,15 +115,19 @@
 
         function clearSession() {
             console.log("Wiping Session Data...");
-            // Keep some non-sensitive settings if needed, but for now wipe user identity
             const keysToRemove = [
                 'cdf_user_username', 'cdf_user_email', 'user_class', 
                 'user_nen_type_v2', 'cdf_adinkra_symbol', 'cdf_beta_key',
-                'cdf_beta_session'
+                'cdf_beta_session', 'cqr_auth_state', 'circle_user_state',
+                'cdf_balance', 'cdf_wallet_flow', 'cdf_xp'
             ];
-            
             keysToRemove.forEach(k => localStorage.removeItem(k));
             sessionStorage.clear();
+            if (window.supabaseClient) {
+                window.supabaseClient.auth.signOut().catch(() => {});
+            } else if (window.handleLogout) {
+                window.handleLogout().catch(() => {});
+            }
         }
 
         // Start

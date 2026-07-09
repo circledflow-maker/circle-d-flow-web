@@ -810,9 +810,10 @@
                     name: nameInput ? nameInput.value : 'Unknown',
                     email: emailInput ? emailInput.value : 'Unknown',
                     service_type: projectType ? projectType.value : 'standard',
-                    duration: slider ? parseInt(slider.value) : 2,
-                    total_price: totalPrice ? parseInt(totalPrice.innerText.replace('€', '') || 0) : 0,
-                    status: 'confirmed'
+                    duration_hours: slider ? parseInt(slider.value, 10) : 2,
+                    total_price: totalPrice ? parseInt(totalPrice.innerText.replace('€', '') || 0, 10) : 0,
+                    status: 'pending',
+                    payment_status: 'unpaid'
                 };
 
                 if (!supabase) {
@@ -867,6 +868,7 @@
     <script src="../js/agents/horizon_bar.js" defer></script>
     <script src="../js/agents/social_matrix.js" defer></script>
     <script src="../js/agents/flowee.js" defer></script>
+    <script src="../js/agents/flowee_photographer_journey.js?v=1.0" defer></script>
 
     <!-- AUTOMATED AGENT INJECTION -->
 
