@@ -228,6 +228,33 @@ class HelperAgent extends Agent {
         }
     }
 
+    /** Visual Eye delegates broken <img> recovery here */
+    repairBatch(images) {
+        if (!images || !images.length) return 0;
+        let repaired = 0;
+        const fallback = window.location.pathname.includes('/pages/')
+            ? '../Assets/images/logo.png'
+            : 'Assets/images/logo.png';
+        images.forEach((img) => {
+            if (!img || img.dataset.helperRepaired === '1') return;
+            img.dataset.helperRepaired = '1';
+            const orig = img.getAttribute('src') || '';
+            img.dataset.fallbackSrc = img.dataset.fallbackSrc || fallback;
+            img.onerror = () => {
+                if (img.src !== img.dataset.fallbackSrc) {
+                    img.src = img.dataset.fallbackSrc;
+                    repaired += 1;
+                }
+            };
+            if (!img.complete || img.naturalHeight === 0) {
+                const base = orig.split('?')[0];
+                if (base) img.src = `${base}?repair=${Date.now()}`;
+            }
+        });
+        if (repaired > 0) console.log(`[${this.name}] Repaired ${repaired} asset(s).`);
+        return repaired;
+    }
+
     async captureGlitch(type = 'MANUAL_REPORT', details = 'User Initiated', context = 'Global', options = {}) {
         const snapshot = {
             id: 'GLITCH-' + Math.random().toString(36).substr(2, 5).toUpperCase(),

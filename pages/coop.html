@@ -295,10 +295,14 @@
                 <section><!-- panel 1: tutorial + guide + planner -->
                     <div id="coop-mobile-slot-tutorial" class="mb-3"></div>
                     <div id="coop-mobile-slot-guide" class="mb-3"></div>
-                    <div class="nature-border rounded-3xl p-4">
+                    <div id="coop-phase-planner-m" class="nature-border rounded-3xl p-4">
                         <p class="section-label">Pipeline</p>
                         <div id="coop-gap-alert-m" class="coop-gap ok mb-3"></div>
-                        <div id="coop-phase-dots" class="coop-dots mb-3"></div>
+                        <div class="flex items-center justify-between gap-2 mb-2">
+                            <button type="button" id="coop-phase-prev-m" class="coop-chip on px-3 py-1 text-[10px]">← Phase</button>
+                            <div id="coop-phase-dots" class="coop-dots flex-1 justify-center"></div>
+                            <button type="button" id="coop-phase-next-m" class="coop-chip on px-3 py-1 text-[10px]">Phase →</button>
+                        </div>
                         <p class="coop-swipe-hint text-[10px] mb-2">Swipe phases ← →</p>
                         <div id="coop-phase-form-m"></div>
                     </div>
@@ -440,7 +444,7 @@
     <script src="../js/data/coop_pipeline.js?v=1.1"></script>
     <script src="../js/agents/adinkra_engine.js?v=1.0"></script>
     <script src="../js/agents/coop_barkeeper.js?v=1.4"></script>
-    <script src="../js/agents/coop_mobile.js?v=1.1"></script>
+    <script src="../js/agents/coop_mobile.js?v=1.3"></script>
     <script src="../js/agents/storage_hygiene.js?v=1.0"></script>
     <script src="../js/agents/coop_sync.js?v=1.2"></script>
     <script src="../js/agents/coop_flowee_tutorial.js?v=1.3"></script>

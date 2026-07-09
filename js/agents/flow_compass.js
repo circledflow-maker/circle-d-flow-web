@@ -22,7 +22,11 @@ class FlowCompassAgent {
         console.log(`[${this.name}] Initializing the Imperial Orrery...`);
         this.injectStyles();
         this.injectUniverse();
-        
+
+        if (document.fonts && document.fonts.ready) {
+            await document.fonts.ready;
+        }
+
         // WAIT FOR DATA (Progressive Disclosure)
         await this.fetchUserStatus();
 
@@ -65,11 +69,12 @@ class FlowCompassAgent {
 
             /* UNIVERSE BACKGROUND */
             .cdf-universe {
-                position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
-                background: radial-gradient(circle at center, #1a1025 0%, #000000 100%); overflow: hidden; pointer-events: none;
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;
+                background: radial-gradient(ellipse at 50% 20%, #1a1025 0%, #050508 45%, #000000 100%);
+                overflow: hidden; pointer-events: none;
             }
-            .cdf-star { position: absolute; background: white; border-radius: 50%; opacity: 0; animation: twinkle var(--duration) ease-in-out infinite; }
-            .cdf-star.symbol { background: transparent; color: rgba(255, 255, 255, 0.3); font-size: var(--size); font-family: monospace; }
+            .cdf-star { position: absolute; background: white; border-radius: 50%; opacity: 0.35; animation: twinkle var(--duration) ease-in-out infinite; box-shadow: 0 0 4px rgba(255,255,255,0.5); }
+            .cdf-star.symbol { background: transparent; color: rgba(212, 175, 55, 0.45); font-size: 10px; font-family: monospace; box-shadow: none; }
             @keyframes twinkle { 0%, 100% { opacity: 0.2; transform: scale(0.8); } 50% { opacity: var(--max-opacity); transform: scale(1.2); } }
             
             .cdf-meteor { position: absolute; width: 2px; height: 2px; background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1)); border-radius: 50%; animation: shower 3s linear infinite; opacity: 0; }
@@ -111,7 +116,11 @@ class FlowCompassAgent {
 
             /* PLANETS */
             .planet-node { position: absolute; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 100; pointer-events: auto; margin-top: -22px; margin-left: -22px; }
-            .planet-node.locked { filter: grayscale(100%) brightness(0.3); cursor: not-allowed; }
+            .planet-visual .material-symbols-outlined {
+                font-size: 20px; line-height: 1; display: block;
+                font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+            }
+            .planet-node.locked .planet-visual .material-symbols-outlined { opacity: 0.4; }
             .planet-visual { width: 100%; height: 100%; background: rgba(10, 10, 10, 0.95); border: 1px solid rgba(255,255,255,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: 0.3s; position: relative; }
             .planet-node:hover .planet-visual, .planet-node.focused .planet-visual { transform: scale(1.4); border-color: var(--planet-color); box-shadow: 0 0 25px var(--planet-color); background: #111; }
             
@@ -204,13 +213,14 @@ class FlowCompassAgent {
         const universe = document.createElement('div');
         universe.className = 'cdf-universe';
         document.body.prepend(universe);
-        for(let i=0; i<180; i++) {
+        for(let i=0; i<320; i++) {
             const star = document.createElement('div');
-            star.className = (i % 20 === 0) ? 'cdf-star symbol' : 'cdf-star';
-            if(i % 20 === 0) star.innerText = Math.random() > 0.5 ? '✦' : '·';
-            else { const size = Math.random() * 2 + 0.5; star.style.width = `${size}px`; star.style.height = `${size}px`; }
+            star.className = (i % 24 === 0) ? 'cdf-star symbol' : 'cdf-star';
+            if(i % 24 === 0) star.innerText = Math.random() > 0.5 ? '✦' : '·';
+            else { const size = Math.random() * 2.5 + 0.5; star.style.width = `${size}px`; star.style.height = `${size}px`; }
             star.style.left = `${Math.random() * 100}%`; star.style.top = `${Math.random() * 100}%`;
-            star.style.setProperty('--duration', `${Math.random() * 4 + 2}s`); star.style.setProperty('--max-opacity', Math.random() * 0.8 + 0.2);
+            star.style.setProperty('--duration', `${Math.random() * 5 + 2}s`);
+            star.style.setProperty('--max-opacity', Math.random() * 0.9 + 0.35);
             universe.appendChild(star);
         }
         for(let i=0; i<10; i++) {
@@ -293,6 +303,21 @@ class FlowCompassAgent {
         };
     }
 
+    resolveIcon(name) {
+        const map = {
+            temple_hindu: 'castle',
+            swords: 'shield',
+            hub: 'hub',
+            headphones: 'headphones',
+            visibility: 'visibility',
+            restaurant: 'restaurant',
+            explore: 'explore',
+            storefront: 'storefront',
+            school: 'school',
+        };
+        return map[name] || name || 'public';
+    }
+
     ensureSphereSheet() {
         if (document.getElementById('sphere-sheet-backdrop')) return;
         const backdrop = document.createElement('div');
@@ -328,7 +353,7 @@ class FlowCompassAgent {
             const x = 50 + (50 * Math.cos(rad));
             const y = 50 + (50 * Math.sin(rad));
             node.style.left = `${x}%`; node.style.top = `${y}%`;
-            node.innerHTML = `<div class="planet-visual"><span class="material-symbols-outlined">${p.icon}</span><div class="planet-label" style="color: ${p.color}">${p.label}</div></div>`;
+            node.innerHTML = `<div class="planet-visual"><span class="material-symbols-outlined" aria-hidden="true">${this.resolveIcon(p.icon)}</span><div class="planet-label" style="color: ${p.color}">${p.label}</div></div>`;
             node.onclick = (e) => { e.stopPropagation(); this.toggleMenu(p.id, p.options); };
             os.appendChild(node);
         });

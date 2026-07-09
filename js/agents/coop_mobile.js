@@ -52,8 +52,20 @@
       this.bindMainSwipe();
       this.bindPhaseSwipe();
       this.bindCrewSwipe();
+      this.bindPhaseNavButtons();
       MQ.addEventListener('change', () => this.onBreakpoint());
       this.onBreakpoint();
+    },
+
+    bindPhaseNavButtons() {
+      document.getElementById('coop-phase-prev-m')?.addEventListener('click', () => {
+        const cur = (window.CoopBarkeeper?.project?.phase || 1) - 1;
+        this.goPhase(cur - 1);
+      });
+      document.getElementById('coop-phase-next-m')?.addEventListener('click', () => {
+        const cur = (window.CoopBarkeeper?.project?.phase || 1) - 1;
+        this.goPhase(cur + 1);
+      });
     },
 
     onBreakpoint() {
@@ -96,12 +108,12 @@
     },
 
     goPhase(i) {
-      const track = document.getElementById('coop-phase-track');
-      if (!track || !window.CoopBarkeeper) return;
+      if (!window.CoopBarkeeper) return;
       const ph = Math.max(1, Math.min(5, i + 1));
       window.CoopBarkeeper.project.phase = ph;
       window.CoopBarkeeper.save({});
-      track.style.transform = `translateX(-${(ph - 1) * 100}%)`;
+      const track = document.getElementById('coop-phase-track');
+      if (track) track.style.transform = `translateX(-${(ph - 1) * 100}%)`;
       window.CoopBarkeeper.renderPhases();
       window.CoopBarkeeper.renderPhaseForm();
       window.CoopBarkeeper.guide?.();
@@ -147,7 +159,8 @@
     },
 
     bindPhaseSwipe() {
-      const viewport = document.getElementById('coop-phase-viewport');
+      const viewport = document.getElementById('coop-phase-viewport')
+        || document.getElementById('coop-phase-planner-m');
       this.attachSwipe(viewport, (dir) => {
         const cur = (window.CoopBarkeeper?.project?.phase || 1) - 1;
         this.goPhase(cur + dir);

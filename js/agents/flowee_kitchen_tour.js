@@ -23,14 +23,14 @@ class FloweeKitchenTour {
         if (el) { el.classList.add('flowee-tour-highlight'); el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
     }
 
-    async start() {
+    async start(force) {
         const path = location.pathname;
         const isKitchen = path.includes('akwaba_kitchen');
         const isOps = path.includes('kitchen_workspace');
         if (!isKitchen && !isOps) return;
 
         const key = isOps ? 'cdf_kitchen_ops_tour_v1' : 'cdf_kitchen_tour_v1';
-        if (localStorage.getItem(key)) return;
+        if (!force && localStorage.getItem(key)) return;
 
         if (isKitchen) await this.guestTour();
         else await this.ownerTour();
@@ -55,12 +55,16 @@ class FloweeKitchenTour {
     }
 
     async ownerTour() {
-        await this.speak('Kitchen Command Center online. Manage pickup mode, QR scans, and your Soul Ticket here.');
-        await this.speak('Add dishes in Kitchen Ops — they sync to your public menu when Supabase is connected.');
-        await this.speak('Share your WhatsApp link: guests open akwaba_kitchen with menu and QR already set.');
+        await this.speak('Kitchen Command Center online. Swipe: Delivery Board, Menu Editor, Crew Comms.');
+        this.highlight('#kitchen-kds-board');
+        await this.speak('Delivery Board — advance tickets New → Confirmed → Cooking → Ready.');
+        this.highlight('#kitchen-menu-editor');
+        await this.speak('Menu Editor — toggle LIVE or OFF. Syncs to akwaba_kitchen when Supabase is connected.');
+        this.highlight('#kitchen-comm-panel');
+        await this.speak('Crew Comms — post updates. Flowee relays status to your team.');
         this.highlight('.soul-ticket-inner');
-        await this.speak('Flip the Soul Ticket to show your QR. Scan simulates a Navigator arrival and grants XP.');
-        await this.speak('Future: Navigator discount codes unlock when guests collect taste runes. Stay tuned!');
+        await this.speak('Soul Ticket QR — guests scan at the bar when order is READY.');
+        await this.speak('Tutorial complete. Run sql/kitchen_pipeline_setup.sql once for full DB sync.', 'celebrate');
     }
 }
 

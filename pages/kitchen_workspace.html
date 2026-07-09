@@ -103,6 +103,22 @@
         .flame { font-size: 2rem; cursor: pointer; filter: grayscale(1); transition: all 0.2s; }
         .flame:hover, .flame.active { filter: grayscale(0) drop-shadow(0 0 5px var(--terracotta)); transform: scale(1.1); }
 
+        .kds-board { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+        @media (min-width: 640px) { .kds-board { grid-template-columns: repeat(4, 1fr); } }
+        .kds-col { background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; min-height: 120px; }
+        .kds-col-head { display: flex; justify-content: space-between; padding: 8px 10px; border-bottom: 2px solid; font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em; }
+        .kds-count { opacity: 0.6; }
+        .kds-cards { padding: 6px; display: flex; flex-direction: column; gap: 6px; max-height: 200px; overflow-y: auto; }
+        .kds-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 8px; }
+        .kds-advance { width: 100%; font-size: 9px; padding: 6px; border-radius: 6px; background: rgba(138,154,91,0.25); border: 1px solid rgba(138,154,91,0.5); color: #fff; text-transform: uppercase; letter-spacing: 0.08em; }
+        .menu-edit-row { display: flex; align-items: center; gap: 10px; padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .menu-toggle { font-size: 9px; padding: 6px 10px; border-radius: 99px; border: 1px solid rgba(255,255,255,0.2); opacity: 0.5; }
+        .menu-toggle.on { border-color: var(--sage); background: rgba(138,154,91,0.2); opacity: 1; }
+        #kitchen-comm-log { max-height: 140px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px; }
+        .comm-msg { font-size: 11px; padding: 8px; background: rgba(0,0,0,0.35); border-radius: 8px; border-left: 2px solid var(--gold); }
+        .comm-who { display: block; font-size: 9px; text-transform: uppercase; color: var(--terracotta); margin-bottom: 4px; }
+        .flowee-tour-highlight { outline: 2px solid var(--gold); box-shadow: 0 0 20px rgba(212,175,55,0.4); border-radius: 12px; }
+
         /* The Custom Switch */
         .toggle-checkbox:checked { right: 0; border-color: var(--sage); }
         .toggle-checkbox:checked + .toggle-label { background-color: var(--sage); }
@@ -122,10 +138,14 @@
         <div class="swiper tasteSwiper w-full h-full">
             <div class="swiper-wrapper">
                 
-                <!-- SLIDE 1: KITCHEN COMMAND CENTER -->
-                <div class="swiper-slide p-6 flex flex-col justify-center max-w-sm mx-auto overflow-y-auto pb-24">
-                    <div class="bg-white/5 border border-white/10 rounded-xl p-6 relative overflow-hidden mb-6">
+                <!-- SLIDE 1: KITCHEN COMMAND + KDS -->
+                <div class="swiper-slide p-6 flex flex-col justify-start max-w-lg mx-auto overflow-y-auto pb-24">
+                    <div class="bg-white/5 border border-white/10 rounded-xl p-4 relative overflow-hidden mb-4">
                         <div class="absolute top-0 right-0 w-32 h-32 bg-[var(--terracotta)]/10 blur-3xl rounded-full pointer-events-none"></div>
+                        <h2 class="cinzel text-lg mb-3 text-white">Delivery Board</h2>
+                        <div id="kitchen-kds-board" class="kds-board"></div>
+                    </div>
+                    <div class="bg-white/5 border border-white/10 rounded-xl p-4 relative overflow-hidden mb-4">
                         <h2 class="cinzel text-lg mb-4 text-white">The Ledger</h2>
                         
                         <div class="flex items-center justify-between mb-6">
@@ -151,8 +171,10 @@
                     </div>
                 </div>
 
-                <!-- SLIDE 2: ANALYTICS & ECOSYSTEM -->
-                <div class="swiper-slide p-6 flex flex-col justify-center max-w-sm mx-auto overflow-y-auto pb-24">
+                <!-- SLIDE 2: MENU + ANALYTICS -->
+                <div class="swiper-slide p-6 flex flex-col justify-start max-w-lg mx-auto overflow-y-auto pb-24">
+                    <h2 class="cinzel text-lg mb-3 text-[var(--gold)]">Menu Editor</h2>
+                    <div id="kitchen-menu-editor" class="bg-white/5 border border-white/10 rounded-xl mb-6 overflow-hidden"></div>
                     <h2 class="cinzel text-lg mb-4 text-[var(--gold)] text-center">Operations & Community</h2>
                     <div class="grid grid-cols-2 gap-4 mb-6">
                         <div class="bg-white/5 border border-white/10 rounded-xl p-4 text-center hover:border-[var(--gold)]/50 transition">
@@ -180,8 +202,16 @@
                     </button>
                 </div>
 
-                <!-- SLIDE 3: GUEST PREVIEW & SCANNER -->
-                <div class="swiper-slide p-6 flex flex-col justify-center items-center overflow-y-auto pb-24">
+                <!-- SLIDE 3: COMM + SOUL TICKET -->
+                <div class="swiper-slide p-6 flex flex-col justify-start max-w-lg mx-auto overflow-y-auto pb-24">
+                    <div id="kitchen-comm-panel" class="bg-white/5 border border-[var(--gold)]/30 rounded-xl p-4 mb-6">
+                        <h2 class="cinzel text-sm text-[var(--gold)] mb-2">Crew Comms</h2>
+                        <div id="kitchen-comm-log"></div>
+                        <form id="kitchen-comm-form" class="flex gap-2">
+                            <input id="kitchen-comm-input" class="flex-1 bg-black/50 border border-white/10 rounded-lg px-3 py-2 text-xs text-white" placeholder="@Flowee status, rush order, 86 wings…" autocomplete="off">
+                            <button type="submit" class="px-3 py-2 bg-[var(--terracotta)] text-black text-xs font-bold rounded-lg">SEND</button>
+                        </form>
+                    </div>
                     <h3 class="text-[10px] uppercase tracking-[0.2em] text-white/50 text-center w-full mb-4">Guest Perspective</h3>
                     
                     <div class="perspective-container w-full">
@@ -265,8 +295,10 @@
     <script src="../js/data/lisbon_quests.js?v=1.1"></script>
     <script src="../js/agents/quest_engine.js?v=4.6"></script>
     <script src="../js/data/akwaba_kitchen_data.js?v=1.0"></script>
-    <script src="../js/agents/kitchen_engine.js?v=1.0"></script>
-    <script src="../js/agents/flowee_kitchen_tour.js?v=1.0" defer></script>
+    <script src="../js/agents/kitchen_engine.js?v=1.1"></script>
+    <script src="../js/agents/kitchen_ops.js?v=1.0"></script>
+    <script src="../js/agents/pusher.js?v=4.1"></script>
+    <script src="../js/agents/flowee_kitchen_tour.js?v=1.1" defer></script>
     <div id="flowee-agent" style="position:fixed;bottom:20px;right:20px;z-index:9998"></div>
     <script>
         // POS Switch Logic

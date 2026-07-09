@@ -69,6 +69,13 @@ class SentinelAgent extends Agent {
                 return;
             }
 
+            const msg = args.join(' ');
+            const benign = /Zen Mechanic|Prisma Menu: MISSING|Flow Point: MISSING|Zen Core: MISSING|Detail Overlay: MISSING|WebGL unavailable|Error creating WebGL context/i;
+            if (benign.test(msg)) {
+                originalError.apply(console, args);
+                return;
+            }
+
             isLogging = true;
             try {
                 this.logIssue('CONSOLE', `Error: ${args.join(' ')}`, 'high');

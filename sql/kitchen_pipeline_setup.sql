@@ -160,3 +160,203 @@ END $$;
 
 -- After Akwaba signs up, run:
 -- UPDATE public.kitchens SET owner_user_id = '<their-auth-uuid>' WHERE slug = 'akwabalx';
+
+-- -----------------------------------------------------------------------------
+-- 5. KITCHEN STAFF & INVITE CODES
+-- -----------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS public.kitchen_staff (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    kitchen_id UUID NOT NULL REFERENCES public.kitchens(id) ON DELETE CASCADE,
+    user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+    role TEXT NOT NULL DEFAULT 'crew' CHECK (role IN ('owner','chef','pass','bar','service','crew')),
+    invite_code TEXT,
+    display_name TEXT,
+    is_active BOOLEAN DEFAULT true,
+    joined_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE (kitchen_id, user_id)
+);
+
+CREATE TABLE IF NOT EXISTS public.kitchen_invite_codes (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    kitchen_id UUID NOT NULL REFERENCES public.kitchens(id) ON DELETE CASCADE,
+    code TEXT NOT NULL UNIQUE,
+    role TEXT NOT NULL DEFAULT 'crew',
+    uses_left INTEGER DEFAULT 10,
+    expires_at TIMESTAMPTZ,
+    created_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE public.kitchen_staff ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.kitchen_invite_codes ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "kitchen_staff_read" ON public.kitchen_staff;
+CREATE POLICY "kitchen_staff_read" ON public.kitchen_staff FOR SELECT USING (
+    EXISTS (SELECT 1 FROM public.kitchens k WHERE k.id = kitchen_id AND (k.owner_user_id = auth.uid() OR EXISTS (
+        SELECT 1 FROM public.kitchen_staff s WHERE s.kitchen_id = kitchen_staff.kitchen_id AND s.user_id = auth.uid() AND s.is_active
+    )))
+);
+DROP POLICY IF EXISTS "kitchen_staff_owner_write" ON public.kitchen_staff;
+CREATE POLICY "kitchen_staff_owner_write" ON public.kitchen_staff FOR ALL
+USING (EXISTS (SELECT 1 FROM public.kitchens k WHERE k.id = kitchen_id AND k.owner_user_id = auth.uid()))
+WITH CHECK (EXISTS (SELECT 1 FROM public.kitchens k WHERE k.id = kitchen_id AND k.owner_user_id = auth.uid()));
+
+DROP POLICY IF EXISTS "kitchen_invites_owner" ON public.kitchen_invite_codes;
+CREATE POLICY "kitchen_invites_owner" ON public.kitchen_invite_codes FOR ALL
+USING (EXISTS (SELECT 1 FROM public.kitchens k WHERE k.id = kitchen_id AND k.owner_user_id = auth.uid()))
+WITH CHECK (EXISTS (SELECT 1 FROM public.kitchens k WHERE k.id = kitchen_id AND k.owner_user_id = auth.uid()));
+
+-- -----------------------------------------------------------------------------
+-- 6. VOUCHERS & GAMIFICATION RULES
+-- -----------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS public.kitchen_vouchers (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    kitchen_id UUID NOT NULL REFERENCES public.kitchens(id) ON DELETE CASCADE,
+    code TEXT NOT NULL,
+    discount_type TEXT NOT NULL DEFAULT 'percent' CHECK (discount_type IN ('percent','fixed_eur','flow_credits')),
+    discount_value NUMERIC(8,2) NOT NULL DEFAULT 10,
+    min_order_eur NUMERIC(8,2) DEFAULT 0,
+    uses_left INTEGER DEFAULT 50,
+    expires_at TIMESTAMPTZ,
+    xp_bonus INTEGER DEFAULT 15,
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE (kitchen_id, code)
+);
+
+CREATE TABLE IF NOT EXISTS public.kitchen_gamification_rules (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    kitchen_id UUID NOT NULL REFERENCES public.kitchens(id) ON DELETE CASCADE,
+    rule_key TEXT NOT NULL,
+    label TEXT NOT NULL,
+    xp_reward INTEGER DEFAULT 0,
+    flow_reward INTEGER DEFAULT 0,
+    karma_reward INTEGER DEFAULT 0,
+    is_active BOOLEAN DEFAULT true,
+    config JSONB DEFAULT '{}'::jsonb,
+    UNIQUE (kitchen_id, rule_key)
+);
+
+ALTER TABLE public.kitchen_vouchers ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.kitchen_gamification_rules ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "kitchen_vouchers_read" ON public.kitchen_vouchers;
+CREATE POLICY "kitchen_vouchers_read" ON public.kitchen_vouchers FOR SELECT USING (is_active = true);
+DROP POLICY IF EXISTS "kitchen_vouchers_owner" ON public.kitchen_vouchers;
+CREATE POLICY "kitchen_vouchers_owner" ON public.kitchen_vouchers FOR ALL
+USING (EXISTS (SELECT 1 FROM public.kitchens k WHERE k.id = kitchen_id AND k.owner_user_id = auth.uid()))
+WITH CHECK (EXISTS (SELECT 1 FROM public.kitchens k WHERE k.id = kitchen_id AND k.owner_user_id = auth.uid()));
+
+DROP POLICY IF EXISTS "kitchen_rules_read" ON public.kitchen_gamification_rules;
+CREATE POLICY "kitchen_rules_read" ON public.kitchen_gamification_rules FOR SELECT USING (is_active = true);
+DROP POLICY IF EXISTS "kitchen_rules_owner" ON public.kitchen_gamification_rules;
+CREATE POLICY "kitchen_rules_owner" ON public.kitchen_gamification_rules FOR ALL
+USING (EXISTS (SELECT 1 FROM public.kitchens k WHERE k.id = kitchen_id AND k.owner_user_id = auth.uid()))
+WITH CHECK (EXISTS (SELECT 1 FROM public.kitchens k WHERE k.id = kitchen_id AND k.owner_user_id = auth.uid()));
+
+-- -----------------------------------------------------------------------------
+-- 7. KITCHEN COMMUNICATION (crew ↔ Flowee briefing channel)
+-- -----------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS public.kitchen_messages (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    kitchen_id UUID NOT NULL REFERENCES public.kitchens(id) ON DELETE CASCADE,
+    sender_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+    sender_name TEXT NOT NULL DEFAULT 'Crew',
+    body TEXT NOT NULL,
+    channel TEXT NOT NULL DEFAULT 'ops' CHECK (channel IN ('ops','guest','system')),
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_kitchen_messages_kitchen ON public.kitchen_messages(kitchen_id, created_at DESC);
+
+ALTER TABLE public.kitchen_messages ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "kitchen_messages_read" ON public.kitchen_messages;
+CREATE POLICY "kitchen_messages_read" ON public.kitchen_messages FOR SELECT USING (
+    EXISTS (SELECT 1 FROM public.kitchens k WHERE k.id = kitchen_id AND (
+        k.owner_user_id = auth.uid()
+        OR EXISTS (SELECT 1 FROM public.kitchen_staff s WHERE s.kitchen_id = kitchen_messages.kitchen_id AND s.user_id = auth.uid() AND s.is_active)
+    ))
+);
+DROP POLICY IF EXISTS "kitchen_messages_insert" ON public.kitchen_messages;
+CREATE POLICY "kitchen_messages_insert" ON public.kitchen_messages FOR INSERT
+WITH CHECK (
+    EXISTS (SELECT 1 FROM public.kitchens k WHERE k.id = kitchen_id AND (
+        k.owner_user_id = auth.uid()
+        OR EXISTS (SELECT 1 FROM public.kitchen_staff s WHERE s.kitchen_id = kitchen_messages.kitchen_id AND s.user_id = auth.uid() AND s.is_active)
+    ))
+);
+
+-- Expand order statuses (safe re-check)
+ALTER TABLE public.kitchen_orders DROP CONSTRAINT IF EXISTS kitchen_orders_status_check;
+ALTER TABLE public.kitchen_orders ADD CONSTRAINT kitchen_orders_status_check
+CHECK (status IN ('pending','confirmed','in_progress','ready','picked_up','cancelled'));
+
+-- -----------------------------------------------------------------------------
+-- 8. SEED — gamification rules + demo invite + voucher
+-- -----------------------------------------------------------------------------
+INSERT INTO public.kitchen_gamification_rules (kitchen_id, rule_key, label, xp_reward, flow_reward, karma_reward, config) VALUES
+('a1b2c3d4-e5f6-7890-abcd-ef1234567890', 'first_pickup', 'First Taste Pickup', 25, 0, 5, '{"quest":"LQ-T02"}'),
+('a1b2c3d4-e5f6-7890-abcd-ef1234567890', 'order_ready', 'Order marked READY', 10, 0, 2, '{}'),
+('a1b2c3d4-e5f6-7890-abcd-ef1234567890', 'soul_ticket_scan', 'Soul Ticket scan @ bar', 15, 0, 3, '{}'),
+('a1b2c3d4-e5f6-7890-abcd-ef1234567890', 'five_star_vibe', '5-flame rating', 20, 50, 5, '{}')
+ON CONFLICT (kitchen_id, rule_key) DO UPDATE SET
+    label = EXCLUDED.label,
+    xp_reward = EXCLUDED.xp_reward,
+    flow_reward = EXCLUDED.flow_reward,
+    karma_reward = EXCLUDED.karma_reward;
+
+INSERT INTO public.kitchen_invite_codes (kitchen_id, code, role, uses_left, expires_at)
+VALUES ('a1b2c3d4-e5f6-7890-abcd-ef1234567890', 'AKWABA-CREW', 'crew', 20, NOW() + INTERVAL '90 days')
+ON CONFLICT (code) DO NOTHING;
+
+INSERT INTO public.kitchen_vouchers (kitchen_id, code, discount_type, discount_value, xp_bonus, uses_left, expires_at)
+VALUES ('a1b2c3d4-e5f6-7890-abcd-ef1234567890', 'NAVIGATOR10', 'percent', 10, 15, 100, NOW() + INTERVAL '180 days')
+ON CONFLICT (kitchen_id, code) DO NOTHING;
+
+-- -----------------------------------------------------------------------------
+-- 9. REWARD HELPER — call from app when order picked up / rated
+-- -----------------------------------------------------------------------------
+CREATE OR REPLACE FUNCTION public.kitchen_grant_reward(p_user_id UUID, p_rule_key TEXT, p_kitchen_slug TEXT DEFAULT 'akwabalx')
+RETURNS JSONB
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+    v_rule public.kitchen_gamification_rules%ROWTYPE;
+BEGIN
+    IF p_user_id IS NULL THEN
+        RETURN jsonb_build_object('ok', false, 'msg', 'no user');
+    END IF;
+
+    SELECT r.* INTO v_rule
+    FROM public.kitchen_gamification_rules r
+    JOIN public.kitchens k ON k.id = r.kitchen_id
+    WHERE k.slug = p_kitchen_slug AND r.rule_key = p_rule_key AND r.is_active
+    LIMIT 1;
+
+    IF NOT FOUND THEN
+        RETURN jsonb_build_object('ok', false, 'msg', 'rule not found');
+    END IF;
+
+    UPDATE public.profiles
+    SET
+        exp = COALESCE(exp, 0) + v_rule.xp_reward,
+        karma = COALESCE(karma, 0) + v_rule.karma_reward,
+        flow_credits = COALESCE(flow_credits, 0) + v_rule.flow_reward,
+        level = GREATEST(COALESCE(level, 1), FLOOR((COALESCE(exp, 0) + v_rule.xp_reward) / 200.0)::int + 1)
+    WHERE id = p_user_id;
+
+    RETURN jsonb_build_object(
+        'ok', true,
+        'xp', v_rule.xp_reward,
+        'flow', v_rule.flow_reward,
+        'karma', v_rule.karma_reward
+    );
+END;
+$$;
+
+-- Enable Realtime (run in Supabase Dashboard → Database → Replication if needed):
+-- ALTER PUBLICATION supabase_realtime ADD TABLE public.kitchen_orders;
+-- ALTER PUBLICATION supabase_realtime ADD TABLE public.kitchen_messages;
+

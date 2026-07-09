@@ -5,7 +5,7 @@
 window.SPHERE_WORLDS = {
     HighPalast: {
         label: 'High Palast',
-        icon: 'temple_hindu',
+        icon: 'castle',
         color: '#FFD700',
         hub: 'high_palast.html',
         flowee: 'The High Palast. Your legacy museum, library, and treasury await.',
