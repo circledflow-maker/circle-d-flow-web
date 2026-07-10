@@ -81,19 +81,23 @@ class FloweeKitchenTour {
     }
 
     async ownerTour(force) {
-        const key = 'cdf_kitchen_ops_tour_v1';
+        const key = 'cdf_kitchen_ops_tour_v2';
         if (!force && localStorage.getItem(key)) return;
         await this.speak('Kitchen Command — swipe 5 decks: KDS, Menu, QR, Crew, Soul Ticket.');
         this.highlight('#kitchen-kds-board');
         await this.speak('Slide 1 — advance orders New → Confirmed → Cooking → Ready. Real-time from guest orders.');
         this.highlight('#kitchen-menu-editor');
-        await this.speak('Slide 2 — edit dishes live. Name, price, SAVE. LIVE/OFF hides from guests instantly.');
+        await this.speak('Slide 2 — edit dishes live. Now with image upload! Snap a pic, we compress and sync it to the menu.', 'guide');
         this.highlight('#kitchen-qr-studio');
         await this.speak('Slide 3 — download your menu QR. Print at bar. Create a new kitchen if you are forging a realm.');
         this.highlight('#kitchen-comm-panel');
         await this.speak('Slide 4 — crew comms. Rush orders, 86 items, @Flowee briefings sync to team.');
         this.highlight('#soul-ticket');
         await this.speak('Slide 5 — Soul Ticket scan grants Trust + Flow Credits. Better than Lieferando — you own the guest relationship.', 'celebrate');
+        
+        if (window.FloweeReward) {
+            window.FloweeReward.xpToast('Kitchen Command Tutorial Complete!', 50);
+        }
         localStorage.setItem(key, '1');
     }
 }

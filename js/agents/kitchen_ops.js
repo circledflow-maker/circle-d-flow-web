@@ -257,21 +257,31 @@
       const rows = items.map((item) => {
         const id = item.id || item.slug || item.name;
         const avail = item.is_available !== false;
-        return `<div class="menu-edit-row" data-item-id="${escapeHtml(id)}">
-          <div class="flex-1 min-w-0">
-            <input class="menu-name w-full bg-transparent font-bold text-sm border-b border-white/10 mb-1" value="${escapeHtml(item.name)}" data-field="name">
-            <input class="menu-desc w-full bg-transparent text-[10px] text-white/50 border-b border-white/5 mb-1" value="${escapeHtml(item.description || '')}" data-field="description" placeholder="Description">
-            <div class="flex gap-2 items-center mt-1">
-              <input class="menu-price w-16 bg-black/40 text-[10px] px-2 py-1 rounded border border-white/10" type="number" step="0.01" value="${parseFloat(item.price_eur || 0).toFixed(2)}" data-field="price_eur">
-              <select class="menu-cat text-[10px] bg-black/40 border border-white/10 rounded px-1" data-field="category">
-                ${['main', 'combo', 'vegan', 'drink', 'dessert'].map((c) => `<option value="${c}" ${item.category === c ? 'selected' : ''}>${c}</option>`).join('')}
-              </select>
-              <button type="button" class="menu-save text-[9px] px-2 py-1 border border-[var(--gold)]/50 text-[var(--gold)] rounded" data-save-id="${escapeHtml(id)}">SAVE</button>
+        const img = item.image_url || '/Assets/kitchens/akwabalx/logo-fallback.png';
+        return `<div class="menu-edit-row flex-col" data-item-id="${escapeHtml(id)}">
+          <div class="flex items-start gap-2 w-full">
+            <div class="relative w-16 h-16 bg-black/40 border border-white/10 rounded overflow-hidden flex-shrink-0">
+                <img src="${escapeHtml(img)}" class="w-full h-full object-cover menu-item-img-preview" id="img-prev-${escapeHtml(id)}">
+                <label class="absolute inset-0 flex items-center justify-center bg-black/50 text-[9px] text-white cursor-pointer opacity-0 hover:opacity-100 transition">
+                    UPLOAD
+                    <input type="file" class="hidden menu-img-upload" data-upload-id="${escapeHtml(id)}" accept="image/*">
+                </label>
             </div>
-          </div>
-          <div class="flex flex-col gap-1">
-            <button type="button" class="menu-toggle ${avail ? 'on' : ''}" data-menu-id="${escapeHtml(id)}">${avail ? 'LIVE' : 'OFF'}</button>
-            <button type="button" class="menu-del text-[9px] text-red-400/70" data-del-id="${escapeHtml(id)}">✕</button>
+            <div class="flex-1 min-w-0">
+              <input class="menu-name w-full bg-transparent font-bold text-sm border-b border-white/10 mb-1" value="${escapeHtml(item.name)}" data-field="name">
+              <input class="menu-desc w-full bg-transparent text-[10px] text-white/50 border-b border-white/5 mb-1" value="${escapeHtml(item.description || '')}" data-field="description" placeholder="Description">
+              <div class="flex gap-2 items-center mt-1">
+                <input class="menu-price w-16 bg-black/40 text-[10px] px-2 py-1 rounded border border-white/10" type="number" step="0.01" value="${parseFloat(item.price_eur || 0).toFixed(2)}" data-field="price_eur">
+                <select class="menu-cat text-[10px] bg-black/40 border border-white/10 rounded px-1" data-field="category">
+                  ${['main', 'combo', 'vegan', 'drink', 'dessert'].map((c) => `<option value="${c}" ${item.category === c ? 'selected' : ''}>${c}</option>`).join('')}
+                </select>
+                <button type="button" class="menu-save text-[9px] px-2 py-1 border border-[var(--gold)]/50 text-[var(--gold)] rounded" data-save-id="${escapeHtml(id)}">SAVE</button>
+              </div>
+            </div>
+            <div class="flex flex-col gap-1">
+              <button type="button" class="menu-toggle ${avail ? 'on' : ''}" data-menu-id="${escapeHtml(id)}">${avail ? 'LIVE' : 'OFF'}</button>
+              <button type="button" class="menu-del text-[9px] text-red-400/70" data-del-id="${escapeHtml(id)}">✕</button>
+            </div>
           </div>
         </div>`;
       }).join('');
@@ -296,7 +306,61 @@
       el.querySelectorAll('.menu-del').forEach((btn) => {
         btn.addEventListener('click', () => this.deleteMenuItem(btn.dataset.delId));
       });
+      el.querySelectorAll('.menu-img-upload').forEach((input) => {
+        input.addEventListener('change', (e) => this.handleImageUpload(e.target.dataset.uploadId, e.target.files[0]));
+      });
       document.getElementById('btn-add-menu-item')?.addEventListener('click', () => this.addMenuItem());
+    },
+
+    async handleImageUpload(id, file) {
+      if (!file) return;
+      if (window.Pusher) window.Pusher.showToast('Compressing image...', 'info');
+      try {
+        const compressed = await this.compressImage(file);
+        const itemIdx = this.menu.findIndex(i => (i.id || i.slug || i.name) === id);
+        if (itemIdx >= 0) {
+           this.menu[itemIdx].image_url = compressed;
+           const preview = document.getElementById(`img-prev-${id}`);
+           if (preview) preview.src = compressed;
+           if (window.supabaseClient && this.kitchen?.id && !String(id).startsWith('local-')) {
+               await window.supabaseClient.from('kitchen_menu_items').update({ image_url: compressed }).eq('id', id);
+           }
+           if (window.Pusher) window.Pusher.showToast('Image uploaded and synced', 'success');
+           if (window.Flowee) window.Flowee.talk(true, 'Dish image updated! Looking tasty.', 'celebrate');
+        }
+      } catch (e) {
+        if (window.Pusher) window.Pusher.showToast('Failed to process image', 'error');
+      }
+    },
+
+    compressImage(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            const MAX_WIDTH = 800;
+            const MAX_HEIGHT = 800;
+            let width = img.width;
+            let height = img.height;
+            if (width > height) {
+              if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
+            } else {
+              if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
+            }
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            resolve(canvas.toDataURL('image/jpeg', 0.8));
+          };
+          img.onerror = reject;
+          img.src = e.target.result;
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
     },
 
     rowField(row, field) {

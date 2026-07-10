@@ -217,6 +217,9 @@
                 pagination: { el: '.swiper-pagination', clickable: true, dynamicBullets: true },
                 touchRatio: 1.2,
                 resistanceRatio: 0.85,
+                grabCursor: true,
+                allowTouchMove: true,
+                touchStartPreventDefault: false
             });
             if (window.Flowee) window.Flowee.renderVessel();
         });
