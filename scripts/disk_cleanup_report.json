@@ -1,0 +1,38 @@
+{
+  "dry_run": true,
+  "c_free_hint": 0,
+  "d_free_hint": 371,
+  "project_copies": [
+    {
+      "path": "C:\\Users\\user\\.cursor\\projects\\d-circle-d-flow-web",
+      "size_mb": 2.1,
+      "is_canonical": false,
+      "duplicate_of_d": true
+    }
+  ],
+  "comparisons": [
+    {
+      "a": "C:\\Users\\user\\AppData\\Local\\npm-cache",
+      "b": "D:\\npm-cache",
+      "a_mb": 292.1,
+      "b_mb": 0.0,
+      "same_name_same_size": 1,
+      "sample_dupes": [
+        "_update-notifier-last-checked"
+      ]
+    }
+  ],
+  "actions": [
+    {
+      "action": "clear_c_npm_cache",
+      "path": "C:\\Users\\user\\AppData\\Local\\npm-cache",
+      "reason": "D:\\npm-cache exists; set npm config cache to D and remove C cache",
+      "cmd": "npm config set cache D:\\npm-cache && rmdir /s /q \"%LOCALAPPDATA%\\npm-cache\""
+    },
+    {
+      "action": "remove_duplicate_project_on_c",
+      "path": "C:\\Users\\user\\.cursor\\projects\\d-circle-d-flow-web",
+      "reason": "Canonical repo is D:\\circle-d-flow-web"
+    }
+  ]
+}

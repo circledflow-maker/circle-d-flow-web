@@ -743,6 +743,7 @@
         };
 
         window.addEventListener('DOMContentLoaded', async () => {
+            if (window.enforceAuth) await window.enforceAuth();
             await checkProtocolStatus();
             await loadUserQuests();
             await loadFlowAreasSelect();

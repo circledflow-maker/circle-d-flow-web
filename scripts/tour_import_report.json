@@ -1,0 +1,21 @@
+{
+  "dry_run": false,
+  "imported": 522,
+  "skipped_dupe": 0,
+  "new_artists": [
+    "29 May behind the scenes",
+    "Evening Tour"
+  ],
+  "by_artist": {
+    "29 May behind the scenes": {
+      "target": "D:\\cdf27jue\\cdfevent\\29 May behind the scenes",
+      "imported": 100,
+      "skipped_dupe": 0
+    },
+    "Evening Tour": {
+      "target": "D:\\cdf27jue\\cdfevent\\Evening Tour",
+      "imported": 422,
+      "skipped_dupe": 0
+    }
+  }
+}

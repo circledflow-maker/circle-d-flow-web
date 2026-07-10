@@ -280,6 +280,21 @@ async function checkUserSession() {
     return session;
 }
 
+// --- 4.1 ENFORCE STRICT AUTHENTICATION ---
+window.enforceAuth = async function() {
+    if(!window.supabaseClient) {
+        console.warn("Supabase not loaded yet.");
+        setTimeout(window.enforceAuth, 500);
+        return;
+    }
+    const { data: { session } } = await window.supabaseClient.auth.getSession();
+    if (!session) {
+        console.warn("Auth Enforced: User not logged in. Redirecting to login...");
+        window.location.replace(getRedirectPath('pages/login.html'));
+    }
+    return session;
+};
+
 // Helper function for visual feedback
 function showFeedback(message, type) {
     const statusField = document.getElementById('auth-status');

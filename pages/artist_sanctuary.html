@@ -298,12 +298,22 @@
         #joystick-zone { bottom: calc(24px + var(--dock-safe-bottom)); left: 20px; }
 
         @media (max-width: 480px) {
-            .sanctuary-dock { right: 8px; gap: 8px; }
+            .sanctuary-dock { right: 8px; gap: 8px; transform: translateX(150%); }
+            .sanctuary-dock.open { transform: translateX(0); }
             .sanctuary-dock-btn { width: 44px; height: 44px; }
             #constellation-legend { max-width: 150px; }
             body.artist-sanctuary #feedback-siphon-btn { left: 118px; }
+            #mobile-dock-toggle { display: flex; }
         }
     </style>
+    <script>
+        function toggleSanctuaryDock() {
+            const dock = document.getElementById('sanctuary-dock');
+            dock.classList.toggle('open');
+            const toggleIcon = document.querySelector('#mobile-dock-toggle .material-symbols-outlined');
+            toggleIcon.innerText = dock.classList.contains('open') ? 'close' : 'menu';
+        }
+    </script>
 </head>
 <body class="artist-sanctuary mobile-optimized">
     <div id="canvas-container"></div>
@@ -341,8 +351,13 @@
             </div>
         </details>
 
+        <!-- Mobile Dock Toggle -->
+        <button type="button" id="mobile-dock-toggle" onclick="toggleSanctuaryDock()" class="hidden fixed right-2 top-1/2 -translate-y-1/2 z-[60] bg-black/80 border border-[#d4af37]/50 text-[#d4af37] w-12 h-12 rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(212,175,55,0.3)]">
+            <span class="material-symbols-outlined">menu</span>
+        </button>
+
         <!-- Action Dock (Right Side) -->
-        <nav id="sanctuary-dock" class="sanctuary-dock" aria-label="Sanctuary tools">
+        <nav id="sanctuary-dock" class="sanctuary-dock transition-transform duration-300" aria-label="Sanctuary tools">
             <button type="button" onclick="openVisionHub()" class="sanctuary-dock-btn" data-accent="vision" data-label="Vision" title="The Vision — Theater & Archive">
                 <span class="material-symbols-outlined filled-icon" aria-hidden="true">visibility</span>
             </button>

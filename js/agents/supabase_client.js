@@ -1,4 +1,3 @@
-
 /**
  * SUPABASE CLIENT INITIALIZATION
  * Connects to the Circle D Flow backend.
@@ -19,12 +18,16 @@ if(window.supabase) {
         });
         console.log("[Supabase] Client Initialized Successfully.");
         
-        // Test Connection
-        window.supabaseClient.from('profiles').select('count', { count: 'exact', head: true })
-            .then(({ count, error }) => {
-                if(error) console.warn("[Supabase] Connection Test Warning:", error);
-                else console.log("[Supabase] Connection Verified. Profiles:", count);
-            });
+        // Test Connection (only if session exists or handle RLS gracefully)
+        window.supabaseClient.auth.getSession().then(({ data: { session } }) => {
+            if (session) {
+                window.supabaseClient.from('profiles').select('count', { count: 'exact', head: true })
+                    .then(({ count, error }) => {
+                        if(error) console.log("[Supabase] Connection Test (RLS):", error.message);
+                        else console.log("[Supabase] Connection Verified. Profiles:", count);
+                    });
+            }
+        });
             
     } catch (e) {
         console.error("[Supabase] Initialization Failed:", e);
@@ -93,3 +96,18 @@ if(window.supabaseClient) {
         }
     });
 }
+
+// --- ENFORCE STRICT AUTHENTICATION ---
+window.enforceAuth = async function() {
+    if(!window.supabaseClient) {
+        console.warn("Supabase not loaded yet.");
+        setTimeout(window.enforceAuth, 500);
+        return;
+    }
+    const { data: { session } } = await window.supabaseClient.auth.getSession();
+    if (!session) {
+        console.warn("Auth Enforced: User not logged in. Redirecting to login...");
+        window.location.replace('../pages/login.html');
+    }
+    return session;
+};
