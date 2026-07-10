@@ -304,6 +304,13 @@ class FlowCompassAgent {
     }
 
     resolveIcon(name) {
+        if (window.getAdinkraMeta) {
+            const meta = window.getAdinkraMeta(name);
+            // If it's a known Adinkra symbol and not the fallback '◈' (unless specifically mate_masie)
+            if (meta && meta.glyph && (meta.glyph !== '◈' || name === 'mate_masie')) {
+                return `<span class="adinkra-glyph" style="font-style: normal; font-family: 'Space Mono', monospace; font-size: 1.2em;">${meta.glyph}</span>`;
+            }
+        }
         const map = {
             temple_hindu: 'castle',
             swords: 'shield',
@@ -315,7 +322,8 @@ class FlowCompassAgent {
             storefront: 'storefront',
             school: 'school',
         };
-        return map[name] || name || 'public';
+        const iconStr = map[name] || name || 'public';
+        return `<span class="material-symbols-outlined" aria-hidden="true">${iconStr}</span>`;
     }
 
     ensureSphereSheet() {
@@ -353,7 +361,7 @@ class FlowCompassAgent {
             const x = 50 + (50 * Math.cos(rad));
             const y = 50 + (50 * Math.sin(rad));
             node.style.left = `${x}%`; node.style.top = `${y}%`;
-            node.innerHTML = `<div class="planet-visual"><span class="material-symbols-outlined" aria-hidden="true">${this.resolveIcon(p.icon)}</span><div class="planet-label" style="color: ${p.color}">${p.label}</div></div>`;
+            node.innerHTML = `<div class="planet-visual">${this.resolveIcon(p.icon)}<div class="planet-label" style="color: ${p.color}">${p.label}</div></div>`;
             node.onclick = (e) => { e.stopPropagation(); this.toggleMenu(p.id, p.options); };
             os.appendChild(node);
         });

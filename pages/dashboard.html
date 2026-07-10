@@ -646,22 +646,27 @@
         }
     </style>
 
+    <script src="../js/agents/zen_mechanic.js?v=1.0" defer></script>
     <script>
         // Start System Check DISABLED so developer can see the Orbit
         document.addEventListener('DOMContentLoaded', async () => {
             // Check System Status
             if (window.supabaseClient) {
-                const { data } = await window.supabaseClient
-                    .from('system_settings')
-                    .select('is_active, message')
-                    .eq('key', 'maintenance_mode')
-                    .single();
+                try {
+                    const { data, error } = await window.supabaseClient
+                        .from('system_settings')
+                        .select('is_active, message')
+                        .eq('key', 'maintenance_mode')
+                        .maybeSingle();
 
-                if (data && data.is_active === true) {
-                    const overlay = document.getElementById('system-pause-overlay');
-                    // if (overlay) overlay.style.display = 'flex'; // DISABLED
-                    const msgEl = document.querySelector('.flow-return-msg');
-                    if (msgEl && data.message) msgEl.innerText = data.message;
+                    if (data && data.is_active === true) {
+                        const overlay = document.getElementById('system-pause-overlay');
+                        // if (overlay) overlay.style.display = 'flex'; // DISABLED
+                        const msgEl = document.querySelector('.flow-return-msg');
+                        if (msgEl && data.message) msgEl.innerText = data.message;
+                    }
+                } catch (e) {
+                    // Suppress system_settings errors if table missing
                 }
             }
         });

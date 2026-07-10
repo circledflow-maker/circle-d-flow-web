@@ -5,7 +5,7 @@
 window.SPHERE_WORLDS = {
     HighPalast: {
         label: 'High Palast',
-        icon: 'castle',
+        icon: 'aban',
         color: '#FFD700',
         hub: 'high_palast.html',
         flowee: 'The High Palast. Your legacy museum, library, and treasury await.',
@@ -19,7 +19,7 @@ window.SPHERE_WORLDS = {
     },
     Academy: {
         label: 'Academy',
-        icon: 'school',
+        icon: 'nea_onnim',
         color: '#9a4dff',
         hub: 'academy.html',
         flowee: 'Navigator Academy — manga portfolios, locations, and participant stories.',
@@ -33,7 +33,7 @@ window.SPHERE_WORLDS = {
     },
     Bazaar: {
         label: 'Bazaar',
-        icon: 'storefront',
+        icon: 'bese_saka',
         color: '#cd7f32',
         hub: 'marketplace.html',
         flowee: 'Captain, fresh artifacts from Alfama await at the Bazaar.',
@@ -47,7 +47,7 @@ window.SPHERE_WORLDS = {
     },
     Battle: {
         label: 'Battleground',
-        icon: 'shield',
+        icon: 'akofena',
         color: '#ef4444',
         hub: 'colosseum.html',
         flowee: 'The Arena awaits champions. Ready to spar?',
@@ -61,7 +61,7 @@ window.SPHERE_WORLDS = {
     },
     Vision: {
         label: 'Vision',
-        icon: 'visibility',
+        icon: 'hwe_mu_dua',
         color: '#a855f7',
         hub: 'photographer_hub.html',
         flowee: 'Vision Hub — studio, gallery, bookings & crew shoots.',
@@ -78,7 +78,7 @@ window.SPHERE_WORLDS = {
     },
     Sound: {
         label: 'Sound',
-        icon: 'headphones',
+        icon: 'akoma',
         color: '#06b6d4',
         hub: 'system_radio.html',
         flowee: 'Upload, share, rotate on System Radio — Mihaly Flow in motion.',
@@ -92,7 +92,7 @@ window.SPHERE_WORLDS = {
     },
     Taste: {
         label: 'Taste',
-        icon: 'restaurant',
+        icon: 'ese_ne_tekrema',
         color: '#22c55e',
         hub: 'taste_world_hub.html',
         flowee: 'Taste World — radar, kitchen, crew ops & your own QR menu.',
@@ -107,7 +107,7 @@ window.SPHERE_WORLDS = {
     },
     Connection: {
         label: 'Connection',
-        icon: 'hub',
+        icon: 'nkonsonkonson',
         color: '#ec4899',
         hub: 'artist_sanctuary.html',
         flowee: 'Resonance Bar — co-plan events with Flowee, roles, gear & calendar.',
@@ -121,7 +121,7 @@ window.SPHERE_WORLDS = {
     },
     Quest: {
         label: 'Quest Log',
-        icon: 'explore',
+        icon: 'sankofa',
         color: '#94a3b8',
         hub: 'quest_map.html',
         flowee: 'Atlas, Codex, Brotherhood — Lisbon awaits.',

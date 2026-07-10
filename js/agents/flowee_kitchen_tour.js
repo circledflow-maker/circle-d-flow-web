@@ -21,10 +21,17 @@ class FloweeKitchenTour {
         }
     }
 
-    highlight(sel) {
+    highlight(sel, slideIndex = null) {
         document.querySelectorAll('.flowee-tour-highlight').forEach((e) => e.classList.remove('flowee-tour-highlight'));
         const el = document.querySelector(sel);
-        if (el) { el.classList.add('flowee-tour-highlight'); el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+        if (el) { 
+            el.classList.add('flowee-tour-highlight'); 
+            if (slideIndex !== null && document.querySelector('.tasteOpsSwiper')) {
+                document.querySelector('.tasteOpsSwiper').swiper.slideTo(slideIndex);
+            } else {
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' }); 
+            }
+        }
     }
 
     async start(force) {
@@ -84,21 +91,24 @@ class FloweeKitchenTour {
         const key = 'cdf_kitchen_ops_tour_v2';
         if (!force && localStorage.getItem(key)) return;
         await this.speak('Kitchen Command — swipe 5 decks: KDS, Menu, QR, Crew, Soul Ticket.');
-        this.highlight('#kitchen-kds-board');
+        this.highlight('#kitchen-kds-board', 0);
         await this.speak('Slide 1 — advance orders New → Confirmed → Cooking → Ready. Real-time from guest orders.');
-        this.highlight('#kitchen-menu-editor');
+        this.highlight('#kitchen-menu-editor', 1);
         await this.speak('Slide 2 — edit dishes live. Now with image upload! Snap a pic, we compress and sync it to the menu.', 'guide');
-        this.highlight('#kitchen-qr-studio');
+        this.highlight('#kitchen-qr-studio', 2);
         await this.speak('Slide 3 — download your menu QR. Print at bar. Create a new kitchen if you are forging a realm.');
-        this.highlight('#kitchen-comm-panel');
+        this.highlight('#kitchen-comm-panel', 3);
         await this.speak('Slide 4 — crew comms. Rush orders, 86 items, @Flowee briefings sync to team.');
-        this.highlight('#soul-ticket');
+        this.highlight('#soul-ticket', 4);
         await this.speak('Slide 5 — Soul Ticket scan grants Trust + Flow Credits. Better than Lieferando — you own the guest relationship.', 'celebrate');
         
         if (window.FloweeReward) {
             window.FloweeReward.xpToast('Kitchen Command Tutorial Complete!', 50);
         }
         localStorage.setItem(key, '1');
+        
+        // Remove highlight at the end
+        setTimeout(() => this.highlight('.none'), 3000);
     }
 }
 
