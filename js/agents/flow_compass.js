@@ -304,11 +304,10 @@ class FlowCompassAgent {
     }
 
     resolveIcon(name) {
-        if (window.getAdinkraMeta) {
-            const meta = window.getAdinkraMeta(name);
-            // If it's a known Adinkra symbol and not the fallback '◈' (unless specifically mate_masie)
-            if (meta && meta.glyph && (meta.glyph !== '◈' || name === 'mate_masie')) {
-                return `<span class="adinkra-glyph" style="font-style: normal; font-family: 'Space Mono', monospace; font-size: 1.2em;">${meta.glyph}</span>`;
+        if (window.renderAdinkraGlyph) {
+            const m = window.getAdinkraMeta?.(name);
+            if (m && m.glyph !== '◈' && name !== 'public') {
+                return window.renderAdinkraGlyph(name, 'gold');
             }
         }
         const map = {

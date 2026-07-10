@@ -1020,8 +1020,8 @@ class FloweeAgent {
 
                 <!-- Messages Area -->
                 <div id="flowee-messages" style="flex: 1; overflow-y: auto; padding: 4px; display: flex; flex-direction: column; gap: 12px; font-size: 0.8rem; color: #eee; scroll-behavior: smooth;">
-                    <div style="background: rgba(212,175,55,0.1); border-left: 3px solid var(--haki-gold); padding: 10px; border-radius: 4px; line-height: 1.4;">
-                        Hallo! Ich bin Flowee, dein Navigator. Wie darf ich dir heute assistieren?
+                    <div style="background: rgba(212,175,55,0.1); border-left: 3px solid var(--haki-gold); padding: 10px; border-radius: 4px; line-height: 1.4;" id="flowee-greeting-msg">
+                        Hallo Navigator! Ich bin Flowee, dein Begleiter. Wie darf ich dir heute assistieren?
                     </div>
                 </div>
 
@@ -1044,6 +1044,33 @@ class FloweeAgent {
             document.body.appendChild(chatDiv);
         }
         this.chatInterface = chatDiv;
+
+        // Dynamic greeting setup
+        let uname = 'Navigator';
+        try {
+            const u = JSON.parse(localStorage.getItem('cqr_user') || '{}');
+            if (u.username) uname = u.username;
+        } catch(e) {}
+
+        const isDashboard = window.location.pathname.includes('dashboard');
+        let greetingText = `Hallo <strong>${uname}</strong>! Ich bin Flowee, dein Navigator. Wie darf ich dir heute assistieren?`;
+        
+        if (isDashboard) {
+            greetingText += `<br><br><strong style="color:var(--haki-gold)">Orbit Agenda:</strong><br>
+            <div style="margin-top: 8px; font-size: 0.85em; display:flex; flex-direction:column; gap:4px;">
+                <span><strong>High Palast (Aban)</strong>: Museum, Library & Treasury</span>
+                <span><strong>Academy (Nea Onnim)</strong>: Manga Portfolios & Navigator-Lernen</span>
+                <span><strong>Bazaar (Bese Saka)</strong>: Marktplatz für Artefakte</span>
+                <span><strong>Battleground (Akofena)</strong>: Die Arena</span>
+                <span><strong>Vision (Hwe Mu Dua)</strong>: Fotostudio & Galerie</span>
+                <span><strong>Sound (Akoma)</strong>: System Radio</span>
+                <span><strong>Taste (Ese Ne Tekrema)</strong>: Akwaba Kitchen</span>
+                <span><strong>Connection (Nkonsonnkonson)</strong>: Resonance Bar</span>
+                <span><strong>Quest Log (Sankofa)</strong>: Missionen und Atlas</span>
+            </div>`;
+        }
+        const greetingEl = document.getElementById('flowee-greeting-msg');
+        if (greetingEl) greetingEl.innerHTML = greetingText;
     }
 
     toggleChat() {
@@ -1494,6 +1521,7 @@ class FloweeAgent {
 
         // 5. EXISTING KNOWLEDGE BASE FALLBACK
         for(let entry of this.knowledgeBase) {
+            if (!entry.keywords) continue;
             for(let key of entry.keywords) {
                 if(q.includes(key)) {
                     return { text: entry.answer, link: entry.deep_link };
