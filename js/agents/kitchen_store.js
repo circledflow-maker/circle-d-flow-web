@@ -16,10 +16,16 @@
     }
   }
 
+  function isUuid(value) {
+    return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(String(value || ''));
+  }
+
   window.kitchenMediaUrl = function kitchenMediaUrl(url, preferWebp) {
     if (!url || String(url).startsWith('data:')) return url;
     if (preferWebp === false) return url;
-    return String(url).replace(/\.(jpe?g|png)(\?.*)?$/i, '.webp$2');
+    const s = String(url);
+    if (/logo-fallback|\/logo\.png/i.test(s)) return s;
+    return s.replace(/\.(jpe?g|png)(\?.*)?$/i, '.webp$2');
   };
 
   window.KitchenStore = {
@@ -132,10 +138,15 @@
         if (direct.ok) return direct;
       }
 
-      const cloud = await this.syncToCloud('update_menu_item', { id, kitchen_id: kitchenId, ...fields }, slug);
-      if (cloud.ok) return { ok: true, source: 'api' };
+      if (!String(id).startsWith('local-') && isUuid(id)) {
+        const cloud = await this.syncToCloud('update_menu_item', { id, kitchen_id: kitchenId, ...fields }, slug);
+        if (cloud.ok) return { ok: true, source: 'api' };
+        if (cloud.error && !cloud.error.includes('not configured')) {
+          return { ok: true, source: 'local', warning: cloud.error };
+        }
+      }
 
-      return { ok: true, source: 'local', warning: cloud.error || 'Saved on this device — cloud sync pending' };
+      return { ok: true, source: 'local', warning: 'Saved on this device — cloud sync pending' };
     },
 
     async insertMenuItem(slug, payload) {
@@ -145,12 +156,14 @@
       items.push(row);
       this.saveMenuLocal(slug, items);
 
-      if (window.supabaseClient && payload.kitchen_id && !String(id).startsWith('local-')) {
-        const direct = await this.trySupabaseMenuWrite('insert', 'kitchen_menu_items', payload, {});
-        if (direct.ok) return direct;
+      if (window.supabaseClient && payload.kitchen_id) {
+        const insertPayload = { ...payload };
+        delete insertPayload.id;
+        const direct = await this.trySupabaseMenuWrite('insert', 'kitchen_menu_items', insertPayload, {});
+        if (direct.ok) return { ok: true, source: 'supabase', id };
       }
 
-      const cloud = await this.syncToCloud('insert_menu_item', row, slug);
+      const cloud = await this.syncToCloud('insert_menu_item', { ...payload, kitchen_id: payload.kitchen_id }, slug);
       if (cloud.ok) return { ok: true, source: 'api', id: cloud.id || id };
 
       return { ok: true, source: 'local', id, warning: cloud.error };

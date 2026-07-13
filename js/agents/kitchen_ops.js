@@ -115,12 +115,13 @@
       let remote = [];
       if (window.supabaseClient && this.kitchen?.id) {
         try {
-          const { data } = await window.supabaseClient
+          const { data, error } = await window.supabaseClient
             .from('kitchen_menu_items')
             .select('*')
             .eq('kitchen_id', this.kitchen.id)
             .order('sort_order');
-          remote = data || [];
+          if (error) console.warn('[KitchenOps] menu load', error.message);
+          else remote = data || [];
         } catch (e) {
           console.warn('[KitchenOps] menu load', e.message);
         }
@@ -141,14 +142,19 @@
         return;
       }
       try {
-        const { data } = await window.supabaseClient
+        const { data, error } = await window.supabaseClient
           .from('kitchen_messages')
           .select('*')
           .eq('kitchen_id', this.kitchen.id)
           .eq('channel', 'ops')
           .order('created_at', { ascending: true })
           .limit(80);
-        this.messages = data || [];
+        if (error) {
+          console.warn('[KitchenOps] messages load', error.message);
+          this.messages = JSON.parse(localStorage.getItem(localKey) || '[]');
+        } else {
+          this.messages = data || [];
+        }
       } catch (e) {
         this.messages = JSON.parse(localStorage.getItem(localKey) || '[]');
       }

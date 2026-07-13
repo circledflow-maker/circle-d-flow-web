@@ -195,9 +195,8 @@ ALTER TABLE public.kitchen_invite_codes ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "kitchen_staff_read" ON public.kitchen_staff;
 CREATE POLICY "kitchen_staff_read" ON public.kitchen_staff FOR SELECT USING (
-    EXISTS (SELECT 1 FROM public.kitchens k WHERE k.id = kitchen_id AND (k.owner_user_id = auth.uid() OR EXISTS (
-        SELECT 1 FROM public.kitchen_staff s WHERE s.kitchen_id = kitchen_staff.kitchen_id AND s.user_id = auth.uid() AND s.is_active
-    )))
+    user_id = auth.uid()
+    OR EXISTS (SELECT 1 FROM public.kitchens k WHERE k.id = kitchen_id AND k.owner_user_id = auth.uid())
 );
 DROP POLICY IF EXISTS "kitchen_staff_owner_write" ON public.kitchen_staff;
 CREATE POLICY "kitchen_staff_owner_write" ON public.kitchen_staff FOR ALL

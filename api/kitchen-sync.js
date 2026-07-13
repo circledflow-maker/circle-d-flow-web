@@ -14,6 +14,10 @@ function cors(res) {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 }
 
+function isUuid(value) {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(String(value || ''));
+}
+
 async function getKitchen(db, slug) {
   const { data, error } = await db.from('kitchens').select('id, slug').eq('slug', slug).maybeSingle();
   if (error) throw new Error(error.message);
@@ -43,6 +47,7 @@ module.exports = async function handler(req, res) {
     if (action === 'update_menu_item') {
       const { id, ...fields } = payload;
       if (!id) return res.status(400).json({ error: 'Missing item id' });
+      if (!isUuid(id)) return res.status(400).json({ error: 'Invalid item id — save locally until item is synced from cloud' });
       const { error } = await db.from('kitchen_menu_items').update(fields).eq('id', id).eq('kitchen_id', kitchenId);
       if (error) throw new Error(error.message);
       return res.status(200).json({ ok: true });
@@ -59,6 +64,7 @@ module.exports = async function handler(req, res) {
     if (action === 'delete_menu_item') {
       const { id } = payload;
       if (!id) return res.status(400).json({ error: 'Missing item id' });
+      if (!isUuid(id)) return res.status(200).json({ ok: true, local_only: true });
       const { error } = await db.from('kitchen_menu_items').delete().eq('id', id).eq('kitchen_id', kitchenId);
       if (error) throw new Error(error.message);
       return res.status(200).json({ ok: true });
