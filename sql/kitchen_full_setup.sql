@@ -111,7 +111,7 @@ INSERT INTO public.kitchens (
     'Lisbon, Portugal',
     38.7200, -9.1450,
     '/Assets/kitchens/akwabalx/logo.webp',
-    '/Assets/kitchens/akwabalx/hero-1.webp',
+    '/Assets/kitchens/akwabalx/dish-table-combo.webp',
     '/Assets/kitchens/akwabalx/reel-hero.mp4',
     '/Assets/kitchens/akwabalx/menu-board.webp',
     'https://circle-d-flow-web.vercel.app/pages/akwaba_kitchen',
@@ -135,11 +135,13 @@ INSERT INTO public.kitchens (
 DELETE FROM public.kitchen_menu_items WHERE kitchen_id = 'a1b2c3d4-e5f6-7890-abcd-ef1234567890';
 
 INSERT INTO public.kitchen_menu_items (kitchen_id, name, description, category, price_eur, image_url, sort_order) VALUES
-('a1b2c3d4-e5f6-7890-abcd-ef1234567890', 'Jollof Rice Bowl', 'Smoky tomato jollof with plantain & salad', 'main', 12.00, '/Assets/kitchens/akwabalx/dish-table.webp', 1),
-('a1b2c3d4-e5f6-7890-abcd-ef1234567890', 'KitKat Special', 'Chef signature â€” sweet heat fusion plate', 'main', 14.00, '/Assets/kitchens/akwabalx/dish-kitkat.webp', 2),
-('a1b2c3d4-e5f6-7890-abcd-ef1234567890', 'Garden Vegan Plate', 'Seasonal greens from Secret Garden', 'vegan', 11.00, '/Assets/kitchens/akwabalx/hero-3.webp', 3),
-('a1b2c3d4-e5f6-7890-abcd-ef1234567890', 'Akwaba Combo', 'Rice + stew + drink â€” best value', 'combo', 16.00, '/Assets/kitchens/akwabalx/menu-board.webp', 4),
-('a1b2c3d4-e5f6-7890-abcd-ef1234567890', 'Fresh Juice', 'Daily rotation â€” ask at the bar', 'drink', 4.00, '/Assets/kitchens/akwabalx/hero-5.webp', 5);
+('a1b2c3d4-e5f6-7890-abcd-ef1234567890', 'Veggie Burger Combo', 'Fresh veggie burger with homemade sauce. Served with fried ripe plantain.', 'main', 9.50, '/Assets/kitchens/akwabalx/dish-veggie-burger.webp', 1),
+('a1b2c3d4-e5f6-7890-abcd-ef1234567890', 'Chicken Burger Combo', 'Juicy chicken burger with special sauce. Served with fried ripe plantain.', 'main', 11.50, '/Assets/kitchens/akwabalx/dish-table-combo.webp', 2),
+('a1b2c3d4-e5f6-7890-abcd-ef1234567890', 'Plantain Seul', 'Fried ripe plantain.', 'side', 4.00, '/Assets/kitchens/akwabalx/dish-wings-plantain.webp', 3),
+('a1b2c3d4-e5f6-7890-abcd-ef1234567890', 'Sauce', 'Extra sauce portion.', 'extra', 0.50, '/Assets/kitchens/akwabalx/menu-board.webp', 4),
+('a1b2c3d4-e5f6-7890-abcd-ef1234567890', 'Extra Veggie', 'Extra veggie portion.', 'extra', 2.00, '/Assets/kitchens/akwabalx/dish-veggie-burger.webp', 5),
+('a1b2c3d4-e5f6-7890-abcd-ef1234567890', 'Chicken', 'Extra chicken portion.', 'extra', 3.00, '/Assets/kitchens/akwabalx/dish-wings-plantain.webp', 6),
+('a1b2c3d4-e5f6-7890-abcd-ef1234567890', 'Special Mayo', 'House special mayo.', 'extra', 0.50, '/Assets/kitchens/akwabalx/menu-board.webp', 7);
 
 -- Optional: link to master_artists when row exists
 DO $$

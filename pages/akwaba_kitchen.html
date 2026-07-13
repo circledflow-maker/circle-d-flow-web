@@ -32,7 +32,8 @@
         #kitchen-entry-reel .intro-vignette { position:absolute; inset:0; background:linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 45%, rgba(0,0,0,0.35) 100%); pointer-events:none; }
         #kitchen-entry-reel .intro-brand { position:absolute; top:18%; left:0; right:0; text-align:center; z-index:202; pointer-events:none; }
         #kitchen-entry-reel button { position:absolute; bottom:24px; right:16px; z-index:203; }
-        .flavor-log-box { border:1px solid rgba(212,175,55,0.35); border-radius:12px; background:rgba(20,15,10,0.85); padding:1rem; }
+        #kitchen-title-banner { border:1px solid rgba(212,175,55,0.35); border-radius:12px; overflow:hidden; background:rgba(0,0,0,0.35); }
+        #kitchen-title-banner img { width:100%; max-height:220px; object-fit:cover; display:block; }
         .flavor-feed-item video { background:#000; }
         #guest-feedback-preview, #guest-feedback-video-preview { max-height:120px; border-radius:8px; }
     </style>
@@ -72,7 +73,10 @@
             <a href="quest_map.html?focus=secret_garden_lx" class="text-[10px] px-3 py-1.5 border border-cyan-500/50 rounded-full text-cyan-400">Atlas Pin</a>
             <button type="button" onclick="shareKitchen()" class="text-[10px] px-3 py-1.5 border border-[var(--gold)]/50 rounded-full text-[var(--gold)]">Share WhatsApp</button>
         </div>
-        <div class="grid grid-cols-3 gap-2 mb-6" id="gallery-strip"></div>
+        <div id="kitchen-title-banner" class="mb-6">
+            <img id="kitchen-title-image" src="../Assets/kitchens/akwabalx/dish-table-combo.webp" alt="AkwabaLX at Secret Garden" width="800" height="220" loading="lazy"
+                onerror="this.onerror=null;this.src='../Assets/kitchens/akwabalx/dish-table-combo.jpg'">
+        </div>
     </section>
 
     <section class="px-4 pb-4">
@@ -166,7 +170,7 @@
     <script src="../js/data/taste_world_i18n.js?v=1.0" defer></script>
     <script src="../js/agents/flavor_quest_engine.js?v=1.1" defer></script>
     <script src="../js/agents/kitchen_feedback.js?v=1.0" defer></script>
-    <script src="../js/data/akwaba_kitchen_data.js?v=1.2" defer></script>
+    <script src="../js/data/akwaba_kitchen_data.js?v=1.3" defer></script>
     <script src="../js/agents/kitchen_store.js?v=1.2" defer></script>
     <script src="../js/agents/kitchen_engine.js?v=1.4" defer></script>
     <script src="../js/agents/flowee.js?v=3.4" defer></script>
@@ -364,19 +368,12 @@
             document.getElementById('kitchen-tagline').textContent = k.tagline || window.AKWABA_KITCHEN.tagline;
             const disc = document.getElementById('discount-note');
             if (disc) disc.textContent = k.discount_note || window.AKWABA_KITCHEN.discount_note || 'Navigator discounts coming soon — collect Akoma rune for early access.';
-            const gal = document.getElementById('gallery-strip');
-            gal.innerHTML = '';
-            (k.gallery || window.AKWABA_KITCHEN.gallery).slice(0, 6).forEach((src, i) => {
-                const img = document.createElement('img');
-                img.src = imgUrl(src);
-                img.alt = `AkwabaLX gallery ${i + 1}`;
-                img.width = 119;
-                img.height = 64;
-                img.loading = 'lazy';
-                img.className = 'rounded-lg h-16 w-full object-cover border border-white/10';
-                img.onerror = function () { this.onerror = null; this.src = src; };
-                gal.appendChild(img);
-            });
+            const titleImg = document.getElementById('kitchen-title-image');
+            const titleSrc = k.cover || k.cover_url || window.AKWABA_KITCHEN.cover;
+            if (titleImg && titleSrc) {
+                titleImg.src = imgUrl(titleSrc);
+                titleImg.onerror = function () { this.onerror = null; this.src = titleSrc; };
+            }
         }
 
         document.addEventListener('DOMContentLoaded', async () => {
