@@ -35,14 +35,22 @@
       const kitchenSlug = slug || params.get('kitchen') || localStorage.getItem('cdf_active_kitchen') || 'akwabalx';
       if (window.KitchenEngine) await window.KitchenEngine.load(kitchenSlug);
       this.kitchen = window.KitchenEngine?.kitchen || window.AKWABA_KITCHEN;
+      if (window.KitchenStore) {
+        this.kitchen = window.KitchenStore.normalizeKitchen(this.kitchen, kitchenSlug);
+      }
       localStorage.setItem('cdf_active_kitchen', this.kitchen?.slug || kitchenSlug);
       await Promise.all([this.loadOrders(), this.loadMenu(), this.loadMessages(), this.loadStats()]);
       this.renderAll();
       this.bindPanels();
       this.subscribeRealtime();
       const tut = params.get('tutorial');
-      if (window.FloweeKitchenTour && (tut || !localStorage.getItem('cdf_kitchen_ops_tour_v1'))) {
-        setTimeout(() => window.FloweeKitchenTour.start(true), 900);
+      const mode = params.get('mode');
+      if (mode === 'forge' || params.get('slide') === 'forge') {
+        window.location.replace('kitchen_forge.html' + (tut ? '?tutorial=1' : ''));
+        return;
+      }
+      if (window.FloweeKitchenTour && tut === 'ops') {
+        setTimeout(() => window.FloweeKitchenTour.ownerTour(true), 900);
       }
     },
 
@@ -51,6 +59,7 @@
       this.renderKDS();
       this.renderStats();
       this.renderMenuEditor();
+      this.renderBrandingEditor();
       this.renderQRStudio();
       this.renderKitchenSetup();
       this.renderComm();
@@ -102,19 +111,26 @@
     },
 
     async loadMenu() {
-      if (!window.supabaseClient || !this.kitchen?.id) {
-        this.menu = window.KitchenEngine?.menu || window.AKWABA_KITCHEN?.menu || [];
-        return;
+      const slug = this.kitchen?.slug || 'akwabalx';
+      let remote = [];
+      if (window.supabaseClient && this.kitchen?.id) {
+        try {
+          const { data } = await window.supabaseClient
+            .from('kitchen_menu_items')
+            .select('*')
+            .eq('kitchen_id', this.kitchen.id)
+            .order('sort_order');
+          remote = data || [];
+        } catch (e) {
+          console.warn('[KitchenOps] menu load', e.message);
+        }
       }
-      try {
-        const { data } = await window.supabaseClient
-          .from('kitchen_menu_items')
-          .select('*')
-          .eq('kitchen_id', this.kitchen.id)
-          .order('sort_order');
-        this.menu = data || [];
-      } catch (e) {
-        this.menu = window.KitchenEngine?.menu || [];
+      if (!remote.length) remote = window.KitchenEngine?.menu || window.AKWABA_KITCHEN?.menu || [];
+      this.menu = window.KitchenStore
+        ? window.KitchenStore.mergeMenu(remote, slug)
+        : remote;
+      if (window.KitchenStore) {
+        this.kitchen = window.KitchenStore.normalizeKitchen(this.kitchen, slug);
       }
     },
 
@@ -222,7 +238,10 @@
         if (idx >= 0) { local[idx].status = nextStatus; localStorage.setItem('cdf_kitchen_orders_local', JSON.stringify(local)); }
       }
       if (nextStatus === 'ready') await this.grantKitchenReward('order_ready');
-      if (nextStatus === 'picked_up') await this.grantKitchenReward('first_pickup');
+      if (nextStatus === 'picked_up') {
+        await this.grantKitchenReward('first_pickup');
+        if (window.FlavorQuestEngine) window.FlavorQuestEngine.onEvent('soul_scan', { orderId });
+      }
       await this.loadOrders();
       await this.loadStats();
       this.renderKDS();
@@ -250,6 +269,89 @@
       }
     },
 
+    mediaSrc(url) {
+      if (!url) return '/Assets/kitchens/akwabalx/logo-fallback.png';
+      if (window.kitchenMediaUrl && !String(url).startsWith('data:')) return window.kitchenMediaUrl(url);
+      return url;
+    },
+
+    renderBrandingEditor() {
+      const el = document.getElementById('kitchen-branding-editor');
+      if (!el) return;
+      const slug = this.kitchen?.slug || 'akwabalx';
+      const k = window.KitchenStore ? window.KitchenStore.normalizeKitchen(this.kitchen, slug) : this.kitchen;
+      const cover = k?.cover || '/Assets/kitchens/akwabalx/hero-1.jpg';
+      const board = k?.menu_board || '/Assets/kitchens/akwabalx/menu-board.webp';
+      el.innerHTML = `
+        <p class="text-[10px] text-white/50 mb-3">Title image (hero) and food menu card — syncs to guest page instantly.</p>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div class="ops-card p-0 overflow-hidden">
+            <p class="slide-label px-3 pt-3 mb-0">Title Image</p>
+            <div class="relative aspect-[4/3] bg-black/40 m-3 rounded-lg overflow-hidden border border-white/10">
+              <img id="brand-cover-preview" src="${escapeHtml(this.mediaSrc(cover))}" class="w-full h-full object-cover" alt="Kitchen cover"
+                onerror="this.onerror=null;this.src='${escapeHtml(cover)}'">
+              <label class="absolute inset-0 flex items-center justify-center bg-black/50 text-[9px] text-white cursor-pointer opacity-0 hover:opacity-100 transition">
+                UPLOAD COVER
+                <input type="file" class="hidden" id="brand-cover-upload" accept="image/*">
+              </label>
+            </div>
+            <button type="button" id="btn-save-cover" class="w-full text-[9px] py-2 border-t border-white/10 text-[var(--gold)] uppercase tracking-widest">Save Title Image</button>
+          </div>
+          <div class="ops-card p-0 overflow-hidden">
+            <p class="slide-label px-3 pt-3 mb-0">Food Menu Card</p>
+            <div class="relative aspect-[3/4] bg-black/40 m-3 rounded-lg overflow-hidden border border-white/10">
+              <img id="brand-menu-preview" src="${escapeHtml(this.mediaSrc(board))}" class="w-full h-full object-contain" alt="Menu board"
+                onerror="this.onerror=null;this.src='${escapeHtml(board)}'">
+              <label class="absolute inset-0 flex items-center justify-center bg-black/50 text-[9px] text-white cursor-pointer opacity-0 hover:opacity-100 transition">
+                UPLOAD MENU
+                <input type="file" class="hidden" id="brand-menu-upload" accept="image/*">
+              </label>
+            </div>
+            <button type="button" id="btn-save-menu-board" class="w-full text-[9px] py-2 border-t border-white/10 text-[var(--gold)] uppercase tracking-widest">Save Menu Card</button>
+          </div>
+        </div>`;
+
+      this._brandCoverData = cover.startsWith('data:') ? cover : null;
+      this._brandMenuData = board.startsWith('data:') ? board : null;
+
+      document.getElementById('brand-cover-upload')?.addEventListener('change', async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        const data = await this.compressImage(file, 1400);
+        this._brandCoverData = data;
+        const img = document.getElementById('brand-cover-preview');
+        if (img) img.src = data;
+      });
+      document.getElementById('brand-menu-upload')?.addEventListener('change', async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        const data = await this.compressImage(file, 1600);
+        this._brandMenuData = data;
+        const img = document.getElementById('brand-menu-preview');
+        if (img) img.src = data;
+      });
+      document.getElementById('btn-save-cover')?.addEventListener('click', () => this.saveBranding('cover', this._brandCoverData));
+      document.getElementById('btn-save-menu-board')?.addEventListener('click', () => this.saveBranding('menu_board', this._brandMenuData));
+    },
+
+    async saveBranding(field, dataUrl) {
+      if (!dataUrl) {
+        if (window.Pusher) window.Pusher.showToast('Upload an image first', 'error');
+        return;
+      }
+      const slug = this.kitchen?.slug || 'akwabalx';
+      const brand = { [field]: dataUrl };
+      const result = await window.KitchenStore.saveBrandingCloud(slug, this.kitchen?.id, brand);
+      this.kitchen = window.KitchenStore.normalizeKitchen(this.kitchen, slug);
+      if (window.Pusher) {
+        window.Pusher.showToast(
+          result.warning ? `${field} saved locally` : `${field === 'cover' ? 'Title image' : 'Menu card'} live on guest page`,
+          result.warning ? 'info' : 'success'
+        );
+      }
+      if (window.Flowee) window.Flowee.talk(true, 'Branding updated — guests see it now.', 'celebrate');
+    },
+
     renderMenuEditor() {
       const el = document.getElementById('kitchen-menu-editor');
       if (!el) return;
@@ -257,11 +359,13 @@
       const rows = items.map((item) => {
         const id = item.id || item.slug || item.name;
         const avail = item.is_available !== false;
-        const img = item.image_url || '/Assets/kitchens/akwabalx/logo-fallback.png';
+        const img = item.image_url || item.image || '/Assets/kitchens/akwabalx/logo-fallback.png';
+        const imgWeb = this.mediaSrc(img);
         return `<div class="menu-edit-row flex-col" data-item-id="${escapeHtml(id)}">
           <div class="flex items-start gap-2 w-full">
             <div class="relative w-16 h-16 bg-black/40 border border-white/10 rounded overflow-hidden flex-shrink-0">
-                <img src="${escapeHtml(img)}" class="w-full h-full object-cover menu-item-img-preview" id="img-prev-${escapeHtml(id)}">
+                <img src="${escapeHtml(imgWeb)}" class="w-full h-full object-cover menu-item-img-preview" id="img-prev-${escapeHtml(id)}"
+                  onerror="this.onerror=null;this.src='${escapeHtml(img)}'">
                 <label class="absolute inset-0 flex items-center justify-center bg-black/50 text-[9px] text-white cursor-pointer opacity-0 hover:opacity-100 transition">
                     UPLOAD
                     <input type="file" class="hidden menu-img-upload" data-upload-id="${escapeHtml(id)}" accept="image/*">
@@ -322,10 +426,10 @@
            this.menu[itemIdx].image_url = compressed;
            const preview = document.getElementById(`img-prev-${id}`);
            if (preview) preview.src = compressed;
-           if (window.supabaseClient && this.kitchen?.id && !String(id).startsWith('local-')) {
-               await window.supabaseClient.from('kitchen_menu_items').update({ image_url: compressed }).eq('id', id);
-           }
-           if (window.Pusher) window.Pusher.showToast('Image uploaded and synced', 'success');
+           const slug = this.kitchen?.slug || 'akwabalx';
+           const result = await window.KitchenStore.saveMenuItem(slug, this.kitchen?.id, id, { image_url: compressed });
+           const msg = result.warning ? 'Image saved on this device' : 'Image uploaded and synced';
+           if (window.Pusher) window.Pusher.showToast(msg, result.warning ? 'info' : 'success');
            if (window.Flowee) window.Flowee.talk(true, 'Dish image updated! Looking tasty.', 'celebrate');
         }
       } catch (e) {
@@ -333,27 +437,25 @@
       }
     },
 
-    compressImage(file) {
+    compressImage(file, maxSize) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = (e) => {
           const img = new Image();
           img.onload = () => {
             const canvas = document.createElement('canvas');
-            const MAX_WIDTH = 800;
-            const MAX_HEIGHT = 800;
+            const MAX = maxSize || 800;
             let width = img.width;
             let height = img.height;
             if (width > height) {
-              if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
+              if (width > MAX) { height *= MAX / width; width = MAX; }
             } else {
-              if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
+              if (height > MAX) { width *= MAX / height; height = MAX; }
             }
             canvas.width = width;
             canvas.height = height;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0, width, height);
-            resolve(canvas.toDataURL('image/jpeg', 0.8));
+            canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+            resolve(canvas.toDataURL('image/jpeg', 0.82));
           };
           img.onerror = reject;
           img.src = e.target.result;
@@ -376,13 +478,14 @@
         category: this.rowField(row, 'category') || 'main',
       };
       if (!payload.name) return;
-      if (window.supabaseClient && this.kitchen?.id) {
-        const { error } = await window.supabaseClient.from('kitchen_menu_items').update(payload).eq('id', id);
-        if (error) { if (window.Pusher) window.Pusher.showToast(error.message, 'error'); return; }
-      }
+      const slug = this.kitchen?.slug || 'akwabalx';
+      const result = await window.KitchenStore.saveMenuItem(slug, this.kitchen?.id, id, payload);
       await this.loadMenu();
       this.renderMenuEditor();
-      if (window.Pusher) window.Pusher.showToast(`${payload.name} saved — live on guest menu`, 'success');
+      const msg = result.warning
+        ? `${payload.name} saved on this device`
+        : `${payload.name} saved — live on guest menu`;
+      if (window.Pusher) window.Pusher.showToast(msg, result.warning ? 'info' : 'success');
     },
 
     async addMenuItem() {
@@ -390,32 +493,27 @@
       const description = document.getElementById('new-item-desc')?.value?.trim() || '';
       const price_eur = parseFloat(document.getElementById('new-item-price')?.value) || 0;
       if (!name) return;
+      const slug = this.kitchen?.slug || 'akwabalx';
       const payload = {
         kitchen_id: this.kitchen?.id || DEFAULT_KITCHEN_ID,
         name, description, price_eur, category: 'main', is_available: true,
         sort_order: (this.menu.length || 0) + 1,
         image_url: '/Assets/kitchens/akwabalx/logo-fallback.png',
       };
-      if (window.supabaseClient) {
-        const { error } = await window.supabaseClient.from('kitchen_menu_items').insert([payload]);
-        if (error) { if (window.Pusher) window.Pusher.showToast(error.message, 'error'); return; }
-      } else {
-        payload.id = `local-${Date.now()}`;
-        this.menu.push(payload);
-      }
+      const result = await window.KitchenStore.insertMenuItem(slug, payload);
       document.getElementById('new-item-name').value = '';
       document.getElementById('new-item-desc').value = '';
       document.getElementById('new-item-price').value = '';
       await this.loadMenu();
       this.renderMenuEditor();
       if (window.Flowee) window.Flowee.talk(true, `"${name}" is LIVE on your kitchen page. Guests see it instantly.`, 'celebrate');
+      if (result.warning && window.Pusher) window.Pusher.showToast('Saved locally — cloud sync when online', 'info');
     },
 
     async deleteMenuItem(id) {
       if (!confirm('Remove this dish from the menu?')) return;
-      if (window.supabaseClient) {
-        await window.supabaseClient.from('kitchen_menu_items').delete().eq('id', id);
-      }
+      const slug = this.kitchen?.slug || 'akwabalx';
+      await window.KitchenStore.deleteMenuItem(slug, this.kitchen?.id, id);
       await this.loadMenu();
       this.renderMenuEditor();
     },
@@ -424,9 +522,8 @@
       const turningOn = !btn.classList.contains('on');
       btn.classList.toggle('on', turningOn);
       btn.textContent = turningOn ? 'LIVE' : 'OFF';
-      if (window.supabaseClient && this.kitchen?.id) {
-        await window.supabaseClient.from('kitchen_menu_items').update({ is_available: turningOn }).eq('kitchen_id', this.kitchen.id).eq('id', id);
-      }
+      const slug = this.kitchen?.slug || 'akwabalx';
+      await window.KitchenStore.saveMenuItem(slug, this.kitchen?.id, id, { is_available: turningOn });
       if (window.Pusher) window.Pusher.showToast(turningOn ? 'Item LIVE on guest menu' : 'Item hidden', 'success');
     },
 
@@ -511,8 +608,19 @@
         return;
       }
       localStorage.setItem('cdf_active_kitchen', slug);
+      const localK = { slug, name, tagline, show_on_radar: true };
+      const list = JSON.parse(localStorage.getItem('cdf_my_kitchens') || '[]');
+      if (!list.find((x) => x.slug === slug)) {
+        list.push(localK);
+        localStorage.setItem('cdf_my_kitchens', JSON.stringify(list));
+      }
+      const radar = JSON.parse(localStorage.getItem('cdf_radar_kitchens') || '[]');
+      if (!radar.find((x) => x.slug === slug)) {
+        radar.push({ slug, name, tagline, page: `akwaba_kitchen.html?kitchen=${slug}` });
+        localStorage.setItem('cdf_radar_kitchens', JSON.stringify(radar));
+      }
       if (window.Flowee) window.Flowee.talk(true, `Kitchen "${name}" forged! Add dishes, download QR, invite crew.`, 'celebrate');
-      window.location.href = `kitchen_workspace.html?kitchen=${slug}&tutorial=1`;
+      window.location.href = `kitchen_workspace.html?kitchen=${slug}&tutorial=ops`;
     },
 
     renderStaffPanel() {
@@ -522,7 +630,7 @@
         <div class="text-[10px] text-white/50 mb-2">Crew invite code</div>
         <div class="font-mono text-lg text-[var(--gold)] mb-3">AKWABA-CREW</div>
         <p class="text-[10px] text-white/40 mb-3">Share with pass, bar & service. Staff sees KDS + comms when logged in.</p>
-        <a href="akwaba_kitchen.html" class="block text-center text-xs py-2 border border-white/20 rounded-lg text-white/70">Preview guest menu →</a>`;
+        <a href="akwaba_kitchen.html?kitchen=${escapeHtml(this.kitchen?.slug || 'akwabalx')}" class="block text-center text-xs py-2 border border-white/20 rounded-lg text-white/70">Preview guest menu →</a>`;
     },
 
     renderSoulTicket() {

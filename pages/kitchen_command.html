@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kitchen Command | Taste World</title>
+    <script src="https://cdn.tailwindcss.com" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/mobile-sphere-nav.css">
+    <style>
+        :root { --gold:#D4AF37; --sage:#8A9A5B; }
+        body { background:#0a0806; color:#fdfbf7; font-family:'Plus Jakarta Sans',sans-serif; padding-bottom:88px; }
+        .cinzel { font-family:Cinzel,serif; }
+        .kitchen-card { border:1px solid rgba(212,175,55,0.3); border-radius:12px; padding:1rem; background:rgba(255,255,255,0.04); }
+    </style>
+</head>
+<body class="px-4 py-6 max-w-lg mx-auto">
+    <header class="flex justify-between items-center mb-6">
+        <a href="taste_world_hub.html" class="text-white/40 text-xs">← Hub</a>
+        <div id="tw-lang-switch"></div>
+    </header>
+
+    <h1 class="cinzel text-2xl text-[var(--gold)] mb-1" data-tw-i18n="tw.cmd.title">Kitchen Command</h1>
+    <p class="text-xs text-white/50 mb-6" data-tw-i18n="tw.cmd.sub">Wähle deine zugewiesene oder erstellte Kitchen</p>
+
+    <div id="kitchen-list" class="grid gap-3 mb-6"></div>
+    <p id="kitchen-empty" class="hidden text-sm text-white/40 text-center py-8" data-tw-i18n="tw.cmd.empty"></p>
+
+    <a href="kitchen_forge.html?tutorial=1" class="block text-center py-3 border border-[var(--sage)] text-[var(--sage)] rounded-lg text-sm font-bold" data-tw-i18n="tw.cmd.forge">Neue Kitchen schmieden</a>
+
+    <div id="flowee-agent" style="position:fixed;bottom:72px;right:12px;z-index:9998"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+    <script src="../js/data/taste_world_i18n.js?v=1.0" defer></script>
+    <script src="../js/agents/supabase_client.js?v=4.1" defer></script>
+    <script src="../js/agents/kitchen_store.js?v=1.0" defer></script>
+    <script src="../js/agents/flowee.js?v=5.0" defer></script>
+    <script src="../js/agents/flowee_kitchen_tour.js?v=3.0" defer></script>
+    <script src="../js/agents/mobile_sphere_nav.js?v=1.1" defer></script>
+    <script defer>
+        function localKitchens() {
+            try { return JSON.parse(localStorage.getItem('cdf_my_kitchens') || '[]'); }
+            catch { return []; }
+        }
+
+        async function loadKitchens() {
+            const list = [];
+            const seen = new Set();
+
+            const push = (k) => {
+                if (!k?.slug || seen.has(k.slug)) return;
+                seen.add(k.slug);
+                list.push(k);
+            };
+
+            localKitchens().forEach(push);
+
+            if (window.supabaseClient) {
+                const { data: { user } } = await window.supabaseClient.auth.getUser();
+                if (user) {
+                    const { data: owned } = await window.supabaseClient.from('kitchens').select('slug,name,tagline,logo_url,cover_url').eq('owner_user_id', user.id);
+                    (owned || []).forEach(push);
+                    const { data: staff } = await window.supabaseClient.from('kitchen_staff').select('kitchen_id').eq('user_id', user.id).eq('is_active', true);
+                    const ids = (staff || []).map((s) => s.kitchen_id).filter(Boolean);
+                    if (ids.length) {
+                        const { data: assigned } = await window.supabaseClient.from('kitchens').select('slug,name,tagline,logo_url,cover_url').in('id', ids);
+                        (assigned || []).forEach(push);
+                    }
+                }
+                const { data: live } = await window.supabaseClient.from('kitchens').select('slug,name,tagline,logo_url,cover_url').eq('slug', 'akwabalx').eq('is_live', true).maybeSingle();
+                if (live) push(live);
+            }
+
+            if (!list.length) push({ slug: 'akwabalx', name: 'AkwabaLX', tagline: 'Secret Garden LX', logo_url: '/Assets/kitchens/akwabalx/logo.webp' });
+            return list;
+        }
+
+        function renderKitchens(kitchens) {
+            const wrap = document.getElementById('kitchen-list');
+            const empty = document.getElementById('kitchen-empty');
+            wrap.innerHTML = '';
+            if (!kitchens.length) {
+                empty.classList.remove('hidden');
+                return;
+            }
+            empty.classList.add('hidden');
+            const openLabel = window.TasteI18n?.t('tw.cmd.open') || 'Open ops';
+            kitchens.forEach((k) => {
+                const card = document.createElement('a');
+                card.href = `kitchen_workspace.html?kitchen=${encodeURIComponent(k.slug)}`;
+                card.className = 'kitchen-card flex items-center gap-3 block hover:border-[var(--gold)] transition';
+                const img = k.logo_url || k.logo || '/Assets/kitchens/akwabalx/logo.webp';
+                card.innerHTML = `
+                    <img src="${img}" class="w-12 h-12 rounded-full object-cover border border-[var(--gold)]/40" alt="">
+                    <div class="flex-1 min-w-0">
+                        <div class="font-bold truncate">${k.name || k.slug}</div>
+                        <div class="text-[10px] text-white/40 truncate">${k.tagline || k.location_name || k.slug}</div>
+                    </div>
+                    <span class="text-[9px] uppercase tracking-widest text-[var(--gold)]">${openLabel} →</span>`;
+                wrap.appendChild(card);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            window.TasteI18n?.renderLangSwitcher('tw-lang-switch');
+            window.TasteI18n?.apply();
+            const kitchens = await loadKitchens();
+            renderKitchens(kitchens);
+            if (window.Flowee) window.Flowee.renderVessel();
+            const tut = new URLSearchParams(location.search).get('tutorial');
+            if (tut === '1' && window.FloweeKitchenTour) window.FloweeKitchenTour.startCommandTour(true);
+        });
+    </script>
+</body>
+</html>

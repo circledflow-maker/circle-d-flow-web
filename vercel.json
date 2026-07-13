@@ -10,7 +10,9 @@
     { "source": "/studio", "destination": "/pages/vision_studio", "permanent": false },
     { "source": "/taste", "destination": "/pages/taste_world_hub", "permanent": false },
     { "source": "/taste-hub", "destination": "/pages/taste_world_hub", "permanent": false },
-    { "source": "/kitchen-ops", "destination": "/pages/kitchen_workspace?kitchen=akwabalx", "permanent": false },
+    { "source": "/kitchen-ops", "destination": "/pages/kitchen_command", "permanent": false },
+    { "source": "/kitchen-command", "destination": "/pages/kitchen_command", "permanent": false },
+    { "source": "/kitchen-forge", "destination": "/pages/kitchen_forge", "permanent": false },
     { "source": "/coop", "destination": "/pages/coop", "permanent": false },
     { "source": "/login", "destination": "/pages/login", "permanent": false },
     { "source": "/logout", "destination": "/pages/logout", "permanent": false }

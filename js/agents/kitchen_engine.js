@@ -9,47 +9,74 @@ class KitchenEngine {
         window.KitchenEngine = this;
     }
 
+    mapMenuItems(items) {
+        return (items || [])
+            .filter((i) => i.is_available !== false && !i._deleted)
+            .map((i) => ({
+                id: i.id,
+                name: i.name,
+                description: i.description,
+                category: i.category,
+                price_eur: parseFloat(i.price_eur),
+                image: i.image_url || i.image,
+                sort_order: i.sort_order,
+            }));
+    }
+
     async load(slug) {
+        const kitchenSlug = slug || 'akwabalx';
         const fallback = window.AKWABA_KITCHEN;
+        const normalize = (k) => (window.KitchenStore ? window.KitchenStore.normalizeKitchen(k, kitchenSlug) : k);
+
         if (!window.supabaseClient) {
-            this.kitchen = fallback;
-            this.menu = fallback.menu || [];
+            this.kitchen = normalize(fallback);
+            const merged = window.KitchenStore
+                ? window.KitchenStore.mergeMenu(fallback.menu || [], kitchenSlug)
+                : (fallback.menu || []);
+            this.menu = this.mapMenuItems(merged);
             return this;
         }
         try {
             const { data: k, error } = await window.supabaseClient
-                .from('kitchens').select('*').eq('slug', slug || 'akwabalx').eq('is_live', true).maybeSingle();
+                .from('kitchens').select('*').eq('slug', kitchenSlug).eq('is_live', true).maybeSingle();
             if (!error && k) {
-                this.kitchen = k;
+                this.kitchen = normalize(k);
                 const { data: items } = await window.supabaseClient
-                    .from('kitchen_menu_items').select('*').eq('kitchen_id', k.id).eq('is_available', true).order('sort_order');
-                this.menu = (items || []).map((i) => ({
-                    id: i.id,
-                    name: i.name,
-                    description: i.description,
-                    category: i.category,
-                    price_eur: parseFloat(i.price_eur),
-                    image: i.image_url,
-                }));
+                    .from('kitchen_menu_items').select('*').eq('kitchen_id', k.id).order('sort_order');
+                const merged = window.KitchenStore
+                    ? window.KitchenStore.mergeMenu(items || [], kitchenSlug)
+                    : (items || []);
+                this.menu = this.mapMenuItems(merged);
                 return this;
             }
         } catch (e) {
             console.warn('[KitchenEngine]', e.message);
         }
-        this.kitchen = fallback;
-        this.menu = fallback.menu || [];
+        this.kitchen = normalize(fallback);
+        const merged = window.KitchenStore
+            ? window.KitchenStore.mergeMenu(fallback.menu || [], kitchenSlug)
+            : (fallback.menu || []);
+        this.menu = this.mapMenuItems(merged);
         return this;
     }
 
     subscribeMenuRealtime(onUpdate) {
+        const slug = this.kitchen?.slug || 'akwabalx';
+        const refresh = async () => {
+            await this.load(slug);
+            if (onUpdate) onUpdate(this.menu);
+        };
+        window.addEventListener('KITCHEN_MENU_UPDATED', (e) => {
+            if (!e.detail?.slug || e.detail.slug === slug) refresh();
+        });
+        window.addEventListener('KITCHEN_BRAND_UPDATED', (e) => {
+            if (!e.detail?.slug || e.detail.slug === slug) refresh().then(() => onUpdate && onUpdate(this.menu));
+        });
         if (!window.supabaseClient || !this.kitchen?.id) return;
         if (this._menuChannel) window.supabaseClient.removeChannel(this._menuChannel);
         this._menuChannel = window.supabaseClient
             .channel(`kitchen-menu-${this.kitchen.id}`)
-            .on('postgres_changes', { event: '*', schema: 'public', table: 'kitchen_menu_items', filter: `kitchen_id=eq.${this.kitchen.id}` }, async () => {
-                await this.load(this.kitchen.slug);
-                if (onUpdate) onUpdate(this.menu);
-            })
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'kitchen_menu_items', filter: `kitchen_id=eq.${this.kitchen.id}` }, refresh)
             .subscribe();
     }
 
@@ -103,6 +130,10 @@ class KitchenEngine {
             localStorage.setItem('cdf_kitchen_orders_local', JSON.stringify(local));
         }
         this.clearCart();
+        window.dispatchEvent(new CustomEvent('KITCHEN_ORDER_PLACED', {
+            detail: { kitchenSlug: this.kitchen?.slug, items: payload.items, orderId: order?.id },
+        }));
+        if (window.FlavorQuestEngine) window.FlavorQuestEngine.onEvent('order', { kitchenSlug: this.kitchen?.slug, items: payload.items });
         if (window.QuestEngine) {
             await window.QuestEngine.fulfillTasteQuest('LQ-T02');
             if (window.QuestEngine.grantReward) await window.QuestEngine.grantReward('LQ-008', 100, 'Kitchen Heart');

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forge Kitchen | Taste World</title>
+    <script src="https://cdn.tailwindcss.com" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root { --gold:#D4AF37; --sage:#8A9A5B; --terra:#E2725B; }
+        body { background:#0a0806; color:#fdfbf7; font-family:'Plus Jakarta Sans',sans-serif; padding:1.5rem; padding-bottom:100px; }
+        .cinzel { font-family:Cinzel,serif; }
+        .ops-card { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:1rem; }
+        .flowee-tour-highlight { outline:2px solid var(--gold); box-shadow:0 0 20px rgba(212,175,55,0.4); border-radius:12px; }
+    </style>
+</head>
+<body class="max-w-lg mx-auto">
+    <header class="flex justify-between items-center mb-6">
+        <a href="kitchen_command.html" class="text-white/40 text-xs">← Command</a>
+        <div id="tw-lang-switch"></div>
+    </header>
+
+    <h1 class="cinzel text-2xl text-[var(--gold)] mb-1" data-tw-i18n="tw.forge.title">Kitchen schmieden</h1>
+    <p class="text-xs text-white/50 mb-6" data-tw-i18n="tw.forge.sub">Flowee führt dich durch Name, Slug, Menü & Taste Radar</p>
+
+    <div id="forge-panel" class="ops-card">
+        <form id="kitchen-create-form" class="space-y-3">
+            <input id="new-kitchen-name" class="w-full bg-black/50 border border-white/10 rounded px-3 py-2 text-sm" placeholder="Kitchen name" required>
+            <input id="new-kitchen-slug" class="w-full bg-black/50 border border-white/10 rounded px-3 py-2 text-sm" placeholder="slug (e.g. soulbites)" pattern="[a-z0-9-]+">
+            <input id="new-kitchen-tagline" class="w-full bg-black/50 border border-white/10 rounded px-3 py-2 text-sm" placeholder="Tagline">
+            <input id="new-kitchen-location" class="w-full bg-black/50 border border-white/10 rounded px-3 py-2 text-sm" placeholder="Location (Lisbon venue)">
+            <label class="flex items-center gap-2 text-[10px] text-white/50">
+                <input type="checkbox" id="new-kitchen-radar" checked class="rounded">
+                <span data-tw-i18n="tw.hub.radar.sub">Auf Taste Radar listen</span>
+            </label>
+            <button type="submit" id="btn-forge-kitchen" class="w-full py-3 bg-[var(--gold)] text-black text-xs font-bold uppercase tracking-widest rounded-lg" data-tw-i18n="tw.forge.submit">Kitchen erstellen</button>
+        </form>
+    </div>
+
+    <div id="flowee-agent" style="position:fixed;bottom:72px;right:12px;z-index:9998"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+    <script src="../js/data/taste_world_i18n.js?v=1.0" defer></script>
+    <script src="../js/agents/supabase_client.js?v=4.1" defer></script>
+    <script src="../js/agents/kitchen_store.js?v=1.0" defer></script>
+    <script src="../js/agents/flowee.js?v=5.0" defer></script>
+    <script src="../js/agents/flowee_kitchen_tour.js?v=3.0" defer></script>
+    <script defer>
+        function kitchenUrl(slug) {
+            const base = location.origin.includes('localhost')
+                ? `${location.origin}/pages/akwaba_kitchen.html`
+                : 'https://circle-d-flow-web.vercel.app/pages/akwaba_kitchen';
+            return `${base}?kitchen=${slug}`;
+        }
+
+        function registerLocalKitchen(k) {
+            const list = JSON.parse(localStorage.getItem('cdf_my_kitchens') || '[]');
+            if (!list.find((x) => x.slug === k.slug)) list.push(k);
+            localStorage.setItem('cdf_my_kitchens', JSON.stringify(list));
+            localStorage.setItem('cdf_active_kitchen', k.slug);
+            if (k.show_on_radar !== false) {
+                const radar = JSON.parse(localStorage.getItem('cdf_radar_kitchens') || '[]');
+                if (!radar.find((x) => x.slug === k.slug)) {
+                    radar.push({ slug: k.slug, name: k.name, tagline: k.tagline, page: `akwaba_kitchen.html?kitchen=${k.slug}` });
+                    localStorage.setItem('cdf_radar_kitchens', JSON.stringify(radar));
+                }
+            }
+        }
+
+        async function forgeKitchen(e) {
+            e.preventDefault();
+            const name = document.getElementById('new-kitchen-name')?.value?.trim();
+            let slug = document.getElementById('new-kitchen-slug')?.value?.trim().toLowerCase().replace(/[^a-z0-9-]/g, '')
+                || name?.toLowerCase().replace(/\s+/g, '').slice(0, 20);
+            const tagline = document.getElementById('new-kitchen-tagline')?.value?.trim() || 'Taste the flow';
+            const location_name = document.getElementById('new-kitchen-location')?.value?.trim() || 'Lisbon';
+            const onRadar = document.getElementById('new-kitchen-radar')?.checked !== false;
+            if (!name || !slug) return;
+
+            const payload = {
+                slug, name, tagline, location_name, address: 'Lisbon, Portugal',
+                lat: 38.72, lng: -9.145, is_live: true, show_on_radar: onRadar,
+                logo_url: '/Assets/kitchens/akwabalx/logo.webp',
+                cover_url: '/Assets/kitchens/akwabalx/hero-1.webp',
+                reel_url: '/Assets/kitchens/akwabalx/reel-hero.mp4',
+                menu_board_url: '/Assets/kitchens/akwabalx/menu-board.webp',
+                qr_code_data: kitchenUrl(slug),
+            };
+
+            if (window.supabaseClient) {
+                const { data: { user } } = await window.supabaseClient.auth.getUser();
+                if (user) payload.owner_user_id = user.id;
+                const { data, error } = await window.supabaseClient.from('kitchens').insert([payload]).select().single();
+                if (error && !error.message.includes('duplicate')) {
+                    if (window.Pusher) window.Pusher.showToast(error.message, 'error');
+                    return;
+                }
+                if (data) registerLocalKitchen({ slug: data.slug, name: data.name, tagline: data.tagline, show_on_radar: onRadar });
+            } else {
+                registerLocalKitchen({ slug, name, tagline, show_on_radar: onRadar });
+            }
+
+            const msg = window.TasteI18n?.t('tw.forge.success') || 'Kitchen live!';
+            if (window.Flowee) window.Flowee.talk(true, msg, 'celebrate');
+            if (window.Pusher) window.Pusher.showToast(msg, 'success');
+
+            setTimeout(() => {
+                if (onRadar) location.href = `taste_radar.html?kitchen=${slug}&tutorial=forge`;
+                else location.href = `kitchen_workspace.html?kitchen=${slug}&tutorial=ops`;
+            }, 1400);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            window.TasteI18n?.renderLangSwitcher('tw-lang-switch');
+            window.TasteI18n?.apply();
+            document.getElementById('kitchen-create-form')?.addEventListener('submit', forgeKitchen);
+            if (window.Flowee) window.Flowee.renderVessel();
+            const tut = new URLSearchParams(location.search).get('tutorial');
+            if (tut && window.FloweeKitchenTour) setTimeout(() => window.FloweeKitchenTour.startForgeTour(true), 900);
+        });
+    </script>
+</body>
+</html>

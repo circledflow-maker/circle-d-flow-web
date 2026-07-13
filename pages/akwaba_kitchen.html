@@ -2,30 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AkwabaLX at Secret Garden LX — African soul food menu, pickup orders, Soul Ticket and Navigator offers in Lisbon.">
     <title>AkwabaLX | Secret Garden Kitchen</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="image" href="../Assets/kitchens/akwabalx/menu-board.webp" type="image/webp">
+    <script src="https://cdn.tailwindcss.com" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&family=Cinzel:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link rel="stylesheet" href="../css/quest-triad.css">
     <link rel="stylesheet" href="../css/mobile-sphere-nav.css">
-    <script src="../js/agents/mobile_sphere_nav.js?v=1.0" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
-    <script src="../js/agents/supabase_client.js?v=4.1"></script>
-    <script src="../js/agents/agent.js?v=3.2"></script>
-    <script src="../js/agents/pusher.js?v=3.2"></script>
-    <script src="../js/agents/flowee.js?v=3.4"></script>
-    <script src="../js/data/adinkra_catalog.js?v=1.0"></script>
-    <script src="../js/agents/storage_hygiene.js?v=1.0"></script>
-    <script src="../js/data/akwaba_kitchen_data.js?v=1.1"></script>
-    <script src="../js/agents/flowee_voice.js?v=1.1"></script>
-    <script src="../js/agents/flowee_reward.js?v=1.0"></script>
-    <script src="../js/agents/kitchen_engine.js?v=1.2"></script>
-    <script src="../js/agents/quest_engine.js?v=4.6"></script>
-    <script src="../js/agents/flowee_kitchen_tour.js?v=2.0" defer></script>
-    <link rel="stylesheet" href="../css/mobile-sphere-nav.css">
-    <script src="../js/agents/mobile_sphere_nav.js?v=1.1" defer></script>
     <style>
         :root { --gold:#D4AF37; --sage:#8A9A5B; --terra:#E2725B; }
         body { background:#0a0806; color:#fdfbf7; font-family:'Plus Jakarta Sans',sans-serif; padding-bottom:88px; }
@@ -35,7 +22,7 @@
         #cart-bar { position:fixed; bottom:72px; left:0; right:0; z-index:90; }
         .flowee-tour-highlight { outline:2px solid #00ffcc; box-shadow:0 0 20px rgba(0,255,204,0.4); border-radius:12px; }
         #kitchen-menu-board { border:1px solid rgba(212,175,55,0.35); border-radius:12px; background:rgba(0,0,0,0.35); }
-        #kitchen-menu-board img { width:100%; border-radius:12px; display:block; }
+        #kitchen-menu-board img { width:100%; border-radius:12px; display:block; aspect-ratio:3/4; object-fit:contain; background:#0a0806; }
         #kitchen-entry-reel { position:fixed; inset:0; z-index:200; background:#0a0806; display:flex; align-items:center; justify-content:center; overflow:hidden; }
         #kitchen-entry-reel.hidden { display:none; }
         #kitchen-entry-reel video { width:100%; max-height:100vh; object-fit:cover; }
@@ -50,7 +37,7 @@
 <body class="quest-triad-page">
     <div id="kitchen-entry-reel" class="hidden" aria-hidden="true">
         <div id="intro-slideshow" class="intro-slideshow hidden"></div>
-        <video id="entry-reel-video" playsinline muted preload="metadata" poster="../Assets/kitchens/akwabalx/hero-1.jpg"></video>
+        <video id="entry-reel-video" playsinline muted preload="metadata" poster="../Assets/kitchens/akwabalx/hero-1.webp"></video>
         <div class="intro-vignette"></div>
         <div class="intro-brand">
             <p class="cinzel text-[var(--gold)] text-2xl tracking-widest">AkwabaLX</p>
@@ -59,8 +46,9 @@
         <button type="button" onclick="dismissKitchenReel()" class="text-xs px-4 py-2 border border-[var(--gold)] text-[var(--gold)] rounded-full bg-black/70">Enter Kitchen →</button>
     </div>
 
+    <main id="kitchen-main">
     <header class="sticky top-0 z-50 bg-black/80 backdrop-blur border-b border-[var(--gold)]/20 px-4 py-3 flex items-center gap-3">
-        <img id="kitchen-logo" src="../Assets/kitchens/akwabalx/logo.png" alt="AkwabaLX" class="w-14 h-14 rounded-full object-contain border-2 border-[var(--gold)]/50 bg-black/40 p-1" onerror="this.src='../Assets/kitchens/akwabalx/logo-fallback.png'">
+        <img id="kitchen-logo" src="../Assets/kitchens/akwabalx/logo.webp" alt="AkwabaLX" width="56" height="56" class="w-14 h-14 rounded-full object-contain border-2 border-[var(--gold)]/50 bg-black/40 p-1" onerror="this.onerror=null;this.src='../Assets/kitchens/akwabalx/logo-fallback.png'">
         <div class="flex-1 min-w-0">
             <h1 class="cinzel text-lg text-[var(--gold)] truncate">AkwabaLX</h1>
             <p class="text-[10px] text-[var(--sage)] uppercase tracking-widest truncate">Secret Garden LX</p>
@@ -69,8 +57,9 @@
     </header>
 
     <section class="relative">
-        <img id="hero-poster" class="w-full max-h-48 object-cover" src="../Assets/kitchens/akwabalx/hero-1.jpg" alt="AkwabaLX at Secret Garden">
-        <video id="hero-reel" class="hidden w-full max-h-48 object-cover" muted loop playsinline poster="../Assets/kitchens/akwabalx/hero-1.jpg"></video>
+        <img id="hero-poster" class="w-full max-h-48 object-cover" src="../Assets/kitchens/akwabalx/hero-1.webp" alt="AkwabaLX at Secret Garden" width="800" height="372" fetchpriority="high"
+            onerror="this.onerror=null;this.src='../Assets/kitchens/akwabalx/hero-1.jpg'">
+        <video id="hero-reel" class="hidden w-full max-h-48 object-cover" muted loop playsinline poster="../Assets/kitchens/akwabalx/hero-1.webp"></video>
     </section>
 
     <section class="px-4 py-4">
@@ -86,7 +75,8 @@
     <section class="px-4 pb-4">
         <h2 class="cinzel text-[var(--gold)] text-sm mb-3 tracking-widest">MENU CARD</h2>
         <div id="kitchen-menu-board" class="mb-6 p-2">
-            <img id="menu-board-img" src="../Assets/kitchens/akwabalx/menu-board.jpg" alt="AkwabaLX Menu Card" loading="lazy">
+            <img id="menu-board-img" src="../Assets/kitchens/akwabalx/menu-board.webp" alt="AkwabaLX Menu Card" width="362" height="512" fetchpriority="high"
+                onerror="this.onerror=null;this.src='../Assets/kitchens/akwabalx/menu-board.jpg'">
         </div>
         <h2 class="cinzel text-[var(--gold)] text-sm mb-3 tracking-widest">ORDER — PICKUP AT BAR</h2>
         <div id="menu-grid" class="grid gap-3 sm:grid-cols-2"></div>
@@ -105,6 +95,7 @@
             <button type="button" onclick="downloadQR()" class="text-xs px-4 py-2 border border-[var(--gold)] text-[var(--gold)] rounded">Download QR</button>
         </div>
     </section>
+    </main>
 
     <div id="cart-bar" class="hidden px-4">
         <div class="bg-black/95 border border-[var(--gold)] rounded-xl p-3 flex items-center justify-between gap-2">
@@ -132,11 +123,35 @@
         <button onclick="window.Flowee?.toggleChat()" class="nav-btn" id="nav-comms"><span class="icon">💬</span><span class="nav-label">FLOWEE</span></button>
         <button onclick="location.href='dashboard.html'" class="nav-btn exit"><span class="icon">⚡</span><span class="nav-label">ORBIT</span></button>
     </nav>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js" defer></script>
+    <script src="../js/agents/supabase_client.js?v=4.1" defer></script>
+    <script src="../js/agents/agent.js?v=3.2" defer></script>
+    <script src="../js/agents/pusher.js?v=3.2" defer></script>
+    <script src="../js/data/adinkra_catalog.js?v=1.0" defer></script>
+    <script src="../js/agents/storage_hygiene.js?v=1.0" defer></script>
+    <script src="../js/data/taste_world_i18n.js?v=1.0" defer></script>
+    <script src="../js/agents/flavor_quest_engine.js?v=1.0" defer></script>
+    <script src="../js/data/akwaba_kitchen_data.js?v=1.2" defer></script>
+    <script src="../js/agents/kitchen_store.js?v=1.0" defer></script>
+    <script src="../js/agents/kitchen_engine.js?v=1.3" defer></script>
+    <script src="../js/agents/flowee.js?v=3.4" defer></script>
+    <script src="../js/agents/flowee_voice.js?v=1.1" defer></script>
+    <script src="../js/agents/flowee_reward.js?v=1.0" defer></script>
+    <script src="../js/agents/quest_engine.js?v=4.6" defer></script>
+    <script src="../js/agents/flowee_kitchen_tour.js?v=2.0" defer></script>
+    <script src="../js/agents/mobile_sphere_nav.js?v=1.1" defer></script>
     <script src="../js/agents/quest_triad.js?v=2.1" defer></script>
 
-    <script>
+    <script defer>
         let engine;
         let introSlideTimer = null;
+
+        function imgUrl(path) {
+            if (!path) return '';
+            if (window.kitchenMediaUrl) return window.kitchenMediaUrl(path);
+            return String(path).replace(/\.(jpe?g|png)$/i, '.webp');
+        }
 
         function dismissKitchenReel() {
             const overlay = document.getElementById('kitchen-entry-reel');
@@ -166,13 +181,24 @@
             }, 2800);
         }
 
+        function resolveMediaUrl(url) {
+            if (!url) return '';
+            if (url.startsWith('http') || url.startsWith('data:')) return url;
+            if (url.startsWith('/')) return url;
+            return url.replace(/^\.\.\//, '/');
+        }
+
         function initHeroMedia() {
-            const reelUrl = engine?.kitchen?.reel || window.AKWABA_KITCHEN?.reel;
-            const poster = engine?.kitchen?.cover || window.AKWABA_KITCHEN?.cover || '../Assets/kitchens/akwabalx/hero-1.jpg';
+            const reelUrl = resolveMediaUrl(engine?.kitchen?.reel || window.AKWABA_KITCHEN?.reel);
+            const poster = resolveMediaUrl(engine?.kitchen?.cover || window.AKWABA_KITCHEN?.cover || '/Assets/kitchens/akwabalx/hero-1.webp');
             const heroImg = document.getElementById('hero-poster');
             const heroVid = document.getElementById('hero-reel');
             if (!reelUrl || !heroVid) return;
             heroVid.src = reelUrl;
+            heroVid.muted = true;
+            heroVid.loop = true;
+            heroVid.playsInline = true;
+            heroVid.setAttribute('aria-label', 'AkwabaLX kitchen reel');
             heroVid.oncanplay = () => {
                 heroImg?.classList.add('hidden');
                 heroVid.classList.remove('hidden');
@@ -186,18 +212,20 @@
         }
 
         function playKitchenEntryReel() {
+            const tut = new URLSearchParams(location.search).get('tutorial');
+            if (!tut) return;
             if (sessionStorage.getItem('cdf_akwaba_reel_seen') === '1') return;
             const overlay = document.getElementById('kitchen-entry-reel');
             const vid = document.getElementById('entry-reel-video');
             if (!overlay) return;
             const gallery = engine?.kitchen?.gallery || window.AKWABA_KITCHEN?.gallery || [];
-            const reelUrl = engine?.kitchen?.reel || window.AKWABA_KITCHEN?.reel;
+            const reelUrl = resolveMediaUrl(engine?.kitchen?.reel || window.AKWABA_KITCHEN?.reel);
             overlay.classList.remove('hidden');
 
             const showSlides = () => startIntroSlideshow(gallery.length ? gallery : [
-                '../Assets/kitchens/akwabalx/hero-1.jpg',
-                '../Assets/kitchens/akwabalx/hero-2.jpg',
-                '../Assets/kitchens/akwabalx/hero-3.jpg',
+                '../Assets/kitchens/akwabalx/hero-1.webp',
+                '../Assets/kitchens/akwabalx/hero-2.webp',
+                '../Assets/kitchens/akwabalx/hero-3.webp',
             ]);
 
             if (!vid || !reelUrl) {
@@ -222,18 +250,23 @@
         }
 
         function shareKitchen() {
-            const url = 'https://circle-d-flow-web.vercel.app/pages/akwaba_kitchen';
-            const text = encodeURIComponent('AkwabaLX at Secret Garden LX — taste the flow! ' + url);
+            const slug = engine?.kitchen?.slug || 'akwabalx';
+            const url = `https://circle-d-flow-web.vercel.app/pages/akwaba_kitchen?kitchen=${slug}`;
+            const text = encodeURIComponent(`AkwabaLX at Secret Garden LX — taste the flow! ${url}`);
             window.open('https://wa.me/?text=' + text, '_blank');
+            if (window.FlavorQuestEngine) window.FlavorQuestEngine.onEvent('share_qr');
+            if (window.QuestEngine) window.QuestEngine.fulfillTasteQuest('LQ-T03');
         }
         function renderMenu() {
             const grid = document.getElementById('menu-grid');
             grid.innerHTML = '';
             engine.menu.forEach((item) => {
+                const src = imgUrl(item.image);
+                const fallback = item.image || '';
                 const card = document.createElement('div');
                 card.className = 'menu-card';
                 card.innerHTML = `
-                    ${item.image ? `<img src="${item.image}" alt="${item.name}" loading="lazy">` : ''}
+                    ${item.image ? `<img src="${src}" alt="${item.name}" width="378" height="120" loading="lazy" onerror="this.onerror=null;this.src='${fallback}'">` : ''}
                     <div class="p-3">
                         <div class="flex justify-between gap-2">
                             <strong class="text-sm">${item.name}</strong>
@@ -277,32 +310,59 @@
             link.download = 'AkwabaLX-QR.png';
             link.href = c.toDataURL('image/png');
             link.click();
+            if (window.FlavorQuestEngine) window.FlavorQuestEngine.onEvent('share_qr');
             if (window.QuestEngine) window.QuestEngine.fulfillTasteQuest('LQ-T03');
         }
         window.addEventListener('KITCHEN_CART_UPDATED', updateCart);
-        document.addEventListener('DOMContentLoaded', async () => {
-            engine = window.KitchenEngine;
-            await engine.load('akwabalx');
-            const k = engine.kitchen;
+        function applyKitchenBranding(k) {
             const logo = document.getElementById('kitchen-logo');
-            if (logo && k.logo) logo.src = k.logo;
+            if (logo && k.logo) logo.src = imgUrl(k.logo);
+            const hero = document.getElementById('hero-poster');
+            if (hero && k.cover) {
+                hero.src = imgUrl(k.cover);
+                hero.onerror = function () { this.onerror = null; this.src = k.cover; };
+            }
             const board = document.getElementById('menu-board-img');
-            if (board) board.src = k.menu_board || window.AKWABA_KITCHEN.menu_board;
+            if (board) {
+                board.src = imgUrl(k.menu_board || window.AKWABA_KITCHEN.menu_board);
+                board.onerror = function () { this.onerror = null; this.src = k.menu_board || window.AKWABA_KITCHEN.menu_board; };
+            }
             document.getElementById('kitchen-tagline').textContent = k.tagline || window.AKWABA_KITCHEN.tagline;
-            playKitchenEntryReel();
-            initHeroMedia();
             const disc = document.getElementById('discount-note');
             if (disc) disc.textContent = k.discount_note || window.AKWABA_KITCHEN.discount_note || 'Navigator discounts coming soon — collect Akoma rune for early access.';
             const gal = document.getElementById('gallery-strip');
-            (k.gallery || window.AKWABA_KITCHEN.gallery).slice(0, 6).forEach((src) => {
+            gal.innerHTML = '';
+            (k.gallery || window.AKWABA_KITCHEN.gallery).slice(0, 6).forEach((src, i) => {
                 const img = document.createElement('img');
-                img.src = src;
+                img.src = imgUrl(src);
+                img.alt = `AkwabaLX gallery ${i + 1}`;
+                img.width = 119;
+                img.height = 64;
+                img.loading = 'lazy';
                 img.className = 'rounded-lg h-16 w-full object-cover border border-white/10';
+                img.onerror = function () { this.onerror = null; this.src = src; };
                 gal.appendChild(img);
             });
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const slug = new URLSearchParams(location.search).get('kitchen') || 'akwabalx';
+            engine = window.KitchenEngine;
+            await engine.load(slug);
+            const k = engine.kitchen;
+            applyKitchenBranding(k);
+            playKitchenEntryReel();
+            initHeroMedia();
             renderMenu();
             updateCart();
-            engine.subscribeMenuRealtime(() => { renderMenu(); if (window.Flowee) window.Flowee.talk(true, 'Menu updated live from kitchen.', 'guide'); });
+            engine.subscribeMenuRealtime(() => {
+                applyKitchenBranding(engine.kitchen);
+                renderMenu();
+                if (window.Flowee) window.Flowee.talk(true, 'Menu updated live from kitchen.', 'guide');
+            });
+            window.addEventListener('KITCHEN_BRAND_UPDATED', (e) => {
+                if (!e.detail?.slug || e.detail.slug === slug) applyKitchenBranding(engine.kitchen);
+            });
             const qrUrl = 'https://circle-d-flow-web.vercel.app/pages/akwaba_kitchen';
             try {
                 if (window.QRCode) QRCode.toCanvas(document.getElementById('kitchen-qr'), qrUrl, { width: 160, margin: 1 });

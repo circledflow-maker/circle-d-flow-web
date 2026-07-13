@@ -182,7 +182,8 @@
     <script src="../js/agents/flowee_reward.js?v=1.0"></script>
     <script src="../js/agents/quest_engine.js?v=4.6"></script>
     <script src="../js/data/lisbon_quests.js?v=1.1"></script>
-    <script src="../js/agents/flowee_kitchen_tour.js?v=2.0" defer></script>
+    <script src="../js/agents/flavor_quest_engine.js?v=1.0"></script>
+    <script src="../js/agents/flowee_kitchen_tour.js?v=3.0" defer></script>
     <script src="../js/agents/mobile_sphere_nav.js?v=1.1" defer></script>
     <link rel="stylesheet" href="../css/mobile-sphere-nav.css">
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
@@ -243,8 +244,14 @@
         let selectedItem = null;
 
         document.addEventListener('DOMContentLoaded', async () => {
+            if (window.FlavorQuestEngine) window.FlavorQuestEngine.onEvent('radar_visit');
+            const extra = JSON.parse(localStorage.getItem('cdf_radar_kitchens') || '[]');
+            const focus = new URLSearchParams(location.search).get('kitchen');
+            if (focus && extra.find((k) => k.slug === focus) && window.Flowee) {
+                window.Flowee.talk(true, `New kitchen "${focus}" is live on Taste Radar!`, 'celebrate');
+            }
             radarItems = buildRadarItems();
-            await renderRadar();
+            await renderRadar(extra);
 
             const swiper = new Swiper('.tasteRadarSwiper', {
                 direction: 'vertical',
@@ -262,9 +269,20 @@
             });
         });
 
-        async function renderRadar() {
+        async function renderRadar(extraKitchens) {
             const container = document.getElementById('radar-container');
             container.innerHTML = '';
+            (extraKitchens || []).forEach((k) => {
+                if (k.slug === 'akwabalx') return;
+                container.innerHTML += `
+                    <div class="swiper-slide bg-black">
+                        <div class="w-full max-w-sm mt-6 manga-panel-dark p-6 text-center">
+                            <h2 class="cinzel text-xl mb-2">${k.name || k.slug}</h2>
+                            <p class="text-xs space-mono text-white/70 mb-4">${k.tagline || 'New Taste World kitchen'}</p>
+                            <button onclick="location.href='${k.page || 'akwaba_kitchen.html?kitchen=' + k.slug}'" class="manga-btn px-6 py-2">Enter Kitchen</button>
+                        </div>
+                    </div>`;
+            });
             const board = window.AKWABA_KITCHEN?.menu_board;
             if (board) {
                 container.innerHTML += `
