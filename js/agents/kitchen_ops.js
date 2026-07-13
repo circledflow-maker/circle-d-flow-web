@@ -26,6 +26,18 @@
     try { return JSON.parse(order.status_log); } catch (_) { return []; }
   }
 
+  function fixUiText(s) {
+    if (!s) return s;
+    return String(s)
+      .replace(/â€"/g, '-')
+      .replace(/â€"/g, '-')
+      .replace(/â€¦/g, '...')
+      .replace(/Ã©/g, 'e')
+      .replace(/Ã§/g, 'c')
+      .replace(/\u2014/g, '-')
+      .replace(/\u2013/g, '-');
+  }
+
   function formatStatusTrail(order) {
     const log = parseStatusLog(order);
     if (!log.length) return '';
@@ -34,7 +46,7 @@
       const label = labels[e.status] || e.status;
       const who = e.by_name || e.by || 'Crew';
       const t = e.at ? new Date(e.at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
-      return `<div class="kds-trail">✓ ${label} · ${escapeHtml(who)}${t ? ` · ${t}` : ''}</div>`;
+      return `<div class="kds-trail">&#10003; ${label} &middot; ${escapeHtml(fixUiText(who))}${t ? ` &middot; ${t}` : ''}</div>`;
     }).join('');
   }
 
@@ -275,13 +287,13 @@
         : '';
       return `<div class="kds-card">
         <div class="text-[10px] text-white/40 font-mono">#${String(order.id || '').slice(0, 8)}</div>
-        <div class="font-bold text-sm text-white mt-1">${escapeHtml(names)}</div>
-        <div class="text-[10px] text-white/50 mt-1">€${parseFloat(order.total_eur || 0).toFixed(2)}</div>
-        ${order.pickup_note ? `<div class="text-[10px] text-[var(--terracotta)] mt-1">${escapeHtml(order.pickup_note)}</div>` : ''}
+        <div class="font-bold text-sm text-white mt-1">${escapeHtml(fixUiText(names))}</div>
+        <div class="text-[10px] text-white/50 mt-1">EUR ${parseFloat(order.total_eur || 0).toFixed(2)}</div>
+        ${order.pickup_note ? `<div class="text-[10px] text-[var(--terracotta)] mt-1">${escapeHtml(fixUiText(order.pickup_note))}</div>` : ''}
         ${trail ? `<div class="mt-2 space-y-0.5">${trail}</div>` : ''}
         ${readyNote}
         <div class="flex gap-1 mt-2 flex-wrap">
-          ${next ? `<button type="button" class="kds-advance flex-1" data-advance="${order.id}" data-next="${next}">${nextLabel} →</button>` : ''}
+          ${next ? `<button type="button" class="kds-advance flex-1" data-advance="${order.id}" data-next="${next}">${nextLabel} &rarr;</button>` : ''}
           ${order.status === 'ready' ? `<button type="button" class="kds-ticket text-[9px] px-2 py-1 border border-[var(--gold)]/50 rounded" data-ticket="${order.id}">Ticket</button>` : ''}
         </div>
       </div>`;
@@ -374,7 +386,7 @@
       this.renderSoulTicket();
       const stepLabel = { confirmed: 'Confirmed', in_progress: 'Cooking', ready: 'Ready', picked_up: 'Picked up' }[nextStatus] || nextStatus;
       if (window.Pusher) window.Pusher.showToast(`${stepLabel} by ${operatorName}`, 'success');
-      if (window.Flowee) window.Flowee.talk(true, `Order ${stepLabel.toLowerCase()} — ${operatorName}`, 'guide');
+      if (window.Flowee) window.Flowee.talk(true, `Order ${stepLabel.toLowerCase()} - ${operatorName}`, 'guide');
     },
 
     renderStats() {

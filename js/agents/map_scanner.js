@@ -6,7 +6,7 @@ class MapScannerAgent {
     constructor() {
         this.locations = [
             { id: 'lx_factory', name: 'LX Factory', type: 'art', coords: { x: 200, y: 300 }, locked: false, desc: "The industrial heart of creativity." },
-            { id: 'graca', name: 'Miradouro da GraÃ§a', type: 'chill', coords: { x: 500, y: 150 }, locked: true, desc: "Where the poets gather at sunset." },
+            { id: 'graca', name: 'Miradouro da Graca', type: 'chill', coords: { x: 500, y: 150 }, locked: true, desc: "Where the poets gather at sunset." },
             { id: 'underdogs', name: 'Underdogs Gallery', type: 'art', coords: { x: 600, y: 400 }, locked: true, desc: "Home of the visual vanguard." }
         ];
         this.init();

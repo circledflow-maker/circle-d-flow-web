@@ -19,8 +19,9 @@
     <link rel="stylesheet" href="../css/styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-    <script src="../js/api_config.js" defer></script>
-    <script src="../js/agents/supabase_client.js?v=4.1" defer></script>
+    <script src="../js/api_config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/agents/supabase_client.js?v=4.1"></script>
     <style>
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; overflow-x: hidden; max-width: 100vw; background-color: #050301; font-family: 'Plus Jakarta Sans', sans-serif; }
         #canvas-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
@@ -866,9 +867,12 @@
 
             try {
                 if (artistId) {
-                    const { data: artist } = await window.supabaseClient.from('master_artists').select('*').eq('id', artistId).single();
-                    if(artist) {
+                    const { data: artist, error } = await window.supabaseClient.from('master_artists').select('*').eq('id', artistId).single();
+                    if (artist) {
                         artistData = artist;
+                    } else if (error) {
+                        artistId = null;
+                        localStorage.removeItem('flowee_artist_id');
                     }
                 }
                 
@@ -892,7 +896,7 @@
                 }
 
                 if(artistData) {
-                    document.getElementById('artist-name').innerText = artistData.name;
+                    document.getElementById('artist-name').innerText = artistData.name || 'Navigator';
                     document.getElementById('artist-type').innerText = artistData.artist_type === 'performance' ? 'Performance Soul' : (artistData.artist_type === 'traveler' ? 'Nexus Traveler' : 'Service Weaver');
                     const profileXp = window.QuestEngine?.user?.exp ?? window.QuestEngine?.profile?.exp;
                     const displayExp = Math.max(artistData.exp || 0, profileXp || 0);
@@ -1056,10 +1060,49 @@
                         setTimeout(startInSanctuaryDeepFlow, 2000);
                     }
                 }
-            } catch(e) { console.error(e); }
+            } catch(e) { console.error(e); applySanctuaryHeaderFallback(); }
         }
 
-        setTimeout(initData, 1000);
+        function applySanctuaryHeaderFallback() {
+            const nameEl = document.getElementById('artist-name');
+            const typeEl = document.getElementById('artist-type');
+            const expEl = document.getElementById('artist-exp');
+            const flowEl = document.getElementById('artist-flow');
+            const storedName = localStorage.getItem('cdf_user_username') || 'Navigator';
+            if (nameEl && /^loading/i.test(nameEl.innerText.trim())) {
+                nameEl.innerText = storedName.toUpperCase();
+            }
+            if (typeEl && /connecting/i.test(typeEl.innerText)) {
+                typeEl.innerText = 'Performance Soul';
+            }
+            if (expEl && expEl.innerText === '0 EXP' && window.QuestEngine?.profile?.exp) {
+                expEl.innerText = `${window.QuestEngine.profile.exp} EXP`;
+            }
+            if (flowEl && flowEl.innerText === '0 FLOW' && window.QuestEngine?.profile?.flow) {
+                flowEl.innerText = `${window.QuestEngine.profile.flow} FLOW`;
+            }
+        }
+
+        async function bootSanctuaryData() {
+            for (let i = 0; i < 30 && !window.supabaseClient; i++) {
+                await new Promise((r) => setTimeout(r, 150));
+            }
+            await initData();
+            applySanctuaryHeaderFallback();
+        }
+
+        window.addEventListener('PROFILE_UPDATED', () => {
+            if (artistData) {
+                artistData.name = window.userProfile?.username || artistData.name;
+                artistData.exp = window.userProfile?.exp ?? artistData.exp;
+                document.getElementById('artist-name').innerText = artistData.name;
+                document.getElementById('artist-exp').innerText = `${artistData.exp || 0} EXP`;
+            } else {
+                applySanctuaryHeaderFallback();
+            }
+        });
+
+        bootSanctuaryData();
 
         // --- Flowee In-Sanctuary Chat Logic ---
         const fChat = document.getElementById('flowee-chat-area');

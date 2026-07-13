@@ -213,6 +213,13 @@
         let engine;
         let introSlideTimer = null;
 
+        function fixUiText(s) {
+            if (!s) return s;
+            return String(s)
+                .replace(/â€"/g, '-').replace(/â€"/g, '-')
+                .replace(/\u2014/g, '-').replace(/\u2013/g, '-');
+        }
+
         function imgUrl(path) {
             if (!path) return '';
             if (window.kitchenMediaUrl) return window.kitchenMediaUrl(path);
@@ -367,10 +374,10 @@
 
         const ORDER_FLOW = ['pending', 'confirmed', 'in_progress', 'ready'];
         const ORDER_HINTS = {
-            pending: 'Order received — crew will confirm shortly.',
+            pending: 'Order received - crew will confirm shortly.',
             confirmed: 'Confirmed! Kitchen is prepping your pickup.',
-            in_progress: 'Cooking now — almost ready at the bar.',
-            ready: 'READY — show your Soul Ticket at the bar!',
+            in_progress: 'Cooking now - almost ready at the bar.',
+            ready: 'READY - show your Soul Ticket at the bar!',
             picked_up: 'Enjoy! Thanks for visiting AkwabaLX.',
         };
 
@@ -397,7 +404,7 @@
                 if (log.length) {
                     crewEl.classList.remove('hidden');
                     const labels = { confirmed: 'Confirmed', in_progress: 'Cooking', ready: 'Ready' };
-                    crewEl.innerHTML = log.map((e) => `✓ ${labels[e.status] || e.status}: ${e.by_name || 'Crew'}`).join(' · ');
+                    crewEl.innerHTML = log.map((e) => `&#10003; ${labels[e.status] || e.status}: ${fixUiText(e.by_name || 'Crew')}`).join(' &middot; ');
                 } else {
                     crewEl.classList.add('hidden');
                 }
@@ -467,7 +474,7 @@
             }
             document.getElementById('kitchen-tagline').textContent = k.tagline || window.AKWABA_KITCHEN.tagline;
             const disc = document.getElementById('discount-note');
-            if (disc) disc.textContent = k.discount_note || window.AKWABA_KITCHEN.discount_note || 'Navigator discounts coming soon — collect Akoma rune for early access.';
+            if (disc) disc.textContent = fixUiText(k.discount_note || window.AKWABA_KITCHEN.discount_note || 'Navigator discounts coming soon - collect Akoma rune for early access.');
             const liveBadge = document.getElementById('kitchen-live-badge');
             if (liveBadge) liveBadge.classList.toggle('hidden', k.is_live === false);
             const titleImg = document.getElementById('kitchen-title-image');

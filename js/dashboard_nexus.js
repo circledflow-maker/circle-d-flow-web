@@ -899,13 +899,15 @@ window.ApexNexus = {
 
     checkIntegrity: function() {
         // Self-Repair: Ensure critical agents are active
-        const requiredAgents = ['Flowee', 'VisualEye', 'BridgePusher', 'Helper', 'BetaObserver', 'ZenMechanic'];
+        const requiredAgents = ['Flowee', 'VisualEye', 'BridgePusher', 'Helper', 'BetaObserver'];
+        const optionalAgents = ['ZenMechanic'];
         const missing = requiredAgents.filter(a => !window[a]);
+        const missingOptional = optionalAgents.filter(a => !window[a]);
         
         if(missing.length > 0) {
             console.warn(`[Apex] Integrity Alert. Agents Missing: ${missing.join(', ')}`);
-            // Attempt reload if critical mass failure (optional, maybe just warn for now)
-            // window.location.reload(); 
+        } else if (missingOptional.length > 0) {
+            console.info(`[Apex] Optional agents offline: ${missingOptional.join(', ')}`);
         } else {
              console.log("[Apex] Agent Mesh: 100% INTG.");
         }

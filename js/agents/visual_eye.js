@@ -90,14 +90,12 @@ class VisualEyeAgent {
     }
 
     checkPerformance() {
-        // Simple Web Vitals Check
         if (window.performance) {
             const timing = window.performance.timing;
+            if (!timing.loadEventEnd || timing.loadEventEnd <= timing.navigationStart) return;
             const loadTime = timing.loadEventEnd - timing.navigationStart;
-            
             if (loadTime > 3000) {
                  this.reportAnomaly("Time Dilation", `Reality loading slow (${loadTime}ms). Optimizing flow...`);
-                 // In future, this could trigger 'lazy load' enforcement
             } else {
                  console.log(`[${this.name}] Reality Sync: Optimal (${loadTime}ms).`);
             }

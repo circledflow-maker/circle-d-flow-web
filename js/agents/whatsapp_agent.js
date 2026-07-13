@@ -39,22 +39,28 @@ class WhatsAppAgent extends Agent {
     }
 
     async checkServerStatus() {
+        if (this._bridgeStatusChecked) return this._bridgeStatusCache || { connected: false };
         try {
             const url = this.isLocalBridge()
                 ? `${this.proxyUrl}/status`
                 : `${this.proxyUrl}?action=status`;
             const res = await fetch(url);
             const data = await res.json().catch(() => ({}));
+            this._bridgeStatusChecked = true;
+            this._bridgeStatusCache = data;
             if (data.connected) {
-                this.log('✅ Meta bridge online.');
+                this.log('Meta bridge online.');
             } else if (res.ok) {
-                this.log(`⚠️ Meta bridge offline: ${data.error || 'check Vercel env'}`);
-            } else {
-                this.log('⚠️ Bridge unreachable.');
+                const err = String(data.error || 'check Vercel env');
+                if (/expired|access token/i.test(err)) {
+                    console.info('[WhatsAppAgent] Bridge token expired - renew META token in Vercel env.');
+                } else {
+                    console.info(`[WhatsAppAgent] Bridge offline: ${err}`);
+                }
             }
             return data;
         } catch {
-            this.log('⚠️ Bridge unreachable.');
+            this._bridgeStatusChecked = true;
             return { connected: false };
         }
     }
