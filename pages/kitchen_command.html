@@ -67,7 +67,7 @@
                         (assigned || []).forEach(push);
                     }
                 }
-                const { data: live } = await window.supabaseClient.from('kitchens').select('slug,name,tagline,logo_url,cover_url').eq('slug', 'akwabalx').eq('is_live', true).maybeSingle();
+                const { data: live } = await window.supabaseClient.from('kitchens').select('slug,name,tagline,logo_url,cover_url').eq('slug', 'akwabalx').maybeSingle();
                 if (live) push(live);
             }
 

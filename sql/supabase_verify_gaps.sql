@@ -50,7 +50,5 @@ ORDER BY status DESC, e.table_name;
 -- After kitchen owner signs up:
 -- UPDATE public.kitchens SET owner_user_id = '<uuid>' WHERE slug = 'akwabalx';
 --
--- Realtime (Dashboard → Database → Replication):
--- ALTER PUBLICATION supabase_realtime ADD TABLE public.kitchen_orders;
--- ALTER PUBLICATION supabase_realtime ADD TABLE public.kitchen_messages;
--- ALTER PUBLICATION supabase_realtime ADD TABLE public.coop_invites;
+-- Realtime — run sql/kitchen_live_sync.sql (menu + orders + messages)
+-- Or Dashboard → Database → Replication → add kitchen_menu_items, kitchen_orders

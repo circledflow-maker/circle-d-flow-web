@@ -23,6 +23,14 @@ class KitchenEngine {
             }));
     }
 
+    applyMergedMenu(items, kitchenSlug) {
+        const merged = window.KitchenStore
+            ? window.KitchenStore.mergeMenu(items || [], kitchenSlug)
+            : (items || []);
+        this.menu = this.mapMenuItems(merged);
+        return this.menu;
+    }
+
     async load(slug) {
         const kitchenSlug = slug || 'akwabalx';
         const fallback = window.AKWABA_KITCHEN;
@@ -30,48 +38,54 @@ class KitchenEngine {
 
         if (!window.supabaseClient) {
             this.kitchen = normalize(fallback);
-            const merged = window.KitchenStore
-                ? window.KitchenStore.mergeMenu(fallback.menu || [], kitchenSlug)
-                : (fallback.menu || []);
-            this.menu = this.mapMenuItems(merged);
+            this.applyMergedMenu(fallback.menu || [], kitchenSlug);
             return this;
         }
         try {
             const { data: k, error } = await window.supabaseClient
-                .from('kitchens').select('*').eq('slug', kitchenSlug).eq('is_live', true).maybeSingle();
+                .from('kitchens').select('*').eq('slug', kitchenSlug).maybeSingle();
             if (!error && k) {
                 this.kitchen = normalize(k);
                 const { data: items } = await window.supabaseClient
                     .from('kitchen_menu_items').select('*').eq('kitchen_id', k.id).order('sort_order');
-                const merged = window.KitchenStore
-                    ? window.KitchenStore.mergeMenu(items || [], kitchenSlug)
-                    : (items || []);
-                this.menu = this.mapMenuItems(merged);
+                this.applyMergedMenu(items || [], kitchenSlug);
                 return this;
             }
         } catch (e) {
             console.warn('[KitchenEngine]', e.message);
         }
         this.kitchen = normalize(fallback);
-        const merged = window.KitchenStore
-            ? window.KitchenStore.mergeMenu(fallback.menu || [], kitchenSlug)
-            : (fallback.menu || []);
-        this.menu = this.mapMenuItems(merged);
+        this.applyMergedMenu(fallback.menu || [], kitchenSlug);
         return this;
     }
 
     subscribeMenuRealtime(onUpdate) {
         const slug = this.kitchen?.slug || 'akwabalx';
+        const menuKey = `cdf_kitchen_menu_${slug}`;
+        const brandKey = `cdf_kitchen_brand_${slug}`;
         const refresh = async () => {
             await this.load(slug);
             if (onUpdate) onUpdate(this.menu);
         };
-        window.addEventListener('KITCHEN_MENU_UPDATED', (e) => {
-            if (!e.detail?.slug || e.detail.slug === slug) refresh();
-        });
-        window.addEventListener('KITCHEN_BRAND_UPDATED', (e) => {
-            if (!e.detail?.slug || e.detail.slug === slug) refresh().then(() => onUpdate && onUpdate(this.menu));
-        });
+        if (!this._menuSyncBound) {
+            this._menuSyncBound = true;
+            window.addEventListener('KITCHEN_MENU_UPDATED', (e) => {
+                if (!e.detail?.slug || e.detail.slug === slug) refresh();
+            });
+            window.addEventListener('KITCHEN_BRAND_UPDATED', (e) => {
+                if (!e.detail?.slug || e.detail.slug === slug) refresh().then(() => onUpdate && onUpdate(this.menu));
+            });
+            window.addEventListener('storage', (e) => {
+                if (e.key === menuKey || e.key === brandKey) refresh();
+            });
+            try {
+                this._kitchenBc = new BroadcastChannel('cdf_kitchen_sync');
+                this._kitchenBc.onmessage = (e) => {
+                    const d = e.data || {};
+                    if (d.slug === slug && (d.type === 'menu' || d.type === 'brand')) refresh();
+                };
+            } catch (_) { /* BroadcastChannel unavailable */ }
+        }
         if (!window.supabaseClient || !this.kitchen?.id) return;
         if (this._menuChannel) window.supabaseClient.removeChannel(this._menuChannel);
         this._menuChannel = window.supabaseClient
@@ -147,4 +161,13 @@ class KitchenEngine {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => { new KitchenEngine(); });
+window.ensureKitchenEngine = function ensureKitchenEngine() {
+    if (window.KitchenEngine && typeof window.KitchenEngine.load === 'function') {
+        return window.KitchenEngine;
+    }
+    return new KitchenEngine();
+};
+
+if (!(window.KitchenEngine && typeof window.KitchenEngine.load === 'function')) {
+    new KitchenEngine();
+}

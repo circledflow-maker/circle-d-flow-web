@@ -161,6 +161,26 @@
     },
 
     subscribeRealtime() {
+      const slug = this.kitchen?.slug || 'akwabalx';
+      const menuKey = `cdf_kitchen_menu_${slug}`;
+      if (!this._opsSyncBound) {
+        this._opsSyncBound = true;
+        window.addEventListener('KITCHEN_MENU_UPDATED', (e) => {
+          if (!e.detail?.slug || e.detail.slug === slug) {
+            this.loadMenu().then(() => this.renderMenuEditor());
+          }
+        });
+        window.addEventListener('storage', (e) => {
+          if (e.key === menuKey) this.loadMenu().then(() => this.renderMenuEditor());
+        });
+        try {
+          this._opsBc = new BroadcastChannel('cdf_kitchen_sync');
+          this._opsBc.onmessage = (e) => {
+            const d = e.data || {};
+            if (d.slug === slug && d.type === 'menu') this.loadMenu().then(() => this.renderMenuEditor());
+          };
+        } catch (_) { /* BroadcastChannel unavailable */ }
+      }
       if (!window.supabaseClient || !this.kitchen?.id) return;
       if (this.channel) window.supabaseClient.removeChannel(this.channel);
       this.channel = window.supabaseClient
@@ -477,11 +497,13 @@
     },
 
     async saveMenuItem(id, row) {
+      const current = this.menu.find((m) => String(m.id) === String(id));
       const payload = {
         name: this.rowField(row, 'name'),
         description: this.rowField(row, 'description'),
         price_eur: parseFloat(this.rowField(row, 'price_eur')) || 0,
         category: this.rowField(row, 'category') || 'main',
+        is_available: current?.is_available !== false,
       };
       if (!payload.name) return;
       const slug = this.kitchen?.slug || 'akwabalx';
@@ -530,6 +552,8 @@
       btn.textContent = turningOn ? 'LIVE' : 'OFF';
       const slug = this.kitchen?.slug || 'akwabalx';
       await window.KitchenStore.saveMenuItem(slug, this.kitchen?.id, id, { is_available: turningOn });
+      const item = this.menu.find((m) => String(m.id) === String(id));
+      if (item) item.is_available = turningOn;
       if (window.Pusher) window.Pusher.showToast(turningOn ? 'Item LIVE on guest menu' : 'Item hidden', 'success');
     },
 

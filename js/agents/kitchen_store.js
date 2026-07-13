@@ -37,9 +37,29 @@
       return parseJson(localStorage.getItem(storeKey(slug, 'menu')), []);
     },
 
+    itemTimestamp(item) {
+      if (!item) return 0;
+      if (item.updated_at) {
+        const ts = Number(item.updated_at);
+        if (!Number.isNaN(ts) && ts > 0) return ts;
+        const parsed = Date.parse(item.updated_at);
+        if (!Number.isNaN(parsed)) return parsed;
+      }
+      return 0;
+    },
+
+    broadcastKitchenSync(slug, type) {
+      try {
+        const bc = new BroadcastChannel('cdf_kitchen_sync');
+        bc.postMessage({ slug, type });
+        bc.close();
+      } catch (_) { /* BroadcastChannel unavailable */ }
+    },
+
     saveMenuLocal(slug, items) {
       localStorage.setItem(storeKey(slug, 'menu'), JSON.stringify(items));
       window.dispatchEvent(new CustomEvent('KITCHEN_MENU_UPDATED', { detail: { slug } }));
+      this.broadcastKitchenSync(slug, 'menu');
     },
 
     mergeMenu(remote, slug) {
@@ -52,7 +72,12 @@
           map.delete(id);
           return;
         }
-        map.set(id, { ...(map.get(id) || {}), ...item });
+        const existing = map.get(id);
+        const localTs = this.itemTimestamp(item);
+        const remoteTs = this.itemTimestamp(existing);
+        if (!existing || localTs >= remoteTs) {
+          map.set(id, { ...existing, ...item });
+        }
       });
       return Array.from(map.values())
         .filter((i) => !i._deleted)
@@ -67,6 +92,7 @@
       const next = { ...this.getBranding(slug), ...patch, updated_at: Date.now() };
       localStorage.setItem(storeKey(slug, 'brand'), JSON.stringify(next));
       window.dispatchEvent(new CustomEvent('KITCHEN_BRAND_UPDATED', { detail: { slug } }));
+      this.broadcastKitchenSync(slug, 'brand');
       return next;
     },
 
@@ -156,15 +182,35 @@
       items.push(row);
       this.saveMenuLocal(slug, items);
 
+      const remapLocalId = (cloudId) => {
+        if (!cloudId || cloudId === id) return;
+        const list = this.getMenuLocal(slug);
+        const idx = list.findIndex((i) => String(i.id) === String(id));
+        if (idx < 0) return;
+        list[idx] = { ...list[idx], id: cloudId };
+        this.saveMenuLocal(slug, list);
+      };
+
       if (window.supabaseClient && payload.kitchen_id) {
         const insertPayload = { ...payload };
         delete insertPayload.id;
-        const direct = await this.trySupabaseMenuWrite('insert', 'kitchen_menu_items', insertPayload, {});
-        if (direct.ok) return { ok: true, source: 'supabase', id };
+        const { data, error } = await window.supabaseClient
+          .from('kitchen_menu_items')
+          .insert([insertPayload])
+          .select('id')
+          .single();
+        if (!error && data?.id) {
+          remapLocalId(data.id);
+          return { ok: true, source: 'supabase', id: data.id };
+        }
       }
 
       const cloud = await this.syncToCloud('insert_menu_item', { ...payload, kitchen_id: payload.kitchen_id }, slug);
-      if (cloud.ok) return { ok: true, source: 'api', id: cloud.id || id };
+      if (cloud.ok) {
+        const cloudId = cloud.id || id;
+        remapLocalId(cloudId);
+        return { ok: true, source: 'api', id: cloudId };
+      }
 
       return { ok: true, source: 'local', id, warning: cloud.error };
     },

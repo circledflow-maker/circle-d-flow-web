@@ -133,8 +133,8 @@
     <script src="../js/data/taste_world_i18n.js?v=1.0" defer></script>
     <script src="../js/agents/flavor_quest_engine.js?v=1.0" defer></script>
     <script src="../js/data/akwaba_kitchen_data.js?v=1.2" defer></script>
-    <script src="../js/agents/kitchen_store.js?v=1.0" defer></script>
-    <script src="../js/agents/kitchen_engine.js?v=1.3" defer></script>
+    <script src="../js/agents/kitchen_store.js?v=1.2" defer></script>
+    <script src="../js/agents/kitchen_engine.js?v=1.4" defer></script>
     <script src="../js/agents/flowee.js?v=3.4" defer></script>
     <script src="../js/agents/flowee_voice.js?v=1.1" defer></script>
     <script src="../js/agents/flowee_reward.js?v=1.0" defer></script>
@@ -347,7 +347,11 @@
 
         document.addEventListener('DOMContentLoaded', async () => {
             const slug = new URLSearchParams(location.search).get('kitchen') || 'akwabalx';
-            engine = window.KitchenEngine;
+            engine = window.ensureKitchenEngine ? window.ensureKitchenEngine() : window.KitchenEngine;
+            if (!engine || typeof engine.load !== 'function') {
+                console.error('[Kitchen] KitchenEngine failed to load');
+                return;
+            }
             await engine.load(slug);
             const k = engine.kitchen;
             applyKitchenBranding(k);
