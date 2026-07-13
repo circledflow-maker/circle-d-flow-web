@@ -40,9 +40,20 @@
         #guest-feedback-preview, #guest-feedback-video-preview { max-height:120px; border-radius:8px; }
         .order-step.active { border-color: var(--gold); color: var(--gold); background: rgba(212,175,55,0.12); box-shadow: 0 0 12px rgba(212,175,55,0.25); }
         .order-step.done { border-color: var(--sage); color: var(--sage); }
+        body.akwaba-kitchen-page .animus-global-nav .nav-btn { padding: 8px 4px !important; min-height: 52px; }
+        body.akwaba-kitchen-page .animus-global-nav .nav-btn .icon { font-size: 1.45rem !important; }
+        body.akwaba-kitchen-page .animus-global-nav .nav-label { font-size: 10px !important; letter-spacing: 0.04em !important; }
+        body.akwaba-kitchen-page #kitchen-qr { max-width: 200px; width: 100%; height: auto; }
+        body.akwaba-kitchen-page #kitchen-qr-section canvas { max-width: 200px !important; }
+        body.akwaba-kitchen-page .flavor-log-box label { font-size: 11px !important; padding: 10px 14px !important; }
+        body.akwaba-kitchen-page #btn-guest-feedback { font-size: 13px !important; padding: 12px !important; }
+        body.akwaba-kitchen-page #flowee-agent { bottom: calc(118px + env(safe-area-inset-bottom)); }
+        body.akwaba-kitchen-page { padding-bottom: calc(96px + env(safe-area-inset-bottom)); }
+        body.akwaba-kitchen-page #cart-bar { bottom: calc(80px + env(safe-area-inset-bottom)); }
+        .order-crew-trail { font-size: 9px; color: rgba(255,255,255,0.45); margin-top: 6px; }
     </style>
 </head>
-<body class="quest-triad-page">
+<body class="quest-triad-page akwaba-kitchen-page">
     <div id="kitchen-entry-reel" class="hidden" aria-hidden="true">
         <div id="intro-slideshow" class="intro-slideshow hidden"></div>
         <video id="entry-reel-video" playsinline muted preload="metadata" poster="../Assets/kitchens/akwabalx/hero-1.webp"></video>
@@ -99,6 +110,7 @@
                 <div data-step="ready" class="order-step py-2 rounded border border-white/10 text-white/40">Ready</div>
             </div>
             <p id="kitchen-order-hint" class="text-[10px] text-[var(--sage)] mt-2">—</p>
+            <div id="kitchen-order-crew" class="order-crew-trail hidden"></div>
         </div>
         <div id="menu-grid" class="grid gap-3 sm:grid-cols-2"></div>
     </section>
@@ -138,7 +150,7 @@
         <p id="discount-note" class="text-xs text-[var(--sage)] italic bg-white/5 border border-[var(--sage)]/30 rounded-lg p-3"></p>
     </section>
 
-    <section class="px-4 py-6 border-t border-white/10">
+    <section class="px-4 py-6 border-t border-white/10" id="kitchen-qr-section">
         <h2 class="cinzel text-[var(--gold)] text-sm mb-3">KITCHEN QR</h2>
         <p class="text-xs text-white/50 mb-3">Scan to open menu · Share at events · Link to Secret Garden</p>
         <div class="flex flex-col items-center gap-3">
@@ -188,7 +200,7 @@
     <script src="../js/agents/navigator_display.js?v=1.0" defer></script>
     <script src="../js/agents/kitchen_guest_nav.js?v=1.0" defer></script>
     <script src="../js/agents/kitchen_store.js?v=1.2" defer></script>
-    <script src="../js/agents/kitchen_engine.js?v=1.5" defer></script>
+    <script src="../js/agents/kitchen_engine.js?v=1.6" defer></script>
     <script src="../js/agents/flowee.js?v=3.4" defer></script>
     <script src="../js/agents/flowee_voice.js?v=1.1" defer></script>
     <script src="../js/agents/flowee_reward.js?v=1.0" defer></script>
@@ -379,8 +391,28 @@
             });
             const hint = document.getElementById('kitchen-order-hint');
             if (hint) hint.textContent = ORDER_HINTS[status] || '—';
+            const crewEl = document.getElementById('kitchen-order-crew');
+            const log = Array.isArray(order.status_log) ? order.status_log : [];
+            if (crewEl) {
+                if (log.length) {
+                    crewEl.classList.remove('hidden');
+                    const labels = { confirmed: 'Confirmed', in_progress: 'Cooking', ready: 'Ready' };
+                    crewEl.innerHTML = log.map((e) => `✓ ${labels[e.status] || e.status}: ${e.by_name || 'Crew'}`).join(' · ');
+                } else {
+                    crewEl.classList.add('hidden');
+                }
+            }
             if (status === 'ready' && window.Flowee) window.Flowee.talk(true, 'Your order is READY at the bar!', 'success');
         }
+
+        function onGuestPickupReady(e) {
+            const order = e.detail?.order;
+            if (order) {
+                renderOrderTracker(order);
+                document.getElementById('soul-ticket-modal')?.classList.remove('hidden');
+            }
+        }
+        window.addEventListener('KITCHEN_GUEST_PICKUP_READY', onGuestPickupReady);
 
         function trackGuestOrder(order) {
             if (!order?.id) return;

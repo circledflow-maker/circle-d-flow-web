@@ -20,6 +20,24 @@
     return `AKW-${raw}`;
   }
 
+  function parseStatusLog(order) {
+    if (!order?.status_log) return [];
+    if (Array.isArray(order.status_log)) return order.status_log;
+    try { return JSON.parse(order.status_log); } catch (_) { return []; }
+  }
+
+  function formatStatusTrail(order) {
+    const log = parseStatusLog(order);
+    if (!log.length) return '';
+    const labels = { confirmed: 'Confirmed', in_progress: 'Cooking', ready: 'Ready', picked_up: 'Picked up' };
+    return log.map((e) => {
+      const label = labels[e.status] || e.status;
+      const who = e.by_name || e.by || 'Crew';
+      const t = e.at ? new Date(e.at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
+      return `<div class="kds-trail">✓ ${label} · ${escapeHtml(who)}${t ? ` · ${t}` : ''}</div>`;
+    }).join('');
+  }
+
   window.KitchenOps = {
     kitchen: null,
     orders: [],
@@ -245,12 +263,23 @@
       const items = Array.isArray(order.items) ? order.items : [];
       const names = items.map((i) => i.name || i.title || 'Item').join(', ') || 'Pickup';
       const next = { pending: 'confirmed', confirmed: 'in_progress', in_progress: 'ready', ready: 'picked_up' }[order.status];
-      const nextLabel = { confirmed: 'Confirm', in_progress: 'Cooking', ready: 'Ready', picked_up: 'Picked Up' }[next] || 'Done';
+      const nextLabel = {
+        pending: 'Confirm Order',
+        confirmed: 'Start Cooking',
+        in_progress: 'Mark Ready',
+        ready: 'Picked Up',
+      }[order.status] || 'Done';
+      const trail = formatStatusTrail(order);
+      const readyNote = order.status === 'ready'
+        ? '<div class="kds-trail text-[var(--sage)]">Guest notified when all steps confirmed</div>'
+        : '';
       return `<div class="kds-card">
         <div class="text-[10px] text-white/40 font-mono">#${String(order.id || '').slice(0, 8)}</div>
         <div class="font-bold text-sm text-white mt-1">${escapeHtml(names)}</div>
         <div class="text-[10px] text-white/50 mt-1">€${parseFloat(order.total_eur || 0).toFixed(2)}</div>
         ${order.pickup_note ? `<div class="text-[10px] text-[var(--terracotta)] mt-1">${escapeHtml(order.pickup_note)}</div>` : ''}
+        ${trail ? `<div class="mt-2 space-y-0.5">${trail}</div>` : ''}
+        ${readyNote}
         <div class="flex gap-1 mt-2 flex-wrap">
           ${next ? `<button type="button" class="kds-advance flex-1" data-advance="${order.id}" data-next="${next}">${nextLabel} →</button>` : ''}
           ${order.status === 'ready' ? `<button type="button" class="kds-ticket text-[9px] px-2 py-1 border border-[var(--gold)]/50 rounded" data-ticket="${order.id}">Ticket</button>` : ''}
@@ -258,26 +287,82 @@
       </div>`;
     },
 
+    async getOperatorName() {
+      if (!window.supabaseClient) return localStorage.getItem('cdf_user_username') || 'Kitchen Crew';
+      try {
+        const { data: { user } } = await window.supabaseClient.auth.getUser();
+        if (!user) return 'Kitchen Crew';
+        const { data } = await window.supabaseClient.from('profiles').select('username').eq('id', user.id).single();
+        return data?.username || user.email?.split('@')[0] || 'Operator';
+      } catch (_) {
+        return localStorage.getItem('cdf_user_username') || 'Kitchen Crew';
+      }
+    },
+
+    notifyGuestPickup(order) {
+      if (!order?.id) return;
+      window.dispatchEvent(new CustomEvent('KITCHEN_ORDER_READY', {
+        detail: {
+          orderId: order.id,
+          order,
+          kitchenId: this.kitchen?.id,
+          slug: this.kitchen?.slug,
+        },
+      }));
+      try {
+        const bc = new BroadcastChannel('cdf_kitchen_sync');
+        bc.postMessage({ type: 'order_ready', orderId: order.id, slug: this.kitchen?.slug });
+        bc.close();
+      } catch (_) {}
+    },
+
     async advanceOrder(orderId, nextStatus) {
       if (!orderId || !nextStatus) return;
+      const operatorName = await this.getOperatorName();
+      let operatorId = null;
+      if (window.supabaseClient) {
+        try {
+          const { data: { user } } = await window.supabaseClient.auth.getUser();
+          operatorId = user?.id || null;
+        } catch (_) {}
+      }
+      const existing = this.orders.find((o) => o.id === orderId) || this.allOrders.find((o) => o.id === orderId);
+      const log = parseStatusLog(existing);
+      log.push({
+        status: nextStatus,
+        by_id: operatorId,
+        by_name: operatorName,
+        at: new Date().toISOString(),
+      });
       const isLocal = String(orderId).startsWith('local-') || !window.supabaseClient;
       if (window.supabaseClient && !isLocal) {
-        const { error } = await window.supabaseClient.from('kitchen_orders').update({ status: nextStatus }).eq('id', orderId);
+        const { error } = await window.supabaseClient.from('kitchen_orders').update({
+          status: nextStatus,
+          status_log: log,
+        }).eq('id', orderId);
         if (error) { if (window.Pusher) window.Pusher.showToast(error.message, 'error'); return; }
       } else {
         const local = JSON.parse(localStorage.getItem('cdf_kitchen_orders_local') || '[]');
         const idx = local.findIndex((o) => o.id === orderId);
-        if (idx >= 0) { local[idx].status = nextStatus; localStorage.setItem('cdf_kitchen_orders_local', JSON.stringify(local)); }
+        if (idx >= 0) {
+          local[idx].status = nextStatus;
+          local[idx].status_log = log;
+          localStorage.setItem('cdf_kitchen_orders_local', JSON.stringify(local));
+        }
       }
       window.dispatchEvent(new CustomEvent('KITCHEN_ORDER_UPDATED', {
-        detail: { orderId, status: nextStatus, kitchenId: this.kitchen?.id, slug: this.kitchen?.slug },
+        detail: { orderId, status: nextStatus, kitchenId: this.kitchen?.id, slug: this.kitchen?.slug, status_log: log },
       }));
       try {
         const bc = new BroadcastChannel('cdf_kitchen_sync');
         bc.postMessage({ type: 'order', orderId, status: nextStatus, slug: this.kitchen?.slug });
         bc.close();
       } catch (_) {}
-      if (nextStatus === 'ready') await this.grantKitchenReward('order_ready');
+      if (nextStatus === 'ready') {
+        const order = { ...(existing || {}), id: orderId, status: nextStatus, status_log: log };
+        this.notifyGuestPickup(order);
+        await this.grantKitchenReward('order_ready');
+      }
       if (nextStatus === 'picked_up') {
         await this.grantKitchenReward('first_pickup');
         if (window.FlavorQuestEngine) window.FlavorQuestEngine.onEvent('soul_scan', { orderId });
@@ -287,7 +372,9 @@
       this.renderKDS();
       this.renderStats();
       this.renderSoulTicket();
-      if (window.Pusher) window.Pusher.showToast(`Order → ${nextStatus}`, 'success');
+      const stepLabel = { confirmed: 'Confirmed', in_progress: 'Cooking', ready: 'Ready', picked_up: 'Picked up' }[nextStatus] || nextStatus;
+      if (window.Pusher) window.Pusher.showToast(`${stepLabel} by ${operatorName}`, 'success');
+      if (window.Flowee) window.Flowee.talk(true, `Order ${stepLabel.toLowerCase()} — ${operatorName}`, 'guide');
     },
 
     renderStats() {

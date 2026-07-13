@@ -148,9 +148,13 @@ class KitchenEngine {
             try {
                 this._orderBc = new BroadcastChannel('cdf_kitchen_sync');
                 this._orderBc.onmessage = (e) => {
-                    if (e.data?.type === 'order') this._refreshTrackedOrder();
+                    if (e.data?.type === 'order' || e.data?.type === 'order_ready') this._refreshTrackedOrder();
                 };
             } catch (_) { /* BroadcastChannel unavailable */ }
+            window.addEventListener('KITCHEN_ORDER_READY', (e) => {
+                const d = e.detail || {};
+                if (!d.orderId || d.orderId === this._activeOrderId) this._onGuestOrderReady(d.order || null);
+            });
         }
         this._bindOrderChannel(orderId);
         this._refreshTrackedOrder();
@@ -159,7 +163,26 @@ class KitchenEngine {
     async _refreshTrackedOrder() {
         if (!this._activeOrderId || !this._orderUpdateCb) return;
         const order = await this.fetchOrder(this._activeOrderId);
-        if (order) this._orderUpdateCb(order);
+        if (order) {
+            if (order.status === 'ready' && this._lastReadyNotifyId !== order.id) {
+                this._lastReadyNotifyId = order.id;
+                this._onGuestOrderReady(order);
+            }
+            this._orderUpdateCb(order);
+        }
+    }
+
+    _onGuestOrderReady(order) {
+        if (!order) return;
+        const items = Array.isArray(order.items) ? order.items : [];
+        const title = items.map((i) => i.name).join(', ') || 'Your pickup';
+        const msg = `${title} is READY at the bar — show your Soul Ticket!`;
+        if (window.Flowee) window.Flowee.talk(true, msg, 'success');
+        if (window.Pusher) window.Pusher.showToast('Order ready for pickup!', 'success');
+        if (navigator.vibrate) {
+            try { navigator.vibrate([180, 80, 180, 80, 240]); } catch (_) {}
+        }
+        window.dispatchEvent(new CustomEvent('KITCHEN_GUEST_PICKUP_READY', { detail: { order } }));
     }
 
     _bindOrderChannel(orderId) {
