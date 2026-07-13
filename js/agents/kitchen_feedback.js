@@ -2,48 +2,28 @@
  * Kitchen Feedback — guest Flavor Log + live feed (photo/video)
  */
 (function () {
-  const MAX_IMAGE_BYTES = 4 * 1024 * 1024;
-  const MAX_VIDEO_BYTES = 12 * 1024 * 1024;
-
   function escapeHtml(s) {
     return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
 
-  function compressImage(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const img = new Image();
-        img.onload = () => {
-          const c = document.createElement('canvas');
-          const max = 900;
-          let w = img.width;
-          let h = img.height;
-          if (w > max) { h = h * max / w; w = max; }
-          c.width = w;
-          c.height = h;
-          c.getContext('2d').drawImage(img, 0, 0, w, h);
-          resolve(c.toDataURL('image/jpeg', 0.82));
-        };
-        img.onerror = reject;
-        img.src = e.target.result;
-      };
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
+  async function fitImage(file) {
+    if (window.MediaCompress?.compressImageFile) {
+      const result = await window.MediaCompress.compressImageFile(file);
+      return result.dataUrl;
+    }
+    return window.MediaCompress?.readFileAsDataUrl(file);
   }
 
-  function readVideoDataUrl(file) {
-    return new Promise((resolve, reject) => {
-      if (file.size > MAX_VIDEO_BYTES) {
-        reject(new Error('Video too large — max 12 MB'));
-        return;
+  async function fitVideo(file) {
+    if (window.MediaCompress?.compressVideoFile) {
+      const result = await window.MediaCompress.compressVideoFile(file);
+      if (result.note && window.Pusher) {
+        window.Pusher.showToast(result.note, 'info');
       }
-      const reader = new FileReader();
-      reader.onload = (e) => resolve(e.target.result);
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
+      return { dataUrl: result.dataUrl, mode: result.mode || 'video' };
+    }
+    const dataUrl = await window.MediaCompress.readFileAsDataUrl(file);
+    return { dataUrl, mode: 'video' };
   }
 
   function localFeedback(slug) {
@@ -72,8 +52,7 @@
 
     async handlePhotoInput(file) {
       if (!file) return null;
-      if (file.size > MAX_IMAGE_BYTES) throw new Error('Image too large — max 4 MB');
-      this.photoDataUrl = await compressImage(file);
+      this.photoDataUrl = await fitImage(file);
       this.videoDataUrl = null;
       this.mediaType = 'image';
       return this.photoDataUrl;
@@ -81,7 +60,14 @@
 
     async handleVideoInput(file) {
       if (!file) return null;
-      this.videoDataUrl = await readVideoDataUrl(file);
+      const result = await fitVideo(file);
+      if (result.mode === 'poster') {
+        this.photoDataUrl = result.dataUrl;
+        this.videoDataUrl = null;
+        this.mediaType = 'image';
+        return this.photoDataUrl;
+      }
+      this.videoDataUrl = result.dataUrl;
       this.photoDataUrl = null;
       this.mediaType = 'video';
       return this.videoDataUrl;
@@ -209,31 +195,58 @@
         starsWrap.querySelectorAll('[data-r]').forEach((b, j) => { b.style.opacity = j < 5 ? '1' : '0.35'; });
       }
 
+      const setBusy = (busy) => {
+        const btn = document.getElementById(opts.submitId || 'btn-guest-feedback');
+        if (btn) {
+          btn.disabled = busy;
+          btn.style.opacity = busy ? '0.6' : '1';
+        }
+      };
+
       document.getElementById(opts.photoId || 'guest-feedback-photo')?.addEventListener('change', async (e) => {
         const file = e.target.files?.[0];
         if (!file) return;
+        setBusy(true);
+        if (window.Pusher) window.Pusher.showToast('Optimizing photo…', 'info');
         try {
           const url = await this.handlePhotoInput(file);
           const prev = document.getElementById(opts.previewId || 'guest-feedback-preview');
           const vid = document.getElementById(opts.videoPreviewId || 'guest-feedback-video-preview');
           if (vid) { vid.classList.add('hidden'); vid.removeAttribute('src'); }
           if (prev) { prev.src = url; prev.classList.remove('hidden'); }
+          if (window.Pusher) window.Pusher.showToast('Photo ready', 'success');
         } catch (err) {
-          if (window.Pusher) window.Pusher.showToast(err.message, 'error');
+          if (window.Pusher) window.Pusher.showToast(err.message || 'Could not process photo', 'error');
+        } finally {
+          setBusy(false);
+          e.target.value = '';
         }
       });
 
       document.getElementById(opts.videoId || 'guest-feedback-video')?.addEventListener('change', async (e) => {
         const file = e.target.files?.[0];
         if (!file) return;
+        setBusy(true);
+        if (window.Pusher) window.Pusher.showToast('Optimizing video…', 'info');
         try {
           const url = await this.handleVideoInput(file);
           const prev = document.getElementById(opts.previewId || 'guest-feedback-preview');
           const vid = document.getElementById(opts.videoPreviewId || 'guest-feedback-video-preview');
-          if (prev) prev.classList.add('hidden');
-          if (vid) { vid.src = url; vid.classList.remove('hidden'); }
+          if (this.mediaType === 'video' && vid) {
+            if (prev) prev.classList.add('hidden');
+            vid.src = url;
+            vid.classList.remove('hidden');
+          } else if (prev) {
+            if (vid) { vid.classList.add('hidden'); vid.removeAttribute('src'); }
+            prev.src = url;
+            prev.classList.remove('hidden');
+          }
+          if (window.Pusher) window.Pusher.showToast('Media ready', 'success');
         } catch (err) {
-          if (window.Pusher) window.Pusher.showToast(err.message, 'error');
+          if (window.Pusher) window.Pusher.showToast(err.message || 'Could not process video', 'error');
+        } finally {
+          setBusy(false);
+          e.target.value = '';
         }
       });
 
@@ -242,8 +255,8 @@
         const result = await this.submit(body);
         if (!result.ok) {
           const msg = result.error === 'media_required'
-            ? 'Bitte Foto oder Video hinzufügen / Add photo or video'
-            : 'Bitte Text eingeben / Please write feedback';
+            ? 'Add a photo or video'
+            : 'Please write your feedback';
           if (window.Pusher) window.Pusher.showToast(msg, 'error');
           return;
         }

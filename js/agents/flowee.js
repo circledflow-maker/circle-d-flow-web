@@ -282,11 +282,11 @@ class FloweeAgent {
         const raw = localStorage.getItem('cdf_lang')
             || localStorage.getItem('cqr_lang')
             || localStorage.getItem('cdf_language')
-            || (navigator.language || 'de');
+            || (navigator.language || 'en');
         const code = String(raw).slice(0, 2).toLowerCase();
-        if (code === 'en') return 'en';
+        if (code === 'de') return 'de';
         if (code === 'pt') return 'pt';
-        return 'de';
+        return 'en';
     }
 
     t(key) {
@@ -1429,9 +1429,11 @@ class FloweeAgent {
         if (q.includes('stuck') || q.includes('new') && (q.includes('order') || q.includes('bestell'))) {
             const lang = this.getLang();
             return {
-                text: lang === 'en'
-                    ? 'If Confirm does not move the card: status saves locally first, then cloud-sync. Check you are signed in as kitchen owner or crew with ops code AKWABA-CREW in env.'
-                    : 'Wenn Bestätigen nicht springt: Status wird sofort lokal gespeichert und dann in die Cloud synchronisiert. Als Kitchen-Owner einloggen oder Ops-Code prüfen.',
+                text: lang === 'de'
+                    ? 'Wenn Bestätigen nicht springt: Status wird sofort lokal gespeichert und dann in die Cloud synchronisiert. Als Kitchen-Owner einloggen oder Ops-Code prüfen.'
+                    : lang === 'pt'
+                        ? 'Se Confirmar não mover o cartão: o estado grava localmente primeiro, depois sincroniza na cloud. Verifica login ou código AKWABA-CREW.'
+                        : 'If Confirm does not move the card: status saves locally first, then cloud-sync. Check you are signed in as kitchen owner or crew with ops code AKWABA-CREW in env.',
             };
         }
 

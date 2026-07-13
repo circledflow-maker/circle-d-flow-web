@@ -484,6 +484,42 @@
             panel.setAttribute('aria-hidden', show ? 'false' : 'true');
         }
 
+        const GUILD_STALL_FALLBACK = {
+            arts: 'arts_stall.html',
+            sounds: 'sound_stall.html',
+            products: 'product_stall.html',
+            skills: 'skills_stall.html',
+            healing: 'healing_stall.html',
+            services: 'services_stall.html',
+        };
+
+        function openMyStall() {
+            document.getElementById('integrated-iframe').src = 'marketplace-stall.html';
+            document.getElementById('iframe-modal').showModal();
+        }
+
+        function openForge() {
+            document.getElementById('flowee-overlay').classList.remove('hidden');
+            if (typeof startUploadFlow === 'function') startUploadFlow(true);
+            else window.location.href = 'marketplace_3d.html?intent=upload';
+        }
+
+        function triggerCinematicEntryFallback(guildName) {
+            updateGuildPanels(guildName || 'arts');
+            const stall = GUILD_STALL_FALLBACK[guildName];
+            if (stall) {
+                document.getElementById('integrated-iframe').src = stall;
+                document.getElementById('iframe-modal').showModal();
+                return;
+            }
+            document.getElementById('bazaar-viewport')?.classList.add('hidden');
+            document.getElementById('guild-focus-panel')?.classList.remove('hidden-panel');
+        }
+
+        window.openMyStall = openMyStall;
+        window.openForge = openForge;
+        window.triggerCinematicEntry = triggerCinematicEntryFallback;
+
         document.addEventListener('DOMContentLoaded', () => {
             if (typeof THREE === 'undefined') {
                 console.warn('[Bazaar3D] THREE not loaded — 2D carousel still works.');
@@ -824,7 +860,6 @@
         let targetLookAt = new THREE.Vector3();
         let currentLookAt = new THREE.Vector3(0, 10, -36);
         let skyLookAtTarget = new THREE.Vector3(0, 10, -36);
-        let skyLookAtTarget = new THREE.Vector3(0, 4, -28);
 
         function triggerCinematicEntry(guildName) {
             const zone = bazaarZones[guildName] || bazaarZones.auctionCenter;
@@ -1025,15 +1060,6 @@
 
 
         // --- 8. INTEGRATE HTML PAGES (IFRAMES) ---
-        function openMyStall() {
-            document.getElementById('integrated-iframe').src = "marketplace-stall.html";
-            document.getElementById('iframe-modal').showModal();
-        }
-        function openForge() {
-            document.getElementById('flowee-overlay').classList.remove('hidden');
-            if (typeof startUploadFlow === 'function') startUploadFlow(true);
-            else window.location.href = 'marketplace_3d.html?intent=upload';
-        }
         const GUILD_STALL_MAP = {
             arts: 'arts_stall.html',
             sounds: 'sound_stall.html',

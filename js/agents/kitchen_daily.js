@@ -123,20 +123,20 @@
         <div id="daily-report-print" class="daily-report-sheet">
           <header class="daily-report-head">
             <h1 class="cinzel text-[var(--gold)] text-lg tracking-widest">${escapeHtml(report.kitchen_name)}</h1>
-            <p class="text-[10px] uppercase tracking-widest text-white/50">Tagesabschluss · ${report.report_date}</p>
-            <p class="text-[9px] text-white/40 mt-1">${report.auto_generated ? 'Automatisch 23:30' : 'Manuell erstellt'} · ${new Date(report.generated_at).toLocaleString('de-DE')}</p>
+            <p class="text-[10px] uppercase tracking-widest text-white/50">Daily Close · ${report.report_date}</p>
+            <p class="text-[9px] text-white/40 mt-1">${report.auto_generated ? 'Auto 23:30' : 'Manual'} · ${new Date(report.generated_at).toLocaleString('en-GB')}</p>
           </header>
           <div class="daily-stat-grid">
-            <div><strong>${report.orders_total}</strong><span>Bestellungen</span></div>
-            <div><strong>${report.orders_picked_up}</strong><span>Abgeholt</span></div>
-            <div><strong>€${Number(report.revenue_eur).toFixed(2)}</strong><span>Umsatz</span></div>
-            <div><strong>${report.soul_scans}</strong><span>Soul-Scans</span></div>
+            <div><strong>${report.orders_total}</strong><span>Orders</span></div>
+            <div><strong>${report.orders_picked_up}</strong><span>Picked up</span></div>
+            <div><strong>€${Number(report.revenue_eur).toFixed(2)}</strong><span>Revenue</span></div>
+            <div><strong>${report.soul_scans}</strong><span>Soul scans</span></div>
             <div><strong>${report.avg_vibe}</strong><span>Vibe</span></div>
             <div><strong>${report.trust_points}</strong><span>Trust</span></div>
           </div>
-          <p class="text-[9px] uppercase text-[var(--gold)] mt-4 mb-2">Top Gerichte</p>
-          <table class="daily-dish-table"><thead><tr><th>#</th><th>Gericht</th><th>Anz.</th></tr></thead><tbody>${dishes}</tbody></table>
-          <p class="text-[9px] text-white/40 mt-3">Crew-Nachrichten: ${report.crew_messages} · Bereit: ${report.status_breakdown?.ready || 0} · Offen: ${report.status_breakdown?.pending || 0}</p>
+          <p class="text-[9px] uppercase text-[var(--gold)] mt-4 mb-2">Top Dishes</p>
+          <table class="daily-dish-table"><thead><tr><th>#</th><th>Dish</th><th>Qty</th></tr></thead><tbody>${dishes}</tbody></table>
+          <p class="text-[9px] text-white/40 mt-3">Crew messages: ${report.crew_messages} · Ready: ${report.status_breakdown?.ready || 0} · Open: ${report.status_breakdown?.pending || 0}</p>
         </div>`;
     },
 
@@ -160,9 +160,9 @@
       this.saveArchiveLocal(slug, report);
       const cloud = await this.syncCloud(slug, report);
       if (!cloud.ok && window.Pusher && !auto) {
-        window.Pusher.showToast('Archiv lokal gespeichert', 'success');
+        window.Pusher.showToast('Saved to local archive', 'success');
       } else if (window.Pusher && !auto) {
-        window.Pusher.showToast('Tagesabschluss erstellt', 'success');
+        window.Pusher.showToast('Daily close report created', 'success');
       }
       this.renderPanel();
       return report;
@@ -193,14 +193,14 @@
           <div class="daily-archive-row">
             <div>
               <div class="font-bold text-sm text-white">${r.report_date}</div>
-              <div class="text-[9px] text-white/40">${r.auto_generated ? 'Auto 23:30' : 'Manuell'} · €${Number(r.revenue_eur).toFixed(2)} · ${r.orders_picked_up} Pickups</div>
+              <div class="text-[9px] text-white/40">${r.auto_generated ? 'Auto 23:30' : 'Manual'} · €${Number(r.revenue_eur).toFixed(2)} · ${r.orders_picked_up} pickups</div>
             </div>
             <div class="flex gap-1">
-              <button type="button" class="daily-archive-btn" data-view="${r.report_date}" title="Ansehen"><span class="material-symbols-outlined text-sm">visibility</span></button>
+              <button type="button" class="daily-archive-btn" data-view="${r.report_date}" title="View"><span class="material-symbols-outlined text-sm">visibility</span></button>
               <button type="button" class="daily-archive-btn" data-pdf="${r.report_date}" title="PDF"><span class="material-symbols-outlined text-sm">picture_as_pdf</span></button>
             </div>
           </div>`).join('')
-        : '<p class="text-white/30 text-xs">Noch keine Abschlüsse — manuell erstellen oder Auto um 23:30.</p>';
+        : '<p class="text-white/30 text-xs">No daily closes yet — create manually or wait for auto at 23:30.</p>';
 
       list.querySelectorAll('[data-view]').forEach((btn) => {
         btn.addEventListener('click', () => {
@@ -234,7 +234,7 @@
       const cutoff = 23 * 60 + 30;
       if (mins >= cutoff && !this.hasReportForDay(slug, day)) {
         this.generateReport({ auto: true }).then(() => {
-          if (window.Flowee) window.Flowee.talk(true, `Tagesabschluss ${day} automatisch im Archiv hinterlegt.`, 'guide');
+          if (window.Flowee) window.Flowee.talk(true, `Daily close ${day} saved to archive automatically.`, 'guide');
         });
       }
     },

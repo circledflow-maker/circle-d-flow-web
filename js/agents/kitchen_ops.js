@@ -111,10 +111,10 @@
   function formatStatusTrail(order) {
     const log = parseStatusLog(order);
     if (!log.length) return '';
-    const lang = localStorage.getItem('cdf_lang') || localStorage.getItem('cqr_lang') || 'de';
-    const labels = lang.startsWith('en')
-      ? { confirmed: 'Confirmed', in_progress: 'Cooking', ready: 'Ready', picked_up: 'Picked up' }
-      : { confirmed: 'Bestätigt', in_progress: 'In Zubereitung', ready: 'Abholbereit', picked_up: 'Abgeholt' };
+    const lang = localStorage.getItem('cdf_lang') || localStorage.getItem('cqr_lang') || 'en';
+    const labels = lang.startsWith('de')
+      ? { confirmed: 'Bestätigt', in_progress: 'In Zubereitung', ready: 'Abholbereit', picked_up: 'Abgeholt' }
+      : { confirmed: 'Confirmed', in_progress: 'Cooking', ready: 'Ready', picked_up: 'Picked up' };
     return log.map((e) => {
       const label = labels[e.status] || e.status;
       const who = e.by_name || e.by || 'Crew';
@@ -364,11 +364,11 @@
         ready: 'shopping_bag',
       }[order.status] || 'check';
       const nextLabel = {
-        pending: 'Bestätigen',
-        confirmed: 'Kochen',
-        in_progress: 'Bereit',
-        ready: 'Abgeholt',
-      }[order.status] || 'Weiter';
+        pending: 'Confirm',
+        confirmed: 'Cook',
+        in_progress: 'Ready',
+        ready: 'Picked up',
+      }[order.status] || 'Next';
       const trail = formatStatusTrail(order);
       const readyNote = order.status === 'ready'
         ? '<div class="kds-trail text-[var(--sage)]">Guest notified when all steps confirmed</div>'
@@ -478,7 +478,7 @@
         }
         if (!error) synced = true;
         else if (window.Pusher) {
-          window.Pusher.showToast('Lokal gespeichert — Cloud folgt', 'warning');
+          window.Pusher.showToast('Saved locally — cloud sync pending', 'warning');
         }
       }
       if (synced && kid) pruneOrderOverlay(kid, [{ id: orderId, status: nextStatus }]);
@@ -504,18 +504,18 @@
       this.renderKDS();
       this.renderStats();
       this.renderSoulTicket();
-      const lang = localStorage.getItem('cdf_lang') || localStorage.getItem('cqr_lang') || 'de';
-      const stepLabels = lang.startsWith('en')
-        ? { confirmed: 'Confirmed', in_progress: 'Cooking', ready: 'Ready', picked_up: 'Picked up' }
-        : { confirmed: 'Bestätigt', in_progress: 'In Zubereitung', ready: 'Abholbereit', picked_up: 'Abgeholt' };
+      const lang = localStorage.getItem('cdf_lang') || localStorage.getItem('cqr_lang') || 'en';
+      const stepLabels = lang.startsWith('de')
+        ? { confirmed: 'Bestätigt', in_progress: 'In Zubereitung', ready: 'Abholbereit', picked_up: 'Abgeholt' }
+        : { confirmed: 'Confirmed', in_progress: 'Cooking', ready: 'Ready', picked_up: 'Picked up' };
       const stepLabel = stepLabels[nextStatus] || nextStatus;
       if (window.Pusher) {
-        window.Pusher.showToast(lang.startsWith('en') ? `${stepLabel} · ${operatorName}` : `${stepLabel} · ${operatorName}`, 'success');
+        window.Pusher.showToast(`${stepLabel} · ${operatorName}`, 'success');
       }
       if (window.Flowee) {
-        const msg = lang.startsWith('en')
-          ? `Order ${stepLabel.toLowerCase()} — ${operatorName}`
-          : `Bestellung ${stepLabel.toLowerCase()} — ${operatorName}`;
+        const msg = lang.startsWith('de')
+          ? `Bestellung ${stepLabel.toLowerCase()} — ${operatorName}`
+          : `Order ${stepLabel.toLowerCase()} — ${operatorName}`;
         window.Flowee.talk(true, msg, 'guide');
       }
     },
@@ -708,6 +708,10 @@
     },
 
     compressImage(file, maxSize) {
+      if (window.MediaCompress?.compressImageFile) {
+        const maxBytes = window.MediaCompress.MAX_IMAGE_BYTES;
+        return window.MediaCompress.compressImageFile(file, maxBytes).then((r) => r.dataUrl);
+      }
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -1057,10 +1061,10 @@
             }
           }
           pushLocal();
-          if (window.Pusher) window.Pusher.showToast('Crew-Nachricht lokal gespeichert', 'warning');
+          if (window.Pusher) window.Pusher.showToast('Crew message saved locally', 'warning');
         } catch (e) {
           pushLocal();
-          if (window.Pusher) window.Pusher.showToast('Crew offline — lokal gespeichert', 'warning');
+          if (window.Pusher) window.Pusher.showToast('Crew offline — saved locally', 'warning');
         }
       } else {
         pushLocal();
