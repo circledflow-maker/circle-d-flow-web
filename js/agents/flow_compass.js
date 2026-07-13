@@ -86,12 +86,24 @@ class FlowCompassAgent {
                 position: relative; width: 65vmin; height: 65vmin; max-width: 650px; max-height: 650px;
                 display: flex; align-items: center; justify-content: center;
                 perspective: 1200px; transform-style: preserve-3d; transition: all 0.5s;
+                --orbit-fit: 1;
+                transform: scale(var(--orbit-fit));
+                transform-origin: center center;
             }
             .orrery-container.master-active { transform: scale(0.9) translateZ(-100px); }
             .orrery-container.master-active .planet-node, .orrery-container.master-active .orbit-ring { opacity: 0.15; filter: blur(3px); pointer-events: none; }
             .orrery-container.master-active .master-core { opacity: 0; transform: scale(0); }
             
-            @media (max-width: 768px) { .orrery-container { width: 90vmin; height: 90vmin; } }
+            @media (max-width: 768px) {
+                .orrery-container {
+                    width: min(74vmin, calc(100vw - 24px));
+                    height: min(74vmin, calc(100dvh - 210px));
+                    max-width: calc(100vw - 24px);
+                    max-height: calc(100dvh - 210px);
+                }
+                .ring-outer, .os-outer { width: 78%; height: 78%; }
+                .planet-label { display: none; }
+            }
 
             /* RINGS & SYSTEMS (PERCENTAGE BASED) */
             .orbit-ring { position: absolute; border-radius: 50%; border: 1px dashed rgba(255,255,255,0.1); top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; }
@@ -169,7 +181,7 @@ class FlowCompassAgent {
             .sphere-world-btn .sw-desc { font-size: 10px; color: #888; margin-top: 2px; }
             .sphere-sheet-enter-hub { margin: 0 12px 12px; padding: 12px; background: rgba(212,175,55,0.15); border: 1px dashed var(--haki-gold); border-radius: 10px; color: var(--haki-gold); font-family: 'Cinzel', serif; font-size: 12px; cursor: pointer; text-align: center; }
             
-            #flowee-guide-msg { position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.85); border: 1px solid var(--haki-gold); padding: 12px 25px; border-radius: 12px; color: var(--haki-gold); font-family: 'Cinzel', serif; font-size: 1rem; text-align: center; opacity: 0; transition: 0.5s; pointer-events: none; z-index: 500; min-width: 320px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+            #flowee-guide-msg { position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.85); border: 1px solid var(--haki-gold); padding: 12px 25px; border-radius: 12px; color: var(--haki-gold); font-family: 'Cinzel', serif; font-size: 1rem; text-align: center; opacity: 0; transition: 0.5s; pointer-events: none; z-index: 500; min-width: min(320px, calc(100vw - 32px)); max-width: calc(100vw - 32px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); box-sizing: border-box; }
             #flowee-guide-msg.visible { opacity: 1; }
 
             /* VISION WORLD TRANSITIONS (WARP SPEED) */
@@ -213,7 +225,8 @@ class FlowCompassAgent {
         const universe = document.createElement('div');
         universe.className = 'cdf-universe';
         document.body.prepend(universe);
-        for(let i=0; i<320; i++) {
+        const starCount = window.innerWidth < 768 ? 140 : 320;
+        for(let i=0; i<starCount; i++) {
             const star = document.createElement('div');
             star.className = (i % 24 === 0) ? 'cdf-star symbol' : 'cdf-star';
             if(i % 24 === 0) star.innerText = Math.random() > 0.5 ? '✦' : '·';
@@ -223,7 +236,7 @@ class FlowCompassAgent {
             star.style.setProperty('--max-opacity', Math.random() * 0.9 + 0.35);
             universe.appendChild(star);
         }
-        for(let i=0; i<10; i++) {
+        for(let i=0; i<(window.innerWidth < 768 ? 4 : 10); i++) {
             const m = document.createElement('div'); m.className = 'cdf-meteor'; m.style.left = `${Math.random() * 100}%`; m.style.top = `${Math.random() * 40}%`; m.style.animationDelay = `${Math.random() * 15}s`;
             universe.appendChild(m);
         }
@@ -287,6 +300,37 @@ class FlowCompassAgent {
 
         this.renderOrbit(innerOrbit, 'inner');
         this.renderOrbit(outerOrbit, 'outer');
+        this.fitOrreryToViewport();
+    }
+
+    fitOrreryToViewport() {
+        const container = this.container || document.querySelector('.orrery-container');
+        if (!container) return;
+
+        const apply = () => {
+            container.style.setProperty('--orbit-fit', '1');
+            if (window.innerWidth > 768) return;
+
+            const stage = container.parentElement;
+            const availW = (stage?.clientWidth || window.innerWidth) - 8;
+            const availH = window.innerHeight - 200;
+            const size = container.offsetWidth || container.getBoundingClientRect().width;
+            if (!size) return;
+
+            const scale = Math.min(1, availW / size, availH / size);
+            container.style.setProperty('--orbit-fit', String(Math.max(0.72, scale)));
+        };
+
+        apply();
+        if (!this._fitBound) {
+            this._fitBound = true;
+            let t;
+            window.addEventListener('resize', () => {
+                clearTimeout(t);
+                t = setTimeout(apply, 120);
+            });
+            window.addEventListener('orientationchange', () => setTimeout(apply, 200));
+        }
     }
 
     buildPlanetNode(id, world, angle) {
@@ -564,7 +608,10 @@ class FlowCompassAgent {
                 this.resetFocus();
             }
         });
-        window.addEventListener('resize', () => { this.isMobile = window.innerWidth < 768; });
+        window.addEventListener('resize', () => {
+            this.isMobile = window.innerWidth < 768;
+            this.fitOrreryToViewport();
+        });
     }
     showPasswordGate() { document.getElementById('sound-gate').classList.add('visible'); setTimeout(() => document.getElementById('gate-pass').focus(), 100); }
     closeGate() { document.getElementById('sound-gate').classList.remove('visible'); }

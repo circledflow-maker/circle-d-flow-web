@@ -1,7 +1,36 @@
 /* Dashboard mobile integrity — prevents horizontal bleed on narrow viewports */
 html {
-    overflow-x: hidden;
+    overflow-x: clip;
     max-width: 100%;
+}
+
+body.dashboard-page {
+    overflow-x: clip;
+    max-width: 100vw;
+}
+
+body.dashboard-page main {
+    width: 100%;
+    max-width: 100vw;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.dashboard-orbit-stage {
+    width: 100%;
+    max-width: 100vw;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.mandala-container {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
 }
 
 .cdf-universe,
@@ -31,6 +60,44 @@ html {
     overflow-wrap: anywhere;
 }
 
+@media (max-width: 768px) {
+  .orrery-container {
+    width: min(74vmin, calc(100vw - 24px)) !important;
+    height: min(74vmin, calc(100dvh - 210px)) !important;
+    max-width: calc(100vw - 24px) !important;
+    max-height: calc(100dvh - 210px) !important;
+    transform: scale(var(--orbit-fit, 1));
+    transform-origin: center center;
+  }
+
+  .planet-node {
+    width: 36px !important;
+    height: 36px !important;
+    margin-top: -18px !important;
+    margin-left: -18px !important;
+  }
+
+  .planet-label {
+    display: none !important;
+  }
+
+  #daily-activity-pill {
+    display: none;
+  }
+
+  #flowee-guide-msg {
+    min-width: 0 !important;
+    width: min(300px, calc(100vw - 32px));
+    font-size: 0.85rem !important;
+    padding: 10px 16px !important;
+  }
+
+  .master-core {
+    width: 72px !important;
+    height: 72px !important;
+  }
+}
+
 @media (max-width: 480px) {
   .dashboard-sanctuary-link span:last-child {
     display: none;
@@ -52,9 +119,9 @@ html {
     height: 64px !important;
   }
 
-  .orbit-system.os-outer {
-    transform: scale(0.92);
-    transform-origin: center top;
+  .orrery-container {
+    width: min(70vmin, calc(100vw - 20px)) !important;
+    height: min(70vmin, calc(100dvh - 200px)) !important;
   }
 }
 

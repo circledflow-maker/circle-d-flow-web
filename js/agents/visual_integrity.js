@@ -16,8 +16,8 @@ class VisualIntegrityAgent {
 
     init() {
         console.log(`[Phoenix-EE] ${this.name} online.`);
-        document.documentElement.style.overflowX = 'hidden';
-        document.body.style.overflowX = 'hidden';
+        document.documentElement.style.overflowX = 'clip';
+        document.body.style.overflowX = 'clip';
         document.body.style.maxWidth = '100vw';
 
         window.addEventListener('load', () => this.checkSystem());
@@ -62,8 +62,8 @@ class VisualIntegrityAgent {
             console.warn(`[${this.name}] Horizontal overflow: body ${bodyWidth}px > viewport ${docWidth}px (+${overflow}px)`);
         }
 
-        document.documentElement.style.overflowX = 'hidden';
-        document.body.style.overflowX = 'hidden';
+        document.documentElement.style.overflowX = 'clip';
+        document.body.style.overflowX = 'clip';
     }
 
     enforceTheme() {
