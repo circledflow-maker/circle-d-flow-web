@@ -2722,48 +2722,33 @@
         const soulLight = new THREE.PointLight(savedColor, 2.0, 15);
         soulGroup.add(soulLight);
 
-        // Flowee Orb (Companion — animation form: magenta core + antennae)
+        // Flowee Orb (Companion — original cyan wings)
         const floweeOrb = new THREE.Group();
         playerGroup.add(floweeOrb);
         floweeOrb.position.set(2, 2.5, -2);
-        
-        const fCoreGeo = new THREE.SphereGeometry(0.32, 16, 16);
-        const fCoreMat = new THREE.MeshBasicMaterial({ color: 0xff00cc });
+
+        const fCoreGeo = new THREE.SphereGeometry(0.35, 16, 16);
+        const fCoreMat = new THREE.MeshBasicMaterial({ color: 0x00ffcc, transparent: true, opacity: 0.95 });
         const fCore = new THREE.Mesh(fCoreGeo, fCoreMat);
         floweeOrb.add(fCore);
-        
-        const fLight = new THREE.PointLight(0xff00cc, 1.2, 10);
+
+        const fLight = new THREE.PointLight(0x00ffcc, 1.4, 10);
         floweeOrb.add(fLight);
 
-        const antennaMat = new THREE.LineBasicMaterial({ color: 0xa855f7, transparent: true, opacity: 0.95 });
-        const leftAntennaGeo = new THREE.BufferGeometry().setFromPoints([
-            new THREE.Vector3(0, 0.32, 0),
-            new THREE.Vector3(-0.12, 0.62, 0.05),
-            new THREE.Vector3(-0.22, 0.88, 0.1),
-        ]);
-        const rightAntennaGeo = new THREE.BufferGeometry().setFromPoints([
-            new THREE.Vector3(0, 0.32, 0),
-            new THREE.Vector3(0.12, 0.62, 0.05),
-            new THREE.Vector3(0.22, 0.88, 0.1),
-        ]);
-        const leftAntenna = new THREE.Line(leftAntennaGeo, antennaMat);
-        const rightAntenna = new THREE.Line(rightAntennaGeo, antennaMat);
-        floweeOrb.add(leftAntenna);
-        floweeOrb.add(rightAntenna);
+        const wingGeo = new THREE.PlaneGeometry(0.55, 0.28);
+        const wingMat = new THREE.MeshBasicMaterial({
+            color: 0x00ffcc, transparent: true, opacity: 0.65,
+            side: THREE.DoubleSide, blending: THREE.AdditiveBlending, depthWrite: false,
+        });
+        const leftWing = new THREE.Mesh(wingGeo, wingMat);
+        leftWing.position.set(-0.42, 0, 0);
+        leftWing.rotation.y = 0.35;
+        floweeOrb.add(leftWing);
 
-        const sideMat = new THREE.LineBasicMaterial({ color: 0x22d3ee, transparent: true, opacity: 0.85 });
-        const leftSideGeo = new THREE.BufferGeometry().setFromPoints([
-            new THREE.Vector3(-0.32, 0, 0),
-            new THREE.Vector3(-0.55, 0, 0),
-        ]);
-        const rightSideGeo = new THREE.BufferGeometry().setFromPoints([
-            new THREE.Vector3(0.32, 0, 0),
-            new THREE.Vector3(0.55, 0, 0),
-        ]);
-        const leftSide = new THREE.Line(leftSideGeo, sideMat);
-        const rightSide = new THREE.Line(rightSideGeo, sideMat);
-        floweeOrb.add(leftSide);
-        floweeOrb.add(rightSide);
+        const rightWing = new THREE.Mesh(wingGeo, wingMat);
+        rightWing.position.set(0.42, 0, 0);
+        rightWing.rotation.y = -0.35;
+        floweeOrb.add(rightWing);
 
         camera.position.set(0, 10, 20);
         camera.lookAt(playerGroup.position);
@@ -3075,19 +3060,17 @@
                 }
             });
 
-            // Flowee orbit — antennae sway
+            // Flowee orbit — wing flap
             floweeOrb.position.y = 2.5 + Math.sin(time * 3) * 0.4;
             floweeOrb.position.x = 2 + Math.cos(time) * 0.5;
             floweeOrb.position.z = -2 + Math.sin(time * 1.5) * 0.5;
-            
+
             fCore.rotation.y += delta;
             fCore.rotation.x += delta * 0.5;
 
-            const sway = Math.sin(time * 4) * 0.12;
-            leftAntenna.rotation.z = sway;
-            rightAntenna.rotation.z = -sway;
-            leftSide.scale.x = 0.85 + Math.sin(time * 5) * 0.15;
-            rightSide.scale.x = 0.85 + Math.sin(time * 5 + 1) * 0.15;
+            const flapAngle = Math.sin(time * 8) * 0.45;
+            leftWing.rotation.z = 0.2 + flapAngle;
+            rightWing.rotation.z = -0.2 - flapAngle;
 
             // Move Soul — smooth glide (no hop)
             const isWalking = moveVec.length() > 0;

@@ -71,6 +71,37 @@
     });
   }
 
+  function mergeLocalStatus(orders, localAll, kid) {
+    const localMap = new Map(
+      (localAll || []).filter((o) => o.kitchen_id === kid).map((o) => [o.id, o])
+    );
+    return (orders || []).map((o) => {
+      const loc = localMap.get(o.id);
+      if (!loc?.status) return o;
+      const dbRank = STATUS_RANK[o.status] ?? 0;
+      const locRank = STATUS_RANK[loc.status] ?? 0;
+      if (locRank > dbRank) {
+        return { ...o, status: loc.status, status_log: loc.status_log || o.status_log };
+      }
+      return o;
+    });
+  }
+
+  function pruneOrderOverlay(kid, dbOrders) {
+    const overlay = getOrderOverlay(kid);
+    let changed = false;
+    (dbOrders || []).forEach((o) => {
+      if (!overlay[o.id]) return;
+      const dbRank = STATUS_RANK[o.status] ?? 0;
+      const ovRank = STATUS_RANK[overlay[o.id].status] ?? 0;
+      if (dbRank >= ovRank) {
+        delete overlay[o.id];
+        changed = true;
+      }
+    });
+    if (changed) localStorage.setItem(overlayKey(kid), JSON.stringify(overlay));
+  }
+
   function patchOrderLists(ops, orderId, patch) {
     const apply = (o) => (o.id === orderId ? { ...o, ...patch } : o);
     ops.orders = ops.orders.map(apply);
@@ -161,7 +192,8 @@
           .eq('kitchen_id', kid)
           .order('created_at', { ascending: false })
           .limit(120);
-        let dbOrders = applyOrderOverlays((data || []).map(norm), kid);
+        let dbOrders = mergeLocalStatus(applyOrderOverlays((data || []).map(norm), kid), localAll, kid);
+        pruneOrderOverlay(kid, dbOrders);
         const dbIds = new Set(dbOrders.map((o) => o.id));
         const mergedLocal = applyOrderOverlays(localActive.filter((o) => !dbIds.has(o.id)), kid);
         this.allOrders = [...dbOrders, ...localAll.filter((o) => o.kitchen_id === kid && !dbIds.has(o.id)).map(norm)];
@@ -267,7 +299,10 @@
       this.channel = window.supabaseClient
         .channel(`kitchen-ops-${this.kitchen.id}`)
         .on('postgres_changes', { event: '*', schema: 'public', table: 'kitchen_orders', filter: `kitchen_id=eq.${this.kitchen.id}` }, () => {
-          this.loadOrders().then(() => { this.renderKDS(); this.renderStats(); this.renderSoulTicket(); });
+          if (this._orderReloadTimer) clearTimeout(this._orderReloadTimer);
+          this._orderReloadTimer = setTimeout(() => {
+            this.loadOrders().then(() => { this.renderKDS(); this.renderStats(); this.renderSoulTicket(); });
+          }, 400);
         })
         .on('postgres_changes', { event: '*', schema: 'public', table: 'kitchen_menu_items', filter: `kitchen_id=eq.${this.kitchen.id}` }, () => {
           this.loadMenu().then(() => this.renderMenuEditor());
@@ -326,10 +361,10 @@
         in_progress: 'done_all',
         ready: 'shopping_bag',
       }[order.status] || 'check';
-      const nextTitle = {
-        pending: 'Bestellung bestätigen',
-        confirmed: 'Kochen starten',
-        in_progress: 'Als bereit markieren',
+      const nextLabel = {
+        pending: 'Bestätigen',
+        confirmed: 'Kochen',
+        in_progress: 'Bereit',
         ready: 'Abgeholt',
       }[order.status] || 'Weiter';
       const trail = formatStatusTrail(order);
@@ -344,7 +379,7 @@
         ${trail ? `<div class="mt-2 space-y-0.5">${trail}</div>` : ''}
         ${readyNote}
         <div class="flex gap-1 mt-2 flex-wrap">
-          ${next ? `<button type="button" class="kds-advance flex-1 flex items-center justify-center gap-1" data-advance="${order.id}" data-next="${next}" title="${nextTitle}"><span class="material-symbols-outlined text-sm" aria-hidden="true">${nextIcon}</span></button>` : ''}
+          ${next ? `<button type="button" class="kds-advance flex-1 flex items-center justify-center gap-1.5" data-advance="${order.id}" data-next="${next}" title="${nextLabel}"><span class="material-symbols-outlined text-sm" aria-hidden="true">${nextIcon}</span><span class="kds-advance-label">${nextLabel}</span></button>` : ''}
           ${order.status === 'ready' ? `<button type="button" class="kds-ticket text-[9px] px-2 py-1 border border-[var(--gold)]/50 rounded" data-ticket="${order.id}">Ticket</button>` : ''}
         </div>
       </div>`;
@@ -381,6 +416,8 @@
 
     async advanceOrder(orderId, nextStatus) {
       if (!orderId || !nextStatus) return;
+      const btn = document.querySelector(`[data-advance="${orderId}"]`);
+      if (btn) btn.disabled = true;
       const operatorName = await this.getOperatorName();
       const slug = this.kitchen?.slug || 'akwabalx';
       const kid = this.kitchen?.id;
@@ -407,7 +444,29 @@
 
       const isLocal = String(orderId).startsWith('local-') || !window.supabaseClient;
       let synced = isLocal;
-      if (window.supabaseClient && !isLocal) {
+
+      // Persist locally first — survives reload + realtime race
+      const local = JSON.parse(localStorage.getItem('cdf_kitchen_orders_local') || '[]');
+      const idx = local.findIndex((o) => o.id === orderId);
+      if (idx >= 0) {
+        local[idx] = { ...local[idx], ...patch, kitchen_id: kid || local[idx].kitchen_id };
+      } else if (existing) {
+        local.push({ ...existing, ...patch, kitchen_id: kid });
+      }
+      localStorage.setItem('cdf_kitchen_orders_local', JSON.stringify(local));
+
+      // Cloud API first (service role bypasses RLS)
+      if (window.KitchenStore && !isLocal) {
+        const cloud = await window.KitchenStore.syncToCloud('update_order', {
+          id: orderId,
+          kitchen_id: kid,
+          status: nextStatus,
+          status_log: log,
+        }, slug);
+        if (cloud.ok) synced = true;
+      }
+
+      if (!synced && window.supabaseClient && !isLocal) {
         let { error } = await window.supabaseClient.from('kitchen_orders').update({
           status: nextStatus,
           status_log: log,
@@ -415,41 +474,12 @@
         if (error && /status_log|column|PGRST/.test(error.message || '')) {
           ({ error } = await window.supabaseClient.from('kitchen_orders').update({ status: nextStatus }).eq('id', orderId));
         }
-        if (!error) {
-          synced = true;
-        } else if (window.KitchenStore) {
-          const cloud = await window.KitchenStore.syncToCloud('update_order', {
-            id: orderId,
-            kitchen_id: kid,
-            status: nextStatus,
-            status_log: log,
-          }, slug);
-          synced = cloud.ok;
-          if (!cloud.ok && window.Pusher) {
-            const msg = cloud.error?.includes('not configured')
-              ? 'Lokal gespeichert — Cloud-Sync ausstehend'
-              : (cloud.error || error.message);
-            window.Pusher.showToast(msg, synced ? 'success' : 'warning');
-          }
-        } else if (window.Pusher) {
-          window.Pusher.showToast('Lokal aktualisiert — Cloud-Sync fehlgeschlagen', 'warning');
+        if (!error) synced = true;
+        else if (window.Pusher) {
+          window.Pusher.showToast('Lokal gespeichert — Cloud folgt', 'warning');
         }
       }
-      const local = JSON.parse(localStorage.getItem('cdf_kitchen_orders_local') || '[]');
-      const idx = local.findIndex((o) => o.id === orderId);
-      if (idx >= 0) {
-        local[idx].status = nextStatus;
-        local[idx].status_log = log;
-        localStorage.setItem('cdf_kitchen_orders_local', JSON.stringify(local));
-      } else if (!isLocal && existing) {
-        local.push({ ...existing, ...patch, kitchen_id: kid });
-        localStorage.setItem('cdf_kitchen_orders_local', JSON.stringify(local));
-      }
-      if (synced && kid) {
-        const overlay = getOrderOverlay(kid);
-        delete overlay[orderId];
-        localStorage.setItem(overlayKey(kid), JSON.stringify(overlay));
-      }
+      if (synced && kid) pruneOrderOverlay(kid, [{ id: orderId, status: nextStatus }]);
       window.dispatchEvent(new CustomEvent('KITCHEN_ORDER_UPDATED', {
         detail: { orderId, status: nextStatus, kitchenId: this.kitchen?.id, slug: this.kitchen?.slug, status_log: log },
       }));

@@ -331,6 +331,21 @@ class FloweeAgent {
         return typeof val === 'function' ? val : val;
     }
 
+    floweeSvgHtml() {
+        return `
+            <svg viewBox="0 0 100 100" width="100%" height="100%" style="filter: drop-shadow(0 0 15px rgba(0, 255, 204, 0.8)); overflow: visible;">
+                <path d="M40,50 C10,20 -10,60 15,75 C25,80 40,65 40,50 Z" fill="#00ffcc" opacity="0.8">
+                    <animateTransform attributeName="transform" type="rotate" values="0 40 50; -20 40 50; 0 40 50" dur="0.8s" repeatCount="indefinite"/>
+                </path>
+                <path d="M60,50 C90,20 110,60 85,75 C75,80 60,65 60,50 Z" fill="#00ffcc" opacity="0.8">
+                    <animateTransform attributeName="transform" type="rotate" values="0 60 50; 20 60 50; 0 60 50" dur="0.8s" repeatCount="indefinite"/>
+                </path>
+                <circle cx="50" cy="50" r="16" fill="#00ffcc">
+                    <animate attributeName="r" values="16;18;16" dur="2s" repeatCount="indefinite"/>
+                </circle>
+            </svg>`;
+    }
+
     detectContext() {
         // PRIORITY: If Tutorial is active, do not override with default context
         if(this.tutorialActive) return;
@@ -981,28 +996,7 @@ class FloweeAgent {
             visual.style.alignItems = 'center';
             visual.style.justifyContent = 'center';
 
-            visual.innerHTML = `
-                <svg viewBox="0 0 100 100" width="100%" height="100%" style="filter: drop-shadow(0 0 15px rgba(255, 0, 204, 0.75)); overflow: visible;">
-                    <!-- Antennae (purple curves) -->
-                    <path d="M50,34 C42,12 28,8 22,18" fill="none" stroke="#a855f7" stroke-width="2.5" stroke-linecap="round">
-                        <animateTransform attributeName="transform" type="rotate" values="0 50 34; -8 50 34; 0 50 34" dur="2.4s" repeatCount="indefinite"/>
-                    </path>
-                    <path d="M50,34 C58,12 72,8 78,18" fill="none" stroke="#a855f7" stroke-width="2.5" stroke-linecap="round">
-                        <animateTransform attributeName="transform" type="rotate" values="0 50 34; 8 50 34; 0 50 34" dur="2.4s" repeatCount="indefinite"/>
-                    </path>
-                    <!-- Side resonance lines (cyan) -->
-                    <line x1="18" y1="50" x2="34" y2="50" stroke="#22d3ee" stroke-width="2" stroke-linecap="round" opacity="0.9">
-                        <animate attributeName="x2" values="34;30;34" dur="1.6s" repeatCount="indefinite"/>
-                    </line>
-                    <line x1="82" y1="50" x2="66" y2="50" stroke="#22d3ee" stroke-width="2" stroke-linecap="round" opacity="0.9">
-                        <animate attributeName="x2" values="66;70;66" dur="1.6s" repeatCount="indefinite"/>
-                    </line>
-                    <!-- Core orb (magenta) -->
-                    <circle cx="50" cy="50" r="16" fill="#ff00cc">
-                        <animate attributeName="r" values="16;17.5;16" dur="2s" repeatCount="indefinite"/>
-                    </circle>
-                </svg>
-            `;
+            visual.innerHTML = this.floweeSvgHtml();
             
             visual.addEventListener('click', (e) => {
                 console.log("[Flowee] Icon Clicked!");
@@ -1016,25 +1010,7 @@ class FloweeAgent {
             });
             this.container.appendChild(visual);
         } else {
-            visual.innerHTML = `
-                <svg viewBox="0 0 100 100" width="100%" height="100%" style="filter: drop-shadow(0 0 15px rgba(255, 0, 204, 0.75)); overflow: visible;">
-                    <path d="M50,34 C42,12 28,8 22,18" fill="none" stroke="#a855f7" stroke-width="2.5" stroke-linecap="round">
-                        <animateTransform attributeName="transform" type="rotate" values="0 50 34; -8 50 34; 0 50 34" dur="2.4s" repeatCount="indefinite"/>
-                    </path>
-                    <path d="M50,34 C58,12 72,8 78,18" fill="none" stroke="#a855f7" stroke-width="2.5" stroke-linecap="round">
-                        <animateTransform attributeName="transform" type="rotate" values="0 50 34; 8 50 34; 0 50 34" dur="2.4s" repeatCount="indefinite"/>
-                    </path>
-                    <line x1="18" y1="50" x2="34" y2="50" stroke="#22d3ee" stroke-width="2" stroke-linecap="round" opacity="0.9">
-                        <animate attributeName="x2" values="34;30;34" dur="1.6s" repeatCount="indefinite"/>
-                    </line>
-                    <line x1="82" y1="50" x2="66" y2="50" stroke="#22d3ee" stroke-width="2" stroke-linecap="round" opacity="0.9">
-                        <animate attributeName="x2" values="66;70;66" dur="1.6s" repeatCount="indefinite"/>
-                    </line>
-                    <circle cx="50" cy="50" r="16" fill="#ff00cc">
-                        <animate attributeName="r" values="16;17.5;16" dur="2s" repeatCount="indefinite"/>
-                    </circle>
-                </svg>
-            `;
+            visual.innerHTML = this.floweeSvgHtml();
         }
 
         let bubble = document.getElementById('flowee-bubble');

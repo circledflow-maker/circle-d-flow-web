@@ -3,8 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="description" content="The Grand Bazaar - Seamless 3D Market">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <title>Grand Bazaar 3D | Circle D Flow</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="https://js.stripe.com">
     <script>
         // Suppress Tailwind Play CDN production warning
         const originalWarn = console.warn;
@@ -13,12 +17,11 @@
             originalWarn.apply(console, args);
         };
     </script>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&family=Cinzel:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" />
     
-    <!-- Stripe JS for Checkout -->
-    <script src="https://js.stripe.com/v3/"></script>
+    <!-- Stripe loaded on-demand when checkout opens -->
 
     <style>
         body {
@@ -61,7 +64,7 @@
             width: 100vw;
             overflow-x: auto;
             scroll-snap-type: x mandatory;
-            scrollbar-width: none; /* Firefox */
+            scrollbar-width: none;
         }
         .bazaar-viewport::-webkit-scrollbar { display: none; }
         
@@ -87,6 +90,43 @@
         }
         
         .stall-card.active { transform: scale(1.05); border-color: #ffaa44; }
+        .stall-desc { font-size: 10px; color: rgba(255,255,255,0.5); margin: 8px 0 12px; line-height: 1.45; min-height: 2.8em; }
+
+        #guild-focus-panel {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(8px);
+            width: min(92vw, 340px);
+            margin-bottom: 12px;
+            background: rgba(18, 8, 24, 0.92);
+            border: 1px solid rgba(255, 170, 68, 0.45);
+            border-radius: 14px;
+            padding: 14px 16px;
+            text-align: center;
+            pointer-events: auto;
+            transition: opacity 0.35s ease, transform 0.35s ease;
+            box-shadow: 0 0 24px rgba(255, 170, 68, 0.15);
+        }
+        #guild-focus-panel.hidden-panel { opacity: 0; transform: translateX(-50%) translateY(20px); pointer-events: none; }
+
+        #guild-inzone-panel {
+            position: fixed;
+            bottom: 5.5rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(120%);
+            width: min(92vw, 360px);
+            z-index: 30;
+            background: rgba(18, 8, 24, 0.95);
+            border: 1px solid rgba(255, 170, 68, 0.5);
+            border-radius: 16px;
+            padding: 18px;
+            text-align: center;
+            pointer-events: auto;
+            transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease;
+            box-shadow: 0 0 30px rgba(255, 170, 68, 0.2);
+        }
+        #guild-inzone-panel.visible { transform: translateX(-50%) translateY(0); }
 
         .carousel-nav-btn {
             position: absolute;
@@ -235,53 +275,82 @@
 
         <!-- BAZAAR CAROUSEL -->
         <div class="bazaar-viewport pointer-events-auto" id="bazaar-viewport">
+            <div id="guild-focus-panel" class="hidden-panel" aria-live="polite">
+                <span id="focus-guild-icon" class="material-symbols-outlined guild-icon text-3xl mb-1">palette</span>
+                <h2 id="focus-guild-name" class="font-cinzel text-gold text-base tracking-widest">Guild of Arts</h2>
+                <p id="focus-guild-desc" class="stall-desc mb-3">Visual artifacts, masks &amp; digital creations.</p>
+                <button type="button" id="focus-enter-btn" class="btn-primary text-xs py-2" onclick="triggerCinematicEntry(window.activeSkyGuild || 'arts')">
+                    <span class="material-symbols-outlined align-middle text-sm mr-1">door_open</span> Enter Guild House
+                </button>
+            </div>
             <button type="button" class="carousel-nav-btn carousel-prev" id="carousel-prev" aria-label="Previous guild">‹</button>
             <div class="stalls-track" id="stalls-track">
                 
                 <!-- Arts -->
-                <div class="stall-card" id="card-arts">
+                <div class="stall-card" id="card-arts" data-guild="arts">
                     <span class="material-symbols-outlined guild-icon">palette</span>
                     <h3 class="font-cinzel text-gold text-lg">Guild of Arts</h3>
-                    <button class="btn-primary" onclick="triggerCinematicEntry('arts')">Enter Arts</button>
+                    <p class="stall-desc">Visual artifacts, masks &amp; digital creations from Lisbon Navigators.</p>
+                    <button class="btn-primary flex items-center justify-center gap-2" onclick="triggerCinematicEntry('arts')"><span class="material-symbols-outlined text-sm">door_open</span> Enter Arts</button>
                 </div>
 
                 <!-- Skills -->
-                <div class="stall-card" id="card-skills">
+                <div class="stall-card" id="card-skills" data-guild="skills">
                     <span class="material-symbols-outlined guild-icon">school</span>
                     <h3 class="font-cinzel text-gold text-lg">Guild of Skills</h3>
-                    <button class="btn-primary" onclick="triggerCinematicEntry('skills')">Enter Skills</button>
+                    <p class="stall-desc">Mentorship, workshops &amp; skill trades in the Flow economy.</p>
+                    <button class="btn-primary flex items-center justify-center gap-2" onclick="triggerCinematicEntry('skills')"><span class="material-symbols-outlined text-sm">door_open</span> Enter Skills</button>
                 </div>
 
                 <!-- Sounds -->
-                <div class="stall-card" id="card-sounds">
+                <div class="stall-card" id="card-sounds" data-guild="sounds">
                     <span class="material-symbols-outlined guild-icon">headphones</span>
                     <h3 class="font-cinzel text-gold text-lg">Guild of Sounds</h3>
-                    <button class="btn-primary" onclick="triggerCinematicEntry('sounds')">Enter Sounds</button>
+                    <p class="stall-desc">Beats, radio drops &amp; sonic artifacts from the Sound sphere.</p>
+                    <button class="btn-primary flex items-center justify-center gap-2" onclick="triggerCinematicEntry('sounds')"><span class="material-symbols-outlined text-sm">door_open</span> Enter Sounds</button>
                 </div>
                 
                 <!-- Healing -->
-                <div class="stall-card" id="card-healing">
+                <div class="stall-card" id="card-healing" data-guild="healing">
                     <span class="material-symbols-outlined guild-icon">self_improvement</span>
                     <h3 class="font-cinzel text-gold text-lg">Guild of Healing</h3>
-                    <button class="btn-primary" onclick="triggerCinematicEntry('healing')">Enter Healing</button>
+                    <p class="stall-desc">Wellness, oracle sessions &amp; restorative community services.</p>
+                    <button class="btn-primary flex items-center justify-center gap-2" onclick="triggerCinematicEntry('healing')"><span class="material-symbols-outlined text-sm">door_open</span> Enter Healing</button>
                 </div>
                 
                 <!-- Products -->
-                <div class="stall-card" id="card-products">
+                <div class="stall-card" id="card-products" data-guild="products">
                     <span class="material-symbols-outlined guild-icon">category</span>
                     <h3 class="font-cinzel text-gold text-lg">Guild of Products</h3>
-                    <button class="btn-primary" onclick="triggerCinematicEntry('products')">Enter Products</button>
+                    <p class="stall-desc">Physical &amp; digital goods — artifacts for your Vault.</p>
+                    <button class="btn-primary flex items-center justify-center gap-2" onclick="triggerCinematicEntry('products')"><span class="material-symbols-outlined text-sm">door_open</span> Enter Products</button>
                 </div>
                 
                 <!-- Services -->
-                <div class="stall-card" id="card-services">
+                <div class="stall-card" id="card-services" data-guild="services">
                     <span class="material-symbols-outlined guild-icon">handshake</span>
                     <h3 class="font-cinzel text-gold text-lg">Guild of Services</h3>
-                    <button class="btn-primary" onclick="triggerCinematicEntry('services')">Enter Services</button>
+                    <p class="stall-desc">Community gateways, bookings &amp; navigator-for-hire offers.</p>
+                    <button class="btn-primary flex items-center justify-center gap-2" onclick="triggerCinematicEntry('services')"><span class="material-symbols-outlined text-sm">door_open</span> Enter Services</button>
                 </div>
 
             </div>
             <button type="button" class="carousel-nav-btn carousel-next" id="carousel-next" aria-label="Next guild">›</button>
+        </div>
+
+        <!-- In-zone guild panel (slides up after cinematic dive) -->
+        <div id="guild-inzone-panel" aria-hidden="true">
+            <span id="inzone-guild-icon" class="material-symbols-outlined guild-icon text-3xl">palette</span>
+            <h3 id="inzone-guild-name" class="font-cinzel text-gold text-lg mt-1">Guild of Arts</h3>
+            <p id="inzone-guild-desc" class="stall-desc">Welcome to the guild house.</p>
+            <div class="flex flex-col gap-2 mt-3">
+                <button type="button" class="btn-primary text-xs py-2 flex items-center justify-center gap-2" onclick="openZoneItems()">
+                    <span class="material-symbols-outlined text-sm">shopping_cart</span> Browse Artifacts
+                </button>
+                <button type="button" class="btn-primary text-xs py-2 flex items-center justify-center gap-2" onclick="openCatalog()" style="background:linear-gradient(135deg,#5a2a84,#3d1c5c)">
+                    <span class="material-symbols-outlined text-sm">storefront</span> Enter Guild Stall
+                </button>
+            </div>
         </div>
 
         <!-- BAZAAR IN-ZONE UI (Visible after Dive) -->
@@ -360,20 +429,60 @@
     </div>
 
 
-    <!-- SCRIPTS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- Fallback client info, adjust to your actual init -->
-    <script src="../js/agents/supabase_client.js?v=4.1"></script>
-    <script src="../js/gamification.js"></script>
-    <script src="../js/modules/marketplace_core.js"></script>
-    <script src="../js/modules/bazaar_flowee.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+    <script src="../js/agents/supabase_client.js?v=4.1" defer></script>
+    <script src="../js/gamification.js" defer></script>
+    <script src="../js/modules/marketplace_core.js" defer></script>
+    <script src="../js/modules/bazaar_flowee.js" defer></script>
     <script src="../js/agents/mobile_sphere_nav.js?v=1.0" defer></script>
-    <script src="../js/agents/flowee_voice.js?v=1.1"></script>
+    <script src="../js/agents/flowee_voice.js?v=1.1" defer></script>
     <script src="../js/agents/flowee_marketplace_tour.js?v=1.0" defer></script>
 
-    <script>
-        // --- 1. THREE.JS SETUP: GOLDEN HOUR & TATA-SOMBA ---
+    <script defer>
+        const GUILD_META = {
+            arts: { icon: 'palette', name: 'Guild of Arts', desc: 'Visual artifacts, masks & digital creations from Lisbon Navigators.' },
+            skills: { icon: 'school', name: 'Guild of Skills', desc: 'Mentorship, workshops & skill trades in the Flow economy.' },
+            sounds: { icon: 'headphones', name: 'Guild of Sounds', desc: 'Beats, radio drops & sonic artifacts from the Sound sphere.' },
+            healing: { icon: 'self_improvement', name: 'Guild of Healing', desc: 'Wellness, oracle sessions & restorative community services.' },
+            products: { icon: 'category', name: 'Guild of Products', desc: 'Physical & digital goods — artifacts for your Vault.' },
+            services: { icon: 'handshake', name: 'Guild of Services', desc: 'Community gateways, bookings & navigator-for-hire offers.' },
+        };
+        window.activeSkyGuild = 'arts';
+
+        function updateGuildPanels(guildId) {
+            const meta = GUILD_META[guildId] || GUILD_META.arts;
+            window.activeSkyGuild = guildId;
+            const set = (id, text) => { const el = document.getElementById(id); if (el) el.textContent = text; };
+            set('focus-guild-name', meta.name);
+            set('focus-guild-desc', meta.desc);
+            set('inzone-guild-name', meta.name);
+            set('inzone-guild-desc', meta.desc);
+            ['focus-guild-icon', 'inzone-guild-icon'].forEach((id) => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = meta.icon;
+            });
+            const panel = document.getElementById('guild-focus-panel');
+            if (panel) panel.classList.remove('hidden-panel');
+        }
+
+        function showInzonePanel(show) {
+            const panel = document.getElementById('guild-inzone-panel');
+            if (!panel) return;
+            panel.classList.toggle('visible', !!show);
+            panel.setAttribute('aria-hidden', show ? 'false' : 'true');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof THREE === 'undefined') {
+                console.warn('[Bazaar3D] THREE not loaded — 2D carousel still works.');
+                updateGuildPanels('arts');
+                return;
+            }
+            bootBazaar3D();
+        });
+
+        function bootBazaar3D() {
         const scene = new THREE.Scene();
         
         // Dusty Warm Fog
@@ -703,15 +812,19 @@
         let targetCameraPos = new THREE.Vector3();
         let targetLookAt = new THREE.Vector3();
         let currentLookAt = new THREE.Vector3(0, 4, -28);
+        let skyLookAtTarget = new THREE.Vector3(0, 4, -28);
 
         function triggerCinematicEntry(guildName) {
             const zone = bazaarZones[guildName] || bazaarZones.auctionCenter;
             currentGuild = guildName;
-            
+            updateGuildPanels(guildName);
+            window.activeGuild = guildName;
+
             document.getElementById('bazaar-viewport').classList.add('hidden');
+            document.getElementById('guild-focus-panel')?.classList.add('hidden-panel');
             document.getElementById('main-ui').style.opacity = '0';
+            showInzonePanel(false);
             
-            // Dive coordinates
             targetCameraPos.set(zone.x, 3, zone.z + 12);
             targetLookAt.set(zone.x, 2, zone.z - 5);
             
@@ -723,10 +836,12 @@
 
         function exitCinematicDive() {
             document.getElementById('bazaar-inzone-ui').classList.add('hidden');
+            showInzonePanel(false);
+            document.getElementById('soul-interaction-modal').style.display = 'none';
             currentGuild = "";
             
             targetCameraPos.copy(skyPos);
-            targetLookAt.set(0, 4, -28);
+            targetLookAt.copy(skyLookAtTarget);
             
             isCinematicDive = true;
             isSkyView = true;
@@ -795,6 +910,21 @@
         let stripeInstance = null;
         let elements = null;
         let isStripeReady = false;
+        let stripeLoadPromise = null;
+
+        function loadStripeJs() {
+            if (window.Stripe) return Promise.resolve(window.Stripe);
+            if (stripeLoadPromise) return stripeLoadPromise;
+            stripeLoadPromise = new Promise((resolve, reject) => {
+                const s = document.createElement('script');
+                s.src = 'https://js.stripe.com/v3/';
+                s.async = true;
+                s.onload = () => resolve(window.Stripe);
+                s.onerror = reject;
+                document.head.appendChild(s);
+            });
+            return stripeLoadPromise;
+        }
 
         async function triggerInGameCheckout(auctionData) {
             document.getElementById('checkout-modal').classList.remove('hidden');
@@ -827,9 +957,9 @@
                 const { clientSecret } = await response.json();
 
                 if(clientSecret) {
-                     // IMPORTANT: Replace with your actual live/test publishable key
                      const pk = window.STRIPE_PUBLISHABLE_KEY || 'pk_test_51SdebPDeSUihf09RzlBFNrIjuQnfGMixv5aeyxp7Qb8VA8seoEVuHYWb4MBM6Kvfel5N3JMyLly8zzdURworgXJg00ocwKiVGR';
-                     if(!stripeInstance) stripeInstance = Stripe(pk);
+                     const StripeLib = await loadStripeJs();
+                     if(!stripeInstance) stripeInstance = StripeLib(pk);
                      
                      const appearance = { 
                          theme: 'night', 
@@ -961,12 +1091,16 @@
                     if(isSkyView) {
                         document.getElementById('bazaar-viewport').classList.remove('hidden');
                         document.getElementById('main-ui').style.opacity = '1';
+                        document.getElementById('guild-focus-panel')?.classList.remove('hidden-panel');
                     } else {
                         document.getElementById('bazaar-inzone-ui').classList.remove('hidden');
-                        // Trigger NPC Guild Greeting
-                        showGuildGreeting(currentGuild);
+                        showInzonePanel(true);
+                        updateGuildPanels(currentGuild);
                     }
                 }
+            } else if (isSkyView) {
+                currentLookAt.lerp(skyLookAtTarget, 0.035);
+                camera.lookAt(currentLookAt);
             } else if (!isSkyView) {
                 camera.position.y = targetCameraPos.y + Math.sin(time * 0.001) * 0.1;
                 camera.lookAt(currentLookAt);
@@ -1104,16 +1238,25 @@
             const idx = guildCardOrder.indexOf(active);
             scrollToGuildCard(guildCardOrder[(idx + 1) % guildCardOrder.length]);
         });
+        function syncSkyCameraToGuild(guildId) {
+            const def = guildHutDefs.find((g) => g.id === guildId);
+            if (def) skyLookAtTarget.set(def.x, 5, -28);
+            updateGuildPanels(guildId);
+        }
+
         viewport.addEventListener('scroll', () => {
             const center = viewport.scrollLeft + viewport.clientWidth / 2;
+            let activeId = 'arts';
             document.querySelectorAll('.stall-card').forEach(card => {
                 const cardCenter = card.offsetLeft + card.clientWidth / 2;
                 if(Math.abs(center - cardCenter) < 100) {
                     card.classList.add('active');
+                    activeId = card.dataset.guild || activeId;
                 } else {
                     card.classList.remove('active');
                 }
             });
+            if (isSkyView) syncSkyCameraToGuild(activeId);
         });
 
         window.addEventListener('resize', () => {
@@ -1126,11 +1269,19 @@
         // Start
         setTimeout(() => {
             if (document.getElementById('card-arts')) {
-                document.getElementById('card-arts').classList.add('active'); // Initial highlight
+                document.getElementById('card-arts').classList.add('active');
+                updateGuildPanels('arts');
+                syncSkyCameraToGuild('arts');
             }
         }, 500);
 
-        // --- FLOWEE INTERACTIVE UPLOAD FLOW ---
+        window.triggerCinematicEntry = triggerCinematicEntry;
+        window.exitCinematicDive = exitCinematicDive;
+        window.openZoneItems = openZoneItems;
+        window.openCatalog = openCatalog;
+
+        if (webglReady) animate();
+        } // bootBazaar3D
         let uploadData = {};
         const urlParams = new URLSearchParams(window.location.search);
         let artistId = urlParams.get('artistId') || localStorage.getItem('flowee_artist_id');
@@ -1334,8 +1485,6 @@
                 BazaarFlowee.open3DIntro(false);
             }
         }, 1200);
-
-        if (webglReady) animate();
     </script>
 </body>
 </html>
