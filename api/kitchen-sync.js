@@ -81,6 +81,17 @@ module.exports = async function handler(req, res) {
       return res.status(200).json({ ok: true });
     }
 
+    if (action === 'update_order') {
+      const { id, status, status_log } = payload;
+      if (!id || !status) return res.status(400).json({ error: 'Missing order id or status' });
+      if (!isUuid(id)) return res.status(400).json({ error: 'Invalid order id' });
+      const patch = { status };
+      if (status_log != null) patch.status_log = status_log;
+      const { error } = await db.from('kitchen_orders').update(patch).eq('id', id).eq('kitchen_id', kitchenId);
+      if (error) throw new Error(error.message);
+      return res.status(200).json({ ok: true });
+    }
+
     return res.status(400).json({ error: 'Unknown action' });
   } catch (e) {
     console.error('[kitchen-sync]', e.message);

@@ -15,6 +15,7 @@
     <meta name="description" content="Artist Sanctuary 3D — Secret Garden LX performance space in Circle D Flow Lisbon.">
     <script src="https://cdn.tailwindcss.com" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="../css/styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -217,26 +218,9 @@
         .sanctuary-dock-btn[data-accent="flow"] { color: #00ffcc; border-color: rgba(0, 255, 204, 0.45); }
 
         .sanctuary-dock-btn::after {
-            content: attr(data-label);
-            position: absolute;
-            right: calc(100% + 8px);
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(0, 0, 0, 0.82);
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 9px;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            padding: 4px 8px;
-            border-radius: 6px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            opacity: 0;
-            pointer-events: none;
-            white-space: nowrap;
-            transition: opacity 0.2s ease;
+            content: none;
+            display: none;
         }
-        .sanctuary-dock-btn:hover::after,
-        .sanctuary-dock-btn:focus-visible::after { opacity: 1; }
 
         .flowee-icon-svg { display: block; filter: drop-shadow(0 0 8px rgba(0, 255, 204, 0.65)); }
 
@@ -2366,46 +2350,82 @@
         }
 
         function buildGardenPlants() {
-            const trunkMat = new THREE.MeshStandardMaterial({ color: 0x5c3d1e, roughness: 0.9 });
-            const leafMat = new THREE.MeshStandardMaterial({ color: 0x2d6a3e, roughness: 0.85, side: THREE.DoubleSide });
-            const bushMat = new THREE.MeshStandardMaterial({ color: 0x3d7a4a, roughness: 0.95 });
-            const palmSpots = [
-                { x: -8, z: -5, h: 8.5, s: 1.35 }, { x: 8, z: -8, h: 9.2, s: 1.4 }, { x: -5, z: -18, h: 7.8, s: 1.3 },
-                { x: 12, z: -22, h: 9.8, s: 1.45 }, { x: -12, z: -28, h: 8.6, s: 1.35 }, { x: 4, z: -32, h: 8.0, s: 1.3 },
-                { x: -18, z: -14, h: 7.4, s: 1.25 }, { x: 18, z: -12, h: 8.2, s: 1.3 },
-            ];
-            palmSpots.forEach((p) => {
+            const woodMat = new THREE.MeshStandardMaterial({ color: 0x5c3d1e, roughness: 0.75, metalness: 0.05 });
+            const topMat = new THREE.MeshStandardMaterial({ color: 0x8b4513, roughness: 0.55, metalness: 0.08 });
+            const stoolMat = new THREE.MeshStandardMaterial({ color: 0x3d2817, roughness: 0.85 });
+            const accentMat = new THREE.MeshStandardMaterial({ color: 0xd4af37, roughness: 0.35, metalness: 0.4 });
+
+            function addTable(x, z, scale = 1, rotY = 0) {
                 const g = new THREE.Group();
-                g.position.set(p.x, 0, p.z);
-                g.scale.setScalar(p.s || 1);
-                const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.34, p.h, 8), trunkMat);
-                trunk.position.y = p.h / 2;
-                trunk.castShadow = true;
-                g.add(trunk);
-                for (let f = 0; f < 6; f++) {
-                    const frond = new THREE.Mesh(new THREE.BoxGeometry(0.1, 3.8, 0.65), leafMat);
-                    frond.position.y = p.h - 0.2;
-                    frond.rotation.y = (f / 6) * Math.PI * 2;
-                    frond.rotation.z = 0.6;
-                    frond.castShadow = true;
-                    g.add(frond);
-                }
+                g.position.set(x, 0, z);
+                g.rotation.y = rotY;
+                g.scale.setScalar(scale);
+                const top = new THREE.Mesh(new THREE.CylinderGeometry(0.95, 0.95, 0.08, 16), topMat);
+                top.position.y = 0.78;
+                top.castShadow = true;
+                top.receiveShadow = true;
+                g.add(top);
+                const legGeo = new THREE.CylinderGeometry(0.06, 0.08, 0.78, 8);
+                [[0.55, 0.55], [-0.55, 0.55], [0.55, -0.55], [-0.55, -0.55]].forEach(([lx, lz]) => {
+                    const leg = new THREE.Mesh(legGeo, woodMat);
+                    leg.position.set(lx, 0.39, lz);
+                    leg.castShadow = true;
+                    g.add(leg);
+                });
+                const ring = new THREE.Mesh(new THREE.TorusGeometry(0.42, 0.025, 8, 24), accentMat);
+                ring.position.y = 0.74;
+                ring.rotation.x = Math.PI / 2;
+                g.add(ring);
                 scene.add(g);
-            });
-            for (let i = 0; i < 14; i++) {
-                const bushScale = 1.1 + Math.random() * 0.9;
-                const bush = new THREE.Mesh(new THREE.SphereGeometry(0.65 + Math.random() * 0.5, 10, 10), bushMat);
-                bush.position.set(-20 + Math.random() * 40, 0.35 * bushScale, -5 - Math.random() * 35);
-                bush.scale.set(bushScale, bushScale * (0.75 + Math.random() * 0.25), bushScale);
-                bush.castShadow = true;
-                scene.add(bush);
+                return g;
             }
-            const fernMat = new THREE.MeshStandardMaterial({ color: 0x4a8f5c, roughness: 0.9 });
-            for (let i = 0; i < 10; i++) {
-                const fernH = 1.6 + Math.random() * 1.2;
-                const fern = new THREE.Mesh(new THREE.ConeGeometry(0.45 + Math.random() * 0.25, fernH, 8), fernMat);
-                fern.position.set(-14 + Math.random() * 28, fernH * 0.45, -8 - Math.random() * 28);
-                scene.add(fern);
+
+            function addStool(x, z, scale = 1, rotY = 0) {
+                const g = new THREE.Group();
+                g.position.set(x, 0, z);
+                g.rotation.y = rotY;
+                g.scale.setScalar(scale);
+                const seat = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.3, 0.06, 12), stoolMat);
+                seat.position.y = 0.46;
+                seat.castShadow = true;
+                g.add(seat);
+                const post = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.07, 0.44, 8), woodMat);
+                post.position.y = 0.22;
+                post.castShadow = true;
+                g.add(post);
+                const foot = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.24, 0.04, 12), accentMat);
+                foot.position.y = 0.02;
+                g.add(foot);
+                scene.add(g);
+                return g;
+            }
+
+            const patioSets = [
+                { tx: -8, tz: -6, r: 0.2 }, { tx: 8, tz: -9, r: -0.4 }, { tx: -5, tz: -18, r: 0.5 },
+                { tx: 12, tz: -22, r: -0.3 }, { tx: -12, tz: -28, r: 0.15 }, { tx: 4, tz: -32, r: 0.35 },
+                { tx: -18, tz: -14, r: -0.2 }, { tx: 18, tz: -12, r: 0.45 }, { tx: 0, tz: -14, r: 0 },
+                { tx: -6, tz: -24, r: 0.6 }, { tx: 10, tz: -16, r: -0.15 },
+            ];
+            patioSets.forEach((p) => {
+                const scale = 0.95 + Math.random() * 0.25;
+                addTable(p.tx, p.tz, scale, p.r);
+                const stoolOffsets = [
+                    [1.15, 0], [-1.15, 0], [0, 1.15], [0, -1.15],
+                    [0.85, 0.85], [-0.85, -0.85],
+                ];
+                stoolOffsets.forEach(([ox, oz], i) => {
+                    const sx = p.tx + Math.cos(p.r) * ox - Math.sin(p.r) * oz;
+                    const sz = p.tz + Math.sin(p.r) * ox + Math.cos(p.r) * oz;
+                    addStool(sx, sz, 0.85 + (i % 3) * 0.05, p.r + (i * 0.4));
+                });
+            });
+
+            for (let i = 0; i < 6; i++) {
+                const tx = -16 + Math.random() * 32;
+                const tz = -8 - Math.random() * 24;
+                addTable(tx, tz, 0.75 + Math.random() * 0.2, Math.random() * Math.PI);
+                addStool(tx + 0.9, tz, 0.8, Math.random() * Math.PI);
+                addStool(tx - 0.9, tz, 0.8, Math.random() * Math.PI);
             }
         }
 
@@ -2702,32 +2722,48 @@
         const soulLight = new THREE.PointLight(savedColor, 2.0, 15);
         soulGroup.add(soulLight);
 
-        // Flowee Orb (Companion with Wings)
+        // Flowee Orb (Companion — animation form: magenta core + antennae)
         const floweeOrb = new THREE.Group();
         playerGroup.add(floweeOrb);
         floweeOrb.position.set(2, 2.5, -2);
         
-        const fCoreGeo = new THREE.SphereGeometry(0.3, 16, 16);
+        const fCoreGeo = new THREE.SphereGeometry(0.32, 16, 16);
         const fCoreMat = new THREE.MeshBasicMaterial({ color: 0xff00cc });
         const fCore = new THREE.Mesh(fCoreGeo, fCoreMat);
         floweeOrb.add(fCore);
         
-        const fLight = new THREE.PointLight(0xff00cc, 1, 10);
+        const fLight = new THREE.PointLight(0xff00cc, 1.2, 10);
         floweeOrb.add(fLight);
 
-        // Flowee Wings
-        const wingGeo = new THREE.PlaneGeometry(0.5, 0.25);
-        const wingMat = new THREE.MeshBasicMaterial({ color: 0x00ffcc, transparent: true, opacity: 0.6, side: THREE.DoubleSide, blending: THREE.AdditiveBlending });
-        
-        const leftWing = new THREE.Mesh(wingGeo, wingMat);
-        leftWing.position.set(-0.4, 0, 0);
-        leftWing.rotation.x = Math.PI / 2;
-        floweeOrb.add(leftWing);
+        const antennaMat = new THREE.LineBasicMaterial({ color: 0xa855f7, transparent: true, opacity: 0.95 });
+        const leftAntennaGeo = new THREE.BufferGeometry().setFromPoints([
+            new THREE.Vector3(0, 0.32, 0),
+            new THREE.Vector3(-0.12, 0.62, 0.05),
+            new THREE.Vector3(-0.22, 0.88, 0.1),
+        ]);
+        const rightAntennaGeo = new THREE.BufferGeometry().setFromPoints([
+            new THREE.Vector3(0, 0.32, 0),
+            new THREE.Vector3(0.12, 0.62, 0.05),
+            new THREE.Vector3(0.22, 0.88, 0.1),
+        ]);
+        const leftAntenna = new THREE.Line(leftAntennaGeo, antennaMat);
+        const rightAntenna = new THREE.Line(rightAntennaGeo, antennaMat);
+        floweeOrb.add(leftAntenna);
+        floweeOrb.add(rightAntenna);
 
-        const rightWing = new THREE.Mesh(wingGeo, wingMat);
-        rightWing.position.set(0.4, 0, 0);
-        rightWing.rotation.x = Math.PI / 2;
-        floweeOrb.add(rightWing);
+        const sideMat = new THREE.LineBasicMaterial({ color: 0x22d3ee, transparent: true, opacity: 0.85 });
+        const leftSideGeo = new THREE.BufferGeometry().setFromPoints([
+            new THREE.Vector3(-0.32, 0, 0),
+            new THREE.Vector3(-0.55, 0, 0),
+        ]);
+        const rightSideGeo = new THREE.BufferGeometry().setFromPoints([
+            new THREE.Vector3(0.32, 0, 0),
+            new THREE.Vector3(0.55, 0, 0),
+        ]);
+        const leftSide = new THREE.Line(leftSideGeo, sideMat);
+        const rightSide = new THREE.Line(rightSideGeo, sideMat);
+        floweeOrb.add(leftSide);
+        floweeOrb.add(rightSide);
 
         camera.position.set(0, 10, 20);
         camera.lookAt(playerGroup.position);
@@ -3039,7 +3075,7 @@
                 }
             });
 
-            // Flowee Orbit logic & Wings
+            // Flowee orbit — antennae sway
             floweeOrb.position.y = 2.5 + Math.sin(time * 3) * 0.4;
             floweeOrb.position.x = 2 + Math.cos(time) * 0.5;
             floweeOrb.position.z = -2 + Math.sin(time * 1.5) * 0.5;
@@ -3047,10 +3083,11 @@
             fCore.rotation.y += delta;
             fCore.rotation.x += delta * 0.5;
 
-            const flapSpeed = 15;
-            const flapAngle = Math.sin(time * flapSpeed) * 0.5;
-            leftWing.rotation.y = flapAngle;
-            rightWing.rotation.y = -flapAngle;
+            const sway = Math.sin(time * 4) * 0.12;
+            leftAntenna.rotation.z = sway;
+            rightAntenna.rotation.z = -sway;
+            leftSide.scale.x = 0.85 + Math.sin(time * 5) * 0.15;
+            rightSide.scale.x = 0.85 + Math.sin(time * 5 + 1) * 0.15;
 
             // Move Soul — smooth glide (no hop)
             const isWalking = moveVec.length() > 0;

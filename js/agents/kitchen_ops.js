@@ -38,10 +38,52 @@
       .replace(/\u2013/g, '-');
   }
 
+  const STATUS_RANK = { pending: 0, confirmed: 1, in_progress: 2, cooking: 2, ready: 3, picked_up: 4 };
+
+  function overlayKey(kid) {
+    return `cdf_kitchen_order_overlay_${kid || 'local'}`;
+  }
+
+  function getOrderOverlay(kid) {
+    try {
+      return JSON.parse(localStorage.getItem(overlayKey(kid)) || '{}');
+    } catch (_) {
+      return {};
+    }
+  }
+
+  function setOrderOverlay(kid, orderId, patch) {
+    if (!orderId) return;
+    const overlay = getOrderOverlay(kid);
+    overlay[orderId] = { ...overlay[orderId], ...patch, _ts: Date.now() };
+    localStorage.setItem(overlayKey(kid), JSON.stringify(overlay));
+  }
+
+  function applyOrderOverlays(orders, kid) {
+    const overlay = getOrderOverlay(kid);
+    return (orders || []).map((o) => {
+      const ov = overlay[o.id];
+      if (!ov?.status) return o;
+      const dbRank = STATUS_RANK[o.status] ?? 0;
+      const ovRank = STATUS_RANK[ov.status] ?? 0;
+      if (ovRank > dbRank) return { ...o, status: ov.status, status_log: ov.status_log || o.status_log };
+      return o;
+    });
+  }
+
+  function patchOrderLists(ops, orderId, patch) {
+    const apply = (o) => (o.id === orderId ? { ...o, ...patch } : o);
+    ops.orders = ops.orders.map(apply);
+    ops.allOrders = ops.allOrders.map(apply);
+  }
+
   function formatStatusTrail(order) {
     const log = parseStatusLog(order);
     if (!log.length) return '';
-    const labels = { confirmed: 'Confirmed', in_progress: 'Cooking', ready: 'Ready', picked_up: 'Picked up' };
+    const lang = localStorage.getItem('cdf_lang') || localStorage.getItem('cqr_lang') || 'de';
+    const labels = lang.startsWith('en')
+      ? { confirmed: 'Confirmed', in_progress: 'Cooking', ready: 'Ready', picked_up: 'Picked up' }
+      : { confirmed: 'Bestätigt', in_progress: 'In Zubereitung', ready: 'Abholbereit', picked_up: 'Abgeholt' };
     return log.map((e) => {
       const label = labels[e.status] || e.status;
       const who = e.by_name || e.by || 'Crew';
@@ -119,11 +161,14 @@
           .eq('kitchen_id', kid)
           .order('created_at', { ascending: false })
           .limit(120);
-        const dbOrders = (data || []).map(norm);
+        let dbOrders = applyOrderOverlays((data || []).map(norm), kid);
         const dbIds = new Set(dbOrders.map((o) => o.id));
-        const mergedLocal = localActive.filter((o) => !dbIds.has(o.id));
+        const mergedLocal = applyOrderOverlays(localActive.filter((o) => !dbIds.has(o.id)), kid);
         this.allOrders = [...dbOrders, ...localAll.filter((o) => o.kitchen_id === kid && !dbIds.has(o.id)).map(norm)];
-        this.orders = [...dbOrders.filter((o) => ['pending', 'confirmed', 'in_progress', 'ready'].includes(o.status)), ...mergedLocal];
+        this.orders = [
+          ...dbOrders.filter((o) => ['pending', 'confirmed', 'in_progress', 'ready'].includes(o.status)),
+          ...mergedLocal,
+        ];
       } catch (e) {
         console.warn('[KitchenOps] orders', e.message);
         this.orders = localActive;
@@ -275,12 +320,18 @@
       const items = Array.isArray(order.items) ? order.items : [];
       const names = items.map((i) => i.name || i.title || 'Item').join(', ') || 'Pickup';
       const next = { pending: 'confirmed', confirmed: 'in_progress', in_progress: 'ready', ready: 'picked_up' }[order.status];
-      const nextLabel = {
-        pending: 'Confirm Order',
-        confirmed: 'Start Cooking',
-        in_progress: 'Mark Ready',
-        ready: 'Picked Up',
-      }[order.status] || 'Done';
+      const nextIcon = {
+        pending: 'check_circle',
+        confirmed: 'skillet',
+        in_progress: 'done_all',
+        ready: 'shopping_bag',
+      }[order.status] || 'check';
+      const nextTitle = {
+        pending: 'Bestellung bestätigen',
+        confirmed: 'Kochen starten',
+        in_progress: 'Als bereit markieren',
+        ready: 'Abgeholt',
+      }[order.status] || 'Weiter';
       const trail = formatStatusTrail(order);
       const readyNote = order.status === 'ready'
         ? '<div class="kds-trail text-[var(--sage)]">Guest notified when all steps confirmed</div>'
@@ -293,7 +344,7 @@
         ${trail ? `<div class="mt-2 space-y-0.5">${trail}</div>` : ''}
         ${readyNote}
         <div class="flex gap-1 mt-2 flex-wrap">
-          ${next ? `<button type="button" class="kds-advance flex-1" data-advance="${order.id}" data-next="${next}">${nextLabel} &rarr;</button>` : ''}
+          ${next ? `<button type="button" class="kds-advance flex-1 flex items-center justify-center gap-1" data-advance="${order.id}" data-next="${next}" title="${nextTitle}"><span class="material-symbols-outlined text-sm" aria-hidden="true">${nextIcon}</span></button>` : ''}
           ${order.status === 'ready' ? `<button type="button" class="kds-ticket text-[9px] px-2 py-1 border border-[var(--gold)]/50 rounded" data-ticket="${order.id}">Ticket</button>` : ''}
         </div>
       </div>`;
@@ -331,6 +382,8 @@
     async advanceOrder(orderId, nextStatus) {
       if (!orderId || !nextStatus) return;
       const operatorName = await this.getOperatorName();
+      const slug = this.kitchen?.slug || 'akwabalx';
+      const kid = this.kitchen?.id;
       let operatorId = null;
       if (window.supabaseClient) {
         try {
@@ -346,21 +399,56 @@
         by_name: operatorName,
         at: new Date().toISOString(),
       });
+      const patch = { status: nextStatus, status_log: log };
+      patchOrderLists(this, orderId, patch);
+      if (kid) setOrderOverlay(kid, orderId, patch);
+      this.renderKDS();
+      this.renderStats();
+
       const isLocal = String(orderId).startsWith('local-') || !window.supabaseClient;
+      let synced = isLocal;
       if (window.supabaseClient && !isLocal) {
-        const { error } = await window.supabaseClient.from('kitchen_orders').update({
+        let { error } = await window.supabaseClient.from('kitchen_orders').update({
           status: nextStatus,
           status_log: log,
         }).eq('id', orderId);
-        if (error) { if (window.Pusher) window.Pusher.showToast(error.message, 'error'); return; }
-      } else {
-        const local = JSON.parse(localStorage.getItem('cdf_kitchen_orders_local') || '[]');
-        const idx = local.findIndex((o) => o.id === orderId);
-        if (idx >= 0) {
-          local[idx].status = nextStatus;
-          local[idx].status_log = log;
-          localStorage.setItem('cdf_kitchen_orders_local', JSON.stringify(local));
+        if (error && /status_log|column|PGRST/.test(error.message || '')) {
+          ({ error } = await window.supabaseClient.from('kitchen_orders').update({ status: nextStatus }).eq('id', orderId));
         }
+        if (!error) {
+          synced = true;
+        } else if (window.KitchenStore) {
+          const cloud = await window.KitchenStore.syncToCloud('update_order', {
+            id: orderId,
+            kitchen_id: kid,
+            status: nextStatus,
+            status_log: log,
+          }, slug);
+          synced = cloud.ok;
+          if (!cloud.ok && window.Pusher) {
+            const msg = cloud.error?.includes('not configured')
+              ? 'Lokal gespeichert — Cloud-Sync ausstehend'
+              : (cloud.error || error.message);
+            window.Pusher.showToast(msg, synced ? 'success' : 'warning');
+          }
+        } else if (window.Pusher) {
+          window.Pusher.showToast('Lokal aktualisiert — Cloud-Sync fehlgeschlagen', 'warning');
+        }
+      }
+      const local = JSON.parse(localStorage.getItem('cdf_kitchen_orders_local') || '[]');
+      const idx = local.findIndex((o) => o.id === orderId);
+      if (idx >= 0) {
+        local[idx].status = nextStatus;
+        local[idx].status_log = log;
+        localStorage.setItem('cdf_kitchen_orders_local', JSON.stringify(local));
+      } else if (!isLocal && existing) {
+        local.push({ ...existing, ...patch, kitchen_id: kid });
+        localStorage.setItem('cdf_kitchen_orders_local', JSON.stringify(local));
+      }
+      if (synced && kid) {
+        const overlay = getOrderOverlay(kid);
+        delete overlay[orderId];
+        localStorage.setItem(overlayKey(kid), JSON.stringify(overlay));
       }
       window.dispatchEvent(new CustomEvent('KITCHEN_ORDER_UPDATED', {
         detail: { orderId, status: nextStatus, kitchenId: this.kitchen?.id, slug: this.kitchen?.slug, status_log: log },
@@ -384,9 +472,20 @@
       this.renderKDS();
       this.renderStats();
       this.renderSoulTicket();
-      const stepLabel = { confirmed: 'Confirmed', in_progress: 'Cooking', ready: 'Ready', picked_up: 'Picked up' }[nextStatus] || nextStatus;
-      if (window.Pusher) window.Pusher.showToast(`${stepLabel} by ${operatorName}`, 'success');
-      if (window.Flowee) window.Flowee.talk(true, `Order ${stepLabel.toLowerCase()} - ${operatorName}`, 'guide');
+      const lang = localStorage.getItem('cdf_lang') || localStorage.getItem('cqr_lang') || 'de';
+      const stepLabels = lang.startsWith('en')
+        ? { confirmed: 'Confirmed', in_progress: 'Cooking', ready: 'Ready', picked_up: 'Picked up' }
+        : { confirmed: 'Bestätigt', in_progress: 'In Zubereitung', ready: 'Abholbereit', picked_up: 'Abgeholt' };
+      const stepLabel = stepLabels[nextStatus] || nextStatus;
+      if (window.Pusher) {
+        window.Pusher.showToast(lang.startsWith('en') ? `${stepLabel} · ${operatorName}` : `${stepLabel} · ${operatorName}`, 'success');
+      }
+      if (window.Flowee) {
+        const msg = lang.startsWith('en')
+          ? `Order ${stepLabel.toLowerCase()} — ${operatorName}`
+          : `Bestellung ${stepLabel.toLowerCase()} — ${operatorName}`;
+        window.Flowee.talk(true, msg, 'guide');
+      }
     },
 
     renderStats() {

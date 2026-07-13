@@ -80,6 +80,18 @@ class FloweeAgent {
                 keywords: ["cave", "green", "memory", "garden"],
                 question: "What is the Memory Cave?",
                 answer: "The Memory Cave (Green Orb) or Sacred Garden is where community legacies and past flows are recorded."
+            },
+            {
+                keywords: ["kds", "kitchen", "bestellung", "order", "confirm", "pickup", "akwaba", "taste world", "crew"],
+                question: "How does Kitchen Command work?",
+                answer: "KDS flow: NEW → Confirm → Cooking → Ready → Picked up. Swipe slides for Menu, Brand, QR & Crew. Guest orders on Akwaba Kitchen sync here in real time.",
+                deep_link: "pages/kitchen_workspace.html?kitchen=akwabalx"
+            },
+            {
+                keywords: ["menu sync", "menü", "brand", "qr code", "kitchen qr"],
+                question: "How do I sync menu and branding?",
+                answer: "In Kitchen Command swipe to Menu (edit items) or Brand (logo/cover). Changes save locally first, then cloud-sync via ops code. QR slide generates guest pickup links.",
+                deep_link: "pages/kitchen_workspace.html?kitchen=akwabalx"
             }
         ];
 
@@ -90,6 +102,16 @@ class FloweeAgent {
             "academy.html": { mode: "guide", intro: "The Academy lists every participant.", action: "Tap a manga panel — edit your bio and media descriptions." },
             "hall_of_legends.html": { mode: "guide", intro: "The Brotherhood ranks Navigators by XP.", action: "Rise in the Atlas, then return here to see your rank sync." },
             "artist_sanctuary.html": { mode: "guide", intro: "Welcome to the Artist Sanctuary — Akwaba zone, Stage, and Archive await.", action: "I can route you to the Lisbon Atlas or your nearest quest." },
+            "kitchen_workspace.html": {
+                mode: "guide",
+                intro: "Kitchen Command online. I guide you through KDS, menu, brand, QR and crew comms.",
+                action: "Tap me anytime — ask about orders, sync, or Taste World workflows.",
+            },
+            "akwaba_kitchen.html": {
+                mode: "guide",
+                intro: "Guest kitchen live. Orders sync to crew KDS in real time.",
+                action: "Ask me about pickup, Soul Ticket, or menu items.",
+            },
             "quest_map.html": { mode: "guide", intro: "The Lisbon Atlas links streets to quests and Adinkra runes.", action: "Tap NEARBY for closest missions." },
             "quest_board.html": { mode: "guide", intro: "The Codex holds protocols and GPS quests.", action: "Accept a quest, then verify on the Atlas." },
             "marketplace.html": { mode: "active", intro: "The Bazaar. Where skills become currency.", target: "#upload-btn" },
@@ -256,6 +278,59 @@ class FloweeAgent {
         }, 3000);
     }
 
+    getLang() {
+        const raw = localStorage.getItem('cdf_lang')
+            || localStorage.getItem('cqr_lang')
+            || localStorage.getItem('cdf_language')
+            || (navigator.language || 'de');
+        const code = String(raw).slice(0, 2).toLowerCase();
+        if (code === 'en') return 'en';
+        if (code === 'pt') return 'pt';
+        return 'de';
+    }
+
+    t(key) {
+        const lang = this.getLang();
+        const table = {
+            de: {
+                chat_greeting: (name) => `Hallo <strong>${name}</strong>! Ich bin Flowee, dein Navigator. Wie kann ich dir helfen?`,
+                chat_placeholder: 'Frage Flowee…',
+                chat_title: 'Flowee KI',
+                fallback: 'Ich durchsuche die Matrix… Probiere „KDS“, „Bestellung“, „Quests“ oder „Hilfe“.',
+                kitchen_intro: 'Kitchen Command aktiv. KDS: NEW → Bestätigen → Kochen → Bereit. Tippe mich für Hilfe.',
+                kitchen_action: 'Frag mich zu Bestellungen, Sync, Menü oder QR.',
+                guest_intro: 'Gast-Kitchen live. Bestellungen erscheinen im Crew-KDS.',
+                sanctuary_intro: 'Willkommen im Artist Sanctuary — Bühne, Archive & Secret Garden.',
+                order_confirmed: (step, name) => `Bestellung ${step} — ${name}`,
+            },
+            en: {
+                chat_greeting: (name) => `Hello <strong>${name}</strong>! I am Flowee, your Navigator. How can I assist you today?`,
+                chat_placeholder: 'Command the Matrix…',
+                chat_title: 'Flowee AI',
+                fallback: "I'm searching the Matrix… Try 'KDS', 'Orders', 'Quests', or 'Help'.",
+                kitchen_intro: 'Kitchen Command online. KDS: NEW → Confirm → Cooking → Ready. Tap me for help.',
+                kitchen_action: 'Ask about orders, sync, menu, or QR.',
+                guest_intro: 'Guest kitchen live. Orders sync to crew KDS in real time.',
+                sanctuary_intro: 'Welcome to the Artist Sanctuary — stage, archive & Secret Garden.',
+                order_confirmed: (step, name) => `Order ${step} — ${name}`,
+            },
+            pt: {
+                chat_greeting: (name) => `Olá <strong>${name}</strong>! Sou Flowee, teu Navigator. Como posso ajudar?`,
+                chat_placeholder: 'Pergunta ao Flowee…',
+                chat_title: 'Flowee IA',
+                fallback: 'A procurar na Matrix… Tenta „KDS“, „Pedido“, „Quests“ ou „Ajuda“.',
+                kitchen_intro: 'Kitchen Command ativo. KDS: NOVO → Confirmar → Cozinhar → Pronto.',
+                kitchen_action: 'Pergunta sobre pedidos, sync, menu ou QR.',
+                guest_intro: 'Cozinha convidado ativa. Pedidos sincronizam com a crew.',
+                sanctuary_intro: 'Bem-vindo ao Artist Sanctuary — palco, arquivo & jardim.',
+                order_confirmed: (step, name) => `Pedido ${step} — ${name}`,
+            },
+        };
+        const entry = table[lang] || table.de;
+        const val = entry[key];
+        return typeof val === 'function' ? val : val;
+    }
+
     detectContext() {
         // PRIORITY: If Tutorial is active, do not override with default context
         if(this.tutorialActive) return;
@@ -269,9 +344,20 @@ class FloweeAgent {
         }
 
         for(const key in this.dialogueMatrix) {
-            if(path.includes(key)) return this.dialogueMatrix[key];
+            if(path.includes(key)) {
+                const ctx = { ...this.dialogueMatrix[key] };
+                if (key === 'kitchen_workspace.html') {
+                    ctx.intro = this.t('kitchen_intro');
+                    ctx.action = this.t('kitchen_action');
+                } else if (key === 'akwaba_kitchen.html') {
+                    ctx.intro = this.t('guest_intro');
+                } else if (key === 'artist_sanctuary.html') {
+                    ctx.intro = this.t('sanctuary_intro');
+                }
+                return ctx;
+            }
         }
-        return this.dialogueMatrix['default'];
+        return { ...this.dialogueMatrix['default'] };
     }
 
     applyMode(mode) {
@@ -896,18 +982,24 @@ class FloweeAgent {
             visual.style.justifyContent = 'center';
 
             visual.innerHTML = `
-                <svg viewBox="0 0 100 100" width="100%" height="100%" style="filter: drop-shadow(0 0 15px rgba(0, 255, 204, 0.8)); overflow: visible;">
-                    <!-- Left Wing -->
-                    <path d="M40,50 C10,20 -10,60 15,75 C25,80 40,65 40,50 Z" fill="#00ffcc" opacity="0.8">
-                        <animateTransform attributeName="transform" type="rotate" values="0 40 50; -20 40 50; 0 40 50" dur="0.8s" repeatCount="indefinite"/>
+                <svg viewBox="0 0 100 100" width="100%" height="100%" style="filter: drop-shadow(0 0 15px rgba(255, 0, 204, 0.75)); overflow: visible;">
+                    <!-- Antennae (purple curves) -->
+                    <path d="M50,34 C42,12 28,8 22,18" fill="none" stroke="#a855f7" stroke-width="2.5" stroke-linecap="round">
+                        <animateTransform attributeName="transform" type="rotate" values="0 50 34; -8 50 34; 0 50 34" dur="2.4s" repeatCount="indefinite"/>
                     </path>
-                    <!-- Right Wing -->
-                    <path d="M60,50 C90,20 110,60 85,75 C75,80 60,65 60,50 Z" fill="#00ffcc" opacity="0.8">
-                        <animateTransform attributeName="transform" type="rotate" values="0 60 50; 20 60 50; 0 60 50" dur="0.8s" repeatCount="indefinite"/>
+                    <path d="M50,34 C58,12 72,8 78,18" fill="none" stroke="#a855f7" stroke-width="2.5" stroke-linecap="round">
+                        <animateTransform attributeName="transform" type="rotate" values="0 50 34; 8 50 34; 0 50 34" dur="2.4s" repeatCount="indefinite"/>
                     </path>
-                    <!-- Center Body -->
-                    <circle cx="50" cy="50" r="16" fill="#00ffcc">
-                        <animate attributeName="r" values="16;18;16" dur="2s" repeatCount="indefinite"/>
+                    <!-- Side resonance lines (cyan) -->
+                    <line x1="18" y1="50" x2="34" y2="50" stroke="#22d3ee" stroke-width="2" stroke-linecap="round" opacity="0.9">
+                        <animate attributeName="x2" values="34;30;34" dur="1.6s" repeatCount="indefinite"/>
+                    </line>
+                    <line x1="82" y1="50" x2="66" y2="50" stroke="#22d3ee" stroke-width="2" stroke-linecap="round" opacity="0.9">
+                        <animate attributeName="x2" values="66;70;66" dur="1.6s" repeatCount="indefinite"/>
+                    </line>
+                    <!-- Core orb (magenta) -->
+                    <circle cx="50" cy="50" r="16" fill="#ff00cc">
+                        <animate attributeName="r" values="16;17.5;16" dur="2s" repeatCount="indefinite"/>
                     </circle>
                 </svg>
             `;
@@ -923,6 +1015,26 @@ class FloweeAgent {
                 }
             });
             this.container.appendChild(visual);
+        } else {
+            visual.innerHTML = `
+                <svg viewBox="0 0 100 100" width="100%" height="100%" style="filter: drop-shadow(0 0 15px rgba(255, 0, 204, 0.75)); overflow: visible;">
+                    <path d="M50,34 C42,12 28,8 22,18" fill="none" stroke="#a855f7" stroke-width="2.5" stroke-linecap="round">
+                        <animateTransform attributeName="transform" type="rotate" values="0 50 34; -8 50 34; 0 50 34" dur="2.4s" repeatCount="indefinite"/>
+                    </path>
+                    <path d="M50,34 C58,12 72,8 78,18" fill="none" stroke="#a855f7" stroke-width="2.5" stroke-linecap="round">
+                        <animateTransform attributeName="transform" type="rotate" values="0 50 34; 8 50 34; 0 50 34" dur="2.4s" repeatCount="indefinite"/>
+                    </path>
+                    <line x1="18" y1="50" x2="34" y2="50" stroke="#22d3ee" stroke-width="2" stroke-linecap="round" opacity="0.9">
+                        <animate attributeName="x2" values="34;30;34" dur="1.6s" repeatCount="indefinite"/>
+                    </line>
+                    <line x1="82" y1="50" x2="66" y2="50" stroke="#22d3ee" stroke-width="2" stroke-linecap="round" opacity="0.9">
+                        <animate attributeName="x2" values="66;70;66" dur="1.6s" repeatCount="indefinite"/>
+                    </line>
+                    <circle cx="50" cy="50" r="16" fill="#ff00cc">
+                        <animate attributeName="r" values="16;17.5;16" dur="2s" repeatCount="indefinite"/>
+                    </circle>
+                </svg>
+            `;
         }
 
         let bubble = document.getElementById('flowee-bubble');
@@ -1009,7 +1121,7 @@ class FloweeAgent {
                 <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-bottom: 10px;">
                     <div style="display: flex; align-items: center; gap: 8px;">
                          <img src="${pathPrefix}logo.png" style="width: 20px; height: 20px;">
-                         <span style="font-family: 'Cinzel', serif; color: var(--haki-gold); font-size: 0.8rem; letter-spacing: 2px; font-weight: bold;">Flowee AI</span>
+                         <span style="font-family: 'Cinzel', serif; color: var(--haki-gold); font-size: 0.8rem; letter-spacing: 2px; font-weight: bold;">${this.t('chat_title')}</span>
                     </div>
                     <div style="display: flex; gap: 12px; align-items: center;">
                         <span id="flowee-voice-toggle" onclick="window.FloweeVoice && window.FloweeVoice.toggle(); window.Flowee.updateVoiceIcon();" style="cursor: pointer; color: rgba(0,255,204,0.8); font-size: 18px;" class="material-symbols-outlined" title="Toggle voice">volume_up</span>
@@ -1021,13 +1133,13 @@ class FloweeAgent {
                 <!-- Messages Area -->
                 <div id="flowee-messages" style="flex: 1; overflow-y: auto; padding: 4px; display: flex; flex-direction: column; gap: 12px; font-size: 0.8rem; color: #eee; scroll-behavior: smooth;">
                     <div style="background: rgba(212,175,55,0.1); border-left: 3px solid var(--haki-gold); padding: 10px; border-radius: 4px; line-height: 1.4;" id="flowee-greeting-msg">
-                        Hello Navigator! I am Flowee, your guide. How can I assist you today?
+                        …
                     </div>
                 </div>
 
                 <!-- Input Area -->
                 <div style="position: relative; margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
-                    <input id="flowee-input" type="text" placeholder="Command the Matrix..." 
+                    <input id="flowee-input" type="text" placeholder="${this.t('chat_placeholder')}"
                         style="width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(212,175,55,0.2); border-radius: 20px; padding: 12px 45px 12px 20px; color: #fff; font-size: 0.8rem; outline: none; box-sizing: border-box; transition: border-color 0.3s;"
                         onfocus="this.style.borderColor='rgba(212,175,55,0.6)'"
                         onblur="this.style.borderColor='rgba(212,175,55,0.2)'"
@@ -1053,7 +1165,11 @@ class FloweeAgent {
         } catch(e) {}
 
         const isDashboard = window.location.pathname.includes('dashboard');
-        let greetingText = `Hello <strong>${uname}</strong>! I am Flowee, your Navigator. How can I assist you today?`;
+        const isKitchen = window.location.pathname.includes('kitchen_workspace');
+        let greetingText = this.t('chat_greeting')(uname);
+        if (isKitchen) {
+            greetingText += `<br><br><span style="color:var(--haki-gold);font-size:0.85em">${this.t('kitchen_intro')}</span>`;
+        }
         
         if (isDashboard) {
             greetingText += `<br><br><strong style="color:var(--haki-gold)">Orbit Agenda:</strong><br>
@@ -1071,6 +1187,19 @@ class FloweeAgent {
         }
         const greetingEl = document.getElementById('flowee-greeting-msg');
         if (greetingEl) greetingEl.innerHTML = greetingText;
+
+        const quick = document.getElementById('flowee-chat-quick-actions');
+        if (quick && isKitchen) {
+            const lang = this.getLang();
+            const chips = lang === 'en'
+                ? ['How does KDS work?', 'Order stuck in NEW', 'Menu sync', 'QR for guests']
+                : lang === 'pt'
+                    ? ['Como funciona o KDS?', 'Pedido preso em NOVO', 'Sync menu', 'QR convidados']
+                    : ['Wie funktioniert KDS?', 'Bestellung bleibt in NEW', 'Menü-Sync', 'QR für Gäste'];
+            quick.innerHTML = chips.map((c) =>
+                `<button type="button" onclick="window.Flowee.processInput('${c.replace(/'/g, "\\'")}')" style="font-size:9px;padding:4px 8px;border-radius:99px;border:1px solid rgba(212,175,55,0.35);background:rgba(212,175,55,0.08);color:#eee;cursor:pointer">${c}</button>`
+            ).join('');
+        }
     }
 
     toggleChat() {
@@ -1310,6 +1439,26 @@ class FloweeAgent {
             { keys: ["cave", "memory", "garden", "cinema"], url: "pages/memory_cave.html", msg: "Quiet your mind... Descending into the Memory Cave." }
         ];
 
+        // Kitchen / Taste World shortcuts
+        if (q.includes('kds') || q.includes('kitchen command') || q.includes('delivery board')) {
+            const lang = this.getLang();
+            return {
+                text: lang === 'en'
+                    ? 'KDS columns: NEW → tap ✓ to Confirm → Cooking → Ready → Picked up. Swipe for Menu, Brand, QR & Crew comms.'
+                    : lang === 'pt'
+                        ? 'KDS: NOVO → Confirmar → Cozinhar → Pronto → Recolhido. Desliza para Menu, Brand, QR & Crew.'
+                        : 'KDS-Spalten: NEW → ✓ bestätigen → Kochen → Bereit → Abgeholt. Swipe für Menü, Brand, QR & Crew.',
+            };
+        }
+        if (q.includes('stuck') || q.includes('new') && (q.includes('order') || q.includes('bestell'))) {
+            const lang = this.getLang();
+            return {
+                text: lang === 'en'
+                    ? 'If Confirm does not move the card: status saves locally first, then cloud-sync. Check you are signed in as kitchen owner or crew with ops code AKWABA-CREW in env.'
+                    : 'Wenn Bestätigen nicht springt: Status wird sofort lokal gespeichert und dann in die Cloud synchronisiert. Als Kitchen-Owner einloggen oder Ops-Code prüfen.',
+            };
+        }
+
         // 2.5 SPECIAL: CONFIRMATIONS (If Brain is waiting)
         const isConfirm = ["yes", "ja", "ok", "sync", "confirm", "yep", "do it"].some(k => q === k);
         const isDeny = ["no", "nein", "abort", "stop", "cancel"].some(k => q === k);
@@ -1530,7 +1679,7 @@ class FloweeAgent {
         }
 
         if (window.AgenticBrain?.syncPending) return { text: "Awaiting confirmation for the Cloud Pulse (Yes/No)..." };
-        return { text: "I'm searching the Matrix... Try 'Quests', 'Bag', 'Market', or 'Help'.", link: null };
+        return { text: this.t('fallback'), link: null };
     }
 
     restartTutorial() {

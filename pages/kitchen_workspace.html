@@ -48,7 +48,9 @@
         .flame:hover, .flame.active { filter: grayscale(0) drop-shadow(0 0 5px var(--terracotta)); transform: scale(1.1); }
         .stat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
         .stat-box { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 12px; text-align: center; }
-        .swiper-pagination-bullet { background: var(--gold) !important; }
+        .ops-nav-btn { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 8px; border: 1px solid rgba(255,255,255,0.12); color: rgba(255,255,255,0.55); background: rgba(0,0,0,0.25); flex-shrink: 0; }
+        .ops-nav-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(212,175,55,0.12); }
+        .ops-nav-btn .material-symbols-outlined { font-size: 18px; }
         @media print { body * { visibility: hidden; } #kitchen-qr-studio, #kitchen-qr-studio * { visibility: visible; } #kitchen-qr-studio { position: fixed; inset: 0; display: flex !important; align-items: center; justify-content: center; } }
     </style>
 </head>
@@ -65,9 +67,14 @@
         </div>
     </header>
 
-    <nav class="flex gap-1 px-3 py-2 overflow-x-auto text-[9px] uppercase tracking-widest border-b border-white/5 bg-black/30" id="ops-slide-nav">
-        <span class="px-2 py-1 text-[var(--gold)] whitespace-nowrap">← swipe →</span>
-        <span class="text-white/30 whitespace-nowrap">KDS · Menu · Brand · QR · Crew · Ticket</span>
+    <nav class="flex gap-2 px-3 py-2 overflow-x-auto items-center border-b border-white/5 bg-black/30" id="ops-slide-nav" aria-label="Kitchen slides">
+        <span class="material-symbols-outlined text-[var(--gold)] text-base shrink-0" title="Swipe">swipe</span>
+        <button type="button" class="ops-nav-btn active" data-slide="0" title="KDS"><span class="material-symbols-outlined" aria-hidden="true">dashboard</span></button>
+        <button type="button" class="ops-nav-btn" data-slide="1" title="Menü"><span class="material-symbols-outlined" aria-hidden="true">restaurant_menu</span></button>
+        <button type="button" class="ops-nav-btn" data-slide="2" title="Brand"><span class="material-symbols-outlined" aria-hidden="true">palette</span></button>
+        <button type="button" class="ops-nav-btn" data-slide="3" title="QR"><span class="material-symbols-outlined" aria-hidden="true">qr_code_2</span></button>
+        <button type="button" class="ops-nav-btn" data-slide="4" title="Crew"><span class="material-symbols-outlined" aria-hidden="true">forum</span></button>
+        <button type="button" class="ops-nav-btn" data-slide="5" title="Ticket"><span class="material-symbols-outlined" aria-hidden="true">confirmation_number</span></button>
     </nav>
 
     <main class="w-full" style="height: calc(100vh - 108px);">
@@ -205,7 +212,8 @@
     <script src="../js/agents/supabase_client.js?v=4.1"></script>
     <script src="../js/agents/agent.js?v=3.2"></script>
     <script src="../js/agents/pusher.js?v=4.1"></script>
-    <script src="../js/agents/flowee.js?v=5.0"></script>
+    <script src="../js/data/taste_world_i18n.js?v=1.0"></script>
+    <script src="../js/agents/flowee.js?v=5.1"></script>
     <script src="../js/agents/flowee_voice.js?v=1.1"></script>
     <script src="../js/agents/flowee_reward.js?v=1.0"></script>
     <script src="../js/data/lisbon_quests.js?v=1.1"></script>
@@ -213,7 +221,7 @@
     <script src="../js/data/akwaba_kitchen_data.js?v=1.3"></script>
     <script src="../js/agents/kitchen_store.js?v=1.2"></script>
     <script src="../js/agents/kitchen_engine.js?v=1.4"></script>
-    <script src="../js/agents/kitchen_ops.js?v=2.7"></script>
+    <script src="../js/agents/kitchen_ops.js?v=2.8"></script>
     <script src="../js/agents/flowee_kitchen_tour.js?v=3.0" defer></script>
     <script src="../js/agents/mobile_sphere_nav.js?v=1.1" defer></script>
     <script>
@@ -229,7 +237,17 @@
                 resistanceRatio: 0.85,
                 grabCursor: true,
                 allowTouchMove: true,
-                touchStartPreventDefault: false
+                touchStartPreventDefault: false,
+                on: {
+                    slideChange(s) {
+                        document.querySelectorAll('#ops-slide-nav .ops-nav-btn').forEach((btn) => {
+                            btn.classList.toggle('active', Number(btn.dataset.slide) === s.activeIndex);
+                        });
+                    },
+                },
+            });
+            document.querySelectorAll('#ops-slide-nav .ops-nav-btn').forEach((btn) => {
+                btn.addEventListener('click', () => swiper.slideTo(Number(btn.dataset.slide) || 0));
             });
             const params = new URLSearchParams(location.search);
             if (params.get('slide') === 'forge' || location.hash === '#create') {
