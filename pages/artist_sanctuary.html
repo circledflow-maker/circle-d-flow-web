@@ -2722,33 +2722,75 @@
         const soulLight = new THREE.PointLight(savedColor, 2.0, 15);
         soulGroup.add(soulLight);
 
-        // Flowee Orb (Companion — original cyan wings)
+        // Flowee Orb (Companion — natural fairy wings)
         const floweeOrb = new THREE.Group();
         playerGroup.add(floweeOrb);
         floweeOrb.position.set(2, 2.5, -2);
 
-        const fCoreGeo = new THREE.SphereGeometry(0.35, 16, 16);
-        const fCoreMat = new THREE.MeshBasicMaterial({ color: 0x00ffcc, transparent: true, opacity: 0.95 });
+        const fCoreGeo = new THREE.SphereGeometry(0.32, 20, 20);
+        const fCoreMat = new THREE.MeshBasicMaterial({ color: 0x00ffcc, transparent: true, opacity: 0.92 });
         const fCore = new THREE.Mesh(fCoreGeo, fCoreMat);
         floweeOrb.add(fCore);
 
-        const fLight = new THREE.PointLight(0x00ffcc, 1.4, 10);
+        const fLight = new THREE.PointLight(0x00ffcc, 1.5, 10);
         floweeOrb.add(fLight);
 
-        const wingGeo = new THREE.PlaneGeometry(0.55, 0.28);
-        const wingMat = new THREE.MeshBasicMaterial({
-            color: 0x00ffcc, transparent: true, opacity: 0.65,
-            side: THREE.DoubleSide, blending: THREE.AdditiveBlending, depthWrite: false,
-        });
-        const leftWing = new THREE.Mesh(wingGeo, wingMat);
-        leftWing.position.set(-0.42, 0, 0);
-        leftWing.rotation.y = 0.35;
-        floweeOrb.add(leftWing);
+        function fairyWing(side) {
+            const shape = new THREE.Shape();
+            const s = side === 'left' ? 1 : -1;
+            shape.moveTo(0, 0.05);
+            shape.bezierCurveTo(0.15 * s, 0.55, 0.95 * s, 0.75, 1.35 * s, 0.15);
+            shape.bezierCurveTo(1.05 * s, -0.15, 0.45 * s, -0.55, 0.08 * s, -0.35);
+            shape.bezierCurveTo(0.02 * s, -0.08, 0, 0.05, 0, 0.05);
+            const geo = new THREE.ShapeGeometry(shape);
+            const mat = new THREE.MeshBasicMaterial({
+                color: 0xaaffee,
+                transparent: true,
+                opacity: 0.5,
+                side: THREE.DoubleSide,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false,
+            });
+            const wing = new THREE.Mesh(geo, mat);
+            wing.rotation.y = side === 'left' ? 0.25 : -0.25;
+            return wing;
+        }
 
-        const rightWing = new THREE.Mesh(wingGeo, wingMat);
-        rightWing.position.set(0.42, 0, 0);
-        rightWing.rotation.y = -0.35;
+        function fairyWingInner(side) {
+            const shape = new THREE.Shape();
+            const s = side === 'left' ? 1 : -1;
+            shape.moveTo(0, 0);
+            shape.bezierCurveTo(0.1 * s, 0.35, 0.55 * s, 0.45, 0.75 * s, 0.08);
+            shape.bezierCurveTo(0.5 * s, -0.08, 0.2 * s, -0.28, 0.05 * s, -0.12);
+            shape.lineTo(0, 0);
+            const geo = new THREE.ShapeGeometry(shape);
+            const mat = new THREE.MeshBasicMaterial({
+                color: 0x66ddff,
+                transparent: true,
+                opacity: 0.35,
+                side: THREE.DoubleSide,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false,
+            });
+            const wing = new THREE.Mesh(geo, mat);
+            wing.rotation.y = side === 'left' ? 0.3 : -0.3;
+            wing.position.z = 0.02;
+            return wing;
+        }
+
+        const leftWing = fairyWing('left');
+        leftWing.position.set(-0.08, 0, 0);
+        floweeOrb.add(leftWing);
+        const leftWingInner = fairyWingInner('left');
+        leftWingInner.position.set(-0.06, 0.02, 0.03);
+        floweeOrb.add(leftWingInner);
+
+        const rightWing = fairyWing('right');
+        rightWing.position.set(0.08, 0, 0);
         floweeOrb.add(rightWing);
+        const rightWingInner = fairyWingInner('right');
+        rightWingInner.position.set(0.06, 0.02, 0.03);
+        floweeOrb.add(rightWingInner);
 
         camera.position.set(0, 10, 20);
         camera.lookAt(playerGroup.position);
@@ -3068,9 +3110,11 @@
             fCore.rotation.y += delta;
             fCore.rotation.x += delta * 0.5;
 
-            const flapAngle = Math.sin(time * 8) * 0.45;
-            leftWing.rotation.z = 0.2 + flapAngle;
-            rightWing.rotation.z = -0.2 - flapAngle;
+            const flapAngle = Math.sin(time * 6) * 0.55;
+            leftWing.rotation.z = 0.08 + flapAngle;
+            rightWing.rotation.z = -0.08 - flapAngle;
+            leftWingInner.rotation.z = 0.12 + flapAngle * 0.7;
+            rightWingInner.rotation.z = -0.12 - flapAngle * 0.7;
 
             // Move Soul — smooth glide (no hop)
             const isWalking = moveVec.length() > 0;

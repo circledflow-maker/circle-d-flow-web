@@ -155,6 +155,7 @@
       if (window.FloweeKitchenTour && tut === 'ops') {
         setTimeout(() => window.FloweeKitchenTour.ownerTour(true), 900);
       }
+      if (window.KitchenDaily) window.KitchenDaily.init();
     },
 
     renderAll() {
@@ -169,6 +170,7 @@
       this.renderStaffPanel();
       this.renderSoulTicket();
       this.renderVoucherPanel();
+      if (window.KitchenDaily) window.KitchenDaily.renderPanel();
     },
 
     async loadOrders() {
@@ -960,6 +962,7 @@
         if (window.Pusher) window.Pusher.showToast('Select a READY order first', 'error');
         return;
       }
+      if (window.KitchenDaily) window.KitchenDaily.recordScan(this.kitchen?.slug || 'akwabalx');
       await this.advanceOrder(order.id, 'picked_up');
       await this.grantKitchenReward('soul_ticket_scan');
       const trust = parseInt(localStorage.getItem('cdf_kitchen_trust') || '0', 10) + 5;
@@ -1023,22 +1026,45 @@
 
     async sendMessage(body) {
       const name = localStorage.getItem('cdf_user_username') || 'Chef';
+      const slug = this.kitchen?.slug || 'akwabalx';
       const payload = { kitchen_id: this.kitchen?.id || DEFAULT_KITCHEN_ID, sender_name: name, body, channel: 'ops' };
-      if (window.supabaseClient) {
-        const { data: { user } } = await window.supabaseClient.auth.getUser();
-        if (user) payload.sender_id = user.id;
-        const { error } = await window.supabaseClient.from('kitchen_messages').insert([payload]);
-        if (error) { if (window.Pusher) window.Pusher.showToast(error.message, 'error'); return; }
-      } else {
-        const localKey = `cdf_kitchen_msgs_${this.kitchen?.slug || 'akwabalx'}`;
+      const localKey = `cdf_kitchen_msgs_${slug}`;
+      const pushLocal = () => {
         const list = JSON.parse(localStorage.getItem(localKey) || '[]');
         list.push({ ...payload, id: Date.now(), created_at: new Date().toISOString() });
         localStorage.setItem(localKey, JSON.stringify(list));
         this.messages = list;
         this.renderComm();
+      };
+      if (window.supabaseClient) {
+        try {
+          const { data: { user } } = await window.supabaseClient.auth.getUser();
+          if (user) payload.sender_id = user.id;
+          const { error } = await window.supabaseClient.from('kitchen_messages').insert([payload]);
+          if (!error) {
+            await this.loadMessages();
+            this.renderComm();
+            if (window.Flowee) window.Flowee.talk(true, `Relayed to crew: "${body}"`, 'guide');
+            return;
+          }
+          if (window.KitchenStore) {
+            const cloud = await window.KitchenStore.syncToCloud('insert_kitchen_message', payload, slug);
+            if (cloud.ok) {
+              await this.loadMessages();
+              this.renderComm();
+              if (window.Flowee) window.Flowee.talk(true, `Relayed to crew: "${body}"`, 'guide');
+              return;
+            }
+          }
+          pushLocal();
+          if (window.Pusher) window.Pusher.showToast('Crew-Nachricht lokal gespeichert', 'warning');
+        } catch (e) {
+          pushLocal();
+          if (window.Pusher) window.Pusher.showToast('Crew offline — lokal gespeichert', 'warning');
+        }
+      } else {
+        pushLocal();
       }
-      await this.loadMessages();
-      this.renderComm();
       if (window.Flowee) window.Flowee.talk(true, `Relayed to crew: "${body}"`, 'guide');
     },
   };

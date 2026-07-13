@@ -47,24 +47,37 @@
             top: 0; left: 0; right: 0; bottom: 0;
             z-index: 10;
             pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
             transition: opacity 0.8s ease;
+        }
+
+        .horizon-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 200;
+            pointer-events: auto;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.92), rgba(0,0,0,0.55), transparent);
         }
 
         .pointer-events-auto { pointer-events: auto; }
 
-        .horizon-bar {
-            background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
-        }
-
         /* Bazaar Carousel (Mobile Swipe UI) */
         .bazaar-viewport {
-            position: absolute;
-            bottom: 20px;
+            position: fixed;
+            bottom: 0;
             left: 0;
             width: 100vw;
+            max-height: 40vh;
+            padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
             overflow-x: auto;
             scroll-snap-type: x mandatory;
             scrollbar-width: none;
+            pointer-events: auto;
+            z-index: 30;
         }
         .bazaar-viewport::-webkit-scrollbar { display: none; }
         
@@ -93,22 +106,20 @@
         .stall-desc { font-size: 10px; color: rgba(255,255,255,0.5); margin: 8px 0 12px; line-height: 1.45; min-height: 2.8em; }
 
         #guild-focus-panel {
-            position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%) translateY(8px);
+            position: relative;
+            transform: none;
             width: min(92vw, 340px);
-            margin-bottom: 12px;
+            margin: 0 auto 10px;
             background: rgba(18, 8, 24, 0.92);
             border: 1px solid rgba(255, 170, 68, 0.45);
             border-radius: 14px;
-            padding: 14px 16px;
+            padding: 12px 14px;
             text-align: center;
             pointer-events: auto;
             transition: opacity 0.35s ease, transform 0.35s ease;
             box-shadow: 0 0 24px rgba(255, 170, 68, 0.15);
         }
-        #guild-focus-panel.hidden-panel { opacity: 0; transform: translateX(-50%) translateY(20px); pointer-events: none; }
+        #guild-focus-panel.hidden-panel { opacity: 0; transform: translateY(12px); pointer-events: none; height: 0; padding: 0; margin: 0; overflow: hidden; border: none; }
 
         #guild-inzone-panel {
             position: fixed;
@@ -491,10 +502,10 @@
 
         const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
         
-        // Initial Sky View — huts framed above guild carousel
-        const skyPos = new THREE.Vector3(0, 14, 38);
+        // Initial Sky View — guild huts in upper half, UI stack in lower 40%
+        const skyPos = new THREE.Vector3(0, 22, 48);
         camera.position.copy(skyPos);
-        camera.lookAt(0, 4, -28);
+        camera.lookAt(0, 10, -36);
 
         const renderer = (() => {
             try {
@@ -652,7 +663,7 @@
         ];
         const guildHutMeshes = {};
         guildHutDefs.forEach((g) => {
-            guildHutMeshes[g.id] = createClayBuilding(g.x, -28, 7, 7, 11, g.sym, g.color);
+            guildHutMeshes[g.id] = createClayBuilding(g.x, -36, 7, 7, 11, g.sym, g.color);
         });
 
         // Community Hubs
@@ -797,13 +808,13 @@
 
         // --- 5. CINEMATIC DIVE & CAMERA LERP ---
         const bazaarZones = {
-            arts: { x: -22, z: -28 },
-            sounds: { x: -4, z: -28 },
-            skills: { x: -13, z: -28 },
-            healing: { x: 5, z: -28 },
-            products: { x: 14, z: -28 },
-            services: { x: 23, z: -28 },
-            auctionCenter: { x: 0, z: -35 }
+            arts: { x: -22, z: -36 },
+            sounds: { x: -4, z: -36 },
+            skills: { x: -13, z: -36 },
+            healing: { x: 5, z: -36 },
+            products: { x: 14, z: -36 },
+            services: { x: 23, z: -36 },
+            auctionCenter: { x: 0, z: -42 }
         };
 
         let isCinematicDive = false;
@@ -811,7 +822,8 @@
         let currentGuild = "";
         let targetCameraPos = new THREE.Vector3();
         let targetLookAt = new THREE.Vector3();
-        let currentLookAt = new THREE.Vector3(0, 4, -28);
+        let currentLookAt = new THREE.Vector3(0, 10, -36);
+        let skyLookAtTarget = new THREE.Vector3(0, 10, -36);
         let skyLookAtTarget = new THREE.Vector3(0, 4, -28);
 
         function triggerCinematicEntry(guildName) {
@@ -1240,7 +1252,7 @@
         });
         function syncSkyCameraToGuild(guildId) {
             const def = guildHutDefs.find((g) => g.id === guildId);
-            if (def) skyLookAtTarget.set(def.x, 5, -28);
+            if (def) skyLookAtTarget.set(def.x, 10, -36);
             updateGuildPanels(guildId);
         }
 

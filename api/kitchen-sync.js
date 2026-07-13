@@ -92,6 +92,35 @@ module.exports = async function handler(req, res) {
       return res.status(200).json({ ok: true });
     }
 
+    if (action === 'insert_kitchen_message') {
+      const { sender_name, body, channel, sender_id } = payload;
+      if (!body) return res.status(400).json({ error: 'Missing message body' });
+      const row = {
+        kitchen_id: kitchenId,
+        sender_name: sender_name || 'Crew',
+        body,
+        channel: channel || 'ops',
+      };
+      if (sender_id && isUuid(sender_id)) row.sender_id = sender_id;
+      const { error } = await db.from('kitchen_messages').insert([row]);
+      if (error) throw new Error(error.message);
+      return res.status(200).json({ ok: true });
+    }
+
+    if (action === 'save_daily_report') {
+      const { report } = payload;
+      if (!report?.report_date) return res.status(400).json({ error: 'Missing report_date' });
+      const row = {
+        kitchen_id: kitchenId,
+        report_date: report.report_date,
+        payload: report,
+        auto_generated: !!report.auto_generated,
+      };
+      const { error } = await db.from('kitchen_daily_reports').upsert(row, { onConflict: 'kitchen_id,report_date' });
+      if (error) throw new Error(error.message);
+      return res.status(200).json({ ok: true });
+    }
+
     return res.status(400).json({ error: 'Unknown action' });
   } catch (e) {
     console.error('[kitchen-sync]', e.message);
