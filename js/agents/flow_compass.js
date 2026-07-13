@@ -96,13 +96,19 @@ class FlowCompassAgent {
             
             @media (max-width: 768px) {
                 .orrery-container {
-                    width: min(74vmin, calc(100vw - 24px));
-                    height: min(74vmin, calc(100dvh - 210px));
-                    max-width: calc(100vw - 24px);
-                    max-height: calc(100dvh - 210px);
+                    width: min(68vmin, calc(100vw - 28px));
+                    height: min(68vmin, calc(100dvh - 220px));
+                    max-width: calc(100vw - 28px);
+                    max-height: calc(100dvh - 220px);
                 }
-                .ring-outer, .os-outer { width: 78%; height: 78%; }
-                .planet-label { display: none; }
+                .ring-outer, .os-outer { width: 72%; height: 72%; }
+                .ring-inner, .os-inner { width: 44%; height: 44%; }
+                .planet-label {
+                    display: block; opacity: 0.9; bottom: -22px; font-size: 7px;
+                    max-width: 52px; overflow: hidden; text-overflow: ellipsis;
+                    letter-spacing: 0.04em; text-align: center; left: 50%;
+                    transform: translateX(-50%); white-space: nowrap;
+                }
             }
 
             /* RINGS & SYSTEMS (PERCENTAGE BASED) */
@@ -133,7 +139,19 @@ class FlowCompassAgent {
                 font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24;
             }
             .planet-node.locked .planet-visual .material-symbols-outlined { opacity: 0.4; }
-            .planet-visual { width: 100%; height: 100%; background: rgba(10, 10, 10, 0.95); border: 1px solid rgba(255,255,255,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: 0.3s; position: relative; }
+            .planet-visual {
+                width: 100%; height: 100%; background: rgba(10, 10, 10, 0.95); border: 1px solid rgba(255,255,255,0.3);
+                border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: 0.3s;
+                position: relative; overflow: hidden;
+            }
+            .planet-visual .adinkra-glyph-svg,
+            .planet-visual .adinkra-glyph-fallback {
+                width: 22px; height: 22px; max-width: 88%; max-height: 88%; flex-shrink: 0;
+                display: block; line-height: 1;
+            }
+            .planet-visual .material-symbols-outlined {
+                overflow: hidden; text-overflow: clip; white-space: nowrap; max-width: 100%;
+            }
             .planet-node:hover .planet-visual, .planet-node.focused .planet-visual { transform: scale(1.4); border-color: var(--planet-color); box-shadow: 0 0 25px var(--planet-color); background: #111; }
             
             .os-inner .planet-node { animation: counter-orbit-cw 80s linear infinite; }
@@ -317,8 +335,10 @@ class FlowCompassAgent {
             const size = container.offsetWidth || container.getBoundingClientRect().width;
             if (!size) return;
 
-            const scale = Math.min(1, availW / size, availH / size);
-            container.style.setProperty('--orbit-fit', String(Math.max(0.72, scale)));
+            const pad = window.innerWidth < 400 ? 16 : 8;
+            const scale = Math.min(1, (availW - pad) / size, availH / size);
+            const floor = window.innerWidth < 400 ? 0.62 : 0.72;
+            container.style.setProperty('--orbit-fit', String(Math.max(floor, scale)));
         };
 
         apply();
@@ -348,13 +368,25 @@ class FlowCompassAgent {
     }
 
     resolveIcon(name) {
-        if (window.renderAdinkraGlyph) {
-            const m = window.getAdinkraMeta?.(name);
-            if (m && m.glyph !== '◈' && name !== 'public') {
+        if (name && name !== 'public' && window.renderAdinkraGlyph && window.getAdinkraMeta) {
+            const m = window.getAdinkraMeta(name);
+            if (m) {
                 return window.renderAdinkraGlyph(name, 'gold');
             }
         }
         const map = {
+            aban: 'castle',
+            nea_onnim: 'school',
+            bese_saka: 'storefront',
+            akofena: 'shield',
+            hwe_mu_dua: 'photo_camera',
+            hwehwemudua: 'photo_camera',
+            akoma: 'favorite',
+            ese_ne_tekrema: 'restaurant',
+            nkonsonkonson: 'groups',
+            nkonsonnkonson: 'groups',
+            sankofa: 'history',
+            mate_masie: 'psychology',
             temple_hindu: 'castle',
             swords: 'shield',
             hub: 'hub',
@@ -365,7 +397,7 @@ class FlowCompassAgent {
             storefront: 'storefront',
             school: 'school',
         };
-        const iconStr = map[name] || name || 'public';
+        const iconStr = map[name] || 'public';
         return `<span class="material-symbols-outlined" aria-hidden="true">${iconStr}</span>`;
     }
 
@@ -392,17 +424,23 @@ class FlowCompassAgent {
         document.body.appendChild(sheet);
     }
 
+    orbitRadiusPct() {
+        if (window.innerWidth >= 768) return 50;
+        return window.innerWidth < 400 ? 38 : 42;
+    }
+
     renderOrbit(planets, type) {
         const os = document.getElementById(`os-${type}`);
         if(!os) return;
+        const r = this.orbitRadiusPct();
         planets.forEach(p => {
             const node = document.createElement('div');
             node.className = `planet-node planet-${type}`;
             node.id = `planet-${p.id}`;
             node.style.setProperty('--planet-color', p.color || 'var(--haki-gold)');
             const rad = p.angle * (Math.PI / 180);
-            const x = 50 + (50 * Math.cos(rad));
-            const y = 50 + (50 * Math.sin(rad));
+            const x = 50 + (r * Math.cos(rad));
+            const y = 50 + (r * Math.sin(rad));
             node.style.left = `${x}%`; node.style.top = `${y}%`;
             node.innerHTML = `<div class="planet-visual">${this.resolveIcon(p.icon)}<div class="planet-label" style="color: ${p.color}">${p.label}</div></div>`;
             node.onclick = (e) => { e.stopPropagation(); this.toggleMenu(p.id, p.options); };

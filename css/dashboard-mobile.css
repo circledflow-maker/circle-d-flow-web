@@ -62,23 +62,42 @@ body.dashboard-page main {
 
 @media (max-width: 768px) {
   .orrery-container {
-    width: min(74vmin, calc(100vw - 24px)) !important;
-    height: min(74vmin, calc(100dvh - 210px)) !important;
-    max-width: calc(100vw - 24px) !important;
-    max-height: calc(100dvh - 210px) !important;
+    width: min(68vmin, calc(100vw - 28px)) !important;
+    height: min(68vmin, calc(100dvh - 220px)) !important;
+    max-width: calc(100vw - 28px) !important;
+    max-height: calc(100dvh - 220px) !important;
     transform: scale(var(--orbit-fit, 1));
     transform-origin: center center;
   }
 
   .planet-node {
-    width: 36px !important;
-    height: 36px !important;
-    margin-top: -18px !important;
-    margin-left: -18px !important;
+    width: 40px !important;
+    height: 40px !important;
+    margin-top: -20px !important;
+    margin-left: -20px !important;
+  }
+
+  .planet-visual .adinkra-glyph-svg,
+  .planet-visual .adinkra-glyph-fallback {
+    width: 24px !important;
+    height: 24px !important;
+  }
+
+  .planet-visual .material-symbols-outlined {
+    font-size: 20px !important;
+    line-height: 1 !important;
   }
 
   .planet-label {
-    display: none !important;
+    display: block !important;
+    opacity: 0.92 !important;
+    font-size: 7px !important;
+    max-width: 54px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    bottom: -20px !important;
+    pointer-events: none;
   }
 
   #daily-activity-pill {
@@ -120,8 +139,26 @@ body.dashboard-page main {
   }
 
   .orrery-container {
-    width: min(70vmin, calc(100vw - 20px)) !important;
-    height: min(70vmin, calc(100dvh - 200px)) !important;
+    width: min(62vmin, calc(100vw - 24px)) !important;
+    height: min(62vmin, calc(100dvh - 210px)) !important;
+  }
+
+  body.dashboard-page #wa-fab-stack {
+    left: max(12px, env(safe-area-inset-left, 0px));
+  }
+}
+
+@media (max-width: 380px) {
+  .orrery-container {
+    width: min(58vmin, calc(100vw - 20px)) !important;
+    height: min(58vmin, calc(100dvh - 200px)) !important;
+  }
+
+  .planet-node {
+    width: 36px !important;
+    height: 36px !important;
+    margin-top: -18px !important;
+    margin-left: -18px !important;
   }
 }
 
