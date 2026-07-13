@@ -16,6 +16,9 @@ WITH expected AS (
     'kitchen_messages',
     'kitchen_vouchers',
     'kitchen_gamification_rules',
+    'flavor_quests',
+    'flavor_quest_progress',
+    'kitchen_feedback',
     'coop_projects',
     'coop_invites',
     'coop_project_members',
@@ -42,7 +45,9 @@ ORDER BY status DESC, e.table_name;
 -- 1. sql/triad_pipeline_setup.sql          (guilds, profiles columns — base)
 -- 2. sql/coop_collaboration.sql            (Resonance Bar team sync)
 -- 3. sql/bookings_setup.sql                (photo session bookings)
--- 4. sql/kitchen_pipeline_setup.sql        (Akwaba kitchen ops)
+-- 4. sql/kitchen_full_setup.sql           (kitchens + flavor quests + feedback)
+-- 5. sql/kitchen_rls_fix.sql              (fixes 500 errors — REQUIRED)
+-- 6. sql/kitchen_live_sync.sql            (realtime + feedback media + owner steps)
 -- 5. sql/supabase_profile_aliases_wakungo.sql (Naru + C-riz profiles)
 -- 6. sql/theater_cinema.sql                (Vision Studio uploads — optional)
 -- 7. sql/deployment_hotfix.sql             (if system_settings 406 errors)

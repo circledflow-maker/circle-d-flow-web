@@ -57,7 +57,7 @@ UPDATE public.kitchens SET is_live = true WHERE slug = 'akwabalx';
 -- WHERE slug = 'akwabalx' AND owner_user_id IS NOT NULL
 -- ON CONFLICT (kitchen_id, user_id) DO UPDATE SET role = 'owner', is_active = true;
 
--- 5. Realtime for KDS orders + crew chat (optional but recommended)
+-- 5. Realtime for KDS orders + crew chat + flavor log (optional but recommended)
 DO $$
 BEGIN
   IF NOT EXISTS (
@@ -72,4 +72,22 @@ BEGIN
   ) THEN
     ALTER PUBLICATION supabase_realtime ADD TABLE public.kitchen_messages;
   END IF;
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_publication_tables
+    WHERE pubname = 'supabase_realtime' AND schemaname = 'public' AND tablename = 'kitchen_feedback'
+  ) THEN
+    ALTER PUBLICATION supabase_realtime ADD TABLE public.kitchen_feedback;
+  END IF;
 END $$;
+
+-- 6. Feedback media columns + public read for live guest feed
+ALTER TABLE public.kitchen_feedback
+  ADD COLUMN IF NOT EXISTS video_url TEXT,
+  ADD COLUMN IF NOT EXISTS media_type TEXT DEFAULT 'text'
+    CHECK (media_type IN ('text','image','video','mixed'));
+
+DROP POLICY IF EXISTS "kitchen_feedback_public_read" ON public.kitchen_feedback;
+CREATE POLICY "kitchen_feedback_public_read" ON public.kitchen_feedback
+  FOR SELECT USING (true);
+
+GRANT SELECT, INSERT ON public.kitchen_feedback TO anon, authenticated;

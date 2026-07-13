@@ -176,13 +176,14 @@
         </div>
     </dialog>
 
-    <script src="../js/data/akwaba_kitchen_data.js?v=1.1"></script>
-    <script src="../js/agents/kitchen_engine.js?v=1.2"></script>
+    <script src="../js/data/akwaba_kitchen_data.js?v=1.2"></script>
+    <script src="../js/agents/kitchen_store.js?v=1.2"></script>
+    <script src="../js/agents/kitchen_engine.js?v=1.4"></script>
     <script src="../js/agents/flowee.js?v=5.0"></script>
     <script src="../js/agents/flowee_reward.js?v=1.0"></script>
     <script src="../js/agents/quest_engine.js?v=4.6"></script>
     <script src="../js/data/lisbon_quests.js?v=1.1"></script>
-    <script src="../js/agents/flavor_quest_engine.js?v=1.0"></script>
+    <script src="../js/agents/flavor_quest_engine.js?v=1.1"></script>
     <script src="../js/agents/flowee_kitchen_tour.js?v=3.0" defer></script>
     <script src="../js/agents/mobile_sphere_nav.js?v=1.1" defer></script>
     <link rel="stylesheet" href="../css/mobile-sphere-nav.css">
@@ -349,11 +350,15 @@
 
         async function placeOrder() {
             document.getElementById('order-modal').close();
-            if (!selectedItem || !window.KitchenEngine) {
+            if (!selectedItem) {
                 setTimeout(() => { location.href = selectedItem?.page || 'akwaba_kitchen.html'; }, 1500);
                 return;
             }
-            const engine = window.KitchenEngine;
+            const engine = window.ensureKitchenEngine ? window.ensureKitchenEngine() : window.KitchenEngine;
+            if (!engine) {
+                setTimeout(() => { location.href = selectedItem?.page || 'akwaba_kitchen.html'; }, 1500);
+                return;
+            }
             await engine.load('akwabalx');
             const menuItem = engine.menu.find((m) => m.id === selectedItem.id || m.name === selectedItem.dish);
             if (menuItem) {

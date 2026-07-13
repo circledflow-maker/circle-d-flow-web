@@ -157,13 +157,18 @@
       return true;
     },
 
-    async submitFeedback({ kitchenSlug, rating, body, photoDataUrl }) {
+    async submitFeedback({ kitchenSlug, kitchenId, rating, body, photoDataUrl, videoDataUrl, mediaType }) {
+      const hasMedia = !!(photoDataUrl || videoDataUrl);
       const payload = {
         kitchen_slug: kitchenSlug || 'akwabalx',
+        kitchen_id: kitchenId || null,
         rating: rating || 5,
         body: body || '',
         photo_url: photoDataUrl || null,
+        video_url: videoDataUrl || null,
+        media_type: mediaType || (videoDataUrl ? 'video' : (photoDataUrl ? 'image' : 'text')),
         quest_id: 'LQ-FQ02',
+        created_at: new Date().toISOString(),
       };
 
       if (window.supabaseClient) {
@@ -176,7 +181,7 @@
 
       localStorage.setItem(`cdf_flavor_feedback_${Date.now()}`, JSON.stringify(payload));
       window.dispatchEvent(new CustomEvent('cdf-flavor-log', { detail: payload }));
-      this.onEvent('feedback', { photo: !!photoDataUrl, rating, body });
+      this.onEvent('feedback', { photo: hasMedia, rating, body });
       return true;
     },
 

@@ -50,12 +50,17 @@
             <button type="button" class="flame text-xl opacity-40" data-r="5">🔥</button>
         </div>
         <textarea id="feedback-body" rows="3" class="w-full bg-black/50 border border-white/10 rounded p-3 text-xs mb-3" data-tw-i18n="tw.flavor.feedback.placeholder"></textarea>
-        <div class="flex gap-3 items-center mb-3">
+        <div class="flex gap-3 items-center mb-3 flex-wrap">
             <label class="text-[10px] px-3 py-2 border border-white/20 rounded cursor-pointer uppercase">
                 <span data-tw-i18n="tw.flavor.upload">Foto hochladen</span>
                 <input type="file" id="feedback-photo" accept="image/*" class="hidden">
             </label>
+            <label class="text-[10px] px-3 py-2 border border-white/20 rounded cursor-pointer uppercase">
+                Video
+                <input type="file" id="feedback-video" accept="video/mp4,video/webm,video/quicktime" class="hidden">
+            </label>
             <img id="feedback-preview" class="hidden w-20 h-20 object-cover rounded border border-white/10" alt="">
+            <video id="feedback-video-preview" class="hidden w-24 h-20 object-cover rounded border border-white/10" muted playsinline></video>
         </div>
         <button type="button" id="btn-send-feedback" class="w-full py-3 bg-[#00ff00] text-black font-bold text-xs uppercase" data-tw-i18n="tw.flavor.send">Feedback senden</button>
     </section>
@@ -69,40 +74,20 @@
     <script src="../js/agents/flowee.js?v=5.0" defer></script>
     <script src="../js/agents/flowee_reward.js?v=1.0" defer></script>
     <script src="../js/agents/quest_engine.js?v=4.6" defer></script>
-    <script src="../js/agents/flavor_quest_engine.js?v=1.0" defer></script>
+    <script src="../js/agents/flavor_quest_engine.js?v=1.1" defer></script>
+    <script src="../js/agents/kitchen_feedback.js?v=1.0" defer></script>
     <script defer>
         let feedbackRating = 5;
-        let feedbackPhoto = null;
-
-        function compressFeedbackPhoto(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const img = new Image();
-                    img.onload = () => {
-                        const c = document.createElement('canvas');
-                        const max = 900;
-                        let w = img.width, h = img.height;
-                        if (w > max) { h = h * max / w; w = max; }
-                        c.width = w; c.height = h;
-                        c.getContext('2d').drawImage(img, 0, 0, w, h);
-                        resolve(c.toDataURL('image/jpeg', 0.82));
-                    };
-                    img.onerror = reject;
-                    img.src = e.target.result;
-                };
-                reader.onerror = reject;
-                reader.readAsDataURL(file);
-            });
-        }
 
         document.addEventListener('DOMContentLoaded', () => {
             window.TasteI18n?.renderLangSwitcher('tw-lang-switch');
             window.TasteI18n?.apply();
+            if (window.KitchenFeedback) window.KitchenFeedback.setRating(5);
 
             document.querySelectorAll('#rating-stars .flame').forEach((btn, i) => {
                 btn.addEventListener('click', () => {
                     feedbackRating = i + 1;
+                    if (window.KitchenFeedback) window.KitchenFeedback.setRating(feedbackRating);
                     document.querySelectorAll('#rating-stars .flame').forEach((b, j) => {
                         b.style.opacity = j < feedbackRating ? '1' : '0.35';
                     });
@@ -112,11 +97,30 @@
 
             document.getElementById('feedback-photo')?.addEventListener('change', async (e) => {
                 const file = e.target.files?.[0];
-                if (!file) return;
-                feedbackPhoto = await compressFeedbackPhoto(file);
-                const prev = document.getElementById('feedback-preview');
-                prev.src = feedbackPhoto;
-                prev.classList.remove('hidden');
+                if (!file || !window.KitchenFeedback) return;
+                try {
+                    const url = await window.KitchenFeedback.handlePhotoInput(file);
+                    document.getElementById('feedback-video-preview')?.classList.add('hidden');
+                    const prev = document.getElementById('feedback-preview');
+                    prev.src = url;
+                    prev.classList.remove('hidden');
+                } catch (err) {
+                    if (window.Pusher) window.Pusher.showToast(err.message, 'error');
+                }
+            });
+
+            document.getElementById('feedback-video')?.addEventListener('change', async (e) => {
+                const file = e.target.files?.[0];
+                if (!file || !window.KitchenFeedback) return;
+                try {
+                    const url = await window.KitchenFeedback.handleVideoInput(file);
+                    document.getElementById('feedback-preview')?.classList.add('hidden');
+                    const vid = document.getElementById('feedback-video-preview');
+                    vid.src = url;
+                    vid.classList.remove('hidden');
+                } catch (err) {
+                    if (window.Pusher) window.Pusher.showToast(err.message, 'error');
+                }
             });
 
             document.getElementById('btn-send-feedback')?.addEventListener('click', async () => {
@@ -125,12 +129,20 @@
                     if (window.Pusher) window.Pusher.showToast('Bitte Text eingeben / Please write feedback', 'error');
                     return;
                 }
-                await window.FlavorQuestEngine.submitFeedback({
-                    kitchenSlug: 'akwabalx',
-                    rating: feedbackRating,
-                    body,
-                    photoDataUrl: feedbackPhoto,
-                });
+                if (window.KitchenFeedback) {
+                    window.KitchenFeedback.setRating(feedbackRating);
+                    const result = await window.KitchenFeedback.submit(body);
+                    if (!result.ok) {
+                        if (window.Pusher) window.Pusher.showToast('Foto oder Video erforderlich / Photo or video required', 'error');
+                        return;
+                    }
+                } else {
+                    await window.FlavorQuestEngine.submitFeedback({
+                        kitchenSlug: 'akwabalx',
+                        rating: feedbackRating,
+                        body,
+                    });
+                }
                 if (window.Pusher) window.Pusher.showToast('Flavor Log gespeichert — claim XP in missions', 'success');
                 window.FlavorQuestEngine.renderQuests('quest-grid');
             });
