@@ -15,11 +15,12 @@
     <link rel="stylesheet" href="../css/mobile-sphere-nav.css">
     <style>
         :root { --gold:#D4AF37; --sage:#8A9A5B; --terra:#E2725B; }
-        body { background:#0a0806; color:#fdfbf7; font-family:'Plus Jakarta Sans',sans-serif; padding-bottom:88px; }
+        body { background:#0a0806; color:#fdfbf7; font-family:'Plus Jakarta Sans',sans-serif; padding-bottom:calc(88px + env(safe-area-inset-bottom)); }
         .cinzel { font-family:'Cinzel',serif; }
         .menu-card { background:rgba(20,15,10,0.9); border:1px solid rgba(212,175,55,0.25); border-radius:12px; overflow:hidden; }
         .menu-card img { width:100%; height:120px; object-fit:cover; }
-        #cart-bar { position:fixed; bottom:72px; left:0; right:0; z-index:90; }
+        #cart-bar { position:fixed; bottom:calc(72px + env(safe-area-inset-bottom)); left:0; right:0; z-index:85; }
+        #flowee-agent { position:fixed; bottom:calc(130px + env(safe-area-inset-bottom)); right:12px; z-index:80; pointer-events:auto; }
         .flowee-tour-highlight { outline:2px solid #00ffcc; box-shadow:0 0 20px rgba(0,255,204,0.4); border-radius:12px; }
         #kitchen-menu-board { border:1px solid rgba(212,175,55,0.35); border-radius:12px; background:rgba(0,0,0,0.35); }
         #kitchen-menu-board img { width:100%; border-radius:12px; display:block; aspect-ratio:3/4; object-fit:contain; background:#0a0806; }
@@ -152,13 +153,13 @@
         </div>
     </div>
 
-    <div id="flowee-agent" style="position:fixed;bottom:90px;right:12px;z-index:9998;pointer-events:auto"></div>
-    <nav class="animus-global-nav">
-        <button onclick="location.href='quest_map.html'" class="nav-btn" id="nav-map"><span class="icon">📍</span><span class="nav-label">MAP</span></button>
-        <button onclick="location.href='quest_board.html'" class="nav-btn" id="nav-board"><span class="icon">📖</span><span class="nav-label">QUESTS</span></button>
-        <button onclick="location.href='hall_of_legends.html'" class="nav-btn" id="nav-bro"><span class="icon">🏛️</span><span class="nav-label">RANK</span></button>
-        <button onclick="window.Flowee?.toggleChat()" class="nav-btn" id="nav-comms"><span class="icon">💬</span><span class="nav-label">FLOWEE</span></button>
-        <button onclick="location.href='dashboard.html'" class="nav-btn exit"><span class="icon">⚡</span><span class="nav-label">ORBIT</span></button>
+    <div id="flowee-agent"></div>
+    <nav class="animus-global-nav" style="z-index:100">
+        <button type="button" class="nav-btn" id="nav-map"><span class="icon">📍</span><span class="nav-label">MAP</span></button>
+        <button type="button" class="nav-btn" id="nav-board"><span class="icon">📖</span><span class="nav-label">QUESTS</span></button>
+        <button type="button" class="nav-btn" id="nav-bro"><span class="icon">🏛️</span><span class="nav-label">RANK</span></button>
+        <button type="button" class="nav-btn" id="nav-comms"><span class="icon">💬</span><span class="nav-label">FLOWEE</span></button>
+        <button type="button" class="nav-btn exit" id="nav-orbit"><span class="icon">⚡</span><span class="nav-label">ORBIT</span></button>
     </nav>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js" defer></script>
@@ -170,7 +171,9 @@
     <script src="../js/data/taste_world_i18n.js?v=1.0" defer></script>
     <script src="../js/agents/flavor_quest_engine.js?v=1.1" defer></script>
     <script src="../js/agents/kitchen_feedback.js?v=1.0" defer></script>
-    <script src="../js/data/akwaba_kitchen_data.js?v=1.3" defer></script>
+    <script src="../js/data/akwaba_kitchen_data.js?v=1.4" defer></script>
+    <script src="../js/agents/navigator_display.js?v=1.0" defer></script>
+    <script src="../js/agents/kitchen_guest_nav.js?v=1.0" defer></script>
     <script src="../js/agents/kitchen_store.js?v=1.2" defer></script>
     <script src="../js/agents/kitchen_engine.js?v=1.4" defer></script>
     <script src="../js/agents/flowee.js?v=3.4" defer></script>
@@ -421,6 +424,12 @@
                     feedId: 'guest-feedback-feed',
                 });
             }
+            document.getElementById('nav-map')?.addEventListener('click', () => window.KitchenGuestNav?.goMap());
+            document.getElementById('nav-board')?.addEventListener('click', () => window.KitchenGuestNav?.goQuests());
+            document.getElementById('nav-bro')?.addEventListener('click', () => window.KitchenGuestNav?.goRank());
+            document.getElementById('nav-comms')?.addEventListener('click', () => window.Flowee?.toggleChat());
+            document.getElementById('nav-orbit')?.addEventListener('click', () => window.KitchenGuestNav?.goOrbit());
+            window.KitchenGuestNav?.greetIfGuest();
         });
     </script>
 </body>

@@ -652,6 +652,13 @@ class QuestEngine {
     }
 
     // --- 3. THE BROTHERHOOD (Leaderboard) ---
+    displayName(profile) {
+        if (window.NavigatorDisplay) return window.NavigatorDisplay.displayNavigatorName(profile);
+        const u = String(profile?.username || '').trim();
+        if (u && !/^unknown$/i.test(u)) return u;
+        return profile?.id ? `Navigator ${String(profile.id).slice(0, 6)}` : 'Navigator';
+    },
+
     async initBrotherhood() {
         console.log("🏛️ [Brotherhood] Hierarchy Loaded.");
         if (window.PointsSync) await window.PointsSync.refresh();
@@ -660,9 +667,15 @@ class QuestEngine {
 
         let agents = [];
         try {
-            const { data, error } = await this.supabase.from('profiles').select('*').order('exp', { ascending: false }).limit(30);
-            if(error) throw error;
-            agents = data || [];
+            const { data, error } = await this.supabase
+                .from('profiles')
+                .select('id, username, email, exp, karma, level, avatar_url, guild_id')
+                .order('exp', { ascending: false })
+                .limit(50);
+            if (error) throw error;
+            agents = (data || []).filter((ag) =>
+                window.NavigatorDisplay ? window.NavigatorDisplay.isRealProfile(ag) : !!ag.id
+            );
         } catch(e) {
              console.warn("[Brotherhood] Connection fluctuation.", e);
         }
@@ -673,16 +686,18 @@ class QuestEngine {
             if (agents.length === 0) {
                 list.innerHTML = `<div style="text-align:center;padding:40px 20px;color:#666;font-family:'Courier New',monospace;">
                     <p style="color:#d4af37;margin-bottom:8px;">NO OPERATIVES YET</p>
-                    <p style="font-size:0.85em;">Complete Atlas quests to appear on the live register.</p>
+                    <p style="font-size:0.85em;">Registrierte Navigators erscheinen hier live aus der Datenbank.</p>
+                    <a href="bantaba.html" style="color:#00f0ff;font-size:0.85em;display:inline-block;margin-top:12px;">→ Bantaba besuchen</a>
                 </div>`;
             } else {
-            agents.forEach((ag, idx) => {
+            agents.slice(0, 10).forEach((ag, idx) => {
                  const div = document.createElement('div');
                  div.className = 'leaderboard-item';
+                 const label = this.displayName(ag);
                  div.innerHTML = `
                     <div class="agent-link" style="cursor:pointer;display:flex;align-items:center;gap:8px;" onclick="window.location.href='academy.html?user=${ag.id}'">
                         <span class="rank-num" style="color:${idx < 3 ? 'gold' : '#aaa'};width:30px;">#${idx+1}</span>
-                        <span class="agent-name hover:text-cyan-400 transition-colors">${ag.username || 'Unknown'}</span>
+                        <span class="agent-name hover:text-cyan-400 transition-colors">${label}</span>
                     </div>
                     <div style="color:gold">${(ag.exp || 0).toLocaleString()} XP</div>
                  `;
@@ -694,10 +709,20 @@ class QuestEngine {
         const myExp = document.getElementById('brotherhood-my-exp');
         if (myExp && this.profile) myExp.textContent = (this.profile.exp || 0).toLocaleString();
 
-        if(this.profile) {
+        if (this.profile) {
             this.renderBadges(this.profile.exp, 'my-badge-case');
             this.renderAdinkraCodex();
             this.renderLevelUnlocks();
+        }
+
+        if (!this._brotherhoodRealtimeBound && this.supabase) {
+            this._brotherhoodRealtimeBound = true;
+            this._brotherhoodChannel = this.supabase
+                .channel('brotherhood-live-profiles')
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'profiles' }, () => {
+                    this.initBrotherhood();
+                })
+                .subscribe();
         }
     }
 

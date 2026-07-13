@@ -1,4 +1,6 @@
--- AkwabaLX — 7 menu items + title image (run in Supabase SQL Editor)
+-- WARNING: Do NOT run if workspace menu is already configured via Kitchen Ops.
+-- This only resets cloud seed — workspace localStorage edits are preserved on device.
+-- AkwabaLX — 7 menu items + title image (run in Supabase SQL Editor ONLY for fresh seed)
 
 UPDATE public.kitchens
 SET

@@ -4,15 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CQR | THE BROTHERHOOD</title>
+    <link rel="preconnect" href="https://agkmbaephgsnunlarntm.supabase.co">
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="../css/quest-triad.css">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../js/agents/agent.js?v=3.2"></script>
-    <script src="../js/agents/helper.js?v=3.2"></script>
-    <script src="../js/agents/pusher.js?v=3.2"></script>
-    <script src="../js/agents/sound_engineer.js?v=3.2"></script>
-    <script src="../js/agents/brain.js?v=3.2"></script>
+    <script src="https://cdn.tailwindcss.com" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+    <script src="../js/agents/agent.js?v=3.2" defer></script>
+    <script src="../js/agents/helper.js?v=3.2" defer></script>
+    <script src="../js/agents/pusher.js?v=3.2" defer></script>
+    <script src="../js/agents/sound_engineer.js?v=3.2" defer></script>
+    <script src="../js/agents/brain.js?v=3.2" defer></script>
     <script src="../js/agents/global_ticker.js" defer></script>
     <script src="../js/agents/network_hub.js" defer></script>
     <script src="../js/agents/constructor_bot.js" defer></script>
@@ -25,8 +26,8 @@
     <script src="../js/agents/tutorial_core.js" defer></script>
     <script src="../js/agents/quest_controller.js" defer></script>
     <script src="../js/agents/visual_integrity.js" defer></script>
-    <script src="../js/agents/flowee.js?v=3.2"></script>
-    <script src="../js/agents/supabase_client.js?v=3.2"></script>
+    <script src="../js/agents/flowee.js?v=3.2" defer></script>
+    <script src="../js/agents/supabase_client.js?v=4.1" defer></script>
     <script src="../js/agents/points_sync.js?v=1.0"></script>
     <script src="../js/data/lisbon_quests.js?v=1.1"></script>
     <script src="../js/data/lisbon_venues.js?v=1.0"></script>
@@ -37,13 +38,14 @@
     <script src="../js/agents/flowee_voice.js?v=1.1" defer></script>
     <script src="../js/agents/flowee_quest_tour.js?v=1.1" defer></script>
     <script src="../js/agents/quest_triad.js?v=2.1" defer></script>
-    <script src="../js/agents/quest_engine.js?v=4.5" defer></script>
+    <script src="../js/agents/navigator_display.js?v=1.0" defer></script>
+    <script src="../js/agents/quest_engine.js?v=4.6" defer></script>
 </head>
 <body class="animus-ui min-h-screen bg-black text-white font-mono">
 
     <!-- Mobile Header & Burger Menu -->
     <div class="fixed top-6 left-6 z-[100]">
-        <button id="burger-btn" class="w-10 h-10 flex flex-col justify-center items-center gap-1.5 bg-black border border-[#d4af37]/50 rounded cursor-pointer z-[101]">
+        <button id="burger-btn" aria-label="Open menu" class="w-10 h-10 flex flex-col justify-center items-center gap-1.5 bg-black border border-[#d4af37]/50 rounded cursor-pointer z-[101]">
             <span class="w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
             <span class="w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
             <span class="w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
@@ -71,7 +73,7 @@
         
         <!-- HEADER -->
         <div style="text-align: center; margin-bottom: 50px;">
-            <img src="../Assets/images/cqr-logo-gold.png" style="width: 80px; filter: drop-shadow(0 0 10px gold);" class="mx-auto animate-pulse-slow">
+            <img src="../Assets/images/cqr-logo-gold.png" alt="Circle D Flow logo" style="width: 80px; filter: drop-shadow(0 0 10px gold);" class="mx-auto animate-pulse-slow">
             <h1 class="animus-title text-4xl md:text-6xl my-4 glitch-text" data-text="THE BROTHERHOOD" style="color:white; font-family:'Cinzel', serif;">THE BROTHERHOOD</h1>
             <p style="letter-spacing: 5px; color: #666; font-size: 0.9em; text-transform:uppercase;">LISBON CELL HIERARCHY</p>
             <a href="quest_map.html" id="bro-return-link" class="inline-block mt-4 text-xs text-white/50 hover:text-gold no-underline">[ RETURN TO ATLAS ]</a>
@@ -91,7 +93,7 @@
                 <div style="flex:1; min-width: 250px;">
                     <div style="display:flex; align-items:center; gap:15px; margin-bottom:10px;">
                         <div style="width:60px; height:60px; border:2px solid gold; display:flex; align-items:center; justify-content:center; overflow:hidden; border-radius:50%;">
-                            <img id="my-avatar" src="../assets/images/default-avatar.png" style="width:100%; height:100%; object-fit:cover;">
+                            <img id="my-avatar" src="../Assets/kitchens/akwabalx/logo-fallback.png" alt="Navigator avatar" style="width:100%; height:100%; object-fit:cover;">
                         </div>
                         <div>
                             <h3 style="color: gold; margin: 0; font-size: 0.8em; letter-spacing:1px;">IDENTITY CONFIRMED</h3>
@@ -281,6 +283,11 @@
     </style>
 
     <script>
+        function dossierName(profile) {
+            if (window.NavigatorDisplay) return window.NavigatorDisplay.displayNavigatorName(profile);
+            return profile?.username || 'Navigator';
+        }
+
         window.addEventListener('load', async () => {
              const fromAtlas = new URLSearchParams(location.search).get('from') === 'atlas';
              const ret = document.getElementById('bro-return-link');
@@ -301,9 +308,10 @@
                  }
                  
                  // Fallback if loadBrotherhoodStatus is slow
-                 if(window.userProfile) {
-                     document.getElementById('my-codename').innerText = window.userProfile.username || 'UNKNOWN';
-                     document.getElementById('my-codename').setAttribute('data-text', window.userProfile.username || 'UNKNOWN');
+                 if (window.userProfile) {
+                     const label = dossierName(window.userProfile);
+                     document.getElementById('my-codename').innerText = label;
+                     document.getElementById('my-codename').setAttribute('data-text', label);
                      document.getElementById('my-exp').innerText = window.userProfile.exp || 0;
                  }
              } else {
@@ -317,7 +325,15 @@
             if(!window.supabaseClient) return;
 
             const { data: { user } } = await window.supabaseClient.auth.getUser();
-            if (!user) return;
+            if (!user) {
+                document.getElementById('my-codename').innerText = 'GUEST NAVIGATOR';
+                document.getElementById('my-codename').setAttribute('data-text', 'GUEST NAVIGATOR');
+                document.getElementById('my-rank-label').innerText = 'VISITOR';
+                document.getElementById('user-dossier').insertAdjacentHTML('beforeend',
+                    `<p style="margin-top:16px;color:#00f0ff;font-size:0.85em;">Besuche <a href="bantaba.html" style="color:gold">Bantaba</a> für erste Eindrücke — oder <a href="login.html?redirect=${encodeURIComponent('hall_of_legends.html')}" style="color:gold">registriere dich</a>.</p>`
+                );
+                return;
+            }
 
             // 1. Prüfe das Profil des Agenten
             const { data: profile } = await window.supabaseClient
@@ -329,8 +345,8 @@
             if (!profile) return;
             
             // Update Dossier UI
-            document.getElementById('my-codename').innerText = profile.username || 'UNKNOWN';
-            document.getElementById('my-codename').setAttribute('data-text', profile.username || 'UNKNOWN');
+            document.getElementById('my-codename').innerText = dossierName(profile);
+            document.getElementById('my-codename').setAttribute('data-text', dossierName(profile));
             document.getElementById('my-exp').innerText = profile.exp || 0;
             
             // Calc Rank Progress (Mock logic)

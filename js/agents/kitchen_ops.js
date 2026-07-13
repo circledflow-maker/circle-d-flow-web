@@ -126,6 +126,10 @@
           console.warn('[KitchenOps] menu load', e.message);
         }
       }
+      if (!remote.length && window.KitchenStore) {
+        const local = window.KitchenStore.getMenuLocal(slug).filter((i) => !i._deleted);
+        if (local.length) remote = local;
+      }
       if (!remote.length) remote = window.KitchenEngine?.menu || window.AKWABA_KITCHEN?.menu || [];
       this.menu = window.KitchenStore
         ? window.KitchenStore.mergeMenu(remote, slug)
