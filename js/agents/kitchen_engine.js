@@ -112,6 +112,70 @@ class KitchenEngine {
         return this.cart.reduce((s, i) => s + (i.price_eur || 0) * (i.qty || 1), 0);
     }
 
+    normalizeOrderStatus(status) {
+        const s = String(status || 'pending').toLowerCase();
+        if (s === 'cooking') return 'in_progress';
+        return s;
+    }
+
+    async fetchOrder(orderId) {
+        if (!orderId) return null;
+        if (window.supabaseClient && !String(orderId).startsWith('local-')) {
+            try {
+                const { data } = await window.supabaseClient
+                    .from('kitchen_orders').select('*').eq('id', orderId).maybeSingle();
+                if (data) return { ...data, status: this.normalizeOrderStatus(data.status) };
+            } catch (e) { console.warn('[KitchenEngine] fetchOrder', e.message); }
+        }
+        const local = JSON.parse(localStorage.getItem('cdf_kitchen_orders_local') || '[]');
+        const found = local.find((o) => o.id === orderId);
+        return found ? { ...found, status: this.normalizeOrderStatus(found.status) } : null;
+    }
+
+    subscribeOrderRealtime(orderId, onUpdate) {
+        if (!orderId || typeof onUpdate !== 'function') return;
+        this._activeOrderId = orderId;
+        this._orderUpdateCb = onUpdate;
+        if (!this._orderSyncBound) {
+            this._orderSyncBound = true;
+            window.addEventListener('KITCHEN_ORDER_UPDATED', (e) => {
+                const d = e.detail || {};
+                if (!d.orderId || d.orderId === this._activeOrderId) this._refreshTrackedOrder();
+            });
+            window.addEventListener('storage', (e) => {
+                if (e.key === 'cdf_kitchen_orders_local') this._refreshTrackedOrder();
+            });
+            try {
+                this._orderBc = new BroadcastChannel('cdf_kitchen_sync');
+                this._orderBc.onmessage = (e) => {
+                    if (e.data?.type === 'order') this._refreshTrackedOrder();
+                };
+            } catch (_) { /* BroadcastChannel unavailable */ }
+        }
+        this._bindOrderChannel(orderId);
+        this._refreshTrackedOrder();
+    }
+
+    async _refreshTrackedOrder() {
+        if (!this._activeOrderId || !this._orderUpdateCb) return;
+        const order = await this.fetchOrder(this._activeOrderId);
+        if (order) this._orderUpdateCb(order);
+    }
+
+    _bindOrderChannel(orderId) {
+        if (!window.supabaseClient || String(orderId).startsWith('local-')) return;
+        if (this._orderChannel) window.supabaseClient.removeChannel(this._orderChannel);
+        this._orderChannel = window.supabaseClient
+            .channel(`kitchen-order-${orderId}`)
+            .on('postgres_changes', {
+                event: 'UPDATE',
+                schema: 'public',
+                table: 'kitchen_orders',
+                filter: `id=eq.${orderId}`,
+            }, () => this._refreshTrackedOrder())
+            .subscribe();
+    }
+
     clearCart() {
         this.cart = [];
         localStorage.removeItem('cdf_kitchen_cart');
@@ -131,11 +195,10 @@ class KitchenEngine {
         let order = null;
         if (window.supabaseClient) {
             const { data: { user } } = await window.supabaseClient.auth.getUser();
-            if (user) {
-                payload.customer_id = user.id;
-                const { data, error } = await window.supabaseClient.from('kitchen_orders').insert([payload]).select().single();
-                if (!error && data) order = data;
-            }
+            if (user) payload.customer_id = user.id;
+            const { data, error } = await window.supabaseClient.from('kitchen_orders').insert([payload]).select().single();
+            if (!error && data) order = data;
+            else if (error) console.warn('[KitchenEngine] order insert', error.message);
         }
         if (!order) {
             order = { ...payload, id: crypto.randomUUID?.() || `local-${Date.now()}`, created_at: new Date().toISOString() };
@@ -143,6 +206,16 @@ class KitchenEngine {
             local.push(order);
             localStorage.setItem('cdf_kitchen_orders_local', JSON.stringify(local));
         }
+        localStorage.setItem('cdf_active_kitchen_order', JSON.stringify({
+            id: order.id,
+            kitchen_id: order.kitchen_id,
+            slug: this.kitchen?.slug || 'akwabalx',
+        }));
+        try {
+            const bc = new BroadcastChannel('cdf_kitchen_sync');
+            bc.postMessage({ type: 'order', orderId: order.id, status: order.status, slug: this.kitchen?.slug });
+            bc.close();
+        } catch (_) {}
         this.clearCart();
         window.dispatchEvent(new CustomEvent('KITCHEN_ORDER_PLACED', {
             detail: { kitchenSlug: this.kitchen?.slug, items: payload.items, orderId: order?.id },

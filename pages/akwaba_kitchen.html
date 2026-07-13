@@ -7,10 +7,9 @@
     <title>AkwabaLX | Secret Garden Kitchen</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" as="image" href="../Assets/kitchens/akwabalx/menu-board.webp" type="image/webp">
+    <link rel="preload" as="image" href="../Assets/kitchens/akwabalx/dish-table-combo.webp" type="image/webp">
     <script src="https://cdn.tailwindcss.com" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&family=Cinzel:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link rel="stylesheet" href="../css/quest-triad.css">
     <link rel="stylesheet" href="../css/mobile-sphere-nav.css">
     <style>
@@ -34,9 +33,13 @@
         #kitchen-entry-reel .intro-brand { position:absolute; top:18%; left:0; right:0; text-align:center; z-index:202; pointer-events:none; }
         #kitchen-entry-reel button { position:absolute; bottom:24px; right:16px; z-index:203; }
         #kitchen-title-banner { border:1px solid rgba(212,175,55,0.35); border-radius:12px; overflow:hidden; background:rgba(0,0,0,0.35); }
-        #kitchen-title-banner img { width:100%; max-height:220px; object-fit:cover; display:block; }
+        #kitchen-title-banner img { width:100%; max-height:220px; object-fit:cover; display:block; aspect-ratio:800/220; height:auto; }
+        #flowee-agent { min-width:48px; min-height:48px; }
+        body.quest-triad-page { min-height:100vh; }
         .flavor-feed-item video { background:#000; }
         #guest-feedback-preview, #guest-feedback-video-preview { max-height:120px; border-radius:8px; }
+        .order-step.active { border-color: var(--gold); color: var(--gold); background: rgba(212,175,55,0.12); box-shadow: 0 0 12px rgba(212,175,55,0.25); }
+        .order-step.done { border-color: var(--sage); color: var(--sage); }
     </style>
 </head>
 <body class="quest-triad-page">
@@ -56,7 +59,7 @@
         <img id="kitchen-logo" src="../Assets/kitchens/akwabalx/logo.webp" alt="AkwabaLX" width="56" height="56" class="w-14 h-14 rounded-full object-contain border-2 border-[var(--gold)]/50 bg-black/40 p-1" onerror="this.onerror=null;this.src='../Assets/kitchens/akwabalx/logo-fallback.png'">
         <div class="flex-1 min-w-0">
             <h1 class="cinzel text-lg text-[var(--gold)] truncate">AkwabaLX</h1>
-            <p class="text-[10px] text-[var(--sage)] uppercase tracking-widest truncate">Secret Garden LX</p>
+            <p class="text-[10px] text-[var(--sage)] uppercase tracking-widest truncate">Secret Garden LX <span id="kitchen-live-badge" class="hidden text-[#4ade80]">· LIVE</span></p>
         </div>
         <a href="taste_world_entry.html" class="text-white/40 text-xs">← Taste</a>
     </header>
@@ -75,7 +78,7 @@
             <button type="button" onclick="shareKitchen()" class="text-[10px] px-3 py-1.5 border border-[var(--gold)]/50 rounded-full text-[var(--gold)]">Share WhatsApp</button>
         </div>
         <div id="kitchen-title-banner" class="mb-6">
-            <img id="kitchen-title-image" src="../Assets/kitchens/akwabalx/dish-table-combo.webp" alt="AkwabaLX at Secret Garden" width="800" height="220" loading="lazy"
+            <img id="kitchen-title-image" src="../Assets/kitchens/akwabalx/dish-table-combo.webp" alt="AkwabaLX at Secret Garden" width="800" height="220" fetchpriority="high" decoding="async"
                 onerror="this.onerror=null;this.src='../Assets/kitchens/akwabalx/dish-table-combo.jpg'">
         </div>
     </section>
@@ -87,6 +90,16 @@
                 onerror="this.onerror=null;this.src='../Assets/kitchens/akwabalx/menu-board.jpg'">
         </div>
         <h2 class="cinzel text-[var(--gold)] text-sm mb-3 tracking-widest">ORDER — PICKUP AT BAR</h2>
+        <div id="kitchen-order-tracker" class="hidden mb-4 p-3 rounded-xl border border-[var(--gold)]/30 bg-black/50">
+            <p class="text-[10px] text-white/50 uppercase tracking-widest mb-2">Live pickup status</p>
+            <div class="grid grid-cols-4 gap-1 text-center text-[9px] font-bold uppercase" id="kitchen-order-steps">
+                <div data-step="pending" class="order-step py-2 rounded border border-white/10 text-white/40">New</div>
+                <div data-step="confirmed" class="order-step py-2 rounded border border-white/10 text-white/40">Confirmed</div>
+                <div data-step="in_progress" class="order-step py-2 rounded border border-white/10 text-white/40">Cooking</div>
+                <div data-step="ready" class="order-step py-2 rounded border border-white/10 text-white/40">Ready</div>
+            </div>
+            <p id="kitchen-order-hint" class="text-[10px] text-[var(--sage)] mt-2">—</p>
+        </div>
         <div id="menu-grid" class="grid gap-3 sm:grid-cols-2"></div>
     </section>
 
@@ -175,11 +188,11 @@
     <script src="../js/agents/navigator_display.js?v=1.0" defer></script>
     <script src="../js/agents/kitchen_guest_nav.js?v=1.0" defer></script>
     <script src="../js/agents/kitchen_store.js?v=1.2" defer></script>
-    <script src="../js/agents/kitchen_engine.js?v=1.4" defer></script>
+    <script src="../js/agents/kitchen_engine.js?v=1.5" defer></script>
     <script src="../js/agents/flowee.js?v=3.4" defer></script>
     <script src="../js/agents/flowee_voice.js?v=1.1" defer></script>
     <script src="../js/agents/flowee_reward.js?v=1.0" defer></script>
-    <script src="../js/agents/quest_engine.js?v=4.6" defer></script>
+    <script src="../js/agents/quest_engine.js?v=4.7" defer></script>
     <script src="../js/agents/flowee_kitchen_tour.js?v=2.0" defer></script>
     <script src="../js/agents/mobile_sphere_nav.js?v=1.1" defer></script>
     <script src="../js/agents/quest_triad.js?v=2.1" defer></script>
@@ -337,6 +350,58 @@
             document.getElementById('guest-ticket-qr').src = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(qr)}`;
             document.getElementById('soul-ticket-modal').classList.remove('hidden');
             localStorage.setItem('cdf_last_soul_order', JSON.stringify(order));
+            trackGuestOrder(order);
+        }
+
+        const ORDER_FLOW = ['pending', 'confirmed', 'in_progress', 'ready'];
+        const ORDER_HINTS = {
+            pending: 'Order received — crew will confirm shortly.',
+            confirmed: 'Confirmed! Kitchen is prepping your pickup.',
+            in_progress: 'Cooking now — almost ready at the bar.',
+            ready: 'READY — show your Soul Ticket at the bar!',
+            picked_up: 'Enjoy! Thanks for visiting AkwabaLX.',
+        };
+
+        function renderOrderTracker(order) {
+            const wrap = document.getElementById('kitchen-order-tracker');
+            if (!wrap || !order) { wrap?.classList.add('hidden'); return; }
+            const status = engine?.normalizeOrderStatus?.(order.status) || order.status;
+            if (!ORDER_FLOW.includes(status) && status !== 'picked_up') { wrap.classList.add('hidden'); return; }
+            wrap.classList.remove('hidden');
+            const idx = ORDER_FLOW.indexOf(status);
+            wrap.querySelectorAll('.order-step').forEach((el) => {
+                const step = el.dataset.step;
+                const stepIdx = ORDER_FLOW.indexOf(step);
+                el.classList.remove('active', 'done');
+                if (status === 'picked_up') el.classList.add('done');
+                else if (stepIdx < idx) el.classList.add('done');
+                else if (stepIdx === idx) el.classList.add('active');
+            });
+            const hint = document.getElementById('kitchen-order-hint');
+            if (hint) hint.textContent = ORDER_HINTS[status] || '—';
+            if (status === 'ready' && window.Flowee) window.Flowee.talk(true, 'Your order is READY at the bar!', 'success');
+        }
+
+        function trackGuestOrder(order) {
+            if (!order?.id) return;
+            localStorage.setItem('cdf_active_kitchen_order', JSON.stringify({
+                id: order.id,
+                kitchen_id: order.kitchen_id,
+                slug: engine?.kitchen?.slug || 'akwabalx',
+            }));
+            renderOrderTracker(order);
+            engine?.subscribeOrderRealtime?.(order.id, renderOrderTracker);
+        }
+
+        async function resumeActiveOrder() {
+            let meta = null;
+            try { meta = JSON.parse(localStorage.getItem('cdf_active_kitchen_order') || 'null'); } catch (_) {}
+            if (!meta?.id) return;
+            const order = await engine?.fetchOrder?.(meta.id);
+            if (order) {
+                renderOrderTracker(order);
+                engine.subscribeOrderRealtime(order.id, renderOrderTracker);
+            }
         }
 
         async function placeOrder() {
@@ -371,6 +436,8 @@
             document.getElementById('kitchen-tagline').textContent = k.tagline || window.AKWABA_KITCHEN.tagline;
             const disc = document.getElementById('discount-note');
             if (disc) disc.textContent = k.discount_note || window.AKWABA_KITCHEN.discount_note || 'Navigator discounts coming soon — collect Akoma rune for early access.';
+            const liveBadge = document.getElementById('kitchen-live-badge');
+            if (liveBadge) liveBadge.classList.toggle('hidden', k.is_live === false);
             const titleImg = document.getElementById('kitchen-title-image');
             const titleSrc = k.cover || k.cover_url || window.AKWABA_KITCHEN.cover;
             if (titleImg && titleSrc) {
@@ -417,6 +484,7 @@
             if (new URLSearchParams(location.search).get('soul_ticket')) {
                 try { showSoulTicket(JSON.parse(localStorage.getItem('cdf_last_soul_order'))); } catch (_) {}
             }
+            await resumeActiveOrder();
             if (window.KitchenFeedback) {
                 window.KitchenFeedback.initGuest({
                     slug,

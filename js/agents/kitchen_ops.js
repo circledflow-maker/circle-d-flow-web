@@ -72,9 +72,11 @@
       const localKey = 'cdf_kitchen_orders_local';
       const localAll = JSON.parse(localStorage.getItem(localKey) || '[]');
       const kid = this.kitchen?.id;
+      const norm = (o) => ({ ...o, status: o.status === 'cooking' ? 'in_progress' : o.status });
+      const activeStatuses = ['pending', 'confirmed', 'in_progress', 'ready', 'cooking'];
       const localActive = localAll.filter((o) =>
-        o.kitchen_id === kid && ['pending', 'confirmed', 'in_progress', 'ready'].includes(o.status)
-      );
+        o.kitchen_id === kid && activeStatuses.includes(o.status)
+      ).map(norm);
       if (!window.supabaseClient || !kid) {
         this.orders = localActive;
         this.allOrders = [...localAll.filter((o) => o.kitchen_id === kid)];
@@ -87,10 +89,10 @@
           .eq('kitchen_id', kid)
           .order('created_at', { ascending: false })
           .limit(120);
-        const dbOrders = data || [];
+        const dbOrders = (data || []).map(norm);
         const dbIds = new Set(dbOrders.map((o) => o.id));
         const mergedLocal = localActive.filter((o) => !dbIds.has(o.id));
-        this.allOrders = [...dbOrders, ...localAll.filter((o) => o.kitchen_id === kid && !dbIds.has(o.id))];
+        this.allOrders = [...dbOrders, ...localAll.filter((o) => o.kitchen_id === kid && !dbIds.has(o.id)).map(norm)];
         this.orders = [...dbOrders.filter((o) => ['pending', 'confirmed', 'in_progress', 'ready'].includes(o.status)), ...mergedLocal];
       } catch (e) {
         console.warn('[KitchenOps] orders', e.message);
@@ -267,6 +269,14 @@
         const idx = local.findIndex((o) => o.id === orderId);
         if (idx >= 0) { local[idx].status = nextStatus; localStorage.setItem('cdf_kitchen_orders_local', JSON.stringify(local)); }
       }
+      window.dispatchEvent(new CustomEvent('KITCHEN_ORDER_UPDATED', {
+        detail: { orderId, status: nextStatus, kitchenId: this.kitchen?.id, slug: this.kitchen?.slug },
+      }));
+      try {
+        const bc = new BroadcastChannel('cdf_kitchen_sync');
+        bc.postMessage({ type: 'order', orderId, status: nextStatus, slug: this.kitchen?.slug });
+        bc.close();
+      } catch (_) {}
       if (nextStatus === 'ready') await this.grantKitchenReward('order_ready');
       if (nextStatus === 'picked_up') {
         await this.grantKitchenReward('first_pickup');

@@ -657,7 +657,7 @@ class QuestEngine {
         const u = String(profile?.username || '').trim();
         if (u && !/^unknown$/i.test(u)) return u;
         return profile?.id ? `Navigator ${String(profile.id).slice(0, 6)}` : 'Navigator';
-    },
+    }
 
     async initBrotherhood() {
         console.log("🏛️ [Brotherhood] Hierarchy Loaded.");

@@ -61,6 +61,9 @@ class SoulPassAgent {
         set('sn-stat-karma', (this.userData.karma || 0).toLocaleString());
         set('sn-stat-steps', (this.userData.steps || 0).toLocaleString());
         set('sn-stat-runes', String(this.userData.runes || 0));
+        const uid = this.userData.userId || '';
+        set('sn-user-id', uid ? `UID · ${uid}` : 'UID · —');
+        set('sn-user-id-account', uid || '—');
         const rankEl = document.getElementById('sn-stat-rank');
         if (rankEl) rankEl.textContent = this.userData.rank || 'LEVEL 1';
         const guildDisp = document.getElementById('sn-display-guild');
@@ -116,8 +119,9 @@ class SoulPassAgent {
                         if(crystal) {
                             let detailsObj = {};
                             try { detailsObj = JSON.parse(this.userData.contact_details); } catch(e) {}
-                            if(detailsObj.avatar_url) {
-                                crystal.style.background = `url('${detailsObj.avatar_url}') center/cover no-repeat`;
+                            const avatar = profile.avatar_url || detailsObj.avatar_url;
+                            if(avatar) {
+                                crystal.style.background = `url('${avatar}') center/cover no-repeat`;
                             }
                         }
                     }
@@ -127,6 +131,7 @@ class SoulPassAgent {
             }
         }
         if (window.PointsSync) window.PointsSync.refresh();
+        this.refreshIdentityStats();
     }
 
     injectStyles() {
@@ -315,8 +320,13 @@ class SoulPassAgent {
                 <div class="sp-crystal" ${avatarStyle}></div>
                 <h2 style="font-family: 'Cinzel', serif; font-size: clamp(1.5rem, 6vw, 2.5rem); color: #fff; text-shadow: 0 0 15px rgba(255,255,255,0.3); margin-top: 16px;" id="sn-display-name">${(this.userData.name || "Navigator").toUpperCase()}</h2>
                 <span id="sn-admin-badge" style="display:none; font-size:10px; color:#10b981; border:1px solid #10b981; padding:3px 8px; border-radius:12px; letter-spacing:1px;">ADMIN MASTER · ALL WORLDS</span>
+                <p id="sn-user-id" style="font-family:'Space Mono',monospace;color:#666;font-size:0.65rem;letter-spacing:1px;margin-top:10px;word-break:break-all;">UID · —</p>
                 <p style="font-family: 'Space Mono', monospace; color: #d4af37; letter-spacing: 2px; font-size: 0.75rem; margin-top: 8px;" id="sn-stat-rank">${this.userData.rank || 'LEVEL 1'}</p>
             </div>
+            <label style="display:block;text-align:center;margin:12px 0 0;cursor:pointer;font-size:10px;color:#d4af37;letter-spacing:1px;text-transform:uppercase;">
+                <input type="file" accept="image/*" class="hidden" onchange="SoulPass.uploadAvatar(this.files[0]); this.value='';">
+                Upload portrait
+            </label>
             
             <div class="sp-stats-grid">
                 <div class="sp-stat-card">
@@ -451,6 +461,10 @@ class SoulPassAgent {
                 <div class="sy-row">
                     <div class="sy-label">Registered Email</div>
                     <div class="sy-value" id="sn-user-email" style="color:#d4af37; font-family:'Space Mono', monospace;">${this.userData.email || 'Loading...'}</div>
+                </div>
+                <div class="sy-row">
+                    <div class="sy-label">User ID</div>
+                    <div class="sy-value" id="sn-user-id-account" style="color:#888; font-family:'Space Mono', monospace; font-size:0.75rem; word-break:break-all;">${this.userData.userId || '—'}</div>
                 </div>
             </div>
 
@@ -676,6 +690,29 @@ class SoulPassAgent {
             await window.supabaseClient.auth.signOut();
             window.location.href = '/index.html';
         }
+    }
+
+    async uploadAvatar(file) {
+        if (!file || !file.type.startsWith('image/')) return;
+        const reader = new FileReader();
+        reader.onload = async () => {
+            const dataUrl = reader.result;
+            let details = {};
+            try { details = JSON.parse(this.userData.contact_details || '{}'); } catch (e) {}
+            details.avatar_url = dataUrl;
+            this.userData.contact_details = JSON.stringify(details);
+            const crystal = document.querySelector('.sp-crystal');
+            if (crystal) crystal.style.background = `url('${dataUrl}') center/cover no-repeat`;
+            localStorage.setItem('cdf_avatar_src', dataUrl);
+            if (window.supabaseClient && this.userData.userId) {
+                await window.supabaseClient.from('profiles').update({
+                    avatar_url: dataUrl,
+                    contact_details: JSON.stringify(details),
+                }).eq('id', this.userData.userId);
+            }
+            if (window.Pusher) window.Pusher.showToast('Portrait synced', 'success');
+        };
+        reader.readAsDataURL(file);
     }
 
     async deleteProfile() {
