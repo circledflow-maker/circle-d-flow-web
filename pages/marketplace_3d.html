@@ -37,7 +37,8 @@
 
         #canvas-container {
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
+            top: 0; left: 0; right: 0;
+            bottom: 42vh;
             z-index: 1;
         }
 
@@ -88,28 +89,32 @@
         }
 
         .stall-card {
-            width: 280px;
+            width: 108px;
             scroll-snap-align: center;
             flex-shrink: 0;
-            margin: 0 10px;
-            background: rgba(22, 11, 26, 0.9);
+            margin: 0 8px;
+            background: rgba(22, 11, 26, 0.85);
             border: 2px solid #d2691e;
-            box-shadow: 0 0 30px rgba(210, 105, 30, 0.15), inset 0 0 20px rgba(0,0,0,0.8);
-            border-radius: 16px;
-            padding: 20px;
+            box-shadow: 0 0 20px rgba(210, 105, 30, 0.12), inset 0 0 16px rgba(0,0,0,0.8);
+            border-radius: 14px;
+            padding: 12px 8px;
             text-align: center;
-            transform: scale(0.9);
-            transition: transform 0.3s;
+            transform: scale(0.92);
+            transition: transform 0.3s, border-color 0.3s;
         }
         
-        .stall-card.active { transform: scale(1.05); border-color: #ffaa44; }
-        .stall-desc { font-size: 10px; color: rgba(255,255,255,0.5); margin: 8px 0 12px; line-height: 1.45; min-height: 2.8em; }
+        .stall-card.active { transform: scale(1); border-color: #ffaa44; }
+        .stall-card .stall-desc,
+        .stall-card .btn-primary { display: none; }
+        .stall-card .guild-icon { font-size: 28px; margin-bottom: 4px; }
+        .stall-card h3 { font-size: 10px; line-height: 1.25; margin: 0; }
+        .stall-desc { font-size: 10px; color: rgba(255,255,255,0.55); margin: 8px 0 12px; line-height: 1.45; min-height: 2.8em; }
 
         #guild-focus-panel {
             position: relative;
             transform: none;
             width: min(92vw, 340px);
-            margin: 0 auto 10px;
+            margin: 0 auto 8px;
             background: rgba(18, 8, 24, 0.92);
             border: 1px solid rgba(255, 170, 68, 0.45);
             border-radius: 14px;
@@ -286,7 +291,7 @@
 
         <!-- BAZAAR CAROUSEL -->
         <div class="bazaar-viewport pointer-events-auto" id="bazaar-viewport">
-            <div id="guild-focus-panel" class="hidden-panel" aria-live="polite">
+            <div id="guild-focus-panel" aria-live="polite">
                 <span id="focus-guild-icon" class="material-symbols-outlined guild-icon text-3xl mb-1">palette</span>
                 <h2 id="focus-guild-name" class="font-cinzel text-gold text-base tracking-widest">Guild of Arts</h2>
                 <p id="focus-guild-desc" class="stall-desc mb-3">Visual artifacts, masks &amp; digital creations.</p>
@@ -536,7 +541,7 @@
         scene.fog = new THREE.FogExp2(0x2a0a05, 0.025);
         scene.background = new THREE.Color(0x2a0a05);
 
-        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / Math.max(window.innerHeight * 0.58, 320), 0.1, 1000);
         
         // Initial Sky View — guild huts in upper half, UI stack in lower 40%
         const skyPos = new THREE.Vector3(0, 22, 48);
@@ -558,11 +563,15 @@
             }
         })();
         const webglReady = !!renderer;
+        const isMobileBazaar = window.innerWidth < 768;
         if (webglReady) {
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        renderer.shadowMap.enabled = true;
-        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        const canvasHost = document.getElementById('canvas-container');
+        const viewW = window.innerWidth;
+        const viewH = canvasHost?.clientHeight || Math.round(window.innerHeight * 0.58);
+        renderer.setSize(viewW, viewH);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobileBazaar ? 1.5 : 2));
+        renderer.shadowMap.enabled = !isMobileBazaar;
+        if (!isMobileBazaar) renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         document.getElementById('canvas-container').appendChild(renderer.domElement);
         }
 
@@ -572,15 +581,17 @@
 
         const sunLight = new THREE.DirectionalLight(0xffa500, 2.5);
         sunLight.position.set(50, 60, 20);
-        sunLight.castShadow = true;
-        sunLight.shadow.mapSize.width = 2048;
-        sunLight.shadow.mapSize.height = 2048;
+        sunLight.castShadow = !isMobileBazaar;
+        if (!isMobileBazaar) {
+        sunLight.shadow.mapSize.width = 1024;
+        sunLight.shadow.mapSize.height = 1024;
         sunLight.shadow.camera.near = 0.5;
         sunLight.shadow.camera.far = 150;
         sunLight.shadow.camera.left = -50;
         sunLight.shadow.camera.right = 50;
         sunLight.shadow.camera.top = 50;
         sunLight.shadow.camera.bottom = -50;
+        }
         scene.add(sunLight);
 
         // Floor (Dusty Ground)
@@ -1299,9 +1310,12 @@
 
         window.addEventListener('resize', () => {
             if (!webglReady) return;
-            camera.aspect = window.innerWidth / window.innerHeight;
+            const container = document.getElementById('canvas-container');
+            const w = window.innerWidth;
+            const h = container?.clientHeight || window.innerHeight;
+            camera.aspect = w / h;
             camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setSize(w, h);
         });
 
         // Start

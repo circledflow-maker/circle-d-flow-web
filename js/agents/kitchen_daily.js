@@ -140,12 +140,41 @@
         </div>`;
     },
 
+    async resolveKitchenId(slug, fallbackId) {
+      if (window.supabaseClient) {
+        try {
+          const { data } = await window.supabaseClient
+            .from('kitchens')
+            .select('id')
+            .eq('slug', slug || 'akwabalx')
+            .maybeSingle();
+          if (data?.id) return data.id;
+        } catch (_) { /* offline */ }
+      }
+      return fallbackId || null;
+    },
+
     async syncCloud(slug, report) {
+      const kitchenId = await this.resolveKitchenId(slug, report.kitchen_id);
+      const payload = { ...report, kitchen_id: kitchenId, kitchen_slug: slug };
+      const row = {
+        kitchen_id: kitchenId,
+        report_date: report.report_date,
+        payload,
+        auto_generated: !!report.auto_generated,
+      };
+
+      if (window.supabaseClient && kitchenId) {
+        try {
+          const { error } = await window.supabaseClient
+            .from('kitchen_daily_reports')
+            .upsert(row, { onConflict: 'kitchen_id,report_date' });
+          if (!error) return { ok: true, source: 'supabase' };
+        } catch (_) { /* fall through */ }
+      }
+
       if (!window.KitchenStore) return { ok: false };
-      return window.KitchenStore.syncToCloud('save_daily_report', {
-        kitchen_id: report.kitchen_id,
-        report,
-      }, slug);
+      return window.KitchenStore.syncToCloud('save_daily_report', { report: payload }, slug);
     },
 
     async generateReport({ auto = false } = {}) {
@@ -159,10 +188,12 @@
       const report = this.buildReport(ops.kitchen, ops.allOrders || [], day, { auto });
       this.saveArchiveLocal(slug, report);
       const cloud = await this.syncCloud(slug, report);
-      if (!cloud.ok && window.Pusher && !auto) {
-        window.Pusher.showToast('Saved to local archive', 'success');
-      } else if (window.Pusher && !auto) {
-        window.Pusher.showToast('Daily close report created', 'success');
+      if (window.Pusher && !auto) {
+        if (cloud.ok) {
+          window.Pusher.showToast('Daily close report created', 'success');
+        } else {
+          window.Pusher.showToast('Saved to local archive — cloud sync pending', 'info');
+        }
       }
       this.renderPanel();
       return report;
@@ -187,6 +218,7 @@
       const hasToday = archive.some((r) => r.report_date === today);
 
       el.querySelector('#btn-generate-daily')?.classList.toggle('opacity-50', hasToday);
+      el.querySelector('#btn-generate-daily')?.toggleAttribute('disabled', hasToday);
 
       list.innerHTML = archive.length
         ? archive.map((r) => `
@@ -220,7 +252,16 @@
     },
 
     bindPanel() {
-      document.getElementById('btn-generate-daily')?.addEventListener('click', () => this.generateReport({ auto: false }));
+      document.getElementById('btn-generate-daily')?.addEventListener('click', async () => {
+        const btn = document.getElementById('btn-generate-daily');
+        if (btn?.disabled) return;
+        if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; }
+        try {
+          await this.generateReport({ auto: false });
+        } finally {
+          if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
+        }
+      });
       this.renderPanel();
     },
 

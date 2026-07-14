@@ -111,14 +111,20 @@ module.exports = async function handler(req, res) {
       const { report } = payload;
       if (!report?.report_date) return res.status(400).json({ error: 'Missing report_date' });
       const row = {
-        kitchen_id: kitchenId,
+        kitchen_id: kitchen.id,
         report_date: report.report_date,
-        payload: report,
+        payload: { ...report, kitchen_id: kitchen.id, kitchen_slug: slug },
         auto_generated: !!report.auto_generated,
       };
       const { error } = await db.from('kitchen_daily_reports').upsert(row, { onConflict: 'kitchen_id,report_date' });
-      if (error) throw new Error(error.message);
-      return res.status(200).json({ ok: true });
+      if (error) {
+        const msg = error.message || 'Save failed';
+        if (/kitchen_daily_reports|schema cache|relation/i.test(msg)) {
+          return res.status(503).json({ error: 'Daily reports table missing — run sql/kitchen_daily_reports.sql in Supabase' });
+        }
+        throw new Error(msg);
+      }
+      return res.status(200).json({ ok: true, kitchen_id: kitchen.id });
     }
 
     return res.status(400).json({ error: 'Unknown action' });
