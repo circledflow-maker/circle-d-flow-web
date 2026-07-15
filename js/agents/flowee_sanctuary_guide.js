@@ -66,14 +66,30 @@ class FloweeSanctuaryGuide {
 
     async runReturningPulse() {
         const quest = this.suggestQuest();
+        const actions = [
+            { label: 'ENTER ATLAS', action: () => { window.location.href = 'quest_map.html'; } },
+            { label: 'OPEN QUESTS', action: () => { window.location.href = 'quest_board.html'; } },
+        ];
+        if (window.ArtistProfileSync?.needsSoulprint(this.artist)) {
+            actions.unshift({
+                label: 'COMPLETE SOUL IMPRINT',
+                action: () => {
+                    if (window.FloweeSoulprint) {
+                        window.FloweeSoulprint.start(this.artist, this.artist?.id, () => {
+                            if (typeof initData === 'function') initData();
+                        });
+                    } else if (typeof startInSanctuaryDeepFlow === 'function') {
+                        startInSanctuaryDeepFlow();
+                    }
+                },
+            });
+        }
+        actions.push({ label: 'RESONANCE BAR', action: () => { window.location.href = 'coop.html'; } });
+        actions.push({ label: 'STAY HERE', action: () => window.Flowee?.shush() });
         await this.speak(
             `Welcome back, ${this.username()}. ${quest ? `Nearest mission: ${quest.title} — ${quest.reward_exp || 600} XP.` : 'The Atlas awaits your next move.'}`,
             'guide',
-            [
-                { label: 'ENTER ATLAS', action: () => { window.location.href = 'quest_map.html'; } },
-                { label: 'OPEN QUESTS', action: () => { window.location.href = 'quest_board.html'; } },
-                { label: 'STAY HERE', action: () => window.Flowee?.shush() },
-            ]
+            actions
         );
     }
 
@@ -132,13 +148,14 @@ class FloweeSanctuaryGuide {
         await this.offerPathChoice();
     }
 
-    async saveOnboarding(guideDone) {
+    async saveOnboarding(guideDone, deepDone) {
         const uid = this.profile?.id || (await window.supabaseClient?.auth.getUser())?.data?.user?.id;
         if (!window.supabaseClient || !uid) return;
         try {
             await window.supabaseClient.from('sanctuary_onboarding').upsert({
                 user_id: uid,
                 guide_completed: guideDone,
+                deep_flow_completed: !!deepDone,
                 last_news_at: new Date().toISOString(),
                 updated_at: new Date().toISOString(),
             }, { onConflict: 'user_id' });

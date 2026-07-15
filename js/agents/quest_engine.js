@@ -106,7 +106,7 @@ class QuestEngine {
     }
 
     async init() {
-        console.log("⚡ [QuestEngine] Animus System wird gestartet...");
+        console.log("⚡ [QuestEngine] Animus System starting...");
         
         // 1. Auth Check
         const { data: { session } } = await this.supabase.auth.getSession();

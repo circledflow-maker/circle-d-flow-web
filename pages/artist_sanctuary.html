@@ -1027,6 +1027,9 @@
                     if(!contentHtml) {
                         contentHtml = 'Data sync pending... If you just answered Flowee, the database might be updating.';
                     }
+                    if (window.ArtistProfileSync && artistId) {
+                        contentHtml += window.ArtistProfileSync.renderDataPanelHtml(artistId);
+                    }
                     document.getElementById('data-content').innerHTML = contentHtml;
 
                     // Flowee sanctuary guide (synced with global Flowee agent)
@@ -1041,7 +1044,10 @@
                         } catch (_) {}
                         setTimeout(() => window.FloweeSanctuaryGuide.start(artistData, navProfile), 3000);
                     } else if (!deepFlowCompleted && artistData.artist_type !== 'traveler') {
-                        setTimeout(startInSanctuaryDeepFlow, 2000);
+                        setTimeout(() => {
+                            if (window.FloweeSoulprint) window.FloweeSoulprint.start(artistData, artistId);
+                            else startInSanctuaryDeepFlow();
+                        }, 2000);
                     }
                 }
             } catch(e) { console.error(e); applySanctuaryHeaderFallback(); }
@@ -1144,6 +1150,10 @@
         }
 
         async function startInSanctuaryDeepFlow() {
+            if (window.FloweeSoulprint && artistData) {
+                window.FloweeSoulprint.start(artistData, artistId);
+                return;
+            }
             document.getElementById('flowee-overlay').classList.remove('hidden');
             fMsg(`Welcome to your personal Sanctuary, <b>${artistData.name}</b>. The world is forming around you.`);
             
@@ -1548,8 +1558,10 @@
         async function finishPerfFlow() {
             fMsg(`<span class="text-[#d4af37] animate-pulse">Syncing Soul Imprint to Network...</span>`);
             
-            // Fallback: Save to LocalStorage immediately
             localStorage.setItem('soul_data_' + artistId, JSON.stringify(tempFlowData));
+            if (window.ArtistProfileSync) {
+                await window.ArtistProfileSync.applyFromFlow(tempFlowData, artistData, artistId);
+            }
 
             try {
                 // Update master_artists FIRST to ensure EXP is granted and deep flow is marked complete
@@ -1558,7 +1570,8 @@
 
                 // Try to insert into performance_details (might fail if table doesn't exist)
                 const { error: insertErr } = await window.supabaseClient.from('performance_details').insert([{
-                    artist_id: artistId, event_id: eventId, performance_category: 'Completed Post-Sync',
+                    artist_id: artistId, event_id: eventId,
+                    performance_category: tempFlowData.category || tempFlowData.artCategory || 'Completed Post-Sync',
                     technical_needs: tempFlowData.tech, artifact_of_power: tempFlowData.artifact, inspiration: tempFlowData.insp
                 }]);
                 if (insertErr) console.warn("Supabase table missing, saved locally.");
@@ -1575,8 +1588,10 @@
         async function finishServFlow() {
             fMsg(`<span class="text-[#d4af37] animate-pulse">Syncing Inventory to Network...</span>`);
             
-            // Fallback: Save to LocalStorage immediately
             localStorage.setItem('soul_data_' + artistId, JSON.stringify(tempFlowData));
+            if (window.ArtistProfileSync) {
+                await window.ArtistProfileSync.applyFromFlow(tempFlowData, artistData, artistId);
+            }
 
             try {
                 // Update master_artists FIRST
@@ -3190,7 +3205,10 @@
     <script src="../js/data/adinkra_catalog.js?v=1.0"></script>
     <script src="../js/agents/flowee_voice.js?v=1.1"></script>
     <script src="../js/agents/flowee_notify.js?v=2.1"></script>
-    <script src="../js/agents/flowee_sanctuary_guide.js?v=1.0"></script>
+    <script src="../js/data/coop_equipment.js?v=1.0"></script>
+    <script src="../js/agents/artist_profile_sync.js?v=1.0"></script>
+    <script src="../js/agents/flowee_soulprint.js?v=1.0"></script>
+    <script src="../js/agents/flowee_sanctuary_guide.js?v=1.1"></script>
     <script src="../js/agents/adinkra_sync.js?v=1.0"></script>
 </body>
 </html>

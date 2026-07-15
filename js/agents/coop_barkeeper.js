@@ -262,6 +262,13 @@ GEAR: ${gear || 'TBD'}
 
     init() {
       this.project = readProject();
+      if (window.ArtistProfileSync) {
+        const sp = window.ArtistProfileSync.getSoulprint();
+        if (sp.completed_at && (this.project.title === 'Untitled Session' || !(this.project.equipment || []).length)) {
+          this.project = window.ArtistProfileSync.seedCoopProject(sp);
+          writeProject(this.project);
+        }
+      }
       try {
         this.chat = JSON.parse(localStorage.getItem(CHAT_KEY) || '[]');
       } catch {
@@ -578,7 +585,12 @@ GEAR: ${gear || 'TBD'}
     },
 
     renderPhaseForm() {
-      const targets = ['coop-phase-form', 'coop-phase-form-m'].map((id) => document.getElementById(id)).filter(Boolean);
+      const mobile = window.matchMedia('(max-width: 1023px)').matches;
+      const activeId = mobile ? 'coop-phase-form-m' : 'coop-phase-form';
+      const inactiveId = mobile ? 'coop-phase-form' : 'coop-phase-form-m';
+      const inactiveEl = document.getElementById(inactiveId);
+      if (inactiveEl) inactiveEl.innerHTML = '';
+      const targets = [document.getElementById(activeId)].filter(Boolean);
       if (!targets.length) return;
       const p = this.project;
       const ph = p.phase;
@@ -732,7 +744,9 @@ GEAR: ${gear || 'TBD'}
     },
 
     renderEquipment() {
-      const el = document.getElementById('coop-equipment');
+      const mobile = window.matchMedia('(max-width: 1023px)').matches;
+      const root = document.getElementById(mobile ? 'coop-phase-form-m' : 'coop-phase-form');
+      const el = root?.querySelector('#coop-equipment') || document.getElementById('coop-equipment');
       if (!el) return;
       const list = window.getEquipmentForProject?.(this.project.projectType || 'organic', this.project.scale || 'get_together') || window.COOP_EQUIPMENT || [];
       el.innerHTML = list.map((g) => {
@@ -744,7 +758,9 @@ GEAR: ${gear || 'TBD'}
     },
 
     renderGuests() {
-      const el = document.getElementById('coop-guests');
+      const mobile = window.matchMedia('(max-width: 1023px)').matches;
+      const root = document.getElementById(mobile ? 'coop-phase-form-m' : 'coop-phase-form');
+      const el = root?.querySelector('#coop-guests') || document.getElementById('coop-guests');
       if (!el) return;
       el.innerHTML = (this.project.guests || []).map((g) =>
         `<span class="coop-guest-tag">${g}</span>`
