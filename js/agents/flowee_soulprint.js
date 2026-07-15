@@ -14,6 +14,27 @@
     'Vocalist', 'Rapper', 'Producer / Beatmaker', 'DJ', 'Instrumentalist', 'Live Band', 'Sound Engineer',
   ];
 
+  const MUSIC_GENRES = [
+    'Afrobeats / Amapiano', 'Hip-Hop / Rap', 'Jazz / Soul', 'Electronic', 'Reggae / Dancehall',
+    'Fado / Portuguese', 'World / Fusion', 'Experimental',
+  ];
+
+  const LANGUAGES = [
+    { id: 'en', label: 'English' },
+    { id: 'pt', label: 'Portuguese' },
+    { id: 'fr', label: 'French' },
+    { id: 'de', label: 'German' },
+    { id: 'es', label: 'Spanish' },
+    { id: 'other', label: 'Other' },
+  ];
+
+  const SESSION_INTENTS = [
+    { id: 'find_crew', label: 'Find Crew & Collaborators' },
+    { id: 'get_booked', label: 'Get Booked for Sessions' },
+    { id: 'host_sessions', label: 'Host / Lead Sessions' },
+    { id: 'learn_jam', label: 'Learn & Jam' },
+  ];
+
   const COOP_ROLE_PICKS = [
     'host', 'audio_engineer', 'dop', 'photographer', 'streamer', 'creative_director',
     'social_bts', 'graphic_design', 'philosopher', 'guest_relations',
@@ -28,6 +49,14 @@
     { id: 'stream_pc', label: 'Stream Setup' },
     { id: 'pa_system', label: 'PA / Speakers' },
     { id: 'dj_controller', label: 'DJ Controller' },
+  ];
+
+  const MUSIC_EQUIP = [
+    { id: 'rode_mic', label: 'Vocal Mic' },
+    { id: 'pa_system', label: 'PA / Monitors' },
+    { id: 'dj_controller', label: 'DJ Decks' },
+    { id: 'zoom_h6', label: 'Portable Recorder' },
+    { id: 'stream_pc', label: 'DAW / Laptop' },
   ];
 
   const LOCATIONS = [
@@ -74,7 +103,7 @@
       this._artist = artistData;
       this._artistId = artistId;
       this._onComplete = onComplete;
-      this._data = { equipmentIds: [], coopRoles: [] };
+      this._data = { equipmentIds: [], coopRoles: [], languages: [] };
       if (window.Flowee?.shush) window.Flowee.shush();
       document.getElementById('flowee-overlay')?.classList.remove('hidden');
       this.msg(`Welcome, <b>${artistData?.name || 'Navigator'}</b>. Let's build your Soul Imprint — Connection & Resonance Bar will sync from your answers.`);
@@ -116,6 +145,20 @@
         this._data.equipmentIds.push('zoom_h6');
       }
       this.userVal(role);
+      setTimeout(() => this.stepMusicGenre(), 500);
+    },
+
+    stepMusicGenre() {
+      this.msg('What genre or vibe best describes your sound? Connection uses this for crew matching.');
+      this.setInput(this.chipGrid(MUSIC_GENRES.map((g) => ({ id: g, label: g })), 'pickMusicGenre'));
+    },
+
+    pickMusicGenre(genre) {
+      this._data.musicGenre = genre;
+      if (this._data.category?.startsWith('Music ·')) {
+        this._data.category = `${this._data.category} · ${genre}`;
+      }
+      this.userVal(genre);
       setTimeout(() => this.stepCoopRoles(), 500);
     },
 
@@ -134,7 +177,7 @@
       this._data.category = type;
       this._data.serviceType = type;
       this.userVal(type);
-      setTimeout(() => this.stepServiceCut(), 500);
+      setTimeout(() => this.stepCoopRoles(), 500);
     },
 
     stepDiscipline() {
@@ -185,6 +228,56 @@
         this._data.coopRoles = this._data.is_musician ? ['audio_engineer'] : ['creative_director'];
       }
       this.userVal((this._data.coopRoles || []).join(', '));
+      setTimeout(() => this.stepLanguages(), 400);
+    },
+
+    stepLanguages() {
+      const picked = this._data.languages || [];
+      this.msg('Which languages do you work in? Pick all that apply — useful for Lisbon crew invites.');
+      this.setInput(`
+        <div class="flex flex-wrap gap-2 mb-2">
+          ${LANGUAGES.map((l) =>
+            `<button type="button" onclick="window.FloweeSoulprint.toggleLanguage('${l.id}')" id="sp-lang-${l.id}" class="text-[9px] px-2 py-1 rounded-full border ${picked.includes(l.id) ? 'border-[#00ffcc] bg-[#00ffcc]/25 text-white' : 'border-white/20 text-white/60'}">${l.label}</button>`
+          ).join('')}
+        </div>
+        <div class="flex gap-2">
+          <input type="text" id="fc-input" class="flex-1 bg-black/50 border border-white/20 rounded p-2 text-white text-sm outline-none focus:border-[#00ffcc]" placeholder="Other language (optional)">
+          <button type="button" onclick="window.FloweeSoulprint.submitLanguages()" class="bg-[#00ffcc] text-black px-4 rounded font-bold text-xs">NEXT</button>
+        </div>`);
+    },
+
+    toggleLanguage(id) {
+      let list = this._data.languages || [];
+      if (list.includes(id)) list = list.filter((x) => x !== id);
+      else list = [...list, id];
+      this._data.languages = list;
+      const btn = document.getElementById('sp-lang-' + id);
+      if (btn) {
+        btn.classList.toggle('border-[#00ffcc]', list.includes(id));
+        btn.classList.toggle('bg-[#00ffcc]/25', list.includes(id));
+        btn.classList.toggle('text-white', list.includes(id));
+      }
+    },
+
+    submitLanguages() {
+      const extra = document.getElementById('fc-input')?.value?.trim();
+      const labels = (this._data.languages || []).map((id) => LANGUAGES.find((l) => l.id === id)?.label || id);
+      if (extra) labels.push(extra);
+      this._data.languages = labels;
+      if (labels.length) this.userVal(labels.join(', '));
+      this.setInput('');
+      setTimeout(() => this.stepSessionIntent(), 400);
+    },
+
+    stepSessionIntent() {
+      this.msg('What do you want from Connection & Cooperation right now?');
+      this.setInput(this.chipGrid(SESSION_INTENTS, 'pickSessionIntent'));
+    },
+
+    pickSessionIntent(intent) {
+      const item = SESSION_INTENTS.find((s) => s.id === intent) || SESSION_INTENTS[0];
+      this._data.sessionIntent = item.id;
+      this.userVal(item.label);
       setTimeout(() => this.stepProjectVibe(), 400);
     },
 
@@ -229,16 +322,20 @@
     },
 
     stepEquipment() {
-      this.msg('Gear you need on stage or on set. Tap chips + add notes.');
+      const isMusic = this._data.is_musician;
+      const equipList = isMusic ? MUSIC_EQUIP : EQUIP_QUICK;
+      this.msg(isMusic
+        ? 'Stage & studio gear you bring or need. Tap chips + add instrument / rider notes.'
+        : 'Gear you need on stage or on set. Tap chips + add notes.');
       const picked = this._data.equipmentIds || [];
       this.setInput(`
         <div class="flex flex-wrap gap-2 mb-2">
-          ${EQUIP_QUICK.map((e) =>
+          ${equipList.map((e) =>
             `<button type="button" onclick="window.FloweeSoulprint.toggleEquip('${e.id}')" id="sp-eq-${e.id}" class="text-[10px] px-3 py-1 rounded-full border ${picked.includes(e.id) ? 'border-[#00ffcc] bg-[#00ffcc]/25 text-white' : 'border-white/20 text-white/60'}">${e.label}</button>`
           ).join('')}
         </div>
         <div class="flex gap-2">
-          <input type="text" id="fc-input" class="flex-1 bg-black/50 border border-white/20 rounded p-2 text-white text-sm outline-none focus:border-[#00ffcc]" placeholder="Extra gear / tech rider…">
+          <input type="text" id="fc-input" class="flex-1 bg-black/50 border border-white/20 rounded p-2 text-white text-sm outline-none focus:border-[#00ffcc]" placeholder="${isMusic ? 'Instrument, in-ears, DAW, extra rider…' : 'Extra gear / tech rider…'}">
           <button type="button" onclick="window.FloweeSoulprint.submitEquipment()" class="bg-[#00ffcc] text-black px-4 rounded font-bold">NEXT</button>
         </div>`);
     },
@@ -281,11 +378,7 @@
     pickCollaboration(mode) {
       this._data.collaboration = mode;
       this.userVal(mode.replace('_', ' '));
-      if (this._data.artist_type === 'service') {
-        setTimeout(() => this.stepServiceCut(), 400);
-      } else {
-        setTimeout(() => this.stepArtifact(), 400);
-      }
+      setTimeout(() => this.stepArtifact(), 400);
     },
 
     stepArtifact() {
@@ -340,7 +433,11 @@
       this._data.soulColor = val;
       this.userVal(val);
       this.setInput('');
-      setTimeout(() => this.stepPayment(), 600);
+      if (this._data.artist_type === 'service' && !this._data.cut) {
+        setTimeout(() => this.stepServiceCut(), 600);
+      } else {
+        setTimeout(() => this.stepPayment(), 600);
+      }
     },
 
     stepPayment() {
@@ -368,12 +465,7 @@
       this._data.inventory = this._data.inventory || [];
       this.userVal(val + '%');
       this.setInput('');
-      if (typeof handleFC === 'function' && typeof tempFlowData !== 'undefined') {
-        Object.assign(tempFlowData, this._data);
-        handleFC('cut');
-        return;
-      }
-      setTimeout(() => this.stepArtifact(), 400);
+      setTimeout(() => this.stepPayment(), 400);
     },
 
     async finishPerformance() {

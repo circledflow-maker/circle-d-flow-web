@@ -2,36 +2,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="Lisbon Atlas — GPS quest map for Circle D Flow navigators. Find missions, sanctuaries, and Adinkra runes across the city.">
     <title>CQR | THE ATLAS</title>
+    <link rel="preconnect" href="https://a.basemaps.cartocdn.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preconnect" href="https://unpkg.com" crossorigin>
+    <link rel="dns-prefetch" href="https://b.basemaps.cartocdn.com">
+    <link rel="dns-prefetch" href="https://c.basemaps.cartocdn.com">
+    <link rel="dns-prefetch" href="https://d.basemaps.cartocdn.com">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="../css/quest-triad.css">
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../js/agents/agent.js?v=3.2"></script>
-    <script src="../js/agents/helper.js?v=3.3"></script>
-    <script src="../js/agents/pusher.js?v=3.2"></script>
-    <script src="../js/agents/sound_engineer.js?v=3.2"></script>
-    <script src="../js/agents/brain.js?v=3.2"></script>
-    <script src="../js/agents/global_ticker.js" defer></script>
-    <script src="../js/agents/network_hub.js" defer></script>
-    <script src="../js/agents/constructor_bot.js" defer></script>
-    <script src="../js/agents/kingdom_science.js" defer></script>
-    <script src="../js/agents/resonance_bridge.js" defer></script>
-    <script src="../js/agents/vault_space.js" defer></script>
-    <script src="../js/agents/horizon_bar.js" defer></script>
-    <script src="../js/agents/social_matrix.js" defer></script>
-    <script src="../js/agents/orbital_menu.js" defer></script>
-    <script src="../js/agents/tutorial_core.js" defer></script>
-    <script src="../js/agents/quest_controller.js" defer></script>
-    <script src="../js/agents/visual_integrity.js" defer></script>
-    <script src="../js/agents/flowee.js?v=3.2"></script>
-    <script src="../js/agents/supabase_client.js?v=3.2"></script>
-    <script src="../js/data/lisbon_quests.js?v=1.1"></script>
-    <script src="../js/data/lisbon_venues.js?v=1.0"></script>
-    <script src="../js/data/akademie_data.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap"></noscript>
     
     <style>
         /* Togo / West African Aesthetic Base */
@@ -146,19 +130,32 @@
             .animus-global-nav .nav-btn { min-width: unset; font-size: 0.55em; padding: 5px; }
             .animus-global-nav .nav-btn .icon { font-size: 1.5em; margin-bottom: 4px; }
         }
+
+        /* Map marker touch targets + screen reader labels */
+        .leaflet-marker-icon.custom-soul-wrapper,
+        .leaflet-marker-icon.custom-mission-wrapper,
+        .leaflet-marker-icon.atlas-venue-pin,
+        .leaflet-marker-icon.atlas-quest-pin {
+            min-width: 44px !important;
+            min-height: 44px !important;
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+        }
+        #map-search-input { min-height: 44px; }
+        .fab { min-width: 44px; min-height: 44px; }
     </style>
 </head>
 <body>
-    <!-- Burger menu removed for map -->
-
+    <main id="main-content" aria-label="Lisbon Atlas interactive map">
     <!-- MAP CONTAINER -->
-    <div id="quest-map"></div>
+    <div id="quest-map" role="application" aria-label="Lisbon city map with quests and venues"></div>
 
     <!-- TOP HUD -->
     <div id="hud-top">
         <div style="display: flex; justify-content: space-between; align-items: flex-start;">
             <div>
-                <h2 class="cinzel text-xl md:text-4xl drop-shadow-md" style="color: var(--color-gold); margin:0; font-weight: bold;">LISBON ATLAS</h2>
+                <h2 style="color: var(--color-gold); margin:0; font-weight: bold; font-size: clamp(1.25rem, 4vw, 2.25rem); letter-spacing: 0.05em;">LISBON ATLAS</h2>
                 <div class="adinkra-panel" style="padding: 5px 10px; display: inline-block; margin-top: 10px; font-size: 0.8em;">
                     <span style="color: #aaa;">STATUS:</span> <span id="sync-status" style="color: #0f0; font-weight: bold;">ONLINE</span>
                 </div>
@@ -166,21 +163,22 @@
             
             <!-- Legend Toggle Button -->
             <div style="display: flex; gap: 10px;">
-                <button onclick="window.location.href='artist_sanctuary.html'" class="fab fab-text pointer-events-auto" style="position: relative; background: var(--color-terracotta); color: white; border-color: var(--color-terracotta);">
-                    <span class="material-symbols-outlined" style="margin-right: 5px;">arrow_back</span> SANCTUARY
+                <button type="button" onclick="window.location.href='artist_sanctuary.html'" class="fab fab-text pointer-events-auto" style="position: relative; background: var(--color-terracotta); color: white; border-color: var(--color-terracotta);" aria-label="Return to Artist Sanctuary">
+                    <span class="material-symbols-outlined" aria-hidden="true" style="margin-right: 5px;">arrow_back</span> SANCTUARY
                 </button>
-                <button onclick="toggleLegend()" class="fab fab-text pointer-events-auto" style="position: relative; right: 0;">
-                    <span class="material-symbols-outlined" style="margin-right: 5px;">explore</span> WORLDS
+                <button type="button" onclick="toggleLegend()" class="fab fab-text pointer-events-auto" style="position: relative; right: 0;" aria-label="Show the eight worlds legend">
+                    <span class="material-symbols-outlined" aria-hidden="true" style="margin-right: 5px;">explore</span> WORLDS
                 </button>
             </div>
         </div>
         
         <!-- Search Bar -->
         <div id="map-search-container" class="pointer-events-auto" style="display: flex; gap: 10px; width: 100%; max-width: 400px; margin-top: 15px;">
-            <input type="text" id="map-search-input" placeholder="Search the Atlas..." 
+            <input type="search" id="map-search-input" placeholder="Search the Atlas..." 
+                aria-label="Search the Atlas"
                 onkeypress="if(event.key === 'Enter') searchLocation()"
                 style="flex: 1; padding: 12px; background: rgba(26,26,26,0.8); border: 1px solid var(--color-terracotta); color: var(--color-sand); outline: none;">
-            <button onclick="searchLocation()" style="padding: 12px 20px; background: var(--color-terracotta); color: #fff; font-weight: bold; border: none; cursor: pointer;">
+            <button type="button" onclick="searchLocation()" aria-label="Search location" style="padding: 12px 20px; background: var(--color-terracotta); color: #fff; font-weight: bold; border: none; cursor: pointer; min-width: 44px; min-height: 44px;">
                 🔍
             </button>
         </div>
@@ -203,10 +201,10 @@
 
     <!-- FLOATING CONTROLS (BOTTOM RIGHT) -->
     <div style="position: absolute; bottom: 120px; right: 20px; z-index: 1000; display: flex; flex-direction: column; gap: 15px;">
-        <button onclick="toggleCreatorMode()" id="creator-btn" class="fab" style="width: 50px; height: 50px;" title="Drop Beacon">
+        <button type="button" onclick="toggleCreatorMode()" id="creator-btn" class="fab" style="width: 50px; height: 50px;" aria-label="Drop beacon on map">
             📍
         </button>
-        <button onclick="centerOnUser()" class="fab" style="width: 50px; height: 50px; background: var(--color-terracotta); color: white; border-color: var(--color-terracotta);" title="Locate Me">
+        <button type="button" onclick="centerOnUser()" class="fab" style="width: 50px; height: 50px; background: var(--color-terracotta); color: white; border-color: var(--color-terracotta);" aria-label="Center map on your location">
             👁️
         </button>
     </div>
@@ -224,25 +222,81 @@
 
     <!-- GLOBAL NAV DOCK (ANIMUS) -->
     <div id="flowee-agent" style="position:fixed;bottom:90px;right:12px;z-index:9998;pointer-events:auto"></div>
-    <nav class="animus-global-nav" style="z-index: 9999;">
-        <button onclick="window.location.href='quest_map.html'" class="nav-btn active" id="nav-map"><span class="icon">📍</span><br>ATLAS</button>
-        <button onclick="window.location.href='quest_board.html'" class="nav-btn" id="nav-board"><span class="icon">📖</span><br>CODEX</button>
-        <button onclick="window.location.href='hall_of_legends.html?from=atlas'" class="nav-btn" id="nav-bro"><span class="icon">🏛️</span><br>BROTHERHOOD</button>
-        <div class="nav-divider"></div>
-        <button onclick="window.QuestEngine?.toggleComms()" class="nav-btn" id="nav-comms"><span class="icon">💬</span><span class="nav-label">FLOWEE</span></button>
-        <button onclick="window.location.href='dashboard.html'" class="nav-btn exit"><span class="icon">⚡</span><span class="nav-label">ORBIT</span></button>
+    <nav class="animus-global-nav" style="z-index: 9999;" aria-label="Global navigation">
+        <button type="button" onclick="window.location.href='quest_map.html'" class="nav-btn active" id="nav-map" aria-label="Atlas map" aria-current="page"><span class="icon" aria-hidden="true">📍</span><br>ATLAS</button>
+        <button type="button" onclick="window.location.href='quest_board.html'" class="nav-btn" id="nav-board" aria-label="Quest codex"><span class="icon" aria-hidden="true">📖</span><br>CODEX</button>
+        <button type="button" onclick="window.location.href='hall_of_legends.html?from=atlas'" class="nav-btn" id="nav-bro" aria-label="Brotherhood hall"><span class="icon" aria-hidden="true">🏛️</span><br>BROTHERHOOD</button>
+        <div class="nav-divider" aria-hidden="true"></div>
+        <button type="button" onclick="window.QuestEngine?.toggleComms()" class="nav-btn" id="nav-comms" aria-label="Open Flowee comms"><span class="icon" aria-hidden="true">💬</span><span class="nav-label">FLOWEE</span></button>
+        <button type="button" onclick="window.location.href='dashboard.html'" class="nav-btn exit" aria-label="Orbit dashboard"><span class="icon" aria-hidden="true">⚡</span><span class="nav-label">ORBIT</span></button>
     </nav>
+    </main>
 
+    <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script defer src="../js/agents/supabase_client.js?v=3.3"></script>
+    <script defer src="../js/data/lisbon_quests.js?v=1.1"></script>
+    <script defer src="../js/data/lisbon_venues.js?v=1.1"></script>
+    <script defer src="../js/agents/agent.js?v=3.2"></script>
+    <script defer src="../js/agents/helper.js?v=3.3"></script>
+    <script defer src="../js/agents/pusher.js?v=3.2"></script>
+    <script defer src="../js/agents/brain.js?v=3.2"></script>
+    <script defer src="../js/agents/flowee.js?v=5.0"></script>
+    <script defer src="../js/agents/global_ticker.js"></script>
+    <script defer src="../js/agents/network_hub.js"></script>
+    <script defer src="../js/agents/constructor_bot.js"></script>
+    <script defer src="../js/agents/kingdom_science.js"></script>
+    <script defer src="../js/agents/resonance_bridge.js"></script>
+    <script defer src="../js/agents/vault_space.js"></script>
+    <script defer src="../js/agents/horizon_bar.js"></script>
+    <script defer src="../js/agents/social_matrix.js"></script>
+    <script defer src="../js/agents/orbital_menu.js"></script>
+    <script defer src="../js/agents/tutorial_core.js"></script>
+    <script defer src="../js/agents/quest_controller.js"></script>
+    <script defer src="../js/agents/visual_integrity.js"></script>
+    <script defer src="../js/agents/sound_engineer.js?v=3.2"></script>
+    <script defer src="../js/agents/fitable_sync.js?v=1.0"></script>
+    <script defer src="../js/agents/flowee_notify.js?v=2.1"></script>
+    <script defer src="../js/data/adinkra_glossar_100.js?v=1.0"></script>
+    <script defer src="../js/data/adinkra_nature_cycle.js?v=1.0"></script>
+    <script defer src="../js/data/adinkra_catalog.js?v=2.0"></script>
+    <script defer src="../js/data/adinkra_guilds.js?v=1.0"></script>
+    <script defer src="../js/agents/adinkra_glyph_engine.js?v=1.0"></script>
+    <script defer src="../js/agents/adinkra_engine.js?v=1.0"></script>
+    <script defer src="../js/agents/flowee_reward.js?v=1.0"></script>
+    <script defer src="../js/agents/adinkra_sync.js?v=1.0"></script>
+    <script defer src="../js/agents/flowee_voice.js?v=1.1"></script>
+    <script defer src="../js/agents/flowee_quest_tour.js?v=1.1"></script>
+    <script defer src="../js/agents/quest_triad.js?v=2.1"></script>
+    <script defer src="../js/agents/atlas_engine.js?v=1.3"></script>
+    <script defer src="../js/agents/vision_cinema_engine.js?v=1.0"></script>
+    <script defer src="../js/agents/quest_engine.js?v=4.7"></script>
     <script>
+        document.addEventListener('DOMContentLoaded', function initQuestMap() {
+        if (!window.L) { console.error('[Atlas] Leaflet failed to load'); return; }
+
+        function bindMapMarkerA11y(marker, label) {
+            marker.on('add', function () {
+                const el = this.getElement?.() || this._icon;
+                if (!el) return;
+                el.setAttribute('role', 'button');
+                el.setAttribute('aria-label', label);
+                el.setAttribute('tabindex', '0');
+            });
+        }
+
         // --- 1. CORE VARIABLES ---
         window.map = L.map('quest-map', {zoomControl: false}).setView([38.7223, -9.1393], 13);
         const map = window.map;
         
-        // CartoDB Dark Matter Base
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        // CartoDB Dark Matter Base (1x tiles — faster on mobile)
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
             attribution: '&copy; OpenStreetMap &copy; CARTO',
             subdomains: 'abcd',
-            maxZoom: 20
+            maxZoom: 20,
+            detectRetina: false,
+            updateWhenIdle: true,
+            keepBuffer: 2
         }).addTo(map);
 
         let userMarker = null;
@@ -284,6 +338,7 @@
                 userMarker.setLatLng(e.latlng);
             } else {
                 userMarker = L.marker(e.latlng, { icon: soulIcon, zIndexOffset: 1000 }).addTo(map);
+                bindMapMarkerA11y(userMarker, 'Your navigator position on the map');
             }
 
             if(firstLocate) {
@@ -399,6 +454,7 @@
                     });
                     
                     const marker = L.marker([area.lat, area.lng], { icon: icon }).addTo(map);
+                    bindMapMarkerA11y(marker, `Mission beacon: ${area.name || 'Unknown'}`);
                     missionMarkers[area.id] = { marker: marker, data: area };
                     
                     if (area.isAkademie) {
@@ -541,7 +597,7 @@
         // Burger Menu logic removed
 
         // INIT
-        window.addEventListener('load', async () => {
+        (async function bootAtlas() {
             if (window.AtlasEngine) window.AtlasEngine.init(map);
             loadFlowAreas();
             const params = new URLSearchParams(window.location.search);
@@ -551,24 +607,16 @@
                     window.VisionCinemaEngine?.focusFromQuery();
                 }, 800);
             }
-        });
+        })();
+
+        window.toggleLegend = toggleLegend;
+        window.searchLocation = searchLocation;
+        window.toggleCreatorMode = toggleCreatorMode;
+        window.centerOnUser = centerOnUser;
+        window.saveBeacon = saveBeacon;
+        window.closeModal = closeModal;
+
+        }); /* DOMContentLoaded */
     </script>
-    <script src="../js/agents/fitable_sync.js?v=1.0" defer></script>
-    <script src="../js/agents/flowee_notify.js?v=2.1" defer></script>
-    <script src="../js/data/adinkra_glossar_100.js?v=1.0" defer></script>
-    <script src="../js/data/adinkra_nature_cycle.js?v=1.0" defer></script>
-    <script src="../js/data/adinkra_catalog.js?v=2.0" defer></script>
-    <script src="../js/data/adinkra_guilds.js?v=1.0" defer></script>
-    <script src="../js/data/lisbon_venues.js?v=1.1" defer></script>
-    <script src="../js/agents/adinkra_glyph_engine.js?v=1.0" defer></script>
-    <script src="../js/agents/adinkra_engine.js?v=1.0" defer></script>
-    <script src="../js/agents/flowee_reward.js?v=1.0" defer></script>
-    <script src="../js/agents/adinkra_sync.js?v=1.0" defer></script>
-    <script src="../js/agents/flowee_voice.js?v=1.1" defer></script>
-    <script src="../js/agents/flowee_quest_tour.js?v=1.1" defer></script>
-    <script src="../js/agents/quest_triad.js?v=2.1" defer></script>
-    <script src="../js/agents/atlas_engine.js?v=1.2" defer></script>
-    <script src="../js/agents/vision_cinema_engine.js?v=1.0" defer></script>
-    <script src="../js/agents/quest_engine.js?v=4.7" defer></script>
 </body>
 </html>

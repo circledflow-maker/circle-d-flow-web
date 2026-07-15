@@ -612,7 +612,12 @@
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         let artistId = urlParams.get('artistId') || localStorage.getItem('flowee_artist_id');
-        const eventId = urlParams.get('eventId');
+        function safeEventId(raw) {
+            return typeof raw === 'string'
+                && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(raw)
+                ? raw : null;
+        }
+        const eventId = safeEventId(urlParams.get('eventId'));
         let artistData = null;
         let deepFlowCompleted = true; // Assume true until checked
 
@@ -1137,8 +1142,9 @@
             localStorage.setItem('soul_data_' + artistId, JSON.stringify(localData));
 
             try {
-                const inserts = [{ artist_id: artistId, event_id: eventId, product_name: name, quantity: qty, price: price }];
-                const { error: invErr } = await window.supabaseClient.from('service_inventories').insert(inserts);
+                const row = { artist_id: artistId, product_name: name, quantity: qty, price: price };
+                if (eventId) row.event_id = eventId;
+                const { error: invErr } = await window.supabaseClient.from('service_inventories').insert([row]);
                 if (invErr) console.warn("Supabase table missing, saved locally.");
             } catch(e) {}
 
@@ -1599,7 +1605,11 @@
                 if (updateErr) throw updateErr;
 
                 if(tempFlowData.inventory.length > 0) {
-                    const inserts = tempFlowData.inventory.map(i => ({ artist_id: artistId, event_id: eventId, product_name: i.name, quantity: i.qty, price: i.price }));
+                    const inserts = tempFlowData.inventory.map(i => {
+                        const row = { artist_id: artistId, product_name: i.name, quantity: i.qty, price: i.price };
+                        if (eventId) row.event_id = eventId;
+                        return row;
+                    });
                     const { error: invErr } = await window.supabaseClient.from('service_inventories').insert(inserts);
                     if (invErr) console.warn("Supabase table missing, saved locally.");
                 }
@@ -3206,8 +3216,8 @@
     <script src="../js/agents/flowee_voice.js?v=1.1"></script>
     <script src="../js/agents/flowee_notify.js?v=2.1"></script>
     <script src="../js/data/coop_equipment.js?v=1.0"></script>
-    <script src="../js/agents/artist_profile_sync.js?v=1.1"></script>
-    <script src="../js/agents/flowee_soulprint.js?v=1.1"></script>
+    <script src="../js/agents/artist_profile_sync.js?v=1.2"></script>
+    <script src="../js/agents/flowee_soulprint.js?v=1.2"></script>
     <script src="../js/data/coop_roles.js?v=1.0"></script>
     <script src="../js/agents/flowee_sanctuary_guide.js?v=1.2"></script>
     <script src="../js/agents/adinkra_sync.js?v=1.0"></script>

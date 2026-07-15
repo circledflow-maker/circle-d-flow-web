@@ -25,6 +25,9 @@
       category: 'Art discipline',
       artistPath: 'Artist type',
       musicRole: 'Music role',
+      musicGenre: 'Genre / vibe',
+      languages: 'Languages',
+      sessionIntent: 'Connection goal',
       tech: 'Tech rider / gear',
       artifact: 'Artifact of power',
       inspiration: 'Creative spark',
@@ -83,6 +86,15 @@
     try { return JSON.parse(raw || ''); } catch (_) { return fallback; }
   }
 
+  function isValidUuid(v) {
+    return typeof v === 'string'
+      && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(v);
+  }
+
+  function safeEventId(raw) {
+    return isValidUuid(raw) ? raw : null;
+  }
+
   function matchEquipment(text, selectedIds) {
     const ids = new Set(selectedIds || []);
     const lower = String(text || '').toLowerCase();
@@ -107,6 +119,8 @@
   window.ArtistProfileSync = {
     getLang,
     t,
+    isValidUuid,
+    safeEventId,
 
     getSoulprint() {
       return parseJson(localStorage.getItem(SOULPRINT_KEY), {});
@@ -133,6 +147,9 @@
           ...legacy,
           artistPath: patch.artistPath,
           musicRole: patch.musicRole,
+          musicGenre: patch.musicGenre,
+          languages: patch.languages,
+          sessionIntent: patch.sessionIntent,
           is_musician: patch.is_musician,
           category: patch.category || patch.artCategory,
           coopRoles: patch.coopRoles,
@@ -205,6 +222,8 @@
           roles: sp.coopRoles,
         };
       }
+      if (sp.sessionIntent) project.sessionIntent = sp.sessionIntent;
+      if (sp.languages?.length) project.languages = sp.languages;
       if (eqIds.length) {
         project.equipment = [...new Set([...(project.equipment || []), ...eqIds])];
       }
@@ -212,6 +231,9 @@
         artistPath: sp.artistPath,
         category: sp.category || sp.artCategory,
         musicRole: sp.musicRole,
+        musicGenre: sp.musicGenre,
+        languages: sp.languages,
+        sessionIntent: sp.sessionIntent,
         is_musician: sp.is_musician,
         coopRoles: sp.coopRoles,
         collaboration: sp.collaboration,
@@ -249,6 +271,9 @@
           artist_path: sp.artistPath,
           is_musician: !!sp.is_musician,
           music_role: sp.musicRole,
+          music_genre: sp.musicGenre,
+          languages: sp.languages || [],
+          session_intent: sp.sessionIntent,
           category: sp.category || sp.artCategory,
           coop_roles: sp.coopRoles || [],
           collaboration: sp.collaboration,
@@ -296,17 +321,19 @@
         artifact_of_power: data.artifact || '',
         inspiration: data.insp || data.inspiration || '',
       };
-      const eid = eventId && eventId !== 'null' && eventId !== 'undefined' ? eventId : null;
+      const eid = safeEventId(eventId);
       if (eid) row.event_id = eid;
 
       try {
-        const { data: existing } = await window.supabaseClient
+        const { data: existing, error: selErr } = await window.supabaseClient
           .from('performance_details')
           .select('id')
           .eq('artist_id', artistId)
           .order('created_at', { ascending: false })
           .limit(1)
           .maybeSingle();
+
+        if (selErr && selErr.code !== 'PGRST116') throw selErr;
 
         if (existing?.id) {
           const { error } = await window.supabaseClient
@@ -320,8 +347,13 @@
         if (error) throw error;
         return { ok: true, inserted: true };
       } catch (e) {
-        console.warn('[ArtistProfileSync] performance_details:', e.message);
-        return { ok: false, error: e.message, local: true };
+        const msg = e?.message || String(e);
+        if (/relation.*does not exist|42P01/i.test(msg)) {
+          console.warn('[ArtistProfileSync] performance_details table missing — saved locally.');
+        } else {
+          console.warn('[ArtistProfileSync] performance_details:', msg);
+        }
+        return { ok: false, error: msg, local: true };
       }
     },
 
@@ -332,6 +364,9 @@
         artistPath: tempFlowData.artistPath,
         is_musician: tempFlowData.is_musician,
         musicRole: tempFlowData.musicRole,
+        musicGenre: tempFlowData.musicGenre,
+        languages: tempFlowData.languages || [],
+        sessionIntent: tempFlowData.sessionIntent,
         name: artistData?.name,
         category: tempFlowData.category || tempFlowData.artCategory,
         artCategory: tempFlowData.category || tempFlowData.artCategory,
@@ -389,6 +424,15 @@
       }
       if (sp.musicRole) {
         html += `<div class="mb-2"><strong class="text-[#d4af37]">${t('musicRole')}:</strong> ${sp.musicRole}</div>`;
+      }
+      if (sp.musicGenre) {
+        html += `<div class="mb-2"><strong class="text-[#d4af37]">${t('musicGenre')}:</strong> ${sp.musicGenre}</div>`;
+      }
+      if (sp.languages?.length) {
+        html += `<div class="mb-2"><strong class="text-[#d4af37]">${t('languages')}:</strong> ${sp.languages.join(', ')}</div>`;
+      }
+      if (sp.sessionIntent) {
+        html += `<div class="mb-2"><strong class="text-[#d4af37]">${t('sessionIntent')}:</strong> ${sp.sessionIntent.replace(/_/g, ' ')}</div>`;
       }
       if (category) {
         html += `<div class="mb-2"><strong class="text-[#d4af37]">${t('category')}:</strong> ${category}</div>`;

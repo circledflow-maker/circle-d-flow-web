@@ -31,6 +31,7 @@ ALTER TABLE public.master_artists ADD COLUMN IF NOT EXISTS community_cut_percent
 ALTER TABLE public.performance_details ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Allow public read performance_details" ON public.performance_details FOR SELECT USING (true);
 CREATE POLICY "Allow public insert performance_details" ON public.performance_details FOR INSERT WITH CHECK (true);
+CREATE POLICY "Allow public update performance_details" ON public.performance_details FOR UPDATE USING (true) WITH CHECK (true);
 
 ALTER TABLE public.service_inventories ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Allow public read service_inventories" ON public.service_inventories FOR SELECT USING (true);

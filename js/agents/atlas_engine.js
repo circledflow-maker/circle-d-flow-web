@@ -64,15 +64,17 @@ class AtlasEngine {
         const bar = document.createElement('div');
         bar.id = 'atlas-filter-bar';
         bar.className = 'atlas-filter-bar';
+        bar.setAttribute('role', 'toolbar');
+        bar.setAttribute('aria-label', 'Atlas map filters');
         bar.innerHTML = `
-            <button type="button" class="atlas-filter active" data-f="all">ALL</button>
-            <button type="button" class="atlas-filter" data-f="miradouro">VIEWS</button>
-            <button type="button" class="atlas-filter" data-f="sanctuary">SANCTUARY</button>
-            <button type="button" class="atlas-filter" data-f="sound">SOUND</button>
-            <button type="button" class="atlas-filter" data-f="vision">VISION</button>
-            <button type="button" class="atlas-filter" data-f="cinema">CINEMA</button>
-            <button type="button" class="atlas-filter" data-f="kitchen">KITCHEN</button>
-            <button type="button" class="atlas-filter atlas-nearby-btn" id="atlas-nearby-btn" data-f="nearby">NEARBY</button>
+            <button type="button" class="atlas-filter active" data-f="all" aria-label="Show all venues">ALL</button>
+            <button type="button" class="atlas-filter" data-f="miradouro" aria-label="Filter miradouro views">VIEWS</button>
+            <button type="button" class="atlas-filter" data-f="sanctuary" aria-label="Filter sanctuaries">SANCTUARY</button>
+            <button type="button" class="atlas-filter" data-f="sound" aria-label="Filter sound venues">SOUND</button>
+            <button type="button" class="atlas-filter" data-f="vision" aria-label="Filter vision venues">VISION</button>
+            <button type="button" class="atlas-filter" data-f="cinema" aria-label="Filter cinema locations">CINEMA</button>
+            <button type="button" class="atlas-filter" data-f="kitchen" aria-label="Filter kitchen venues">KITCHEN</button>
+            <button type="button" class="atlas-filter atlas-nearby-btn" id="atlas-nearby-btn" data-f="nearby" aria-label="Show nearest missions">NEARBY</button>
         `;
         document.body.appendChild(bar);
         bar.querySelectorAll('.atlas-filter').forEach((btn) => {
@@ -110,6 +112,16 @@ class AtlasEngine {
         return revealed;
     }
 
+    bindMarkerA11y(marker, label) {
+        marker.on('add', function () {
+            const el = this.getElement?.() || this._icon;
+            if (!el) return;
+            el.setAttribute('role', 'button');
+            el.setAttribute('aria-label', label);
+            el.setAttribute('tabindex', '0');
+        });
+    }
+
     tierColor(tier) {
         return { bronze: '#cd7f32', silver: '#c0c0c0', gold: '#d4af37' }[tier] || '#666';
     }
@@ -131,6 +143,7 @@ class AtlasEngine {
                 iconSize: [14, 14],
             });
             const m = L.marker([v.lat, v.lng], { icon }).addTo(this.map);
+            this.bindMarkerA11y(m, fog ? `Hidden venue: ${v.name}` : `Venue: ${v.name}`);
             const stepsLeft = Math.max(0, (v.stepsReveal || 0) - this.steps);
             const dist = this.userPos ? Math.round(this.dist(this.userPos.lat, this.userPos.lng, v.lat, v.lng)) : null;
             m.bindPopup(this.venuePopupHtml(v, fog, stepsLeft, tier, dist));
@@ -172,6 +185,7 @@ class AtlasEngine {
                 iconSize: [18, 18],
             });
             const m = L.marker([q.lat, q.lng], { icon }).addTo(this.map);
+            this.bindMarkerA11y(m, `Quest: ${q.title}`);
             const accepted = window.QuestEngine?.isQuestAccepted?.(q.id);
             const done = window.QuestEngine?.isQuestComplete?.(q.id);
             m.bindPopup(`

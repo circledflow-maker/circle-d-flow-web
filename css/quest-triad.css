@@ -33,7 +33,9 @@
 }
 .atlas-filter {
   flex-shrink: 0;
-  padding: 6px 12px;
+  padding: 10px 14px;
+  min-height: 44px;
+  min-width: 44px;
   font-size: 10px;
   font-family: 'Courier New', monospace;
   background: transparent;
