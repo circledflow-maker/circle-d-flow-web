@@ -6,6 +6,7 @@ SET
   cover_url = '/Assets/kitchens/akwabalx/dish-table-combo.webp?v=2',
   menu_board_url = '/Assets/kitchens/akwabalx/menu-board.webp?v=2',
   logo_url = '/Assets/kitchens/akwabalx/logo.webp?v=2',
+  reel_url = '/Assets/kitchens/akwabalx/reel-hero.mp4',
   is_live = true
 WHERE slug = 'akwabalx';
 

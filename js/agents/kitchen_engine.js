@@ -49,7 +49,6 @@ class KitchenEngine {
                 const { data: items } = await window.supabaseClient
                     .from('kitchen_menu_items').select('*').eq('kitchen_id', k.id).order('sort_order');
                 this.applyMergedMenu(items || [], kitchenSlug);
-                if (kitchenSlug === 'akwabalx') this.kitchen.reel = '';
                 return this;
             }
         } catch (e) {
@@ -57,7 +56,6 @@ class KitchenEngine {
         }
         this.kitchen = normalize(fallback);
         this.applyMergedMenu(fallback.menu || [], kitchenSlug);
-        if (kitchenSlug === 'akwabalx') this.kitchen.reel = '';
         return this;
     }
 

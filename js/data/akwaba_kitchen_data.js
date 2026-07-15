@@ -14,8 +14,7 @@ window.AKWABA_KITCHEN = {
   logo: '../Assets/kitchens/akwabalx/logo.webp?v=2',
   menu_board: '../Assets/kitchens/akwabalx/menu-board.webp?v=2',
   cover: '../Assets/kitchens/akwabalx/dish-table-combo.webp?v=2',
-  // Hero reel disabled on guest landing — use table photo. Tutorial loads Assets path directly.
-  reel: '',
+  reel: '../Assets/kitchens/akwabalx/reel-hero.mp4',
   qr_url: 'https://circle-d-flow-web.vercel.app/pages/akwaba_kitchen',
   whatsapp_share: 'https://wa.me/?text=' + encodeURIComponent('AkwabaLX at Secret Garden LX — taste the flow! https://circle-d-flow-web.vercel.app/pages/akwaba_kitchen'),
   discount_note: 'Navigator discounts coming soon — collect Akoma rune for early access.',

@@ -25,13 +25,17 @@
         #kitchen-menu-board img { width:100%; border-radius:12px; display:block; aspect-ratio:3/4; object-fit:contain; background:#0a0806; }
         #kitchen-entry-reel { position:fixed; inset:0; z-index:200; background:#0a0806; display:flex; align-items:center; justify-content:center; overflow:hidden; }
         #kitchen-entry-reel.hidden { display:none; }
-        #kitchen-entry-reel video { width:100%; max-height:100vh; object-fit:cover; }
+        #kitchen-entry-reel #entry-reel-video { position:absolute; inset:0; width:100%; height:100%; height:100dvh; object-fit:cover; }
         #kitchen-entry-reel .intro-slideshow { position:absolute; inset:0; }
         #kitchen-entry-reel .intro-slideshow img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity 1.2s ease; }
         #kitchen-entry-reel .intro-slideshow img.active { opacity:1; }
-        #kitchen-entry-reel .intro-vignette { position:absolute; inset:0; background:linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 45%, rgba(0,0,0,0.35) 100%); pointer-events:none; }
-        #kitchen-entry-reel .intro-brand { position:absolute; top:18%; left:0; right:0; text-align:center; z-index:202; pointer-events:none; }
-        #kitchen-entry-reel button { position:absolute; bottom:24px; right:16px; z-index:203; }
+        #kitchen-entry-reel .intro-vignette { position:absolute; inset:0; background:linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 40%, rgba(0,0,0,0.45) 100%); pointer-events:none; }
+        #kitchen-entry-reel .intro-brand { position:absolute; top:max(18%, env(safe-area-inset-top)); left:0; right:0; text-align:center; z-index:202; pointer-events:none; }
+        #kitchen-entry-reel .entry-reel-actions { position:absolute; bottom:max(24px, env(safe-area-inset-bottom)); left:0; right:0; z-index:203; display:flex; justify-content:center; gap:12px; padding:0 16px; }
+        #kitchen-entry-reel .entry-reel-actions button { position:static; min-height:44px; min-width:44px; }
+        body.akwaba-entry-reel-open { overflow:hidden; }
+        #kitchen-hero-strip { min-height:12rem; }
+        #kitchen-hero-strip #hero-reel:not(.hidden) { display:block; }
         #kitchen-title-banner { border:1px solid rgba(212,175,55,0.35); border-radius:12px; overflow:hidden; background:rgba(0,0,0,0.35); }
         #kitchen-title-banner img { width:100%; max-height:220px; object-fit:cover; display:block; aspect-ratio:800/220; height:auto; }
         #flowee-agent { min-width:48px; min-height:48px; }
@@ -54,15 +58,18 @@
     </style>
 </head>
 <body class="quest-triad-page akwaba-kitchen-page">
-    <div id="kitchen-entry-reel" class="hidden" aria-hidden="true">
+    <div id="kitchen-entry-reel" class="hidden" aria-hidden="true" role="dialog" aria-label="AkwabaLX welcome reel">
         <div id="intro-slideshow" class="intro-slideshow hidden"></div>
-        <video id="entry-reel-video" playsinline muted preload="metadata" poster="../Assets/kitchens/akwabalx/hero-1.webp"></video>
+        <video id="entry-reel-video" playsinline muted preload="auto" poster="../Assets/kitchens/akwabalx/dish-table-combo.webp?v=2"></video>
         <div class="intro-vignette"></div>
         <div class="intro-brand">
             <p class="cinzel text-[var(--gold)] text-2xl tracking-widest">AkwabaLX</p>
-            <p class="text-[10px] text-[var(--sage)] uppercase tracking-[0.25em] mt-1">Secret Garden LX</p>
+            <p class="text-[10px] text-[var(--sage)] uppercase tracking-[0.25em] mt-1">Secret Garden LX · LIVE</p>
         </div>
-        <button type="button" onclick="dismissKitchenReel()" class="text-xs px-4 py-2 border border-[var(--gold)] text-[var(--gold)] rounded-full bg-black/70">Enter Kitchen →</button>
+        <div class="entry-reel-actions">
+            <button type="button" onclick="dismissKitchenReel()" class="text-xs px-5 py-3 border border-white/30 text-white/80 rounded-full bg-black/50">Skip</button>
+            <button type="button" onclick="dismissKitchenReel()" class="text-xs px-5 py-3 border border-[var(--gold)] text-[var(--gold)] rounded-full bg-black/70 font-bold">Enter Kitchen →</button>
+        </div>
     </div>
 
     <main id="kitchen-main">
@@ -70,12 +77,12 @@
         <img id="kitchen-logo" src="../Assets/kitchens/akwabalx/logo.webp?v=2" alt="Akwaba Food" width="56" height="56" class="w-14 h-14 rounded-full object-contain border-2 border-[var(--gold)]/50 bg-black/40 p-1" onerror="this.onerror=null;this.src='../Assets/kitchens/akwabalx/logo-fallback.png'">
         <div class="flex-1 min-w-0">
             <h1 id="kitchen-display-name" class="cinzel text-lg text-[var(--gold)] truncate">AkwabaLX</h1>
-            <p class="text-[10px] text-[var(--sage)] uppercase tracking-widest truncate"><span id="kitchen-location-label">Secret Garden LX</span> <span id="kitchen-live-badge" class="hidden text-[#4ade80]">· LIVE</span></p>
+            <p class="text-[10px] text-[var(--sage)] uppercase tracking-widest truncate"><span id="kitchen-location-label">Secret Garden LX</span> <span id="kitchen-live-badge" class="text-[#4ade80]">· LIVE</span></p>
         </div>
         <a href="taste_world_entry.html" class="text-white/40 text-xs">← Taste</a>
     </header>
 
-    <section class="relative">
+    <section id="kitchen-hero-strip" class="relative">
         <img id="hero-poster" class="w-full max-h-48 object-cover" src="../Assets/kitchens/akwabalx/dish-table-combo.webp?v=2" alt="AkwabaLX at Secret Garden" width="800" height="372" fetchpriority="high"
             onerror="this.onerror=null;this.src='../Assets/kitchens/akwabalx/dish-table-combo.jpg'">
         <video id="hero-reel" class="hidden w-full max-h-48 object-cover" muted loop playsinline poster="../Assets/kitchens/akwabalx/dish-table-combo.webp?v=2"></video>
@@ -197,11 +204,11 @@
     <script src="../js/agents/flavor_quest_engine.js?v=1.1" defer></script>
     <script src="../js/utils/media_compress.js?v=1.0" defer></script>
     <script src="../js/agents/kitchen_feedback.js?v=1.1" defer></script>
-    <script src="../js/data/akwaba_kitchen_data.js?v=2.0" defer></script>
+    <script src="../js/data/akwaba_kitchen_data.js?v=2.1" defer></script>
     <script src="../js/agents/navigator_display.js?v=1.0" defer></script>
     <script src="../js/agents/kitchen_guest_nav.js?v=1.0" defer></script>
     <script src="../js/agents/kitchen_store.js?v=1.2" defer></script>
-    <script src="../js/agents/kitchen_engine.js?v=1.7" defer></script>
+    <script src="../js/agents/kitchen_engine.js?v=1.8" defer></script>
     <script src="../js/agents/flowee.js?v=3.4" defer></script>
     <script src="../js/agents/flowee_voice.js?v=1.1" defer></script>
     <script src="../js/agents/flowee_reward.js?v=1.0" defer></script>
@@ -227,12 +234,23 @@
             return String(path).replace(/\.(jpe?g|png)$/i, '.webp');
         }
 
+        function getKitchenReelUrl() {
+            return resolveMediaUrl(
+                engine?.kitchen?.reel
+                || engine?.kitchen?.reel_url
+                || window.AKWABA_KITCHEN?.reel
+                || '/Assets/kitchens/akwabalx/reel-hero.mp4'
+            );
+        }
+
         function dismissKitchenReel() {
             const overlay = document.getElementById('kitchen-entry-reel');
             const vid = document.getElementById('entry-reel-video');
             if (introSlideTimer) { clearInterval(introSlideTimer); introSlideTimer = null; }
             if (vid) { vid.pause(); vid.currentTime = 0; }
             overlay?.classList.add('hidden');
+            overlay?.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('akwaba-entry-reel-open');
             sessionStorage.setItem('cdf_akwaba_reel_seen', '1');
             initHeroMedia();
         }
@@ -263,10 +281,7 @@
         }
 
         function initHeroMedia() {
-            // Guest default: show title/cover photo. Reel only via ?reel=1 or tutorial entry.
-            const params = new URLSearchParams(location.search);
-            const wantReel = params.get('reel') === '1' || params.get('tutorial') === '1';
-            const reelUrl = wantReel ? resolveMediaUrl(engine?.kitchen?.reel || window.AKWABA_KITCHEN?.reel) : '';
+            const reelUrl = getKitchenReelUrl();
             const poster = resolveMediaUrl(engine?.kitchen?.cover || window.AKWABA_KITCHEN?.cover || '/Assets/kitchens/akwabalx/dish-table-combo.webp?v=2');
             const heroImg = document.getElementById('hero-poster');
             const heroVid = document.getElementById('hero-reel');
@@ -274,10 +289,7 @@
                 heroImg.src = poster;
                 heroImg.classList.remove('hidden');
             }
-            if (!reelUrl || !heroVid) {
-                heroVid?.classList.add('hidden');
-                return;
-            }
+            if (!reelUrl || !heroVid) return;
             heroVid.src = reelUrl;
             heroVid.muted = true;
             heroVid.loop = true;
@@ -296,15 +308,20 @@
         }
 
         function playKitchenEntryReel() {
-            const tut = new URLSearchParams(location.search).get('tutorial');
-            if (!tut) return;
-            if (sessionStorage.getItem('cdf_akwaba_reel_seen') === '1') return;
+            const params = new URLSearchParams(location.search);
+            if (params.get('reel') === '0') return false;
+            const force = params.get('reel') === '1';
+            if (!force && sessionStorage.getItem('cdf_akwaba_reel_seen') === '1') return false;
+
             const overlay = document.getElementById('kitchen-entry-reel');
             const vid = document.getElementById('entry-reel-video');
-            if (!overlay) return;
+            if (!overlay) return false;
+
             const gallery = engine?.kitchen?.gallery || window.AKWABA_KITCHEN?.gallery || [];
-            const reelUrl = resolveMediaUrl(engine?.kitchen?.reel || '../Assets/kitchens/akwabalx/reel-hero.mp4');
+            const reelUrl = getKitchenReelUrl();
             overlay.classList.remove('hidden');
+            overlay.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('akwaba-entry-reel-open');
 
             const showSlides = () => startIntroSlideshow(gallery.length ? gallery : [
                 '../Assets/kitchens/akwabalx/hero-1.webp',
@@ -314,14 +331,20 @@
 
             if (!vid || !reelUrl) {
                 showSlides();
-                return;
+                return true;
             }
 
+            vid.classList.remove('hidden');
             let started = false;
-            const fallbackTimer = setTimeout(() => { if (!started) showSlides(); }, 1800);
+            const fallbackTimer = setTimeout(() => { if (!started) showSlides(); }, 2200);
 
             vid.onerror = () => { clearTimeout(fallbackTimer); showSlides(); };
-            vid.onplaying = () => { started = true; clearTimeout(fallbackTimer); document.getElementById('intro-slideshow')?.classList.add('hidden'); vid.classList.remove('hidden'); };
+            vid.onplaying = () => {
+                started = true;
+                clearTimeout(fallbackTimer);
+                document.getElementById('intro-slideshow')?.classList.add('hidden');
+                vid.classList.remove('hidden');
+            };
             vid.onended = () => dismissKitchenReel();
 
             vid.src = reelUrl;
@@ -331,6 +354,7 @@
                 vid.muted = true;
                 vid.play().catch(() => { clearTimeout(fallbackTimer); showSlides(); });
             });
+            return true;
         }
 
         function shareKitchen() {
@@ -514,14 +538,11 @@
                     localStorage.removeItem(`cdf_kitchen_menu_${slug}`);
                 }
                 const brandRaw = localStorage.getItem(`cdf_kitchen_brand_${slug}`);
-                if (brandRaw) {
+                if (brandRaw && /hero-1\.webp|dish-table\.webp|dish-kitkat\.webp/i.test(brandRaw)) {
                     let brand = {};
                     try { brand = JSON.parse(brandRaw) || {}; } catch (_) { brand = {}; }
-                    if (/hero-1\.webp|dish-table\.webp|dish-kitkat\.webp|reel-hero\.mp4/i.test(brandRaw) || brand.reel) {
-                        delete brand.reel;
-                        if (/hero-1\.webp|dish-table\.webp|dish-kitkat\.webp/i.test(brand.cover || '')) delete brand.cover;
-                        localStorage.setItem(`cdf_kitchen_brand_${slug}`, JSON.stringify(brand));
-                    }
+                    if (/hero-1\.webp|dish-table\.webp|dish-kitkat\.webp/i.test(brand.cover || '')) delete brand.cover;
+                    localStorage.setItem(`cdf_kitchen_brand_${slug}`, JSON.stringify(brand));
                 }
             } catch (_) { /* ignore */ }
             engine = window.ensureKitchenEngine ? window.ensureKitchenEngine() : window.KitchenEngine;
@@ -532,8 +553,8 @@
             await engine.load(slug);
             const k = engine.kitchen;
             applyKitchenBranding(k);
-            playKitchenEntryReel();
-            initHeroMedia();
+            const entryOpen = playKitchenEntryReel();
+            if (!entryOpen) initHeroMedia();
             renderMenu();
             updateCart();
             engine.subscribeMenuRealtime(() => {
