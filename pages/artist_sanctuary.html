@@ -1564,25 +1564,25 @@
             }
 
             try {
-                // Update master_artists FIRST to ensure EXP is granted and deep flow is marked complete
-                const { error: updateErr } = await window.supabaseClient.from('master_artists').update({ exp: (artistData.exp || 0) + 15, flow_credits: (artistData.flow_credits || 0) + 10 }).eq('id', artistId);
-                if (updateErr) throw updateErr;
+                if (artistData?.artist_type !== 'traveler' && artistId) {
+                    const { error: updateErr } = await window.supabaseClient.from('master_artists').update({
+                        exp: (artistData.exp || 0) + 15,
+                        flow_credits: (artistData.flow_credits || 0) + 10,
+                        artist_type: tempFlowData.artist_type || artistData.artist_type || 'performance',
+                    }).eq('id', artistId);
+                    if (updateErr) console.warn('[Sanctuary] master_artists update:', updateErr.message);
+                }
 
-                // Try to insert into performance_details (might fail if table doesn't exist)
-                const { error: insertErr } = await window.supabaseClient.from('performance_details').insert([{
-                    artist_id: artistId, event_id: eventId,
-                    performance_category: tempFlowData.category || tempFlowData.artCategory || 'Completed Post-Sync',
-                    technical_needs: tempFlowData.tech, artifact_of_power: tempFlowData.artifact, inspiration: tempFlowData.insp
-                }]);
-                if (insertErr) console.warn("Supabase table missing, saved locally.");
-
-                fMsg(`Sync Complete.`);
+                fMsg(`Sync Complete. Connection & Resonance Bar updated.`);
                 setTimeout(() => {
-                    fMsg(`Look to your right dock:<br>• <strong class="text-[#33ccff]">Vision</strong> (eye) — theater archive & creative lens.<br>• <strong class="text-[#ff99cc]">Akademiy</strong> — skills & quests.<br>• <strong class="text-[#d4af37]">Soul Seal</strong> (QR) for the gate.<br>• <strong class="text-[#00ffcc]">Flowee wings</strong> bottom-right — your guide (not a robot).`);
+                    fMsg(`Look to your right dock:<br>• <strong class="text-[#33ccff]">Vision</strong> (eye) — theater archive & creative lens.<br>• <strong class="text-[#ff99cc]">Akademiy</strong> — skills & quests.<br>• <strong class="text-[#d4af37]">Soul Seal</strong> (QR) for the gate.<br>• <strong class="text-[#00ffcc]">Flowee wings</strong> bottom-right — your guide.<br>• <strong class="text-[#D47E3D]">Resonance Bar</strong> — open Connection for your session blueprint.`);
                     setFInput(`<button onclick="document.getElementById('flowee-overlay').classList.add('hidden')" class="w-full bg-[#00ffcc]/20 border border-[#00ffcc]/50 text-[#00ffcc] py-3 rounded font-bold uppercase tracking-widest text-xs mt-2 hover:bg-[#00ffcc]/40 transition">Enter 3D World</button>`);
                 }, 1500);
-                initData(); // refresh UI
-            } catch(e) { fMsg("Error syncing data: " + (e.message || "Database tables missing.")); }
+                initData();
+            } catch(e) {
+                fMsg("Saved locally — cloud sync will retry when online.");
+                setFInput(`<button onclick="document.getElementById('flowee-overlay').classList.add('hidden')" class="w-full bg-[#00ffcc]/20 border border-[#00ffcc]/50 text-[#00ffcc] py-3 rounded font-bold uppercase tracking-widest text-xs mt-2">Enter 3D World</button>`);
+            }
         }
 
         async function finishServFlow() {
@@ -3206,9 +3206,10 @@
     <script src="../js/agents/flowee_voice.js?v=1.1"></script>
     <script src="../js/agents/flowee_notify.js?v=2.1"></script>
     <script src="../js/data/coop_equipment.js?v=1.0"></script>
-    <script src="../js/agents/artist_profile_sync.js?v=1.0"></script>
-    <script src="../js/agents/flowee_soulprint.js?v=1.0"></script>
-    <script src="../js/agents/flowee_sanctuary_guide.js?v=1.1"></script>
+    <script src="../js/agents/artist_profile_sync.js?v=1.1"></script>
+    <script src="../js/agents/flowee_soulprint.js?v=1.1"></script>
+    <script src="../js/data/coop_roles.js?v=1.0"></script>
+    <script src="../js/agents/flowee_sanctuary_guide.js?v=1.2"></script>
     <script src="../js/agents/adinkra_sync.js?v=1.0"></script>
 </body>
 </html>

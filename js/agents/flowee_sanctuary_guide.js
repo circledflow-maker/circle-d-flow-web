@@ -22,6 +22,12 @@ class FloweeSanctuaryGuide {
         await this.waitForFlowee(8000);
         if (!window.Flowee) return;
 
+        const overlay = document.getElementById('flowee-overlay');
+        if (overlay && !overlay.classList.contains('hidden')) return;
+
+        const localData = JSON.parse(localStorage.getItem('soul_data_' + (artistData.id || '')) || 'null');
+        if (window.ArtistProfileSync?.needsSoulprint(artistData, localData)) return;
+
         const key = 'cdf_sanctuary_guide_v1';
         const done = localStorage.getItem(key) === 'done';
 

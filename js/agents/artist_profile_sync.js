@@ -23,12 +23,17 @@
   const STRINGS = {
     en: {
       category: 'Art discipline',
+      artistPath: 'Artist type',
+      musicRole: 'Music role',
       tech: 'Tech rider / gear',
       artifact: 'Artifact of power',
       inspiration: 'Creative spark',
       connection: 'Connection (Resonance Bar)',
       equipment: 'Equipment pack',
       project: 'Session title',
+      roles: 'Coop roles',
+      scale: 'Session scale',
+      location: 'Preferred zone',
       openCoop: 'Open Resonance Bar',
       synced: 'Soul Imprint synced to Connection',
       incomplete: 'Soul Imprint incomplete',
@@ -126,13 +131,22 @@
         const legacy = parseJson(localStorage.getItem('soul_data_' + patch.artistId), {});
         localStorage.setItem('soul_data_' + patch.artistId, JSON.stringify({
           ...legacy,
+          artistPath: patch.artistPath,
+          musicRole: patch.musicRole,
+          is_musician: patch.is_musician,
           category: patch.category || patch.artCategory,
+          coopRoles: patch.coopRoles,
+          projectType: patch.projectType,
+          scale: patch.scale,
+          locationId: patch.locationId,
           tech: patch.tech,
           artifact: patch.artifact,
           insp: patch.insp,
           cut: patch.cut,
           inventory: patch.inventory,
           equipmentIds: patch.equipmentIds,
+          collaboration: patch.collaboration,
+          socialLink: patch.socialLink,
         }));
       }
       return next;
@@ -169,21 +183,43 @@
       }
       if (sp.category || sp.artCategory) {
         project.artistCategory = sp.category || sp.artCategory;
-        project.projectType = categoryToProjectType(sp.category || sp.artCategory);
+        project.projectType = sp.projectType || categoryToProjectType(sp.category || sp.artCategory);
       } else if (sp.artist_type === 'performance') {
         project.projectType = project.projectType || 'social_media';
       } else if (sp.artist_type === 'service') {
         project.projectType = project.projectType || 'organic';
       }
+      if (sp.scale) project.scale = sp.scale;
+      if (sp.locationId) project.locationId = sp.locationId;
+      if (sp.projectType) project.projectType = sp.projectType;
+      if (sp.adinkraSoul) project.adinkraSoul = sp.adinkraSoul;
+      else if (sp.projectType && window.COOP_ADINKRA_BY_VIBE) {
+        project.adinkraSoul = window.COOP_ADINKRA_BY_VIBE[sp.projectType] || window.COOP_ADINKRA_BY_VIBE.default;
+      }
+      if (sp.coopRoles?.length && project.crew) {
+        const username = sp.name || 'artist';
+        const slotId = 'artist_self';
+        project.crew[slotId] = {
+          memberId: slotId,
+          name: username,
+          roles: sp.coopRoles,
+        };
+      }
       if (eqIds.length) {
         project.equipment = [...new Set([...(project.equipment || []), ...eqIds])];
       }
       project.soulprint = {
+        artistPath: sp.artistPath,
         category: sp.category || sp.artCategory,
+        musicRole: sp.musicRole,
+        is_musician: sp.is_musician,
+        coopRoles: sp.coopRoles,
+        collaboration: sp.collaboration,
         tech: sp.tech,
         artifact: sp.artifact,
         inspiration: sp.insp,
         artist_type: sp.artist_type,
+        socialLink: sp.socialLink,
         synced_at: new Date().toISOString(),
       };
       project.updatedAt = new Date().toISOString();
@@ -210,16 +246,26 @@
         if (typeof contact === 'string') contact = parseJson(contact, {});
         contact.artist_profile = {
           artist_type: sp.artist_type,
+          artist_path: sp.artistPath,
+          is_musician: !!sp.is_musician,
+          music_role: sp.musicRole,
           category: sp.category || sp.artCategory,
+          coop_roles: sp.coopRoles || [],
+          collaboration: sp.collaboration,
+          project_type: sp.projectType,
+          scale: sp.scale,
+          location_id: sp.locationId,
           tech_rider: sp.tech,
           artifact: sp.artifact,
           inspiration: sp.insp,
           equipment_ids: eqIds,
+          social_link: sp.socialLink,
           soul_color: sp.soulColor,
           updated_at: sp.updated_at,
         };
-        const roleCalling = profile?.role_calling
-          || (sp.category ? `${sp.category} Artist` : null);
+        const roleCalling = sp.musicRole
+          ? `${sp.musicRole}`
+          : (sp.category ? `${sp.category} Artist` : profile?.role_calling);
         const patch = { contact_details: contact };
         if (roleCalling) patch.role_calling = roleCalling;
         const { error } = await window.supabaseClient.from('profiles').update(patch).eq('id', userId);
@@ -241,20 +287,67 @@
       } catch (_) { /* table optional */ }
     },
 
+    async syncPerformanceDetails(data, artistId, eventId) {
+      if (!window.supabaseClient || !artistId) return { ok: false, local: true };
+      const row = {
+        artist_id: artistId,
+        performance_category: data.category || data.artCategory || data.artistPath || 'Soulprint',
+        technical_needs: data.tech || '',
+        artifact_of_power: data.artifact || '',
+        inspiration: data.insp || data.inspiration || '',
+      };
+      const eid = eventId && eventId !== 'null' && eventId !== 'undefined' ? eventId : null;
+      if (eid) row.event_id = eid;
+
+      try {
+        const { data: existing } = await window.supabaseClient
+          .from('performance_details')
+          .select('id')
+          .eq('artist_id', artistId)
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .maybeSingle();
+
+        if (existing?.id) {
+          const { error } = await window.supabaseClient
+            .from('performance_details')
+            .update(row)
+            .eq('id', existing.id);
+          if (error) throw error;
+          return { ok: true, updated: true };
+        }
+        const { error } = await window.supabaseClient.from('performance_details').insert([row]);
+        if (error) throw error;
+        return { ok: true, inserted: true };
+      } catch (e) {
+        console.warn('[ArtistProfileSync] performance_details:', e.message);
+        return { ok: false, error: e.message, local: true };
+      }
+    },
+
     async applyFromFlow(tempFlowData, artistData, artistId) {
       const sp = this.saveSoulprint({
         artistId,
-        artist_type: artistData?.artist_type,
+        artist_type: tempFlowData.artist_type || artistData?.artist_type,
+        artistPath: tempFlowData.artistPath,
+        is_musician: tempFlowData.is_musician,
+        musicRole: tempFlowData.musicRole,
         name: artistData?.name,
         category: tempFlowData.category || tempFlowData.artCategory,
         artCategory: tempFlowData.category || tempFlowData.artCategory,
+        projectType: tempFlowData.projectType,
+        scale: tempFlowData.scale,
+        locationId: tempFlowData.locationId,
+        coopRoles: tempFlowData.coopRoles || [],
+        collaboration: tempFlowData.collaboration,
+        socialLink: tempFlowData.socialLink,
         tech: tempFlowData.tech,
         artifact: tempFlowData.artifact,
         insp: tempFlowData.insp,
         equipmentIds: tempFlowData.equipmentIds || [],
         cut: tempFlowData.cut,
         inventory: tempFlowData.inventory,
-        soulColor: localStorage.getItem('soul_color_' + artistId),
+        soulColor: tempFlowData.soulColor || localStorage.getItem('soul_color_' + artistId),
         completed_at: new Date().toISOString(),
       });
       const project = this.seedCoopProject(sp);
@@ -265,6 +358,17 @@
         if (userId) {
           await this.syncToProfile(sp, userId);
           await this.markDeepFlowComplete(userId);
+        }
+        if (artistId && sp.artist_type !== 'service') {
+          const urlParams = new URLSearchParams(window.location.search);
+          await this.syncPerformanceDetails(sp, artistId, urlParams.get('eventId'));
+        }
+        if (artistId && artistData?.artist_type !== 'traveler') {
+          try {
+            await window.supabaseClient.from('master_artists').update({
+              artist_type: sp.artist_type || artistData.artist_type,
+            }).eq('id', artistId);
+          } catch (_) { /* optional */ }
         }
       }
       return { soulprint: sp, project, userId };
@@ -278,7 +382,14 @@
       const tech = sp.tech || local.tech;
       const eqIds = matchEquipment(tech, sp.equipmentIds || local.equipmentIds || coop.equipment || []);
       const eqLabels = equipmentLabels(eqIds);
+      const roleLabels = (sp.coopRoles || []).map((id) => window.getCoopRole?.(id)?.label || id);
       let html = '';
+      if (sp.artistPath || sp.is_musician) {
+        html += `<div class="mb-2"><strong class="text-[#d4af37]">${t('artistPath')}:</strong> ${sp.is_musician ? 'Musician' : (sp.artistPath || 'Artist').replace(/_/g, ' ')}</div>`;
+      }
+      if (sp.musicRole) {
+        html += `<div class="mb-2"><strong class="text-[#d4af37]">${t('musicRole')}:</strong> ${sp.musicRole}</div>`;
+      }
       if (category) {
         html += `<div class="mb-2"><strong class="text-[#d4af37]">${t('category')}:</strong> ${category}</div>`;
       }
@@ -287,6 +398,12 @@
       }
       if (eqLabels.length) {
         html += `<div class="mb-2"><strong class="text-[#d4af37]">${t('equipment')}:</strong> ${eqLabels.join(', ')}</div>`;
+      }
+      if (roleLabels.length) {
+        html += `<div class="mb-2"><strong class="text-[#d4af37]">${t('roles')}:</strong> ${roleLabels.join(', ')}</div>`;
+      }
+      if (coop.scale) {
+        html += `<div class="mb-2 text-xs text-white/50">${t('scale')}: ${coop.scale.replace(/_/g, ' ')}</div>`;
       }
       if (coop.title) {
         html += `<div class="mb-3 mt-3 pt-3 border-t border-white/10">
