@@ -263,11 +263,21 @@
         }
 
         function initHeroMedia() {
-            const reelUrl = resolveMediaUrl(engine?.kitchen?.reel || window.AKWABA_KITCHEN?.reel);
-            const poster = resolveMediaUrl(engine?.kitchen?.cover || window.AKWABA_KITCHEN?.cover || '/Assets/kitchens/akwabalx/hero-1.webp');
+            // Guest default: show title/cover photo. Reel only via ?reel=1 or tutorial entry.
+            const params = new URLSearchParams(location.search);
+            const wantReel = params.get('reel') === '1' || params.get('tutorial') === '1';
+            const reelUrl = wantReel ? resolveMediaUrl(engine?.kitchen?.reel || window.AKWABA_KITCHEN?.reel) : '';
+            const poster = resolveMediaUrl(engine?.kitchen?.cover || window.AKWABA_KITCHEN?.cover || '/Assets/kitchens/akwabalx/dish-table-combo.webp?v=2');
             const heroImg = document.getElementById('hero-poster');
             const heroVid = document.getElementById('hero-reel');
-            if (!reelUrl || !heroVid) return;
+            if (heroImg && poster) {
+                heroImg.src = poster;
+                heroImg.classList.remove('hidden');
+            }
+            if (!reelUrl || !heroVid) {
+                heroVid?.classList.add('hidden');
+                return;
+            }
             heroVid.src = reelUrl;
             heroVid.muted = true;
             heroVid.loop = true;
