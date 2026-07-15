@@ -510,12 +510,18 @@
             // Drop stale guest caches from older Akwaba seeds (Jollof / KitKat / etc.)
             try {
                 const raw = localStorage.getItem(`cdf_kitchen_menu_${slug}`);
-                if (raw && /Jollof|Garden Vegan|Fresh Juice|Akwaba Combo/i.test(raw)) {
+                if (raw && /Jollof|Garden Vegan|Fresh Juice|Akwaba Combo|KitKat/i.test(raw)) {
                     localStorage.removeItem(`cdf_kitchen_menu_${slug}`);
                 }
-                const brand = localStorage.getItem(`cdf_kitchen_brand_${slug}`);
-                if (brand && /hero-1\.webp|dish-table\.webp|dish-kitkat\.webp/i.test(brand)) {
-                    localStorage.removeItem(`cdf_kitchen_brand_${slug}`);
+                const brandRaw = localStorage.getItem(`cdf_kitchen_brand_${slug}`);
+                if (brandRaw) {
+                    let brand = {};
+                    try { brand = JSON.parse(brandRaw) || {}; } catch (_) { brand = {}; }
+                    if (/hero-1\.webp|dish-table\.webp|dish-kitkat\.webp|reel-hero\.mp4/i.test(brandRaw) || brand.reel) {
+                        delete brand.reel;
+                        if (/hero-1\.webp|dish-table\.webp|dish-kitkat\.webp/i.test(brand.cover || '')) delete brand.cover;
+                        localStorage.setItem(`cdf_kitchen_brand_${slug}`, JSON.stringify(brand));
+                    }
                 }
             } catch (_) { /* ignore */ }
             engine = window.ensureKitchenEngine ? window.ensureKitchenEngine() : window.KitchenEngine;
