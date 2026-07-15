@@ -142,11 +142,18 @@
             align-items: center;
             justify-content: center;
         }
+        /* HUD readability on map */
+        #hud-top h2 { text-shadow: 0 2px 8px rgba(0,0,0,0.9); }
+        #hud-top .adinkra-panel { color: var(--color-sand); }
+        #map-search-input::placeholder { color: rgba(230, 194, 128, 0.55); }
+        .fab-text { color: #fff !important; text-shadow: 0 1px 3px rgba(0,0,0,0.8); font-size: 0.75em; letter-spacing: 0.04em; }
+        #legend-panel { color: var(--color-sand); }
+        #legend-panel li { color: var(--color-sand); }
         #map-search-input { min-height: 44px; }
         .fab { min-width: 44px; min-height: 44px; }
     </style>
 </head>
-<body>
+<body class="quest-map-page">
     <main id="main-content" aria-label="Lisbon Atlas interactive map">
     <!-- MAP CONTAINER -->
     <div id="quest-map" role="application" aria-label="Lisbon city map with quests and venues"></div>
@@ -157,7 +164,7 @@
             <div>
                 <h2 style="color: var(--color-gold); margin:0; font-weight: bold; font-size: clamp(1.25rem, 4vw, 2.25rem); letter-spacing: 0.05em;">LISBON ATLAS</h2>
                 <div class="adinkra-panel" style="padding: 5px 10px; display: inline-block; margin-top: 10px; font-size: 0.8em;">
-                    <span style="color: #aaa;">STATUS:</span> <span id="sync-status" style="color: #0f0; font-weight: bold;">ONLINE</span>
+                    <span style="color: #c8b896;">STATUS:</span> <span id="sync-status" style="color: #5dff8a; font-weight: bold;">ONLINE</span>
                 </div>
             </div>
             
@@ -268,7 +275,7 @@
     <script defer src="../js/agents/flowee_voice.js?v=1.1"></script>
     <script defer src="../js/agents/flowee_quest_tour.js?v=1.1"></script>
     <script defer src="../js/agents/quest_triad.js?v=2.1"></script>
-    <script defer src="../js/agents/atlas_engine.js?v=1.3"></script>
+    <script defer src="../js/agents/atlas_engine.js?v=1.4"></script>
     <script defer src="../js/agents/vision_cinema_engine.js?v=1.0"></script>
     <script defer src="../js/agents/quest_engine.js?v=4.7"></script>
     <script>
@@ -459,12 +466,12 @@
                     
                     if (area.isAkademie) {
                         marker.bindPopup(`
-                            <div class="adinkra-panel" style="padding:15px; text-align:center; min-width:220px; font-family: 'Courier New', monospace; border: 2px solid #00f0ff;">
-                                <h3 style="color:#00f0ff; font-weight:bold; margin:0 0 5px 0; font-size: 1.1em;">${area.name}</h3>
-                                <p style="font-size:0.8em; color:#ccc; margin:0 0 10px 0;">Pages/Files: ${area.scan_count}</p>
-                                <a href="akademie.html" style="display:block; padding:10px; background:#00f0ff; color:#000; text-decoration:none; font-weight:bold; border-radius:4px; margin-top:15px; animation: floatPulse 2s infinite alternate;">📖 READ IN AKADEMIE</a>
+                            <div class="atlas-popup-card">
+                                <h3 class="atlas-popup-title" style="color:#66eeff !important">${area.name}</h3>
+                                <p class="atlas-popup-desc">Pages/Files: ${area.scan_count}</p>
+                                <a href="akademie.html" class="atlas-popup-btn atlas-popup-btn-primary" style="background:#00f0ff;color:#000">📖 READ IN AKADEMIE</a>
                             </div>
-                        `);
+                        `, { className: 'atlas-popup', maxWidth: 300 });
                     } else {
                         updatePopupContent(area.id, false, 999); // Initial closed state
                     }
@@ -511,18 +518,18 @@
                 actionHtml = `<a href="flow_area_scan.html?id=${area.id}" style="display:block; padding:10px; background:var(--color-gold); color:#000; text-decoration:none; font-weight:bold; border-radius:4px; margin-top:15px; animation: floatPulse 2s infinite alternate;">📲 ENTER THE ZONE (SCAN QR)</a>`;
             } else {
                 const distStr = distanceMeters === 999 ? 'Calculating...' : `${Math.round(distanceMeters)}m away`;
-                actionHtml = `<div style="padding:10px; background:rgba(255,255,255,0.1); color:#aaa; margin-top:15px; font-size: 0.8em;">📍 Too far (${distStr})</div>`;
+                actionHtml = `<div class="atlas-popup-distance">Too far (${distStr})</div>`;
             }
 
             mObj.marker.bindPopup(`
-                <div class="adinkra-panel" style="padding:15px; text-align:center; min-width:220px; font-family: 'Courier New', monospace; border: none;">
+                <div class="atlas-popup-card">
                     ${imgHtml}
-                    <h3 style="color:var(--color-gold); font-weight:bold; margin:0 0 5px 0; font-size: 1.1em;">${area.name}</h3>
-                    <p style="font-size:0.8em; color:#ccc; margin:0 0 10px 0;">${area.address || 'Unknown Coordinates'}</p>
-                    <p style="font-size:0.8em; color:var(--color-terracotta); margin:0;">Scans: ${area.scan_count || 0}</p>
+                    <h3 class="atlas-popup-title">${area.name}</h3>
+                    <p class="atlas-popup-desc">${area.address || 'Unknown Coordinates'}</p>
+                    <p class="atlas-popup-meta">Scans: ${area.scan_count || 0}</p>
                     ${actionHtml}
                 </div>
-            `);
+            `, { className: 'atlas-popup', maxWidth: 300 });
         }
 
         // --- 5. UI INTERACTIONS ---

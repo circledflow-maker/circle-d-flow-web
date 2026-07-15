@@ -122,6 +122,10 @@ class AtlasEngine {
         });
     }
 
+    popupOpts() {
+        return { className: 'atlas-popup', maxWidth: 300, minWidth: 220 };
+    }
+
     tierColor(tier) {
         return { bronze: '#cd7f32', silver: '#c0c0c0', gold: '#d4af37' }[tier] || '#666';
     }
@@ -146,7 +150,7 @@ class AtlasEngine {
             this.bindMarkerA11y(m, fog ? `Hidden venue: ${v.name}` : `Venue: ${v.name}`);
             const stepsLeft = Math.max(0, (v.stepsReveal || 0) - this.steps);
             const dist = this.userPos ? Math.round(this.dist(this.userPos.lat, this.userPos.lng, v.lat, v.lng)) : null;
-            m.bindPopup(this.venuePopupHtml(v, fog, stepsLeft, tier, dist));
+            m.bindPopup(this.venuePopupHtml(v, fog, stepsLeft, tier, dist), this.popupOpts());
             this.markers[v.id] = m;
         });
     }
@@ -154,23 +158,41 @@ class AtlasEngine {
     venuePopupHtml(v, fog, stepsLeft, tier, distM) {
         const rune = v.runeName || v.rune || 'Adinkra';
         let body = fog
-            ? `<p style="font-size:11px;color:#aaa">Hidden in fog. Walk <b>${stepsLeft}</b> more steps — or get within 500m.</p><p style="font-size:10px;color:#888">${v.vibe || ''}</p>`
-            : `<p style="font-size:11px;color:#ccc">${v.vibe || v.zone}</p><p style="font-size:10px;color:#d4af37">Rune: ${rune}</p>`;
-        if (distM != null) body += `<p style="font-size:10px;color:#06b6d4">${distM}m away</p>`;
+            ? `<p class="atlas-popup-desc">Hidden in fog. Walk <b>${stepsLeft}</b> more steps — or get within 500m.</p><p class="atlas-popup-meta">${v.vibe || ''}</p>`
+            : `<p class="atlas-popup-desc">${v.vibe || v.zone}</p><p class="atlas-popup-meta">Rune: ${rune}</p>`;
+        if (distM != null) body += `<p class="atlas-popup-reward">${distM}m away</p>`;
         let actions = '';
         if (!fog && distM != null && distM <= 120) {
-            actions = `<button onclick="window.AtlasEngine.collectBronze('${v.id}')" style="width:100%;margin-top:8px;padding:8px;background:#cd7f32;color:#000;border:none;border-radius:6px;font-weight:bold;cursor:pointer">COLLECT BRONZE RUNE</button>`;
+            actions = `<button type="button" onclick="window.AtlasEngine.collectBronze('${v.id}')" class="atlas-popup-btn atlas-popup-btn-primary">COLLECT BRONZE RUNE</button>`;
             if (tier === 'bronze' || tier === 'silver') {
-                actions += `<button onclick="window.AtlasEngine.anchorSilver('${v.id}')" style="width:100%;margin-top:6px;padding:8px;background:#c0c0c0;color:#000;border:none;border-radius:6px;font-size:11px;cursor:pointer">ANCHOR SILVER (scan + 30min)</button>`;
+                actions += `<button type="button" onclick="window.AtlasEngine.anchorSilver('${v.id}')" class="atlas-popup-btn atlas-popup-btn-secondary">ANCHOR SILVER (scan + 30min)</button>`;
             }
         } else if (!fog) {
-            actions = `<button onclick="QuestEngine.acceptQuest('LQ-VENUE-${v.id}')" style="width:100%;margin-top:8px;padding:8px;background:#d4af37;color:#000;border:none;border-radius:6px;font-size:11px;cursor:pointer">ACCEPT NEARBY QUEST</button>`;
+            actions = `<button type="button" onclick="QuestEngine.acceptQuest('LQ-VENUE-${v.id}')" class="atlas-popup-btn atlas-popup-btn-primary">ACCEPT NEARBY QUEST</button>`;
         }
         if (v.kitchenPage) {
-            actions += `<a href="pages/${v.kitchenPage}" style="display:block;width:100%;margin-top:8px;padding:8px;background:#22c55e;color:#000;text-align:center;border-radius:6px;font-weight:bold;text-decoration:none;font-size:11px">OPEN KITCHEN MENU</a>`;
+            actions += `<a href="pages/${v.kitchenPage}" class="atlas-popup-btn atlas-popup-btn-success">OPEN KITCHEN MENU</a>`;
         }
-        if (tier) body += `<p style="color:${this.tierColor(tier)};font-size:11px;margin-top:6px">Tier: ${tier.toUpperCase()}</p>`;
-        return `<div style="min-width:200px;font-family:monospace"><strong style="color:#d4af37">${v.name}</strong>${body}${actions}</div>`;
+        if (tier) body += `<p class="atlas-popup-meta">Tier: ${tier.toUpperCase()}</p>`;
+        return `<div class="atlas-popup-card"><strong class="atlas-popup-title">${v.name}</strong>${body}${actions}</div>`;
+    }
+
+    questPopupHtml(q, accepted, done) {
+        let actions = '';
+        if (done) {
+            actions = '<p class="atlas-popup-done">✓ COMPLETED</p>';
+        } else if (accepted) {
+            actions = `<button type="button" onclick="QuestEngine.fulfillAtGPS('${q.id}')" class="atlas-popup-btn atlas-popup-btn-success">VERIFY GPS</button>`;
+        } else {
+            actions = `<button type="button" onclick="QuestEngine.acceptQuest('${q.id}')" class="atlas-popup-btn atlas-popup-btn-primary">ACCEPT QUEST</button>`;
+        }
+        actions += `<button type="button" onclick="sessionStorage.setItem('target_codex_id','${q.id}');location.href='quest_board.html'" class="atlas-popup-btn atlas-popup-btn-secondary">OPEN IN CODEX</button>`;
+        return `<div class="atlas-popup-card">
+            <strong class="atlas-popup-title">${q.title}</strong>
+            <p class="atlas-popup-desc">${q.description}</p>
+            <p class="atlas-popup-reward">+${q.reward_exp} XP · +${q.reward_flow || 0} FLOW</p>
+            ${actions}
+        </div>`;
     }
 
     renderQuests() {
@@ -188,16 +210,7 @@ class AtlasEngine {
             this.bindMarkerA11y(m, `Quest: ${q.title}`);
             const accepted = window.QuestEngine?.isQuestAccepted?.(q.id);
             const done = window.QuestEngine?.isQuestComplete?.(q.id);
-            m.bindPopup(`
-                <div style="font-family:monospace;min-width:220px">
-                    <strong style="color:#E2725B">${q.title}</strong>
-                    <p style="font-size:11px;color:#ccc">${q.description}</p>
-                    <p style="font-size:10px;color:gold">+${q.reward_exp} XP · +${q.reward_flow || 0} FLOW</p>
-                    ${done ? '<p style="color:#0f0">COMPLETED</p>' : accepted
-                        ? `<button onclick="QuestEngine.fulfillAtGPS('${q.id}')" style="width:100%;padding:8px;margin-top:6px;background:#0f0;color:#000;border:none;border-radius:6px;font-weight:bold;cursor:pointer">VERIFY GPS</button>`
-                        : `<button onclick="QuestEngine.acceptQuest('${q.id}')" style="width:100%;padding:8px;margin-top:6px;background:#d4af37;color:#000;border:none;border-radius:6px;font-weight:bold;cursor:pointer">ACCEPT QUEST</button>`}
-                    <button onclick="sessionStorage.setItem('target_codex_id','${q.id}');location.href='quest_board.html'" style="width:100%;padding:6px;margin-top:4px;background:transparent;border:1px solid #666;color:#aaa;border-radius:6px;font-size:10px;cursor:pointer">OPEN IN CODEX</button>
-                </div>`);
+            m.bindPopup(this.questPopupHtml(q, accepted, done), this.popupOpts());
             this.questMarkers[q.id] = m;
         });
     }
