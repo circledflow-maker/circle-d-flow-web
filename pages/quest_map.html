@@ -57,8 +57,9 @@
             display: block !important;
             visibility: visible !important;
             opacity: 1 !important;
-            filter: sepia(35%) hue-rotate(345deg) contrast(115%) brightness(1.2);
-            background: #1a1a1a;
+            /* Keep tiles readable — heavy sepia made dark_all look like a black void */
+            filter: none;
+            background: #0b0b0b;
             margin: 0 !important;
             padding: 0 !important;
         }
@@ -346,12 +347,12 @@
         window.map = L.map('quest-map', {zoomControl: false}).setView([38.7223, -9.1393], 13);
         const map = window.map;
         
-        // CartoDB Dark Matter Base (1x tiles — faster on mobile)
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
+        // CartoDB Dark Matter — readable base (no CSS color filter on the container)
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
             attribution: '&copy; OpenStreetMap &copy; CARTO',
             subdomains: 'abcd',
             maxZoom: 20,
-            detectRetina: false,
+            detectRetina: true,
             updateWhenIdle: true,
             keepBuffer: 2
         }).addTo(map);
