@@ -69,6 +69,10 @@ class HelperAgent extends Agent {
         // Prevent dupes
         if(document.getElementById("feedback-siphon-btn")) return;
 
+        const path = window.location.pathname.toLowerCase();
+        // Quest map is dense — skip glitch overlay here (breaks layout without Tailwind)
+        if (path.includes('quest_map')) return;
+
         const btn = document.createElement('button');
         btn.id = "feedback-siphon-btn";
         btn.type = 'button';
