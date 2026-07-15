@@ -303,7 +303,7 @@
             const vid = document.getElementById('entry-reel-video');
             if (!overlay) return;
             const gallery = engine?.kitchen?.gallery || window.AKWABA_KITCHEN?.gallery || [];
-            const reelUrl = resolveMediaUrl(engine?.kitchen?.reel || window.AKWABA_KITCHEN?.reel);
+            const reelUrl = resolveMediaUrl(engine?.kitchen?.reel || '../Assets/kitchens/akwabalx/reel-hero.mp4');
             overlay.classList.remove('hidden');
 
             const showSlides = () => startIntroSlideshow(gallery.length ? gallery : [
