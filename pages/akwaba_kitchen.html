@@ -7,7 +7,7 @@
     <title>AkwabaLX | Secret Garden Kitchen</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" as="image" href="../Assets/kitchens/akwabalx/dish-table-combo.webp" type="image/webp">
+    <link rel="preload" as="image" href="../Assets/kitchens/akwabalx/dish-table-combo.webp?v=2" type="image/webp">
     <script src="https://cdn.tailwindcss.com" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&family=Cinzel:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/quest-triad.css">
@@ -67,18 +67,18 @@
 
     <main id="kitchen-main">
     <header class="sticky top-0 z-50 bg-black/80 backdrop-blur border-b border-[var(--gold)]/20 px-4 py-3 flex items-center gap-3">
-        <img id="kitchen-logo" src="../Assets/kitchens/akwabalx/logo.webp" alt="AkwabaLX" width="56" height="56" class="w-14 h-14 rounded-full object-contain border-2 border-[var(--gold)]/50 bg-black/40 p-1" onerror="this.onerror=null;this.src='../Assets/kitchens/akwabalx/logo-fallback.png'">
+        <img id="kitchen-logo" src="../Assets/kitchens/akwabalx/logo.webp?v=2" alt="Akwaba Food" width="56" height="56" class="w-14 h-14 rounded-full object-contain border-2 border-[var(--gold)]/50 bg-black/40 p-1" onerror="this.onerror=null;this.src='../Assets/kitchens/akwabalx/logo-fallback.png'">
         <div class="flex-1 min-w-0">
-            <h1 class="cinzel text-lg text-[var(--gold)] truncate">AkwabaLX</h1>
-            <p class="text-[10px] text-[var(--sage)] uppercase tracking-widest truncate">Secret Garden LX <span id="kitchen-live-badge" class="hidden text-[#4ade80]">· LIVE</span></p>
+            <h1 id="kitchen-display-name" class="cinzel text-lg text-[var(--gold)] truncate">AkwabaLX</h1>
+            <p class="text-[10px] text-[var(--sage)] uppercase tracking-widest truncate"><span id="kitchen-location-label">Secret Garden LX</span> <span id="kitchen-live-badge" class="hidden text-[#4ade80]">· LIVE</span></p>
         </div>
         <a href="taste_world_entry.html" class="text-white/40 text-xs">← Taste</a>
     </header>
 
     <section class="relative">
-        <img id="hero-poster" class="w-full max-h-48 object-cover" src="../Assets/kitchens/akwabalx/hero-1.webp" alt="AkwabaLX at Secret Garden" width="800" height="372" fetchpriority="high"
-            onerror="this.onerror=null;this.src='../Assets/kitchens/akwabalx/hero-1.jpg'">
-        <video id="hero-reel" class="hidden w-full max-h-48 object-cover" muted loop playsinline poster="../Assets/kitchens/akwabalx/hero-1.webp"></video>
+        <img id="hero-poster" class="w-full max-h-48 object-cover" src="../Assets/kitchens/akwabalx/dish-table-combo.webp?v=2" alt="AkwabaLX at Secret Garden" width="800" height="372" fetchpriority="high"
+            onerror="this.onerror=null;this.src='../Assets/kitchens/akwabalx/dish-table-combo.jpg'">
+        <video id="hero-reel" class="hidden w-full max-h-48 object-cover" muted loop playsinline poster="../Assets/kitchens/akwabalx/dish-table-combo.webp?v=2"></video>
     </section>
 
     <section class="px-4 py-4">
@@ -89,7 +89,7 @@
             <button type="button" onclick="shareKitchen()" class="text-[10px] px-3 py-1.5 border border-[var(--gold)]/50 rounded-full text-[var(--gold)]">Share WhatsApp</button>
         </div>
         <div id="kitchen-title-banner" class="mb-6">
-            <img id="kitchen-title-image" src="../Assets/kitchens/akwabalx/dish-table-combo.webp" alt="AkwabaLX at Secret Garden" width="800" height="220" fetchpriority="high" decoding="async"
+            <img id="kitchen-title-image" src="../Assets/kitchens/akwabalx/dish-table-combo.webp?v=2" alt="AkwabaLX at Secret Garden" width="800" height="220" fetchpriority="high" decoding="async"
                 onerror="this.onerror=null;this.src='../Assets/kitchens/akwabalx/dish-table-combo.jpg'">
         </div>
     </section>
@@ -97,7 +97,7 @@
     <section class="px-4 pb-4">
         <h2 class="cinzel text-[var(--gold)] text-sm mb-3 tracking-widest">MENU CARD</h2>
         <div id="kitchen-menu-board" class="mb-6 p-2">
-            <img id="menu-board-img" src="../Assets/kitchens/akwabalx/menu-board.webp" alt="AkwabaLX Menu Card" width="362" height="512" fetchpriority="high"
+            <img id="menu-board-img" src="../Assets/kitchens/akwabalx/menu-board.webp?v=2" alt="Secret Garden LX Food Menu" width="362" height="512" fetchpriority="high"
                 onerror="this.onerror=null;this.src='../Assets/kitchens/akwabalx/menu-board.jpg'">
         </div>
         <h2 class="cinzel text-[var(--gold)] text-sm mb-3 tracking-widest">ORDER — PICKUP AT BAR</h2>
@@ -197,7 +197,7 @@
     <script src="../js/agents/flavor_quest_engine.js?v=1.1" defer></script>
     <script src="../js/utils/media_compress.js?v=1.0" defer></script>
     <script src="../js/agents/kitchen_feedback.js?v=1.1" defer></script>
-    <script src="../js/data/akwaba_kitchen_data.js?v=1.4" defer></script>
+    <script src="../js/data/akwaba_kitchen_data.js?v=2.0" defer></script>
     <script src="../js/agents/navigator_display.js?v=1.0" defer></script>
     <script src="../js/agents/kitchen_guest_nav.js?v=1.0" defer></script>
     <script src="../js/agents/kitchen_store.js?v=1.2" defer></script>
@@ -461,25 +461,34 @@
         }
         window.addEventListener('KITCHEN_CART_UPDATED', updateCart);
         function applyKitchenBranding(k) {
+            const fallback = window.AKWABA_KITCHEN || {};
+            const nameEl = document.getElementById('kitchen-display-name');
+            if (nameEl) nameEl.textContent = k.name || fallback.name || 'AkwabaLX';
+            const locEl = document.getElementById('kitchen-location-label');
+            if (locEl) locEl.textContent = k.location_name || fallback.location_name || 'Secret Garden LX';
             const logo = document.getElementById('kitchen-logo');
-            if (logo && k.logo) logo.src = imgUrl(k.logo);
+            if (logo && (k.logo || fallback.logo)) {
+                logo.src = imgUrl(k.logo || fallback.logo);
+                logo.alt = k.name || 'Akwaba Food';
+            }
             const hero = document.getElementById('hero-poster');
-            if (hero && k.cover) {
-                hero.src = imgUrl(k.cover);
-                hero.onerror = function () { this.onerror = null; this.src = k.cover; };
+            const coverSrc = k.cover || fallback.cover;
+            if (hero && coverSrc) {
+                hero.src = imgUrl(coverSrc);
+                hero.onerror = function () { this.onerror = null; this.src = coverSrc; };
             }
             const board = document.getElementById('menu-board-img');
             if (board) {
-                board.src = imgUrl(k.menu_board || window.AKWABA_KITCHEN.menu_board);
-                board.onerror = function () { this.onerror = null; this.src = k.menu_board || window.AKWABA_KITCHEN.menu_board; };
+                board.src = imgUrl(k.menu_board || fallback.menu_board);
+                board.onerror = function () { this.onerror = null; this.src = k.menu_board || fallback.menu_board; };
             }
-            document.getElementById('kitchen-tagline').textContent = k.tagline || window.AKWABA_KITCHEN.tagline;
+            document.getElementById('kitchen-tagline').textContent = k.tagline || fallback.tagline || '';
             const disc = document.getElementById('discount-note');
-            if (disc) disc.textContent = fixUiText(k.discount_note || window.AKWABA_KITCHEN.discount_note || 'Navigator discounts coming soon - collect Akoma rune for early access.');
+            if (disc) disc.textContent = fixUiText(k.discount_note || fallback.discount_note || 'Navigator discounts coming soon - collect Akoma rune for early access.');
             const liveBadge = document.getElementById('kitchen-live-badge');
             if (liveBadge) liveBadge.classList.toggle('hidden', k.is_live === false);
             const titleImg = document.getElementById('kitchen-title-image');
-            const titleSrc = k.cover || k.cover_url || window.AKWABA_KITCHEN.cover;
+            const titleSrc = k.cover || k.cover_url || fallback.cover;
             if (titleImg && titleSrc) {
                 titleImg.src = imgUrl(titleSrc);
                 titleImg.onerror = function () { this.onerror = null; this.src = titleSrc; };
@@ -488,6 +497,17 @@
 
         document.addEventListener('DOMContentLoaded', async () => {
             const slug = new URLSearchParams(location.search).get('kitchen') || 'akwabalx';
+            // Drop stale guest caches from older Akwaba seeds (Jollof / KitKat / etc.)
+            try {
+                const raw = localStorage.getItem(`cdf_kitchen_menu_${slug}`);
+                if (raw && /Jollof|Garden Vegan|Fresh Juice|Akwaba Combo/i.test(raw)) {
+                    localStorage.removeItem(`cdf_kitchen_menu_${slug}`);
+                }
+                const brand = localStorage.getItem(`cdf_kitchen_brand_${slug}`);
+                if (brand && /hero-1\.webp|dish-table\.webp|dish-kitkat\.webp/i.test(brand)) {
+                    localStorage.removeItem(`cdf_kitchen_brand_${slug}`);
+                }
+            } catch (_) { /* ignore */ }
             engine = window.ensureKitchenEngine ? window.ensureKitchenEngine() : window.KitchenEngine;
             if (!engine || typeof engine.load !== 'function') {
                 console.error('[Kitchen] KitchenEngine failed to load');
