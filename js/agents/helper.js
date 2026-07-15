@@ -73,14 +73,12 @@ class HelperAgent extends Agent {
         btn.id = "feedback-siphon-btn";
         btn.type = 'button';
         btn.setAttribute('aria-label', 'Report Glitch');
-        btn.className = "fixed bottom-24 left-8 w-10 h-10 bg-red-500/20 border border-red-500/50 rounded-full flex items-center justify-center text-red-500 hover:bg-red-500 hover:text-white transition-all z-50 group shadow-[0_0_15px_rgba(255,42,81,0.2)]";
+        btn.className = 'cdf-glitch-fab';
         btn.onclick = () => this.openGlitchModal('MANUAL_REPORT', 'User Feedback Button');
         
         btn.innerHTML = `
-            <span class="material-symbols-outlined text-sm">bug_report</span>
-            <div class="absolute left-full ml-2 bg-black/80 text-red-500 text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 whitespace-nowrap border border-red-500/20 pointer-events-none transition-opacity">
-                Report Glitch
-            </div>
+            <span class="material-symbols-outlined cdf-glitch-fab-icon">bug_report</span>
+            <span class="cdf-glitch-fab-tip">Report Glitch</span>
         `;
         document.body.appendChild(btn);
         this.positionGlitchButton(btn);
@@ -91,6 +89,10 @@ class HelperAgent extends Agent {
         if (!btn) return;
         const path = window.location.pathname.toLowerCase();
         if (path.includes('artist_sanctuary')) return;
+        if (path.includes('quest_map')) {
+            btn.style.bottom = 'calc(5.5rem + env(safe-area-inset-bottom, 0px))';
+            btn.style.left = '12px';
+        }
         if (path.includes('dashboard')) {
             btn.style.bottom = 'calc(7rem + env(safe-area-inset-bottom, 0px))';
             btn.style.left = '4.85rem';
@@ -100,26 +102,34 @@ class HelperAgent extends Agent {
     }
 
     ensureGlitchModal() {
-        if (document.getElementById('glitch-report-modal')) return;
+        const existing = document.getElementById('glitch-report-modal');
+        if (existing) {
+            if (existing.classList.contains('cdf-glitch-overlay')) {
+                existing.style.display = 'none';
+                return;
+            }
+            existing.remove();
+        }
 
         const modal = document.createElement('div');
         modal.id = 'glitch-report-modal';
-        modal.className = 'fixed inset-0 z-[1000001] hidden items-end sm:items-center justify-center p-4 bg-black/70 backdrop-blur-sm';
+        modal.className = 'cdf-glitch-overlay';
+        modal.style.display = 'none';
         modal.innerHTML = `
-            <div class="w-full max-w-md bg-[#0d0502] border border-red-500/30 rounded-2xl p-4 shadow-2xl" role="dialog" aria-labelledby="glitch-modal-title">
-                <div class="flex items-center justify-between mb-3">
-                    <h3 id="glitch-modal-title" class="text-red-400 text-xs uppercase tracking-widest font-bold">Report Glitch</h3>
-                    <button type="button" id="glitch-modal-close" class="text-white/50 hover:text-white text-lg leading-none px-2" aria-label="Close">✕</button>
+            <div class="cdf-glitch-panel" role="dialog" aria-labelledby="glitch-modal-title">
+                <div class="cdf-glitch-header">
+                    <h3 id="glitch-modal-title">Report Glitch</h3>
+                    <button type="button" id="glitch-modal-close" aria-label="Close">✕</button>
                 </div>
-                <p class="text-[11px] text-white/60 mb-3 leading-relaxed">Describe what broke or felt wrong. You can queue it for <strong class="text-[#d4af37]">Main evening review</strong> to track progress updates.</p>
-                <textarea id="glitch-details-input" rows="4" class="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-sm text-white placeholder-white/30 outline-none focus:border-red-400/50 resize-none" placeholder="What happened? Which icon, zone, or step failed?"></textarea>
-                <label class="flex items-start gap-2 mt-3 text-[11px] text-white/75 cursor-pointer">
-                    <input type="checkbox" id="glitch-queue-main" class="mt-0.5 accent-red-500" checked>
+                <p class="cdf-glitch-desc">Describe what broke or felt wrong. You can queue it for <strong>Main evening review</strong> to track progress updates.</p>
+                <textarea id="glitch-details-input" rows="4" placeholder="What happened? Which icon, zone, or step failed?"></textarea>
+                <label class="cdf-glitch-check">
+                    <input type="checkbox" id="glitch-queue-main" checked>
                     <span>Send to <strong>Main</strong> for evening evaluation &amp; progress update</span>
                 </label>
-                <div class="flex gap-2 mt-4">
-                    <button type="button" id="glitch-submit-btn" class="flex-1 bg-red-500/80 hover:bg-red-500 text-white text-xs font-bold uppercase tracking-widest py-2.5 rounded-lg transition">Send Report</button>
-                    <button type="button" id="glitch-cancel-btn" class="px-4 bg-white/5 hover:bg-white/10 text-white/70 text-xs uppercase tracking-widest py-2.5 rounded-lg border border-white/10 transition">Cancel</button>
+                <div class="cdf-glitch-actions">
+                    <button type="button" id="glitch-submit-btn" class="cdf-glitch-send">Send Report</button>
+                    <button type="button" id="glitch-cancel-btn" class="cdf-glitch-cancel">Cancel</button>
                 </div>
             </div>
         `;
@@ -143,18 +153,14 @@ class HelperAgent extends Agent {
         if (input) input.value = type === 'MANUAL_REPORT' ? '' : defaultDetails;
         if (queue) queue.checked = true;
         if (modal) {
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
+            modal.style.display = 'flex';
             input?.focus();
         }
     }
 
     closeGlitchModal() {
         const modal = document.getElementById('glitch-report-modal');
-        if (modal) {
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-        }
+        if (modal) modal.style.display = 'none';
     }
 
     async submitGlitchModal() {

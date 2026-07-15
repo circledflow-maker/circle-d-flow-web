@@ -32,11 +32,20 @@
             font-family: 'Courier New', Courier, monospace;
         }
 
+        body.quest-map-page main#main-content {
+            position: relative;
+            width: 100%;
+            height: 100dvh;
+            height: -webkit-fill-available;
+            overflow: hidden;
+        }
+
         /* Map Container with Sepia/Terracotta Filter */
         #quest-map {
-            width: 100vw;
-            height: 100dvh; /* Use dynamic viewport height for mobile */
-            height: -webkit-fill-available; /* iOS fallback */
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
             z-index: 1;
             filter: sepia(60%) hue-rotate(340deg) contrast(120%);
             background: #000;
@@ -115,7 +124,7 @@
 
         /* UI Overlays */
         #hud-top {
-            position: absolute; top: 100px; left: 20px; right: 20px; z-index: 1000;
+            position: absolute; top: 118px; left: 20px; right: 20px; z-index: 1000;
             pointer-events: none;
         }
         
@@ -245,7 +254,7 @@
     <script defer src="../js/data/lisbon_quests.js?v=1.1"></script>
     <script defer src="../js/data/lisbon_venues.js?v=1.1"></script>
     <script defer src="../js/agents/agent.js?v=3.2"></script>
-    <script defer src="../js/agents/helper.js?v=3.3"></script>
+    <script defer src="../js/agents/helper.js?v=3.4"></script>
     <script defer src="../js/agents/pusher.js?v=3.2"></script>
     <script defer src="../js/agents/brain.js?v=3.2"></script>
     <script defer src="../js/agents/flowee.js?v=5.0"></script>
@@ -277,7 +286,7 @@
     <script defer src="../js/agents/quest_triad.js?v=2.1"></script>
     <script defer src="../js/agents/atlas_engine.js?v=1.4"></script>
     <script defer src="../js/agents/vision_cinema_engine.js?v=1.0"></script>
-    <script defer src="../js/agents/quest_engine.js?v=4.7"></script>
+    <script defer src="../js/agents/quest_engine.js?v=4.8"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function initQuestMap() {
         if (!window.L) { console.error('[Atlas] Leaflet failed to load'); return; }
@@ -607,6 +616,20 @@
         (async function bootAtlas() {
             if (window.AtlasEngine) window.AtlasEngine.init(map);
             loadFlowAreas();
+            if (typeof window.loadMapPins === 'function') {
+                try { await window.loadMapPins(map); } catch (e) { console.warn('[Atlas] loadMapPins:', e.message); }
+            } else {
+                let tries = 0;
+                const waitPins = setInterval(async () => {
+                    tries += 1;
+                    if (typeof window.loadMapPins === 'function') {
+                        clearInterval(waitPins);
+                        try { await window.loadMapPins(map); } catch (e) { console.warn('[Atlas] loadMapPins:', e.message); }
+                    } else if (tries > 15) clearInterval(waitPins);
+                }, 200);
+            }
+            setTimeout(() => { map.invalidateSize(); }, 100);
+            window.addEventListener('resize', () => map.invalidateSize());
             const params = new URLSearchParams(window.location.search);
             if (params.get('filter') === 'cinema' || params.get('cinema')) {
                 setTimeout(() => {

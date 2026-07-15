@@ -179,7 +179,12 @@ class QuestEngine {
 
         [...(quests || []), ...locationQuests].forEach(q => this.addPinToMap(map, q));
 
-        if (window.LISBON_VENUES) {
+        if (window.getAllVenues) {
+            (window.getAllVenues() || []).forEach(v => {
+                if (!v.lat) return;
+                this.addVenuePin(map, v);
+            });
+        } else if (window.LISBON_VENUES) {
             Object.values(window.LISBON_VENUES).flat().forEach(v => {
                 if (!v.lat) return;
                 this.addVenuePin(map, v);
