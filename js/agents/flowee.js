@@ -102,6 +102,8 @@ class FloweeAgent {
             "academy.html": { mode: "guide", intro: "The Academy lists every participant.", action: "Tap a manga panel — edit your bio and media descriptions." },
             "hall_of_legends.html": { mode: "guide", intro: "The Brotherhood ranks Navigators by XP.", action: "Rise in the Atlas, then return here to see your rank sync." },
             "artist_sanctuary.html": { mode: "guide", intro: "Welcome to the Artist Sanctuary — Akwaba zone, Stage, and Archive await.", action: "I can route you to the Lisbon Atlas or your nearest quest." },
+            "lapa71_register.html": { mode: "guide", intro: "Welcome to the family — Lapa 71 x Tagus Drop Rhythm registration.", action: "I will coach each section. Start with your name, then disciplines, Aug 29, and jam details if you flow." },
+            "join.html": { mode: "guide", intro: "Welcome to the family — Lapa 71 x Tagus Drop Rhythm registration.", action: "I will coach each section. Start with your name, then disciplines, Aug 29, and jam details if you flow." },
             "kitchen_workspace.html": {
                 mode: "guide",
                 intro: "Kitchen Command online. I guide you through KDS, menu, brand, QR and crew comms.",

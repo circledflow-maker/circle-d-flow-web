@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lapa 71 x Tagus Drop Rhythm — Member & Jam Registration | Circle D Flow</title>
+  <meta name="description" content="Join Lapa 71 x Tagus Drop Rhythm — Member & Jam registration for Circle D Flow C4C at @mude.cafeteria.">
+  <meta property="og:title" content="Lapa 71 x Tagus Drop Rhythm — Join the Family">
+  <meta property="og:description" content="Member & Jam registration — Aug 29 @ 19:30, R. Garcia de Orta 71C, Lisboa.">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="../css/join.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <nav class="nav-bar" aria-label="Primary">
+    <a href="../index.html">Home</a>
+    <a href="/pages/bantaba.html">Bantaba</a>
+    <a href="/pages/artist_sanctuary">Sanctuary</a>
+  </nav>
+
+  <main class="join-shell">
+    <header class="hero-brand">
+      <p class="brand-mark">Circle D Flow</p>
+      <p class="brand-sub">C4C · Community for Connections</p>
+      <h1 class="hero-title">Lapa 71 x Tagus Drop Rhythm — Member &amp; Jam Registration</h1>
+      <p class="hero-welcome">
+        Welcome to the family! Lapa 71 (hosted at @mude.cafeteria) is the new home for Circle D Flow
+        (presenting C4C — Community for Connections) and Wako Kungo. We are building a cultural hub to
+        support local talent, connect artists, and set a new status quo together. Whether you're joining
+        to vibe in the audience or stepping up to perform, fill out this quick form to register as an
+        official community member and secure your spot. Flowee will guide you step by step.
+      </p>
+    </header>
+
+    <div class="progress-track" id="progress-track" aria-hidden="true">
+      <span class="progress-dot active" data-step="1"></span>
+      <span class="progress-dot" data-step="2"></span>
+      <span class="progress-dot" data-step="3"></span>
+      <span class="progress-dot" data-step="4"></span>
+    </div>
+
+    <form id="join-form" novalidate>
+      <div id="form-error" class="form-error" role="alert"></div>
+
+      <!-- Section 1 -->
+      <section class="panel" data-section="1" id="section-1">
+        <p class="section-kicker">Section 1 · Identity</p>
+        <h2 class="section-title">Who are you in the Flow?</h2>
+
+        <div class="field">
+          <label for="fullName">Full Name <span class="req">*</span></label>
+          <input id="fullName" name="fullName" type="text" autocomplete="name" required data-flowee-hint="identity">
+        </div>
+        <div class="field">
+          <label for="stageName">Preferred / Stage Name <span class="req">*</span></label>
+          <input id="stageName" name="stageName" type="text" autocomplete="nickname" required data-flowee-hint="stage">
+        </div>
+        <div class="field">
+          <label for="phone">WhatsApp / Phone <span class="req">*</span></label>
+          <input id="phone" name="phone" type="tel" autocomplete="tel" required data-flowee-hint="phone">
+        </div>
+        <div class="field">
+          <label for="email">Email <span class="req">*</span></label>
+          <input id="email" name="email" type="email" autocomplete="email" required data-flowee-hint="email">
+        </div>
+        <div class="field">
+          <label for="instagram">Instagram Handle <span class="req">*</span></label>
+          <input id="instagram" name="instagram" type="text" placeholder="@username" required data-flowee-hint="instagram">
+        </div>
+
+        <div class="actions">
+          <button type="button" class="btn btn-primary" data-next="2">Continue</button>
+        </div>
+      </section>
+
+      <!-- Section 2 -->
+      <section class="panel" data-section="2" id="section-2" hidden>
+        <p class="section-kicker">Section 2 · Discipline</p>
+        <h2 class="section-title">Primary artistic discipline</h2>
+        <p class="hint-chip">Select all that resonate</p>
+
+        <div class="check-grid" id="discipline-grid">
+          <label class="check-item"><input type="checkbox" name="disciplines" value="Vocalist/Singer"><span>Vocalist / Singer</span></label>
+          <label class="check-item"><input type="checkbox" name="disciplines" value="Rapper/MC"><span>Rapper / MC</span></label>
+          <label class="check-item"><input type="checkbox" name="disciplines" value="Instrumentalist/Musician"><span>Instrumentalist / Musician</span></label>
+          <label class="check-item"><input type="checkbox" name="disciplines" value="DJ/Producer"><span>DJ / Producer</span></label>
+          <label class="check-item"><input type="checkbox" name="disciplines" value="Visual Artist/Fashion/Designer"><span>Visual Artist / Fashion / Designer</span></label>
+          <label class="check-item"><input type="checkbox" name="disciplines" value="Supporter/Music Enthusiast (Audience)"><span>Supporter / Music Enthusiast (Audience)</span></label>
+          <label class="check-item"><input type="checkbox" name="disciplines" value="Other" id="disc-other-check"><span>Other</span></label>
+        </div>
+
+        <div class="field" id="discipline-other-wrap" hidden>
+          <label for="disciplineOther">Tell us more</label>
+          <input id="disciplineOther" name="disciplineOther" type="text">
+        </div>
+
+        <div class="actions">
+          <button type="button" class="btn btn-ghost" data-prev="1">Back</button>
+          <button type="button" class="btn btn-primary" data-next="3">Continue</button>
+        </div>
+      </section>
+
+      <!-- Section 3 -->
+      <section class="panel" data-section="3" id="section-3" hidden>
+        <p class="section-kicker">Section 3 · Night of Aug 29</p>
+        <h2 class="section-title">Will you be with us?</h2>
+
+        <p class="section-kicker" style="margin-top:0.4rem">Attending Aug 29 · 19:30 @ Lapa 71?</p>
+        <div class="choice-row two" role="radiogroup" aria-label="Attending Aug 29">
+          <label class="choice-card">
+            <input type="radio" name="attendingAug29" value="yes" required>
+            <strong>Yes</strong>
+            <p>Responsible Donation — join the night at Lapa 71.</p>
+          </label>
+          <label class="choice-card">
+            <input type="radio" name="attendingAug29" value="no">
+            <strong>No</strong>
+            <p>Keep me updated for the next gatherings.</p>
+          </label>
+        </div>
+
+        <p class="section-kicker">Interested in the Jam?</p>
+        <div class="choice-row two" role="radiogroup" aria-label="Jam interest">
+          <label class="choice-card">
+            <input type="radio" name="jamInterested" value="yes" required>
+            <strong>Yes</strong>
+            <p>I want to perform / jam — next step asks for details.</p>
+          </label>
+          <label class="choice-card">
+            <input type="radio" name="jamInterested" value="no">
+            <strong>No</strong>
+            <p>Skip jam details — still a full member of the family.</p>
+          </label>
+        </div>
+
+        <div class="actions">
+          <button type="button" class="btn btn-ghost" data-prev="2">Back</button>
+          <button type="button" class="btn btn-primary" data-next="4">Continue</button>
+        </div>
+      </section>
+
+      <!-- Section 4 (conditional) -->
+      <section class="panel" data-section="4" id="section-4" hidden>
+        <p class="section-kicker">Section 4 · Jam Details</p>
+        <h2 class="section-title">How will you flow?</h2>
+
+        <p class="section-kicker">How do you want to perform?</p>
+        <div class="choice-row" role="radiogroup" aria-label="Perform style">
+          <label class="choice-card">
+            <input type="radio" name="jamPerformStyle" value="solo">
+            <strong>Solo</strong>
+            <p>Your set, your voice, your moment.</p>
+          </label>
+          <label class="choice-card">
+            <input type="radio" name="jamPerformStyle" value="jam_with_musicians">
+            <strong>Jam with musicians</strong>
+            <p>Plug into the band energy with Jam Lead Mr. Isaac.</p>
+          </label>
+          <label class="choice-card">
+            <input type="radio" name="jamPerformStyle" value="freestyle">
+            <strong>Freestyle</strong>
+            <p>Open floor — spontaneous Tagus Drop rhythm.</p>
+          </label>
+        </div>
+
+        <div class="field">
+          <label for="jamInstruments">Instruments</label>
+          <input id="jamInstruments" name="jamInstruments" type="text" placeholder="e.g. voice, guitar, djembe…" data-flowee-hint="instruments">
+        </div>
+        <div class="field">
+          <label for="jamSongDetails">Song titles / key / BPM / genre</label>
+          <textarea id="jamSongDetails" name="jamSongDetails" placeholder="List songs, keys, BPM, genre notes…" data-flowee-hint="songs"></textarea>
+        </div>
+
+        <p class="section-kicker">Backing track?</p>
+        <div class="choice-row two">
+          <label class="choice-card">
+            <input type="radio" name="jamBackingTrack" value="yes">
+            <strong>Yes</strong>
+            <p>I will bring / need a backing track.</p>
+          </label>
+          <label class="choice-card">
+            <input type="radio" name="jamBackingTrack" value="no">
+            <strong>No</strong>
+            <p>Live / acoustic / freestyle only.</p>
+          </label>
+        </div>
+
+        <div class="actions">
+          <button type="button" class="btn btn-ghost" data-prev="3">Back</button>
+          <button type="submit" class="btn btn-primary" id="submit-btn">Submit Registration</button>
+        </div>
+      </section>
+    </form>
+
+    <section class="panel success-panel" id="success-panel" hidden>
+      <h2>Thank you for registering!</h2>
+      <p>
+        You joined the Lapa 71 movement. Show this confirmation at the door. Tag us on Instagram so we
+        can share your posts — see you on stage!
+      </p>
+      <div class="confirm-meta">
+        <div><strong>Venue</strong> — Lapa 71 (@mude.cafeteria) · R. Garcia de Orta 71C, 1200-678 Lisboa</div>
+        <div><strong>When</strong> — August 29 @ 19:30</div>
+        <div><strong>Entry</strong> — Responsible Donation</div>
+        <div><strong>Jam Lead</strong> — Mr. Isaac</div>
+        <div><strong>Powered by</strong> — Wako Kungo · Circle D Flow (C4C) · Humble. - Brave · @mude.cafeteria - Robinho</div>
+      </div>
+      <div class="cta-stack">
+        <a class="btn btn-primary" href="/pages/artist_sanctuary">Enter Artist Sanctuary</a>
+        <a class="btn btn-ghost" href="/pages/bantaba.html">Visit Bantaba</a>
+        <a class="btn btn-ghost" href="/login">Login / Claim Profile</a>
+      </div>
+    </section>
+  </main>
+
+  <div id="flowee-agent"></div>
+
+  <script src="../js/agents/flowee.js"></script>
+  <script src="../js/agents/flowee_join_guide.js"></script>
+  <script src="../js/join_registration.js"></script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-{
+﻿{
   "outputDirectory": ".",
   "cleanUrls": true,
   "trailingSlash": false,
@@ -15,6 +15,8 @@
     { "source": "/kitchen-forge", "destination": "/pages/kitchen_forge", "permanent": false },
     { "source": "/coop", "destination": "/pages/coop", "permanent": false },
     { "source": "/login", "destination": "/pages/login", "permanent": false },
-    { "source": "/logout", "destination": "/pages/logout", "permanent": false }
+    { "source": "/logout", "destination": "/pages/logout", "permanent": false },
+    { "source": "/join", "destination": "/pages/lapa71_register", "permanent": false },
+    { "source": "/admin/registrations", "destination": "/pages/admin_registrations", "permanent": false }
   ]
 }
