@@ -117,7 +117,97 @@ function simDeviceLabel() {
   return String(raw).replace(/\\/g, '/');
 }
 
+
+async function handleWhatsappWebhook(req, res) {
+  const c = metaConfig();
+
+  if (req.method === 'GET') {
+    const mode = req.query['hub.mode'];
+    const token = req.query['hub.verify_token'];
+    const challenge = req.query['hub.challenge'];
+    if (mode === 'subscribe' && token === c.verifyToken) {
+      res.status(200).send(challenge);
+      return;
+    }
+    res.status(403).end();
+    return;
+  }
+
+  if (req.method !== 'POST') {
+    res.status(405).end();
+    return;
+  }
+
+  try {
+    const data = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+    const value =
+      data &&
+      data.entry &&
+      data.entry[0] &&
+      data.entry[0].changes &&
+      data.entry[0].changes[0] &&
+      data.entry[0].changes[0].value;
+    const message = value && value.messages && value.messages[0];
+
+    if (message) {
+      const text = (message.text && message.text.body) || '(media)';
+      const from = message.from;
+      await storeInbound(c, {
+        direction: 'inbound',
+        sender: from,
+        recipient: (value.metadata && value.metadata.phone_number_id) || c.phoneId,
+        body: text,
+        raw: data,
+        consumed: false,
+      });
+
+      const lower = String(text).toLowerCase().trim();
+      let reply = null;
+      if (['hi', 'hello', 'ola', 'flow', 'flowee'].some((k) => lower.includes(k))) {
+        reply =
+          'Flowee online. I am your Circle D Flow navigator. Reply *quest*, *dashboard*, or *help* for paths.';
+      } else if (lower.includes('quest')) {
+        reply = 'Open your Quest Grid: https://circle-d-flow-web.vercel.app/pages/dashboard';
+      } else if (lower.includes('dashboard') || lower.includes('orbit')) {
+        reply = "Captain's Quarters: https://circle-d-flow-web.vercel.app/pages/dashboard";
+      } else if (lower.includes('help')) {
+        reply =
+          'Commands: quest | dashboard | sanctuary | notify\nI can ping you when quests complete.';
+      } else if (lower.includes('sanctuary')) {
+        reply = 'Artist Sanctuary: https://circle-d-flow-web.vercel.app/pages/artist_sanctuary.html';
+      }
+
+      if (reply && c.token) {
+        await metaPost(
+          c.phoneId + '/messages',
+          {
+            messaging_product: 'whatsapp',
+            to: String(from).replace(/\+/g, ''),
+            type: 'text',
+            text: { body: reply },
+          },
+          c.token
+        );
+      }
+    }
+
+    res.status(200).send('EVENT_RECEIVED');
+  } catch (e) {
+    res.status(400).end();
+  }
+}
+
+function isWhatsappWebhook(req) {
+  if ((req.query && req.query.op) === 'webhook') return true;
+  if (req.query && req.query['hub.mode']) return true;
+  return String(req.url || '').includes('whatsapp-webhook');
+}
+
 export default async function handler(req, res) {
+  if (isWhatsappWebhook(req)) {
+    return handleWhatsappWebhook(req, res);
+  }
+
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');

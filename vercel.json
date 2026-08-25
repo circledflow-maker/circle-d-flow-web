@@ -3,20 +3,94 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "redirects": [
-    { "source": "/photographer", "destination": "/pages/photographer_hub", "permanent": false },
-    { "source": "/vision", "destination": "/pages/vision_studio", "permanent": false },
-    { "source": "/book", "destination": "/pages/booking", "permanent": false },
-    { "source": "/book-session", "destination": "/pages/booking", "permanent": false },
-    { "source": "/studio", "destination": "/pages/vision_studio", "permanent": false },
-    { "source": "/taste", "destination": "/pages/taste_world_hub", "permanent": false },
-    { "source": "/taste-hub", "destination": "/pages/taste_world_hub", "permanent": false },
-    { "source": "/kitchen-ops", "destination": "/pages/kitchen_command", "permanent": false },
-    { "source": "/kitchen-command", "destination": "/pages/kitchen_command", "permanent": false },
-    { "source": "/kitchen-forge", "destination": "/pages/kitchen_forge", "permanent": false },
-    { "source": "/coop", "destination": "/pages/coop", "permanent": false },
-    { "source": "/login", "destination": "/pages/login", "permanent": false },
-    { "source": "/logout", "destination": "/pages/logout", "permanent": false },
-    { "source": "/join", "destination": "/pages/lapa71_register", "permanent": false },
-    { "source": "/admin/registrations", "destination": "/pages/admin_registrations", "permanent": false }
+    {
+      "source": "/photographer",
+      "destination": "/pages/photographer_hub",
+      "permanent": false
+    },
+    {
+      "source": "/vision",
+      "destination": "/pages/vision_studio",
+      "permanent": false
+    },
+    {
+      "source": "/book",
+      "destination": "/pages/booking",
+      "permanent": false
+    },
+    {
+      "source": "/book-session",
+      "destination": "/pages/booking",
+      "permanent": false
+    },
+    {
+      "source": "/studio",
+      "destination": "/pages/vision_studio",
+      "permanent": false
+    },
+    {
+      "source": "/taste",
+      "destination": "/pages/taste_world_hub",
+      "permanent": false
+    },
+    {
+      "source": "/taste-hub",
+      "destination": "/pages/taste_world_hub",
+      "permanent": false
+    },
+    {
+      "source": "/kitchen-ops",
+      "destination": "/pages/kitchen_command",
+      "permanent": false
+    },
+    {
+      "source": "/kitchen-command",
+      "destination": "/pages/kitchen_command",
+      "permanent": false
+    },
+    {
+      "source": "/kitchen-forge",
+      "destination": "/pages/kitchen_forge",
+      "permanent": false
+    },
+    {
+      "source": "/coop",
+      "destination": "/pages/coop",
+      "permanent": false
+    },
+    {
+      "source": "/login",
+      "destination": "/pages/login",
+      "permanent": false
+    },
+    {
+      "source": "/logout",
+      "destination": "/pages/logout",
+      "permanent": false
+    },
+    {
+      "source": "/join",
+      "destination": "/pages/lapa71_register",
+      "permanent": false
+    },
+    {
+      "source": "/admin/registrations",
+      "destination": "/pages/admin_registrations",
+      "permanent": false
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/api/admin-registrations",
+      "destination": "/api/register-event?op=admin"
+    },
+    {
+      "source": "/api/whatsapp-webhook",
+      "destination": "/api/whatsapp?op=webhook"
+    },
+    {
+      "source": "/api/support-checkout",
+      "destination": "/api/create-payment-intent?op=support-checkout"
+    }
   ]
 }
