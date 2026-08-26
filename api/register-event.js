@@ -6,20 +6,13 @@
  */
 const { createClient } = require('@supabase/supabase-js');
 const crypto = require('crypto');
+const {
+  getSupabaseUrl,
+  getServiceRoleKey,
+} = require('./_lib/supabase_env');
 
 const EVENT_ID = 'lapa71-tagus-drop-20260829';
 const DEFAULT_SOURCE = 'social_join';
-
-function requireEnv(name) {
-  const value = process.env[name];
-  if (!value) {
-    const err = new Error(`Missing required environment variable: ${name}`);
-    err.status = 503;
-    err.code = 'MISSING_ENV';
-    throw err;
-  }
-  return value;
-}
 
 function cors(res) {
   res.setHeader('Access-Control-Allow-Credentials', true);
@@ -196,8 +189,8 @@ async function handleRegister(req, res) {
   }
 
   try {
-    const supabaseUrl = requireEnv('SUPABASE_URL');
-    const supabaseServiceRole = requireEnv('SUPABASE_SERVICE_ROLE_KEY');
+    const supabaseUrl = getSupabaseUrl();
+    const supabaseServiceRole = getServiceRoleKey();
     const supabase = createClient(supabaseUrl, supabaseServiceRole, {
       auth: { autoRefreshToken: false, persistSession: false },
     });
@@ -449,11 +442,9 @@ async function handleAdmin(req, res) {
   try {
     assertAdmin(req);
 
-    const supabase = createClient(
-      requireEnv('SUPABASE_URL'),
-      requireEnv('SUPABASE_SERVICE_ROLE_KEY'),
-      { auth: { autoRefreshToken: false, persistSession: false } }
-    );
+    const supabase = createClient(getSupabaseUrl(), getServiceRoleKey(), {
+      auth: { autoRefreshToken: false, persistSession: false },
+    });
 
     if (req.method === 'GET') {
       const eventId = eventFilter(req.query?.eventId || req.query?.event_id);

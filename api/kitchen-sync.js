@@ -3,8 +3,12 @@
  * POST { action, slug, ops_code, payload }
  */
 const { createClient } = require('@supabase/supabase-js');
+const { normalizeSupabaseUrl } = require('./_lib/supabase_env');
 
-const SUPABASE_URL = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://agkmbaephgsnunlarntm.supabase.co';
+const SUPABASE_URL =
+  normalizeSupabaseUrl(
+    process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+  ) || 'https://agkmbaephgsnunlarntm.supabase.co';
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
 const OPS_CODE = process.env.KITCHEN_OPS_CODE || 'AKWABA-CREW';
 

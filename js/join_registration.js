@@ -165,13 +165,18 @@
 
   function friendlyApiError(data, status) {
     const raw = data?.error || data?.details || '';
+    const details = data?.details || '';
+    if (/Invalid path specified/i.test(raw + details) || data?.code === 'BAD_SUPABASE_URL') {
+      return 'Registration is paused — Supabase URL on the server looks wrong. It must be https://YOUR_PROJECT.supabase.co (without /rest/v1).';
+    }
     if (/Missing required environment variable/i.test(raw) || /SUPABASE_/i.test(raw)) {
       return 'Registration is paused — the server is missing connection keys. Tell the Circle D Flow crew to set Supabase env vars on Vercel.';
     }
     if (status === 405) return 'This registration path is not accepting that method right now.';
     if (status >= 500) {
+      const detail = details && details !== raw ? ` (${details})` : '';
       return raw
-        ? `Something went wrong on the server: ${raw}`
+        ? `Something went wrong on the server: ${raw}${detail}`
         : 'Something went wrong on the server. Please try again in a moment.';
     }
     return raw || 'Registration failed. Check the highlighted fields and try again.';
