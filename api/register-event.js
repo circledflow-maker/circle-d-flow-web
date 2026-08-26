@@ -12,7 +12,12 @@ const DEFAULT_SOURCE = 'social_join';
 
 function requireEnv(name) {
   const value = process.env[name];
-  if (!value) throw new Error(`Missing required environment variable: ${name}`);
+  if (!value) {
+    const err = new Error(`Missing required environment variable: ${name}`);
+    err.status = 503;
+    err.code = 'MISSING_ENV';
+    throw err;
+  }
   return value;
 }
 
@@ -212,9 +217,13 @@ async function handleRegister(req, res) {
     const jamPerformStyle = clean(body.jamPerformStyle || body.jam_perform_style);
     const jamInstruments = clean(body.jamInstruments || body.jam_instruments);
     const jamSongDetails = clean(body.jamSongDetails || body.jam_song_details);
+    const jamArtDescription = clean(
+      body.jamArtDescription || body.jam_art_description || body.artDescription
+    );
     const jamBackingTrack = asBool(body.jamBackingTrack ?? body.jam_backing_track);
     const source = clean(body.source) || DEFAULT_SOURCE;
     const eventId = clean(body.eventId || body.event_id) || EVENT_ID;
+    const allowedStyles = ['solo', 'jam_with_musicians', 'freestyle', 'art_showcase'];
 
     if (!fullName || !phone || !email) {
       return res.status(400).json({ error: 'Missing required fields: fullName, phone, email' });
@@ -232,7 +241,20 @@ async function handleRegister(req, res) {
       return res.status(400).json({ error: 'Please indicate jam interest' });
     }
     if (jamInterested && !jamPerformStyle) {
-      return res.status(400).json({ error: 'Jam section: how will you perform?' });
+      return res.status(400).json({ error: 'Jam section: how will you perform or showcase?' });
+    }
+    if (jamInterested && jamPerformStyle && !allowedStyles.includes(jamPerformStyle)) {
+      return res.status(400).json({ error: 'Invalid jam perform style' });
+    }
+    if (
+      jamInterested &&
+      (jamPerformStyle === 'art_showcase' ||
+        disciplines.some((d) => /visual|fashion|designer|other/i.test(String(d)))) &&
+      !jamArtDescription
+    ) {
+      return res.status(400).json({
+        error: 'Describe your art / performance so we know what you bring.',
+      });
     }
 
     // 1) Source of truth — always insert event_registrations
@@ -252,10 +274,12 @@ async function handleRegister(req, res) {
       jam_perform_style: jamInterested ? jamPerformStyle : null,
       jam_instruments: jamInterested ? jamInstruments : null,
       jam_song_details: jamInterested ? jamSongDetails : null,
+      jam_art_description: jamInterested ? jamArtDescription : null,
       jam_backing_track: jamInterested ? jamBackingTrack : null,
       metadata: {
         userAgent: req.headers['user-agent'] || null,
         submittedAt: new Date().toISOString(),
+        artDescription: jamInterested ? jamArtDescription : null,
       },
     };
 
@@ -350,26 +374,16 @@ async function handleRegister(req, res) {
     });
   } catch (e) {
     console.error('[register-event] API error:', e);
-    return res.status(500).json({ error: 'Internal Server Error', details: e.message });
+    const status = e.status || 500;
+    return res.status(status).json({
+      error: e.message || 'Internal Server Error',
+      details: e.message,
+      code: e.code || null,
+    });
   }
 }
 
 const ADMIN_DEFAULT_EVENT = 'lapa71-tagus-drop-20260829';
-function requireEnv(name) {
-  const value = process.env[name];
-  if (!value) throw new Error(`Missing required environment variable: ${name}`);
-  return value;
-}
-
-function cors(res) {
-  res.setHeader('Access-Control-Allow-Credentials', true);
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,POST,PUT');
-  res.setHeader(
-    'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, x-admin-key'
-  );
-}
 
 function getAdminKey(req) {
   return (
@@ -516,6 +530,9 @@ async function handleAdmin(req, res) {
       }
       if (body.jam_song_details != null || body.jamSongDetails != null) {
         patch.jam_song_details = body.jam_song_details ?? body.jamSongDetails;
+      }
+      if (body.jam_art_description != null || body.jamArtDescription != null) {
+        patch.jam_art_description = body.jam_art_description ?? body.jamArtDescription;
       }
       if (body.jam_backing_track != null || body.jamBackingTrack != null) {
         patch.jam_backing_track = Boolean(body.jam_backing_track ?? body.jamBackingTrack);
