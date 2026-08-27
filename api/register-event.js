@@ -284,10 +284,20 @@ async function handleRegister(req, res) {
 
     if (insertError) {
       console.error('[register-event] insert:', insertError.message);
+      let supabaseHost = null;
+      try {
+        supabaseHost = new URL(supabaseUrl).host;
+      } catch (_) {
+        supabaseHost = 'unparseable';
+      }
       return res.status(500).json({
         error: 'Database error',
         details: insertError.message,
-        hint: 'Apply sql/event_registrations_lapa71.sql if the table is missing.',
+        supabaseHost,
+        hint:
+          insertError.message && /Invalid path/i.test(insertError.message)
+            ? 'Set Vercel SUPABASE_URL to https://YOUR_PROJECT.supabase.co (no /rest/v1).'
+            : 'Apply sql/event_registrations_lapa71.sql if the table is missing.',
       });
     }
 

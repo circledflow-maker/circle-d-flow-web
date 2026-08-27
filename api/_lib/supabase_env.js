@@ -15,10 +15,20 @@ function cleanEnv(value) {
 function normalizeSupabaseUrl(raw) {
   let url = cleanEnv(raw);
   if (!url) return '';
-  url = url.replace(/\/+$/, '');
-  url = url.replace(/\/rest\/v1$/i, '');
-  url = url.replace(/\/auth\/v1$/i, '');
-  return url.replace(/\/+$/, '');
+  if (!/^https?:\/\//i.test(url)) url = `https://${url}`;
+  try {
+    const u = new URL(url);
+    // Always collapse to project origin — drop /rest/v1, /auth/v1, etc.
+    if (/\.supabase\.co$/i.test(u.hostname)) {
+      return `https://${u.hostname}`;
+    }
+    return `${u.protocol}//${u.host}`.replace(/\/+$/, '');
+  } catch (_) {
+    url = url.replace(/\/+$/, '');
+    url = url.replace(/\/rest\/v1(?:\/.*)?$/i, '');
+    url = url.replace(/\/auth\/v1(?:\/.*)?$/i, '');
+    return url.replace(/\/+$/, '');
+  }
 }
 
 function requireEnv(name) {
