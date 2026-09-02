@@ -509,11 +509,14 @@ class FloweeAgent {
 
     highlight(selector) {
         const el = document.querySelector(selector);
-        if(el) {
-            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            el.classList.add('ring-4', 'ring-mystic-gold', 'animate-pulse');
-            setTimeout(() => el.classList.remove('ring-4', 'ring-mystic-gold', 'animate-pulse'), 3000);
+        if (!el) return;
+        if (document.body.classList.contains('kyh-body') && window.FloweeKyhGuide?.spotlight) {
+            window.FloweeKyhGuide.spotlight(selector);
+            return;
         }
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        el.classList.add('ring-4', 'ring-mystic-gold', 'animate-pulse');
+        setTimeout(() => el.classList.remove('ring-4', 'ring-mystic-gold', 'animate-pulse'), 3000);
     }
 
     checkProfileStatus() {

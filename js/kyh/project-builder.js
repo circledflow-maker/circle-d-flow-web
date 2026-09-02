@@ -154,6 +154,10 @@
         if (window.FloweeKyhGuide && stepIndex === 0) {
           FloweeKyhGuide.hint('FEEL');
         }
+        const stepIds = ['types', 'heart', 'have', 'need', 'where', 'when', 'maturity', 'success'];
+        if (window.FloweeKyhGuide && stepIds[stepIndex]) {
+          FloweeKyhGuide.onBuilderStep(stepIds[stepIndex]);
+        }
       }
 
       function finish() {

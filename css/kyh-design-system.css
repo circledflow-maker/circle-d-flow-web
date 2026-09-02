@@ -900,3 +900,204 @@ body.kyh-body .flowee-bubble {
 /* --- Section centered --- */
 .kyh-section--center { text-align: center; }
 .kyh-section--center .kyh-lead { margin-inline: auto; }
+
+/* --- Scene mode (no scroll, zoom transitions) --- */
+body.kyh-scenes-mode {
+  overflow: hidden;
+  height: 100vh;
+}
+
+body.kyh-scenes-mode .kyh-shell {
+  height: 100vh;
+  overflow: hidden;
+}
+
+body.kyh-scenes-mode main {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.kyh-scenes {
+  position: relative;
+  height: calc(100vh - var(--kyh-nav-height));
+  min-height: 28rem;
+  overflow: hidden;
+}
+
+.kyh-scene {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--kyh-space-lg) var(--kyh-space-md);
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.94);
+  transition:
+    opacity 0.55s var(--kyh-ease),
+    transform 0.55s var(--kyh-ease);
+  overflow-y: auto;
+}
+
+.kyh-scene.is-active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: scale(1);
+  z-index: 2;
+}
+
+.kyh-scene.is-exit-left,
+.kyh-scene.is-exit-right {
+  z-index: 1;
+}
+
+.kyh-scene.is-exit-left.is-exit-active {
+  opacity: 0;
+  transform: scale(0.88) translateX(-4%);
+}
+
+.kyh-scene.is-exit-right.is-exit-active {
+  opacity: 0;
+  transform: scale(0.88) translateX(4%);
+}
+
+.kyh-scene.is-entering {
+  z-index: 3;
+  opacity: 0;
+}
+
+.kyh-scene.is-from-right.is-enter-active {
+  opacity: 1;
+  transform: scale(1) translateX(0);
+}
+
+.kyh-scene.is-from-left.is-enter-active {
+  opacity: 1;
+  transform: scale(1) translateX(0);
+}
+
+.kyh-scene.is-from-right {
+  transform: scale(0.92) translateX(5%);
+}
+
+.kyh-scene.is-from-left {
+  transform: scale(0.92) translateX(-5%);
+}
+
+.kyh-scene__inner {
+  width: min(100%, var(--kyh-max-width));
+  margin-inline: auto;
+}
+
+.kyh-scene-nav {
+  position: absolute;
+  left: 50%;
+  bottom: var(--kyh-space-md);
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: var(--kyh-space-sm);
+  padding: 0.45rem 0.75rem;
+  border-radius: var(--kyh-radius-full);
+  border: 1px solid var(--kyh-line);
+  background: rgba(10, 9, 8, 0.88);
+  backdrop-filter: blur(12px);
+}
+
+.kyh-scene-nav__label {
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--kyh-muted);
+  min-width: 5rem;
+  text-align: center;
+}
+
+.kyh-scene-dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  border: 1px solid var(--kyh-line-strong);
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: all var(--kyh-duration) var(--kyh-ease);
+}
+
+.kyh-scene-dot.is-active {
+  background: var(--kyh-gold);
+  border-color: var(--kyh-gold);
+  box-shadow: 0 0 10px var(--kyh-gold-glow);
+  transform: scale(1.2);
+}
+
+.kyh-scene-arrow {
+  background: none;
+  border: 1px solid var(--kyh-line);
+  color: var(--kyh-gold);
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  transition: border-color var(--kyh-duration) var(--kyh-ease);
+}
+
+.kyh-scene-arrow:hover {
+  border-color: var(--kyh-gold);
+}
+
+/* --- Flowee spotlight + tour button --- */
+.kyh-spotlight {
+  position: relative;
+  z-index: 50;
+  box-shadow: 0 0 0 3px var(--kyh-gold), 0 0 28px var(--kyh-gold-glow);
+  border-radius: var(--kyh-radius-md);
+  animation: kyhSpotlightPulse 1.6s ease-in-out infinite;
+}
+
+@keyframes kyhSpotlightPulse {
+  0%, 100% { box-shadow: 0 0 0 3px var(--kyh-gold), 0 0 20px var(--kyh-gold-glow); }
+  50% { box-shadow: 0 0 0 5px var(--kyh-gold), 0 0 36px var(--kyh-gold-glow); }
+}
+
+.kyh-tour-next {
+  position: fixed;
+  right: 1rem;
+  bottom: 6.5rem;
+  z-index: 210;
+  padding: 0.65rem 1rem;
+  border-radius: var(--kyh-radius-full);
+  border: 1px solid var(--kyh-gold);
+  background: rgba(10, 9, 8, 0.92);
+  color: var(--kyh-gold);
+  font-family: var(--kyh-font-ui);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  transition: background var(--kyh-duration) var(--kyh-ease);
+}
+
+.kyh-tour-next:hover {
+  background: var(--kyh-gold-soft);
+}
+
+@media (max-width: 767px) {
+  .kyh-tour-next {
+    left: 1rem;
+    right: 1rem;
+    text-align: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kyh-scene { transition: opacity 0.2s ease; transform: none !important; }
+  .kyh-spotlight { animation: none; }
+}
