@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Start your creative project — Kiss Your Heart Project Builder">
+  <title>Project Builder | Kiss Your Heart</title>
+  <link rel="icon" href="/Assets/kyh/brand/kiss-your-heart-logo.png" type="image/png">
+  <link rel="stylesheet" href="/css/kyh-design-system.css">
+</head>
+<body class="kyh-body">
+  <a class="kyh-skip" href="#main">Skip to content</a>
+  <div class="kyh-shell">
+    <div id="kyh-nav-root"></div>
+    <main id="main" class="kyh-section">
+      <div class="kyh-container kyh-builder-wrap">
+        <div id="kyh-builder-rail" style="margin-bottom:1.5rem;"></div>
+        <div id="kyh-builder-root"></div>
+      </div>
+    </main>
+    <div id="kyh-footer-root"></div>
+  </div>
+
+  <script src="/js/kyh/kyh-config.js"></script>
+  <script src="/js/kyh/kyh-shell.js"></script>
+  <script src="/js/kyh/kyh-motion.js"></script>
+  <script src="/js/kyh/kyh-stages.js"></script>
+  <script src="/js/kyh/recommendations.js"></script>
+  <script src="/js/kyh/project-builder.js"></script>
+  <script src="/js/kyh/kyh-page.js"></script>
+  <script src="/js/agents/flowee.js" defer></script>
+  <script src="/js/agents/flowee_kyh_guide.js" defer></script>
+  <script>
+    KYHPage.boot({
+      activeSlug: 'create',
+      onReady: function () {
+        KYHStages.render(document.getElementById('kyh-builder-rail'), { activeStage: 'FEEL', doneThrough: -1 });
+        KYHProjectBuilder.init(document.getElementById('kyh-builder-root'));
+      }
+    });
+  </script>
+</body>
+</html>

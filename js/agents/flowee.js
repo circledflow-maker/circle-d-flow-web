@@ -102,6 +102,13 @@ class FloweeAgent {
             "academy.html": { mode: "guide", intro: "The Academy lists every participant.", action: "Tap a manga panel — edit your bio and media descriptions." },
             "hall_of_legends.html": { mode: "guide", intro: "The Brotherhood ranks Navigators by XP.", action: "Rise in the Atlas, then return here to see your rank sync." },
             "artist_sanctuary.html": { mode: "guide", intro: "Welcome to the Artist Sanctuary — Akwaba zone, Stage, and Archive await.", action: "I can route you to the Lisbon Atlas or your nearest quest." },
+            "lapa71_register.html": { mode: "guide", intro: "Welcome to the family — Lapa 71 x Tagus Drop Rhythm registration.", action: "I will coach each section. Start with your name, then disciplines, Aug 29, and jam details if you flow." },
+            "join.html": { mode: "guide", intro: "Welcome to the family — Lapa 71 x Tagus Drop Rhythm registration.", action: "I will coach each section. Start with your name, then disciplines, Aug 29, and jam details if you flow." },
+            "kyh/index.html": { mode: "guide", intro: "Welcome to Kiss Your Heart — Creative Project Management.", action: "Start Your Project when you are ready. I will guide you through Feel → Share." },
+            "kyh/journey.html": { mode: "guide", intro: "The six-stage journey — from first feeling to shared echo.", action: "Every real cultural project walks this path." },
+            "kyh/create/project-builder.html": { mode: "guide", intro: "No bureaucracy — one meaningful question at a time.", action: "Tell me what you are creating. We will shape it together." },
+            "kyh/create/project-map.html": { mode: "guide", intro: "Your Project Map — where you are and what comes next.", action: "Book the recommended session or explore the Full Journey." },
+            "kiss-your-heart.html": { mode: "guide", intro: "Kiss Your Heart — where creative projects become experiences.", action: "Explore the new studio at /pages/kyh or ask me about the journey." },
             "kitchen_workspace.html": {
                 mode: "guide",
                 intro: "Kitchen Command online. I guide you through KDS, menu, brand, QR and crew comms.",

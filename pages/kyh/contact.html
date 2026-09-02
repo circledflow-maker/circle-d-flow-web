@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact | Kiss Your Heart</title>
+  <link rel="icon" href="/Assets/kyh/brand/kiss-your-heart-logo.png" type="image/png">
+  <link rel="stylesheet" href="/css/kyh-design-system.css">
+</head>
+<body class="kyh-body">
+  <div class="kyh-shell">
+    <div id="kyh-nav-root"></div>
+    <main class="kyh-section">
+      <div class="kyh-container kyh-reveal" style="max-width:32rem;">
+        <p class="kyh-eyebrow">Connect</p>
+        <h1 class="kyh-display kyh-display-md">Contact</h1>
+        <form id="kyh-contact-form" class="kyh-panel" style="margin-top:1.5rem;">
+          <div class="kyh-field">
+            <label class="kyh-label" for="name">Name</label>
+            <input class="kyh-input" id="name" name="name" required autocomplete="name">
+          </div>
+          <div class="kyh-field">
+            <label class="kyh-label" for="email">Email</label>
+            <input class="kyh-input" id="email" name="email" type="email" required autocomplete="email">
+          </div>
+          <div class="kyh-field">
+            <label class="kyh-label" for="category">I am interested in</label>
+            <select class="kyh-input" id="category" name="category">
+              <option value="PROJECT">Starting a project</option>
+              <option value="SPONSOR">Sponsoring</option>
+              <option value="VENUE">Offering a space</option>
+              <option value="ARTIST">As an artist</option>
+              <option value="PARTNER">Partnership</option>
+              <option value="GENERAL">General</option>
+            </select>
+          </div>
+          <div class="kyh-field">
+            <label class="kyh-label" for="message">Message</label>
+            <textarea class="kyh-textarea" id="message" name="message" rows="4" required placeholder="What's in your heart?"></textarea>
+          </div>
+          <p class="kyh-form-error" id="kyh-contact-error" hidden role="alert">We couldn't send this yet — please try again or email directly.</p>
+          <p class="kyh-muted" id="kyh-contact-success" hidden style="color:var(--kyh-success);">Thank you — we'll be in touch soon.</p>
+          <button type="submit" class="kyh-btn kyh-btn--primary" style="margin-top:1rem;">Send message</button>
+        </form>
+        <p class="kyh-muted" style="margin-top:1rem;font-size:0.85rem;">Or use the <a href="/pages/contact" style="color:var(--kyh-gold);">Circle D Flow contact page</a>.</p>
+      </div>
+    </main>
+    <div id="kyh-footer-root"></div>
+  </div>
+  <script src="/js/kyh/kyh-config.js"></script>
+  <script src="/js/kyh/kyh-shell.js"></script>
+  <script src="/js/kyh/kyh-motion.js"></script>
+  <script src="/js/kyh/kyh-page.js"></script>
+  <script src="/js/agents/flowee.js" defer></script>
+  <script src="/js/agents/flowee_kyh_guide.js" defer></script>
+  <script>
+    KYHPage.boot({
+      onReady: function () {
+        var params = new URLSearchParams(location.search);
+        var type = params.get('type');
+        if (type) {
+          var cat = document.getElementById('category');
+          var map = { sponsor: 'SPONSOR', venue: 'VENUE', project: 'PROJECT', artist: 'ARTIST', partner: 'PARTNER' };
+          if (map[type]) cat.value = map[type];
+        }
+        document.getElementById('kyh-contact-form').addEventListener('submit', function (e) {
+          e.preventDefault();
+          document.getElementById('kyh-contact-success').hidden = false;
+          e.target.querySelector('button').disabled = true;
+        });
+      }
+    });
+  </script>
+</body>
+</html>

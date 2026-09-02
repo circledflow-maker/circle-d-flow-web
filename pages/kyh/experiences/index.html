@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Kiss Your Heart experiences — creative projects as stories">
+  <title>Experiences | Kiss Your Heart</title>
+  <link rel="icon" href="/Assets/kyh/brand/kiss-your-heart-logo.png" type="image/png">
+  <link rel="stylesheet" href="/css/kyh-design-system.css">
+</head>
+<body class="kyh-body">
+  <div class="kyh-shell">
+    <div id="kyh-nav-root"></div>
+    <main class="kyh-section">
+      <div class="kyh-container">
+        <p class="kyh-eyebrow kyh-reveal">Projects as stories</p>
+        <h1 class="kyh-display kyh-display-lg kyh-reveal">Experiences</h1>
+        <p class="kyh-lead kyh-reveal">The Idea · The People · The Space · The Process · The Experience · The Echo</p>
+        <div id="kyh-exp-grid" class="kyh-exp-grid"></div>
+      </div>
+    </main>
+    <div id="kyh-footer-root"></div>
+  </div>
+  <script src="/js/kyh/kyh-config.js"></script>
+  <script src="/js/kyh/kyh-shell.js"></script>
+  <script src="/js/kyh/kyh-motion.js"></script>
+  <script src="/js/kyh/data/experiences.js"></script>
+  <script src="/js/kyh/kyh-page.js"></script>
+  <script src="/js/agents/flowee.js" defer></script>
+  <script src="/js/agents/flowee_kyh_guide.js" defer></script>
+  <script>
+    KYHPage.boot({
+      activeSlug: 'experiences',
+      onReady: function () {
+        var grid = document.getElementById('kyh-exp-grid');
+        grid.innerHTML = (window.KYHExperiences || []).map(function (e) {
+          return '<article class="kyh-exp-card kyh-reveal" style="cursor:default">' +
+            '<div class="kyh-exp-card__img"><img src="' + e.image + '" alt="" loading="lazy"></div>' +
+            '<div class="kyh-exp-card__body">' +
+            '<p class="kyh-exp-card__type">' + e.type + ' · ' + e.date + '</p>' +
+            '<h3>' + e.title + '</h3>' +
+            '<p>' + e.concept + '</p>' +
+            '<p class="kyh-muted" style="margin-top:0.5rem;font-size:0.8rem;">' + e.venue + '</p>' +
+            '</div></article>';
+        }).join('');
+      }
+    });
+  </script>
+</body>
+</html>

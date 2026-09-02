@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Your Kiss Your Heart project map — next steps and recommendations">
+  <title>Your Project Map | Kiss Your Heart</title>
+  <link rel="icon" href="/Assets/kyh/brand/kiss-your-heart-logo.png" type="image/png">
+  <link rel="stylesheet" href="/css/kyh-design-system.css">
+</head>
+<body class="kyh-body">
+  <a class="kyh-skip" href="#main">Skip to content</a>
+  <div class="kyh-shell">
+    <div id="kyh-nav-root"></div>
+    <main id="main" class="kyh-section">
+      <div class="kyh-container" style="max-width:52rem;">
+        <div id="kyh-map-root"></div>
+      </div>
+    </main>
+    <div id="kyh-footer-root"></div>
+  </div>
+
+  <script src="/js/kyh/kyh-config.js"></script>
+  <script src="/js/kyh/kyh-shell.js"></script>
+  <script src="/js/kyh/kyh-motion.js"></script>
+  <script src="/js/kyh/kyh-stages.js"></script>
+  <script src="/js/kyh/recommendations.js"></script>
+  <script src="/js/kyh/project-map.js"></script>
+  <script src="/js/kyh/kyh-page.js"></script>
+  <script src="/js/agents/flowee.js" defer></script>
+  <script src="/js/agents/flowee_kyh_guide.js" defer></script>
+  <script>
+    KYHPage.boot({
+      activeSlug: 'create',
+      onReady: function () {
+        KYHProjectMap.render(document.getElementById('kyh-map-root'));
+      }
+    });
+  </script>
+</body>
+</html>
