@@ -11,41 +11,32 @@
   <div class="kyh-shell">
     <div id="kyh-nav-root"></div>
     <main class="kyh-section">
-      <div class="kyh-container kyh-reveal" style="max-width:44rem;">
+      <div class="kyh-container kyh-reveal" style="max-width:52rem;">
         <p class="kyh-eyebrow">Sessions</p>
         <h1 class="kyh-display kyh-display-md">Book a Session</h1>
-        <div class="kyh-journey-grid" style="margin-top:1.5rem;">
-          <article class="kyh-panel kyh-panel--accent">
-            <h3 class="kyh-display" style="font-size:1.25rem;">Vision Session</h3>
-            <p class="kyh-muted">Clarify intention and impact.</p>
-            <a class="kyh-btn kyh-btn--ghost" href="/pages/booking?service=vision" style="margin-top:0.75rem;">Book</a>
-          </article>
-          <article class="kyh-panel kyh-panel--accent">
-            <h3 class="kyh-display" style="font-size:1.25rem;">Project Development</h3>
-            <p class="kyh-muted">Structure your idea into a project.</p>
-            <a class="kyh-btn kyh-btn--ghost" href="/pages/booking?service=development" style="margin-top:0.75rem;">Book</a>
-          </article>
-          <article class="kyh-panel kyh-panel--accent">
-            <h3 class="kyh-display" style="font-size:1.25rem;">The Full Journey</h3>
-            <p class="kyh-muted">Feel through Share — fully supported.</p>
-            <a class="kyh-btn kyh-btn--primary" href="/pages/booking?service=full-journey" style="margin-top:0.75rem;">Book Full Journey</a>
-          </article>
-          <article class="kyh-panel kyh-panel--accent">
-            <h3 class="kyh-display" style="font-size:1.25rem;">Experience Feedback</h3>
-            <p class="kyh-muted">After an event — send a link. Flowee guides the session.</p>
-            <a class="kyh-btn kyh-btn--ghost" href="/pages/kyh/feedback" style="margin-top:0.75rem;">Send feedback link</a>
-          </article>
-        </div>
+        <p class="kyh-lead" style="margin-top:0.75rem;">Choose the support that matches where you are — from first feeling to full journey.</p>
+        <div id="kyh-book-grid" class="kyh-journey-grid" style="margin-top:1.5rem;"></div>
+        <p class="kyh-muted" style="margin-top:1.5rem;text-align:center;">
+          Not sure yet? <a href="/pages/kyh/create/project-builder" style="color:var(--kyh-gold);">Start with the Project Builder</a>
+        </p>
       </div>
     </main>
     <div id="kyh-footer-root"></div>
   </div>
   <script src="/js/kyh/kyh-config.js"></script>
+  <script src="/js/kyh/data/services.js"></script>
+  <script src="/js/kyh/kyh-book.js"></script>
   <script src="/js/kyh/kyh-shell.js"></script>
   <script src="/js/kyh/kyh-motion.js"></script>
   <script src="/js/kyh/kyh-page.js"></script>
   <script src="/js/agents/flowee.js" defer></script>
   <script src="/js/agents/flowee_kyh_guide.js" defer></script>
-  <script>KYHPage.boot({});</script>
+  <script>
+    KYHPage.boot({
+      onReady: function () {
+        KYHBook.renderGrid(document.getElementById('kyh-book-grid'));
+      }
+    });
+  </script>
 </body>
 </html>

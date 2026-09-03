@@ -132,7 +132,7 @@
           <h2 class="kyh-display kyh-display-md">${esc(rec.title || 'Project Development')}</h2>
           <p class="kyh-muted">${esc(rec.description)}</p>
           <div style="display:flex;flex-wrap:wrap;gap:0.75rem;justify-content:center;margin-top:1.25rem;">
-            <a class="kyh-btn kyh-btn--primary" href="${u('book')}?service=${rec.id || 'PROJECT_DEVELOPMENT'}">${esc(rec.ctaLabel || 'Book a Session')}</a>
+            <a class="kyh-btn kyh-btn--primary" href="${esc(rec.bookHref || (window.KYHServices?.bookHref(rec.id || 'PROJECT_DEVELOPMENT')))}">${esc(rec.ctaLabel || 'Book a Session')}</a>
             <a class="kyh-btn kyh-btn--ghost" href="${u('feedback')}?project=${id}">Schedule feedback session</a>
           </div>
         </section>

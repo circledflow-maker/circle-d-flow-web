@@ -39,6 +39,7 @@
     { "source": "/experiences", "destination": "/pages/kyh/experiences", "permanent": false },
     { "source": "/support", "destination": "/pages/kyh/support", "permanent": false },
     { "source": "/spaces", "destination": "/pages/kyh/spaces", "permanent": false },
-    { "source": "/services", "destination": "/pages/kyh/services", "permanent": false }
+    { "source": "/services", "destination": "/pages/kyh/services", "permanent": false },
+    { "source": "/sessions", "destination": "/pages/kyh/book", "permanent": false }
   ]
 }
