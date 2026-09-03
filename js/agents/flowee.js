@@ -108,6 +108,7 @@ class FloweeAgent {
             "kyh/journey.html": { mode: "guide", intro: "The six-stage journey — from first feeling to shared echo.", action: "Every real cultural project walks this path." },
             "kyh/create/project-builder.html": { mode: "guide", intro: "No bureaucracy — one meaningful question at a time.", action: "Tell me what you are creating. We will shape it together." },
             "kyh/create/project-map.html": { mode: "guide", intro: "Your Project Map — where you are and what comes next.", action: "Book the recommended session or explore the Full Journey." },
+            "kyh/book.html": { mode: "guide", intro: "Sessions for every stage — Vision, Development, or the Full Journey.", action: "Pick the session that matches where you are today." },
             "kiss-your-heart.html": { mode: "guide", intro: "Kiss Your Heart — where creative projects become experiences.", action: "Explore the new studio at /pages/kyh or ask me about the journey." },
             "kitchen_workspace.html": {
                 mode: "guide",
