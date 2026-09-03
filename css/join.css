@@ -175,6 +175,13 @@ body::before {
 
 .field label .req { color: var(--gold); }
 
+.field-hint {
+  margin-top: 0.4rem;
+  font-size: 0.82rem;
+  color: var(--muted);
+  line-height: 1.35;
+}
+
 .field input,
 .field textarea,
 .field select {

@@ -201,10 +201,13 @@
         <option value="solo">solo</option>
         <option value="jam_with_musicians">jam_with_musicians</option>
         <option value="freestyle">freestyle</option>
+        <option value="art_showcase">art_showcase</option>
       </select>
-      <label for="edit-instruments">Instruments</label>
+      <label for="edit-art">Art / performance description</label>
+      <textarea id="edit-art" rows="3"></textarea>
+      <label for="edit-instruments">Instruments / tools / medium</label>
       <input id="edit-instruments" type="text">
-      <label for="edit-songs">Song details</label>
+      <label for="edit-songs">Music notes</label>
       <textarea id="edit-songs" rows="3"></textarea>
       <label for="edit-bt">Backing track</label>
       <select id="edit-bt">
@@ -315,6 +318,7 @@
       document.getElementById('edit-attend').value = String(!!r.attending_aug29);
       document.getElementById('edit-jam').value = String(!!r.jam_interested);
       document.getElementById('edit-style').value = r.jam_perform_style || '';
+      document.getElementById('edit-art').value = r.jam_art_description || (r.metadata && r.metadata.artDescription) || '';
       document.getElementById('edit-instruments').value = r.jam_instruments || '';
       document.getElementById('edit-songs').value = r.jam_song_details || '';
       document.getElementById('edit-bt').value = r.jam_backing_track == null ? '' : String(!!r.jam_backing_track);
@@ -356,6 +360,7 @@
         attending_aug29: document.getElementById('edit-attend').value === 'true',
         jam_interested: document.getElementById('edit-jam').value === 'true',
         jam_perform_style: document.getElementById('edit-style').value || null,
+        jam_art_description: document.getElementById('edit-art').value || null,
         jam_instruments: document.getElementById('edit-instruments').value || null,
         jam_song_details: document.getElementById('edit-songs').value || null,
         jam_backing_track: bt === '' ? null : bt === 'true',

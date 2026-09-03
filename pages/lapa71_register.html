@@ -90,8 +90,8 @@
         </div>
 
         <div class="field" id="discipline-other-wrap" hidden>
-          <label for="disciplineOther">Tell us more</label>
-          <input id="disciplineOther" name="disciplineOther" type="text">
+          <label for="disciplineOther">Describe your other discipline / art</label>
+          <input id="disciplineOther" name="disciplineOther" type="text" placeholder="e.g. photographer, dancer, poet, ceramicist…" data-flowee-hint="other">
         </div>
 
         <div class="actions">
@@ -161,15 +161,25 @@
             <strong>Freestyle</strong>
             <p>Open floor — spontaneous Tagus Drop rhythm.</p>
           </label>
+          <label class="choice-card">
+            <input type="radio" name="jamPerformStyle" value="art_showcase">
+            <strong>Art showcase</strong>
+            <p>Visual, fashion, design, photo, or other non-music art.</p>
+          </label>
         </div>
 
         <div class="field">
-          <label for="jamInstruments">Instruments</label>
-          <input id="jamInstruments" name="jamInstruments" type="text" placeholder="e.g. voice, guitar, djembe…" data-flowee-hint="instruments">
+          <label for="jamArtDescription">Describe your art / performance</label>
+          <textarea id="jamArtDescription" name="jamArtDescription" rows="3" placeholder="What will you show or share? Medium, theme, vibe, installation, lookbook, photo series…" data-flowee-hint="art"></textarea>
+          <p class="field-hint">For visual artists, fashion, designers, photographers, and other creators — tell us your piece.</p>
         </div>
         <div class="field">
-          <label for="jamSongDetails">Song titles / key / BPM / genre</label>
-          <textarea id="jamSongDetails" name="jamSongDetails" placeholder="List songs, keys, BPM, genre notes…" data-flowee-hint="songs"></textarea>
+          <label for="jamInstruments">Instruments / tools / medium</label>
+          <input id="jamInstruments" name="jamInstruments" type="text" placeholder="e.g. voice, guitar, camera, paints, sewing machine…" data-flowee-hint="instruments">
+        </div>
+        <div class="field" id="music-notes-wrap">
+          <label for="jamSongDetails">Music notes (songs / key / BPM / genre)</label>
+          <textarea id="jamSongDetails" name="jamSongDetails" placeholder="Optional for musicians — list songs, keys, BPM, genre…" data-flowee-hint="songs"></textarea>
         </div>
 
         <p class="section-kicker">Backing track?</p>
