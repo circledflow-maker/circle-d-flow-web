@@ -90,7 +90,6 @@ class GamificationEngine {
             isChampion: false, // Tournament Winner Flag
             championPath: null, // 'master' or 'architect'
             freePublicQuestSlots: 0, // Architect Perk
-            freePublicQuestSlots: 0, // Architect Perk
             badges: [], // Earned Badges
             karma: 0 // Trust Factor
         };

@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin · Event Registrations | Circle D Flow</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #050301;
+      --gold: #d4af37;
+      --cyan: #00ffcc;
+      --text: #f3e9d2;
+      --muted: #9a8f7a;
+      --line: rgba(212,175,55,0.25);
+      --panel: rgba(12,8,4,0.92);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: radial-gradient(ellipse at top, #1a1208, var(--bg));
+      color: var(--text);
+      min-height: 100vh;
+      padding: 1.25rem;
+    }
+    h1 {
+      font-family: 'Cinzel', serif;
+      color: var(--gold);
+      font-size: 1.4rem;
+      margin-bottom: 0.35rem;
+    }
+    .sub { color: var(--muted); font-size: 0.85rem; margin-bottom: 1.2rem; }
+    .gate, .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 1.1rem;
+      margin-bottom: 1rem;
+    }
+    label { display: block; font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.35rem; }
+    input, select, textarea {
+      width: 100%;
+      background: #000;
+      border: 1px solid var(--line);
+      color: var(--text);
+      border-radius: 8px;
+      padding: 0.65rem 0.75rem;
+      font: inherit;
+      margin-bottom: 0.75rem;
+    }
+    button, .btn {
+      font-family: 'Cinzel', serif;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border: none;
+      border-radius: 999px;
+      padding: 0.7rem 1.1rem;
+      cursor: pointer;
+      background: linear-gradient(145deg, #e0c15a, #a8841f);
+      color: #1a1205;
+    }
+    button.ghost {
+      background: transparent;
+      color: var(--cyan);
+      border: 1px solid rgba(0,255,204,0.35);
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0.7rem;
+      margin-bottom: 1rem;
+    }
+    .stat {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 0.9rem;
+    }
+    .stat b {
+      display: block;
+      font-family: 'Cinzel', serif;
+      font-size: 1.5rem;
+      color: var(--gold);
+    }
+    .stat span { color: var(--muted); font-size: 0.78rem; }
+    .toolbar { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: end; margin-bottom: 0.8rem; }
+    .toolbar > div { flex: 1; min-width: 180px; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    th, td { text-align: left; padding: 0.55rem 0.4rem; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    th { color: var(--cyan); font-weight: 500; font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; }
+    tr { cursor: pointer; }
+    tr:hover { background: rgba(212,175,55,0.06); }
+    .badge {
+      display: inline-block;
+      padding: 0.15rem 0.45rem;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      border: 1px solid var(--line);
+      color: var(--gold);
+    }
+    .modal-backdrop {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+      display: none; align-items: center; justify-content: center; padding: 1rem; z-index: 50;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal {
+      width: min(520px, 100%);
+      max-height: 90vh;
+      overflow: auto;
+      background: #0c0804;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 1.2rem;
+    }
+    .modal h2 { font-family: 'Cinzel', serif; color: var(--gold); margin-bottom: 0.8rem; font-size: 1.1rem; }
+    .err { color: #ffb4a8; font-size: 0.85rem; margin-bottom: 0.6rem; }
+    .disc-bar { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.5rem; }
+    .disc-bar span {
+      font-size: 0.72rem;
+      padding: 0.2rem 0.45rem;
+      border-radius: 6px;
+      background: rgba(0,255,204,0.08);
+      border: 1px solid rgba(0,255,204,0.25);
+      color: var(--cyan);
+    }
+    #app[hidden], #gate[hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+  <div id="gate" class="gate">
+    <h1>Registrations Admin</h1>
+    <p class="sub">Enter the admin key (stored in localStorage as <code>cdf_admin_key</code>).</p>
+    <div class="err" id="gate-err"></div>
+    <label for="admin-key">Admin API key</label>
+    <input id="admin-key" type="password" autocomplete="current-password" placeholder="ADMIN_API_KEY or ADMIN_OPS_CODE">
+    <button type="button" id="gate-btn">Unlock</button>
+  </div>
+
+  <div id="app" hidden>
+    <h1>Lapa 71 · Member &amp; Jam</h1>
+    <p class="sub">Event <code>lapa71-tagus-drop-20260829</code> · source <code>social_join</code></p>
+
+    <div class="stats" id="stats"></div>
+    <div class="disc-bar" id="disc-stats"></div>
+
+    <div class="toolbar panel">
+      <div>
+        <label for="search">Search</label>
+        <input id="search" type="search" placeholder="name, email, phone, discipline…">
+      </div>
+      <button type="button" id="refresh-btn">Refresh</button>
+      <button type="button" class="ghost" id="logout-btn">Clear key</button>
+    </div>
+
+    <div class="panel" style="overflow-x:auto">
+      <div class="err" id="list-err"></div>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Stage</th>
+            <th>Contact</th>
+            <th>Attend</th>
+            <th>Jam</th>
+            <th>Status</th>
+            <th>When</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="modal">
+    <div class="modal">
+      <h2 id="modal-title">Edit registration</h2>
+      <div class="err" id="modal-err"></div>
+      <input type="hidden" id="edit-id">
+      <label for="edit-status">Status</label>
+      <select id="edit-status">
+        <option value="pending">pending</option>
+        <option value="confirmed">confirmed</option>
+        <option value="waitlist">waitlist</option>
+        <option value="cancelled">cancelled</option>
+      </select>
+      <label for="edit-notes">Admin notes</label>
+      <textarea id="edit-notes" rows="3"></textarea>
+      <label for="edit-attend">Attending Aug 29</label>
+      <select id="edit-attend">
+        <option value="true">Yes</option>
+        <option value="false">No</option>
+      </select>
+      <label for="edit-jam">Jam interested</label>
+      <select id="edit-jam">
+        <option value="true">Yes</option>
+        <option value="false">No</option>
+      </select>
+      <label for="edit-style">Jam perform style</label>
+      <select id="edit-style">
+        <option value="">—</option>
+        <option value="solo">solo</option>
+        <option value="jam_with_musicians">jam_with_musicians</option>
+        <option value="freestyle">freestyle</option>
+      </select>
+      <label for="edit-instruments">Instruments</label>
+      <input id="edit-instruments" type="text">
+      <label for="edit-songs">Song details</label>
+      <textarea id="edit-songs" rows="3"></textarea>
+      <label for="edit-bt">Backing track</label>
+      <select id="edit-bt">
+        <option value="">—</option>
+        <option value="true">Yes</option>
+        <option value="false">No</option>
+      </select>
+      <div style="display:flex;gap:0.5rem;margin-top:0.4rem">
+        <button type="button" id="save-btn">Save</button>
+        <button type="button" class="ghost" id="close-btn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const EVENT_Q = 'lapa71-tagus-drop';
+    const KEY_LS = 'cdf_admin_key';
+    let rows = [];
+    let adminKey = localStorage.getItem(KEY_LS) || '';
+
+    const gate = document.getElementById('gate');
+    const app = document.getElementById('app');
+
+    function headers() {
+      return {
+        'Content-Type': 'application/json',
+        'x-admin-key': adminKey,
+      };
+    }
+
+    function unlockUI() {
+      gate.hidden = true;
+      app.hidden = false;
+      load();
+    }
+
+    async function load() {
+      const q = document.getElementById('search').value.trim();
+      const url = `/api/admin-registrations?eventId=${encodeURIComponent(EVENT_Q)}${q ? '&q=' + encodeURIComponent(q) : ''}`;
+      document.getElementById('list-err').textContent = '';
+      try {
+        const res = await fetch(url, { headers: headers() });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Failed to load');
+        rows = data.registrations || [];
+        renderStats(data.stats || {});
+        renderTable(rows);
+      } catch (e) {
+        document.getElementById('list-err').textContent = e.message;
+        if (String(e.message).includes('Unauthorized')) {
+          localStorage.removeItem(KEY_LS);
+          adminKey = '';
+          gate.hidden = false;
+          app.hidden = true;
+        }
+      }
+    }
+
+    function renderStats(stats) {
+      const el = document.getElementById('stats');
+      el.innerHTML = [
+        ['Members', stats.members || stats.total || 0],
+        ['Attending Yes', stats.attendingYes || 0],
+        ['Jam Yes', stats.jamYes || 0],
+        ['Pending', (stats.byStatus && stats.byStatus.pending) || 0],
+        ['Confirmed', (stats.byStatus && stats.byStatus.confirmed) || 0],
+      ].map(([label, n]) => `<div class="stat"><b>${n}</b><span>${label}</span></div>`).join('');
+
+      const disc = document.getElementById('disc-stats');
+      const by = stats.byDiscipline || {};
+      disc.innerHTML = Object.keys(by).sort().map((k) => `<span>${k}: ${by[k]}</span>`).join('') || '';
+    }
+
+    function renderTable(list) {
+      const tb = document.getElementById('tbody');
+      if (!list.length) {
+        tb.innerHTML = '<tr><td colspan="7">No registrations yet.</td></tr>';
+        return;
+      }
+      tb.innerHTML = list.map((r) => `
+        <tr data-id="${r.id}">
+          <td>${esc(r.full_name)}</td>
+          <td>${esc(r.stage_name || '—')}</td>
+          <td>${esc(r.email)}<br><span style="color:var(--muted)">${esc(r.phone || '')}</span></td>
+          <td>${r.attending_aug29 ? 'Yes' : 'No'}</td>
+          <td>${r.jam_interested ? 'Yes' : 'No'}</td>
+          <td><span class="badge">${esc(r.status)}</span></td>
+          <td>${r.created_at ? new Date(r.created_at).toLocaleString() : ''}</td>
+        </tr>
+      `).join('');
+    }
+
+    function esc(s) {
+      return String(s == null ? '' : s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function openEdit(id) {
+      const r = rows.find((x) => x.id === id);
+      if (!r) return;
+      document.getElementById('edit-id').value = r.id;
+      document.getElementById('modal-title').textContent = r.full_name + (r.stage_name ? ` (${r.stage_name})` : '');
+      document.getElementById('edit-status').value = r.status || 'pending';
+      document.getElementById('edit-notes').value = r.admin_notes || '';
+      document.getElementById('edit-attend').value = String(!!r.attending_aug29);
+      document.getElementById('edit-jam').value = String(!!r.jam_interested);
+      document.getElementById('edit-style').value = r.jam_perform_style || '';
+      document.getElementById('edit-instruments').value = r.jam_instruments || '';
+      document.getElementById('edit-songs').value = r.jam_song_details || '';
+      document.getElementById('edit-bt').value = r.jam_backing_track == null ? '' : String(!!r.jam_backing_track);
+      document.getElementById('modal-err').textContent = '';
+      document.getElementById('modal').classList.add('open');
+    }
+
+    document.getElementById('gate-btn').onclick = () => {
+      const key = document.getElementById('admin-key').value.trim();
+      if (!key) {
+        document.getElementById('gate-err').textContent = 'Enter a key.';
+        return;
+      }
+      adminKey = key;
+      localStorage.setItem(KEY_LS, key);
+      unlockUI();
+    };
+
+    document.getElementById('refresh-btn').onclick = load;
+    document.getElementById('search').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') load();
+    });
+    document.getElementById('logout-btn').onclick = () => {
+      localStorage.removeItem(KEY_LS);
+      location.reload();
+    };
+    document.getElementById('tbody').onclick = (e) => {
+      const tr = e.target.closest('tr[data-id]');
+      if (tr) openEdit(tr.dataset.id);
+    };
+    document.getElementById('close-btn').onclick = () => document.getElementById('modal').classList.remove('open');
+    document.getElementById('save-btn').onclick = async () => {
+      const id = document.getElementById('edit-id').value;
+      const bt = document.getElementById('edit-bt').value;
+      const body = {
+        id,
+        status: document.getElementById('edit-status').value,
+        admin_notes: document.getElementById('edit-notes').value,
+        attending_aug29: document.getElementById('edit-attend').value === 'true',
+        jam_interested: document.getElementById('edit-jam').value === 'true',
+        jam_perform_style: document.getElementById('edit-style').value || null,
+        jam_instruments: document.getElementById('edit-instruments').value || null,
+        jam_song_details: document.getElementById('edit-songs').value || null,
+        jam_backing_track: bt === '' ? null : bt === 'true',
+      };
+      try {
+        const res = await fetch('/api/admin-registrations', {
+          method: 'PATCH',
+          headers: headers(),
+          body: JSON.stringify(body),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Save failed');
+        document.getElementById('modal').classList.remove('open');
+        load();
+      } catch (e) {
+        document.getElementById('modal-err').textContent = e.message;
+      }
+    };
+
+    if (adminKey) unlockUI();
+  </script>
+</body>
+</html>

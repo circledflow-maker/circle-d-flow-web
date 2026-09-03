@@ -1,0 +1,86 @@
+---
+description: Content pipeline rules for Wakungo / Circle D Flow video & audio (Akademy, Stages, FlowTalk, Podcast)
+alwaysApply: true
+---
+
+# Wakungo Content Pipeline — Regelwerk
+
+Bei **jedem** Content-Befehl (Video/Audio/Fotos, SD-Karte, Drive, Meetup, Artists): zuerst dieses Regelwerk anwenden, dann ausführen. Fehlen Songtitel, Artist-Namen, Format oder Zielordner → kurz nachfragen.
+
+## Formate
+
+| Format | Fokus | Schnitt |
+|--------|--------|---------|
+| **Circle Akademy** | Klarheit, gesprochenes Wort | Silence/Füllwörter raus; Multicam bei Demo/Händen; Lower-Third-Platz frei |
+| **Circle D Stages** | Energie, Rhythmus | Keine Silence-Cuts; Fake-Multi-Cam / Beat-Schnitte; Totale↔Medium↔Close-ups |
+| **Flow Talk** | Story, Emotion | L-/J-Cuts; ruhiges Pacing; Stimme vorne, BG kaum hörbar |
+| **Podcast** | Dialog | Active Speaker ~80%; alle ~15s Reaktionsschuss |
+
+## Fake Multi-Cam (Stativ / eine Kamera)
+
+Nur wenn Quelle ≥1080p (ideal 4K). Für YouTube-Export meist **1080p**.
+
+1. **Totale** — Original-Frame (Intro, Outro, laute/volle Passagen)
+2. **Medium** — Crop ~70–75% Mitte (Musiker + Instrumente; Boden/Decke weg)
+3. **Close-ups** — links/rechts abwechselnd zur Musik/Lead-Stimme
+
+Wechsel rhythmisch (~6–12s) oder auf Audio-Peaks. Kein harter Zoom-Sprung ohne Cut.
+
+## Bild (alle Formate)
+
+- Schatten leicht anheben (Club/Rotlicht: Details in Gesichtern/Gitarren)
+- Kontrast leicht hoch; Sättigung Rotlicht ggf. leicht runter (natürliche Haut)
+- Sanftes Denoise (`hqdn3d` o.ä.), kein matschiges Over-smooth
+- Kein Qualitätsverlust „sichtbar“: H.264 CRF **18–21** @ 1080p, `+faststart`, AAC **160–192k** (Archive/Proxy); Master-Export CRF **17–19** / AAC **256–320k** nur wenn Platz egal
+
+## Ton
+
+- **Interview / FlowTalk / Akademie:** Stimme klar + warm; BG-Rauschen stark runter; kein „schaler“ Höhen-Boost
+- **Musik / Stages / Jam:** ausgewogen Stimme+Instrumente; voller Körper, nicht dünn
+- `afftdn` nf nur im gültigen Bereich (**≤ -20**)
+- Loudnorm: Interview ~**-16 LUFS**, Musik ~**-14 LUFS**
+
+## YouTube-Elemente (Stages / veröffentlichungsfertig)
+
+- Intro 5–10s: Artist + Songtitel (Lower Third)
+- Outro: Fade/Blur + Platz für Endcards
+- Thumbnail: Action-Frame, aufgehellt, Kontrast, lesbarer Titel
+
+## Ordnerstruktur (Ziel)
+
+```
+/Content_Pipeline/Artists/[Artist]/
+  01_Raw_Video | 02_Raw_Audio | 03_Proxies_Compressed
+  04_Sync_Sequences | 05_Format_Drafts/{Akademy,Stages,FlowTalk,Podcast}
+```
+
+Lokal oft: `D:\Wakungo_Content_Studio\...` — gleiche Logik (raw → compress → edit/master → drive/export).
+
+## Kamera-Tags
+
+- Nikon Z50II → oft Standard/B-Roll/Totale
+- Nikon D850 (+ Fisheye) → Cypher/Stage High-Energy
+- Externe WAV = Audio-Master; Kamera-Audio mute aber behalten
+
+## Agenten-Ablauf
+
+1. Quelle + Format identifizieren  
+2. Kompression (abspielbar, klein, Timecode/Name behalten)  
+3. Sync falls Multi-Audio  
+4. Format-Regeln (Schnitt/Grade/Ton)  
+5. Drive-/YouTube-Exports + Thumbnail  
+6. Kurz Status melden; bei Blockern nachfragen  
+
+## Performance / SD-Karte (immer beachten)
+
+- **Ideal:** Raw-Copy des Masters auf **NTFS**, dann lokal encoden.
+- **D: ist oft FAT32 (max 4 GB/Datei):** Kein voller 20GB+ Master-Cache auf D:. Stattdessen:
+  - Work-Temps + Bodies + Packages unter `D:\Wakungo_Content_Studio\...\00_work\` und `04_videos_compressed\`
+  - Encode **direkt von SD** → Output auf D: (H.264 Bodies bleiben typisch &lt; 4 GB)
+  - Kein `+faststart` auf FAT32-Workfiles (spart Rewrite/2× Platz)
+- C: nur nutzen wenn genug NTFS-Platz für Master-Cache; sonst D:-Work + SD-Source.
+- SD eingesteckt lassen bis Encode-Queue durch ist.
+
+## Hanna & Mr Isaac / Performance
+
+Default-Format: **Circle D Stages**. Artist-Label: „Hanna & Mr Isaac“, Venue oft Cultura Lounge / Greenstreet — Titel nachfragen wenn unbekannt.

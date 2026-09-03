@@ -51,6 +51,11 @@
       primary: { label: 'Start Your Project', href: url('create/project-builder') },
       secondary: { label: 'Book a Session', href: url('book') },
     },
+    routes: {
+      dashboard: url('dashboard'),
+      feedback: url('feedback'),
+      briefing: url('create/project-map'),
+    },
     stages: ['FEEL', 'SHAPE', 'CONNECT', 'BUILD', 'EXPERIENCE', 'SHARE'],
     stageQuestions: {
       FEEL: 'What is in your heart?',

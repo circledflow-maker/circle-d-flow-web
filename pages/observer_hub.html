@@ -267,11 +267,15 @@
         // We will assume window.supabase exists from the library include + client init.
         
         // RE-INIT for Guest Page specifically to ensure connectivity
-        // Fallback to these keys if window.supabaseClient isn't ready
-        const guestSupabase = window.supabaseClient || window.supabase.createClient(
-            'https://agkmbaephgsnunlarntm.supabase.co', 
-            'sb_publishable_VwT4qFpNCgNizSXMILBcKQ_aevHvWvM'
+        const runtimeCfg = window.__CDF_CONFIG__ || {};
+        const guestSupabase = window.supabaseClient || (
+            (window.supabase && runtimeCfg.supabaseUrl && runtimeCfg.supabaseKey)
+                ? window.supabase.createClient(runtimeCfg.supabaseUrl, runtimeCfg.supabaseKey)
+                : null
         );
+        if (!guestSupabase) {
+            console.error('Observer Hub: Supabase client unavailable. Provide window.__CDF_CONFIG__.');
+        }
 
         let guestMap;
         let currentLang = 'en';

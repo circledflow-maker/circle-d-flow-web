@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Dashboard | Kiss Your Heart</title>
+  <link rel="icon" href="/Assets/kyh/brand/kiss-your-heart-logo.png" type="image/png">
+  <link rel="stylesheet" href="/css/kyh-design-system.css">
+</head>
+<body class="kyh-body">
+  <div class="kyh-shell">
+    <div id="kyh-nav-root"></div>
+    <main class="kyh-section">
+      <div class="kyh-container kyh-briefing-wrap" id="kyh-dashboard-root"></div>
+    </main>
+    <div id="kyh-footer-root"></div>
+  </div>
+  <script src="/js/kyh/kyh-config.js"></script>
+  <script src="/js/kyh/kyh-shell.js"></script>
+  <script src="/js/kyh/kyh-motion.js"></script>
+  <script src="/js/kyh/kyh-dashboard.js"></script>
+  <script src="/js/kyh/kyh-page.js"></script>
+  <script src="/js/agents/flowee.js" defer></script>
+  <script src="/js/agents/flowee_kyh_guide.js" defer></script>
+  <script>
+    KYHPage.boot({
+      onReady: function () {
+        var id = new URLSearchParams(location.search).get('project');
+        KYHDashboard.render(document.getElementById('kyh-dashboard-root'), id);
+      }
+    });
+  </script>
+</body>
+</html>

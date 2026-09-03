@@ -82,7 +82,9 @@
   function detectContext() {
     const path = (location.pathname || '').toLowerCase();
     if (path.includes('project-builder')) return 'builder';
-    if (path.includes('project-map')) return 'map';
+        if (path.includes('project-map')) return 'map';
+        if (path.includes('dashboard')) return 'dashboard';
+        if (path.includes('feedback')) return 'feedback';
     if (path.includes('experiences')) return 'experiences';
     if (path.includes('journey')) return 'journey';
     if (path.includes('/kyh') || path.endsWith('kyh')) return 'home';
@@ -98,7 +100,11 @@
         } else if (ctx === 'builder') {
           speak('No bureaucracy — one meaningful question at a time. I will coach each step.', 'guide');
         } else if (ctx === 'map') {
-          speak('Your Project Map — where you are, what you have, and the recommended next step.', 'guide');
+          speak('Your full project briefing — places, artists, benefits, risks, pay model, and marketing flow. This comes after your complete workflow.', 'guide');
+        } else if (ctx === 'dashboard') {
+          speak('Your team dashboard — share this link and move the project from idea to experience together.', 'guide');
+        } else if (ctx === 'feedback') {
+          speak('Experience feedback — honest reflections help every next project grow.', 'guide');
         } else if (ctx === 'journey') {
           speak('Six stages from first feeling to shared echo. Every real project walks this path.', 'guide');
         } else {
@@ -158,6 +164,11 @@
 
     onCta(label) {
       speak(`Good choice — <strong>${label}</strong> is a clear next step.`, 'guide');
+    },
+
+    onBriefingReady(analysis) {
+      const v = (analysis?.venues || [])[0]?.name;
+      speak(`Your briefing is ready${v ? ` — <strong>${v}</strong> could be a strong fit` : ''}. Open the Team Dashboard to share with your crew.`, 'success');
     },
 
     spotlight,

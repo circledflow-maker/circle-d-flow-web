@@ -2,6 +2,16 @@
   "outputDirectory": ".",
   "cleanUrls": true,
   "trailingSlash": false,
+  "rewrites": [
+    { "source": "/api/register-event", "destination": "/api/registrations?route=event" },
+    { "source": "/api/register-guest", "destination": "/api/registrations?route=guest" },
+    { "source": "/api/admin-registrations", "destination": "/api/registrations?route=admin" },
+    { "source": "/api/kyh-feedback-invite", "destination": "/api/registrations?route=kyh-feedback" },
+    { "source": "/api/create-checkout", "destination": "/api/payments?route=checkout" },
+    { "source": "/api/create-payment-intent", "destination": "/api/payments?route=intent" },
+    { "source": "/api/support-checkout", "destination": "/api/payments?route=support" },
+    { "source": "/api/whatsapp-webhook", "destination": "/api/whatsapp?webhook=1" }
+  ],
   "redirects": [
     { "source": "/photographer", "destination": "/pages/photographer_hub", "permanent": false },
     { "source": "/vision", "destination": "/pages/vision_studio", "permanent": false },
@@ -23,6 +33,8 @@
     { "source": "/create", "destination": "/pages/kyh/create", "permanent": false },
     { "source": "/create/project-builder", "destination": "/pages/kyh/create/project-builder", "permanent": false },
     { "source": "/create/project-map", "destination": "/pages/kyh/create/project-map", "permanent": false },
+    { "source": "/dashboard", "destination": "/pages/kyh/dashboard", "permanent": false },
+    { "source": "/feedback", "destination": "/pages/kyh/feedback", "permanent": false },
     { "source": "/journey", "destination": "/pages/kyh/journey", "permanent": false },
     { "source": "/experiences", "destination": "/pages/kyh/experiences", "permanent": false },
     { "source": "/support", "destination": "/pages/kyh/support", "permanent": false },

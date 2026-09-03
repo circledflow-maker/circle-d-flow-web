@@ -3,36 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roll the Dice | Circle D Flow</title>
+    <title>The Calypso Protocol | Circle D Flow</title>
     <link rel="stylesheet" href="css/dice.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;500;800&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Navigation -->
     <div class="nav-overlay" style="position: fixed; top: 20px; left: 20px; z-index: 1000; display: flex; gap: 15px;">
-        <a href="index.html" class="nav-icon-btn" title="Home" style="color: #fff; text-decoration: none; font-family: 'Inter', sans-serif; font-size: 14px; opacity: 0.7; transition: opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'">Home</a>
-        <a href="/pages/dashboard.html" class="nav-icon-btn" title="Dashboard" style="color: #fff; text-decoration: none; font-family: 'Inter', sans-serif; font-size: 14px; opacity: 0.7; transition: opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'">Dashboard</a>
+        <a href="index.html" class="nav-icon-btn" title="Home" style="color: #fff; text-decoration: none; font-family: 'Inter', sans-serif; font-size: 14px; opacity: 0.7;">Home</a>
+        <a href="/pages/dashboard.html" class="nav-icon-btn" title="Dashboard" style="color: #fff; text-decoration: none; font-family: 'Inter', sans-serif; font-size: 14px; opacity: 0.7;">Captain's Quarters</a>
+        <a href="/pages/bantaba.html" class="nav-icon-btn" title="Bantaba" style="color: #fff; text-decoration: none; font-family: 'Inter', sans-serif; font-size: 14px; opacity: 0.7;">Bantaba</a>
     </div>
 
+    <div id="calypso-canvas" aria-hidden="true"></div>
+
     <div class="container">
-        <!-- Step 1: The Lock -->
         <div id="lock-screen" class="screen active">
             <div class="logo-area">
-                <h1>Circle D Flow</h1>
-                <p>Enter your email to unlock your ticket price.</p>
+                <p class="protocol-kicker">The Calypso Protocol</p>
+                <h1>Identify Yourself</h1>
+                <p>Enter your email to link this destiny roll to your session.</p>
+                <p id="protocol-event" class="protocol-event"></p>
             </div>
-            
+
             <form id="email-form">
-                <input type="email" id="email-input" placeholder="gast@email.com" required>
-                <button type="submit" class="glow-button">Unlock & Roll</button>
+                <input type="email" id="email-input" placeholder="captain@orbit.com" required>
+                <button type="submit" class="glow-button">Connect Session</button>
             </form>
             <div id="error-message" class="error-hidden"></div>
         </div>
 
-        <!-- Step 2: The Dice Roll -->
         <div id="dice-screen" class="screen">
-            <h2 class="roll-title">Rolling your destiny...</h2>
-            
+            <h2 class="roll-title">Cast the Dice</h2>
+
             <div class="scene">
                 <div class="cube" id="cube">
                     <div class="cube__face cube__face--front">1</div>
@@ -44,14 +46,18 @@
                 </div>
             </div>
 
+            <button type="button" id="cast-btn" class="glow-button cast-btn">Cast the Dice</button>
+
             <div id="result-popup" class="popup hidden">
                 <h2 id="result-text">It's a 4!</h2>
                 <p>Your contribution is <span id="result-amount">4</span>€.</p>
-                <a id="checkout-btn" href="#" class="glow-button checkout-btn">Proceed to Checkout</a>
+                <a id="checkout-btn" href="#" class="glow-button checkout-btn">Proceed to Payment</a>
             </div>
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="js/calypso_scene.js"></script>
     <script src="js/dice.js"></script>
 </body>
 </html>

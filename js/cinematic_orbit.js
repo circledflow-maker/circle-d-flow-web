@@ -533,7 +533,7 @@ class OrbitEngine {
             luvo: { luvo: true, msg: 'Entering Luvo Chamber…', color: '#d4af37' },
             bantaba: { url: 'pages/bantaba.html', msg: 'Entering Bantaba…', color: '#00ff88' },
             archive: { url: 'pages/archive.html', msg: 'Entering The Archive…', color: '#00f0ff' },
-            heart: { url: 'pages/heart.html', msg: 'Entering the Heart…', color: '#ff5522' },
+            heart: { url: 'pages/kyh', msg: 'Entering Kiss Your Heart…', color: '#ff5522' },
         };
     }
 

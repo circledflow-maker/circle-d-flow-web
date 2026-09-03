@@ -95,7 +95,7 @@
         <p class="kyh-form-error" id="kyh-step-error" hidden role="alert">Something is missing here. Take another look.</p>
         <div class="kyh-builder-actions">
           ${stepNum > 0 ? '<button type="button" class="kyh-btn kyh-btn--ghost" data-action="back">Back</button>' : '<span></span>'}
-          <button type="button" class="kyh-btn kyh-btn--primary" data-action="next">${stepNum === total - 1 ? 'See Your Project Map' : 'Continue'}</button>
+          <button type="button" class="kyh-btn kyh-btn--primary" data-action="next">${stepNum === total - 1 ? 'See Your Project Briefing' : 'Continue'}</button>
         </div>
       </div>`;
   }
@@ -165,6 +165,10 @@
         if (window.KYHRecommendations) {
           draft.stage = KYHRecommendations.computeStage(draft);
           draft.recommendation = KYHRecommendations.recommend(draft);
+        }
+        if (window.KYHIntelligence) {
+          draft.analysis = KYHIntelligence.analyse(draft);
+          draft.id = KYHIntelligence.saveProject(draft, draft.analysis);
         }
         saveDraft(draft);
         window.location.href = u('create/project-map');

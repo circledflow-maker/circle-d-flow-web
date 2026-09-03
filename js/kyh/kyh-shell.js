@@ -87,6 +87,15 @@
               <li><a href="${u('journey')}">The Journey</a></li>
               <li><a href="${u('services')}">Services</a></li>
               <li><a href="${u('book')}">Book a Session</a></li>
+              <li><a href="${u('feedback')}">Experience Feedback</a></li>
+            </ul>
+          </div>
+          <div class="kyh-footer__col">
+            <h4>Team</h4>
+            <ul>
+              <li><a href="${u('dashboard')}">Project Dashboard</a></li>
+              <li><a href="${u('feedback')}">Feedback Sessions</a></li>
+              <li><a href="/" style="color:var(--kyh-gold);">← Circle D Flow</a></li>
             </ul>
           </div>
           <div class="kyh-footer__col">

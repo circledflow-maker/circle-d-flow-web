@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Experience Feedback | Kiss Your Heart</title>
+  <link rel="icon" href="/Assets/kyh/brand/kiss-your-heart-logo.png" type="image/png">
+  <link rel="stylesheet" href="/css/kyh-design-system.css">
+</head>
+<body class="kyh-body">
+  <div class="kyh-shell">
+    <div id="kyh-nav-root"></div>
+    <main class="kyh-section">
+      <div class="kyh-container" style="max-width:28rem;">
+        <p class="kyh-eyebrow kyh-reveal">Experience · Feedback</p>
+        <h1 class="kyh-display kyh-display-md kyh-reveal">Send a feedback session link</h1>
+        <p class="kyh-muted kyh-reveal">Enter an email — we send a private link. Flowee guides the session interactively.</p>
+        <form id="kyh-fb-invite" class="kyh-panel kyh-reveal" style="margin-top:1.5rem;">
+          <div class="kyh-field">
+            <label class="kyh-label" for="fb-email">Email</label>
+            <input class="kyh-input" id="fb-email" type="email" required placeholder="guest@example.com">
+          </div>
+          <div class="kyh-field">
+            <label class="kyh-label" for="fb-project">Project (optional)</label>
+            <input class="kyh-input" id="fb-project" type="text" placeholder="Project name or ID">
+          </div>
+          <button type="submit" class="kyh-btn kyh-btn--primary" style="margin-top:0.5rem;">Send feedback link</button>
+          <p id="kyh-fb-result" class="kyh-muted" hidden style="margin-top:1rem;font-size:0.88rem;"></p>
+        </form>
+        <p style="margin-top:1.5rem;text-align:center;">
+          <a class="kyh-btn kyh-btn--ghost" href="/pages/kyh/feedback/session">I have a link — start session</a>
+        </p>
+      </div>
+    </main>
+    <div id="kyh-footer-root"></div>
+  </div>
+  <script src="/js/kyh/kyh-config.js"></script>
+  <script src="/js/kyh/kyh-shell.js"></script>
+  <script src="/js/kyh/kyh-motion.js"></script>
+  <script src="/js/kyh/kyh-page.js"></script>
+  <script src="/js/agents/flowee.js" defer></script>
+  <script src="/js/agents/flowee_kyh_guide.js" defer></script>
+  <script>
+    KYHPage.boot({
+      onReady: function () {
+        var p = new URLSearchParams(location.search).get('project');
+        if (p) document.getElementById('fb-project').value = p;
+        document.getElementById('kyh-fb-invite').addEventListener('submit', async function (e) {
+          e.preventDefault();
+          var email = document.getElementById('fb-email').value.trim();
+          var project = document.getElementById('fb-project').value.trim();
+          var res = document.getElementById('kyh-fb-result');
+          try {
+            var r = await fetch('/api/kyh-feedback-invite', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email, project })
+            });
+            var j = await r.json();
+            res.hidden = false;
+            if (j.link) {
+              res.innerHTML = 'Link ready: <a href="' + j.link + '" style="color:var(--kyh-gold)">' + j.link + '</a>' +
+                (j.emailed ? ' — sent to ' + email : ' — copy and share (email pending setup)');
+            } else res.textContent = j.error || 'Something went wrong. Try again.';
+          } catch (err) {
+            var token = 'fb-' + Date.now().toString(36);
+            var link = location.origin + '/pages/kyh/feedback/session?token=' + token;
+            localStorage.setItem('kyh_fb_' + token, JSON.stringify({ email, project, createdAt: Date.now() }));
+            res.hidden = false;
+            res.innerHTML = 'Link: <a href="' + link + '" style="color:var(--kyh-gold)">' + link + '</a>';
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>

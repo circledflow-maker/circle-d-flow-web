@@ -3,11 +3,19 @@
  * Connects to the Circle D Flow backend.
  */
 
-const SUPABASE_URL = 'https://agkmbaephgsnunlarntm.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_VwT4qFpNCgNizSXMILBcKQ_aevHvWvM'; // Key from config
+// Public anon bootstrap (RLS-protected). Prefer js/cdf_runtime_config.js loaded first.
+if (!window.__CDF_CONFIG__ || !window.__CDF_CONFIG__.supabaseKey) {
+    window.__CDF_CONFIG__ = Object.assign({}, window.__CDF_CONFIG__ || {}, {
+        supabaseUrl: 'https://agkmbaephgsnunlarntm.supabase.co',
+        supabaseKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFna21iYWVwaGdzbnVubGFybnRtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5MTAwNjEsImV4cCI6MjA4NjQ4NjA2MX0.XTuM8TTPWgbe65OzNnD8YQkfXY_nTAiYH_Cu-oiRM-k'
+    });
+}
+const runtimeCfg = window.__CDF_CONFIG__ || {};
+const SUPABASE_URL = runtimeCfg.supabaseUrl || window.CDF_SUPABASE_URL;
+const SUPABASE_KEY = runtimeCfg.supabaseKey || window.CDF_SUPABASE_KEY;
 
 // Auto-init if library present
-if(window.supabase) {
+if(window.supabase && SUPABASE_URL && SUPABASE_KEY) {
     try {
         window.supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
             auth: {
@@ -33,7 +41,7 @@ if(window.supabase) {
         console.error("[Supabase] Initialization Failed:", e);
     }
 } else {
-    console.error("[Supabase] Critical: Library not loaded.");
+    console.error("[Supabase] Critical: Library not loaded or runtime config missing.");
 }
 
 // --- OAUTH LOGIC (THE SYNAPSE GATE) ---

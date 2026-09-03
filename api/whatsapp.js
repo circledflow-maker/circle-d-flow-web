@@ -118,6 +118,12 @@ function simDeviceLabel() {
 }
 
 export default async function handler(req, res) {
+  if (req.query.webhook === '1' || req.query.webhook === 'true') {
+    const webhook = require('../lib/cdf-api/whatsapp-webhook');
+    const fn = webhook.default || webhook;
+    return fn(req, res);
+  }
+
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');

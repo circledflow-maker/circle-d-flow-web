@@ -4,10 +4,19 @@ import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 // You can set them in your Vercel Environment Variables:
 // VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY
 
-// Using hardcoded fallbacks or window.ENV if provided by a bundler
-// Replaced with a valid dummy URL so the app doesn't crash if ENV is missing
-const supabaseUrl = window.ENV?.SUPABASE_URL || 'https://agkmbaephgsnunlarntm.supabase.co';
-const supabaseAnonKey = window.ENV?.SUPABASE_ANON_KEY || 'sb_publishable_VwT4qFpNCgNizSXMILBcKQ_aevHvWvM';
+// Prefer env bridge / __CDF_CONFIG__; fall back to public anon (RLS-protected)
+if (!window.__CDF_CONFIG__ || !window.__CDF_CONFIG__.supabaseKey) {
+    window.__CDF_CONFIG__ = Object.assign({}, window.__CDF_CONFIG__ || {}, {
+        supabaseUrl: 'https://agkmbaephgsnunlarntm.supabase.co',
+        supabaseKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFna21iYWVwaGdzbnVubGFybnRtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5MTAwNjEsImV4cCI6MjA4NjQ4NjA2MX0.XTuM8TTPWgbe65OzNnD8YQkfXY_nTAiYH_Cu-oiRM-k'
+    });
+}
+const runtimeCfg = window.__CDF_CONFIG__ || {};
+const supabaseUrl = window.ENV?.SUPABASE_URL || runtimeCfg.supabaseUrl;
+const supabaseAnonKey = window.ENV?.SUPABASE_ANON_KEY || runtimeCfg.supabaseKey;
+if (!supabaseUrl || !supabaseAnonKey) {
+    throw new Error('Supabase runtime config missing for Heart client');
+}
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 

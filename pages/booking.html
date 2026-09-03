@@ -613,10 +613,15 @@
             // Initialize Supabase safely
             let supabase = null;
             try {
-                const supabaseUrl = 'https://ylxghoyjmwkrulijkocy.supabase.co';
-                const supabaseKey = 'sb_publishable_Mr5qm2GKIlU25Lw-0gtJlw_aBjbXju_';
+                const runtimeCfg = window.__CDF_CONFIG__ || {};
+                const supabaseUrl = runtimeCfg.supabaseUrl;
+                const supabaseKey = runtimeCfg.supabaseKey;
                 if (window.supabase) {
-                    supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+                    if (supabaseUrl && supabaseKey) {
+                        supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+                    } else {
+                        console.error('Booking: Missing Supabase runtime config (window.__CDF_CONFIG__).');
+                    }
                 } else {
                     console.error('Supabase library not loaded. Check your internet connection.');
                 }

@@ -990,7 +990,8 @@ class FloweeAgent {
 
         const path = window.location.pathname.toLowerCase();
         const isRoot = path.endsWith('index.html') || path.endsWith('/') || path.endsWith('beta-initiation.html');
-        const pathPrefix = isRoot ? 'Assets/images/' : '../Assets/images/';
+        const isKyh = path.includes('/pages/kyh') || document.body.classList.contains('kyh-body');
+        const pathPrefix = isKyh || path.startsWith('/pages/') ? '/Assets/images/' : (isRoot ? 'Assets/images/' : '../Assets/images/');
 
         let visual = document.getElementById('flowee-visual');
         if (!visual) {
@@ -1100,7 +1101,8 @@ class FloweeAgent {
 
         const path = window.location.pathname;
         const isRoot = path.endsWith('index.html') || path.endsWith('/') || path.endsWith('beta-initiation.html');
-        const pathPrefix = isRoot ? 'Assets/images/' : '../Assets/images/';
+        const isKyh = path.includes('/pages/kyh') || path.includes('/kyh');
+        const pathPrefix = isKyh || path.startsWith('/pages/') ? '/Assets/images/' : (isRoot ? 'Assets/images/' : '../Assets/images/');
 
         chatDiv.innerHTML = `
                 <!-- Header -->

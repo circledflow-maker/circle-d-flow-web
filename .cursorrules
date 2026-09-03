@@ -62,6 +62,7 @@ Bei Arbeit an einem Themenbereich zuerst den passenden Abschnitt prüfen. Keine 
 ### D. Nova Era Content-Pipeline (`scripts/v*_*.py`)
 * Rohdaten: `G:\My Drive\Nova Era\...`; Output: `D:\KYHeart_Social_Media\...`, `YouTube_Master_Renders`.
 * Agenten versioniert (`v21_`, `v22_`); Lightroom-Look und Mascot-Branding beibehalten.
+* **Encode-Speed:** Lange HEVC-Master nie direkt von SD encoden. Zuerst auf **NTFS** cachen (`%TEMP%\destiny_master_cache\`) oder Segment per `ffmpeg -c copy` → lokal encode. D: ist oft FAT32 (max 4 GB/Datei).
 
 ### E. SEO & Performance
 * Meta-Tags pro Seite; `cleanUrls` via Vercel.

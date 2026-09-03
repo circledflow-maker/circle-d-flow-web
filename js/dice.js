@@ -9,124 +9,139 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultText = document.getElementById('result-text');
     const resultAmount = document.getElementById('result-amount');
     const checkoutBtn = document.getElementById('checkout-btn');
+    const castBtn = document.getElementById('cast-btn');
+    const protocolTitle = document.getElementById('protocol-event');
 
-    emailForm.addEventListener('submit', async (e) => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const basePrice = parseInt(urlParams.get('basePrice'), 10) || 0;
+    const eventId = urlParams.get('eventId') || 'listening-party-june-2';
+    const formula = urlParams.get('formula') || (eventId === 'criz' ? 'calypso' : 'multiply');
+
+    if (protocolTitle) {
+        protocolTitle.textContent = eventId === 'criz'
+            ? 'Event: c-riz · Calypso entry 10€ + 5€ × the die'
+            : (eventId === 'circledflow'
+                ? 'Event: Circle D Flow Awakening'
+                : 'Roll to set your contribution');
+    }
+
+    const canvas = document.getElementById('calypso-canvas');
+    const has3d = window.CalypsoScene && canvas && window.CalypsoScene.mount(canvas);
+    if (has3d && cube) cube.parentElement.style.display = 'none';
+
+    let sessionEmail = '';
+
+    function showError(msg) {
+        errorMessage.innerText = msg;
+        errorMessage.className = 'error-visible';
+    }
+
+    function faceRotation(rolled) {
+        switch (rolled) {
+            case 1: return { x: 0, y: 0 };
+            case 2: return { x: -90, y: 0 };
+            case 3: return { x: 0, y: -90 };
+            case 4: return { x: 0, y: 90 };
+            case 5: return { x: 90, y: 0 };
+            case 6: return { x: 180, y: 0 };
+            default: return { x: 0, y: 0 };
+        }
+    }
+
+    emailForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const email = emailInput.value.trim();
         if (!email) return;
 
-        // Read URL params
-        const urlParams = new URLSearchParams(window.location.search);
-        const basePrice = parseInt(urlParams.get('basePrice')) || 1;
-        const eventId = urlParams.get('eventId') || 'listening-party-june-2';
-
         if (localStorage.getItem(`has_rolled_${eventId}_${email}`)) {
-            errorMessage.innerText = "You have already rolled the dice! Please check your previous checkout link or contact support.";
-            errorMessage.className = 'error-visible';
+            showError('You have already rolled the dice. Use your previous checkout link or contact support.');
             return;
         }
 
-        // Hide error
         errorMessage.className = 'error-hidden';
         errorMessage.innerText = '';
-
-        // Switch to dice screen
+        sessionEmail = email;
         lockScreen.classList.remove('active');
         diceScreen.classList.add('active');
+        if (castBtn) {
+            castBtn.disabled = false;
+            castBtn.classList.remove('hidden');
+        }
+        if (resultPopup) resultPopup.classList.add('hidden');
+        if (has3d) {
+            window.CalypsoScene.setResult(null);
+            window.CalypsoScene.setRolling(false);
+        }
+    });
 
-        // Start infinite spin
-        cube.classList.add('spinning');
+    async function castDice() {
+        if (!sessionEmail || (castBtn && castBtn.disabled)) return;
+        if (castBtn) {
+            castBtn.disabled = true;
+            castBtn.textContent = 'Casting…';
+        }
+        if (cube) cube.classList.add('spinning');
+        if (has3d) window.CalypsoScene.setRolling(true);
 
         try {
             const response = await fetch('/api/roll', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ email, basePrice, eventId })
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: sessionEmail,
+                    eventId,
+                    formula,
+                    basePrice: basePrice || undefined
+                })
             });
-
             const data = await response.json();
+            if (!response.ok) throw new Error(data.error || 'Something went wrong');
 
-            if (!response.ok) {
-                throw new Error(data.error || 'Something went wrong');
-            }
-
-            // Stop infinite spin, start targeted roll animation
-            cube.classList.remove('spinning');
-            
-            // Calculate rotation based on the rolled number
-            // Face 1: front (0, 0)
-            // Face 2: top (-90, 0)
-            // Face 3: right (0, -90)
-            // Face 4: left (0, 90)
-            // Face 5: bottom (90, 0)
-            // Face 6: back (180, 0)
-            
-            // We add extra spins (e.g. 1080deg = 3 full rotations) to make it look cool
-            const extraSpins = 1440; // 4 full spins
-            
-            let xRand = 0;
-            let yRand = 0;
-
-            switch(data.rolled) {
-                case 1: xRand = 0; yRand = 0; break;
-                case 2: xRand = -90; yRand = 0; break;
-                case 3: xRand = 0; yRand = -90; break;
-                case 4: xRand = 0; yRand = 90; break;
-                case 5: xRand = 90; yRand = 0; break;
-                case 6: xRand = 180; yRand = 0; break;
-            }
-
-            // If already rolled, no need to spin again
-            if(data.alreadyRolled) {
-                cube.style.transform = `translateZ(-50px) rotateX(${xRand}deg) rotateY(${yRand}deg)`;
-                resultText.innerText = `You already rolled a ${data.rolled}!`;
-                resultAmount.innerText = data.rolled * basePrice;
+            const applyResult = () => {
+                if (cube) {
+                    cube.classList.remove('spinning');
+                    const rot = faceRotation(data.rolled);
+                    cube.style.transform = `translateZ(-50px) rotateX(${rot.x}deg) rotateY(${rot.y}deg) scale(1.4)`;
+                }
+                if (has3d) window.CalypsoScene.setResult(data.rolled);
+                resultText.innerText = data.alreadyRolled
+                    ? `You already rolled a ${data.rolled}!`
+                    : `It's a ${data.rolled}!`;
+                resultAmount.innerText = data.amount_eur;
                 checkoutBtn.href = data.checkout_url;
-                cube.style.transform += ' scale(1.8)';
                 resultPopup.classList.remove('hidden');
+                if (castBtn) castBtn.classList.add('hidden');
+                if (!data.alreadyRolled && window.supabaseClient) {
+                    window.supabaseClient.from('dice_stats').insert([{
+                        email: sessionEmail,
+                        rolled_value: data.rolled,
+                        amount_paid_cents: data.amount_cents,
+                        event_id: eventId
+                    }]).then(() => {}, (e) => console.warn('Stats Sync Failed', e));
+                }
+                if (!data.alreadyRolled) {
+                    localStorage.setItem(`has_rolled_${eventId}_${sessionEmail}`, 'true');
+                }
+            };
+
+            if (data.alreadyRolled) {
+                applyResult();
             } else {
-                // Apply final rotation for new roll
-                cube.style.transform = `translateZ(-50px) rotateX(${xRand + extraSpins}deg) rotateY(${yRand + extraSpins}deg)`;
-
-                // Wait for animation to finish (3s defined in CSS)
-                setTimeout(async () => {
-                    resultText.innerText = `It's a ${data.rolled}!`;
-                    
-                    // SAVE TO SUPABASE STATS (Analytics)
-                    if(window.supabaseClient) {
-                        try {
-                            await window.supabaseClient.from('dice_stats').insert([{
-                                email: email,
-                                rolled_value: data.rolled,
-                                amount_paid_cents: data.rolled * basePrice * 100,
-                                event_id: eventId
-                            }]);
-                        } catch(e) { console.warn("Stats Sync Failed", e); }
-                    }
-                    
-                    // Save to local storage to prevent frontend re-rolling
-                    localStorage.setItem(`has_rolled_${eventId}_${email}`, 'true');
-                    
-                    resultAmount.innerText = data.rolled * basePrice;
-                    checkoutBtn.href = data.checkout_url;
-                    
-                    // Cinematic zoom in
-                    cube.style.transform += ' scale(1.8)';
-                    
-                    resultPopup.classList.remove('hidden');
-                }, 3000);
+                setTimeout(applyResult, 2500);
             }
-
         } catch (error) {
             console.error(error);
-            // Go back to lock screen and show error
-            cube.classList.remove('spinning');
+            if (cube) cube.classList.remove('spinning');
+            if (has3d) window.CalypsoScene.setRolling(false);
             diceScreen.classList.remove('active');
             lockScreen.classList.add('active');
-            errorMessage.innerText = error.message;
-            errorMessage.className = 'error-visible';
+            if (castBtn) {
+                castBtn.disabled = false;
+                castBtn.textContent = 'Cast the Dice';
+            }
+            showError(error.message);
         }
-    });
+    }
+
+    if (castBtn) castBtn.addEventListener('click', castDice);
 });
