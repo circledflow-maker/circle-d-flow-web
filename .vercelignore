@@ -1,0 +1,34 @@
+# Keep Vercel uploads small (Git history still heavy; CLI deploy uses this)
+00_INBOX_RAW_ENERGY/
+AfricanQueenKitchen/
+Assets/Portfolio/
+content creation/
+Resolve Project Backups/
+DCIM/
+Portfolio_Content/
+raw_uploads/
+scratch/
+scripts/wakungo_reel/
+scripts/lapa71_editorial/
+scripts/lapa71_youtube/
+_application_batgroup/
+_application_tourlane/
+*.NEF
+*.MOV
+*.mp4
+*.avi
+*.mkv
+*.webm
+*.zip
+*.tar
+*.gz
+*.dmg
+*.part
+rclone
+node_modules/
+.git/
+scripts/__pycache__/
+**/__pycache__/
+*.pyc
+.env
+.env.*
