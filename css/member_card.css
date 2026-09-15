@@ -124,54 +124,62 @@ body.wk-card-page {
 .wk-face--back {
   transform: rotateY(180deg);
   background-image: var(--wk-card-back);
-  display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
-  gap: 3%;
-  padding: 5% 4% 6%;
-  align-items: end;
+  /* overlays sit on printed name plate + QR frame */
 }
 
 .wk-name-slot {
-  grid-column: 1;
-  min-height: 22%;
+  position: absolute;
+  /* Align to cream name plate on wako_card_back.jpg */
+  left: 4.5%;
+  top: 46%;
+  width: 50%;
+  height: 28%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.15rem;
-  padding: 0.35rem 0.5rem;
-  border-radius: 6px;
-  background: rgba(244, 239, 230, 0.94);
-  border: 1px solid rgba(212, 175, 55, 0.55);
+  gap: 0.12rem;
+  padding: 0.2rem 0.55rem 0.35rem;
+  border-radius: 4px;
+  background: transparent;
+  border: none;
   color: var(--wk-ink);
   font-family: Cinzel, Georgia, serif;
-  font-size: clamp(0.75rem, 2.6vw, 1rem);
-  font-weight: 600;
+  font-size: clamp(0.85rem, 3.2vw, 1.15rem);
+  font-weight: 700;
+  letter-spacing: 0.04em;
   text-align: center;
   word-break: break-word;
+  line-height: 1.15;
+  pointer-events: none;
 }
 
 .wk-member-no {
   font-family: "Plus Jakarta Sans", sans-serif;
-  font-size: 0.62rem;
-  letter-spacing: 0.12em;
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(11, 15, 24, 0.55);
+  color: rgba(11, 15, 24, 0.5);
   font-weight: 600;
 }
 
-.wk-name-slot.is-empty { color: rgba(11, 15, 24, 0.35); font-weight: 500; }
+.wk-name-slot.is-empty {
+  color: rgba(11, 15, 24, 0.32);
+  font-weight: 500;
+  font-size: clamp(0.7rem, 2.4vw, 0.9rem);
+}
 
 .wk-qr-slot {
-  grid-column: 2;
-  width: 100%;
-  max-width: 110px;
+  position: absolute;
+  right: 4.2%;
+  top: 28%;
+  width: 30%;
   aspect-ratio: 1;
-  justify-self: end;
-  padding: 5px;
-  border-radius: 8px;
+  padding: 3.5%;
+  border-radius: 6px;
   background: #fff;
-  border: 2px solid var(--wk-gold);
+  border: none;
+  box-shadow: none;
   display: grid;
   place-items: center;
 }
@@ -225,7 +233,7 @@ body.wk-card-page {
   width: 100%;
   padding: 0.15rem 0.1rem 0.5rem;
   overflow-y: auto;
-  max-height: min(48vh, 360px);
+  max-height: min(56vh, 420px);
 }
 
 .wk-panel {
@@ -355,6 +363,41 @@ body.wk-card-page {
   text-transform: uppercase;
   color: rgba(244, 239, 230, 0.4);
   margin: 0.35rem 0 0;
+}
+
+.wk-partners {
+  display: grid;
+  gap: 0.45rem;
+  margin-top: 0.75rem;
+}
+
+.wk-partners > p {
+  margin: 0 0 0.15rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(244, 239, 230, 0.5);
+}
+
+.wk-partner-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.4rem;
+}
+
+@media (min-width: 380px) {
+  .wk-partner-row {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+.wk-btn--partner {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(61, 224, 255, 0.35);
+  color: #fff;
+  font-size: 0.72rem;
+  padding: 0.62rem 0.5rem;
 }
 
 #flowee-agent {
