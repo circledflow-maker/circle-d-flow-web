@@ -533,7 +533,7 @@ class OrbitEngine {
             luvo: { luvo: true, msg: 'Entering Luvo Chamber…', color: '#d4af37' },
             bantaba: { url: 'pages/bantaba.html', msg: 'Entering Bantaba…', color: '#00ff88' },
             archive: { url: 'pages/archive.html', msg: 'Entering The Archive…', color: '#00f0ff' },
-            heart: { url: 'pages/kyh', msg: 'Entering Kiss Your Heart…', color: '#ff5522' },
+            heart: { url: 'pages/kyh/', msg: 'Entering Kiss Your Heart…', subtitle: 'Creative Project Management Studio', color: '#ff5522' },
         };
     }
 
@@ -753,7 +753,10 @@ class OrbitEngine {
         }
 
         this.isTransitioning = true;
-        this.navigateToWorld(route.url, route.msg, route.color);
+        const line = route.subtitle
+            ? `${route.msg}<br><span style="font-size:0.85em;opacity:0.85;font-family:Inter,sans-serif">${route.subtitle}</span>`
+            : route.msg;
+        this.navigateToWorld(route.url, line, route.color);
     }
 
     highlightWorld(id) {

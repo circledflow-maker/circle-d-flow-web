@@ -38,7 +38,7 @@ Phase 0 is **not** new UI — it is audit, storage, env gates, and one reliable 
 ### In progress
 
 - [ ] Lapa71 video Part 3 — proxies **1507–1510** (encode running)
-- [ ] Vercel production deploy (git push + `vercel --prod` from your login)
+- [ ] Vercel production deploy — push `main`, confirm `/kyh` live
 
 ### Blocked — needs you
 
@@ -84,15 +84,15 @@ Never run two SD encodes + heavy 3D page build simultaneously.
 
 ## 5. Phase map after Phase 0
 
-| Phase | Circle D Flow web |
-|-------|-------------------|
-| **0** | This doc + gates + storage ← **here** |
-| **1** | Orbit → worlds stable, HEART → KYH gateway |
-| **2** | Quest triad polish (map, board, legends) |
-| **3** | Bazaar checkout + `Gamification.spendTokens` |
-| **4** | Join / membership unified (beyond Lapa71) |
-| **5** | Supabase projects + leads (shared with KYH Phase 8) |
-| **6** | Content embed (Stages cuts from D: → Experiences) |
+| Phase | Circle D Flow web | Status |
+|-------|-------------------|--------|
+| **0** | Gates + storage + deploy | ✅ Done |
+| **1** | Orbit → worlds stable, HEART → KYH gateway | ✅ Done |
+| **2** | Quest triad polish (map, board, legends) | Next |
+| **3** | Bazaar checkout + `Gamification.spendTokens` | Planned |
+| **4** | Join / membership unified (beyond Lapa71) | Planned |
+| **5** | Supabase projects + leads (shared with KYH Phase 8) | Planned |
+| **6** | Content embed (Stages cuts from D: → Experiences) | Planned |
 
 KYH has its own phase map in `KISS_YOUR_HEART_ARCHITECTURE.md`.
 

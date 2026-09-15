@@ -343,6 +343,10 @@ body.kyh-body::before {
   border-left: 3px solid var(--kyh-gold);
 }
 
+.kyh-panel--active {
+  box-shadow: 0 0 0 1px var(--kyh-gold-soft), 0 12px 40px rgba(0, 0, 0, 0.35);
+}
+
 /* --- Stage rail (journey visual language) --- */
 .kyh-stage-rail {
   display: flex;

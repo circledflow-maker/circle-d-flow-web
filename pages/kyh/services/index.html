@@ -14,25 +14,41 @@
       <div class="kyh-container kyh-reveal">
         <p class="kyh-eyebrow">Path B — I know what I need</p>
         <h1 class="kyh-display kyh-display-lg">Services</h1>
-        <p class="kyh-lead">Select a service — or start with the Project Builder if you're exploring.</p>
-        <div class="kyh-type-grid" style="margin-top:1.5rem;">
+        <p class="kyh-lead">Select a session — or start with the Project Builder if you're exploring.</p>
+
+        <h2 class="kyh-display" style="font-size:1.35rem;margin-top:2rem;">Studio Sessions</h2>
+        <div id="kyh-services-sessions" class="kyh-journey-grid" style="margin-top:1rem;"></div>
+
+        <h2 class="kyh-display" style="font-size:1.35rem;margin-top:2.5rem;">Photography &amp; legacy packages</h2>
+        <div class="kyh-type-grid" style="margin-top:1rem;">
           <a class="kyh-type-tile" href="/pages/services-artist">Artists</a>
           <a class="kyh-type-tile" href="/pages/services-brand">Brands</a>
           <a class="kyh-type-tile" href="/pages/services-community">Community</a>
           <a class="kyh-type-tile" href="/pages/services-wedding">Wedding</a>
-          <a class="kyh-type-tile" href="/pages/kyh/book">Sessions</a>
-          <a class="kyh-type-tile" href="/pages/kyh/create/project-builder">Project Builder</a>
+        </div>
+
+        <div style="margin-top:2rem;display:flex;flex-wrap:wrap;gap:0.75rem;">
+          <a class="kyh-btn kyh-btn--primary" href="/pages/kyh/create/project-builder">Start Your Project</a>
+          <a class="kyh-btn kyh-btn--ghost" href="/pages/kyh/book">All sessions</a>
         </div>
       </div>
     </main>
     <div id="kyh-footer-root"></div>
   </div>
   <script src="/js/kyh/kyh-config.js"></script>
+  <script src="/js/kyh/data/services.js"></script>
+  <script src="/js/kyh/kyh-services-page.js"></script>
   <script src="/js/kyh/kyh-shell.js"></script>
   <script src="/js/kyh/kyh-motion.js"></script>
   <script src="/js/kyh/kyh-page.js"></script>
   <script src="/js/agents/flowee.js" defer></script>
   <script src="/js/agents/flowee_kyh_guide.js" defer></script>
-  <script>KYHPage.boot({});</script>
+  <script>
+    KYHPage.boot({
+      onReady: function () {
+        KYHServicesPage.renderSessions(document.getElementById('kyh-services-sessions'));
+      }
+    });
+  </script>
 </body>
 </html>
