@@ -4,6 +4,7 @@
  * /api/register-guest      → ?route=guest
  * /api/admin-registrations → ?route=admin
  * /api/kyh-feedback-invite → ?route=kyh-feedback
+ * /api/claim-member-card   → ?route=claim-card
  */
 async function invoke(mod, req, res) {
   const fn = mod && (mod.default || mod);
@@ -24,6 +25,8 @@ module.exports = async function handler(req, res) {
       return invoke(require('../lib/cdf-api/admin-registrations'), req, res);
     case 'kyh-feedback':
       return invoke(require('../lib/cdf-api/kyh-feedback-invite'), req, res);
+    case 'claim-card':
+      return invoke(require('../lib/cdf-api/claim-member-card'), req, res);
     default:
       return res.status(404).json({ error: 'Unknown registrations route', route });
   }

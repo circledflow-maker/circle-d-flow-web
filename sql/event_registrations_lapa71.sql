@@ -26,9 +26,10 @@ create table if not exists public.event_registrations (
 
   -- Section 4 (conditional jam)
   jam_perform_style text
-    check (jam_perform_style is null or jam_perform_style in ('solo', 'jam_with_musicians', 'freestyle')),
+    check (jam_perform_style is null or jam_perform_style in ('solo', 'jam_with_musicians', 'freestyle', 'art_showcase')),
   jam_instruments text,
   jam_song_details text,
+  jam_art_description text,
   jam_backing_track boolean,
 
   admin_notes text,

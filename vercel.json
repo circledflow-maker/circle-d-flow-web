@@ -10,6 +10,9 @@
     { "source": "/api/create-checkout", "destination": "/api/payments?route=checkout" },
     { "source": "/api/create-payment-intent", "destination": "/api/payments?route=intent" },
     { "source": "/api/support-checkout", "destination": "/api/payments?route=support" },
+    { "source": "/api/create-membership-checkout", "destination": "/api/payments?route=membership" },
+    { "source": "/api/membership-activate", "destination": "/api/payments?route=membership-activate" },
+    { "source": "/api/claim-member-card", "destination": "/api/registrations?route=claim-card" },
     { "source": "/api/whatsapp-webhook", "destination": "/api/whatsapp?webhook=1" }
   ],
   "redirects": [
@@ -27,6 +30,9 @@
     { "source": "/login", "destination": "/pages/login", "permanent": false },
     { "source": "/logout", "destination": "/pages/logout", "permanent": false },
     { "source": "/join", "destination": "/pages/lapa71_register", "permanent": false },
+    { "source": "/membership", "destination": "/pages/membership", "permanent": false },
+    { "source": "/member-card", "destination": "/pages/member_card", "permanent": false },
+    { "source": "/flow-crew", "destination": "/pages/member_card", "permanent": false },
     { "source": "/admin/registrations", "destination": "/pages/admin_registrations", "permanent": false },
     { "source": "/kyh", "destination": "/pages/kyh", "permanent": false },
     { "source": "/kiss-your-heart", "destination": "/pages/kyh", "permanent": false },

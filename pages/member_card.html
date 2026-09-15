@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wako Kungo Membership Card | Circle D Flow</title>
+  <meta name="description" content="Claim your Wako Kungo digital membership card — linked to Circle D Flow EXP and community.">
+  <meta property="og:title" content="Wako Kungo Membership Card">
+  <meta property="og:description" content="Digital membership card for the Circle D Flow culture-tech ecosystem.">
+  <meta property="og:image" content="/assets/membership/wako_card_front.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/member_card.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/cdf_runtime_config.js" defer></script>
+  <script src="../js/agents/supabase_client.js" defer></script>
+</head>
+<body class="wk-card-page">
+  <main class="wk-shell">
+    <p class="wk-brand">Circle D Flow · Wako Kungo</p>
+    <h1 class="wk-title">Membership Card</h1>
+    <p class="wk-lede">
+      Your digital pass into the ecosystem. Claim your name, show the QR at events,
+      and grow EXP as you flow — registration first, membership as invitation.
+    </p>
+
+    <div class="wk-meta" aria-live="polite">
+      <span class="wk-chip" id="chip-status">Card <strong>Draft</strong></span>
+      <span class="wk-chip" id="chip-tier">Tier <strong>Registered</strong></span>
+      <span class="wk-chip" id="chip-exp">EXP <strong>—</strong></span>
+    </div>
+
+    <div class="wk-stage" aria-label="Membership card">
+      <div class="wk-card" id="wk-card" role="button" tabindex="0" aria-label="Flip membership card">
+        <div class="wk-face wk-face--front" title="Wako Kungo Membership Card"></div>
+        <div class="wk-face wk-face--back">
+          <div class="wk-name-slot is-empty" id="wk-member-name">Your name here</div>
+          <div class="wk-qr-slot" id="wk-qr" aria-label="Membership QR code"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wk-actions" style="margin-bottom:1rem">
+      <button type="button" class="wk-btn wk-btn--ghost" id="flip-card-btn">Flip card</button>
+      <button type="button" class="wk-btn wk-btn--cyan" id="share-card-btn">Share / Copy link</button>
+    </div>
+
+    <section class="wk-panel" id="claim-panel">
+      <h2>Claim your card</h2>
+      <div class="wk-field">
+        <label for="member-name-input">Member name</label>
+        <input id="member-name-input" name="memberName" type="text" autocomplete="nickname" maxlength="48" placeholder="How should the Circle call you?">
+      </div>
+      <div class="wk-field">
+        <label for="member-email-input">Email (for Stripe + profile bind)</label>
+        <input id="member-email-input" name="memberEmail" type="email" autocomplete="email" placeholder="you@email.com">
+      </div>
+      <div id="wk-status-msg" class="wk-hint" hidden style="border:1px solid rgba(61,224,255,0.35);padding:0.65rem 0.75rem;border-radius:10px;margin-bottom:0.75rem"></div>
+      <div class="wk-actions">
+        <button type="button" class="wk-btn wk-btn--gold" id="claim-card-btn">Claim card · +25 EXP</button>
+        <a class="wk-btn wk-btn--ghost" href="/login">Login to sync profile</a>
+        <a class="wk-btn wk-btn--ghost" href="/join">From Lapa71?</a>
+      </div>
+      <p class="wk-hint">Logged-in claim writes EXP to <code>profiles.exp</code>. Paid tiers open Stripe Checkout (€5 / €15 monthly).</p>
+    </section>
+
+    <section class="wk-panel" id="invite-panel" hidden>
+      <h2>Want to go one step further?</h2>
+      <p class="wk-hint" style="margin-top:0;margin-bottom:0.85rem">Join the Flow Crew. Support the ecosystem. Stay close to artists and events.</p>
+      <div class="wk-tiers">
+        <article class="wk-tier">
+          <h3>Registered · Free</h3>
+          <p class="price">€0</p>
+          <p>Account, events, basic Orbit, public discovery.</p>
+          <div class="wk-actions" style="margin-top:0.65rem">
+            <button type="button" class="wk-btn wk-btn--ghost" data-tier-select="registered">Stay Registered</button>
+          </div>
+        </article>
+        <article class="wk-tier">
+          <h3>Flow Supporter</h3>
+          <p class="price">€5 / month · Stripe</p>
+          <p>Early access, optional Supporters wall, playlists, member area.</p>
+          <div class="wk-actions" style="margin-top:0.65rem">
+            <button type="button" class="wk-btn wk-btn--cyan" data-tier-select="flow_supporter">Pay with Stripe</button>
+          </div>
+        </article>
+        <article class="wk-tier">
+          <h3>Flow Crew</h3>
+          <p class="price">€15 / month · Stripe</p>
+          <p>All Supporter perks + partner discounts &amp; exclusive content — event benefits stay per-event.</p>
+          <div class="wk-actions" style="margin-top:0.65rem">
+            <button type="button" class="wk-btn wk-btn--gold" data-tier-select="flow_crew">Pay with Stripe</button>
+          </div>
+        </article>
+      </div>
+      <div class="wk-actions" style="margin-top:1rem">
+        <a class="wk-btn wk-btn--ghost" href="/">Explore Circle D Flow</a>
+        <a class="wk-btn wk-btn--ghost" href="/pages/bantaba.html">Bantaba</a>
+        <button type="button" class="wk-btn wk-btn--ghost" id="copy-link-btn">Copy card link</button>
+      </div>
+    </section>
+
+    <section class="wk-panel" id="partners-panel">
+      <h2>Partners in the Circle</h2>
+      <p class="wk-hint" style="margin-top:0;margin-bottom:0.85rem">Official links from your membership card.</p>
+      <div class="wk-tiers">
+        <article class="wk-tier">
+          <h3>Wako Kungo</h3>
+          <p>Music, sessions, community hub.</p>
+          <div class="wk-actions" style="margin-top:0.65rem">
+            <a class="wk-btn wk-btn--cyan" data-partner="wako" href="https://linktr.ee/wako.kungo" target="_blank" rel="noopener noreferrer">Open Wako Linktree</a>
+          </div>
+        </article>
+        <article class="wk-tier">
+          <h3>Humble.project</h3>
+          <p>Shop &amp; creative goods — member discounts unlock with Flow Crew.</p>
+          <div class="wk-actions" style="margin-top:0.65rem">
+            <a class="wk-btn wk-btn--ghost" data-partner="humble" href="https://humble-project.com/" target="_blank" rel="noopener noreferrer">humble-project.com</a>
+          </div>
+        </article>
+        <article class="wk-tier">
+          <h3>Kreativlon.art</h3>
+          <p>Art &amp; shop — Flow Crew partner lane.</p>
+          <div class="wk-actions" style="margin-top:0.65rem">
+            <a class="wk-btn wk-btn--ghost" data-partner="kreativlon" href="https://www.kreativlon.shop" target="_blank" rel="noopener noreferrer">kreativlon.shop</a>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <div id="flowee-agent"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
+  <script src="../js/agents/flowee.js" defer></script>
+  <script src="../js/agents/flowee_member_card_guide.js" defer></script>
+  <script src="../js/member_card.js" defer></script>
+</body>
+</html>

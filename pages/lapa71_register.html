@@ -90,8 +90,8 @@
         </div>
 
         <div class="field" id="discipline-other-wrap" hidden>
-          <label for="disciplineOther">Tell us more</label>
-          <input id="disciplineOther" name="disciplineOther" type="text">
+          <label for="disciplineOther">Describe your other discipline / art</label>
+          <input id="disciplineOther" name="disciplineOther" type="text" placeholder="e.g. photographer, dancer, poet, ceramicist…" data-flowee-hint="other">
         </div>
 
         <div class="actions">
@@ -161,15 +161,25 @@
             <strong>Freestyle</strong>
             <p>Open floor — spontaneous Tagus Drop rhythm.</p>
           </label>
+          <label class="choice-card">
+            <input type="radio" name="jamPerformStyle" value="art_showcase">
+            <strong>Art showcase</strong>
+            <p>Visual, fashion, design, photo, or other non-music art.</p>
+          </label>
         </div>
 
         <div class="field">
-          <label for="jamInstruments">Instruments</label>
-          <input id="jamInstruments" name="jamInstruments" type="text" placeholder="e.g. voice, guitar, djembe…" data-flowee-hint="instruments">
+          <label for="jamArtDescription">Describe your art / performance</label>
+          <textarea id="jamArtDescription" name="jamArtDescription" rows="3" placeholder="What will you show or share? Medium, theme, vibe, installation, lookbook, photo series…" data-flowee-hint="art"></textarea>
+          <p class="field-hint">For visual artists, fashion, designers, photographers, and other creators — tell us your piece.</p>
         </div>
         <div class="field">
-          <label for="jamSongDetails">Song titles / key / BPM / genre</label>
-          <textarea id="jamSongDetails" name="jamSongDetails" placeholder="List songs, keys, BPM, genre notes…" data-flowee-hint="songs"></textarea>
+          <label for="jamInstruments">Instruments / tools / medium</label>
+          <input id="jamInstruments" name="jamInstruments" type="text" placeholder="e.g. voice, guitar, camera, paints, sewing machine…" data-flowee-hint="instruments">
+        </div>
+        <div class="field" id="music-notes-wrap">
+          <label for="jamSongDetails">Music notes (songs / key / BPM / genre)</label>
+          <textarea id="jamSongDetails" name="jamSongDetails" placeholder="Optional for musicians — list songs, keys, BPM, genre…" data-flowee-hint="songs"></textarea>
         </div>
 
         <p class="section-kicker">Backing track?</p>
@@ -194,10 +204,10 @@
     </form>
 
     <section class="panel success-panel" id="success-panel" hidden>
-      <h2>Thank you for registering!</h2>
+      <h2>You're in.</h2>
       <p>
-        You joined the Lapa 71 movement. Show this confirmation at the door. Tag us on Instagram so we
-        can share your posts — see you on stage!
+        Your place with Lapa 71 x Tagus Drop Rhythm is registered. Show this confirmation at the door.
+        Tag us so we can share your posts — see you on stage!
       </p>
       <div class="confirm-meta">
         <div><strong>Venue</strong> — Lapa 71 (@mude.cafeteria) · R. Garcia de Orta 71C, 1200-678 Lisboa</div>
@@ -206,8 +216,15 @@
         <div><strong>Jam Lead</strong> — Mr. Isaac</div>
         <div><strong>Powered by</strong> — Wako Kungo · Circle D Flow (C4C) · Humble. - Brave · @mude.cafeteria - Robinho</div>
       </div>
+      <h3 class="section-title" style="margin-top:1.5rem">Want to go one step further?</h3>
+      <p>
+        Claim your <strong>Wako Kungo Membership Card</strong>, link EXP, and join the Flow Crew when you are ready —
+        membership is an invitation, not a wall.
+      </p>
       <div class="cta-stack">
-        <a class="btn btn-primary" href="/pages/artist_sanctuary">Enter Artist Sanctuary</a>
+        <a class="btn btn-primary" href="/member-card?src=lapa71">Claim Membership Card</a>
+        <a class="btn btn-ghost" href="/membership">Explore Flow Crew</a>
+        <a class="btn btn-ghost" href="/pages/artist_sanctuary">Enter Artist Sanctuary</a>
         <a class="btn btn-ghost" href="/pages/bantaba.html">Visit Bantaba</a>
         <a class="btn btn-ghost" href="/login">Login / Claim Profile</a>
       </div>

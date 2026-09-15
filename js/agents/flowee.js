@@ -103,6 +103,7 @@ class FloweeAgent {
             "hall_of_legends.html": { mode: "guide", intro: "The Brotherhood ranks Navigators by XP.", action: "Rise in the Atlas, then return here to see your rank sync." },
             "artist_sanctuary.html": { mode: "guide", intro: "Welcome to the Artist Sanctuary — Akwaba zone, Stage, and Archive await.", action: "I can route you to the Lisbon Atlas or your nearest quest." },
             "lapa71_register.html": { mode: "guide", intro: "Welcome to the family — Lapa 71 x Tagus Drop Rhythm registration.", action: "I will coach each section. Start with your name, then disciplines, Aug 29, and jam details if you flow." },
+            "member_card.html": { mode: "guide", intro: "Your Wako Kungo membership card.", action: "Claim your name, flip for QR, grow EXP — then decide Free, Supporter, or Flow Crew." },
             "join.html": { mode: "guide", intro: "Welcome to the family — Lapa 71 x Tagus Drop Rhythm registration.", action: "I will coach each section. Start with your name, then disciplines, Aug 29, and jam details if you flow." },
             "kyh/index.html": { mode: "guide", intro: "Welcome to Kiss Your Heart — Creative Project Management.", action: "Start Your Project when you are ready. I will guide you through Feel → Share." },
             "kyh/journey.html": { mode: "guide", intro: "The six-stage journey — from first feeling to shared echo.", action: "Every real cultural project walks this path." },

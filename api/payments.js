@@ -3,6 +3,8 @@
  * /api/create-checkout       → ?route=checkout
  * /api/create-payment-intent → ?route=intent
  * /api/support-checkout      → ?route=support
+ * /api/create-membership-checkout → ?route=membership
+ * /api/membership-activate   → ?route=membership-activate
  */
 async function invoke(mod, req, res) {
   const fn = mod && (mod.default || mod);
@@ -21,6 +23,10 @@ module.exports = async function handler(req, res) {
       return invoke(require('../lib/cdf-api/create-payment-intent'), req, res);
     case 'support':
       return invoke(require('../lib/cdf-api/support-checkout'), req, res);
+    case 'membership':
+      return invoke(require('../lib/cdf-api/membership-checkout'), req, res);
+    case 'membership-activate':
+      return invoke(require('../lib/cdf-api/membership-activate'), req, res);
     default:
       return res.status(404).json({ error: 'Unknown payments route', route });
   }
