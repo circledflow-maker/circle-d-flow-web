@@ -1,5 +1,5 @@
 /**
- * Flowee guide for Wako Kungo member card
+ * Flowee guide for Wako Kungo member card (swipe onboarding)
  */
 (function () {
   function agent() {
@@ -9,7 +9,7 @@
   function say(text, type) {
     const a = agent();
     if (a && typeof a.talk === 'function') {
-      a.talk(true, text, type || 'guide');
+      a.talk(true, String(text).replace(/<[^>]+>/g, ''), type || 'guide');
       return;
     }
     const host = document.getElementById('flowee-agent');
@@ -30,7 +30,7 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
-      say('One card. Your name. Your QR. Your EXP in the Circle.', 'guide');
-    }, 600);
+      say('Swipe with me — name, contact, profile, then your Wako card into inventory.', 'guide');
+    }, 700);
   });
 })();

@@ -621,6 +621,42 @@
         let artistData = null;
         let deepFlowCompleted = true; // Assume true until checked
 
+        // Membership card welcome → inventory + Flowee
+        (function welcomeMemberCard() {
+            if (urlParams.get('welcome') !== 'card') return;
+            try {
+                const card = JSON.parse(localStorage.getItem('cdf_wako_member_card') || '{}');
+                const inv = JSON.parse(localStorage.getItem('cdf_inventory') || '[]');
+                const hasCard = Array.isArray(inv) && inv.some((i) => i && i.type === 'membership_card');
+                if (card && card.claimed && !hasCard) {
+                    const item = {
+                        id: 'wako_member_card_' + (card.publicId || 'local'),
+                        type: 'membership_card',
+                        name: 'Wako Kungo Membership Card',
+                        label: 'Wako Kungo · ' + (card.memberNumber || ''),
+                        memberNumber: card.memberNumber,
+                        displayName: card.displayName,
+                        publicId: card.publicId,
+                        qty: 1,
+                        acquiredAt: card.claimedAt || new Date().toISOString(),
+                    };
+                    inv.unshift(item);
+                    localStorage.setItem('cdf_inventory', JSON.stringify(inv));
+                }
+                const msg =
+                    'Welcome to the Sanctuary. Your Wako membership card' +
+                    (card.memberNumber ? ' (' + card.memberNumber + ')' : '') +
+                    ' is in inventory — open the pouch or say inventory to Flowee.';
+                setTimeout(() => {
+                    if (window.flowee && typeof window.flowee.talk === 'function') {
+                        window.flowee.talk(true, msg, 'guide');
+                    } else if (window.Flowee && typeof window.Flowee.talk === 'function') {
+                        window.Flowee.talk(true, msg, 'guide');
+                    }
+                }, 1200);
+            } catch (e) { /* ignore */ }
+        })();
+
         function toggleModal(id) {
             const el = document.getElementById(id);
             if(el.classList.contains('hidden')) el.classList.remove('hidden');

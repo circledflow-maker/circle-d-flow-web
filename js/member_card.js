@@ -1,32 +1,65 @@
 /**
- * Wako Kungo Member Card — claim → profiles.exp, Stripe tiers, partner links
+ * Wako Kungo Member Card — Flowee-guided swipe claim flow
+ * Steps: welcome → name → contact method → details → password/profile → claim → optional tier → sanctuary
  */
 (function () {
   const STORAGE_KEY = 'cdf_wako_member_card';
+  const INVENTORY_KEY = 'cdf_inventory';
   const XP_CLAIM = 25;
+  const SANCTUARY_URL = '/pages/artist_sanctuary.html?welcome=card';
+  const TOTAL_STEPS = 7;
 
-  const PARTNERS = {
-    wako: 'https://linktr.ee/wako.kungo',
-    humble: 'https://humble-project.com/',
-    kreativlon: 'https://www.kreativlon.shop',
+  const GUIDE = [
+    'Tap the card to see the Wako Kungo emblem. Then swipe — I guide every step.',
+    'What name goes on the gold plate? Type it, then Next.',
+    'How do you want to connect? Google, email, Instagram, or another contact — same spirit as Circle D Flow.',
+    'Almost there. Confirm how we reach you so the profile can bind.',
+    'No profile yet? Create a password. Already in the Circle? Sign in with the same credentials.',
+    'Claim locks your member number + QR into inventory, then we open the 3D Sanctuary.',
+    'Optional Stripe upgrade — or enter the Sanctuary with your free Registered card.',
+  ];
+
+  const state = {
+    step: 0,
+    contact: '',
+    swiping: false,
   };
 
   const els = {
+    track: document.getElementById('wk-track'),
+    deck: document.getElementById('wk-deck'),
+    dots: document.getElementById('wk-dots'),
+    guide: document.getElementById('wk-guide'),
     card: document.getElementById('wk-card'),
+    nameText: document.getElementById('wk-name-text'),
     nameSlot: document.getElementById('wk-member-name'),
+    memberNo: document.getElementById('wk-member-no'),
     qr: document.getElementById('wk-qr'),
     nameInput: document.getElementById('member-name-input'),
     emailInput: document.getElementById('member-email-input'),
+    igInput: document.getElementById('member-ig-input'),
+    otherInput: document.getElementById('member-other-input'),
+    passwordInput: document.getElementById('member-password-input'),
+    password2Input: document.getElementById('member-password2-input'),
+    fieldIg: document.getElementById('field-instagram'),
+    fieldOther: document.getElementById('field-other'),
+    fieldEmail: document.getElementById('field-email'),
+    fieldPassword: document.getElementById('field-password'),
+    fieldPassword2: document.getElementById('field-password2'),
+    contactTitle: document.getElementById('contact-detail-title'),
+    contactHint: document.getElementById('contact-detail-hint'),
+    authHint: document.getElementById('auth-hint'),
+    authBtn: document.getElementById('auth-submit-btn'),
+    skipAuthed: document.getElementById('skip-if-authed-btn'),
     claimBtn: document.getElementById('claim-card-btn'),
     flipBtn: document.getElementById('flip-card-btn'),
     shareBtn: document.getElementById('share-card-btn'),
-    copyBtn: document.getElementById('copy-link-btn'),
-    expChip: document.getElementById('chip-exp'),
-    tierChip: document.getElementById('chip-tier'),
-    statusChip: document.getElementById('chip-status'),
-    claimPanel: document.getElementById('claim-panel'),
-    invitePanel: document.getElementById('invite-panel'),
+    goSanctuary: document.getElementById('go-sanctuary-btn'),
     msg: document.getElementById('wk-status-msg'),
+    issueMsg: document.getElementById('wk-issue-msg'),
+    expChip: document.getElementById('chip-exp'),
+    memberChip: document.getElementById('chip-member'),
+    statusChip: document.getElementById('chip-status'),
   };
 
   function loadCard() {
@@ -49,22 +82,37 @@
     return id;
   }
 
+  /** Stable member number from publicId → WK-###### */
+  function memberNumber(card) {
+    if (card.memberNumber) return card.memberNumber;
+    const id = publicId(card);
+    let h = 0;
+    for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) >>> 0;
+    const num = String(100000 + (h % 900000));
+    card.memberNumber = 'WK-' + num;
+    saveCard(card);
+    return card.memberNumber;
+  }
+
   function cardUrl(card) {
     const id = publicId(card);
     const u = new URL(window.location.origin + '/member-card');
     u.searchParams.set('ref', id);
     if (card.displayName) u.searchParams.set('n', card.displayName);
+    if (card.memberNumber) u.searchParams.set('m', card.memberNumber);
     return u.toString();
   }
 
-  function setMsg(text, ok) {
-    if (!els.msg) return;
-    els.msg.hidden = !text;
-    els.msg.textContent = text || '';
-    els.msg.style.borderColor = ok === false ? 'rgba(231,76,60,0.5)' : 'rgba(61,224,255,0.35)';
+  function profileQrUrl(card, uid) {
+    const u = new URL(window.location.origin + '/pages/artist_sanctuary.html');
+    u.searchParams.set('member', memberNumber(card));
+    if (uid) u.searchParams.set('uid', uid);
+    u.searchParams.set('card', publicId(card));
+    return u.toString();
   }
 
   function speak(msg, type) {
+    if (els.guide) els.guide.textContent = String(msg || '');
     if (window.FloweeMemberCardGuide && typeof window.FloweeMemberCardGuide.say === 'function') {
       window.FloweeMemberCardGuide.say(msg, type);
       return;
@@ -73,10 +121,25 @@
     if (a && typeof a.talk === 'function') a.talk(true, msg, type || 'guide');
   }
 
-  function renderName(name) {
+  function setMsg(el, text, ok) {
+    if (!el) return;
+    el.hidden = !text;
+    el.textContent = text || '';
+    el.style.borderColor = ok === false ? 'rgba(231,76,60,0.5)' : 'rgba(61,224,255,0.35)';
+  }
+
+  function renderName(name, number) {
     const empty = !name;
-    els.nameSlot.textContent = empty ? 'Your name here' : name;
-    els.nameSlot.classList.toggle('is-empty', empty);
+    if (els.nameText) els.nameText.textContent = empty ? 'Your name here' : name;
+    els.nameSlot?.classList.toggle('is-empty', empty);
+    if (els.memberNo) {
+      if (number) {
+        els.memberNo.hidden = false;
+        els.memberNo.textContent = number;
+      } else {
+        els.memberNo.hidden = true;
+      }
+    }
   }
 
   function renderQr(url) {
@@ -87,7 +150,7 @@
       QRCode.toCanvas(
         canvas,
         url,
-        { width: 180, margin: 1, color: { dark: '#0b0f18', light: '#ffffff' } },
+        { width: 160, margin: 1, color: { dark: '#0b0f18', light: '#ffffff' } },
         (err) => {
           if (err) fallbackQr(url);
           else els.qr.appendChild(canvas);
@@ -102,22 +165,72 @@
     const img = document.createElement('img');
     img.alt = 'Membership QR';
     img.src =
-      'https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=' + encodeURIComponent(url);
+      'https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=' + encodeURIComponent(url);
     els.qr.appendChild(img);
   }
 
   function setChips(card, exp) {
-    els.expChip.innerHTML = 'EXP <strong>' + (exp != null ? exp : '—') + '</strong>';
-    const tier = card.tier || 'registered';
-    const labels = {
-      registered: 'Registered',
-      flow_supporter: 'Flow Supporter',
-      flow_crew: 'Flow Crew',
-    };
-    els.tierChip.innerHTML = 'Tier <strong>' + (labels[tier] || tier) + '</strong>';
-    els.statusChip.innerHTML = card.claimed
-      ? 'Card <strong>Active</strong>'
-      : 'Card <strong>Draft</strong>';
+    if (els.expChip) els.expChip.innerHTML = 'EXP <strong>' + (exp != null ? exp : '—') + '</strong>';
+    if (els.memberChip) {
+      els.memberChip.innerHTML =
+        'No. <strong>' + (card.memberNumber || '—') + '</strong>';
+    }
+    if (els.statusChip) {
+      els.statusChip.innerHTML = card.claimed
+        ? 'Card <strong>Active</strong>'
+        : 'Card <strong>Draft</strong>';
+    }
+  }
+
+  function goStep(n, opts) {
+    const max = TOTAL_STEPS - 1;
+    state.step = Math.max(0, Math.min(max, n));
+    if (els.track) {
+      els.track.style.transform = 'translateX(-' + state.step * 100 + '%)';
+    }
+    if (els.dots) {
+      const spans = els.dots.querySelectorAll('span');
+      // Map 7 flow steps onto 5 progress dots
+      const map = [0, 1, 2, 2, 3, 4, 4];
+      const active = map[state.step] ?? 0;
+      spans.forEach((s, i) => s.classList.toggle('on', i === active));
+    }
+    if (!opts || !opts.silent) {
+      speak(GUIDE[state.step] || '', 'guide');
+    }
+    if (state.step === 0) {
+      // Show emblem briefly then flip to name plate
+      els.card?.classList.remove('is-flipped');
+      setTimeout(() => els.card?.classList.add('is-flipped'), 900);
+    }
+    if (state.step === 4) refreshAuthUi();
+    if (state.step === 3) syncContactDetailUi();
+  }
+
+  function syncContactDetailUi() {
+    const c = state.contact || loadCard().contactMethod || 'email';
+    state.contact = c;
+    els.fieldIg && (els.fieldIg.hidden = c !== 'instagram');
+    els.fieldOther && (els.fieldOther.hidden = c !== 'other');
+    els.fieldEmail && (els.fieldEmail.hidden = c === 'google');
+    if (els.contactTitle) {
+      const titles = {
+        google: 'Google sign-in',
+        email: 'Your email',
+        instagram: 'Instagram + email',
+        other: 'Other contact + email',
+      };
+      els.contactTitle.textContent = titles[c] || 'Your contact';
+    }
+    if (els.contactHint) {
+      els.contactHint.textContent =
+        c === 'google'
+          ? 'Continue opens Google. We return here to issue your card.'
+          : 'Email binds Stripe and your Circle profile.';
+    }
+    document.querySelectorAll('[data-contact]').forEach((btn) => {
+      btn.classList.toggle('is-selected', btn.getAttribute('data-contact') === c);
+    });
   }
 
   async function sessionJwt() {
@@ -130,6 +243,22 @@
     };
   }
 
+  async function refreshAuthUi() {
+    const { user } = await sessionJwt();
+    const hasSession = Boolean(user);
+    if (els.fieldPassword) els.fieldPassword.hidden = hasSession;
+    if (els.fieldPassword2) els.fieldPassword2.hidden = hasSession;
+    if (els.skipAuthed) els.skipAuthed.hidden = !hasSession;
+    if (els.authBtn) {
+      els.authBtn.textContent = hasSession ? 'Continue · Issue card' : 'Create / sign in';
+    }
+    if (els.authHint) {
+      els.authHint.textContent = hasSession
+        ? 'You are already signed in as ' + (user.email || 'member') + '.'
+        : 'No profile yet? We create one. Existing account? Same email + password signs you in.';
+    }
+  }
+
   async function readExp() {
     try {
       const sc = window.supabaseClient;
@@ -139,7 +268,9 @@
         if (uid) {
           const { data } = await sc
             .from('profiles')
-            .select('exp, username, full_name, member_display_name, membership_tier, membership_status, member_card_public_id, email')
+            .select(
+              'exp, username, full_name, member_display_name, membership_tier, membership_status, member_card_public_id, email'
+            )
             .eq('id', uid)
             .maybeSingle();
           if (data) {
@@ -148,7 +279,6 @@
               name: data.member_display_name || data.full_name || data.username || '',
               email: data.email || sess.session.user.email || '',
               tier: data.membership_tier || 'registered',
-              membershipStatus: data.membership_status || 'none',
               publicId: data.member_card_public_id || '',
               authed: true,
               uid,
@@ -169,11 +299,224 @@
     return { exp: localXp, name: '', email: '', tier: 'registered', authed: false, uid: null };
   }
 
-  async function claim() {
+  function pushInventory(card, uid) {
+    let inv = [];
+    try {
+      inv = JSON.parse(localStorage.getItem(INVENTORY_KEY) || '[]');
+      if (!Array.isArray(inv)) inv = [];
+    } catch (_) {
+      inv = [];
+    }
+    const item = {
+      id: 'wako_member_card_' + publicId(card),
+      type: 'membership_card',
+      name: 'Wako Kungo Membership Card',
+      label: 'Wako Kungo · ' + (card.memberNumber || ''),
+      memberNumber: card.memberNumber,
+      displayName: card.displayName,
+      publicId: card.publicId,
+      qrUrl: profileQrUrl(card, uid),
+      cardUrl: cardUrl(card),
+      qty: 1,
+      acquiredAt: new Date().toISOString(),
+      icon: 'badge',
+    };
+    inv = inv.filter((x) => x.type !== 'membership_card' && x.id !== item.id);
+    inv.unshift(item);
+    localStorage.setItem(INVENTORY_KEY, JSON.stringify(inv));
+
+    // Sanctuary / soulprint habit
+    try {
+      const g = JSON.parse(localStorage.getItem('user_gamification_data') || '{}');
+      g.inventory = g.inventory || [];
+      g.inventory = g.inventory.filter((x) => x.type !== 'membership_card');
+      g.inventory.unshift(item);
+      localStorage.setItem('user_gamification_data', JSON.stringify(g));
+    } catch (_) {
+      /* ignore */
+    }
+    return item;
+  }
+
+  function validateName() {
     const name = (els.nameInput?.value || '').trim();
     if (name.length < 2) {
-      speak('I need a name for the gold plate — at least two letters.', 'error');
+      speak('I need at least two letters for the gold plate.', 'error');
       els.nameInput?.focus();
+      return null;
+    }
+    const card = loadCard();
+    card.displayName = name;
+    saveCard(card);
+    renderName(name, card.memberNumber);
+    return name;
+  }
+
+  function validateContactChoice() {
+    if (!state.contact) {
+      speak('Pick how you join — Google, email, Instagram, or other.', 'error');
+      return false;
+    }
+    const card = loadCard();
+    card.contactMethod = state.contact;
+    saveCard(card);
+    return true;
+  }
+
+  function validateContactDetails() {
+    const card = loadCard();
+    const c = state.contact || card.contactMethod || 'email';
+    if (c === 'google') return true;
+
+    if (c === 'instagram') {
+      let ig = (els.igInput?.value || '').trim();
+      if (!ig) {
+        speak('Drop your Instagram handle — with or without @.', 'error');
+        els.igInput?.focus();
+        return false;
+      }
+      if (!ig.startsWith('@')) ig = '@' + ig.replace(/^@+/, '');
+      card.instagram = ig;
+    }
+    if (c === 'other') {
+      const other = (els.otherInput?.value || '').trim();
+      if (other.length < 3) {
+        speak('Add a contact we can recognize — WhatsApp, Discord, or phone.', 'error');
+        els.otherInput?.focus();
+        return false;
+      }
+      card.otherContact = other;
+    }
+
+    const email = (els.emailInput?.value || '').trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      speak('A valid email binds your profile and Stripe.', 'error');
+      els.emailInput?.focus();
+      return false;
+    }
+    card.email = email;
+    saveCard(card);
+    return true;
+  }
+
+  async function startGoogleOAuth() {
+    const sc = window.supabaseClient;
+    if (!sc) {
+      speak('Auth is offline. Try email instead.', 'error');
+      return;
+    }
+    const redirectTo =
+      window.location.origin + '/member-card?step=issue&oauth=1';
+    speak('Opening Google… come back and we issue the card.', 'guide');
+    const { error } = await sc.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo },
+    });
+    if (error) {
+      setMsg(els.msg, error.message, false);
+      speak(error.message, 'error');
+    }
+  }
+
+  async function ensureProfile() {
+    const { user } = await sessionJwt();
+    if (user) {
+      goStep(5);
+      return true;
+    }
+
+    const card = loadCard();
+    if (card.contactMethod === 'google' || state.contact === 'google') {
+      await startGoogleOAuth();
+      return false;
+    }
+
+    const email = (els.emailInput?.value || card.email || '').trim();
+    const password = els.passwordInput?.value || '';
+    const password2 = els.password2Input?.value || '';
+
+    if (!email) {
+      speak('Email is missing — swipe back one step.', 'error');
+      goStep(3);
+      return false;
+    }
+    if (password.length < 6) {
+      speak('Password needs at least 6 characters.', 'error');
+      els.passwordInput?.focus();
+      return false;
+    }
+    if (password !== password2) {
+      speak('Passwords do not match.', 'error');
+      els.password2Input?.focus();
+      return false;
+    }
+
+    const sc = window.supabaseClient;
+    if (!sc) {
+      speak('Supabase client missing — refresh and try again.', 'error');
+      return false;
+    }
+
+    setMsg(els.msg, 'Creating your Circle profile…', true);
+    speak('Forging your profile in the Circle…', 'guide');
+
+    const meta = {
+      full_name: card.displayName || '',
+      member_display_name: card.displayName || '',
+      instagram: card.instagram || '',
+      other_contact: card.otherContact || '',
+      contact_method: card.contactMethod || state.contact || 'email',
+      source: 'member_card',
+    };
+
+    let { data, error } = await sc.auth.signUp({
+      email,
+      password,
+      options: { data: meta },
+    });
+
+    if (error) {
+      // Existing user → sign in
+      if (/already|registered|exists/i.test(error.message)) {
+        const signed = await sc.auth.signInWithPassword({ email, password });
+        if (signed.error) {
+          setMsg(els.msg, signed.error.message, false);
+          speak(signed.error.message, 'error');
+          return false;
+        }
+        data = signed.data;
+      } else {
+        setMsg(els.msg, error.message, false);
+        speak(error.message, 'error');
+        return false;
+      }
+    }
+
+    if (!data?.session && data?.user) {
+      // Email confirm may be required
+      const signed = await sc.auth.signInWithPassword({ email, password });
+      if (signed.error) {
+        setMsg(
+          els.msg,
+          'Account created. Confirm your email if required, then sign in.',
+          true
+        );
+        speak('Check your inbox if confirmation is on — then come back.', 'guide');
+        return false;
+      }
+    }
+
+    setMsg(els.msg, 'Profile ready.', true);
+    speak('Profile locked in. Now we stamp your membership card.', 'guide');
+    goStep(5);
+    return true;
+  }
+
+  async function claimAndEnter() {
+    const name = (els.nameInput?.value || loadCard().displayName || '').trim();
+    if (name.length < 2) {
+      speak('Name first — swipe back to the name step.', 'error');
+      goStep(1);
       return;
     }
 
@@ -184,10 +527,12 @@
     card.claimedAt = new Date().toISOString();
     card.source = new URLSearchParams(window.location.search).get('src') || 'direct';
     publicId(card);
+    memberNumber(card);
     saveCard(card);
 
     const { jwt, user } = await sessionJwt();
     let expShown = null;
+    let uid = user?.id || null;
 
     if (jwt) {
       try {
@@ -200,7 +545,10 @@
           body: JSON.stringify({
             displayName: name,
             publicId: card.publicId,
+            memberNumber: card.memberNumber,
             source: card.source,
+            instagram: card.instagram || '',
+            contactMethod: card.contactMethod || '',
           }),
         });
         const data = await res.json().catch(() => ({}));
@@ -209,24 +557,20 @@
           card.publicId = data.publicId || card.publicId;
           card.profileBound = true;
           saveCard(card);
-          setMsg('Card saved to your Circle profile · +' + (data.xpAwarded || 0) + ' EXP', true);
-          speak(
-            data.alreadyClaimed
-              ? 'Card already on your profile. EXP stays synced.'
-              : 'Beautiful. Card + EXP are on your profile now.',
-            'guide'
+          setMsg(
+            els.issueMsg,
+            'Card on profile · ' + card.memberNumber + ' · +' + (data.xpAwarded || 0) + ' EXP',
+            true
           );
         } else if (data.code === 'AUTH_REQUIRED') {
-          setMsg('Log in to lock EXP onto your profile. Card is ready locally.', false);
-          speak('Log in so I can write EXP into your profile. Card still works locally.', 'guide');
+          setMsg(els.issueMsg, 'Session expired — swipe back to sign in.', false);
         } else {
-          setMsg(data.error || 'Profile save failed — card kept locally.', false);
+          setMsg(els.issueMsg, data.error || 'Profile save failed — card kept locally.', false);
         }
-      } catch (e) {
-        setMsg('Network issue — card kept on this device.', false);
+      } catch (_) {
+        setMsg(els.issueMsg, 'Network issue — card kept on this device.', false);
       }
     } else {
-      // Soft local XP until login
       try {
         const g = JSON.parse(localStorage.getItem('user_gamification_data') || '{}');
         if (!card.xpAwarded) {
@@ -240,38 +584,39 @@
       } catch (_) {
         /* ignore */
       }
-      setMsg('Card claimed on device. Log in to sync EXP to your profile.', true);
-      speak(
-        'Card claimed. Log in (same email as events) so EXP lands on your profile.',
-        'guide'
-      );
-      if (user) {
-        /* noop */
-      }
+      setMsg(els.issueMsg, 'Card claimed on device. Sign in later to sync EXP.', true);
     }
 
+    pushInventory(card, uid);
+    renderName(name, card.memberNumber);
+    renderQr(profileQrUrl(card, uid));
     const profile = await readExp();
-    renderName(name);
-    renderQr(cardUrl(card));
-    setChips({ ...card, tier: profile.tier || card.tier }, expShown != null ? expShown : profile.exp);
+    setChips(card, expShown != null ? expShown : profile.exp);
     els.card?.classList.add('is-flipped');
-    els.invitePanel?.removeAttribute('hidden');
+
+    speak(
+      'Card ' +
+        card.memberNumber +
+        ' is in your inventory. Opening the 3D Sanctuary…',
+      'guide'
+    );
+
+    setTimeout(() => {
+      window.location.href = SANCTUARY_URL;
+    }, 1400);
   }
 
   async function startCheckout(tier) {
     const card = loadCard();
     const name = (els.nameInput?.value || card.displayName || '').trim();
-    const email = (els.emailInput?.value || '').trim();
+    const email = (els.emailInput?.value || card.email || '').trim();
     const { user } = await sessionJwt();
-
     if (!name) {
-      speak('Claim your name on the card first.', 'error');
+      speak('Claim your name first.', 'error');
+      goStep(1);
       return;
     }
-
-    setMsg('Opening Stripe Checkout…', true);
-    speak('Taking you to Stripe — secure monthly membership.', 'guide');
-
+    speak('Opening Stripe — secure monthly membership.', 'guide');
     try {
       const res = await fetch('/api/create-membership-checkout', {
         method: 'POST',
@@ -285,48 +630,10 @@
         }),
       });
       const data = await res.json().catch(() => ({}));
-      if (!res.ok || !data.url) {
-        throw new Error(data.error || 'Checkout unavailable');
-      }
+      if (!res.ok || !data.url) throw new Error(data.error || 'Checkout unavailable');
       window.location.href = data.url;
     } catch (e) {
-      setMsg(e.message || 'Stripe checkout failed', false);
-      speak(e.message || 'Stripe is not ready yet. Check STRIPE_SECRET_KEY on Vercel.', 'error');
-    }
-  }
-
-  async function activatePaidSession(sessionId) {
-    setMsg('Confirming membership with Stripe…', true);
-    try {
-      const res = await fetch('/api/membership-activate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sessionId }),
-      });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok || !data.success) {
-        throw new Error(data.error || 'Activation failed');
-      }
-      const card = loadCard();
-      card.tier = data.tier || card.tier;
-      card.claimed = true;
-      saveCard(card);
-      els.invitePanel?.removeAttribute('hidden');
-      if (data.pendingClaim) {
-        setMsg('Payment received. Log in with ' + (data.email || 'your email') + ' to bind the tier.', true);
-        speak('Payment clear. Log in with the same email to bind Flow Crew to your profile.', 'guide');
-      } else {
-        setMsg(
-          'Membership active · ' +
-            (data.tier || '') +
-            (data.xpAwarded ? ' · +' + data.xpAwarded + ' EXP' : ''),
-          true
-        );
-        speak('Welcome to the Crew. Your profile tier and EXP are updated.', 'guide');
-      }
-      await refresh();
-    } catch (e) {
-      setMsg(e.message || 'Could not activate membership', false);
+      speak(e.message || 'Stripe checkout failed', 'error');
     }
   }
 
@@ -341,7 +648,7 @@
       try {
         await navigator.share({
           title: 'Wako Kungo Membership Card',
-          text: (card.displayName || 'Flow member') + ' — Circle D Flow',
+          text: (card.displayName || 'Flow member') + ' · ' + (card.memberNumber || ''),
           url,
         });
         return;
@@ -357,21 +664,145 @@
     }
   }
 
-  async function refresh() {
-    const card = loadCard();
+  function tryAdvanceFrom(step) {
+    if (step === 1 && !validateName()) return false;
+    if (step === 2 && !validateContactChoice()) return false;
+    if (step === 3) {
+      if (!validateContactDetails()) return false;
+      if (state.contact === 'google') {
+        startGoogleOAuth();
+        return false;
+      }
+    }
+    return true;
+  }
+
+  // ——— Swipe ———
+  function bindSwipe() {
+    const deck = els.deck;
+    if (!deck) return;
+    let startX = 0;
+    let startY = 0;
+    let dx = 0;
+
+    deck.addEventListener(
+      'touchstart',
+      (e) => {
+        if (!e.touches[0]) return;
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+        dx = 0;
+        state.swiping = true;
+      },
+      { passive: true }
+    );
+
+    deck.addEventListener(
+      'touchmove',
+      (e) => {
+        if (!state.swiping || !e.touches[0]) return;
+        dx = e.touches[0].clientX - startX;
+        const dy = e.touches[0].clientY - startY;
+        if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 8) {
+          e.preventDefault();
+        }
+      },
+      { passive: false }
+    );
+
+    deck.addEventListener(
+      'touchend',
+      () => {
+        if (!state.swiping) return;
+        state.swiping = false;
+        if (dx < -56) {
+          if (tryAdvanceFrom(state.step)) goStep(state.step + 1);
+        } else if (dx > 56) {
+          goStep(state.step - 1);
+        }
+        dx = 0;
+      },
+      { passive: true }
+    );
+  }
+
+  // ——— Events ———
+  document.querySelectorAll('[data-next]').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      if (btn.id === 'contact-continue-btn' || btn.hasAttribute('data-next')) {
+        if (!tryAdvanceFrom(state.step)) return;
+        if (state.step === 3 && state.contact === 'google') return;
+        goStep(state.step + 1);
+      }
+    });
+  });
+
+  document.querySelectorAll('[data-prev]').forEach((btn) => {
+    btn.addEventListener('click', () => goStep(state.step - 1));
+  });
+
+  document.querySelectorAll('[data-contact]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      state.contact = btn.getAttribute('data-contact') || '';
+      document.querySelectorAll('[data-contact]').forEach((b) => {
+        b.classList.toggle('is-selected', b === btn);
+      });
+      const card = loadCard();
+      card.contactMethod = state.contact;
+      saveCard(card);
+      speak(
+        state.contact === 'google'
+          ? 'Google it is — fast gate into the Circle.'
+          : state.contact === 'instagram'
+            ? 'Instagram handle next — then email for the profile.'
+            : 'Good. Next we collect the details.',
+        'guide'
+      );
+    });
+  });
+
+  els.authBtn?.addEventListener('click', () => ensureProfile());
+  els.skipAuthed?.addEventListener('click', () => goStep(5));
+  els.claimBtn?.addEventListener('click', () => claimAndEnter());
+  els.flipBtn?.addEventListener('click', flip);
+  els.shareBtn?.addEventListener('click', share);
+  els.card?.addEventListener('click', flip);
+  els.card?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      flip();
+    }
+  });
+
+  els.nameInput?.addEventListener('input', () => {
+    const n = (els.nameInput.value || '').trim();
+    renderName(n, loadCard().memberNumber);
+  });
+
+  document.querySelectorAll('[data-tier-select]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const tier = btn.getAttribute('data-tier-select');
+      if (tier === 'registered') {
+        window.location.href = SANCTUARY_URL;
+        return;
+      }
+      startCheckout(tier);
+    });
+  });
+
+  bindSwipe();
+
+  async function boot() {
     const params = new URLSearchParams(window.location.search);
-    const refName = params.get('n');
-    if (refName && !card.displayName) {
-      card.displayName = refName;
-      saveCard(card);
-    }
+    const card = loadCard();
     const profile = await readExp();
-    if (!card.displayName && profile.name) {
-      card.displayName = profile.name;
+
+    if (params.get('n') && !card.displayName) {
+      card.displayName = params.get('n');
       saveCard(card);
     }
-    if (profile.tier && profile.tier !== 'registered') {
-      card.tier = profile.tier;
+    if (profile.name && !card.displayName) {
+      card.displayName = profile.name;
       saveCard(card);
     }
     if (profile.publicId) {
@@ -379,59 +810,66 @@
       card.claimed = true;
       saveCard(card);
     }
-    if (els.nameInput && card.displayName) els.nameInput.value = card.displayName;
-    if (els.emailInput && profile.email) els.emailInput.value = profile.email;
-    renderName(card.displayName || '');
-    renderQr(cardUrl(card));
+    if (profile.email && els.emailInput) els.emailInput.value = profile.email;
+    if (card.displayName && els.nameInput) els.nameInput.value = card.displayName;
+    if (card.instagram && els.igInput) els.igInput.value = card.instagram;
+    if (card.otherContact && els.otherInput) els.otherInput.value = card.otherContact;
+    if (card.contactMethod) state.contact = card.contactMethod;
+
+    if (card.claimed) memberNumber(card);
+    renderName(card.displayName || '', card.memberNumber || '');
+    renderQr(card.claimed ? profileQrUrl(card, profile.uid) : cardUrl(card));
     setChips(card, profile.exp);
-    if (card.claimed) els.invitePanel?.removeAttribute('hidden');
-    return { card, profile };
-  }
 
-  els.card?.addEventListener('click', flip);
-  els.flipBtn?.addEventListener('click', flip);
-  els.claimBtn?.addEventListener('click', claim);
-  els.shareBtn?.addEventListener('click', share);
-  els.copyBtn?.addEventListener('click', share);
+    // Paid return
+    if (params.get('paid') === '1' && params.get('session_id')) {
+      goStep(6, { silent: true });
+      speak('Payment return — confirming membership…', 'guide');
+      try {
+        const res = await fetch('/api/membership-activate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sessionId: params.get('session_id') }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (res.ok && data.success) {
+          card.tier = data.tier || card.tier;
+          card.claimed = true;
+          saveCard(card);
+          speak('Membership active. Enter the Sanctuary when ready.', 'guide');
+        }
+      } catch (_) {
+        speak('Could not confirm payment — card still works.', 'error');
+      }
+      return;
+    }
 
-  document.querySelectorAll('[data-tier-select]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const tier = btn.getAttribute('data-tier-select');
-      if (tier === 'registered') {
-        const card = loadCard();
-        card.tier = 'registered';
-        saveCard(card);
-        setChips(card, null);
-        speak('Registered is a strong start. Explore partners below anytime.', 'guide');
+    if (params.get('oauth') === '1' || params.get('step') === 'issue') {
+      const { user } = await sessionJwt();
+      if (user) {
+        if (card.displayName) {
+          goStep(5);
+          speak('Google connected. Claim your card to enter the Sanctuary.', 'guide');
+        } else {
+          goStep(1);
+          speak('Google connected. First — your name on the card.', 'guide');
+        }
         return;
       }
-      startCheckout(tier);
-    });
-  });
+    }
 
-  document.querySelectorAll('[data-partner]').forEach((a) => {
-    const key = a.getAttribute('data-partner');
-    if (PARTNERS[key]) a.href = PARTNERS[key];
-  });
-
-  const params = new URLSearchParams(window.location.search);
-  refresh().then(async ({ card }) => {
-    if (params.get('paid') === '1' && params.get('session_id')) {
-      await activatePaidSession(params.get('session_id'));
+    if (card.claimed && profile.authed) {
+      goStep(6, { silent: true });
+      speak('Welcome back. Your card is active — Sanctuary or optional upgrade.', 'guide');
       return;
     }
-    if (params.get('canceled') === '1') {
-      setMsg('Checkout canceled — your free card stays active.', true);
-      speak('No rush. Your Registered card remains.', 'guide');
-      return;
-    }
-    if (card.claimed) {
-      speak('Welcome back. Flip for name + QR. Partners live below.', 'guide');
-    } else {
-      speak(
-        'I am Flowee. Claim your Wako Kungo card — EXP goes to your profile when you are logged in.',
-        'guide'
-      );
-    }
-  });
+
+    goStep(0);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
 })();

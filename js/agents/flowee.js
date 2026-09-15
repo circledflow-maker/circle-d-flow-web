@@ -1880,9 +1880,32 @@ class FloweeAgent {
         if(pouch) {
             pouch.classList.remove('opacity-50', 'grayscale', 'cursor-not-allowed');
             pouch.classList.add('animate-bounce', 'cursor-pointer');
-            pouch.querySelector('.bg-red-500').remove(); // Remove lock
+            const lock = pouch.querySelector('.bg-red-500');
+            if (lock) lock.remove();
             pouch.onclick = () => {
-                alert("Collector's Pouch: \n- 1x Initiate Certificate\n- 1x Starter Badge\n(More features coming soon)");
+                let lines = ["Collector's Pouch:"];
+                try {
+                    const inv = JSON.parse(localStorage.getItem('cdf_inventory') || '[]');
+                    const card = inv.find((i) => i && i.type === 'membership_card');
+                    if (card) {
+                        lines.push('- Wako Kungo Membership Card');
+                        if (card.memberNumber) lines.push('  No. ' + card.memberNumber);
+                        if (card.displayName) lines.push('  Name: ' + card.displayName);
+                    }
+                } catch (_) { /* ignore */ }
+                try {
+                    const wk = JSON.parse(localStorage.getItem('cdf_wako_member_card') || '{}');
+                    if (wk.claimed && !lines.some((l) => /Wako Kungo/.test(l))) {
+                        lines.push('- Wako Kungo Membership Card');
+                        if (wk.memberNumber) lines.push('  No. ' + wk.memberNumber);
+                    }
+                } catch (_) { /* ignore */ }
+                if (lines.length === 1) {
+                    lines.push('- 1x Initiate Certificate');
+                    lines.push('- 1x Starter Badge');
+                    lines.push('(More features coming soon)');
+                }
+                alert(lines.join('\n'));
             };
             this.talk(true, "You have unlocked the **Collector's Pouch**! Check your rewards.");
         }

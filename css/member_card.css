@@ -1,4 +1,4 @@
-/* Wako Kungo digital membership card */
+/* Wako Kungo digital membership card — swipe guided flow */
 :root {
   --wk-navy: #0a1628;
   --wk-navy-2: #12243d;
@@ -8,55 +8,87 @@
   --wk-violet: #7b5cff;
   --wk-cream: #f4efe6;
   --wk-ink: #0b0f18;
+  /* Absolute paths — works from /member-card rewrite; Assets casing matches repo */
+  --wk-card-front: url("/Assets/membership/wako_card_front.jpg");
+  --wk-card-back: url("/Assets/membership/wako_card_back.jpg");
 }
 
 * { box-sizing: border-box; }
 
 body.wk-card-page {
   margin: 0;
-  min-height: 100vh;
+  min-height: 100dvh;
   font-family: "Plus Jakarta Sans", system-ui, sans-serif;
   color: var(--wk-cream);
   background:
     radial-gradient(ellipse 80% 50% at 20% 0%, rgba(61, 224, 255, 0.12), transparent 55%),
     radial-gradient(ellipse 70% 45% at 90% 100%, rgba(123, 92, 255, 0.14), transparent 50%),
     linear-gradient(165deg, #05080f 0%, var(--wk-navy) 45%, #08111f 100%);
+  overflow-x: hidden;
 }
 
 .wk-shell {
-  max-width: 720px;
+  max-width: 480px;
   margin: 0 auto;
-  padding: 1.25rem 1.25rem 7rem;
+  padding: 0.85rem 1rem 6.5rem;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.wk-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .wk-brand {
   font-family: Cinzel, Georgia, serif;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  font-size: 0.72rem;
+  font-size: 0.65rem;
   color: var(--wk-gold);
-  margin: 0 0 0.35rem;
+  margin: 0;
 }
 
-.wk-title {
-  font-family: Cinzel, Georgia, serif;
-  font-size: clamp(1.4rem, 4vw, 1.85rem);
-  font-weight: 600;
-  margin: 0 0 0.5rem;
-  color: #fff;
+.wk-step-dots {
+  display: flex;
+  gap: 0.35rem;
 }
 
-.wk-lede {
-  margin: 0 0 1.5rem;
-  color: rgba(244, 239, 230, 0.72);
-  line-height: 1.45;
-  font-size: 0.95rem;
+.wk-step-dots span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
 }
 
+.wk-step-dots span.on {
+  background: var(--wk-gold);
+  box-shadow: 0 0 8px rgba(212, 175, 55, 0.55);
+}
+
+.wk-flowee-line {
+  margin: 0 0 0.75rem;
+  font-size: 0.92rem;
+  line-height: 1.4;
+  color: rgba(244, 239, 230, 0.88);
+  min-height: 2.6em;
+}
+
+.wk-flowee-line strong {
+  color: var(--wk-gold-soft);
+}
+
+/* Compact card preview */
 .wk-stage {
-  perspective: 1400px;
-  margin: 0 auto 1.5rem;
-  max-width: 560px;
+  perspective: 1200px;
+  margin: 0 auto 0.75rem;
+  width: 100%;
+  max-width: 380px;
+  flex-shrink: 0;
 }
 
 .wk-card {
@@ -64,79 +96,79 @@ body.wk-card-page {
   width: 100%;
   aspect-ratio: 1.68 / 1;
   transform-style: preserve-3d;
-  transition: transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
   cursor: pointer;
-  border-radius: 14px;
+  border-radius: 12px;
 }
 
-.wk-card.is-flipped {
-  transform: rotateY(180deg);
-}
+.wk-card.is-flipped { transform: rotateY(180deg); }
 
 .wk-face {
   position: absolute;
   inset: 0;
   backface-visibility: hidden;
-  border-radius: 14px;
+  border-radius: 12px;
   overflow: hidden;
   border: 1.5px solid var(--wk-gold);
   box-shadow:
     0 0 0 1px rgba(212, 175, 55, 0.25),
-    0 24px 60px rgba(0, 0, 0, 0.55),
-    0 0 40px rgba(61, 224, 255, 0.08);
-  background: var(--wk-navy-2) center / cover no-repeat;
+    0 16px 40px rgba(0, 0, 0, 0.5);
+  background-color: var(--wk-navy-2);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
-.wk-face--front {
-  background-image: url("../assets/membership/wako_card_front.jpg");
-}
+.wk-face--front { background-image: var(--wk-card-front); }
 
 .wk-face--back {
   transform: rotateY(180deg);
-  background-image: url("../assets/membership/wako_card_back.jpg");
+  background-image: var(--wk-card-back);
   display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
-  gap: 4%;
-  padding: 6% 5% 7%;
-  align-items: center;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 3%;
+  padding: 5% 4% 6%;
+  align-items: end;
 }
 
-/* Live overlays on back — sit on empty name / QR regions of artwork */
 .wk-name-slot {
-  align-self: end;
-  margin-top: 18%;
-  margin-left: 2%;
-  margin-right: 2%;
+  grid-column: 1;
   min-height: 22%;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 0.45rem 0.65rem;
+  gap: 0.15rem;
+  padding: 0.35rem 0.5rem;
   border-radius: 6px;
   background: rgba(244, 239, 230, 0.94);
   border: 1px solid rgba(212, 175, 55, 0.55);
   color: var(--wk-ink);
   font-family: Cinzel, Georgia, serif;
-  font-size: clamp(0.85rem, 2.8vw, 1.15rem);
+  font-size: clamp(0.75rem, 2.6vw, 1rem);
   font-weight: 600;
-  letter-spacing: 0.04em;
   text-align: center;
   word-break: break-word;
 }
 
-.wk-name-slot.is-empty {
-  color: rgba(11, 15, 24, 0.35);
-  font-weight: 500;
-  font-size: 0.85rem;
+.wk-member-no {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(11, 15, 24, 0.55);
+  font-weight: 600;
 }
 
+.wk-name-slot.is-empty { color: rgba(11, 15, 24, 0.35); font-weight: 500; }
+
 .wk-qr-slot {
-  justify-self: end;
-  align-self: center;
-  width: min(38%, 132px);
+  grid-column: 2;
+  width: 100%;
+  max-width: 110px;
   aspect-ratio: 1;
-  margin-right: 4%;
-  padding: 6px;
+  justify-self: end;
+  padding: 5px;
   border-radius: 8px;
   background: #fff;
   border: 2px solid var(--wk-gold);
@@ -154,90 +186,135 @@ body.wk-card-page {
 .wk-meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.65rem;
-  margin-bottom: 1.25rem;
+  gap: 0.4rem;
+  margin-bottom: 0.65rem;
+  justify-content: center;
 }
 
 .wk-chip {
   border: 1px solid rgba(212, 175, 55, 0.35);
   background: rgba(10, 22, 40, 0.65);
   border-radius: 999px;
-  padding: 0.35rem 0.8rem;
-  font-size: 0.72rem;
-  letter-spacing: 0.08em;
+  padding: 0.28rem 0.65rem;
+  font-size: 0.65rem;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--wk-gold-soft);
 }
 
-.wk-chip strong {
-  color: #fff;
-  font-weight: 700;
+.wk-chip strong { color: #fff; }
+
+/* Swipe deck */
+.wk-deck {
+  position: relative;
+  flex: 1;
+  min-height: 210px;
+  overflow: hidden;
+  touch-action: pan-y;
+}
+
+.wk-track {
+  display: flex;
+  height: 100%;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.wk-slide {
+  flex: 0 0 100%;
+  width: 100%;
+  padding: 0.15rem 0.1rem 0.5rem;
+  overflow-y: auto;
+  max-height: min(48vh, 360px);
 }
 
 .wk-panel {
   border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(8, 14, 24, 0.72);
+  background: rgba(8, 14, 24, 0.78);
   backdrop-filter: blur(10px);
-  border-radius: 16px;
-  padding: 1.1rem 1.15rem;
-  margin-bottom: 1rem;
+  border-radius: 14px;
+  padding: 0.95rem 1rem;
 }
 
 .wk-panel h2 {
   font-family: Cinzel, Georgia, serif;
-  font-size: 1rem;
-  margin: 0 0 0.65rem;
+  font-size: 0.95rem;
+  margin: 0 0 0.55rem;
   color: var(--wk-gold);
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
 }
 
 .wk-field {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
-  margin-bottom: 0.85rem;
+  gap: 0.3rem;
+  margin-bottom: 0.7rem;
 }
 
 .wk-field label {
-  font-size: 0.75rem;
+  font-size: 0.68rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: rgba(244, 239, 230, 0.55);
 }
 
-.wk-field input,
-.wk-field select {
+.wk-field input {
   border-radius: 10px;
   border: 1px solid rgba(212, 175, 55, 0.35);
   background: rgba(0, 0, 0, 0.35);
   color: #fff;
-  padding: 0.7rem 0.85rem;
+  padding: 0.7rem 0.8rem;
   font-size: 1rem;
 }
 
-.wk-actions {
+.wk-choice-grid {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.wk-choice {
+  appearance: none;
+  width: 100%;
+  text-align: left;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff;
+  padding: 0.75rem 0.85rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.wk-choice strong { display: block; margin-bottom: 0.15rem; }
+.wk-choice span { display: block; font-size: 0.75rem; color: rgba(244, 239, 230, 0.55); }
+.wk-choice.is-selected {
+  border-color: rgba(212, 175, 55, 0.7);
+  background: rgba(212, 175, 55, 0.12);
+}
+
+.wk-nav {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  position: sticky;
+  bottom: 0;
 }
 
 .wk-btn {
   appearance: none;
   border: none;
   border-radius: 999px;
-  padding: 0.75rem 1.2rem;
+  padding: 0.72rem 1.05rem;
   font-weight: 700;
-  font-size: 0.85rem;
-  letter-spacing: 0.04em;
+  font-size: 0.82rem;
+  letter-spacing: 0.03em;
   cursor: pointer;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.15s ease, opacity 0.15s ease;
+  flex: 1;
 }
-
-.wk-btn:active { transform: scale(0.98); }
 
 .wk-btn--gold {
   background: linear-gradient(135deg, #f0d78c, var(--wk-gold) 40%, #a67c1a);
@@ -257,62 +334,37 @@ body.wk-card-page {
 }
 
 .wk-hint {
-  font-size: 0.82rem;
+  font-size: 0.75rem;
   color: rgba(244, 239, 230, 0.55);
-  margin: 0.5rem 0 0;
-  line-height: 1.4;
-}
-
-.wk-tiers {
-  display: grid;
-  gap: 0.65rem;
-}
-
-.wk-tier {
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 12px;
-  padding: 0.85rem 0.95rem;
-  background: rgba(255, 255, 255, 0.03);
-}
-
-.wk-tier h3 {
-  margin: 0 0 0.25rem;
-  font-size: 0.95rem;
-}
-
-.wk-tier p {
-  margin: 0;
-  font-size: 0.8rem;
-  color: rgba(244, 239, 230, 0.6);
+  margin: 0.45rem 0 0;
   line-height: 1.35;
 }
 
-.wk-tier .price {
-  color: var(--wk-gold-soft);
-  font-weight: 700;
-  font-size: 0.85rem;
+.wk-status {
+  border: 1px solid rgba(61, 224, 255, 0.35);
+  padding: 0.55rem 0.7rem;
+  border-radius: 10px;
+  margin-bottom: 0.65rem;
+  font-size: 0.8rem;
+}
+
+.wk-swipe-hint {
+  text-align: center;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(244, 239, 230, 0.4);
+  margin: 0.35rem 0 0;
 }
 
 #flowee-agent {
   position: fixed;
-  right: 12px;
-  bottom: 12px;
+  right: 10px;
+  bottom: 10px;
   z-index: 80;
 }
 
-@media (max-width: 560px) {
-  .wk-face--back {
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr auto;
-    padding: 8% 6% 6%;
-  }
-  .wk-name-slot {
-    margin-top: 28%;
-    min-height: 18%;
-  }
-  .wk-qr-slot {
-    justify-self: center;
-    width: 34%;
-    margin: 0;
-  }
+@media (min-width: 720px) {
+  .wk-shell { max-width: 520px; padding-top: 1.25rem; }
+  .wk-slide { max-height: 400px; }
 }
