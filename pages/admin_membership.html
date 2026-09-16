@@ -256,7 +256,7 @@
     function renderMembers(rows) {
       els.membersBody.innerHTML = (rows || []).map((r) => {
         const name = r.member_display_name || r.full_name || r.username || '—';
-        const contact = [r.email, r.instagram].filter(Boolean).join('<br>');
+        const contact = [r.email, r.instagram || r.instagram_handle].filter(Boolean).join('<br>');
         const when = r.member_card_claimed_at ? new Date(r.member_card_claimed_at).toLocaleString() : '—';
         return `<tr>
           <td>${esc(name)}<div class="badge">${esc(r.member_card_public_id || '')}</div></td>
@@ -309,20 +309,24 @@
 
     async function refreshAll() {
       setMsg(true, '');
-      try {
-        const [ov, mem, partners, coupons] = await Promise.all([
-          call('overview'),
-          call('members', { q: els.memberQ.value || '' }),
-          call('partners'),
-          call('coupons'),
-        ]);
-        renderStats(ov.stats || {});
-        renderMembers(mem.members || []);
-        renderPartners(partners.partners || []);
-        renderCoupons(coupons.coupons || []);
-      } catch (e) {
-        setMsg(false, e.message);
-      }
+      const results = await Promise.allSettled([
+        call('overview'),
+        call('members', { q: els.memberQ.value || '' }),
+        call('partners'),
+        call('coupons'),
+      ]);
+      const [ov, mem, partners, coupons] = results;
+      const errors = [];
+      if (ov.status === 'fulfilled') renderStats(ov.value.stats || {});
+      else errors.push('overview: ' + ov.reason.message);
+      if (mem.status === 'fulfilled') renderMembers(mem.value.members || []);
+      else errors.push('members: ' + mem.reason.message);
+      if (partners.status === 'fulfilled') renderPartners(partners.value.partners || []);
+      else errors.push('partners: ' + partners.reason.message);
+      if (coupons.status === 'fulfilled') renderCoupons(coupons.value.coupons || []);
+      else errors.push('coupons: ' + coupons.reason.message);
+      if (errors.length) setMsg(false, errors.join(' · '));
+      else setMsg(true, 'Synced');
     }
 
     document.getElementById('gate-btn').addEventListener('click', () => {

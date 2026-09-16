@@ -364,17 +364,18 @@
           const { data } = await sc
             .from('profiles')
             .select(
-              'exp, username, full_name, member_display_name, membership_tier, membership_status, member_card_public_id, email'
+              'exp, username, member_display_name, membership_tier, membership_status, member_card_public_id, email, instagram_handle'
             )
             .eq('id', uid)
             .maybeSingle();
           if (data) {
             return {
               exp: data.exp ?? 0,
-              name: data.member_display_name || data.full_name || data.username || '',
+              name: data.member_display_name || data.username || '',
               email: data.email || sess.session.user.email || '',
               tier: data.membership_tier || 'registered',
               publicId: data.member_card_public_id || '',
+              instagram: data.instagram_handle || '',
               authed: true,
               uid,
             };
@@ -556,9 +557,9 @@
     speak('Forging your profile in the Circle…', 'guide');
 
     const meta = {
-      full_name: card.displayName || '',
       member_display_name: card.displayName || '',
-      instagram: card.instagram || '',
+      username: card.displayName || '',
+      instagram_handle: (card.instagram || '').replace(/^@/, ''),
       other_contact: card.otherContact || '',
       contact_method: card.contactMethod || state.contact || 'email',
       source: 'member_card',
@@ -912,7 +913,9 @@
     }
     if (profile.email && els.emailInput) els.emailInput.value = profile.email;
     if (card.displayName && els.nameInput) els.nameInput.value = card.displayName;
-    if (card.instagram && els.igInput) els.igInput.value = card.instagram;
+    if ((card.instagram || profile.instagram) && els.igInput) {
+      els.igInput.value = card.instagram || profile.instagram;
+    }
     if (card.otherContact && els.otherInput) els.otherInput.value = card.otherContact;
     if (card.contactMethod) state.contact = card.contactMethod;
 
