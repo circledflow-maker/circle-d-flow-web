@@ -10,7 +10,7 @@
   <meta property="og:image" content="/Assets/membership/wako_card_front.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/member_card.css?v=20260916b">
+  <link rel="stylesheet" href="/css/member_card.css?v=20260916c">
   <link rel="preload" as="image" href="/Assets/membership/wako_card_front.jpg">
   <link rel="preload" as="image" href="/Assets/membership/wako_card_back.jpg">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -34,7 +34,7 @@
       <span class="wk-chip" id="chip-exp">EXP <strong>—</strong></span>
     </div>
 
-    <div class="wk-stage" aria-label="Membership card">
+    <div class="wk-stage" aria-label="Membership card" id="wk-card-stage">
       <div class="wk-card" id="wk-card" role="button" tabindex="0" aria-label="Flip membership card">
         <div class="wk-face wk-face--front" title="Wako Kungo Emblem"></div>
         <div class="wk-face wk-face--back">
@@ -47,6 +47,8 @@
       </div>
     </div>
 
+    <!-- CLAIM FLOW (pre-orbit) -->
+    <div id="wk-claim-shell">
     <div class="wk-deck" id="wk-deck">
       <div class="wk-track" id="wk-track">
         <!-- 0 Welcome -->
@@ -165,8 +167,9 @@
               <button type="button" class="wk-btn wk-btn--gold" id="claim-card-btn">Claim &amp; unlock codes</button>
             </div>
             <div class="wk-nav" style="margin-top:0.45rem" id="wk-after-claim-nav" hidden>
-              <a class="wk-btn wk-btn--gold" id="go-sanctuary-after-claim" href="/pages/artist_sanctuary.html?welcome=card">Enter 3D Sanctuary</a>
-              <button type="button" class="wk-btn wk-btn--cyan" data-next id="to-tiers-btn">Optional paid tiers</button>
+              <button type="button" class="wk-btn wk-btn--gold" id="enter-orbit-btn">Enter Flow Orbit</button>
+              <a class="wk-btn wk-btn--cyan" id="go-sanctuary-after-claim" href="/pages/artist_sanctuary.html?welcome=card">3D Sanctuary</a>
+              <button type="button" class="wk-btn wk-btn--ghost" data-next id="to-tiers-btn">Optional tiers</button>
             </div>
             <div class="wk-nav" style="margin-top:0.45rem">
               <button type="button" class="wk-btn wk-btn--ghost" id="flip-card-btn">Flip card</button>
@@ -209,13 +212,37 @@
       </div>
     </div>
     <p class="wk-swipe-hint">Swipe ← → · guided by Flowee</p>
+    </div><!-- /wk-claim-shell -->
+
+    <!-- FLOW ORBIT (post-claim card stack) -->
+    <div id="wk-orbit-shell" hidden>
+      <div class="orbit-stage" id="orbit-stage" aria-label="Flow Orbit">
+        <div class="orbit-track" id="orbit-track"></div>
+      </div>
+      <p class="wk-swipe-hint">← → cards · ↑ details · guided by Flowee</p>
+      <nav class="orbit-dock" id="orbit-dock" aria-label="Orbit navigation">
+        <button type="button" class="on" data-orbit-mode="card">◉ Card</button>
+        <button type="button" data-orbit-mode="flow">✦ Flow</button>
+        <button type="button" data-orbit-mode="saved">♥ Saved</button>
+        <button type="button" data-orbit-mode="me">◎ Me</button>
+      </nav>
+      <div class="orbit-detail" id="orbit-detail" hidden>
+        <button type="button" class="orbit-detail-close" id="orbit-detail-close" aria-label="Close">↓</button>
+        <div id="orbit-detail-body"></div>
+      </div>
+      <div class="orbit-enter-row">
+        <button type="button" class="wk-btn wk-btn--ghost" id="orbit-back-claim" hidden>Claim flow</button>
+        <a class="wk-btn wk-btn--cyan" href="/pages/artist_sanctuary.html?welcome=card">Sanctuary</a>
+      </div>
+    </div>
   </main>
 
   <div id="flowee-agent"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
-  <script src="/js/agents/flowee.js?v=20260916b" defer></script>
-  <script src="/js/agents/flowee_member_card_guide.js?v=20260916b" defer></script>
-  <script src="/js/member_card.js?v=20260916b" defer></script>
+  <script src="/js/agents/flowee.js?v=20260916c" defer></script>
+  <script src="/js/agents/flowee_member_card_guide.js?v=20260916c" defer></script>
+  <script src="/js/member_card.js?v=20260916c" defer></script>
+  <script src="/js/flow_orbit.js?v=20260916c" defer></script>
 </body>
 </html>

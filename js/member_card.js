@@ -699,12 +699,10 @@
     if (els.afterClaimNav) els.afterClaimNav.hidden = false;
     if (els.claimBtn) els.claimBtn.hidden = true;
 
-    speak(
-      'Card ' +
-        card.memberNumber +
-        ' is ready. Your partner Gutscheine are below — copy codes, then enter the Sanctuary.',
-      'guide'
-    );
+    speak('Card ' + card.memberNumber + ' claimed. Opening your Flow Orbit…', 'guide');
+    setTimeout(() => {
+      if (typeof window.cdfEnterFlowOrbit === 'function') window.cdfEnterFlowOrbit();
+    }, 650);
   }
 
   async function startCheckout(tier) {
@@ -864,7 +862,10 @@
 
   els.authBtn?.addEventListener('click', () => ensureProfile());
   els.skipAuthed?.addEventListener('click', () => goStep(5));
-  els.claimBtn?.addEventListener('click', () => claimAndEnter());
+    els.claimBtn?.addEventListener('click', () => claimAndEnter());
+    document.getElementById('enter-orbit-btn')?.addEventListener('click', () => {
+      if (typeof window.cdfEnterFlowOrbit === 'function') window.cdfEnterFlowOrbit();
+    });
   els.flipBtn?.addEventListener('click', flip);
   els.shareBtn?.addEventListener('click', share);
   els.card?.addEventListener('click', flip);
@@ -962,6 +963,10 @@
     }
 
     if (card.claimed && profile.authed) {
+      if (typeof window.cdfEnterFlowOrbit === 'function') {
+        window.cdfEnterFlowOrbit();
+        return;
+      }
       goStep(5, { silent: true });
       try {
         const saved = JSON.parse(localStorage.getItem('cdf_member_coupons') || 'null');
@@ -973,6 +978,14 @@
       if (els.claimBtn) els.claimBtn.hidden = true;
       speak('Welcome back. Your card and partner codes are ready.', 'guide');
       return;
+    }
+
+    if (card.claimed) {
+      // Local claim without session — still open Orbit
+      if (typeof window.cdfEnterFlowOrbit === 'function') {
+        window.cdfEnterFlowOrbit();
+        return;
+      }
     }
 
     goStep(0);

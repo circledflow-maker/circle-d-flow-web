@@ -1,36 +1,70 @@
-# Membership Architecture (starter)
+# Membership · Flow Orbit Architecture
 
-## Product tiers (target)
+## Product idea
 
-| Tier | Price | Code |
-|------|-------|------|
-| Registered / Free | €0 | `registered` |
-| Flow Supporter | €5/mo | `flow_supporter` |
-| Flow Crew | €15/mo | `flow_crew` |
+Not a static member page — a **digital Member Card + swipeable Flow Orbit**.
 
-Event benefits are **per-event flags**, not hard-coded into the tier.
+After claim, `/member-card` becomes a horizontal **card stack**:
 
-## Digital card (Phase 5 — now)
+`MEMBER → EVENT(s) → BENEFIT(s) → PARTNER(s) → LOCATION → PROFILE → SAVED`
 
-**Route:** `/member-card` → `pages/member_card.html`  
-**Brand:** Wako Kungo Membership Card (front/back assets in `assets/membership/`)  
-**Guide:** Flowee member-card coach  
-**XP:** Reads `profiles.exp` when authenticated; awards local + soft profile bump on first claim when possible  
-**QR:** Encodes share URL `/member-card?ref=…` for check-in / share
+Same data powers **Admin Flow Control** (`/admin/membership` · alias `/admin/flow`).
 
-## Planned tables (not applied yet — await approval)
+## Routes
+
+| Route | Role |
+|-------|------|
+| `/member-card` | Claim flow + Flow Orbit |
+| `/member-card?view=events` | Jump to first event card |
+| `/member-card?event=slug` | Deep link event |
+| `/member-card?location=lapa71` | Deep link location |
+| `/events/:slug` | Rewrites into member-card deep link |
+| `/locations/:slug` | Rewrites into member-card deep link |
+| `/admin/membership` | Flow Control |
+| `/api/member-orbit` | Feed + saves |
+| `/api/admin-membership` | Admin CRUD |
+| `/api/claim-member-card` | Claim + coupon grants |
+
+## Member UX
+
+1. **Claim** (Flowee-guided swipe) — existing steps
+2. **Orbit** — interactive cards, bottom dock: Card · Flow · Saved · Me
+3. Gestures: horizontal = next card · vertical up = details · tap = action
+4. Flowee lines are short & contextual (“Welcome back. Your next Flow is waiting.”)
+
+## Admin · Flow Control
+
+Tabs: Members · Events · Locations · Partners · Coupons · **Live Feed**
+
+Create Event → `show_in_feed` → appears automatically in Member Orbit.
+
+Event status: `upcoming | starting_soon | live | sold_out | completed | recap`  
+(derived live when time-based).
+
+## Data (Supabase)
 
 ```
-membership_tiers (id, code, price_cents, interval, active)
-memberships (user_id, tier_id, status, provider, provider_ref, source)
-member_cards (user_id, display_name, public_id, qr_payload, issued_at)
+profiles                    — card + EXP + tier
+membership_partners
+membership_coupons
+membership_coupon_grants
+flow_locations              — venues / Flow Points
+flow_events                 — feed cards
+flow_saves                  — My Flow (event|benefit|location|partner)
 ```
 
-Payment provider abstracted (`stripe` | `patreon` | `manual`).
+SQL: `sql/flow_orbit.sql` (+ applied migration `flow_orbit_events_locations_saves`)
 
-## Existing to reuse
+## Files
 
-- `pages/membership.html` — legacy hunter tiers (migrate copy to €5/€15)  
-- Stripe routers in `api/payments.js`  
-- `profiles.exp` for RPG fit  
-- Lapa71 success → invite to card / crew
+- `pages/member_card.html` + `js/member_card.js` + `js/flow_orbit.js` + `css/member_card.css`
+- `pages/admin_membership.html`
+- `lib/cdf-api/flow-orbit.js` · `member-orbit.js` · `admin-membership.js` · `claim-member-card.js`
+
+## Tiers (unchanged)
+
+| Tier | Code |
+|------|------|
+| Registered / Free | `registered` |
+| Flow Supporter €5 | `flow_supporter` |
+| Flow Crew €15 | `flow_crew` |

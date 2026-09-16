@@ -77,13 +77,16 @@
   </div>
 
   <div id="app" hidden>
-    <h1>Membership Command</h1>
-    <p class="sub">Analyse claims, manage partners &amp; shared coupon codes. <a href="/member-card" style="color:var(--cyan)">Open member card</a></p>
+    <h1>Flow Control</h1>
+    <p class="sub">Circle D Flow · same data as Member Orbit. <a href="/member-card" style="color:var(--cyan)">Open member card</a></p>
     <div class="stats" id="stats"></div>
     <div class="tabs">
       <button type="button" class="on" data-tab="members">Members</button>
+      <button type="button" data-tab="events">Events</button>
+      <button type="button" data-tab="locations">Locations</button>
       <button type="button" data-tab="partners">Partners</button>
       <button type="button" data-tab="coupons">Coupons</button>
+      <button type="button" data-tab="live">Live Feed</button>
       <button type="button" class="ghost" id="logout-btn">Lock</button>
       <button type="button" class="ghost" id="refresh-btn">Refresh</button>
     </div>
@@ -168,6 +171,79 @@
         </div>
       </div>
     </section>
+
+    <section class="tab-pane" id="tab-events" hidden>
+      <div class="grid2">
+        <div class="panel">
+          <h2>Create / upsert event</h2>
+          <label>Title</label><input id="e-title" placeholder="Wako Kungo Grand Comeback">
+          <label>Slug (optional)</label><input id="e-slug" placeholder="auto from title">
+          <label>Date</label><input id="e-date" type="date" value="2026-09-27">
+          <label>Time</label><input id="e-time" type="time" value="20:00">
+          <label>Location id</label><select id="e-location"></select>
+          <label>Type</label>
+          <select id="e-type">
+            <option value="concert">Concert</option>
+            <option value="jam">Jam</option>
+            <option value="workshop">Workshop</option>
+            <option value="exhibition">Exhibition</option>
+            <option value="community">Community</option>
+          </select>
+          <label>Status</label>
+          <select id="e-status">
+            <option value="upcoming">Upcoming</option>
+            <option value="starting_soon">Starting soon</option>
+            <option value="live">Live</option>
+            <option value="sold_out">Sold out</option>
+            <option value="completed">Completed</option>
+            <option value="recap">Recap</option>
+          </select>
+          <label>Description</label><textarea id="e-desc" rows="3"></textarea>
+          <label>Member benefit</label><input id="e-benefit" placeholder="Early access">
+          <label><input type="checkbox" id="e-feed" checked> Show in Member Feed</label>
+          <label><input type="checkbox" id="e-feat"> Highlight / featured</label>
+          <button type="button" id="e-save">Save event</button>
+        </div>
+        <div class="panel" style="overflow-x:auto">
+          <h2>Events</h2>
+          <table>
+            <thead><tr><th>Event</th><th>When</th><th>Status</th><th>Feed</th><th></th></tr></thead>
+            <tbody id="events-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-pane" id="tab-locations" hidden>
+      <div class="grid2">
+        <div class="panel">
+          <h2>Create / upsert location</h2>
+          <label>Name</label><input id="l-name" placeholder="Lapa71">
+          <label>Slug</label><input id="l-slug" placeholder="lapa71">
+          <label>City</label><input id="l-city" value="Lisbon">
+          <label>Address</label><input id="l-address">
+          <label>Map URL</label><input id="l-map">
+          <label>Description</label><textarea id="l-desc" rows="3"></textarea>
+          <label><input type="checkbox" id="l-feat"> Featured</label>
+          <button type="button" id="l-save">Save location</button>
+        </div>
+        <div class="panel" style="overflow-x:auto">
+          <h2>Locations</h2>
+          <table>
+            <thead><tr><th>Name</th><th>Slug</th><th>City</th><th></th></tr></thead>
+            <tbody id="locations-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-pane" id="tab-live" hidden>
+      <div class="panel">
+        <h2>Live Member Feed</h2>
+        <p class="sub" style="margin-bottom:0.75rem">Same cards members swipe in Flow Orbit. Feature / hide events without leaving the feed.</p>
+        <div id="live-feed" class="grid2"></div>
+      </div>
+    </section>
   </div>
 
   <script>
@@ -243,14 +319,94 @@
       const by = s.byTier || {};
       els.stats.innerHTML = [
         ['Members', s.members],
-        ['7d claims', s.claimsLast7Days],
-        ['Grants', s.grants],
+        ['Events', s.events || 0],
+        ['Locations', s.locations || 0],
+        ['Saves', s.saves || 0],
         ['Partners', s.partners],
         ['Coupons', s.coupons],
-        ['Registered', by.registered || 0],
-        ['Supporter', by.flow_supporter || 0],
-        ['Crew', by.flow_crew || 0],
+        ['7d claims', s.claimsLast7Days],
+        ['Grants', s.grants],
       ].map(([label, val]) => `<div class="stat"><b>${val}</b><span>${label}</span></div>`).join('');
+    }
+
+    function renderEvents(rows) {
+      const tb = document.getElementById('events-tbody');
+      if (!tb) return;
+      tb.innerHTML = (rows || []).map((e) => `<tr>
+        <td><strong>${esc(e.title)}</strong><div class="badge">${esc(e.slug)}</div>
+          <div style="color:var(--muted);font-size:0.75rem">${esc(e.location?.name || '')}</div></td>
+        <td>${esc(e.eventDate)} ${esc(String(e.startTime || '').slice(0,5))}</td>
+        <td><span class="badge">${esc(e.statusLabel || e.status)}</span></td>
+        <td>${e.showInFeed !== false ? 'yes' : 'no'}${e.isFeatured ? ' · ★' : ''}</td>
+        <td class="row-actions">
+          <button type="button" class="ghost" data-hide-event="${e.id}" data-show="${e.showInFeed === false ? '1' : '0'}">${e.showInFeed === false ? 'Show' : 'Hide'}</button>
+          <button type="button" class="ghost" data-feat-event="${e.id}" data-feat="${e.isFeatured ? '1' : '0'}">${e.isFeatured ? 'Unfeature' : 'Feature'}</button>
+        </td>
+      </tr>`).join('') || '<tr><td colspan="5">No events</td></tr>';
+    }
+
+    function renderLocations(rows) {
+      const tb = document.getElementById('locations-tbody');
+      const sel = document.getElementById('e-location');
+      if (tb) {
+        tb.innerHTML = (rows || []).map((l) => `<tr>
+          <td><strong>${esc(l.name)}</strong></td>
+          <td class="code">${esc(l.slug)}</td>
+          <td>${esc(l.city || '')}</td>
+          <td>${l.isFeatured ? '★' : ''}</td>
+        </tr>`).join('') || '<tr><td colspan="4">No locations</td></tr>';
+      }
+      if (sel) {
+        sel.innerHTML = '<option value="">— none —</option>' + (rows || [])
+          .map((l) => `<option value="${l.id}">${esc(l.name)}</option>`)
+          .join('');
+      }
+    }
+
+    function renderLiveFeed(cards) {
+      const box = document.getElementById('live-feed');
+      if (!box) return;
+      box.innerHTML = (cards || []).map((c) => {
+        const title = c.type === 'event' ? c.data?.title
+          : c.type === 'benefit' ? (c.data?.title || c.data?.code)
+          : c.type === 'partner' ? c.data?.name
+          : c.type === 'location' ? c.data?.name
+          : c.type;
+        return `<div class="panel"><span class="badge">${esc(c.type)}</span>
+          <div style="margin-top:0.4rem;font-family:Cinzel,serif;color:var(--gold)">${esc(title || c.id)}</div>
+          <div style="color:var(--muted);font-size:0.75rem;margin-top:0.25rem">${esc(c.slug || '')}</div>
+        </div>`;
+      }).join('') || '<p class="sub">Feed empty</p>';
+    }
+
+    async function refreshAll() {
+      setMsg(true, '');
+      const results = await Promise.allSettled([
+        call('overview'),
+        call('members', { q: els.memberQ.value || '' }),
+        call('partners'),
+        call('coupons'),
+        call('events'),
+        call('locations'),
+        call('live-feed'),
+      ]);
+      const [ov, mem, partners, coupons, events, locations, live] = results;
+      const errors = [];
+      if (ov.status === 'fulfilled') renderStats(ov.value.stats || {});
+      else errors.push('overview: ' + ov.reason.message);
+      if (mem.status === 'fulfilled') renderMembers(mem.value.members || []);
+      else errors.push('members: ' + mem.reason.message);
+      if (partners.status === 'fulfilled') renderPartners(partners.value.partners || []);
+      else errors.push('partners: ' + partners.reason.message);
+      if (coupons.status === 'fulfilled') renderCoupons(coupons.value.coupons || []);
+      else errors.push('coupons: ' + coupons.reason.message);
+      if (events.status === 'fulfilled') renderEvents(events.value.events || []);
+      else errors.push('events: ' + (events.reason?.message || ''));
+      if (locations.status === 'fulfilled') renderLocations(locations.value.locations || []);
+      else errors.push('locations: ' + (locations.reason?.message || ''));
+      if (live.status === 'fulfilled') renderLiveFeed(live.value.cards || []);
+      if (errors.length) setMsg(false, errors.join(' · '));
+      else setMsg(true, 'Flow Control synced');
     }
 
     function renderMembers(rows) {
@@ -305,28 +461,6 @@
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/"/g, '&quot;');
-    }
-
-    async function refreshAll() {
-      setMsg(true, '');
-      const results = await Promise.allSettled([
-        call('overview'),
-        call('members', { q: els.memberQ.value || '' }),
-        call('partners'),
-        call('coupons'),
-      ]);
-      const [ov, mem, partners, coupons] = results;
-      const errors = [];
-      if (ov.status === 'fulfilled') renderStats(ov.value.stats || {});
-      else errors.push('overview: ' + ov.reason.message);
-      if (mem.status === 'fulfilled') renderMembers(mem.value.members || []);
-      else errors.push('members: ' + mem.reason.message);
-      if (partners.status === 'fulfilled') renderPartners(partners.value.partners || []);
-      else errors.push('partners: ' + partners.reason.message);
-      if (coupons.status === 'fulfilled') renderCoupons(coupons.value.coupons || []);
-      else errors.push('coupons: ' + coupons.reason.message);
-      if (errors.length) setMsg(false, errors.join(' · '));
-      else setMsg(true, 'Synced');
     }
 
     document.getElementById('gate-btn').addEventListener('click', () => {
@@ -404,6 +538,54 @@
       }
     });
 
+    document.getElementById('e-save')?.addEventListener('click', async () => {
+      try {
+        await call('event', {
+          method: 'POST',
+          body: {
+            action: 'event',
+            title: document.getElementById('e-title').value,
+            slug: document.getElementById('e-slug').value,
+            event_date: document.getElementById('e-date').value,
+            start_time: document.getElementById('e-time').value,
+            location_id: document.getElementById('e-location').value || null,
+            event_type: document.getElementById('e-type').value,
+            status: document.getElementById('e-status').value,
+            description: document.getElementById('e-desc').value,
+            member_benefit: document.getElementById('e-benefit').value,
+            show_in_feed: document.getElementById('e-feed').checked,
+            is_featured: document.getElementById('e-feat').checked,
+          },
+        });
+        setMsg(true, 'Event saved — appears in Member Orbit');
+        refreshAll();
+      } catch (e) {
+        setMsg(false, e.message);
+      }
+    });
+
+    document.getElementById('l-save')?.addEventListener('click', async () => {
+      try {
+        await call('location', {
+          method: 'POST',
+          body: {
+            action: 'location',
+            name: document.getElementById('l-name').value,
+            slug: document.getElementById('l-slug').value,
+            city: document.getElementById('l-city').value,
+            address: document.getElementById('l-address').value,
+            map_url: document.getElementById('l-map').value,
+            description: document.getElementById('l-desc').value,
+            is_featured: document.getElementById('l-feat').checked,
+          },
+        });
+        setMsg(true, 'Location saved');
+        refreshAll();
+      } catch (e) {
+        setMsg(false, e.message);
+      }
+    });
+
     document.body.addEventListener('click', async (e) => {
       const tp = e.target.closest('[data-toggle-partner]');
       if (tp) {
@@ -430,6 +612,38 @@
               action: 'update-coupon',
               id: tc.getAttribute('data-toggle-coupon'),
               active: tc.getAttribute('data-active') !== '1',
+            },
+          });
+          refreshAll();
+        } catch (err) {
+          setMsg(false, err.message);
+        }
+      }
+      const he = e.target.closest('[data-hide-event]');
+      if (he) {
+        try {
+          await call('update-event', {
+            method: 'POST',
+            body: {
+              action: 'update-event',
+              id: he.getAttribute('data-hide-event'),
+              show_in_feed: he.getAttribute('data-show') === '1',
+            },
+          });
+          refreshAll();
+        } catch (err) {
+          setMsg(false, err.message);
+        }
+      }
+      const fe = e.target.closest('[data-feat-event]');
+      if (fe) {
+        try {
+          await call('update-event', {
+            method: 'POST',
+            body: {
+              action: 'update-event',
+              id: fe.getAttribute('data-feat-event'),
+              is_featured: fe.getAttribute('data-feat') !== '1',
             },
           });
           refreshAll();
