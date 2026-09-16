@@ -222,13 +222,20 @@
     }
 
     async function tryUnlock(key) {
-      localStorage.setItem(KEY, key);
+      const trimmed = String(key || '').trim();
+      if (!trimmed) {
+        els.gateErr.textContent = 'Enter password FlowCreator!';
+        return;
+      }
+      localStorage.setItem(KEY, trimmed);
       try {
         await call('overview');
+        els.gateErr.textContent = '';
         unlock();
       } catch (e) {
         localStorage.removeItem(KEY);
-        els.gateErr.textContent = e.message || 'Wrong password';
+        els.gateErr.textContent =
+          (e.message || 'Unauthorized') + ' — use FlowCreator! (exact spelling, capital F/C)';
       }
     }
 
