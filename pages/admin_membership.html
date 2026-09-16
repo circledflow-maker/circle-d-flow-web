@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin · Membership | Circle D Flow</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #05080f;
+      --gold: #d4af37;
+      --cyan: #3de0ff;
+      --text: #f4efe6;
+      --muted: #9aa3b2;
+      --line: rgba(212,175,55,0.28);
+      --panel: rgba(10,18,32,0.92);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: radial-gradient(ellipse at top, #12243d, var(--bg));
+      color: var(--text);
+      min-height: 100vh;
+      padding: 1.15rem;
+    }
+    h1, h2 { font-family: Cinzel, Georgia, serif; color: var(--gold); }
+    h1 { font-size: 1.35rem; margin-bottom: 0.25rem; }
+    h2 { font-size: 1rem; margin: 0 0 0.65rem; }
+    .sub { color: var(--muted); font-size: 0.85rem; margin-bottom: 1rem; }
+    .gate, .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 0.9rem;
+    }
+    label { display: block; font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.3rem; }
+    input, select, textarea {
+      width: 100%; background: #000; border: 1px solid var(--line); color: var(--text);
+      border-radius: 8px; padding: 0.6rem 0.7rem; font: inherit; margin-bottom: 0.65rem;
+    }
+    button, .btn {
+      font-family: Cinzel, Georgia, serif; letter-spacing: 0.05em; text-transform: uppercase;
+      border: none; border-radius: 999px; padding: 0.65rem 1rem; cursor: pointer;
+      background: linear-gradient(145deg, #e0c15a, #a8841f); color: #1a1205;
+    }
+    button.ghost { background: transparent; color: var(--cyan); border: 1px solid rgba(61,224,255,0.35); }
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 0.6rem; margin-bottom: 0.9rem; }
+    .stat { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 0.8rem; }
+    .stat b { display: block; font-family: Cinzel, serif; font-size: 1.35rem; color: var(--gold); }
+    .stat span { color: var(--muted); font-size: 0.75rem; }
+    .tabs { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.8rem; }
+    .tabs button { font-size: 0.72rem; padding: 0.5rem 0.85rem; }
+    .tabs button.on { box-shadow: 0 0 0 2px rgba(61,224,255,0.35); }
+    table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    th, td { text-align: left; padding: 0.5rem 0.35rem; border-bottom: 1px solid rgba(255,255,255,0.06); vertical-align: top; }
+    th { color: var(--cyan); font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; }
+    .err { color: #ffb4a8; font-size: 0.85rem; margin-bottom: 0.5rem; }
+    .ok { color: #9dffc2; font-size: 0.85rem; margin-bottom: 0.5rem; }
+    .grid2 { display: grid; gap: 0.75rem; }
+    @media (min-width: 860px) { .grid2 { grid-template-columns: 1fr 1fr; } }
+    .code { font-family: ui-monospace, Menlo, Consolas, monospace; color: #fff; }
+    .badge { display: inline-block; padding: 0.12rem 0.4rem; border-radius: 999px; border: 1px solid var(--line); color: var(--gold); font-size: 0.68rem; }
+    #app[hidden], #gate[hidden], .tab-pane[hidden] { display: none !important; }
+    .row-actions { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+    .row-actions button { font-size: 0.65rem; padding: 0.4rem 0.65rem; }
+  </style>
+</head>
+<body>
+  <div id="gate" class="gate">
+    <h1>Membership Admin</h1>
+    <p class="sub">Members · Partners · Gutschein codes. Password: team-shared admin key.</p>
+    <div class="err" id="gate-err"></div>
+    <label for="admin-key">Admin password</label>
+    <input id="admin-key" type="password" autocomplete="current-password" placeholder="FlowCreator!">
+    <button type="button" id="gate-btn">Unlock</button>
+  </div>
+
+  <div id="app" hidden>
+    <h1>Membership Command</h1>
+    <p class="sub">Analyse claims, manage partners &amp; shared coupon codes. <a href="/member-card" style="color:var(--cyan)">Open member card</a></p>
+    <div class="stats" id="stats"></div>
+    <div class="tabs">
+      <button type="button" class="on" data-tab="members">Members</button>
+      <button type="button" data-tab="partners">Partners</button>
+      <button type="button" data-tab="coupons">Coupons</button>
+      <button type="button" class="ghost" id="logout-btn">Lock</button>
+      <button type="button" class="ghost" id="refresh-btn">Refresh</button>
+    </div>
+    <div class="err" id="app-err"></div>
+    <div class="ok" id="app-ok"></div>
+
+    <section class="tab-pane" id="tab-members">
+      <div class="panel">
+        <label for="member-q">Search members</label>
+        <input id="member-q" type="search" placeholder="name, email, tier, IG…">
+        <div style="overflow-x:auto">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Contact</th>
+                <th>Tier</th>
+                <th>EXP</th>
+                <th>Claimed</th>
+              </tr>
+            </thead>
+            <tbody id="members-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-pane" id="tab-partners" hidden>
+      <div class="grid2">
+        <div class="panel">
+          <h2>Add / upsert partner</h2>
+          <label>Slug</label>
+          <input id="p-slug" placeholder="e.g. newbrand">
+          <label>Name</label>
+          <input id="p-name" placeholder="Display name">
+          <label>URL</label>
+          <input id="p-url" placeholder="https://…">
+          <label>Description</label>
+          <textarea id="p-desc" rows="2"></textarea>
+          <label>Sort order</label>
+          <input id="p-sort" type="number" value="100">
+          <button type="button" id="p-save">Save partner</button>
+        </div>
+        <div class="panel" style="overflow-x:auto">
+          <h2>Partners</h2>
+          <table>
+            <thead><tr><th>Name</th><th>Slug</th><th>Active</th><th></th></tr></thead>
+            <tbody id="partners-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-pane" id="tab-coupons" hidden>
+      <div class="grid2">
+        <div class="panel">
+          <h2>Insert / upsert coupon</h2>
+          <label>Partner</label>
+          <select id="c-partner"></select>
+          <label>Code (shared)</label>
+          <input id="c-code" placeholder="WK-EXAMPLE-15" style="text-transform:uppercase">
+          <label>Title</label>
+          <input id="c-title" placeholder="15% off">
+          <label>Benefit text</label>
+          <textarea id="c-benefit" rows="2" placeholder="Shown to members after claim"></textarea>
+          <label>Discount %</label>
+          <input id="c-discount" type="number" placeholder="15 (optional)">
+          <label>Min tier</label>
+          <select id="c-tier">
+            <option value="registered">registered (all members)</option>
+            <option value="flow_supporter">flow_supporter+</option>
+            <option value="flow_crew">flow_crew only rank+</option>
+          </select>
+          <button type="button" id="c-save">Save coupon</button>
+        </div>
+        <div class="panel" style="overflow-x:auto">
+          <h2>Coupons</h2>
+          <table>
+            <thead><tr><th>Code</th><th>Partner</th><th>Tier</th><th>Active</th><th></th></tr></thead>
+            <tbody id="coupons-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const KEY = 'cdf_membership_admin_key';
+    const api = '/api/admin-membership';
+    const els = {
+      gate: document.getElementById('gate'),
+      app: document.getElementById('app'),
+      key: document.getElementById('admin-key'),
+      gateErr: document.getElementById('gate-err'),
+      appErr: document.getElementById('app-err'),
+      appOk: document.getElementById('app-ok'),
+      stats: document.getElementById('stats'),
+      membersBody: document.getElementById('members-tbody'),
+      partnersBody: document.getElementById('partners-tbody'),
+      couponsBody: document.getElementById('coupons-tbody'),
+      partnerSelect: document.getElementById('c-partner'),
+      memberQ: document.getElementById('member-q'),
+    };
+
+    function adminKey() {
+      return localStorage.getItem(KEY) || '';
+    }
+
+    function setMsg(ok, text) {
+      els.appErr.textContent = ok ? '' : (text || '');
+      els.appOk.textContent = ok ? (text || '') : '';
+    }
+
+    async function call(action, opts = {}) {
+      const method = opts.method || 'GET';
+      const url = new URL(api, window.location.origin);
+      url.searchParams.set('action', action);
+      if (opts.q) url.searchParams.set('q', opts.q);
+      const res = await fetch(url.toString(), {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+          'x-admin-key': adminKey(),
+        },
+        body: opts.body ? JSON.stringify(opts.body) : undefined,
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || 'Request failed');
+      return data;
+    }
+
+    function unlock() {
+      els.gate.hidden = true;
+      els.app.hidden = false;
+      refreshAll();
+    }
+
+    async function tryUnlock(key) {
+      localStorage.setItem(KEY, key);
+      try {
+        await call('overview');
+        unlock();
+      } catch (e) {
+        localStorage.removeItem(KEY);
+        els.gateErr.textContent = e.message || 'Wrong password';
+      }
+    }
+
+    function renderStats(s) {
+      const by = s.byTier || {};
+      els.stats.innerHTML = [
+        ['Members', s.members],
+        ['7d claims', s.claimsLast7Days],
+        ['Grants', s.grants],
+        ['Partners', s.partners],
+        ['Coupons', s.coupons],
+        ['Registered', by.registered || 0],
+        ['Supporter', by.flow_supporter || 0],
+        ['Crew', by.flow_crew || 0],
+      ].map(([label, val]) => `<div class="stat"><b>${val}</b><span>${label}</span></div>`).join('');
+    }
+
+    function renderMembers(rows) {
+      els.membersBody.innerHTML = (rows || []).map((r) => {
+        const name = r.member_display_name || r.full_name || r.username || '—';
+        const contact = [r.email, r.instagram].filter(Boolean).join('<br>');
+        const when = r.member_card_claimed_at ? new Date(r.member_card_claimed_at).toLocaleString() : '—';
+        return `<tr>
+          <td>${esc(name)}<div class="badge">${esc(r.member_card_public_id || '')}</div></td>
+          <td>${contact || '—'}</td>
+          <td>${esc(r.membership_tier || 'registered')}<br><span class="badge">${esc(r.membership_status || 'none')}</span></td>
+          <td>${r.exp ?? '—'}</td>
+          <td>${when}</td>
+        </tr>`;
+      }).join('') || '<tr><td colspan="5">No claimed members yet.</td></tr>';
+    }
+
+    function renderPartners(rows) {
+      els.partnersBody.innerHTML = (rows || []).map((p) => `<tr>
+        <td><strong>${esc(p.name)}</strong><br><a href="${esc(p.url || '#')}" target="_blank" rel="noopener" style="color:var(--cyan);font-size:0.75rem">${esc(p.url || '')}</a></td>
+        <td class="code">${esc(p.slug)}</td>
+        <td>${p.active ? 'yes' : 'no'}</td>
+        <td class="row-actions">
+          <button type="button" class="ghost" data-toggle-partner="${p.id}" data-active="${p.active ? '1' : '0'}">${p.active ? 'Disable' : 'Enable'}</button>
+        </td>
+      </tr>`).join('') || '<tr><td colspan="4">No partners</td></tr>';
+
+      els.partnerSelect.innerHTML = (rows || [])
+        .filter((p) => p.active)
+        .map((p) => `<option value="${p.id}">${esc(p.name)}</option>`)
+        .join('');
+    }
+
+    function renderCoupons(rows) {
+      els.couponsBody.innerHTML = (rows || []).map((c) => {
+        const partner = c.partner?.name || c.partner_id;
+        const grants = Array.isArray(c.grants) ? (c.grants[0]?.count ?? c.grants.length) : (c.grants?.count ?? '—');
+        return `<tr>
+          <td><span class="code">${esc(c.code)}</span><br>${esc(c.title)}<br><small style="color:var(--muted)">${esc(c.benefit_text || '')}</small></td>
+          <td>${esc(partner)}<br><small>grants: ${grants}</small></td>
+          <td>${esc(c.min_tier)}</td>
+          <td>${c.active ? 'yes' : 'no'}</td>
+          <td class="row-actions">
+            <button type="button" class="ghost" data-toggle-coupon="${c.id}" data-active="${c.active ? '1' : '0'}">${c.active ? 'Disable' : 'Enable'}</button>
+          </td>
+        </tr>`;
+      }).join('') || '<tr><td colspan="5">No coupons</td></tr>';
+    }
+
+    function esc(s) {
+      return String(s ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    async function refreshAll() {
+      setMsg(true, '');
+      try {
+        const [ov, mem, partners, coupons] = await Promise.all([
+          call('overview'),
+          call('members', { q: els.memberQ.value || '' }),
+          call('partners'),
+          call('coupons'),
+        ]);
+        renderStats(ov.stats || {});
+        renderMembers(mem.members || []);
+        renderPartners(partners.partners || []);
+        renderCoupons(coupons.coupons || []);
+      } catch (e) {
+        setMsg(false, e.message);
+      }
+    }
+
+    document.getElementById('gate-btn').addEventListener('click', () => {
+      tryUnlock(els.key.value.trim());
+    });
+    els.key.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') tryUnlock(els.key.value.trim());
+    });
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      localStorage.removeItem(KEY);
+      location.reload();
+    });
+    document.getElementById('refresh-btn').addEventListener('click', refreshAll);
+
+    document.querySelectorAll('.tabs [data-tab]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tabs [data-tab]').forEach((b) => b.classList.toggle('on', b === btn));
+        document.querySelectorAll('.tab-pane').forEach((p) => {
+          p.hidden = p.id !== 'tab-' + btn.getAttribute('data-tab');
+        });
+      });
+    });
+
+    let searchTimer;
+    els.memberQ.addEventListener('input', () => {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(async () => {
+        try {
+          const mem = await call('members', { q: els.memberQ.value || '' });
+          renderMembers(mem.members || []);
+        } catch (e) {
+          setMsg(false, e.message);
+        }
+      }, 250);
+    });
+
+    document.getElementById('p-save').addEventListener('click', async () => {
+      try {
+        await call('partner', {
+          method: 'POST',
+          body: {
+            action: 'partner',
+            slug: document.getElementById('p-slug').value,
+            name: document.getElementById('p-name').value,
+            url: document.getElementById('p-url').value,
+            description: document.getElementById('p-desc').value,
+            sort_order: document.getElementById('p-sort').value,
+          },
+        });
+        setMsg(true, 'Partner saved');
+        refreshAll();
+      } catch (e) {
+        setMsg(false, e.message);
+      }
+    });
+
+    document.getElementById('c-save').addEventListener('click', async () => {
+      try {
+        await call('coupon', {
+          method: 'POST',
+          body: {
+            action: 'coupon',
+            partner_id: document.getElementById('c-partner').value,
+            code: document.getElementById('c-code').value,
+            title: document.getElementById('c-title').value,
+            benefit_text: document.getElementById('c-benefit').value,
+            discount_percent: document.getElementById('c-discount').value || null,
+            min_tier: document.getElementById('c-tier').value,
+          },
+        });
+        setMsg(true, 'Coupon saved');
+        refreshAll();
+      } catch (e) {
+        setMsg(false, e.message);
+      }
+    });
+
+    document.body.addEventListener('click', async (e) => {
+      const tp = e.target.closest('[data-toggle-partner]');
+      if (tp) {
+        try {
+          await call('update-partner', {
+            method: 'POST',
+            body: {
+              action: 'update-partner',
+              id: tp.getAttribute('data-toggle-partner'),
+              active: tp.getAttribute('data-active') !== '1',
+            },
+          });
+          refreshAll();
+        } catch (err) {
+          setMsg(false, err.message);
+        }
+      }
+      const tc = e.target.closest('[data-toggle-coupon]');
+      if (tc) {
+        try {
+          await call('update-coupon', {
+            method: 'POST',
+            body: {
+              action: 'update-coupon',
+              id: tc.getAttribute('data-toggle-coupon'),
+              active: tc.getAttribute('data-active') !== '1',
+            },
+          });
+          refreshAll();
+        } catch (err) {
+          setMsg(false, err.message);
+        }
+      }
+    });
+
+    if (adminKey()) {
+      tryUnlock(adminKey());
+    }
+  </script>
+</body>
+</html>

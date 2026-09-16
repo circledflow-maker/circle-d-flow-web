@@ -55,12 +55,43 @@
     flipBtn: document.getElementById('flip-card-btn'),
     shareBtn: document.getElementById('share-card-btn'),
     goSanctuary: document.getElementById('go-sanctuary-btn'),
+    couponsBox: document.getElementById('wk-coupons'),
+    afterClaimNav: document.getElementById('wk-after-claim-nav'),
     msg: document.getElementById('wk-status-msg'),
     issueMsg: document.getElementById('wk-issue-msg'),
     expChip: document.getElementById('chip-exp'),
     memberChip: document.getElementById('chip-member'),
     statusChip: document.getElementById('chip-status'),
   };
+
+  const DEFAULT_COUPONS = [
+    {
+      code: 'WK-PLUS1-ENTRY',
+      title: 'Guest +1 free entry',
+      benefitText: 'Freier Eintritt für dich +1 bei Wako Kungo und Partner-Events.',
+      partner: { name: 'Wako Kungo', url: 'https://www.instagram.com/wako.kungo/', slug: 'wako' },
+    },
+    {
+      code: 'WK-FREE-DRINK',
+      title: 'Wako free drink',
+      benefitText: 'Ein Free Drink bei Wako Kungo (Mitgliedskarte zeigen).',
+      partner: { name: 'Wako Kungo', url: 'https://www.instagram.com/wako.kungo/', slug: 'wako' },
+    },
+    {
+      code: 'WK-HUMBLE-15',
+      title: 'Humble 15% off',
+      benefitText: '15% Rabatt bei Humble.project mit Mitgliedscode.',
+      discountPercent: 15,
+      partner: { name: 'Humble.project', url: 'https://humble-project.com/', slug: 'humble' },
+    },
+    {
+      code: 'WK-KREATIV-20',
+      title: 'Kreativlon 20% off',
+      benefitText: '20% Rabatt bei Kreativlon.art mit Mitgliedscode.',
+      discountPercent: 20,
+      partner: { name: 'Kreativlon.art', url: 'https://www.kreativlon.shop', slug: 'kreativlon' },
+    },
+  ];
 
   function loadCard() {
     try {
@@ -103,12 +134,10 @@
     return u.toString();
   }
 
-  function profileQrUrl(card, uid) {
-    const u = new URL(window.location.origin + '/pages/artist_sanctuary.html');
-    u.searchParams.set('member', memberNumber(card));
-    if (uid) u.searchParams.set('uid', uid);
-    u.searchParams.set('card', publicId(card));
-    return u.toString();
+  const WAKO_IG = 'https://www.instagram.com/wako.kungo/';
+
+  function profileQrUrl(_card, _uid) {
+    return WAKO_IG;
   }
 
   function speak(msg, type) {
@@ -167,6 +196,72 @@
     img.src =
       'https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=' + encodeURIComponent(url);
     els.qr.appendChild(img);
+  }
+
+  function renderCoupons(list) {
+    const box = els.couponsBox;
+    if (!box) return;
+    const coupons = Array.isArray(list) && list.length ? list : DEFAULT_COUPONS;
+    box.hidden = false;
+    box.innerHTML =
+      '<p class="wk-hint" style="margin:0 0 0.35rem">Deine Partner-Gutscheine (shared codes — kopieren &amp; einlösen):</p>' +
+      coupons
+        .map((c) => {
+          const partner = c.partner || {};
+          const url = partner.url || '#';
+          const name = partner.name || 'Partner';
+          const code = c.code || '';
+          return (
+            '<article class="wk-coupon" data-code="' +
+            code.replace(/"/g, '') +
+            '">' +
+            '<strong>' +
+            name +
+            ' · ' +
+            (c.title || 'Perk') +
+            '</strong>' +
+            '<div class="wk-code">' +
+            code +
+            '</div>' +
+            '<p>' +
+            (c.benefitText || c.benefit_text || '') +
+            '</p>' +
+            '<div class="wk-coupon-actions">' +
+            '<button type="button" class="wk-btn wk-btn--gold wk-copy-code" data-code="' +
+            code.replace(/"/g, '') +
+            '">Copy code</button>' +
+            '<a class="wk-btn wk-btn--partner" href="' +
+            url +
+            '" target="_blank" rel="noopener noreferrer">Open partner</a>' +
+            '</div></article>'
+          );
+        })
+        .join('');
+
+    box.querySelectorAll('.wk-copy-code').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const code = btn.getAttribute('data-code') || '';
+        try {
+          await navigator.clipboard.writeText(code);
+          speak('Code ' + code + ' copied.', 'guide');
+          btn.textContent = 'Copied';
+          setTimeout(() => {
+            btn.textContent = 'Copy code';
+          }, 1200);
+        } catch (_) {
+          prompt('Copy code:', code);
+        }
+      });
+    });
+
+    try {
+      const card = loadCard();
+      card.coupons = coupons;
+      saveCard(card);
+      localStorage.setItem('cdf_member_coupons', JSON.stringify(coupons));
+    } catch (_) {
+      /* ignore */
+    }
   }
 
   function setChips(card, exp) {
@@ -556,19 +651,25 @@
           expShown = data.exp;
           card.publicId = data.publicId || card.publicId;
           card.profileBound = true;
+          if (data.tier) card.tier = data.tier;
           saveCard(card);
           setMsg(
             els.issueMsg,
             'Card on profile · ' + card.memberNumber + ' · +' + (data.xpAwarded || 0) + ' EXP',
             true
           );
+          renderCoupons(data.coupons);
         } else if (data.code === 'AUTH_REQUIRED') {
           setMsg(els.issueMsg, 'Session expired — swipe back to sign in.', false);
+          if (data.coupons) renderCoupons(data.coupons);
+          else renderCoupons(DEFAULT_COUPONS);
         } else {
           setMsg(els.issueMsg, data.error || 'Profile save failed — card kept locally.', false);
+          renderCoupons(DEFAULT_COUPONS);
         }
       } catch (_) {
         setMsg(els.issueMsg, 'Network issue — card kept on this device.', false);
+        renderCoupons(DEFAULT_COUPONS);
       }
     } else {
       try {
@@ -585,6 +686,7 @@
         /* ignore */
       }
       setMsg(els.issueMsg, 'Card claimed on device. Sign in later to sync EXP.', true);
+      renderCoupons(DEFAULT_COUPONS);
     }
 
     pushInventory(card, uid);
@@ -593,17 +695,15 @@
     const profile = await readExp();
     setChips(card, expShown != null ? expShown : profile.exp);
     els.card?.classList.add('is-flipped');
+    if (els.afterClaimNav) els.afterClaimNav.hidden = false;
+    if (els.claimBtn) els.claimBtn.hidden = true;
 
     speak(
       'Card ' +
         card.memberNumber +
-        ' is in your inventory. Opening the 3D Sanctuary…',
+        ' is ready. Your partner Gutscheine are below — copy codes, then enter the Sanctuary.',
       'guide'
     );
-
-    setTimeout(() => {
-      window.location.href = SANCTUARY_URL;
-    }, 1400);
   }
 
   async function startCheckout(tier) {
@@ -818,7 +918,7 @@
 
     if (card.claimed) memberNumber(card);
     renderName(card.displayName || '', card.memberNumber || '');
-    renderQr(card.claimed ? profileQrUrl(card, profile.uid) : cardUrl(card));
+    renderQr(WAKO_IG);
     setChips(card, profile.exp);
 
     // Paid return
@@ -859,8 +959,16 @@
     }
 
     if (card.claimed && profile.authed) {
-      goStep(6, { silent: true });
-      speak('Welcome back. Your card is active — Sanctuary or optional upgrade.', 'guide');
+      goStep(5, { silent: true });
+      try {
+        const saved = JSON.parse(localStorage.getItem('cdf_member_coupons') || 'null');
+        renderCoupons(saved || card.coupons || DEFAULT_COUPONS);
+      } catch (_) {
+        renderCoupons(DEFAULT_COUPONS);
+      }
+      if (els.afterClaimNav) els.afterClaimNav.hidden = false;
+      if (els.claimBtn) els.claimBtn.hidden = true;
+      speak('Welcome back. Your card and partner codes are ready.', 'guide');
       return;
     }
 

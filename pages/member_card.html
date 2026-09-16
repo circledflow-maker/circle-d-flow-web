@@ -10,7 +10,7 @@
   <meta property="og:image" content="/Assets/membership/wako_card_front.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/member_card.css?v=20260916">
+  <link rel="stylesheet" href="/css/member_card.css?v=20260916b">
   <link rel="preload" as="image" href="/Assets/membership/wako_card_front.jpg">
   <link rel="preload" as="image" href="/Assets/membership/wako_card_back.jpg">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -158,10 +158,15 @@
           <div class="wk-panel">
             <h2>Claim card · +25 EXP</h2>
             <div id="wk-issue-msg" class="wk-status" hidden></div>
-            <p class="wk-hint" style="margin-top:0">Your membership card lands in inventory with member number + profile QR. Then we open the 3D Sanctuary.</p>
+            <p class="wk-hint" style="margin-top:0">Your membership card lands in inventory with member number + profile QR. Partner Gutscheine appear after claim.</p>
+            <div id="wk-coupons" class="wk-coupons" hidden></div>
             <div class="wk-nav">
               <button type="button" class="wk-btn wk-btn--ghost" data-prev>Back</button>
-              <button type="button" class="wk-btn wk-btn--gold" id="claim-card-btn">Claim &amp; enter Sanctuary</button>
+              <button type="button" class="wk-btn wk-btn--gold" id="claim-card-btn">Claim &amp; unlock codes</button>
+            </div>
+            <div class="wk-nav" style="margin-top:0.45rem" id="wk-after-claim-nav" hidden>
+              <a class="wk-btn wk-btn--gold" id="go-sanctuary-after-claim" href="/pages/artist_sanctuary.html?welcome=card">Enter 3D Sanctuary</a>
+              <button type="button" class="wk-btn wk-btn--cyan" data-next id="to-tiers-btn">Optional paid tiers</button>
             </div>
             <div class="wk-nav" style="margin-top:0.45rem">
               <button type="button" class="wk-btn wk-btn--ghost" id="flip-card-btn">Flip card</button>
@@ -209,8 +214,8 @@
   <div id="flowee-agent"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
-  <script src="/js/agents/flowee.js?v=20260916" defer></script>
-  <script src="/js/agents/flowee_member_card_guide.js?v=20260916" defer></script>
-  <script src="/js/member_card.js?v=20260916" defer></script>
+  <script src="/js/agents/flowee.js?v=20260916b" defer></script>
+  <script src="/js/agents/flowee_member_card_guide.js?v=20260916b" defer></script>
+  <script src="/js/member_card.js?v=20260916b" defer></script>
 </body>
 </html>

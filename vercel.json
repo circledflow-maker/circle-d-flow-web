@@ -13,6 +13,7 @@
     { "source": "/api/create-membership-checkout", "destination": "/api/payments?route=membership" },
     { "source": "/api/membership-activate", "destination": "/api/payments?route=membership-activate" },
     { "source": "/api/claim-member-card", "destination": "/api/registrations?route=claim-card" },
+    { "source": "/api/admin-membership", "destination": "/api/registrations?route=admin-membership" },
     { "source": "/api/whatsapp-webhook", "destination": "/api/whatsapp?webhook=1" }
   ],
   "redirects": [
@@ -34,6 +35,7 @@
     { "source": "/member-card", "destination": "/pages/member_card", "permanent": false },
     { "source": "/flow-crew", "destination": "/pages/member_card", "permanent": false },
     { "source": "/admin/registrations", "destination": "/pages/admin_registrations", "permanent": false },
+    { "source": "/admin/membership", "destination": "/pages/admin_membership", "permanent": false },
     { "source": "/kyh", "destination": "/pages/kyh", "permanent": false },
     { "source": "/kiss-your-heart", "destination": "/pages/kyh", "permanent": false },
     { "source": "/create", "destination": "/pages/kyh/create", "permanent": false },

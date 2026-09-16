@@ -400,6 +400,53 @@ body.wk-card-page {
   padding: 0.62rem 0.5rem;
 }
 
+.wk-coupons {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0.65rem 0 0.85rem;
+}
+
+.wk-coupon {
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 12px;
+  padding: 0.7rem 0.8rem;
+}
+
+.wk-coupon strong {
+  display: block;
+  color: var(--wk-gold-soft);
+  font-size: 0.82rem;
+  margin-bottom: 0.15rem;
+}
+
+.wk-coupon .wk-code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  letter-spacing: 0.06em;
+  color: #fff;
+  font-size: 0.95rem;
+  margin: 0.25rem 0;
+}
+
+.wk-coupon p {
+  margin: 0;
+  font-size: 0.75rem;
+  color: rgba(244, 239, 230, 0.65);
+  line-height: 1.35;
+}
+
+.wk-coupon .wk-coupon-actions {
+  display: flex;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+}
+
+.wk-coupon .wk-coupon-actions .wk-btn {
+  flex: 1;
+  padding: 0.45rem 0.6rem;
+  font-size: 0.7rem;
+}
+
 #flowee-agent {
   position: fixed;
   right: 10px;
