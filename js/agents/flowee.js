@@ -102,9 +102,9 @@ class FloweeAgent {
             "academy.html": { mode: "guide", intro: "The Academy lists every participant.", action: "Tap a manga panel — edit your bio and media descriptions." },
             "hall_of_legends.html": { mode: "guide", intro: "The Brotherhood ranks Navigators by XP.", action: "Rise in the Atlas, then return here to see your rank sync." },
             "artist_sanctuary.html": { mode: "guide", intro: "Welcome to the Artist Sanctuary — Akwaba zone, Stage, and Archive await.", action: "I can route you to the Lisbon Atlas or your nearest quest." },
-            "lapa71_register.html": { mode: "guide", intro: "Welcome to the family — Lapa 71 x Tagus Drop Rhythm registration.", action: "I will coach each section. Start with your name, then disciplines, Aug 29, and jam details if you flow." },
-            "member_card.html": { mode: "guide", intro: "Your Wako Kungo membership card.", action: "Claim your name, flip for QR, grow EXP — then decide Free, Supporter, or Flow Crew." },
-            "join.html": { mode: "guide", intro: "Welcome to the family — Lapa 71 x Tagus Drop Rhythm registration.", action: "I will coach each section. Start with your name, then disciplines, Aug 29, and jam details if you flow." },
+            "lapa71_register": { mode: "guide", intro: "Akwaaba — choose your language, then I welcome you." },
+            "member_card": { mode: "guide", intro: "Your Wako Kungo membership card — benefits, upgrades, Sanctuary." },
+            "join": { mode: "guide", intro: "Akwaaba — choose your language, then I welcome you." },
             "kyh/index.html": { mode: "guide", intro: "Welcome to Kiss Your Heart — Creative Project Management.", action: "Start Your Project when you are ready. I will guide you through Feel → Share." },
             "kyh/journey.html": { mode: "guide", intro: "The six-stage journey — from first feeling to shared echo.", action: "Every real cultural project walks this path." },
             "kyh/create/project-builder.html": { mode: "guide", intro: "No bureaucracy — one meaningful question at a time.", action: "Tell me what you are creating. We will shape it together." },
@@ -588,7 +588,16 @@ class FloweeAgent {
         // Start Interaction — defer on landing until cinematic intro completes
         const isLanding = this._isLandingPage();
         const startMainIntro = () => {
-            if (!isLanding) {
+            const path = (window.location.pathname || '').toLowerCase();
+            // Join + Member Card: dedicated guides own the greeting (wait for user confirm)
+            const guided =
+              path.includes('lapa71_register') ||
+              path.includes('member_card') ||
+              path.endsWith('/join') ||
+              path.includes('/join?') ||
+              document.body.classList.contains('join-page') ||
+              document.body.classList.contains('wk-card-page');
+            if (!isLanding && !guided) {
                 this.talk(true, this.currentContext.intro);
             }
             if (this.currentContext.target) this.highlight(this.currentContext.target);
@@ -642,6 +651,16 @@ class FloweeAgent {
             }
 
             if (!isLanding && !window.location.pathname.includes('dashboard.html') && !localStorage.getItem('cdf_beta_mission_1')) {
+                const p = (window.location.pathname || '').toLowerCase();
+                const guided =
+                  p.includes('lapa71_register') ||
+                  p.includes('member_card') ||
+                  p.endsWith('/join') ||
+                  document.body.classList.contains('join-page') ||
+                  document.body.classList.contains('wk-card-page');
+                if (guided) {
+                  /* FloweeJoinGuide / MemberCardGuide owns the conversation */
+                } else {
                 console.log("[Flowee] Beta Protocol: Mission #1 Assigning...");
                 setTimeout(() => {
                     this.talk(true, "🏴CQR Captain! The Brain is online. I have a mission for you.", "guide");
@@ -652,6 +671,7 @@ class FloweeAgent {
                          if(window.BetaLogger) window.BetaLogger.toggle(); 
                     }, 4000);
                 }, 2000);
+                }
             }
 
         }, isLanding ? 1200 : 1000);

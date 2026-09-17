@@ -261,9 +261,7 @@
     speak(t('hello'), 'guide', [
       { label: t('hello_btn'), action: () => glideAndIntro() },
     ]);
-    setTimeout(() => {
-      if (!stageDone) glideAndIntro();
-    }, 4500);
+    // Wait for user confirmation — no auto-advance
   }
 
   async function runOpening() {
@@ -274,14 +272,15 @@
 
     const switcher = document.getElementById('cdf-lang-switch');
     if (window.CDFi18n && switcher) {
-      window.CDFi18n.mountSwitcher(switcher, () => {
-        if (!stageDone) askLanguage();
+      window.CDFi18n.mountSwitcher(switcher, (code) => {
+        langPicked = true;
+        if (!stageDone) welcomeCenter();
       });
     }
 
-    // If lang already chosen this session, skip picker
+    // Always ask language first; only skip if user already confirmed this session
     try {
-      if (sessionStorage.getItem('cdf_join_lang_ok') === '1') {
+      if (sessionStorage.getItem('cdf_join_lang_ok') === '1' && window.CDFi18n?.getLang()) {
         langPicked = true;
         welcomeCenter();
         return;

@@ -178,9 +178,7 @@
     say(t('card_welcome'), 'guide', [
       { label: t('hello_btn'), action: () => glideAndGuide() },
     ]);
-    setTimeout(() => {
-      if (!stageDone) glideAndGuide();
-    }, 4200);
+    // Wait for user tap — no auto-advance
   }
 
   function askLanguage() {
@@ -215,7 +213,6 @@
     if (window.CDFi18n && switcher) {
       window.CDFi18n.mountSwitcher(switcher, () => {
         renderBenefitsTable();
-        if (!stageDone) askLanguage();
       });
     }
     document.getElementById('wk-benefits-toggle')?.addEventListener('click', () => {
@@ -226,12 +223,9 @@
     });
     document.getElementById('wk-upgrade-btn')?.addEventListener('click', () => openUpgrade());
 
-    // Returning members (orbit view) → soft dock, still offer benefits
-    const view = new URLSearchParams(window.location.search).get('view');
-    if (view === 'card' || document.getElementById('wk-orbit-shell')?.hidden === false) {
-      // still greet once
-    }
-
+    // Benefits visible by default
+    showBenefitsPanel(true);
+    renderBenefitsTable();
     askLanguage();
   }
 

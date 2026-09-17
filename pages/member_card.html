@@ -12,23 +12,30 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
   <noscript><link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
-  <link rel="stylesheet" href="/css/member_card.css?v=20260917e">
+  <link rel="stylesheet" href="/css/member_card.css?v=20260917f">
   <link rel="preload" as="image" href="/Assets/membership/wako_card_front.webp" fetchpriority="high">
   <link rel="preload" as="image" href="/Assets/membership/wako_card_back.webp">
   <script src="/js/cdf_runtime_config.js" defer></script>
   <script src="/js/agents/supabase_client.js" defer></script>
 </head>
 <body class="wk-card-page">
+  <div class="cdf-lang-bar" role="group" aria-label="Language">
+    <span class="cdf-lang-label">Idioma · Language · Sprache</span>
+    <div id="cdf-lang-switch" class="cdf-lang-switch">
+      <button type="button" class="cdf-lang-btn" data-lang="pt">PT</button>
+      <button type="button" class="cdf-lang-btn" data-lang="en">EN</button>
+      <button type="button" class="cdf-lang-btn" data-lang="de">DE</button>
+    </div>
+  </div>
   <main class="wk-shell">
     <header class="wk-top">
       <p class="wk-brand">Circle D Flow · Wako Kungo</p>
-      <div id="cdf-lang-switch" class="cdf-lang-switch" aria-label="Language"></div>
       <div class="wk-step-dots" id="wk-dots" aria-hidden="true">
         <span class="on"></span><span></span><span></span><span></span><span></span>
       </div>
     </header>
 
-    <p class="wk-flowee-line" id="wk-guide" role="status">Flowee is ready. Swipe or tap Next — I will guide each step.</p>
+    <p class="wk-flowee-line" id="wk-guide" role="status">Flowee greets you in the center — pick a language, then confirm.</p>
 
     <div class="wk-meta" aria-live="polite">
       <span class="wk-chip" id="chip-status">Card <strong>Draft</strong></span>
@@ -37,14 +44,14 @@
       <span class="wk-chip" id="wk-tier-chip">Registered · Free</span>
     </div>
 
-    <div class="wk-ben-actions" style="margin:0.35rem 0 0.5rem">
+    <div class="wk-ben-actions">
       <button type="button" class="wk-btn wk-btn--ghost" id="wk-benefits-toggle">Benefits</button>
-      <button type="button" class="wk-btn wk-btn--cyan" id="wk-upgrade-btn">Upgrade</button>
+      <button type="button" class="wk-btn wk-btn--cyan" id="wk-upgrade-btn">Upgrade · €5 / €10</button>
     </div>
 
-    <aside class="wk-benefits" id="wk-benefits-panel" hidden>
+    <aside class="wk-benefits" id="wk-benefits-panel">
       <h3 id="wk-benefits-title">Your benefits</h3>
-      <p class="wk-hint" id="wk-benefits-sub">Current tier vs upgrades you can purchase.</p>
+      <p class="wk-hint" id="wk-benefits-sub">Current tier vs upgrades you can purchase. ✓ included · ★ unlock with upgrade.</p>
       <div style="overflow-x:auto">
         <table class="wk-ben-table">
           <thead>
@@ -271,10 +278,10 @@
   <div id="flowee-agent"></div>
 
   <!-- Heavy scripts deferred; supabase + qrcode loaded on demand by member_card.js -->
-  <script src="/js/data/cdf_i18n.js?v=20260917e" defer></script>
-  <script src="/js/agents/flowee.js?v=20260917e" defer></script>
-  <script src="/js/agents/flowee_member_card_guide.js?v=20260917e" defer></script>
-  <script src="/js/member_card.js?v=20260917e" defer></script>
-  <script src="/js/flow_orbit.js?v=20260917e" defer></script>
+  <script src="/js/data/cdf_i18n.js?v=20260917f" defer></script>
+  <script src="/js/agents/flowee.js?v=20260917f" defer></script>
+  <script src="/js/agents/flowee_member_card_guide.js?v=20260917f" defer></script>
+  <script src="/js/member_card.js?v=20260917f" defer></script>
+  <script src="/js/flow_orbit.js?v=20260917f" defer></script>
 </body>
 </html>

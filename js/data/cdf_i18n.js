@@ -157,20 +157,40 @@
 
   function mountSwitcher(host, onChange) {
     if (!host) return null;
-    host.innerHTML = '';
     host.classList.add('cdf-lang-switch');
     host.setAttribute('role', 'group');
     host.setAttribute('aria-label', t('lang_label'));
+    const existing = host.querySelectorAll('[data-lang]');
+    if (existing.length) {
+      existing.forEach((btn) => {
+        const code = normalize(btn.getAttribute('data-lang'));
+        btn.classList.add('cdf-lang-btn');
+        btn.classList.toggle('on', code === getLang());
+        btn.setAttribute('aria-pressed', code === getLang() ? 'true' : 'false');
+        btn.onclick = () => {
+          setLang(code);
+          host.querySelectorAll('[data-lang]').forEach((b) => {
+            const on = normalize(b.getAttribute('data-lang')) === code;
+            b.classList.toggle('on', on);
+            b.setAttribute('aria-pressed', on ? 'true' : 'false');
+          });
+          if (typeof onChange === 'function') onChange(code);
+        };
+      });
+      return host;
+    }
+    host.innerHTML = '';
     SUPPORTED.forEach((code) => {
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'cdf-lang-btn' + (code === getLang() ? ' on' : '');
       btn.textContent = code.toUpperCase();
+      btn.setAttribute('data-lang', code);
       btn.setAttribute('aria-pressed', code === getLang() ? 'true' : 'false');
       btn.addEventListener('click', () => {
         setLang(code);
         host.querySelectorAll('.cdf-lang-btn').forEach((b) => {
-          const on = b.textContent.toLowerCase() === code;
+          const on = b.getAttribute('data-lang') === code;
           b.classList.toggle('on', on);
           b.setAttribute('aria-pressed', on ? 'true' : 'false');
         });
