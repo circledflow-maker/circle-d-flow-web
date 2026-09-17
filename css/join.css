@@ -371,6 +371,63 @@ body::before {
   right: 14px;
   bottom: calc(16px + env(safe-area-inset-bottom, 0px));
   z-index: 99999;
+  transition: transform 0.85s cubic-bezier(0.22, 1, 0.36, 1), left 0.85s ease, right 0.85s ease, bottom 0.85s ease, top 0.85s ease;
+}
+
+.event-chip {
+  margin-top: 0.75rem;
+  font-size: 0.82rem;
+  color: var(--muted);
+  line-height: 1.4;
+}
+.event-chip a { color: var(--cyan); }
+
+/* Flowee opening: float center, then dock bottom-right */
+body.join-flowee-center #flowee-agent {
+  left: 50%;
+  right: auto;
+  top: 42%;
+  bottom: auto;
+  transform: translate(-50%, -50%) scale(1.55);
+}
+body.join-flowee-center #flowee-agent #flowee-visual {
+  width: 96px !important;
+  height: 96px !important;
+  filter: drop-shadow(0 0 24px rgba(0, 255, 204, 0.45));
+}
+body.join-flowee-center #flowee-agent #flowee-bubble {
+  width: min(320px, calc(100vw - 48px)) !important;
+  max-width: min(320px, calc(100vw - 48px)) !important;
+  margin-right: 0 !important;
+  transform-origin: bottom center !important;
+}
+body.join-intro-dim .join-shell {
+  opacity: 0.35;
+  pointer-events: none;
+  filter: blur(1px);
+  transition: opacity 0.5s ease, filter 0.5s ease;
+}
+body.join-flowee-docked .join-shell,
+body.join-form-ready .join-shell {
+  opacity: 1;
+  pointer-events: auto;
+  filter: none;
+}
+body.join-flowee-docked #flowee-agent {
+  left: auto;
+  right: 14px;
+  top: auto;
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  transform: none;
+}
+
+@media (max-width: 640px) {
+  .panel { padding: 1.15rem 1rem 1.3rem; }
+  .brand-mark { letter-spacing: 0.08em; }
+  body.join-flowee-center #flowee-agent {
+    top: 38%;
+    transform: translate(-50%, -50%) scale(1.35);
+  }
 }
 
 .join-journey {

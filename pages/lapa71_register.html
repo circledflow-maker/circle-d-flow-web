@@ -3,30 +3,37 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Join the Circle — Member Registration | Circle D Flow</title>
-  <meta name="description" content="Join Circle D Flow — Flowee guides you from invite to Member Card to the 3D Artist Sanctuary.">
-  <meta property="og:title" content="Circle D Flow — Find Your Flow">
-  <meta property="og:description" content="Open the invite. Register or log in. Claim your Member Card. Land in the 3D Artist Sanctuary.">
+  <title>Join · Botanical Groove Session · Wako Kungo | Circle D Flow</title>
+  <meta name="description" content="Register for The Botanical Groove Session — 24 Sep at Botânica Lisboa. Flowee guides you to your Wako Kungo Membership Card and the 3D Artist Sanctuary.">
+  <meta property="og:title" content="Wako Kungo presents The Botanical Groove Session">
+  <meta property="og:description" content="24.09 · 20:00–23:00 · Botânica Lisboa · Free entrance · Responsible donations. Register with Flowee.">
   <meta property="og:type" content="website">
-  <link rel="stylesheet" href="../css/join.css">
+  <link rel="stylesheet" href="../css/join.css?v=20260917c">
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="join-page">
   <nav class="nav-bar" aria-label="Primary">
     <a href="../index.html">Home</a>
     <a href="/pages/bantaba.html">Bantaba</a>
     <a href="/login?next=%2Fpages%2Fartist_sanctuary.html%3Fwelcome%3Dregister">Login</a>
+    <a href="/member-card?src=botanica">Member Card</a>
     <a href="/pages/artist_sanctuary">Sanctuary</a>
   </nav>
 
   <main class="join-shell">
     <header class="hero-brand">
-      <p class="brand-mark">Circle D Flow</p>
+      <p class="brand-mark">Wako Kungo · Circle D Flow</p>
       <p class="brand-sub">FIND YOUR FLOW · C4C</p>
-      <h1 class="hero-title">Enter the Circle</h1>
+      <h1 class="hero-title">The Botanical Groove Session</h1>
       <p class="hero-welcome">
-        Flowee greets you here. Register or log in — then claim your Member Card and land in the
-        <strong>3D Artist Sanctuary</strong>. Membership is an invitation, never a wall.
+        <strong>24 September · 20:00–23:00 · Botânica Lisboa</strong><br>
+        Free entrance · Responsible donations. Flowee greets you here — register,
+        claim your <strong>Wako Kungo Membership Card</strong>, then enter the
+        <strong>3D Artist Sanctuary</strong>.
+      </p>
+      <p class="event-chip">
+        Next night: Botânica — not Lapa 71 (August). 
+        <a href="https://www.instagram.com/p/DdUqd6ejdZ6/" target="_blank" rel="noopener">Event on Instagram</a>
       </p>
       <ol class="join-journey" id="join-journey" aria-label="Your path">
         <li class="on">Invite</li>
@@ -37,14 +44,14 @@
     </header>
 
     <div id="flowee-invite-gate" class="invite-gate" hidden>
-      <p class="invite-kicker">Flowee is speaking</p>
+      <p class="invite-kicker">Flowee is with you</p>
       <p class="invite-copy">
-        Use the chat options below — or start registration when you are ready.
+        Use the chat buttons — or start when you are ready. After registration you can claim your Wako Kungo Membership Card.
       </p>
       <div class="invite-actions">
         <button type="button" class="btn btn-primary" id="invite-start-reg">Register with Flowee</button>
         <a class="btn btn-ghost" href="/login?next=%2Fpages%2Fartist_sanctuary.html%3Fwelcome%3Dregister">I already have a login</a>
-        <a class="btn btn-ghost" href="/member-card?src=join&amp;next=%2Fpages%2Fartist_sanctuary.html%3Fwelcome%3Dcard">Claim Member Card</a>
+        <a class="btn btn-ghost" href="/member-card?src=botanica&amp;next=%2Fpages%2Fartist_sanctuary.html%3Fwelcome%3Dcard">Claim Wako Member Card</a>
       </div>
     </div>
 
@@ -58,7 +65,6 @@
     <form id="join-form" novalidate hidden>
       <div id="form-error" class="form-error" role="alert"></div>
 
-      <!-- Section 1 -->
       <section class="panel" data-section="1" id="section-1">
         <p class="section-kicker">Section 1 · Identity</p>
         <h2 class="section-title">Who are you in the Flow?</h2>
@@ -89,7 +95,6 @@
         </div>
       </section>
 
-      <!-- Section 2 -->
       <section class="panel" data-section="2" id="section-2" hidden>
         <p class="section-kicker">Section 2 · Discipline</p>
         <h2 class="section-title">Primary artistic discipline</h2>
@@ -107,7 +112,7 @@
 
         <div class="field" id="discipline-other-wrap" hidden>
           <label for="disciplineOther">Describe your other discipline / art</label>
-          <input id="disciplineOther" name="disciplineOther" type="text" placeholder="e.g. photographer, dancer, poet, ceramicist…" data-flowee-hint="other">
+          <input id="disciplineOther" name="disciplineOther" type="text" placeholder="e.g. photographer, dancer, poet…" data-flowee-hint="other">
         </div>
 
         <div class="actions">
@@ -116,36 +121,35 @@
         </div>
       </section>
 
-      <!-- Section 3 -->
       <section class="panel" data-section="3" id="section-3" hidden>
-        <p class="section-kicker">Section 3 · Night of Aug 29</p>
+        <p class="section-kicker">Section 3 · Botânica · 24/09</p>
         <h2 class="section-title">Will you be with us?</h2>
 
-        <p class="section-kicker" style="margin-top:0.4rem">Attending Aug 29 · 19:30 @ Lapa 71?</p>
-        <div class="choice-row two" role="radiogroup" aria-label="Attending Aug 29">
+        <p class="section-kicker" style="margin-top:0.4rem">Attending 24 September · 20:00–23:00 @ Botânica Lisboa?</p>
+        <div class="choice-row two" role="radiogroup" aria-label="Attending Botanica">
           <label class="choice-card">
-            <input type="radio" name="attendingAug29" value="yes" required>
+            <input type="radio" name="attendingEvent" value="yes" required>
             <strong>Yes</strong>
-            <p>Responsible Donation — join the night at Lapa 71.</p>
+            <p>Free entrance · Responsible donations — Botanical Groove Session.</p>
           </label>
           <label class="choice-card">
-            <input type="radio" name="attendingAug29" value="no">
+            <input type="radio" name="attendingEvent" value="no">
             <strong>No</strong>
-            <p>Keep me updated for the next gatherings.</p>
+            <p>Keep me in the Circle for the next gatherings.</p>
           </label>
         </div>
 
-        <p class="section-kicker">Interested in the Jam?</p>
+        <p class="section-kicker">Interested in performing / sharing art?</p>
         <div class="choice-row two" role="radiogroup" aria-label="Jam interest">
           <label class="choice-card">
             <input type="radio" name="jamInterested" value="yes" required>
             <strong>Yes</strong>
-            <p>I want to perform / jam — next step asks for details.</p>
+            <p>I want to perform / jam / showcase — next step asks for details.</p>
           </label>
           <label class="choice-card">
             <input type="radio" name="jamInterested" value="no">
             <strong>No</strong>
-            <p>Skip jam details — still a full member of the family.</p>
+            <p>Skip stage details — still a full member of the family.</p>
           </label>
         </div>
 
@@ -155,12 +159,11 @@
         </div>
       </section>
 
-      <!-- Section 4 (conditional) -->
       <section class="panel" data-section="4" id="section-4" hidden>
-        <p class="section-kicker">Section 4 · Jam Details</p>
+        <p class="section-kicker">Section 4 · Stage / Share Details</p>
         <h2 class="section-title">How will you flow?</h2>
 
-        <p class="section-kicker">How do you want to perform?</p>
+        <p class="section-kicker">How do you want to show up?</p>
         <div class="choice-row" role="radiogroup" aria-label="Perform style">
           <label class="choice-card">
             <input type="radio" name="jamPerformStyle" value="solo">
@@ -170,12 +173,12 @@
           <label class="choice-card">
             <input type="radio" name="jamPerformStyle" value="jam_with_musicians">
             <strong>Jam with musicians</strong>
-            <p>Plug into the band energy with Jam Lead Mr. Isaac.</p>
+            <p>Plug into the live groove with the Circle crew.</p>
           </label>
           <label class="choice-card">
             <input type="radio" name="jamPerformStyle" value="freestyle">
             <strong>Freestyle</strong>
-            <p>Open floor — spontaneous Tagus Drop rhythm.</p>
+            <p>Open floor — spontaneous Botanical energy.</p>
           </label>
           <label class="choice-card">
             <input type="radio" name="jamPerformStyle" value="art_showcase">
@@ -186,16 +189,15 @@
 
         <div class="field">
           <label for="jamArtDescription">Describe your art / performance</label>
-          <textarea id="jamArtDescription" name="jamArtDescription" rows="3" placeholder="What will you show or share? Medium, theme, vibe, installation, lookbook, photo series…" data-flowee-hint="art"></textarea>
-          <p class="field-hint">For visual artists, fashion, designers, photographers, and other creators — tell us your piece.</p>
+          <textarea id="jamArtDescription" name="jamArtDescription" rows="3" placeholder="What will you share? Medium, theme, vibe…" data-flowee-hint="art"></textarea>
         </div>
         <div class="field">
           <label for="jamInstruments">Instruments / tools / medium</label>
-          <input id="jamInstruments" name="jamInstruments" type="text" placeholder="e.g. voice, guitar, camera, paints, sewing machine…" data-flowee-hint="instruments">
+          <input id="jamInstruments" name="jamInstruments" type="text" placeholder="e.g. voice, guitar, camera, paints…" data-flowee-hint="instruments">
         </div>
         <div class="field" id="music-notes-wrap">
           <label for="jamSongDetails">Music notes (songs / key / BPM / genre)</label>
-          <textarea id="jamSongDetails" name="jamSongDetails" placeholder="Optional for musicians — list songs, keys, BPM, genre…" data-flowee-hint="songs"></textarea>
+          <textarea id="jamSongDetails" name="jamSongDetails" placeholder="Optional for musicians…" data-flowee-hint="songs"></textarea>
         </div>
 
         <p class="section-kicker">Backing track?</p>
@@ -222,27 +224,24 @@
     <section class="panel success-panel" id="success-panel" hidden>
       <h2>You're in.</h2>
       <p>
-        Your place with Lapa 71 x Tagus Drop Rhythm is registered. Show this confirmation at the door.
-        Tag us so we can share your posts — see you on stage!
+        You are registered for <strong>The Botanical Groove Session</strong>.
+        Show this confirmation at the door. Tag @wako.kungo — see you at Botânica.
       </p>
       <div class="confirm-meta">
-        <div><strong>Venue</strong> — Lapa 71 (@mude.cafeteria) · R. Garcia de Orta 71C, 1200-678 Lisboa</div>
-        <div><strong>When</strong> — August 29 @ 19:30</div>
-        <div><strong>Entry</strong> — Responsible Donation</div>
-        <div><strong>Jam Lead</strong> — Mr. Isaac</div>
-        <div><strong>Powered by</strong> — Wako Kungo · Circle D Flow (C4C) · Humble. - Brave · @mude.cafeteria - Robinho</div>
+        <div><strong>Venue</strong> — Botânica Lisboa · Rua do Norte, Bairro Alto</div>
+        <div><strong>When</strong> — 24 September · 20:00–23:00</div>
+        <div><strong>Entry</strong> — Free · Responsible donations</div>
+        <div><strong>Presented by</strong> — Wako Kungo · Circle D Flow (C4C)</div>
       </div>
-      <h3 class="section-title" style="margin-top:1.5rem">Activate your Circle path</h3>
+      <h3 class="section-title" style="margin-top:1.5rem">Claim your Wako Kungo Membership Card</h3>
       <p>
-        Claim your <strong>Member Card</strong> (Free / Support the Flow / Flow Crew), see benefits in your Vault,
-        then land in the <strong>3D Artist Sanctuary</strong> — Flowee guides the interface.
-        Membership tier ≠ Artist status. Artist is earned through the Flow Pool.
+        Free card first — then optional <strong>€5 Support</strong> or <strong>€10 Flow Crew</strong>.
+        Card lives in your Sanctuary Vault. Membership tier ≠ Artist status.
       </p>
       <div class="cta-stack">
-        <a class="btn btn-primary" href="/member-card?src=lapa71&amp;next=%2Fpages%2Fartist_sanctuary.html%3Fwelcome%3Dcard">Claim Membership Card → Sanctuary</a>
+        <a class="btn btn-primary" href="/member-card?src=botanica&amp;next=%2Fpages%2Fartist_sanctuary.html%3Fwelcome%3Dcard">Claim Wako Membership Card → Sanctuary</a>
+        <a class="btn btn-ghost" href="/membership">Explore €5 / €10 Support</a>
         <a class="btn btn-ghost" href="/pages/artist_sanctuary.html?welcome=register">Enter Artist Sanctuary now</a>
-        <a class="btn btn-ghost" href="/membership">Explore Flow Crew (€5 / €10)</a>
-        <a class="btn btn-ghost" href="/pages/bantaba.html">Visit Bantaba</a>
         <a class="btn btn-ghost" href="/login">Login / Claim Profile</a>
       </div>
     </section>
@@ -251,8 +250,8 @@
   <div id="flowee-agent"></div>
 
   <script src="../js/agents/flowee.js"></script>
-  <script src="../js/agents/flowee_join_guide.js?v=20260917b"></script>
-  <script src="../js/join_registration.js?v=20260917b"></script>
+  <script src="../js/agents/flowee_join_guide.js?v=20260917c"></script>
+  <script src="../js/join_registration.js?v=20260917c"></script>
   <script>
     document.getElementById('invite-start-reg')?.addEventListener('click', () => {
       if (window.FloweeJoinGuide?.startRegistration) window.FloweeJoinGuide.startRegistration();

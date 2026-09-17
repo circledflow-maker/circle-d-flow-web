@@ -11,8 +11,11 @@ const {
   getServiceRoleKey,
 } = require('./_lib/supabase_env');
 
-const EVENT_ID = 'lapa71-tagus-drop-20260829';
+const EVENT_ID = 'botanica-groove-20260924';
 const DEFAULT_SOURCE = 'social_join';
+const EVENT_LABEL = 'The Botanical Groove Session';
+const EVENT_WHEN = '24 September 2026 · 20:00–23:00';
+const EVENT_VENUE = 'Botânica Lisboa · Rua do Norte, Bairro Alto';
 
 function cors(res) {
   res.setHeader('Access-Control-Allow-Credentials', true);

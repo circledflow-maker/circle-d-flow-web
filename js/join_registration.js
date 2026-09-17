@@ -1,8 +1,9 @@
 /**
- * Lapa 71 join form — multi-section + conditional jam + POST /api/register-event
+ * Join form — Botanical Groove Session + conditional jam + POST /api/register-event
  */
 (function () {
-  const EVENT_ID = 'lapa71-tagus-drop-20260829';
+  const EVENT_ID = 'botanica-groove-20260924';
+  const DRAFT_KEY = 'cdf_join_draft_botanica';
   const form = document.getElementById('join-form');
   const errorEl = document.getElementById('form-error');
   const successPanel = document.getElementById('success-panel');
@@ -47,9 +48,7 @@
     const discs = selectedDisciplines();
     const style = form.querySelector('input[name="jamPerformStyle"]:checked')?.value;
     if (style === 'art_showcase') return true;
-    return discs.some((d) =>
-      /visual|fashion|designer|other|photo/i.test(d)
-    );
+    return discs.some((d) => /visual|fashion|designer|other|photo/i.test(d));
   }
 
   function updateProgress(step) {
@@ -58,6 +57,24 @@
       dot.classList.toggle('active', s === step);
       dot.classList.toggle('done', s < step);
     });
+  }
+
+  function persistDraft() {
+    try {
+      const data = {
+        fullName: form.fullName?.value || '',
+        stageName: form.stageName?.value || '',
+        phone: form.phone?.value || '',
+        email: form.email?.value || '',
+        instagram: form.instagram?.value || '',
+        disciplines: selectedDisciplines(),
+        attending: form.querySelector('input[name="attendingEvent"]:checked')?.value || '',
+        jam: form.querySelector('input[name="jamInterested"]:checked')?.value || '',
+        eventId: EVENT_ID,
+        savedAt: new Date().toISOString(),
+      };
+      localStorage.setItem(DRAFT_KEY, JSON.stringify(data));
+    } catch (_) { /* ignore */ }
   }
 
   function goTo(step) {
@@ -70,7 +87,8 @@
     currentStep = step;
     updateProgress(step);
     showError('');
-    if (window.FloweeJoinGuide) {
+    persistDraft();
+    if (window.FloweeJoinGuide && document.body.classList.contains('join-form-ready')) {
       window.FloweeJoinGuide.onSection(step, {
         jam: jamYes(),
         nonMusic: isNonMusicCreator(),
@@ -98,36 +116,25 @@
     if (step === 2) {
       const checked = form.querySelectorAll('input[name="disciplines"]:checked');
       if (!checked.length) {
-        return { msg: 'Select at least one artistic discipline.', field: 'disciplines' };
+        return { msg: 'Pick at least one discipline.', field: 'disciplines' };
       }
-      if (otherCheck.checked && !form.disciplineOther.value.trim()) {
-        return {
-          msg: 'Please describe your “Other” discipline / art.',
-          field: 'disciplineOther',
-        };
+      if (otherCheck?.checked && !form.disciplineOther.value.trim()) {
+        return { msg: 'Describe your other discipline.', field: 'disciplineOther' };
       }
       return null;
     }
     if (step === 3) {
-      if (!form.querySelector('input[name="attendingAug29"]:checked')) {
-        return { msg: 'Please choose whether you are attending Aug 29.', field: 'attendingAug29' };
+      if (!form.querySelector('input[name="attendingEvent"]:checked')) {
+        return { msg: 'Tell us if you attend Botânica on 24/09.', field: 'attendingEvent' };
       }
       if (!form.querySelector('input[name="jamInterested"]:checked')) {
-        return { msg: 'Please choose whether you are interested in the Jam.', field: 'jamInterested' };
+        return { msg: 'Tell us if you want to jam / share art.', field: 'jamInterested' };
       }
       return null;
     }
     if (step === 4) {
       if (!form.querySelector('input[name="jamPerformStyle"]:checked')) {
-        return { msg: 'How will you perform or showcase?', field: 'jamPerformStyle' };
-      }
-      const art = (form.jamArtDescription?.value || '').trim();
-      const style = form.querySelector('input[name="jamPerformStyle"]:checked')?.value;
-      if ((style === 'art_showcase' || isNonMusicCreator()) && !art) {
-        return {
-          msg: 'Describe your art / performance so we know what you bring.',
-          field: 'jamArtDescription',
-        };
+        return { msg: 'How will you perform / share?', field: 'jamPerformStyle' };
       }
       return null;
     }
@@ -136,11 +143,11 @@
 
   function collectPayload() {
     const disciplines = selectedDisciplines();
-    const attending = form.querySelector('input[name="attendingAug29"]:checked')?.value === 'yes';
+    const attending = form.querySelector('input[name="attendingEvent"]:checked')?.value === 'yes';
     const jam = form.querySelector('input[name="jamInterested"]:checked')?.value === 'yes';
     const payload = {
       eventId: EVENT_ID,
-      source: 'social_join',
+      source: 'botanica-join',
       fullName: form.fullName.value.trim(),
       stageName: form.stageName.value.trim() || null,
       phone: form.phone.value.trim(),
@@ -149,6 +156,7 @@
       disciplines,
       disciplineOther: form.disciplineOther.value.trim() || null,
       attendingAug29: attending,
+      attendingEvent: attending,
       jamInterested: jam,
     };
     if (jam) {
@@ -165,21 +173,17 @@
 
   function friendlyApiError(data, status) {
     const raw = data?.error || data?.details || '';
-    const details = data?.details || '';
-    if (/Invalid path specified/i.test(raw + details) || data?.code === 'BAD_SUPABASE_URL') {
-      return 'Registration is paused — Supabase URL on the server looks wrong. It must be https://YOUR_PROJECT.supabase.co (without /rest/v1).';
+    if (/Invalid path specified/i.test(raw) || data?.code === 'BAD_SUPABASE_URL') {
+      return 'Registration is paused — Supabase URL on the server looks wrong.';
     }
     if (/Missing required environment variable/i.test(raw) || /SUPABASE_/i.test(raw)) {
-      return 'Registration is paused — the server is missing connection keys. Tell the Circle D Flow crew to set Supabase env vars on Vercel.';
+      return 'Registration is paused — server connection keys missing.';
     }
     if (status === 405) return 'This registration path is not accepting that method right now.';
     if (status >= 500) {
-      const detail = details && details !== raw ? ` (${details})` : '';
-      return raw
-        ? `Something went wrong on the server: ${raw}${detail}`
-        : 'Something went wrong on the server. Please try again in a moment.';
+      return raw ? `Server issue: ${raw}` : 'Something went wrong on the server. Try again.';
     }
-    return raw || 'Registration failed. Check the highlighted fields and try again.';
+    return raw || 'Registration failed. Check the fields and try again.';
   }
 
   async function submitRegistration() {
@@ -215,15 +219,13 @@
       successPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
       if (window.FloweeJoinGuide) window.FloweeJoinGuide.onSuccess(data);
       try {
-        localStorage.setItem('cdf_lapa71_registration_id', data.registrationId || '');
+        localStorage.setItem('cdf_botanica_registration_id', data.registrationId || '');
+        localStorage.removeItem(DRAFT_KEY);
         if (data.profileId) localStorage.setItem('cdf_shadow_profile_id', data.profileId);
-      } catch (_) {
-        /* ignore */
-      }
+      } catch (_) { /* ignore */ }
     } catch (e) {
       const msg =
-        e.message ||
-        'Something went wrong. Please try again — I am still here with you.';
+        e.message || 'Something went wrong. Please try again — I am still here with you.';
       showError(msg, { step: currentStep, api: true, status: e.status });
       buttons.forEach((b) => {
         b.disabled = false;
@@ -255,16 +257,14 @@
   });
 
   form.addEventListener('change', (ev) => {
-    if (ev.target.name === 'jamInterested' || ev.target.name === 'attendingAug29') {
+    persistDraft();
+    if (ev.target === otherCheck) {
+      otherWrap.hidden = !otherCheck.checked;
+    }
+    if (ev.target.name === 'jamInterested' || ev.target.name === 'attendingEvent') {
       const nextBtn = getSection(3)?.querySelector('[data-next="4"]');
       if (nextBtn) {
         nextBtn.textContent = jamYes() ? 'Continue' : 'Submit Registration';
-      }
-    }
-    if (ev.target === otherCheck || ev.target.id === 'disc-other-check') {
-      otherWrap.hidden = !otherCheck.checked;
-      if (otherCheck.checked && window.FloweeJoinGuide) {
-        window.FloweeJoinGuide.onFieldFocus('other', currentStep);
       }
     }
     if (ev.target.name === 'jamPerformStyle' && ev.target.value === 'art_showcase') {
@@ -272,6 +272,8 @@
       form.jamArtDescription?.focus();
     }
   });
+
+  form.addEventListener('input', () => persistDraft());
 
   form.addEventListener('submit', (ev) => {
     ev.preventDefault();
@@ -289,6 +291,12 @@
       window.FloweeJoinGuide.onFieldFocus(hint, currentStep);
     }
   });
+
+  if (otherCheck) {
+    otherCheck.addEventListener('change', () => {
+      otherWrap.hidden = !otherCheck.checked;
+    });
+  }
 
   goTo(1);
   if (window.FloweeJoinGuide) window.FloweeJoinGuide.boot();
