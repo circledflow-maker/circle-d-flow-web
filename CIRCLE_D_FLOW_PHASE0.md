@@ -88,8 +88,8 @@ Never run two SD encodes + heavy 3D page build simultaneously.
 |-------|-------------------|--------|
 | **0** | Gates + storage + deploy | ✅ Done (env smoke still ongoing) |
 | **1** | Orbit → worlds stable, HEART → KYH gateway | ✅ Done |
-| **1b** | **Visitor path** Join → Card → Sanctuary + Welt Heart admin | ✅ In progress (this sprint) |
-| **2** | Quest triad polish (map, board, legends) | Next after 1b deploy |
+| **1b** | **Visitor path** Join → Card → Sanctuary + Welt Heart admin | ✅ Deployed |
+| **2** | Quest triad polish (map, board, legends) | ▶ Started — hub links → Sanctuary |
 | **3** | Bazaar checkout + `Gamification.spendTokens` | Planned |
 | **4** | Flow Pool intake + matching (Applicant → Confirmed) | Planned |
 | **5** | Supabase projects + leads (shared with KYH Phase 8) | Planned |
