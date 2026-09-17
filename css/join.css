@@ -382,13 +382,38 @@ body::before {
 }
 .event-chip a { color: var(--cyan); }
 
-/* Flowee opening: float center, then dock bottom-right */
+/* Language switcher */
+.cdf-lang-switch {
+  display: flex;
+  gap: 0.35rem;
+  justify-content: center;
+  margin: 0.5rem 0 0.75rem;
+}
+.cdf-lang-btn {
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 255, 204, 0.35);
+  background: transparent;
+  color: var(--cyan, #00e5ff);
+  cursor: pointer;
+}
+.cdf-lang-btn.on {
+  background: rgba(212, 175, 55, 0.2);
+  border-color: var(--gold, #d4af37);
+  color: var(--gold, #d4af37);
+}
+
+/* Flowee opening: float center, then dock bottom-right (!important beats flowee inline) */
 body.join-flowee-center #flowee-agent {
-  left: 50%;
-  right: auto;
-  top: 42%;
-  bottom: auto;
-  transform: translate(-50%, -50%) scale(1.55);
+  left: 50% !important;
+  right: auto !important;
+  top: 40% !important;
+  bottom: auto !important;
+  transform: translate(-50%, -50%) scale(1.55) !important;
+  align-items: center !important;
 }
 body.join-flowee-center #flowee-agent #flowee-visual {
   width: 96px !important;
@@ -414,11 +439,12 @@ body.join-form-ready .join-shell {
   filter: none;
 }
 body.join-flowee-docked #flowee-agent {
-  left: auto;
-  right: 14px;
-  top: auto;
-  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
-  transform: none;
+  left: auto !important;
+  right: 14px !important;
+  top: auto !important;
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px)) !important;
+  transform: none !important;
+  align-items: flex-end !important;
 }
 
 @media (max-width: 640px) {

@@ -145,9 +145,12 @@
     const disciplines = selectedDisciplines();
     const attending = form.querySelector('input[name="attendingEvent"]:checked')?.value === 'yes';
     const jam = form.querySelector('input[name="jamInterested"]:checked')?.value === 'yes';
+    const params = new URLSearchParams(window.location.search);
+    const srcTag = (params.get('src') || params.get('invite') || 'web').trim().slice(0, 40);
     const payload = {
       eventId: EVENT_ID,
-      source: 'botanica-join',
+      source: srcTag === '1' || srcTag === 'true' ? 'web-invite' : `web-${srcTag}`,
+      channel: 'direct_web',
       fullName: form.fullName.value.trim(),
       stageName: form.stageName.value.trim() || null,
       phone: form.phone.value.trim(),

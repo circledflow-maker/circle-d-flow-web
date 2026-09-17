@@ -8,7 +8,7 @@
   <meta property="og:title" content="Wako Kungo presents The Botanical Groove Session">
   <meta property="og:description" content="24.09 · 20:00–23:00 · Botânica Lisboa · Free entrance · Responsible donations. Register with Flowee.">
   <meta property="og:type" content="website">
-  <link rel="stylesheet" href="../css/join.css?v=20260917c">
+  <link rel="stylesheet" href="../css/join.css?v=20260917d">
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body class="join-page">
@@ -21,6 +21,7 @@
   </nav>
 
   <main class="join-shell">
+    <div id="cdf-lang-switch" class="cdf-lang-switch" aria-label="Language"></div>
     <header class="hero-brand">
       <p class="brand-mark">Wako Kungo · Circle D Flow</p>
       <p class="brand-sub">FIND YOUR FLOW · C4C</p>
@@ -249,9 +250,10 @@
 
   <div id="flowee-agent"></div>
 
-  <script src="../js/agents/flowee.js"></script>
-  <script src="../js/agents/flowee_join_guide.js?v=20260917c"></script>
-  <script src="../js/join_registration.js?v=20260917c"></script>
+  <script src="../js/data/cdf_i18n.js?v=20260917d"></script>
+  <script src="../js/agents/flowee.js?v=20260917d"></script>
+  <script src="../js/agents/flowee_join_guide.js?v=20260917d"></script>
+  <script src="../js/join_registration.js?v=20260917d"></script>
   <script>
     document.getElementById('invite-start-reg')?.addEventListener('click', () => {
       if (window.FloweeJoinGuide?.startRegistration) window.FloweeJoinGuide.startRegistration();

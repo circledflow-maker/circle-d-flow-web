@@ -7,13 +7,14 @@
   <meta name="description" content="Claim your Wako Kungo digital membership card — guided by Flowee, linked to Circle D Flow EXP.">
   <meta property="og:title" content="Wako Kungo Membership Card">
   <meta property="og:description" content="Digital membership card for the Circle D Flow culture-tech ecosystem.">
-  <meta property="og:image" content="/Assets/membership/wako_card_front.jpg">
+  <meta property="og:image" content="/Assets/membership/wako_card_front.webp">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/member_card.css?v=20260916c">
-  <link rel="preload" as="image" href="/Assets/membership/wako_card_front.jpg">
-  <link rel="preload" as="image" href="/Assets/membership/wako_card_back.jpg">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="/css/member_card.css?v=20260917e">
+  <link rel="preload" as="image" href="/Assets/membership/wako_card_front.webp" fetchpriority="high">
+  <link rel="preload" as="image" href="/Assets/membership/wako_card_back.webp">
   <script src="/js/cdf_runtime_config.js" defer></script>
   <script src="/js/agents/supabase_client.js" defer></script>
 </head>
@@ -21,6 +22,7 @@
   <main class="wk-shell">
     <header class="wk-top">
       <p class="wk-brand">Circle D Flow · Wako Kungo</p>
+      <div id="cdf-lang-switch" class="cdf-lang-switch" aria-label="Language"></div>
       <div class="wk-step-dots" id="wk-dots" aria-hidden="true">
         <span class="on"></span><span></span><span></span><span></span><span></span>
       </div>
@@ -32,11 +34,40 @@
       <span class="wk-chip" id="chip-status">Card <strong>Draft</strong></span>
       <span class="wk-chip" id="chip-member">No. <strong>—</strong></span>
       <span class="wk-chip" id="chip-exp">EXP <strong>—</strong></span>
+      <span class="wk-chip" id="wk-tier-chip">Registered · Free</span>
     </div>
+
+    <div class="wk-ben-actions" style="margin:0.35rem 0 0.5rem">
+      <button type="button" class="wk-btn wk-btn--ghost" id="wk-benefits-toggle">Benefits</button>
+      <button type="button" class="wk-btn wk-btn--cyan" id="wk-upgrade-btn">Upgrade</button>
+    </div>
+
+    <aside class="wk-benefits" id="wk-benefits-panel" hidden>
+      <h3 id="wk-benefits-title">Your benefits</h3>
+      <p class="wk-hint" id="wk-benefits-sub">Current tier vs upgrades you can purchase.</p>
+      <div style="overflow-x:auto">
+        <table class="wk-ben-table">
+          <thead>
+            <tr>
+              <th>Benefit</th>
+              <th>Free</th>
+              <th>€5</th>
+              <th>€10</th>
+            </tr>
+          </thead>
+          <tbody id="wk-benefits-body"></tbody>
+        </table>
+      </div>
+      <div class="wk-ben-actions">
+        <button type="button" class="wk-btn wk-btn--gold" data-tier-select="flow_supporter">€5 Supporter</button>
+        <button type="button" class="wk-btn wk-btn--gold" data-tier-select="flow_crew">€10 Crew</button>
+        <a class="wk-btn wk-btn--ghost" href="/membership">Full tiers</a>
+      </div>
+    </aside>
 
     <div class="wk-stage" aria-label="Membership card" id="wk-card-stage">
       <div class="wk-card" id="wk-card" role="button" tabindex="0" aria-label="Flip membership card">
-        <div class="wk-face wk-face--front" title="Wako Kungo Emblem"></div>
+        <div class="wk-face wk-face--front" title="Wako Kungo Emblem" fetchpriority="high"></div>
         <div class="wk-face wk-face--back">
           <div class="wk-name-slot is-empty" id="wk-member-name">
             <span id="wk-name-text">Your name here</span>
@@ -190,11 +221,11 @@
         <section class="wk-slide" data-step="6">
           <div class="wk-panel">
             <h2>Optional: Flow Crew</h2>
-            <p class="wk-hint" style="margin-top:0">Free Registered card is enough. Paid tiers via Stripe (€5 / €15).</p>
+            <p class="wk-hint" style="margin-top:0">Free Registered card is enough. Paid tiers via Stripe (€5 / €10).</p>
             <div class="wk-choice-grid">
               <button type="button" class="wk-choice" data-tier-select="registered"><strong>Stay Registered · Free</strong><span>Enter Sanctuary now</span></button>
               <button type="button" class="wk-choice" data-tier-select="flow_supporter"><strong>Flow Supporter · €5/mo</strong><span>Stripe Checkout</span></button>
-              <button type="button" class="wk-choice" data-tier-select="flow_crew"><strong>Flow Crew · €15/mo</strong><span>Stripe Checkout</span></button>
+              <button type="button" class="wk-choice" data-tier-select="flow_crew"><strong>Flow Crew · €10/mo</strong><span>Stripe Checkout</span></button>
             </div>
             <div class="wk-nav">
               <a class="wk-btn wk-btn--gold" id="go-sanctuary-btn" href="/pages/artist_sanctuary.html?welcome=card">Enter 3D Sanctuary</a>
@@ -239,10 +270,11 @@
 
   <div id="flowee-agent"></div>
 
-  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
-  <script src="/js/agents/flowee.js?v=20260916c" defer></script>
-  <script src="/js/agents/flowee_member_card_guide.js?v=20260916c" defer></script>
-  <script src="/js/member_card.js?v=20260917a" defer></script>
-  <script src="/js/flow_orbit.js?v=20260917a" defer></script>
+  <!-- Heavy scripts deferred; supabase + qrcode loaded on demand by member_card.js -->
+  <script src="/js/data/cdf_i18n.js?v=20260917e" defer></script>
+  <script src="/js/agents/flowee.js?v=20260917e" defer></script>
+  <script src="/js/agents/flowee_member_card_guide.js?v=20260917e" defer></script>
+  <script src="/js/member_card.js?v=20260917e" defer></script>
+  <script src="/js/flow_orbit.js?v=20260917e" defer></script>
 </body>
 </html>

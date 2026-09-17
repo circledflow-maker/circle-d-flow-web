@@ -1,5 +1,5 @@
 /**
- * Flowee Join Guide — center greet → dock → Botanica intro → interactive register
+ * Flowee Join Guide — language → center welcome → dock → Botanica intro → register
  */
 (function () {
   const EVENT = {
@@ -12,22 +12,60 @@
   };
 
   const HINTS = {
-    identity: 'Your real name — so the Circle knows who walked in.',
-    stage: 'Stage name is how Wako Kungo and the family call you on the floor.',
-    phone: 'WhatsApp is our fastest lane in Lisbon — country code helps.',
-    email: 'Email links this registration to a profile you can claim at login.',
-    instagram: 'Your IG handle — @username is enough. We tag creatives from the night.',
-    other: 'Name your craft in one clear line.',
-    instruments: 'Voice, guitar, camera, paints, decks — whatever you bring.',
-    songs: 'Optional for musicians: songs, key, BPM, genre.',
-    art: 'Describe what you will share — set, look, series, jam vibe.',
+    en: {
+      identity: 'Your real name — so the Circle knows who walked in.',
+      stage: 'Stage name is how Wako Kungo and the family call you on the floor.',
+      phone: 'WhatsApp is our fastest lane in Lisbon — country code helps.',
+      email: 'Email links this registration to a profile you can claim at login.',
+      instagram: 'Your IG handle — @username is enough. We tag creatives from the night.',
+      other: 'Name your craft in one clear line.',
+      instruments: 'Voice, guitar, camera, paints, decks — whatever you bring.',
+      songs: 'Optional for musicians: songs, key, BPM, genre.',
+      art: 'Describe what you will share — set, look, series, jam vibe.',
+    },
+    pt: {
+      identity: 'O teu nome real — para o Circle saber quem entrou.',
+      stage: 'O nome de palco é como a família Wako Kungo te chama.',
+      phone: 'WhatsApp é a via mais rápida em Lisboa — inclui indicativo.',
+      email: 'O email liga este registo a um perfil que podes reclamar no login.',
+      instagram: 'O teu @ no IG — chega. Marcamos creatives da noite.',
+      other: 'Nomeia a tua arte numa linha clara.',
+      instruments: 'Voz, guitarra, câmara, tintas, decks — o que trouxeres.',
+      songs: 'Opcional para músicos: temas, tom, BPM, género.',
+      art: 'Descreve o que queres partilhar — set, look, série, jam.',
+    },
+    de: {
+      identity: 'Dein echter Name — damit der Circle weiß, wer gekommen ist.',
+      stage: 'Dein Stage Name ist, wie dich die Wako-Kungo-Familie nennt.',
+      phone: 'WhatsApp ist unser schnellster Weg in Lissabon — mit Ländervorwahl.',
+      email: 'E-Mail verbindet die Registrierung mit einem Profil beim Login.',
+      instagram: 'Dein IG-Handle — @username reicht.',
+      other: 'Nenne dein Craft in einer klaren Zeile.',
+      instruments: 'Stimme, Gitarre, Kamera, Farbe, Decks — was du mitbringst.',
+      songs: 'Optional für Musiker: Songs, Tonart, BPM, Genre.',
+      art: 'Beschreibe, was du teilst — Set, Look, Serie, Jam.',
+    },
   };
 
   const SECTION_INTRO = {
-    1: 'Identity first. Who are you in the Flow?',
-    2: 'What lives in you? Music, visual, craft, fashion, audience — pick all that fit.',
-    3: 'Botânica on 24/09 — are you coming, and do you want to jam or share art?',
-    4: 'How will you flow that night? Solo, jam, freestyle, or art showcase.',
+    en: {
+      1: 'Identity first. Who are you in the Flow?',
+      2: 'What lives in you? Music, visual, craft, fashion, audience — pick all that fit.',
+      3: 'Botânica on 24/09 — are you coming, and do you want to jam or share art?',
+      4: 'How will you flow that night? Solo, jam, freestyle, or art showcase.',
+    },
+    pt: {
+      1: 'Primeiro a identidade. Quem és no Flow?',
+      2: 'O que vive em ti? Música, visual, craft, moda, público — escolhe o que cabe.',
+      3: 'Botânica a 24/09 — vens, e queres jam ou partilhar arte?',
+      4: 'Como vais fluir essa noite? Solo, jam, freestyle ou showcase.',
+    },
+    de: {
+      1: 'Zuerst Identität. Wer bist du im Flow?',
+      2: 'Was lebt in dir? Musik, Visual, Craft, Fashion, Audience — wähle passend.',
+      3: 'Botânica am 24.09 — kommst du, und willst du jammer oder Kunst teilen?',
+      4: 'Wie fließt du an dem Abend? Solo, Jam, Freestyle oder Showcase.',
+    },
   };
 
   const SANCTUARY_AFTER = '/pages/artist_sanctuary.html?welcome=register';
@@ -43,9 +81,27 @@
   let lastError = '';
   let inviteDone = false;
   let stageDone = false;
+  let langPicked = false;
+
+  function t(key) {
+    return window.CDFi18n ? window.CDFi18n.t(key) : key;
+  }
+
+  function lang() {
+    return window.CDFi18n ? window.CDFi18n.getLang() : 'en';
+  }
 
   function agent() {
     return window.flowee || window.Flowee || window.floweeAgent || null;
+  }
+
+  function refreshVessel() {
+    const a = agent();
+    if (a && typeof a.renderVessel === 'function') {
+      try {
+        a.renderVessel();
+      } catch (_) { /* ignore */ }
+    }
   }
 
   function speak(text, type, options) {
@@ -89,6 +145,7 @@
     } else if (mode === 'dock') {
       document.body.classList.add('join-flowee-docked');
     }
+    refreshVessel();
   }
 
   function setFormVisible(visible) {
@@ -133,6 +190,7 @@
         instagram: form.instagram?.value || '',
         savedAt: new Date().toISOString(),
         eventId: EVENT.id,
+        lang: lang(),
       };
       localStorage.setItem(DRAFT_KEY, JSON.stringify(data));
     } catch (_) { /* ignore */ }
@@ -162,45 +220,88 @@
     try {
       first?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     } catch (_) { /* ignore */ }
-    speak(
-      'Registration is open. I stay with you field by field. When you finish, claim your Wako Kungo Membership Card — then the 3D Sanctuary.',
-      'guide',
-      [
-        {
-          label: 'START WITH MY NAME',
-          action: () => softFocus('fullName'),
+    speak(t('reg_open'), 'guide', [
+      { label: t('start_name'), action: () => softFocus('fullName') },
+    ]);
+  }
+
+  function askLanguage() {
+    setFormVisible(false);
+    setStage('center');
+    speak(t('pick_lang'), 'guide', [
+      {
+        label: 'PORTUGUÊS',
+        action: () => {
+          window.CDFi18n?.setLang('pt');
+          langPicked = true;
+          welcomeCenter();
         },
-      ]
-    );
+      },
+      {
+        label: 'ENGLISH',
+        action: () => {
+          window.CDFi18n?.setLang('en');
+          langPicked = true;
+          welcomeCenter();
+        },
+      },
+      {
+        label: 'DEUTSCH',
+        action: () => {
+          window.CDFi18n?.setLang('de');
+          langPicked = true;
+          welcomeCenter();
+        },
+      },
+    ]);
+  }
+
+  function welcomeCenter() {
+    setStage('center');
+    speak(t('hello'), 'guide', [
+      { label: t('hello_btn'), action: () => glideAndIntro() },
+    ]);
+    setTimeout(() => {
+      if (!stageDone) glideAndIntro();
+    }, 4500);
   }
 
   async function runOpening() {
     setFormVisible(false);
     setStage('center');
     await waitForFlowee(6000);
+    refreshVessel();
 
-    speak(
-      'Akwaaba. I am Flowee — your guide in Circle D Flow and Wako Kungo.',
-      'guide',
-      [{ label: 'HELLO FLOWEE', action: () => glideAndIntro() }]
-    );
+    const switcher = document.getElementById('cdf-lang-switch');
+    if (window.CDFi18n && switcher) {
+      window.CDFi18n.mountSwitcher(switcher, () => {
+        if (!stageDone) askLanguage();
+      });
+    }
 
-    // Auto-continue if user does not tap within ~4s
-    setTimeout(() => {
-      if (!stageDone) glideAndIntro();
-    }, 4200);
+    // If lang already chosen this session, skip picker
+    try {
+      if (sessionStorage.getItem('cdf_join_lang_ok') === '1') {
+        langPicked = true;
+        welcomeCenter();
+        return;
+      }
+    } catch (_) { /* ignore */ }
+
+    askLanguage();
   }
 
   function glideAndIntro() {
     if (stageDone) return;
     stageDone = true;
+    try {
+      sessionStorage.setItem('cdf_join_lang_ok', '1');
+    } catch (_) { /* ignore */ }
     setStage('dock');
 
-    speak(
-      'You landed on the Circle entrance. Here you register for the community, claim your Wako Kungo Membership Card, and enter the 3D Artist Sanctuary.',
-      'guide',
-      [{ label: 'WHAT IS NEXT?', action: () => explainEvent() }]
-    );
+    speak(t('dock_intro'), 'guide', [
+      { label: t('what_next'), action: () => explainEvent() },
+    ]);
   }
 
   function explainEvent() {
@@ -215,27 +316,25 @@
         '. Lapa 71 was August; this night is Botânica.',
       'guide',
       [
+        { label: t('register_me'), action: () => revealForm() },
         {
-          label: 'REGISTER WITH ME',
-          action: () => revealForm(),
-        },
-        {
-          label: 'I ALREADY HAVE A LOGIN',
+          label: t('have_login'),
           action: () => {
-            speak('Taking you to login — then Sanctuary.', 'guide');
+            speak('Login → Sanctuary.', 'guide');
             setTimeout(() => {
               window.location.href = LOGIN_THEN_SANCTUARY;
             }, 800);
           },
         },
         {
-          label: 'CLAIM MEMBER CARD',
+          label: t('claim_card'),
           action: () => {
-            window.location.href = MEMBER_THEN_SANCTUARY;
+            window.location.href =
+              MEMBER_THEN_SANCTUARY + '&lang=' + encodeURIComponent(lang());
           },
         },
         {
-          label: 'SEE EVENT ON IG',
+          label: t('see_ig'),
           action: () => {
             window.open(EVENT.ig, '_blank', 'noopener');
           },
@@ -259,15 +358,22 @@
       if (step === lastSection) return;
       lastSection = step;
       lastError = '';
-      let msg = SECTION_INTRO[step] || 'Keep flowing.';
+      const pack = SECTION_INTRO[lang()] || SECTION_INTRO.en;
+      let msg = pack[step] || 'Keep flowing.';
       if (step === 3 && meta && meta.jam === false) {
-        msg = 'No jam? Perfect — submit when ready. You are still in the family.';
+        msg =
+          lang() === 'pt'
+            ? 'Sem jam? Perfeito — submete quando quiseres. Continuas na família.'
+            : lang() === 'de'
+              ? 'Kein Jam? Perfekt — sende wenn bereit. Du bleibst in der Familie.'
+              : 'No jam? Perfect — submit when ready. You are still in the family.';
       }
       speak(msg, 'guide');
       saveDraft();
     },
     onFieldFocus(key) {
-      const text = HINTS[key];
+      const pack = HINTS[lang()] || HINTS.en;
+      const text = pack[key];
       if (!text || text === lastHint) return;
       lastHint = text;
       speak(text, 'guide');
@@ -295,9 +401,10 @@
         ' Next — claim your Wako Kungo Membership Card, then meet me in the 3D Artist Sanctuary.';
       const actions = [
         {
-          label: 'CLAIM WAKO CARD',
+          label: t('claim_card'),
           action: () => {
-            window.location.href = MEMBER_THEN_SANCTUARY;
+            window.location.href =
+              MEMBER_THEN_SANCTUARY + '&lang=' + encodeURIComponent(lang());
           },
         },
         {

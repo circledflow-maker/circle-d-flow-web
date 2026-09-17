@@ -978,13 +978,31 @@ class FloweeAgent {
         // FIX: Z-Index 10000 to beat Overlay
         const isMobile = window.innerWidth < 768;
         const isLanding = this._isLandingPage();
+        const guidedCenter =
+          document.body.classList.contains('join-flowee-center') ||
+          document.body.classList.contains('wk-flowee-center');
+        const guidedDock =
+          document.body.classList.contains('join-flowee-docked') ||
+          document.body.classList.contains('wk-flowee-docked');
         container.style.position = 'fixed';
-        container.style.bottom = isMobile ? `calc(88px + env(safe-area-inset-bottom, 0px))` : '40px';
-        container.style.right = isMobile ? '20px' : '40px';
+        // Join / Member Card guides own the stage — do not force BR inline styles
+        if (guidedCenter || guidedDock) {
+          container.style.bottom = '';
+          container.style.right = '';
+          container.style.left = '';
+          container.style.top = '';
+          container.style.transform = '';
+          container.style.alignItems = guidedCenter ? 'center' : 'flex-end';
+        } else {
+          container.style.bottom = isMobile ? `calc(88px + env(safe-area-inset-bottom, 0px))` : '40px';
+          container.style.right = isMobile ? '20px' : '40px';
+          container.style.left = '';
+          container.style.top = '';
+          container.style.alignItems = 'flex-end';
+        }
         container.style.zIndex = '999999';
         container.style.display = 'flex';
         container.style.flexDirection = 'column';
-        container.style.alignItems = 'flex-end';
         container.style.pointerEvents = 'none';
         container.className = 'group transition-all duration-500' + (isLanding && isMobile ? ' flowee-landing-vessel' : '');
         

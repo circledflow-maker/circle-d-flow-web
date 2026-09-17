@@ -1,15 +1,40 @@
 /**
- * Flowee guide for Wako Kungo member card (swipe onboarding)
+ * Flowee Member Card Guide — language → center welcome → dock + benefits tour
  */
 (function () {
+  let stageDone = false;
+
+  function t(key) {
+    return window.CDFi18n ? window.CDFi18n.t(key) : key;
+  }
+
   function agent() {
     return window.flowee || window.Flowee || window.floweeAgent || null;
   }
 
-  function say(text, type) {
+  function refreshVessel() {
+    const a = agent();
+    if (a && typeof a.renderVessel === 'function') {
+      try {
+        a.renderVessel();
+      } catch (_) { /* ignore */ }
+    }
+  }
+
+  function setStage(mode) {
+    document.body.classList.remove('wk-flowee-center', 'wk-flowee-docked', 'wk-intro-dim');
+    if (mode === 'center') {
+      document.body.classList.add('wk-flowee-center', 'wk-intro-dim');
+    } else if (mode === 'dock') {
+      document.body.classList.add('wk-flowee-docked');
+    }
+    refreshVessel();
+  }
+
+  function say(text, type, options) {
     const a = agent();
     if (a && typeof a.talk === 'function') {
-      a.talk(true, String(text).replace(/<[^>]+>/g, ''), type || 'guide');
+      a.talk(true, String(text).replace(/<[^>]+>/g, ''), type || 'guide', options || []);
       return;
     }
     const host = document.getElementById('flowee-agent');
@@ -26,11 +51,198 @@
     bubble.textContent = String(text).replace(/<[^>]+>/g, '');
   }
 
-  window.FloweeMemberCardGuide = { say };
+  function showBenefitsPanel(open) {
+    const panel = document.getElementById('wk-benefits-panel');
+    if (!panel) return;
+    panel.hidden = !open;
+    if (open) {
+      try {
+        panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      } catch (_) { /* ignore */ }
+      renderBenefitsTable();
+    }
+  }
+
+  function currentTier() {
+    try {
+      const card = JSON.parse(localStorage.getItem('cdf_wako_member_card') || '{}');
+      return card.tier || 'registered';
+    } catch (_) {
+      return 'registered';
+    }
+  }
+
+  function renderBenefitsTable() {
+    const body = document.getElementById('wk-benefits-body');
+    const title = document.getElementById('wk-benefits-title');
+    const sub = document.getElementById('wk-benefits-sub');
+    if (title) title.textContent = t('benefits_title');
+    if (sub) sub.textContent = t('benefits_sub');
+    if (!body) return;
+
+    const tier = currentTier();
+    const rows = [
+      { key: 'b_card', free: true, sup: true, crew: true },
+      { key: 'b_exp', free: true, sup: true, crew: true },
+      { key: 'b_sanctuary', free: true, sup: true, crew: true },
+      { key: 'b_coupons', free: true, sup: true, crew: true },
+      { key: 'b_events', free: true, sup: true, crew: true },
+      { key: 'b_sup_extra', free: false, sup: true, crew: true },
+      { key: 'b_crew_extra', free: false, sup: false, crew: true },
+    ];
+
+    const mark = (ok, owned) => {
+      if (!ok) return '<span class="wk-ben-off">—</span>';
+      return owned
+        ? '<span class="wk-ben-on" title="included">✓</span>'
+        : '<span class="wk-ben-buy" title="upgrade">★</span>';
+    };
+
+    body.innerHTML = rows
+      .map((r) => {
+        const ownFree = tier === 'registered' || tier === 'flow_supporter' || tier === 'flow_crew';
+        const ownSup = tier === 'flow_supporter' || tier === 'flow_crew';
+        const ownCrew = tier === 'flow_crew';
+        return (
+          `<tr>` +
+          `<td>${t(r.key)}</td>` +
+          `<td>${mark(r.free, r.free && ownFree)}</td>` +
+          `<td>${mark(r.sup, r.sup && ownSup)}</td>` +
+          `<td>${mark(r.crew, r.crew && ownCrew)}</td>` +
+          `</tr>`
+        );
+      })
+      .join('');
+
+    const chip = document.getElementById('wk-tier-chip');
+    if (chip) {
+      chip.textContent =
+        tier === 'flow_crew'
+          ? t('tier_crew')
+          : tier === 'flow_supporter'
+            ? t('tier_sup')
+            : t('tier_free');
+    }
+  }
+
+  function openUpgrade() {
+    showBenefitsPanel(true);
+    say(t('guide_upgrade'), 'guide', [
+      {
+        label: t('tier_sup'),
+        action: () => {
+          document.querySelector('[data-tier-select="flow_supporter"]')?.click();
+          const btn = document.getElementById('to-tiers-btn');
+          if (btn) btn.click();
+          else window.location.href = '/membership';
+        },
+      },
+      {
+        label: t('tier_crew'),
+        action: () => {
+          document.querySelector('[data-tier-select="flow_crew"]')?.click();
+          const btn = document.getElementById('to-tiers-btn');
+          if (btn) btn.click();
+          else window.location.href = '/membership';
+        },
+      },
+      {
+        label: t('tier_free'),
+        action: () => showBenefitsPanel(true),
+      },
+    ]);
+  }
+
+  function glideAndGuide() {
+    if (stageDone) return;
+    stageDone = true;
+    setStage('dock');
+    say(t('card_glide'), 'guide', [
+      {
+        label: t('show_benefits'),
+        action: () => {
+          showBenefitsPanel(true);
+          say(t('guide_benefits'), 'guide', [
+            { label: t('upgrade'), action: () => openUpgrade() },
+            { label: t('continue_swipe'), action: () => showBenefitsPanel(false) },
+          ]);
+        },
+      },
+      { label: t('upgrade'), action: () => openUpgrade() },
+      { label: t('continue_swipe'), action: () => showBenefitsPanel(false) },
+    ]);
+  }
+
+  function welcomeCenter() {
+    setStage('center');
+    say(t('card_welcome'), 'guide', [
+      { label: t('hello_btn'), action: () => glideAndGuide() },
+    ]);
+    setTimeout(() => {
+      if (!stageDone) glideAndGuide();
+    }, 4200);
+  }
+
+  function askLanguage() {
+    setStage('center');
+    say(t('pick_lang'), 'guide', [
+      {
+        label: 'PORTUGUÊS',
+        action: () => {
+          window.CDFi18n?.setLang('pt');
+          welcomeCenter();
+        },
+      },
+      {
+        label: 'ENGLISH',
+        action: () => {
+          window.CDFi18n?.setLang('en');
+          welcomeCenter();
+        },
+      },
+      {
+        label: 'DEUTSCH',
+        action: () => {
+          window.CDFi18n?.setLang('de');
+          welcomeCenter();
+        },
+      },
+    ]);
+  }
+
+  function boot() {
+    const switcher = document.getElementById('cdf-lang-switch');
+    if (window.CDFi18n && switcher) {
+      window.CDFi18n.mountSwitcher(switcher, () => {
+        renderBenefitsTable();
+        if (!stageDone) askLanguage();
+      });
+    }
+    document.getElementById('wk-benefits-toggle')?.addEventListener('click', () => {
+      const panel = document.getElementById('wk-benefits-panel');
+      const open = panel?.hidden;
+      showBenefitsPanel(!!open);
+      if (open) say(t('guide_benefits'), 'guide');
+    });
+    document.getElementById('wk-upgrade-btn')?.addEventListener('click', () => openUpgrade());
+
+    // Returning members (orbit view) → soft dock, still offer benefits
+    const view = new URLSearchParams(window.location.search).get('view');
+    if (view === 'card' || document.getElementById('wk-orbit-shell')?.hidden === false) {
+      // still greet once
+    }
+
+    askLanguage();
+  }
+
+  window.FloweeMemberCardGuide = {
+    say,
+    showBenefits: () => showBenefitsPanel(true),
+    renderBenefitsTable,
+    boot,
+  };
 
   document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(() => {
-      say('Swipe with me — name, contact, profile, then your Wako card into inventory.', 'guide');
-    }, 700);
+    setTimeout(boot, 500);
   });
 })();

@@ -8,6 +8,39 @@
   const XP_CLAIM = 25;
   const SANCTUARY_URL = '/pages/artist_sanctuary.html?welcome=card';
 
+  function loadScript(src) {
+    return new Promise((resolve, reject) => {
+      if (document.querySelector(`script[src="${src}"]`)) {
+        resolve();
+        return;
+      }
+      const s = document.createElement('script');
+      s.src = src;
+      s.async = true;
+      s.onload = () => resolve();
+      s.onerror = () => reject(new Error('Failed ' + src));
+      document.head.appendChild(s);
+    });
+  }
+
+  let libsPromise = null;
+  function ensureLibs() {
+    if (!libsPromise) {
+      libsPromise = Promise.all([
+        window.supabase || window.supabaseClient
+          ? Promise.resolve()
+          : loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2'),
+        window.QRCode
+          ? Promise.resolve()
+          : loadScript('https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js'),
+      ]).then(() => {
+        // supabase_client.js (defer) may init after CDN loads
+        return new Promise((r) => setTimeout(r, 50));
+      });
+    }
+    return libsPromise;
+  }
+
   function sanctuaryDest() {
     try {
       const n = new URLSearchParams(window.location.search).get('next');
@@ -179,9 +212,12 @@
     }
   }
 
-  function renderQr(url) {
+  async function renderQr(url) {
     if (!els.qr) return;
     els.qr.innerHTML = '';
+    try {
+      await ensureLibs();
+    } catch (_) { /* fallback below */ }
     if (window.QRCode && typeof QRCode.toCanvas === 'function') {
       const canvas = document.createElement('canvas');
       QRCode.toCanvas(
@@ -337,6 +373,9 @@
   }
 
   async function sessionJwt() {
+    try {
+      await ensureLibs();
+    } catch (_) { /* ignore */ }
     const sc = window.supabaseClient;
     if (!sc) return { jwt: '', user: null };
     const { data } = await sc.auth.getSession();

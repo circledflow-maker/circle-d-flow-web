@@ -115,9 +115,20 @@
         <div class="stats" id="impact-stats"></div>
       </div>
       <div class="panel">
+        <h2>Registrations · all Circle D Flow web</h2>
+        <p class="sub">Direct web (/join · invites) vs membership card / login claims. Synced to Google Sheet.</p>
+        <div class="stats" id="reg-stats"></div>
+        <div id="reg-by-source" class="sub" style="margin-top:0.5rem"></div>
+        <div class="hub-links" style="margin-top:0.75rem">
+          <button type="button" id="sync-sheet-btn">Sync Google Sheet</button>
+          <a class="btn ghost" id="sheet-link" href="https://docs.google.com/spreadsheets/d/1w3rYMUNGSU7X0w68jVo6q_ZTM0tEG0Y20liEMaxAfWs/edit" target="_blank" rel="noopener">Open sheet</a>
+        </div>
+        <p class="sub" id="sheet-sync-msg" style="margin-top:0.5rem"></p>
+      </div>
+      <div class="panel">
         <h2>Visitor pipeline</h2>
         <p class="sub" style="margin:0">
-          Shared link → Flowee chat → Register / Login → Member Card → 3D Artist Sanctuary.
+          Shared link → Flowee chat (PT/EN/DE) → Register / Login → Member Card + benefits → 3D Artist Sanctuary.
           Membership tier ≠ Artist status. Flow Pool matching = Phase 2.
         </p>
       </div>
@@ -369,6 +380,36 @@
         ['Grants', s.grants],
       ].map(([label, val]) => `<div class="stat"><b>${val}</b><span>${label}</span></div>`).join('');
       renderImpact(s);
+      renderRegFunnel(s);
+      if (s.sheetUrl) {
+        const a = document.getElementById('sheet-link');
+        if (a) a.href = s.sheetUrl;
+      }
+    }
+
+    function renderRegFunnel(s) {
+      const box = document.getElementById('reg-stats');
+      const by = document.getElementById('reg-by-source');
+      if (!box) return;
+      const f = s.registrations || {};
+      box.innerHTML = [
+        ['Total touchpoints', f.totalTouchpoints ?? '—'],
+        ['Event regs (web)', f.eventRegistrations ?? '—'],
+        ['Member cards', f.memberCards ?? '—'],
+        ['Direct web / join', f.webDirect ?? '—'],
+        ['Membership login', f.membershipLogin ?? '—'],
+      ]
+        .map(([label, val]) => `<div class="stat"><b>${val}</b><span>${label}</span></div>`)
+        .join('');
+      if (by) {
+        const entries = Object.entries(f.bySource || {}).sort((a, b) => b[1] - a[1]);
+        by.innerHTML = entries.length
+          ? 'By source: ' +
+            entries
+              .map(([k, v]) => `<span class="badge">${k}: ${v}</span>`)
+              .join(' ')
+          : 'No source breakdown yet — new joins will appear here.';
+      }
     }
 
     function renderImpact(s) {
@@ -545,6 +586,24 @@
       location.reload();
     });
     document.getElementById('refresh-btn').addEventListener('click', refreshAll);
+    document.getElementById('sync-sheet-btn')?.addEventListener('click', async () => {
+      const msg = document.getElementById('sheet-sync-msg');
+      if (msg) msg.textContent = 'Syncing…';
+      try {
+        const data = await call('sync-sheet', { method: 'POST', body: { action: 'sync-sheet' } });
+        if (msg) {
+          msg.textContent = data.skipped
+            ? 'Sheet webhook not set — add GOOGLE_SHEETS_WEBHOOK_URL on Vercel (Apps Script). Row preview: ' +
+              (data.rowCount || 0)
+            : 'Synced ' + (data.rowCount || 0) + ' rows to Google Sheet.';
+        }
+        setMsg(true, msg?.textContent || 'Sheet sync done');
+        if (data.funnel) renderRegFunnel({ registrations: data.funnel });
+      } catch (e) {
+        if (msg) msg.textContent = e.message || 'Sync failed';
+        setMsg(false, e.message || 'Sync failed');
+      }
+    });
 
     document.querySelectorAll('.tabs [data-tab]').forEach((btn) => {
       btn.addEventListener('click', () => {
