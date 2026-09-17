@@ -676,7 +676,7 @@ class SoulPassAgent {
         const confirmMsg = confirm(`Send password reset link to ${email}?`);
         if(confirmMsg) {
             const { error } = await window.supabaseClient.auth.resetPasswordForEmail(email, {
-                redirectTo: window.location.origin + '/pages/dashboard.html'
+                redirectTo: window.location.origin + '/pages/auth_callback'
             });
             if(error) alert("Error sending reset link: " + error.message);
             else alert("Password reset link sent to your email!");

@@ -185,9 +185,58 @@
             z-index: 55;
             display: flex;
             flex-direction: column;
+            align-items: center;
             gap: 10px;
             pointer-events: auto;
             padding-bottom: calc(72px + var(--dock-safe-bottom));
+        }
+
+        .sanctuary-dock-master {
+            width: 56px;
+            height: 56px;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(8, 4, 0, 0.88);
+            backdrop-filter: blur(12px);
+            border: 1.5px solid rgba(212, 175, 55, 0.55);
+            box-shadow: 0 0 18px rgba(212, 175, 55, 0.28);
+            cursor: pointer;
+            padding: 0;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+        .sanctuary-dock-master:hover,
+        .sanctuary-dock-master:focus-visible {
+            transform: scale(1.06);
+            box-shadow: 0 0 22px rgba(0, 255, 204, 0.35);
+            border-color: rgba(0, 255, 204, 0.55);
+        }
+        .sanctuary-dock-master img {
+            width: 34px;
+            height: 34px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 6px rgba(212, 175, 55, 0.45));
+        }
+        .sanctuary-dock-master[aria-expanded="true"] {
+            border-color: rgba(0, 255, 204, 0.65);
+        }
+
+        .sanctuary-dock-tools {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            pointer-events: none;
+            transition: max-height 0.35s ease, opacity 0.28s ease;
+        }
+        .sanctuary-dock.expanded .sanctuary-dock-tools {
+            max-height: 520px;
+            opacity: 1;
+            pointer-events: auto;
         }
 
         .sanctuary-dock-btn {
@@ -216,6 +265,73 @@
         .sanctuary-dock-btn[data-accent="ledger"] { color: #ff00cc; border-color: rgba(255, 0, 204, 0.35); }
         .sanctuary-dock-btn[data-accent="gold"] { color: #d4af37; border-color: rgba(212, 175, 55, 0.45); }
         .sanctuary-dock-btn[data-accent="flow"] { color: #00ffcc; border-color: rgba(0, 255, 204, 0.45); }
+        .sanctuary-dock-btn.locked::before {
+            content: 'lock';
+            font-family: 'Material Symbols Outlined';
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            font-size: 14px;
+            color: #f0d78c;
+            background: rgba(0,0,0,0.75);
+            border-radius: 9999px;
+            padding: 1px;
+            line-height: 1;
+        }
+
+        #cdf-gate-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 90;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.72);
+            backdrop-filter: blur(8px);
+            padding: 1.25rem;
+        }
+        #cdf-gate-modal.open { display: flex; }
+        #cdf-gate-modal .gate-card {
+            width: min(380px, 100%);
+            background: linear-gradient(165deg, rgba(18,10,4,0.96), rgba(6,4,2,0.98));
+            border: 1px solid rgba(212,175,55,0.4);
+            border-radius: 18px;
+            padding: 1.4rem 1.25rem;
+            color: #f5efe6;
+            box-shadow: 0 0 40px rgba(212,175,55,0.15);
+        }
+        #cdf-gate-modal h3 {
+            font-family: Georgia, 'Times New Roman', serif;
+            color: #f0d78c;
+            margin: 0 0 0.4rem;
+            font-size: 1.25rem;
+        }
+        #cdf-gate-modal p { opacity: 0.8; font-size: 0.9rem; margin: 0 0 1rem; }
+        #cdf-gate-modal input {
+            width: 100%;
+            padding: 0.7rem 0.85rem;
+            border-radius: 10px;
+            border: 1px solid rgba(212,175,55,0.35);
+            background: rgba(0,0,0,0.45);
+            color: #fff;
+            margin-bottom: 0.85rem;
+        }
+        #cdf-gate-modal .gate-actions { display: flex; gap: 0.6rem; }
+        #cdf-gate-modal button {
+            flex: 1;
+            padding: 0.65rem;
+            border-radius: 9999px;
+            border: 1px solid rgba(0,255,204,0.4);
+            background: rgba(0,255,204,0.12);
+            color: #00ffcc;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        #cdf-gate-modal button.ghost {
+            background: transparent;
+            border-color: rgba(255,255,255,0.2);
+            color: rgba(255,255,255,0.7);
+        }
 
         .sanctuary-dock-btn::after {
             content: none;
@@ -281,20 +397,28 @@
         #joystick-zone { bottom: calc(24px + var(--dock-safe-bottom)); left: 20px; }
 
         @media (max-width: 480px) {
-            .sanctuary-dock { right: 8px; gap: 8px; transform: translateX(150%); }
-            .sanctuary-dock.open { transform: translateX(0); }
+            .sanctuary-dock { right: 8px; gap: 8px; }
             .sanctuary-dock-btn { width: 44px; height: 44px; }
+            .sanctuary-dock-master { width: 52px; height: 52px; }
             #constellation-legend { max-width: 150px; }
             body.artist-sanctuary #feedback-siphon-btn { left: 118px; }
-            #mobile-dock-toggle { display: flex; }
+            #mobile-dock-toggle { display: none !important; }
         }
     </style>
     <script>
-        function toggleSanctuaryDock() {
+        function toggleSanctuaryDock(forceExpand) {
             const dock = document.getElementById('sanctuary-dock');
-            dock.classList.toggle('open');
-            const toggleIcon = document.querySelector('#mobile-dock-toggle .material-symbols-outlined');
-            toggleIcon.innerText = dock.classList.contains('open') ? 'close' : 'menu';
+            const master = document.getElementById('cdf-dock-master');
+            if (!dock) return;
+            const next = typeof forceExpand === 'boolean'
+                ? forceExpand
+                : !dock.classList.contains('expanded');
+            dock.classList.toggle('expanded', next);
+            dock.classList.toggle('open', next);
+            if (master) master.setAttribute('aria-expanded', next ? 'true' : 'false');
+            if (next && window.FloweeSanctuaryGuide?.onDockExpanded) {
+                window.FloweeSanctuaryGuide.onDockExpanded();
+            }
         }
     </script>
 </head>
@@ -334,42 +458,59 @@
             </div>
         </details>
 
-        <!-- Mobile Dock Toggle -->
-        <button type="button" id="mobile-dock-toggle" onclick="toggleSanctuaryDock()" class="hidden fixed right-2 top-1/2 -translate-y-1/2 z-[60] bg-black/80 border border-[#d4af37]/50 text-[#d4af37] w-12 h-12 rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(212,175,55,0.3)]">
+        <!-- Mobile Dock Toggle (legacy — CDF master button is primary) -->
+        <button type="button" id="mobile-dock-toggle" onclick="toggleSanctuaryDock()" class="hidden fixed right-2 top-1/2 -translate-y-1/2 z-[60] bg-black/80 border border-[#d4af37]/50 text-[#d4af37] w-12 h-12 rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(212,175,55,0.3)]" aria-hidden="true">
             <span class="material-symbols-outlined">menu</span>
         </button>
 
-        <!-- Action Dock (Right Side) -->
-        <nav id="sanctuary-dock" class="sanctuary-dock transition-transform duration-300" aria-label="Sanctuary tools">
-            <button type="button" onclick="openVisionHub()" class="sanctuary-dock-btn" data-accent="vision" data-label="Vision" title="The Vision — Theater & Archive">
-                <span class="material-symbols-outlined filled-icon" aria-hidden="true">visibility</span>
+        <!-- Action Dock (Right Side) — CDF logo controls expand -->
+        <nav id="sanctuary-dock" class="sanctuary-dock transition-transform duration-300" aria-label="Circle D Flow tools">
+            <button type="button" id="cdf-dock-master" class="sanctuary-dock-master" aria-expanded="false" aria-controls="sanctuary-dock-tools" title="Circle D Flow — open tools" onclick="toggleSanctuaryDock()">
+                <img src="../Assets/images/logo.png" alt="Circle D Flow" width="34" height="34" />
             </button>
-            <button type="button" onclick="openAkademiy()" class="sanctuary-dock-btn" data-accent="akademiy" data-label="Akademiy" title="Akademiy — Skills & Quests">
-                <span class="material-symbols-outlined filled-icon" aria-hidden="true">school</span>
-            </button>
-            <button type="button" onclick="openLedger()" class="sanctuary-dock-btn" data-accent="ledger" data-label="Ledger" title="Sanctuary Ledger">
-                <span class="material-symbols-outlined filled-icon" aria-hidden="true">menu_book</span>
-            </button>
-            <button type="button" onclick="toggleModal('data-modal')" class="sanctuary-dock-btn" data-accent="flow" data-label="Vault" title="Inventory Vault">
-                <span class="material-symbols-outlined filled-icon" aria-hidden="true">inventory_2</span>
-            </button>
-            <button type="button" onclick="toggleModal('qr-modal')" class="sanctuary-dock-btn" data-accent="gold" data-label="Soul Seal" title="Soul Seal QR">
-                <span class="material-symbols-outlined filled-icon" aria-hidden="true">qr_code_2</span>
-            </button>
-            <button type="button" onclick="openCameraModal()" class="sanctuary-dock-btn" data-label="Capture" title="Camera & Scan">
-                <span class="material-symbols-outlined filled-icon" aria-hidden="true">photo_camera</span>
-            </button>
-            <button type="button" onclick="goToMarketplace()" class="sanctuary-dock-btn" data-accent="gold" data-label="Bazaar" title="Marketplace">
-                <span class="material-symbols-outlined filled-icon" aria-hidden="true">storefront</span>
-            </button>
-            <button type="button" onclick="openFloweeMenu()" class="sanctuary-dock-btn" data-accent="flow" data-label="Flow Menu" title="Flowee Sanctuary Menu">
-                <svg class="flowee-icon-svg" viewBox="0 0 100 100" width="26" height="26" aria-hidden="true">
-                    <path d="M40,50 C10,20 -10,60 15,75 C25,80 40,65 40,50 Z" fill="#00ffcc" opacity="0.85"/>
-                    <path d="M60,50 C90,20 110,60 85,75 C75,80 60,65 60,50 Z" fill="#00ffcc" opacity="0.85"/>
-                    <circle cx="50" cy="50" r="16" fill="#00ffcc"/>
-                </svg>
-            </button>
+            <div id="sanctuary-dock-tools" class="sanctuary-dock-tools" role="group" aria-label="Sanctuary features">
+                <button type="button" onclick="openVisionHub()" class="sanctuary-dock-btn locked" data-accent="vision" data-label="Vision" data-gate="vision" title="The Vision — Theater & Archive (under construction)">
+                    <span class="material-symbols-outlined filled-icon" aria-hidden="true">visibility</span>
+                </button>
+                <button type="button" onclick="openAkademiy()" class="sanctuary-dock-btn locked" data-accent="akademiy" data-label="Akademiy" data-gate="akademiy" title="Akademiy — Skills & Quests (under construction)">
+                    <span class="material-symbols-outlined filled-icon" aria-hidden="true">school</span>
+                </button>
+                <button type="button" onclick="openLedger()" class="sanctuary-dock-btn" data-accent="ledger" data-label="Ledger" title="Sanctuary Ledger">
+                    <span class="material-symbols-outlined filled-icon" aria-hidden="true">menu_book</span>
+                </button>
+                <button type="button" onclick="toggleModal('data-modal')" class="sanctuary-dock-btn" data-accent="flow" data-label="Vault" title="Inventory Vault — Member Card & benefits">
+                    <span class="material-symbols-outlined filled-icon" aria-hidden="true">inventory_2</span>
+                </button>
+                <button type="button" onclick="toggleModal('qr-modal')" class="sanctuary-dock-btn" data-accent="gold" data-label="Soul Seal" title="Soul Seal QR">
+                    <span class="material-symbols-outlined filled-icon" aria-hidden="true">qr_code_2</span>
+                </button>
+                <button type="button" onclick="openCameraModal()" class="sanctuary-dock-btn" data-label="Capture" title="Camera & Scan">
+                    <span class="material-symbols-outlined filled-icon" aria-hidden="true">photo_camera</span>
+                </button>
+                <button type="button" onclick="goToMarketplace()" class="sanctuary-dock-btn locked" data-accent="gold" data-label="Bazaar" data-gate="marketplace" title="Marketplace (under construction)">
+                    <span class="material-symbols-outlined filled-icon" aria-hidden="true">storefront</span>
+                </button>
+                <button type="button" onclick="openFloweeMenu()" class="sanctuary-dock-btn" data-accent="flow" data-label="Flow Menu" title="Flowee Sanctuary Menu">
+                    <svg class="flowee-icon-svg" viewBox="0 0 100 100" width="26" height="26" aria-hidden="true">
+                        <path d="M40,50 C10,20 -10,60 15,75 C25,80 40,65 40,50 Z" fill="#00ffcc" opacity="0.85"/>
+                        <path d="M60,50 C90,20 110,60 85,75 C75,80 60,65 60,50 Z" fill="#00ffcc" opacity="0.85"/>
+                        <circle cx="50" cy="50" r="16" fill="#00ffcc"/>
+                    </svg>
+                </button>
+            </div>
         </nav>
+
+        <div id="cdf-gate-modal" aria-hidden="true">
+            <div class="gate-card" role="dialog" aria-labelledby="cdf-gate-title">
+                <h3 id="cdf-gate-title">Still under construction</h3>
+                <p id="cdf-gate-copy">Vision, Akademiy and Marketplace are sealed while we build. Enter the Circle password to peek.</p>
+                <input id="cdf-gate-input" type="password" autocomplete="current-password" placeholder="Construction password" />
+                <div class="gate-actions">
+                    <button type="button" class="ghost" onclick="closeConstructionGate()">Back</button>
+                    <button type="button" onclick="submitConstructionGate()">Enter</button>
+                </div>
+            </div>
+        </div>
         
         <!-- Mobile Camera Controls (Removed for now) -->
         <div class="fixed bottom-32 left-6 z-[60] flex flex-col gap-4 items-start pointer-events-auto">
@@ -621,9 +762,10 @@
         let artistData = null;
         let deepFlowCompleted = true; // Assume true until checked
 
-        // Membership card welcome → inventory + Flowee
+        // Membership card / post-registration welcome → inventory + Flowee cinematic tutorial
         (function welcomeMemberCard() {
-            if (urlParams.get('welcome') !== 'card') return;
+            const welcome = urlParams.get('welcome');
+            if (!welcome) return;
             try {
                 const card = JSON.parse(localStorage.getItem('cdf_wako_member_card') || '{}');
                 const inv = JSON.parse(localStorage.getItem('cdf_inventory') || '[]');
@@ -643,19 +785,97 @@
                     inv.unshift(item);
                     localStorage.setItem('cdf_inventory', JSON.stringify(inv));
                 }
-                const msg =
-                    'Welcome to the Sanctuary. Your Wako membership card' +
-                    (card.memberNumber ? ' (' + card.memberNumber + ')' : '') +
-                    ' is in inventory — open the pouch or say inventory to Flowee.';
+                const fromReg = welcome === 'register' || welcome === 'card';
                 setTimeout(() => {
-                    if (window.flowee && typeof window.flowee.talk === 'function') {
-                        window.flowee.talk(true, msg, 'guide');
-                    } else if (window.Flowee && typeof window.Flowee.talk === 'function') {
-                        window.Flowee.talk(true, msg, 'guide');
+                    if (window.FloweeSanctuaryGuide?.runInterfaceTutorial) {
+                        window.FloweeSanctuaryGuide.runInterfaceTutorial({
+                            fromCard: welcome === 'card',
+                            fromRegister: welcome === 'register',
+                            memberNumber: card.memberNumber || '',
+                        });
+                        return;
                     }
-                }, 1200);
+                    const msg =
+                        'Welcome to the Sanctuary. Your membership card' +
+                        (card.memberNumber ? ' (' + card.memberNumber + ')' : '') +
+                        ' lives in the Vault — tap the Circle D Flow logo on the right to open your tools.';
+                    if (window.Flowee?.talk) window.Flowee.talk(true, msg, 'guide');
+                    else if (window.flowee?.talk) window.flowee.talk(true, msg, 'guide');
+                    if (fromReg) toggleSanctuaryDock(true);
+                }, 1100);
             } catch (e) { /* ignore */ }
         })();
+
+        const CDF_CONSTRUCTION_PW = 'FlowComing';
+        const CDF_GATE_KEY = 'cdf_sanctuary_construction_ok';
+        let _pendingGateAction = null;
+
+        function constructionUnlocked() {
+            try {
+                return sessionStorage.getItem(CDF_GATE_KEY) === '1';
+            } catch (_) {
+                return false;
+            }
+        }
+
+        function openConstructionGate(label, onOk) {
+            _pendingGateAction = onOk;
+            const modal = document.getElementById('cdf-gate-modal');
+            const title = document.getElementById('cdf-gate-title');
+            const copy = document.getElementById('cdf-gate-copy');
+            const input = document.getElementById('cdf-gate-input');
+            if (title) title.textContent = (label || 'Zone') + ' — under construction';
+            if (copy) {
+                copy.textContent =
+                    'This wing is still being forged. Enter the Circle password to peek — or stay in the Sanctuary with Flowee.';
+            }
+            if (input) input.value = '';
+            if (modal) {
+                modal.classList.add('open');
+                modal.setAttribute('aria-hidden', 'false');
+            }
+            if (window.Flowee?.talk) {
+                window.Flowee.talk(
+                    true,
+                    (label || 'This zone') + ' is still under construction. Password unlocks a peek for the crew.',
+                    'guide'
+                );
+            }
+            setTimeout(() => input?.focus(), 80);
+        }
+
+        function closeConstructionGate() {
+            _pendingGateAction = null;
+            const modal = document.getElementById('cdf-gate-modal');
+            if (modal) {
+                modal.classList.remove('open');
+                modal.setAttribute('aria-hidden', 'true');
+            }
+        }
+
+        function submitConstructionGate() {
+            const input = document.getElementById('cdf-gate-input');
+            const val = (input?.value || '').trim();
+            if (val !== CDF_CONSTRUCTION_PW) {
+                if (window.Flowee?.talk) window.Flowee.talk(true, 'Not that key. Ask a Circle guide, or wait until we open the wing.', 'error');
+                return;
+            }
+            try {
+                sessionStorage.setItem(CDF_GATE_KEY, '1');
+            } catch (_) { /* ignore */ }
+            const fn = _pendingGateAction;
+            closeConstructionGate();
+            document.querySelectorAll('.sanctuary-dock-btn.locked').forEach((b) => b.classList.remove('locked'));
+            if (typeof fn === 'function') fn();
+        }
+
+        function withConstructionGate(label, proceed) {
+            if (constructionUnlocked()) {
+                proceed();
+                return;
+            }
+            openConstructionGate(label, proceed);
+        }
 
         function toggleModal(id) {
             const el = document.getElementById(id);
@@ -683,12 +903,14 @@
         }
 
         function goToMarketplace() {
-            const trans = document.getElementById('cinematic-transition');
-            trans.classList.remove('pointer-events-none');
-            trans.style.opacity = '1';
-            setTimeout(() => {
-                window.location.href = `marketplace_3d.html?intent=upload&artistId=${artistId}`;
-            }, 1000);
+            withConstructionGate('Marketplace', () => {
+                const trans = document.getElementById('cinematic-transition');
+                trans.classList.remove('pointer-events-none');
+                trans.style.opacity = '1';
+                setTimeout(() => {
+                    window.location.href = `marketplace_3d.html?intent=upload&artistId=${artistId}`;
+                }, 1000);
+            });
         }
 
         function openTasteWorld() {
@@ -697,17 +919,21 @@
         }
 
         function openVisionHub() {
-            if (window.Flowee) window.Flowee.talk(true, 'Opening The Vision — theater archive & creative lens.', 'guide');
-            if (typeof openSystemPlayer === 'function') {
-                openSystemPlayer();
-                return;
-            }
-            window.location.href = 'vision_studio.html?from=sanctuary';
+            withConstructionGate('The Vision', () => {
+                if (window.Flowee) window.Flowee.talk(true, 'Opening The Vision — theater archive & creative lens.', 'guide');
+                if (typeof openSystemPlayer === 'function') {
+                    openSystemPlayer();
+                    return;
+                }
+                window.location.href = 'vision_studio.html?from=sanctuary';
+            });
         }
 
         function openAkademiy() {
-            if (window.Flowee) window.Flowee.talk(true, 'Akademiy awaits — skills, quests, and progression.', 'guide');
-            setTimeout(() => { window.location.href = 'academy.html?from=sanctuary'; }, 700);
+            withConstructionGate('Akademiy', () => {
+                if (window.Flowee) window.Flowee.talk(true, 'Akademiy awaits — skills, quests, and progression.', 'guide');
+                setTimeout(() => { window.location.href = 'academy.html?from=sanctuary'; }, 700);
+            });
         }
 
         document.getElementById('radar-canvas')?.addEventListener('click', (e) => {
@@ -3255,7 +3481,7 @@
     <script src="../js/agents/artist_profile_sync.js?v=1.2"></script>
     <script src="../js/agents/flowee_soulprint.js?v=1.2"></script>
     <script src="../js/data/coop_roles.js?v=1.0"></script>
-    <script src="../js/agents/flowee_sanctuary_guide.js?v=1.2"></script>
+    <script src="../js/agents/flowee_sanctuary_guide.js?v=1.3"></script>
     <script src="../js/agents/adinkra_sync.js?v=1.0"></script>
 </body>
 </html>

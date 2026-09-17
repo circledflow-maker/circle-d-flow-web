@@ -57,11 +57,27 @@ async function handleResendConfirmation(email) {
 
 // --- HELPER: POST-LOGIN ROUTING ---
 function resolvePostLoginPath(session) {
+    try {
+        const next = new URLSearchParams(window.location.search || '').get('next');
+        if (next && next.startsWith('/') && !next.startsWith('//')) {
+            return next;
+        }
+    } catch (_) { /* ignore */ }
+    try {
+        const stored = sessionStorage.getItem('cdf_auth_next');
+        if (stored && stored.startsWith('/') && !stored.startsWith('//')) {
+            sessionStorage.removeItem('cdf_auth_next');
+            return stored;
+        }
+    } catch (_) { /* ignore */ }
     const meta = session?.user?.user_metadata || {};
     const flowClass = meta.flow_class || localStorage.getItem('userClass') || '';
     const isVisual = ['CREATOR', 'PATHFINDER', 'visionary'].includes(flowClass);
-    const page = isVisual ? 'pages/photographer_hub.html' : 'pages/dashboard.html';
-    return getRedirectPath(page).replace('.html', '');
+    if (isVisual) {
+        return getRedirectPath('pages/photographer_hub.html').replace('.html', '');
+    }
+    // Default Circle path: Sanctuary (dashboard.html was emptied in Phase 0)
+    return '/pages/artist_sanctuary.html?welcome=register';
 }
 
 // --- 1. LOGIN LOGIC ---
@@ -317,19 +333,30 @@ async function handleOAuthLogin(provider) {
         return;
     }
     showFeedback("Initiating Neural Link...", "neutral");
-    
-    // PERSIST FOR DASHBOARD SECURITY BEFORE REDIRECT
+
     localStorage.setItem('cqr_auth_state', 'logged_in');
-    
+
+    // Remember where to land after Google returns (query next or visitor path)
+    try {
+        const next = new URLSearchParams(window.location.search || '').get('next');
+        if (next && next.startsWith('/') && !next.startsWith('//')) {
+            sessionStorage.setItem('cdf_auth_next', next);
+        } else if (!sessionStorage.getItem('cdf_auth_next')) {
+            sessionStorage.setItem(
+                'cdf_auth_next',
+                '/pages/artist_sanctuary.html?welcome=register'
+            );
+        }
+    } catch (_) { /* ignore */ }
+
+    const redirectTo = window.location.origin + '/pages/auth_callback';
     const { data, error } = await window.supabaseClient.auth.signInWithOAuth({
         provider: provider,
-        options: {
-            redirectTo: window.location.origin + '/pages/dashboard.html'
-        }
+        options: { redirectTo },
     });
     if (error) {
         showFeedback("OAuth Error: " + error.message, "error");
-        localStorage.removeItem('cqr_auth_state'); // Revert on failure
+        localStorage.removeItem('cqr_auth_state');
     }
 }
 

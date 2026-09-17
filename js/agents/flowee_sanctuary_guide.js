@@ -61,12 +61,7 @@ class FloweeSanctuaryGuide {
 
         if (window.FloweeNotify) await window.FloweeNotify.promptViaFlowee();
 
-        await this.speak(
-            'News from Lisbon: the Atlas is live. Navigators earn XP at real miradouros, sanctuaries, and kitchen zones. Adinkra runes sync to your Brotherhood codex.'
-        );
-
-        await this.speak('Your sanctuary has three zones: Akwaba Kitchen Bar, the Cypher Stage, and the Video Archive. Walk your avatar to discover them.');
-
+        await this.runInterfaceTutorial({ firstVisit: true });
         await this.offerPathChoice();
     }
 
@@ -75,6 +70,10 @@ class FloweeSanctuaryGuide {
         const actions = [
             { label: 'ENTER ATLAS', action: () => { window.location.href = 'quest_map.html'; } },
             { label: 'OPEN QUESTS', action: () => { window.location.href = 'quest_board.html'; } },
+            {
+                label: 'INTERFACE TOUR',
+                action: () => this.runInterfaceTutorial({ firstVisit: false }),
+            },
         ];
         if (window.ArtistProfileSync?.needsSoulprint(this.artist)) {
             actions.unshift({
@@ -97,6 +96,87 @@ class FloweeSanctuaryGuide {
             'guide',
             actions
         );
+    }
+
+    /**
+     * Cinematic / mystic interface tutorial — CDF dock, locked wings, member vault.
+     */
+    async runInterfaceTutorial(opts = {}) {
+        const key = 'cdf_sanctuary_ui_tutorial_v2';
+        if (!opts.force && !opts.fromCard && !opts.fromRegister && !opts.firstVisit) {
+            if (localStorage.getItem(key) === 'done') return;
+        }
+
+        if (opts.fromRegister) {
+            await this.speak(
+                `You're in the Circle, ${this.username()}. Registration landed you in the 3D Sanctuary — I will show you the interface.`
+            );
+        } else if (opts.fromCard) {
+            await this.speak(
+                `Your membership card${opts.memberNumber ? ' (' + opts.memberNumber + ')' : ''} is synced to the Vault. Welcome home.`
+            );
+        } else if (opts.firstVisit) {
+            await this.speak(
+                'This Sanctuary is cinematic and mystic — a living stage for your navigator path.'
+            );
+        }
+
+        if (typeof toggleSanctuaryDock === 'function') toggleSanctuaryDock(true);
+
+        await this.speak(
+            'Tap the Circle D Flow logo on the right — that is your control. Confirm it, and the tools stack underneath.'
+        );
+
+        await this.speak(
+            'Eye is The Vision — theater & archive. Cap is Akademiy — skills & quests. Storefront is the Marketplace. Those three are password-sealed while under construction.'
+        );
+
+        await this.speak(
+            'Book is the Ledger. Pouch is your Vault — member card and benefits live there. QR is your Soul Seal. Camera captures. Wings open me again anytime.'
+        );
+
+        await this.speak(
+            'Membership tier is not Artist status. Free members can still join the Flow Pool later — pay never buys the title Artist.',
+            'guide',
+            [
+                {
+                    label: 'OPEN VAULT',
+                    action: () => {
+                        if (typeof toggleModal === 'function') toggleModal('data-modal');
+                        window.Flowee?.shush();
+                    },
+                },
+                {
+                    label: 'CLAIM / EDIT CARD',
+                    action: () => {
+                        window.location.href = '/member-card?src=sanctuary&next=' + encodeURIComponent('/pages/artist_sanctuary.html?welcome=card');
+                    },
+                },
+                {
+                    label: 'EXPLORE 3D',
+                    action: async () => {
+                        await this.speak('Use the joystick. Walk the courtyard. I stay with you.');
+                        window.Flowee?.shush();
+                    },
+                },
+            ]
+        );
+
+        try {
+            localStorage.setItem(key, 'done');
+        } catch (_) { /* ignore */ }
+    }
+
+    onDockExpanded() {
+        if (this._dockHinted) return;
+        this._dockHinted = true;
+        if (window.Flowee?.talk) {
+            window.Flowee.talk(
+                true,
+                'Tools aligned. Vision · Akademiy · Marketplace are locked with a construction password. Vault holds your card.',
+                'guide'
+            );
+        }
     }
 
     suggestQuest() {

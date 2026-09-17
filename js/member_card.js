@@ -7,6 +7,14 @@
   const INVENTORY_KEY = 'cdf_inventory';
   const XP_CLAIM = 25;
   const SANCTUARY_URL = '/pages/artist_sanctuary.html?welcome=card';
+
+  function sanctuaryDest() {
+    try {
+      const n = new URLSearchParams(window.location.search).get('next');
+      if (n && n.startsWith('/') && !n.startsWith('//')) return n;
+    } catch (_) { /* ignore */ }
+    return SANCTUARY_URL;
+  }
   const TOTAL_STEPS = 7;
 
   const GUIDE = [
@@ -885,7 +893,7 @@
     btn.addEventListener('click', () => {
       const tier = btn.getAttribute('data-tier-select');
       if (tier === 'registered') {
-        window.location.href = SANCTUARY_URL;
+        window.location.href = sanctuaryDest();
         return;
       }
       startCheckout(tier);

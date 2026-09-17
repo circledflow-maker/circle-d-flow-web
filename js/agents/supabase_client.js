@@ -51,23 +51,35 @@ window.handleOAuthLogin = async function(provider) {
         return;
     }
     
-    // Disable UI temporarily or show loading
-    const btn = event.target;
-    const oldText = btn.innerHTML;
-    btn.innerHTML = 'Connecting...';
-    
+    const btn = typeof event !== 'undefined' && event?.target ? event.target : null;
+    const oldText = btn ? btn.innerHTML : '';
+    if (btn) btn.innerHTML = 'Connecting...';
+
     try {
+        try {
+            const next = new URLSearchParams(window.location.search || '').get('next');
+            if (next && next.startsWith('/') && !next.startsWith('//')) {
+                sessionStorage.setItem('cdf_auth_next', next);
+            } else if (!sessionStorage.getItem('cdf_auth_next')) {
+                sessionStorage.setItem(
+                    'cdf_auth_next',
+                    '/pages/artist_sanctuary.html?welcome=register'
+                );
+            }
+        } catch (_) { /* ignore */ }
+
         const { data, error } = await window.supabaseClient.auth.signInWithOAuth({
             provider: provider,
             options: {
-                redirectTo: window.location.origin + '/pages/dashboard.html'
+                // Prefer auth_callback; dashboard.html also bridges (legacy allowlist)
+                redirectTo: window.location.origin + '/pages/auth_callback'
             }
         });
         if (error) throw error;
     } catch(err) {
         console.error('OAuth Error:', err);
         alert('Authentication failed: ' + err.message);
-        btn.innerHTML = oldText;
+        if (btn) btn.innerHTML = oldText;
     }
 };
 

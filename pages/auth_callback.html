@@ -3,30 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Signing in · Circle D Flow</title>
+  <title>Auth callback · Circle D Flow</title>
   <meta name="robots" content="noindex">
+  <meta http-equiv="refresh" content="12;url=/pages/artist_sanctuary.html?welcome=register">
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&family=Plus+Jakarta+Sans:wght@400;600&display=swap" rel="stylesheet">
   <style>
     :root { --gold: #d4af37; --cyan: #00ffcc; --bg: #050301; }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
       background: radial-gradient(ellipse at top, #1a1208, var(--bg));
-      color: #f3e9d2;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      padding: 1.5rem;
-      text-align: center;
+      color: #f3e9d2; font-family: 'Plus Jakarta Sans', sans-serif; padding: 1.5rem; text-align: center;
     }
     .card {
-      max-width: 380px;
-      width: 100%;
-      padding: 1.75rem 1.4rem;
-      border: 1px solid rgba(212,175,55,0.35);
-      border-radius: 16px;
-      background: rgba(12,8,4,0.92);
+      max-width: 380px; width: 100%; padding: 1.75rem 1.4rem;
+      border: 1px solid rgba(212,175,55,0.35); border-radius: 16px; background: rgba(12,8,4,0.92);
     }
     h1 { font-family: Cinzel, Georgia, serif; color: var(--gold); font-size: 1.25rem; margin-bottom: 0.5rem; }
     p { color: rgba(243,233,210,0.7); font-size: 0.9rem; line-height: 1.45; margin-bottom: 1rem; }
@@ -41,11 +32,11 @@
 </head>
 <body>
   <div class="card">
-    <p class="pulse" id="status">Calibrating session…</p>
-    <h1>Circle D Flow</h1>
-    <p id="copy">Finishing Google sign-in. You will enter the Sanctuary (or your Member Card) in a moment.</p>
+    <p class="pulse" id="status">Linking your Circle identity…</p>
+    <h1>Welcome in</h1>
+    <p id="copy">Session sync in progress. Next stop: Member path → 3D Artist Sanctuary.</p>
     <p class="err" id="err" hidden></p>
-    <p><a href="/login">Back to login</a> · <a href="/join?invite=1&src=oauth">Join with Flowee</a></p>
+    <p><a href="/member-card?src=oauth">Member Card</a> · <a href="/pages/artist_sanctuary.html?welcome=register">Sanctuary</a></p>
   </div>
 </body>
 </html>

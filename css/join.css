@@ -373,6 +373,62 @@ body::before {
   z-index: 99999;
 }
 
+.join-journey {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin: 1.1rem 0 0;
+  padding: 0;
+}
+.join-journey li {
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.35rem 0.7rem;
+}
+.join-journey li.on,
+.join-journey.active li:nth-child(-n+2) {
+  color: var(--cyan);
+  border-color: rgba(0, 255, 204, 0.45);
+}
+body.join-form-ready .join-journey li:nth-child(2) {
+  color: var(--gold);
+  border-color: var(--gold-soft);
+}
+
+.invite-gate {
+  background: var(--bg-panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.15rem 1.4rem;
+  margin-bottom: 1.25rem;
+  animation: riseIn 0.45s ease;
+}
+.invite-kicker {
+  font-family: var(--font-display);
+  color: var(--cyan);
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 0.45rem;
+}
+.invite-copy {
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.45;
+  margin-bottom: 1rem;
+}
+.invite-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+.invite-actions .btn { min-width: 0; }
+
 @media (max-width: 640px) {
   .panel { padding: 1.15rem 1rem 1.3rem; }
   .brand-mark { letter-spacing: 0.08em; }

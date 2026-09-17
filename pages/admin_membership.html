@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin · Membership | Circle D Flow</title>
+  <title>Welt Heart · Flow Control | Circle D Flow</title>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -43,8 +43,9 @@
       font-family: Cinzel, Georgia, serif; letter-spacing: 0.05em; text-transform: uppercase;
       border: none; border-radius: 999px; padding: 0.65rem 1rem; cursor: pointer;
       background: linear-gradient(145deg, #e0c15a, #a8841f); color: #1a1205;
+      text-decoration: none; display: inline-block;
     }
-    button.ghost { background: transparent; color: var(--cyan); border: 1px solid rgba(61,224,255,0.35); }
+    button.ghost, a.btn.ghost { background: transparent; color: var(--cyan); border: 1px solid rgba(61,224,255,0.35); }
     .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 0.6rem; margin-bottom: 0.9rem; }
     .stat { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 0.8rem; }
     .stat b { display: block; font-family: Cinzel, serif; font-size: 1.35rem; color: var(--gold); }
@@ -64,12 +65,14 @@
     #app[hidden], #gate[hidden], .tab-pane[hidden] { display: none !important; }
     .row-actions { display: flex; flex-wrap: wrap; gap: 0.35rem; }
     .row-actions button { font-size: 0.65rem; padding: 0.4rem 0.65rem; }
+    .hub-links { display: flex; flex-wrap: wrap; gap: 0.45rem; margin: 0.5rem 0 1rem; }
+    .invite-box textarea { min-height: 72px; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 0.78rem; }
   </style>
 </head>
 <body>
   <div id="gate" class="gate">
-    <h1>Membership Admin</h1>
-    <p class="sub">Members · Partners · Gutschein codes. Password: team-shared admin key.</p>
+    <h1>Welt Heart</h1>
+    <p class="sub">Circle D Flow admin · Flow Control. Same password as Membership Admin.</p>
     <div class="err" id="gate-err"></div>
     <label for="admin-key">Admin password</label>
     <input id="admin-key" type="password" autocomplete="current-password" placeholder="FlowCreator!">
@@ -77,23 +80,62 @@
   </div>
 
   <div id="app" hidden>
-    <h1>Flow Control</h1>
-    <p class="sub">Circle D Flow · same data as Member Orbit. <a href="/member-card" style="color:var(--cyan)">Open member card</a></p>
+    <h1>Welt Heart · Flow Control</h1>
+    <p class="sub">
+      Members · Events · Locations · Impact · Invite links.
+      Visitor path: <span class="code">/join</span> → Member Card → Sanctuary.
+      <a href="/member-card" style="color:var(--cyan)">Open member card</a>
+    </p>
+    <div class="hub-links">
+      <a class="btn ghost" href="/admin/registrations">Event registrations</a>
+      <a class="btn ghost" href="/pages/heart.html">Heart World tools</a>
+      <a class="btn ghost" href="/pages/artist_sanctuary">3D Sanctuary</a>
+      <a class="btn ghost" href="/join?src=admin">Test invite link</a>
+    </div>
     <div class="stats" id="stats"></div>
     <div class="tabs">
-      <button type="button" class="on" data-tab="members">Members</button>
+      <button type="button" class="on" data-tab="impact">Impact</button>
+      <button type="button" data-tab="members">Members</button>
       <button type="button" data-tab="events">Events</button>
       <button type="button" data-tab="locations">Locations</button>
       <button type="button" data-tab="partners">Partners</button>
       <button type="button" data-tab="coupons">Coupons</button>
       <button type="button" data-tab="live">Live Feed</button>
+      <button type="button" data-tab="invite">Invite</button>
       <button type="button" class="ghost" id="logout-btn">Lock</button>
       <button type="button" class="ghost" id="refresh-btn">Refresh</button>
     </div>
     <div class="err" id="app-err"></div>
     <div class="ok" id="app-ok"></div>
 
-    <section class="tab-pane" id="tab-members">
+    <section class="tab-pane" id="tab-impact">
+      <div class="panel">
+        <h2>Circle D Flow — Impact 2026 (baseline)</h2>
+        <p class="sub">Seed numbers from lived culture — auto counters grow as Orbit / Pool go live. Not marketing inflation.</p>
+        <div class="stats" id="impact-stats"></div>
+      </div>
+      <div class="panel">
+        <h2>Visitor pipeline</h2>
+        <p class="sub" style="margin:0">
+          Shared link → Flowee chat → Register / Login → Member Card → 3D Artist Sanctuary.
+          Membership tier ≠ Artist status. Flow Pool matching = Phase 2.
+        </p>
+      </div>
+    </section>
+
+    <section class="tab-pane" id="tab-invite" hidden>
+      <div class="panel invite-box">
+        <h2>Share invite link</h2>
+        <p class="sub">Flowee greets visitors on this URL and guides register or login → Sanctuary.</p>
+        <label for="invite-src">Source tag (ig / whatsapp / qr / flyer)</label>
+        <input id="invite-src" type="text" value="ig" placeholder="ig">
+        <label for="invite-url">Copy link</label>
+        <textarea id="invite-url" readonly></textarea>
+        <button type="button" id="invite-copy">Copy link</button>
+      </div>
+    </section>
+
+    <section class="tab-pane" id="tab-members" hidden>
       <div class="panel">
         <label for="member-q">Search members</label>
         <input id="member-q" type="search" placeholder="name, email, tier, IG…">
@@ -316,7 +358,6 @@
     }
 
     function renderStats(s) {
-      const by = s.byTier || {};
       els.stats.innerHTML = [
         ['Members', s.members],
         ['Events', s.events || 0],
@@ -327,6 +368,36 @@
         ['7d claims', s.claimsLast7Days],
         ['Grants', s.grants],
       ].map(([label, val]) => `<div class="stat"><b>${val}</b><span>${label}</span></div>`).join('');
+      renderImpact(s);
+    }
+
+    function renderImpact(s) {
+      const box = document.getElementById('impact-stats');
+      if (!box) return;
+      // Baseline from lived Circle (2026) + live Orbit counters where available
+      const baseline = [
+        ['75+', 'Creatives connected (baseline)'],
+        ['100+', 'Total participants / attendance'],
+        ['11', 'Artists documented'],
+        ['8', 'Locations'],
+        ['~20', 'Events hosted'],
+        [String(s.members ?? '—'), 'Registered members (live)'],
+        [String(s.events ?? '—'), 'Orbit events (live)'],
+        [String(s.claimsLast7Days ?? '—'), 'Card claims · 7 days'],
+      ];
+      box.innerHTML = baseline
+        .map(([val, label]) => `<div class="stat"><b>${val}</b><span>${label}</span></div>`)
+        .join('');
+    }
+
+    function refreshInviteUrl() {
+      const src = (document.getElementById('invite-src')?.value || 'ig').trim() || 'ig';
+      const url =
+        window.location.origin +
+        '/join?invite=1&src=' +
+        encodeURIComponent(src);
+      const ta = document.getElementById('invite-url');
+      if (ta) ta.value = url;
     }
 
     function renderEvents(rows) {
@@ -481,8 +552,23 @@
         document.querySelectorAll('.tab-pane').forEach((p) => {
           p.hidden = p.id !== 'tab-' + btn.getAttribute('data-tab');
         });
+        if (btn.getAttribute('data-tab') === 'invite') refreshInviteUrl();
       });
     });
+
+    document.getElementById('invite-src')?.addEventListener('input', refreshInviteUrl);
+    document.getElementById('invite-copy')?.addEventListener('click', async () => {
+      refreshInviteUrl();
+      const ta = document.getElementById('invite-url');
+      try {
+        await navigator.clipboard.writeText(ta.value);
+        setMsg(true, 'Invite link copied');
+      } catch (_) {
+        ta.select();
+        setMsg(true, 'Select + copy the link');
+      }
+    });
+    refreshInviteUrl();
 
     let searchTimer;
     els.memberQ.addEventListener('input', () => {

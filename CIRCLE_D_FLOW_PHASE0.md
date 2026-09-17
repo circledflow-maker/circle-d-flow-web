@@ -86,13 +86,23 @@ Never run two SD encodes + heavy 3D page build simultaneously.
 
 | Phase | Circle D Flow web | Status |
 |-------|-------------------|--------|
-| **0** | Gates + storage + deploy | ✅ Done |
+| **0** | Gates + storage + deploy | ✅ Done (env smoke still ongoing) |
 | **1** | Orbit → worlds stable, HEART → KYH gateway | ✅ Done |
-| **2** | Quest triad polish (map, board, legends) | Next |
+| **1b** | **Visitor path** Join → Card → Sanctuary + Welt Heart admin | ✅ In progress (this sprint) |
+| **2** | Quest triad polish (map, board, legends) | Next after 1b deploy |
 | **3** | Bazaar checkout + `Gamification.spendTokens` | Planned |
-| **4** | Join / membership unified (beyond Lapa71) | Planned |
+| **4** | Flow Pool intake + matching (Applicant → Confirmed) | Planned |
 | **5** | Supabase projects + leads (shared with KYH Phase 8) | Planned |
 | **6** | Content embed (Stages cuts from D: → Experiences) | Planned |
+
+### Phase 1b — logical order (now)
+
+1. Shared `/join` + Flowee invite chat → register/login  
+2. Member Card → 3D Sanctuary tutorial  
+3. Welt Heart = Flow Control admin (`/heart`, `/admin`)  
+4. Deploy + smoke: invite link → sanctuary  
+
+Then Phase 2 quest polish / Phase 4 Flow Pool — not all at once.
 
 KYH has its own phase map in `KISS_YOUR_HEART_ARCHITECTURE.md`.
 

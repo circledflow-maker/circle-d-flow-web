@@ -14,9 +14,16 @@
 | 5 | Partner links (Wako / Humble / Kreativlon) | Done |
 | 7 | RLS private promo codes | Not started |
 | 0 | Phase 0 env / smoke tests | Ongoing |
+| 1b | Join Flowee invite → Card → Sanctuary | Done — `/join` |
+| 1b | Welt Heart = Flow Control admin | Done — `/heart` `/admin` |
+| 1b | Login `?next=` → Sanctuary | Done — `auth-handler.js` |
 
 **Share / test (after deploy):**
 
+- https://circle-d-flow-web.vercel.app/join?invite=1&src=ig
 - https://circle-d-flow-web.vercel.app/member-card
+- https://circle-d-flow-web.vercel.app/pages/artist_sanctuary?welcome=register
+- https://circle-d-flow-web.vercel.app/heart
+- https://circle-d-flow-web.vercel.app/admin/membership
 - https://circle-d-flow-web.vercel.app/membership
 - https://circle-d-flow-web.vercel.app/join

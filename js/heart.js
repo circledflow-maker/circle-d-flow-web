@@ -47,18 +47,30 @@ window.heartApp = {
     },
 
     unlockGate() {
-        const pass = document.getElementById('master-password').value.toLowerCase().trim();
+        const pass = document.getElementById('master-password').value.trim();
+        const lower = pass.toLowerCase();
         const err = document.getElementById('gate-error');
-        if (pass === 'ygdrasil' || pass === 'yggdrasil' || pass === 'yggdrassil' || pass === 'ygdrassil') {
+        const okHeart =
+            lower === 'ygdrasil' ||
+            lower === 'yggdrasil' ||
+            lower === 'yggdrassil' ||
+            lower === 'ygdrassil';
+        const okFlow = pass === 'FlowCreator!';
+        if (okFlow) {
+            // Same key as Flow Control → go straight to Welt Heart admin
+            window.location.href = '/admin/membership';
+            return;
+        }
+        if (okHeart) {
             document.getElementById('ygdrasil-gate').style.opacity = '0';
             setTimeout(() => {
                 document.getElementById('ygdrasil-gate').style.display = 'none';
                 document.getElementById('onboarding-screen').style.display = 'flex';
-                this.toggleAuthMode('login'); // Default to login tab
+                this.toggleAuthMode('login');
             }, 1000);
         } else {
             err.style.display = 'block';
-            err.innerText = "The tree remains silent. Incorrect password.";
+            err.innerText = "The tree remains silent. Use FlowCreator! for Flow Control, or the Heart World key.";
         }
     },
 

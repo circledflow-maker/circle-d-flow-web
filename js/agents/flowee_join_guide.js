@@ -1,5 +1,5 @@
 /**
- * Flowee Join Guide — step coaching + missing-field / API error voice
+ * Flowee Join Guide — invite chat → register/login → form coaching → sanctuary
  */
 (function () {
   const HINTS = {
@@ -15,24 +15,51 @@
   };
 
   const SECTION_INTRO = {
-    1: 'Section 1 — identity. Who walks into Lapa 71?',
+    1: 'Section 1 — identity. Who walks into the Circle?',
     2: 'Section 2 — pick every discipline that lives in you. Audience and Other both count.',
-    3: 'Section 3 — Aug 29 night. Attending? Jam? Tell the truth of your calendar.',
+    3: 'Section 3 — event night. Attending? Jam? Tell the truth of your calendar.',
     4: 'Section 4 — jam details. Solo, with musicians, freestyle, or art showcase — then describe what you bring.',
   };
+
+  const SANCTUARY_AFTER =
+    '/pages/artist_sanctuary.html?welcome=register';
+  const MEMBER_THEN_SANCTUARY =
+    '/member-card?src=join&next=' + encodeURIComponent('/pages/artist_sanctuary.html?welcome=card');
+  const LOGIN_THEN_SANCTUARY =
+    '/login?next=' + encodeURIComponent('/pages/artist_sanctuary.html?welcome=register');
 
   let lastHint = '';
   let lastSection = 0;
   let lastError = '';
+  let inviteDone = false;
+
+  function params() {
+    try {
+      return new URLSearchParams(window.location.search || '');
+    } catch (_) {
+      return new URLSearchParams();
+    }
+  }
+
+  function isInviteLink() {
+    const p = params();
+    if (p.get('skipInvite') === '1') return false;
+    // Shared / flyer / QR / IG links — and default join entry
+    if (p.has('invite') || p.has('from') || p.has('src') || p.has('ref') || p.has('utm_source')) {
+      return true;
+    }
+    // Bare /join and lapa71 register always open with Flowee welcome
+    return true;
+  }
 
   function agent() {
     return window.flowee || window.Flowee || window.floweeAgent || null;
   }
 
-  function speak(text, type) {
+  function speak(text, type, options) {
     const a = agent();
     if (a && typeof a.talk === 'function') {
-      a.talk(true, text, type || 'guide');
+      a.talk(true, text, type || 'guide', options || []);
       return;
     }
     const host = document.getElementById('flowee-agent');
@@ -71,14 +98,108 @@
     }
   }
 
+  function setFormVisible(visible) {
+    const form = document.getElementById('join-form');
+    const progress = document.getElementById('progress-track');
+    const gate = document.getElementById('flowee-invite-gate');
+    const journey = document.getElementById('join-journey');
+    if (form) form.hidden = !visible;
+    if (progress) progress.hidden = !visible;
+    if (gate) gate.hidden = visible;
+    if (journey) journey.classList.toggle('active', visible);
+    document.body.classList.toggle('join-form-ready', !!visible);
+  }
+
+  function revealForm() {
+    inviteDone = true;
+    setFormVisible(true);
+    const first = document.getElementById('fullName');
+    if (first) {
+      try {
+        first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } catch (_) { /* ignore */ }
+    }
+    speak(
+      'Registration open. I stay with you — if a field is missing, I tell you. At the end: Member Card, then the 3D Artist Sanctuary.',
+      'guide'
+    );
+  }
+
+  function runInviteChat() {
+    setFormVisible(false);
+    const src = params().get('src') || params().get('from') || params().get('utm_source') || 'link';
+
+    speak(
+      'Akwaaba. I am Flowee — your guide in Circle D Flow.',
+      'guide',
+      [
+        {
+          label: 'CONTINUE',
+          action: () => explainPlace(src),
+        },
+      ]
+    );
+  }
+
+  function explainPlace(src) {
+    speak(
+      'You opened a Circle invite' +
+        (src && src !== 'link' ? ' (' + src + ')' : '') +
+        '. You are at the entrance: Join the family, claim your place, then enter the living 3D Artist Sanctuary — cinematic, mystic, guided by me.',
+      'guide',
+      [
+        {
+          label: 'WHAT AWAITS ME?',
+          action: () => explainPromise(),
+        },
+      ]
+    );
+  }
+
+  function explainPromise() {
+    speak(
+      'At the end of this path: your Member Card (Free / Support / Crew), benefits in your Vault, and the 3D Sanctuary courtyard. Membership never buys Artist status — that grows through the Flow Pool.',
+      'guide',
+      [
+        {
+          label: 'REGISTER WITH FLOWEE',
+          action: () => revealForm(),
+        },
+        {
+          label: 'I ALREADY HAVE A LOGIN',
+          action: () => {
+            speak('Taking you to login — after that I meet you in the Sanctuary.', 'guide');
+            setTimeout(() => {
+              window.location.href = LOGIN_THEN_SANCTUARY;
+            }, 900);
+          },
+        },
+        {
+          label: 'CLAIM CARD FIRST',
+          action: () => {
+            window.location.href = MEMBER_THEN_SANCTUARY;
+          },
+        },
+      ]
+    );
+  }
+
   window.FloweeJoinGuide = {
     boot() {
       setTimeout(() => {
-        speak(
-          'Welcome to the family. I am <strong>Flowee</strong> — I will walk you through Member & Jam registration for Lapa 71. If something is missing, I will tell you.',
-          'guide'
-        );
-      }, 700);
+        if (isInviteLink() && !inviteDone) {
+          runInviteChat();
+        } else {
+          setFormVisible(true);
+          speak(
+            'Welcome. I am Flowee — I walk you through registration. At the end: Member Card and the 3D Artist Sanctuary.',
+            'guide'
+          );
+        }
+      }, 600);
+    },
+    startRegistration() {
+      revealForm();
     },
     onSection(step, meta) {
       if (step === lastSection) return;
@@ -105,7 +226,7 @@
       if (!text || text === lastError) return;
       lastError = text;
       softFocus(meta && meta.field);
-      speak(`Hold on — ${text}`, 'error');
+      speak('Hold on — ' + text, 'error');
     },
     onSuccess(data) {
       lastError = '';
@@ -113,12 +234,30 @@
         data && data.profileId
           ? ' Your shadow profile is linked.'
           : ' Claim your profile at login when ready.';
-      speak(
-        'You\'re in.' +
-          pid +
-          ' Want to go further? Claim your Wako Kungo membership card — I will meet you there.',
-        'success'
-      );
+      const text =
+        "You're in." +
+        pid +
+        ' Next: claim your Member Card — then I meet you in the 3D Artist Sanctuary for a short interface tour.';
+      const actions = [
+        {
+          label: 'CLAIM MEMBER CARD',
+          action: () => {
+            window.location.href = MEMBER_THEN_SANCTUARY;
+          },
+        },
+        {
+          label: 'ENTER SANCTUARY',
+          action: () => {
+            window.location.href = SANCTUARY_AFTER;
+          },
+        },
+      ];
+      const a = agent();
+      if (a && typeof a.talk === 'function') {
+        a.talk(true, text, 'success', actions);
+      } else {
+        speak(text, 'success');
+      }
     },
   };
 })();
