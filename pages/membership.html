@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Membership Ascension - Circle D Flow</title>
-    <meta name="description" content="Upgrade your Hunter Class. Unlock advanced tools, storage, and real-life perks.">
+    <title>Membership · Bronze · Silver · Gold | Circle D Flow</title>
+    <meta name="description" content="Wako Kungo membership — Bronze free, Silver €5, Gold €10. Coupons, guest+1, drinks, content folders, shoot booking.">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
@@ -18,233 +18,220 @@
                         "primary": "#8A2BE2",
                         "electric": "#9A4DFF",
                         "mystic-gold": "#FFD700",
-                        "obsidian": "#0F0A13"
+                        "obsidian": "#0F0A13",
+                        "bronze": "#CD7F32",
+                        "silver": "#C0C0C0"
                     },
                     fontFamily: { "display": ["Plus Jakarta Sans", "sans-serif"] }
                 }
             }
         }
     </script>
-    <!-- AGENT MESH -->
-    <script src="../js/agents/visual_eye.js" defer></script>
-    <script src="../js/agents/helper.js" defer></script>
-    <script src="../js/agents/bridge_pusher.js" defer></script>
-    <script src="../js/agents/global_ticker.js" defer></script>
-    <script src="../js/agents/network_hub.js" defer></script>
-    <script src="../js/agents/constructor_bot.js" defer></script>
-    <script src="../js/agents/kingdom_science.js" defer></script>
-    <script src="../js/agents/resonance_bridge.js" defer></script>
-    <script src="../js/agents/vault_space.js" defer></script>
-    <script src="../js/agents/orbital_menu.js" defer></script>
-    <script src="../js/agents/tutorial_core.js" defer></script>
-    <script src="../js/agents/quest_controller.js" defer></script>
-    <script src="../js/agents/visual_integrity.js" defer></script>
-    <script src="../js/agents/sound_engineer.js" defer></script>
-    <script src="../js/agents/horizon_bar.js" defer></script>
-    <script src="../js/agents/social_matrix.js" defer></script>
+    <script src="../js/cdf_runtime_config.js" defer></script>
+    <script src="../js/agents/supabase_client.js" defer></script>
     <script src="../js/agents/flowee.js" defer></script>
     <script src="../js/gamification.js" defer></script>
 </head>
 <body class="bg-obsidian font-display text-white overflow-x-hidden selection:bg-electric selection:text-white">
 
-    <!-- Mobile Header & Burger Menu -->
     <div class="fixed top-6 left-6 z-[100]">
-        <button id="burger-btn" class="w-10 h-10 flex flex-col justify-center items-center gap-1.5 bg-black border border-[#d4af37]/50 rounded cursor-pointer z-[101]">
-            <span class="w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
-            <span class="w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
-            <span class="w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
+        <button id="burger-btn" class="w-10 h-10 flex flex-col justify-center items-center gap-1.5 bg-black border border-[#d4af37]/50 rounded cursor-pointer z-[101]" aria-label="Menu">
+            <span class="w-6 h-0.5 bg-[#d4af37]"></span>
+            <span class="w-6 h-0.5 bg-[#d4af37]"></span>
+            <span class="w-6 h-0.5 bg-[#d4af37]"></span>
         </button>
     </div>
 
-    <!-- Fullscreen Mobile Menu Overlay -->
     <div id="mobile-menu" class="fixed inset-0 bg-black/95 z-[90] opacity-0 pointer-events-none transition-opacity duration-300 flex flex-col items-center justify-center">
         <nav class="flex flex-col gap-6 text-center">
-            <a href="../index.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">Zum Orbit</a>
-            <a href="bantaba.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">Nach Bantaba</a>
-            <a href="about.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">About Us</a>
-            <a href="portfolio_anime_reality.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">Portfolio</a>
-            <a href="heart.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">Heart</a>
-            <a href="luvo.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">Luvo</a>
+            <a href="/member-card" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">Member Card</a>
+            <a href="/join" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">Join</a>
+            <a href="artist_sanctuary.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">Sanctuary</a>
+            <a href="../index.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">Orbit</a>
         </nav>
     </div>
 
-
-    <!-- NAVIGATION (Minimal) -->
     <nav class="fixed top-0 w-full z-50 p-6 flex justify-between items-center bg-gradient-to-b from-obsidian to-transparent">
-        <a href="dashboard.html" class="flex items-center gap-2 text-white/50 hover:text-white transition-colors">
+        <a href="/member-card" class="flex items-center gap-2 text-white/50 hover:text-white transition-colors">
             <span class="material-symbols-outlined">arrow_back</span>
-            <span class="text-xs font-bold uppercase tracking-widest">Back to Apex</span>
+            <span class="text-xs font-bold uppercase tracking-widest">Member Card</span>
         </a>
-        <img src="../Assets/images/logo.png" class="w-10 h-10 drop-shadow-[0_0_15px_rgba(138,43,226,0.5)]">
+        <img src="../Assets/images/logo.png" alt="Circle D Flow" class="w-10 h-10 drop-shadow-[0_0_15px_rgba(138,43,226,0.5)]">
     </nav>
 
-    <!-- HERO HEADER -->
     <header class="pt-32 pb-12 text-center px-4 relative overflow-hidden">
         <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-electric/10 rounded-full blur-[100px] pointer-events-none"></div>
-        
+        <p class="text-[11px] uppercase tracking-[0.35em] text-mystic-gold/80 mb-3 relative z-10">Status · Bronze · Silver · Gold</p>
         <h1 class="text-4xl md:text-6xl font-black uppercase tracking-widest mb-4 relative z-10">
-            Join the <span class="text-transparent bg-clip-text bg-gradient-to-r from-electric to-pink-500">Flow Crew</span>
+            Wako Kungo <span class="text-transparent bg-clip-text bg-gradient-to-r from-bronze via-silver to-mystic-gold">Membership</span>
         </h1>
         <p class="text-white/60 max-w-xl mx-auto text-lg leading-relaxed relative z-10">
-            Support Circle D Flow. Unlock community benefits when you are ready.
-            Start with your <a href="/member-card" class="text-mystic-gold underline">Wako Kungo Membership Card</a> — payment tiers roll out after card claim.
+            Free Bronze card first. Silver (€5) unlocks coupons, +1 guest and a free drink.
+            Gold (€10) adds content folders, 1h shoot booking, early event access and three free drinks / month.
         </p>
     </header>
 
-    <!-- PRICING TIERS -->
-    <main class="max-w-7xl mx-auto px-6 pb-24 grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
-        
-        <!-- TIER 1: FREE FLOW (The Beginning) -->
-        <div class="relative bg-white/5 border border-white/10 rounded-3xl p-8 flex flex-col gap-6 hover:bg-white/10 transition-all group">
-            <div class="absolute -top-4 left-8 bg-gray-800 text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full border border-white/20">
-                Current Class
+    <main class="max-w-7xl mx-auto px-6 pb-16 grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+
+        <!-- BRONZE -->
+        <div class="relative bg-white/5 border border-[#CD7F32]/40 rounded-3xl p-8 flex flex-col gap-6 hover:bg-white/10 transition-all">
+            <div class="absolute -top-4 left-8 bg-[#CD7F32] text-black text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                Bronze · Free
             </div>
-            
-            <div class="border-b border-white/10 pb-6">
-                <h3 class="text-2xl font-bold text-white mb-2">Circle Free Flow</h3>
+            <div class="border-b border-white/10 pb-6 pt-2">
+                <h3 class="text-2xl font-bold text-[#e8b87a] mb-2">Bronze</h3>
                 <div class="flex items-baseline gap-1">
-                    <span class="text-4xl font-black text-white">0€</span>
+                    <span class="text-4xl font-black text-white">€0</span>
                     <span class="text-white/50">/ month</span>
                 </div>
-                <p class="text-xs text-white/40 mt-2 uppercase tracking-widest">The Drifter Path</p>
+                <p class="text-xs text-white/40 mt-2 uppercase tracking-widest">Registered · Free card</p>
             </div>
-
-            <ul class="space-y-4 text-sm text-white/70">
-                <li class="flex items-center gap-3"><span class="material-symbols-outlined text-green-400">check</span> <span>Access to Archive & Arena</span></li>
-                <li class="flex items-center gap-3"><span class="material-symbols-outlined text-green-400">check</span> <span>1 Active Quest Slot</span></li>
-                <li class="flex items-center gap-3"><span class="material-symbols-outlined text-green-400">check</span> <span>Basic Profile Customization</span></li>
-                <li class="flex items-center gap-3 opacity-50"><span class="material-symbols-outlined text-red-500">close</span> <span>No Marketplace Sales</span></li>
+            <ul class="space-y-3 text-sm text-white/70">
+                <li class="flex items-start gap-3"><span class="material-symbols-outlined text-[#CD7F32] text-lg">check</span> Digital Wako Membership Card + QR</li>
+                <li class="flex items-start gap-3"><span class="material-symbols-outlined text-[#CD7F32] text-lg">check</span> +25 EXP on claim · Sanctuary access</li>
+                <li class="flex items-start gap-3"><span class="material-symbols-outlined text-[#CD7F32] text-lg">check</span> Event alerts in Flow Orbit</li>
+                <li class="flex items-start gap-3 opacity-45"><span class="material-symbols-outlined text-white/30 text-lg">close</span> Partner coupons (Silver+)</li>
+                <li class="flex items-start gap-3 opacity-45"><span class="material-symbols-outlined text-white/30 text-lg">close</span> Guest +1 / free drinks</li>
             </ul>
+            <a href="/member-card" class="w-full py-4 rounded-xl border border-[#CD7F32]/50 text-[#e8b87a] font-bold uppercase tracking-widest text-center mt-auto hover:bg-[#CD7F32]/15 transition">
+                Claim Bronze Card
+            </a>
+        </div>
 
-            <button class="w-full py-4 rounded-xl border border-white/20 text-white/50 font-bold uppercase tracking-widest cursor-not-allowed mt-auto">
-                Active
+        <!-- SILVER -->
+        <div class="relative bg-black border border-white/35 rounded-3xl p-8 flex flex-col gap-6 shadow-[0_0_30px_rgba(192,192,192,0.12)] transform md:-translate-y-4 hover:scale-[1.02] transition-transform z-10">
+            <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-slate-300 to-slate-100 text-black text-[10px] font-bold uppercase tracking-widest px-4 py-1 rounded-full shadow-lg">
+                Silver · €5 / mo
+            </div>
+            <div class="border-b border-white/10 pb-6 pt-2">
+                <h3 class="text-2xl font-bold text-slate-200 mb-2">Silver</h3>
+                <div class="flex items-baseline gap-1">
+                    <span class="text-5xl font-black text-white">€5</span>
+                    <span class="text-white/50">/ month</span>
+                </div>
+                <p class="text-xs text-white/40 mt-2 uppercase tracking-widest">Coupons · guest · drink</p>
+            </div>
+            <ul class="space-y-3 text-sm text-white/80">
+                <li class="flex items-start gap-3"><span class="material-symbols-outlined text-slate-200 text-lg">check_circle</span> <span><strong class="text-white">Everything in Bronze</strong></span></li>
+                <li class="flex items-start gap-3"><span class="material-symbols-outlined text-slate-200 text-lg">check_circle</span> Partner coupons (Humble, Kreativlon, Wako)</li>
+                <li class="flex items-start gap-3"><span class="material-symbols-outlined text-slate-200 text-lg">check_circle</span> Bring <strong class="text-white">+1 guest</strong> to events</li>
+                <li class="flex items-start gap-3"><span class="material-symbols-outlined text-slate-200 text-lg">check_circle</span> <strong class="text-white">1 free drink</strong> for one event</li>
+                <li class="flex items-start gap-3"><span class="material-symbols-outlined text-slate-200 text-lg">check_circle</span> Member info &amp; early alerts for selected events</li>
+            </ul>
+            <button type="button" data-tier="flow_supporter" class="ms-checkout w-full py-4 rounded-xl bg-gradient-to-r from-slate-300 to-slate-100 text-black font-black uppercase tracking-widest hover:brightness-110 transition-all mt-auto">
+                Upgrade to Silver
             </button>
         </div>
 
-        <!-- TIER 2: RISING ARTIST (Popular) -->
-        <div class="relative bg-black border border-electric/50 rounded-3xl p-8 flex flex-col gap-6 shadow-[0_0_30px_rgba(138,43,226,0.2)] transform md:-translate-y-4 hover:scale-[1.02] transition-transform z-10">
-             <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-electric text-white text-[10px] font-bold uppercase tracking-widest px-4 py-1 rounded-full shadow-lg shadow-electric/40">
-                Most Popular
+        <!-- GOLD -->
+        <div class="relative bg-gradient-to-b from-amber-900/35 to-black border border-mystic-gold/40 rounded-3xl p-8 flex flex-col gap-6 hover:border-mystic-gold transition-all">
+            <div class="absolute -top-4 left-8 bg-mystic-gold text-black text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+                Gold · €10 / mo
             </div>
-            
-            <div class="border-b border-white/10 pb-6">
-                <h3 class="text-2xl font-bold text-electric mb-2">Rising Artist</h3>
+            <div class="border-b border-white/10 pb-6 pt-2">
+                <h3 class="text-2xl font-bold text-mystic-gold mb-2">Gold</h3>
                 <div class="flex items-baseline gap-1">
-                    <span class="text-5xl font-black text-white">9€</span>
+                    <span class="text-4xl font-black text-white">€10</span>
                     <span class="text-white/50">/ month</span>
                 </div>
-                <p class="text-xs text-white/40 mt-2 uppercase tracking-widest">The Hunter Path</p>
+                <p class="text-xs text-white/40 mt-2 uppercase tracking-widest">Folders · shoot · drinks ×3</p>
             </div>
-
-            <ul class="space-y-4 text-sm text-white/80">
-                <li class="flex items-center gap-3"><span class="material-symbols-outlined text-electric">check_circle</span> <span class="font-bold text-white">Unlock Marketplace (Sell)</span></li>
-                <li class="flex items-center gap-3"><span class="material-symbols-outlined text-electric">check_circle</span> <span>5 Active Quest Slots</span></li>
-                <li class="flex items-center gap-3"><span class="material-symbols-outlined text-electric">check_circle</span> <span>1.2x XP & Karma Boost</span></li>
-                <li class="flex items-center gap-3"><span class="material-symbols-outlined text-electric">check_circle</span> <span>5GB Cloud Storage</span></li>
+            <ul class="space-y-3 text-sm text-white/75">
+                <li class="flex items-start gap-3"><span class="material-symbols-outlined text-mystic-gold text-lg">diamond</span> <span><strong class="text-white">Everything in Silver</strong></span></li>
+                <li class="flex items-start gap-3"><span class="material-symbols-outlined text-mystic-gold text-lg">diamond</span> Access to <strong class="text-white">content folders</strong></li>
+                <li class="flex items-start gap-3"><span class="material-symbols-outlined text-mystic-gold text-lg">diamond</span> Book <strong class="text-white">1 hour shooting</strong></li>
+                <li class="flex items-start gap-3"><span class="material-symbols-outlined text-mystic-gold text-lg">diamond</span> Early access / free or discount on selected events</li>
+                <li class="flex items-start gap-3"><span class="material-symbols-outlined text-mystic-gold text-lg">diamond</span> <strong class="text-white">1 free drink × 3 events</strong> per month</li>
             </ul>
-
-            <button onclick="MembershipController.selectPlan('rising')" class="w-full py-4 rounded-xl bg-electric text-white font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all shadow-lg shadow-electric/20">
-                Ascend Now
+            <button type="button" data-tier="flow_crew" class="ms-checkout w-full py-4 rounded-xl border border-mystic-gold text-mystic-gold font-bold uppercase tracking-widest hover:bg-mystic-gold hover:text-black transition-all mt-auto">
+                Upgrade to Gold
             </button>
         </div>
-
-        <!-- TIER 3: MASTER WORKSPACE (Elite) -->
-        <div class="relative bg-gradient-to-b from-orange-900/40 to-black border border-orange-500/30 rounded-3xl p-8 flex flex-col gap-6 hover:border-orange-500 transition-all group">
-             <div class="absolute -top-4 left-8 bg-orange-500 text-black text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full">
-                Professional
-            </div>
-
-            <div class="border-b border-white/10 pb-6">
-                <h3 class="text-2xl font-bold text-orange-500 mb-2">Master Workspace</h3>
-                <div class="flex items-baseline gap-1">
-                    <span class="text-4xl font-black text-white">29€</span>
-                    <span class="text-white/50">/ month</span>
-                </div>
-                 <p class="text-xs text-white/40 mt-2 uppercase tracking-widest">The Architect Path</p>
-            </div>
-
-            <ul class="space-y-4 text-sm text-white/70">
-                <li class="flex items-center gap-3"><span class="material-symbols-outlined text-orange-400">diamond</span> <span class="font-bold text-white">Unlimited Marketplace</span></li>
-                <li class="flex items-center gap-3"><span class="material-symbols-outlined text-orange-400">diamond</span> <span>Full Access to All Nodes</span></li>
-                <li class="flex items-center gap-3"><span class="material-symbols-outlined text-orange-400">diamond</span> <span>Unlimited Storage</span></li>
-                <li class="flex items-center gap-3"><span class="material-symbols-outlined text-orange-400">local_cafe</span> <span>Real Life Perks (Free Coffee/Desk)</span></li>
-                <li class="flex items-center gap-3"><span class="material-symbols-outlined text-orange-400">offline_bolt</span> <span>1.5x XP Boost</span></li>
-            </ul>
-
-            <button onclick="MembershipController.selectPlan('master')" class="w-full py-4 rounded-xl border border-orange-500 text-orange-500 font-bold uppercase tracking-widest hover:bg-orange-500 hover:text-black transition-all">
-                Become Master
-            </button>
-        </div>
-
     </main>
 
-    <!-- FAQ SECTION -->
-    <section class="max-w-4xl mx-auto px-6 pb-24 text-center">
-        <h2 class="text-2xl font-bold text-white mb-8 uppercase tracking-widest">The Hunter Code</h2>
-        <div class="space-y-4 text-left">
-            <details class="bg-white/5 border border-white/10 rounded-xl p-4 group">
-                <summary class="font-bold text-white cursor-pointer flex justify-between items-center group-hover:text-electric transition-colors">
-                    What happens if I cancel? <span class="material-symbols-outlined group-open:rotate-180 transition-transform">expand_more</span>
-                </summary>
-                <p class="text-sm text-white/60 mt-4 leading-relaxed">
-                    You keep all XP and Badges earned. Your account reverts to "Drifter" status (Free Flow), locking access to the Marketplace selling features and extra storage.
-                </p>
-            </details>
-            <details class="bg-white/5 border border-white/10 rounded-xl p-4 group">
-                <summary class="font-bold text-white cursor-pointer flex justify-between items-center group-hover:text-electric transition-colors">
-                    Can I pay with crypto? <span class="material-symbols-outlined group-open:rotate-180 transition-transform">expand_more</span>
-                </summary>
-                <p class="text-sm text-white/60 mt-4 leading-relaxed">
-                    Not yet. We are currently integrating FlowTokens as a payment method for Phase 25. For now, we accept Stripe (Card) and PayPal.
-                </p>
-            </details>
-             <details class="bg-white/5 border border-white/10 rounded-xl p-4 group">
-                <summary class="font-bold text-white cursor-pointer flex justify-between items-center group-hover:text-electric transition-colors">
-                    What are 'Real Life Perks'? <span class="material-symbols-outlined group-open:rotate-180 transition-transform">expand_more</span>
-                </summary>
-                <p class="text-sm text-white/60 mt-4 leading-relaxed">
-                    Master Workspace members get physical access benefits at our partner locations (e.g., African Queen Kitchen, Outbreak Studio), including desk space booking and discounts.
-                </p>
-            </details>
+    <section class="max-w-4xl mx-auto px-6 pb-24">
+        <h2 class="text-xl font-bold text-white mb-6 uppercase tracking-widest text-center">Benefit matrix</h2>
+        <div class="overflow-x-auto rounded-2xl border border-white/10 bg-white/5">
+            <table class="w-full text-left text-sm">
+                <thead>
+                    <tr class="border-b border-white/10 text-[11px] uppercase tracking-wider text-white/50">
+                        <th class="p-4">Benefit</th>
+                        <th class="p-4 text-[#e8b87a]">Bronze</th>
+                        <th class="p-4 text-slate-200">Silver €5</th>
+                        <th class="p-4 text-mystic-gold">Gold €10</th>
+                    </tr>
+                </thead>
+                <tbody class="text-white/75">
+                    <tr class="border-b border-white/5"><td class="p-4">Digital card + Sanctuary</td><td class="p-4">?</td><td class="p-4">?</td><td class="p-4">?</td></tr>
+                    <tr class="border-b border-white/5"><td class="p-4">Partner coupons</td><td class="p-4 text-white/30">—</td><td class="p-4">?</td><td class="p-4">?</td></tr>
+                    <tr class="border-b border-white/5"><td class="p-4">+1 guest</td><td class="p-4 text-white/30">—</td><td class="p-4">?</td><td class="p-4">?</td></tr>
+                    <tr class="border-b border-white/5"><td class="p-4">Free drink</td><td class="p-4 text-white/30">—</td><td class="p-4">1 event</td><td class="p-4">3 events / mo</td></tr>
+                    <tr class="border-b border-white/5"><td class="p-4">Early access / event discount</td><td class="p-4 text-white/30">—</td><td class="p-4">Alerts</td><td class="p-4">Free / discount</td></tr>
+                    <tr class="border-b border-white/5"><td class="p-4">Content folders</td><td class="p-4 text-white/30">—</td><td class="p-4 text-white/30">—</td><td class="p-4">?</td></tr>
+                    <tr><td class="p-4">Shoot booking (1h)</td><td class="p-4 text-white/30">—</td><td class="p-4 text-white/30">—</td><td class="p-4">?</td></tr>
+                </tbody>
+            </table>
         </div>
+        <p id="ms-status" class="text-center text-sm text-white/50 mt-6" role="status"></p>
     </section>
 
-    <!-- LOGIC -->
+    <div id="flowee-agent" class="fixed bottom-8 left-8 z-50 flex flex-col items-center group cursor-pointer"></div>
+
     <script>
+        document.getElementById('burger-btn')?.addEventListener('click', () => {
+            const m = document.getElementById('mobile-menu');
+            if (!m) return;
+            const open = m.classList.contains('opacity-0');
+            m.classList.toggle('opacity-0', !open);
+            m.classList.toggle('pointer-events-none', !open);
+        });
+
         window.MembershipController = {
-            selectPlan: function(planId) {
-                // In a real app, this would redirect to Stripe Checkout
-                console.log(`[Membership] Initiating Upgrade: ${planId}`);
-                
-                const confirmMsg = planId === 'rising' 
-                    ? "Upgrade to Rising Artist (9€/mo)?\n\nThis will unlock the Marketplace."
-                    : "Upgrade to Master Workspace (29€/mo)?\n\nWelcome to the Elite.";
-                
-                if(confirm(confirmMsg)) {
-                    // Simulate Payment Success
-                    this.processUpgrade(planId);
+            async selectPlan(tier) {
+                const status = document.getElementById('ms-status');
+                const labels = { flow_supporter: 'Silver · €5', flow_crew: 'Gold · €10' };
+                if (!labels[tier]) return;
+                if (status) status.textContent = 'Opening Stripe for ' + labels[tier] + '…';
+                try {
+                    let email = '';
+                    let userId = '';
+                    let displayName = '';
+                    try {
+                        const card = JSON.parse(localStorage.getItem('cdf_wako_member_card') || '{}');
+                        email = card.email || '';
+                        displayName = card.name || card.displayName || '';
+                        userId = card.uid || card.userId || '';
+                    } catch (_) { /* ignore */ }
+                    const res = await fetch('/api/create-membership-checkout', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            tier,
+                            email,
+                            userId,
+                            displayName,
+                            source: 'membership_page',
+                        }),
+                    });
+                    const data = await res.json().catch(() => ({}));
+                    if (!res.ok || !data.url) {
+                        throw new Error(data.error || 'Checkout unavailable');
+                    }
+                    window.location.href = data.url;
+                } catch (err) {
+                    if (status) status.textContent = err.message || 'Checkout failed — claim your card first at /member-card';
+                    if (window.confirm((err.message || 'Checkout failed') + '\n\nOpen Member Card instead?')) {
+                        window.location.href = '/member-card';
+                    }
                 }
             },
-
-            processUpgrade: function(planId) {
-                // Call Gamification Engine
-                if(window.Gamification) {
-                    window.Gamification.setMembership(planId);
-                    alert("?? WELCOME TO THE CIRCLE.\n\nYour license has been upgraded. Redirecting to Dashboard...");
-                    window.location.href = 'dashboard.html';
-                } else {
-                    console.error("Gamification Engine missing.");
-                }
-            }
         };
+
+        document.querySelectorAll('.ms-checkout').forEach((btn) => {
+            btn.addEventListener('click', () => {
+                window.MembershipController.selectPlan(btn.getAttribute('data-tier'));
+            });
+        });
     </script>
-    <!-- AGENT: FLOWEE (The Guide) -->
-    <div id="flowee-agent" class="fixed bottom-8 left-8 z-50 flex flex-col items-center group cursor-pointer"></div>
-    <script defer src="../js/agents/pusher.js"></script>
-
-    <!-- AUTOMATED AGENT INJECTION -->
-
-    <!-- AUTOMATED AGENT INJECTION -->
-    <script src="../js/agents/imperial_hud.js" defer></script>
 </body>
 </html>

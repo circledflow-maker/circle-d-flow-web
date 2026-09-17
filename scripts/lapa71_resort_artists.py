@@ -1,154 +1,75 @@
 #!/usr/bin/env python3
-"""Re-analyse Lapa71 artist folders and move mis-sorted Stages cuts."""
+"""Re-sort Lapa71 Stages cuts into artist folders using face_db refs."""
 from __future__ import annotations
 
-import argparse
+import importlib.util
+import os
 import re
-import shutil
 import sys
-from collections import Counter
 from pathlib import Path
 
-# Reuse pipeline face-ID + ffmpeg helpers
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import lapa71_tagus_pipeline as pipe  # noqa: E402
+os.environ.setdefault("LAPA71_SRC", r"F:\Part4")
+os.environ.setdefault("LAPA71_OUT", r"D:\Wakungo_Content_Studio\Lapa71")
+os.environ.setdefault("LAPA71_FAST", "1")
 
-OUT = pipe.OUT
-ARTISTS = pipe.ARTISTS
-PROXIES = pipe.PROXIES
-LOGS = pipe.LOGS
+PIPE = Path(r"D:\circle-d-flow-web\scripts\lapa71_tagus_pipeline.py")
+spec = importlib.util.spec_from_file_location("lapa71_tagus_pipeline", PIPE)
+P = importlib.util.module_from_spec(spec)
+assert spec.loader
+spec.loader.exec_module(P)
 
-NAME_HINTS: list[tuple[re.Pattern[str], str]] = [
-    (re.compile(r"manu", re.I), "Manu"),
-    (re.compile(r"elisa", re.I), "Elisa"),
-    (re.compile(r"ana", re.I), "Ana"),
-    (re.compile(r"arpan", re.I), "Arpanito"),
-    (re.compile(r"isaac|mr\.?isaac", re.I), "Mistah_Isaac"),
-    (re.compile(r"maryna|vadini", re.I), "Maryna_Vadini"),
-    (re.compile(r"humble", re.I), "Humble"),
-    (re.compile(r"wakokungo|jam|broll|event", re.I), "Event_Broll"),
-    (re.compile(r"leonnardo|melo", re.I), "Leonnardo_Melo"),
-]
-
-
-def stem_from_filename(name: str) -> str | None:
-    m = re.match(r"(DSC_\d+)", name, re.I)
-    return m.group(1).upper() if m else None
-
-
-def hint_from_filename(name: str) -> str | None:
-    for pat, artist in NAME_HINTS:
-        if pat.search(name):
-            return artist
-    return None
-
-
-def proxy_for_stem(stem: str) -> Path | None:
-    p = PROXIES / f"{stem}_proxy_1080p.mp4"
-    if pipe.probe_ok(p):
-        return p
-    for folder in ARTISTS.iterdir():
-        if not folder.is_dir():
-            continue
-        fp = folder / f"{stem}_full_proxy.mp4"
-        if pipe.probe_ok(fp):
-            return fp
-    return None
-
-
-def vote_artist(video: Path, samples: int = 5) -> str:
-    try:
-        dur = pipe.probe_duration(video)
-    except Exception:
-        dur = 30.0
-    if dur < 3:
-        samples = 3
-    times = [dur * (i + 1) / (samples + 1) for i in range(samples)]
-    votes: Counter[str] = Counter()
-    tmp = LOGS / "resort_frames"
-    tmp.mkdir(parents=True, exist_ok=True)
-    for i, t in enumerate(times):
-        frame = tmp / f"{video.stem}_r{i}.jpg"
-        try:
-            pipe.run([
-                "ffmpeg", "-y", "-hide_banner", "-loglevel", "error",
-                "-ss", f"{t:.2f}", "-i", str(video),
-                "-frames:v", "1", "-q:v", "3", "-vf", "scale=960:-2", str(frame),
-            ])
-        except Exception:
-            continue
-        if frame.exists():
-            votes[pipe.best_label(pipe.identify_frame(frame))] += 1
-    if not votes:
-        return "Event_Broll"
-    artist, count = votes.most_common(1)[0]
-    if artist == "Unknown" or count < 2:
-        return "Event_Broll"
-    return artist
-
-
-def target_name(path: Path, artist: str) -> str:
-    stem = stem_from_filename(path.name) or path.stem.split("_set")[0]
-    m = re.search(r"_set(\d+)", path.name, re.I)
-    idx = m.group(1) if m else "01"
-    if path.name.endswith("_full_proxy.mp4"):
-        return f"{stem}_full_proxy.mp4"
-    return f"{stem}_set{idx}_{artist}_Stages_1080p.mp4"
-
-
-def decide_artist(path: Path, folder_artist: str) -> str:
-    hint = hint_from_filename(path.name)
-    if hint and hint != folder_artist:
-        return hint
-    # Only deep-analyse clips still labelled as folder artist
-    if folder_artist not in path.name and hint is None:
-        return folder_artist
-    stem = stem_from_filename(path.name)
-    if stem:
-        proxy = proxy_for_stem(stem)
-        if proxy and pipe.probe_ok(proxy):
-            voted = pipe.classify_short_clip(proxy, proxy, stem)
-            if voted != folder_artist:
-                return voted
-    if "_full_proxy" in path.name:
-        return vote_artist(path, samples=3)
-    return folder_artist
-
-
-def resort_folder(folder_name: str, apply: bool) -> list[tuple[str, str, str]]:
-    src_dir = ARTISTS / folder_name
-    if not src_dir.is_dir():
-        raise SystemExit(f"missing folder {src_dir}")
-    pipe.build_face_db()
-    moves: list[tuple[str, str, str]] = []
-    for vid in sorted(src_dir.glob("*.mp4")):
-        if "Portraits" in vid.parts:
-            continue
-        artist = decide_artist(vid, folder_name)
-        if artist == folder_name:
-            continue
-        dest_dir = ARTISTS / artist
-        dest_dir.mkdir(parents=True, exist_ok=True)
-        dest = dest_dir / target_name(vid, artist)
-        moves.append((str(vid), str(dest), artist))
-        pipe.log(f"resort {vid.name} -> {artist}/ ({'apply' if apply else 'dry-run'})")
-        if apply:
-            if dest.exists():
-                dest.unlink(missing_ok=True)
-            shutil.move(str(vid), str(dest))
-    return moves
+# Candidates: prior Mistah cuts + nearby setlist block (guitar/bass nights)
+FORCE_CHECK = {
+    f"dsc_{n}"
+    for n in [
+        1459, 1478, 1479, 1480, 1481, 1482, 1483, 1484, 1485, 1486, 1487, 1488,
+        1490, 1491, 1492, 1493, 1494, 1495, 1496, 1497, 1498, 1499, 1500,
+    ]
+}
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--folder", default="Leonnardo_Melo")
-    ap.add_argument("--apply", action="store_true")
-    args = ap.parse_args()
-    pipe.log(f"=== resort {args.folder} apply={args.apply} ===")
-    moves = resort_folder(args.folder, args.apply)
-    pipe.log(f"resort done moves={len(moves)}")
-    for src, dst, artist in moves:
-        print(f"  {Path(src).name} -> {artist}/")
+    P.ensure_dirs()
+    P.migrate_mistah_to_mr_isaac()
+    face_ready = P.build_face_db()
+    P.log(f"resort face_db: {face_ready}")
+
+    cleared = 0
+    for flag in list(P.LOGS.glob("face_done_*.flag")):
+        fl = flag.name.lower()
+        for s in FORCE_CHECK:
+            if s.replace("dsc_", "") in fl:
+                flag.unlink(missing_ok=True)
+                cleared += 1
+                break
+    P.log(f"cleared {cleared} face flags")
+
+    for folder in P.ARTISTS.iterdir():
+        if not folder.is_dir():
+            continue
+        for mp4 in list(folder.glob("*_Stages_1080p.mp4")) + list(folder.glob("*_full_proxy.mp4")):
+            m = re.search(r"dsc_(\d+)", mp4.name.lower())
+            if m and f"dsc_{m.group(1)}" in FORCE_CHECK:
+                mp4.unlink(missing_ok=True)
+                P.log(f"remove old {folder.name}/{mp4.name}")
+
+    P.face_all(FORCE_CHECK)
+
+    for slug in ("Mr_Isaac", "Manu", "Leonnardo_Melo", "Humble", "Ana"):
+        d = P.ARTISTS / slug
+        if d.exists():
+            (d / "ARTIST_INFO.txt").write_text(
+                f"Artist: {P.DISPLAY.get(slug, slug)}\nIG: {P.META.get(slug, '')}\n"
+                f"Event: Tagus Drop Rhythm — Lapa71\n",
+                encoding="utf-8",
+            )
+
+    for d in sorted(P.ARTISTS.iterdir()):
+        if d.is_dir():
+            n = len(list(d.glob("*.mp4")))
+            if n or d.name in ("Mr_Isaac", "Manu"):
+                P.log(f"  {d.name}: {n} mp4")
+    (P.LOGS / "RESORT_DONE.flag").write_text("ok\n", encoding="utf-8")
     return 0
 
 

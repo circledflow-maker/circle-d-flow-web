@@ -190,9 +190,10 @@
         <p class="orbit-sub">${esc(c.benefitText || '')}</p>
         <div class="orbit-actions">
           <button type="button" class="wk-btn wk-btn--gold" data-orbit-copy="${esc(c.code || '')}">Copy</button>
-          <a class="wk-btn wk-btn--cyan" href="${esc(c.partner?.url || '#')}" target="_blank" rel="noopener">Open</a>
+          <button type="button" class="wk-btn wk-btn--cyan" data-orbit-benefit-qr="${esc(c.code || '')}" data-orbit-benefit-label="${esc(c.title || partner)}">Open QR</button>
           <button type="button" class="wk-btn wk-btn--ghost" data-orbit-save="benefit" data-orbit-id="${esc(c.code || c.id)}">${item.saved ? '♥' : 'Save'}</button>
         </div>
+        <p class="orbit-hint">Staff scans once · refills next month</p>
       </article>`;
   }
 
@@ -232,17 +233,30 @@
     const name = card.displayName || feed?.profile?.member_display_name || 'Navigator';
     const exp = card.exp ?? feed?.profile?.exp ?? 0;
     const pct = tierProgress(exp);
+    const email = card.email || feed?.profile?.email || '';
+    const phone = card.phone || '';
+    const ig = card.instagram || card.instagram_handle || '';
+    const tier = card.tier || 'registered';
+    const tierLabel =
+      tier === 'flow_crew' ? 'Gold' : tier === 'flow_supporter' ? 'Silver' : 'Bronze';
     return `
       <article class="orbit-card orbit-card--profile" data-type="profile">
-        <p class="orbit-kicker">PROFILE</p>
+        <p class="orbit-kicker">ME · SOUL NEXUS</p>
         <h2>${esc(name)}</h2>
-        <p class="orbit-id">${esc(no)}</p>
+        <p class="orbit-id">${esc(no)} · ${esc(tierLabel)}</p>
         <p class="orbit-meta">EXP ${esc(String(exp))}</p>
-        <p class="orbit-sub">Tier progress</p>
         <div class="orbit-bar"><span style="width:${pct}%"></span></div>
+        <form class="orbit-me-form" id="orbit-me-form">
+          <label>Display name<input name="displayName" value="${esc(name)}" required minlength="2"></label>
+          <label>Email (sync key)<input name="email" type="email" value="${esc(email)}" placeholder="you@email.com"></label>
+          <label>Phone <span class="muted">(optional)</span><input name="phone" type="tel" value="${esc(phone)}" placeholder="+351…"></label>
+          <label>Instagram <span class="muted">(optional)</span><input name="instagram" value="${esc(ig)}" placeholder="@handle"></label>
+          <button type="submit" class="wk-btn wk-btn--gold">Save profile</button>
+        </form>
+        <p class="orbit-hint">Profile syncs when email matches your Circle login.</p>
         <div class="orbit-actions">
-          <button type="button" class="wk-btn wk-btn--gold" data-orbit-nav="saved">My Benefits / Saved</button>
-          <a class="wk-btn wk-btn--cyan" href="/pages/artist_sanctuary.html?welcome=card">3D Sanctuary</a>
+          <button type="button" class="wk-btn wk-btn--cyan" data-orbit-nav="saved">My Benefits</button>
+          <a class="wk-btn wk-btn--ghost" href="/pages/artist_sanctuary.html?welcome=card">3D Sanctuary</a>
         </div>
       </article>`;
   }
@@ -378,6 +392,114 @@
         if (i >= 0) goTo(i);
       });
     });
+    els.track.querySelectorAll('[data-orbit-benefit-qr]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const code = btn.getAttribute('data-orbit-benefit-qr');
+        const label = btn.getAttribute('data-orbit-benefit-label') || 'Benefit';
+        showOrbitBenefitQr(code, label);
+      });
+    });
+    const meForm = document.getElementById('orbit-me-form');
+    if (meForm) {
+      meForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const fd = new FormData(meForm);
+        saveMeProfile({
+          displayName: String(fd.get('displayName') || '').trim(),
+          email: String(fd.get('email') || '').trim().toLowerCase(),
+          phone: String(fd.get('phone') || '').trim(),
+          instagram: String(fd.get('instagram') || '').trim().replace(/^@/, ''),
+        });
+      });
+    }
+  }
+
+  function showOrbitBenefitQr(code, label) {
+    let modal = document.getElementById('wk-benefit-qr-modal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'wk-benefit-qr-modal';
+      modal.className = 'wk-benefit-qr-modal';
+      modal.innerHTML =
+        '<div class="wk-benefit-qr-card">' +
+        '<button type="button" class="wk-benefit-qr-close" aria-label="Close">×</button>' +
+        '<p class="wk-benefit-qr-label"></p>' +
+        '<img class="wk-benefit-qr-img" alt="QR" width="220" height="220">' +
+        '<p class="wk-benefit-qr-code"></p>' +
+        '<p class="wk-hint">Staff scans once. Refills next month.</p></div>';
+      document.body.appendChild(modal);
+      modal.querySelector('.wk-benefit-qr-close').onclick = () => {
+        modal.hidden = true;
+      };
+      modal.onclick = (ev) => {
+        if (ev.target === modal) modal.hidden = true;
+      };
+    }
+    modal.querySelector('.wk-benefit-qr-label').textContent = label;
+    modal.querySelector('.wk-benefit-qr-code').textContent = code;
+    modal.querySelector('.wk-benefit-qr-img').src = window.CdfBenefitGrants
+      ? window.CdfBenefitGrants.qrUrl(code)
+      : 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent('CDF-BENEFIT:' + code);
+    modal.hidden = false;
+    setGuide('Show QR to staff — one scan this month.');
+  }
+
+  async function saveMeProfile(fields) {
+    if (!fields.displayName || fields.displayName.length < 2) {
+      setGuide('Name needs at least 2 letters.');
+      return;
+    }
+    let card = {};
+    try {
+      card = JSON.parse(localStorage.getItem('cdf_wako_member_card') || '{}');
+    } catch (_) {
+      card = {};
+    }
+    card.displayName = fields.displayName;
+    card.email = fields.email || card.email || '';
+    card.phone = fields.phone || '';
+    card.instagram = fields.instagram || '';
+    try {
+      localStorage.setItem('cdf_wako_member_card', JSON.stringify(card));
+    } catch (_) { /* ignore */ }
+
+    // Sync to Supabase profile when session email matches
+    try {
+      const sb = window.supabaseClient || window.cdfSupabase;
+      if (sb?.auth) {
+        const { data: sess } = await sb.auth.getSession();
+        const user = sess?.session?.user;
+        if (user?.id && fields.email && user.email && user.email.toLowerCase() === fields.email) {
+          await sb
+            .from('profiles')
+            .update({
+              member_display_name: fields.displayName,
+              email: fields.email,
+              instagram_handle: fields.instagram || null,
+              phone: fields.phone || null,
+            })
+            .eq('id', user.id);
+          setGuide('Profile saved & synced to your Circle account.');
+        } else if (user?.id) {
+          await sb
+            .from('profiles')
+            .update({
+              member_display_name: fields.displayName,
+              instagram_handle: fields.instagram || null,
+            })
+            .eq('id', user.id);
+          setGuide('Profile saved. Use the same email as login for full sync.');
+        } else {
+          setGuide('Saved on this device. Sign in with the same email to sync.');
+        }
+      } else {
+        setGuide('Saved on this device.');
+      }
+    } catch (_) {
+      setGuide('Saved locally. Cloud sync retry later.');
+    }
+    state.card = card;
+    paint();
   }
 
   function openDetail(card) {

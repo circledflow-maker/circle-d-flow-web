@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
   <noscript><link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
-  <link rel="stylesheet" href="/css/member_card.css?v=20260917f">
+  <link rel="stylesheet" href="/css/member_card.css?v=20260917h">
   <link rel="preload" as="image" href="/Assets/membership/wako_card_front.webp" fetchpriority="high">
   <link rel="preload" as="image" href="/Assets/membership/wako_card_back.webp">
   <script src="/js/cdf_runtime_config.js" defer></script>
@@ -41,34 +41,51 @@
       <span class="wk-chip" id="chip-status">Card <strong>Draft</strong></span>
       <span class="wk-chip" id="chip-member">No. <strong>—</strong></span>
       <span class="wk-chip" id="chip-exp">EXP <strong>—</strong></span>
-      <span class="wk-chip" id="wk-tier-chip">Registered · Free</span>
+      <span class="wk-chip" id="wk-tier-chip">Bronze · Free</span>
     </div>
 
     <div class="wk-ben-actions">
       <button type="button" class="wk-btn wk-btn--ghost" id="wk-benefits-toggle">Benefits</button>
-      <button type="button" class="wk-btn wk-btn--cyan" id="wk-upgrade-btn">Upgrade · €5 / €10</button>
+      <button type="button" class="wk-btn wk-btn--cyan" id="wk-upgrade-btn">Upgrade · Silver / Gold</button>
     </div>
 
     <aside class="wk-benefits" id="wk-benefits-panel">
       <h3 id="wk-benefits-title">Your benefits</h3>
-      <p class="wk-hint" id="wk-benefits-sub">Current tier vs upgrades you can purchase. ✓ included · ★ unlock with upgrade.</p>
+      <p class="wk-hint" id="wk-benefits-sub">Bronze · Silver · Gold — ✓ included · ★ unlock with upgrade.</p>
       <div style="overflow-x:auto">
         <table class="wk-ben-table">
           <thead>
             <tr>
               <th>Benefit</th>
-              <th>Free</th>
-              <th>€5</th>
-              <th>€10</th>
+              <th>Bronze</th>
+              <th>Silver €5</th>
+              <th>Gold €10</th>
             </tr>
           </thead>
           <tbody id="wk-benefits-body"></tbody>
         </table>
       </div>
       <div class="wk-ben-actions">
-        <button type="button" class="wk-btn wk-btn--gold" data-tier-select="flow_supporter">€5 Supporter</button>
-        <button type="button" class="wk-btn wk-btn--gold" data-tier-select="flow_crew">€10 Crew</button>
-        <a class="wk-btn wk-btn--ghost" href="/membership">Full tiers</a>
+        <button type="button" class="wk-btn wk-btn--gold" data-tier-select="flow_supporter">Silver · €5</button>
+        <button type="button" class="wk-btn wk-btn--gold" data-tier-select="flow_crew">Gold · €10</button>
+        <button type="button" class="wk-btn wk-btn--ghost" id="wk-full-tiers-btn">Full tiers &amp; rules</button>
+      </div>
+      <div class="wk-billing-toggle" id="wk-billing-toggle" hidden>
+        <span class="wk-hint">Billing</span>
+        <label><input type="radio" name="wk-billing" value="month" checked> Monthly</label>
+        <label><input type="radio" name="wk-billing" value="year"> Yearly (2 months free)</label>
+      </div>
+      <div class="wk-legal" id="wk-legal-panel" hidden>
+        <h3>Membership rules &amp; rights</h3>
+        <ul>
+          <li><strong>Bronze (free)</strong> — digital card, Sanctuary, event alerts. No partner coupons.</li>
+          <li><strong>Silver (€5/mo or €50/yr)</strong> — free Wako Kungo event access, coupons, +1 guest, 1 free drink / month, early alerts.</li>
+          <li><strong>Gold (€10/mo or €100/yr)</strong> — all Silver + content folders, 1h shoot booking, early/discounted events, 3 free drinks / month.</li>
+          <li>Benefit QR codes are personal, scanned once by staff, and refill on the 1st of each month.</li>
+          <li>Cancel anytime — you keep EXP and your Bronze card. Paid perks end at period close.</li>
+          <li>Payments via Stripe. By upgrading you agree to fair-use at events and partner venues.</li>
+        </ul>
+        <button type="button" class="wk-btn wk-btn--ghost" id="wk-legal-close">Close</button>
       </div>
     </aside>
 
@@ -227,12 +244,12 @@
         <!-- 6 Optional tiers (compact) -->
         <section class="wk-slide" data-step="6">
           <div class="wk-panel">
-            <h2>Optional: Flow Crew</h2>
-            <p class="wk-hint" style="margin-top:0">Free Registered card is enough. Paid tiers via Stripe (€5 / €10).</p>
+            <h2>Status · Bronze · Silver · Gold</h2>
+            <p class="wk-hint" style="margin-top:0">Bronze free is enough. Silver (€5) = coupons + guest. Gold (€10) = folders + shoot + 3 drinks.</p>
             <div class="wk-choice-grid">
-              <button type="button" class="wk-choice" data-tier-select="registered"><strong>Stay Registered · Free</strong><span>Enter Sanctuary now</span></button>
-              <button type="button" class="wk-choice" data-tier-select="flow_supporter"><strong>Flow Supporter · €5/mo</strong><span>Stripe Checkout</span></button>
-              <button type="button" class="wk-choice" data-tier-select="flow_crew"><strong>Flow Crew · €10/mo</strong><span>Stripe Checkout</span></button>
+              <button type="button" class="wk-choice" data-tier-select="registered"><strong>Stay Bronze · Free</strong><span>Enter Sanctuary now</span></button>
+              <button type="button" class="wk-choice" data-tier-select="flow_supporter"><strong>Silver · €5/mo</strong><span>Coupons · +1 guest · 1 drink</span></button>
+              <button type="button" class="wk-choice" data-tier-select="flow_crew"><strong>Gold · €10/mo</strong><span>Folders · shoot · 3 drinks</span></button>
             </div>
             <div class="wk-nav">
               <a class="wk-btn wk-btn--gold" id="go-sanctuary-btn" href="/pages/artist_sanctuary.html?welcome=card">Enter 3D Sanctuary</a>
@@ -278,10 +295,11 @@
   <div id="flowee-agent"></div>
 
   <!-- Heavy scripts deferred; supabase + qrcode loaded on demand by member_card.js -->
-  <script src="/js/data/cdf_i18n.js?v=20260917f" defer></script>
-  <script src="/js/agents/flowee.js?v=20260917f" defer></script>
-  <script src="/js/agents/flowee_member_card_guide.js?v=20260917f" defer></script>
-  <script src="/js/member_card.js?v=20260917f" defer></script>
-  <script src="/js/flow_orbit.js?v=20260917f" defer></script>
+  <script src="/js/data/cdf_i18n.js?v=20260917h" defer></script>
+  <script src="/js/cdf_benefit_grants.js?v=20260917h" defer></script>
+  <script src="/js/agents/flowee.js?v=20260917h" defer></script>
+  <script src="/js/agents/flowee_member_card_guide.js?v=20260917h" defer></script>
+  <script src="/js/member_card.js?v=20260917h" defer></script>
+  <script src="/js/flow_orbit.js?v=20260917h" defer></script>
 </body>
 </html>

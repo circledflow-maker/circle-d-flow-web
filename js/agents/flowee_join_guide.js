@@ -413,7 +413,7 @@
           },
         },
         {
-          label: '€5 / €10 SUPPORT',
+          label: 'SILVER / GOLD · €5 / €10',
           action: () => {
             window.location.href = '/membership';
           },

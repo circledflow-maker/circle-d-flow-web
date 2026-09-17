@@ -1,8 +1,7 @@
 /**
  * POST /api/register-event
- * Lapa 71 x Tagus Drop — Member & Jam registration.
- * Saves event_registrations, upserts shadow profile when possible.
- * Resend / Stripe are optional stubs (no hard requireEnv).
+ * Wako Kungo · Botanical Groove Session — Member & Jam registration.
+ * (Primary path: /api/registrations?route=event → lib/cdf-api/register-event.js)
  */
 const { createClient } = require('@supabase/supabase-js');
 const crypto = require('crypto');

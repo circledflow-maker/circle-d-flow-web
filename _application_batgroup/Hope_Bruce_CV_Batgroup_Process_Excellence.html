@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Hope Bruce — CV · Process Excellence · Batgroup</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #14212b;
+      --muted: #5a6a75;
+      --paper: #f7f4ef;
+      --card: #ffffff;
+      --teal: #0e7c7b;
+      --teal-deep: #0a5554;
+      --sand: #e8dfd0;
+      --gold: #c4a35a;
+      --line: rgba(20,33,43,.12);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { background: #d9d4cc; }
+    body { font-family: "DM Sans", system-ui, sans-serif; color: var(--ink); font-size: 9.2pt; line-height: 1.32; }
+    .sheet {
+      width: 210mm; height: 297mm; margin: 0 auto; background: var(--paper);
+      display: grid; grid-template-columns: 68mm 1fr; overflow: hidden;
+      box-shadow: 0 8px 40px rgba(0,0,0,.18);
+    }
+    /* LEFT RAIL */
+    .rail {
+      background: linear-gradient(165deg, var(--teal-deep) 0%, var(--teal) 55%, #14919b 100%);
+      color: #f4fffe; padding: 11mm 7mm 9mm; position: relative;
+    }
+    .rail::before {
+      content: ""; position: absolute; right: -18px; top: 42mm; width: 36px; height: 36px;
+      background: var(--gold); border-radius: 10px; transform: rotate(18deg); opacity: .9;
+    }
+    .rail::after {
+      content: ""; position: absolute; left: -10px; bottom: 28mm; width: 52px; height: 52px;
+      border: 3px solid rgba(255,255,255,.18); border-radius: 50%;
+    }
+    .photo-wrap {
+      width: 42mm; height: 42mm; margin: 0 auto 8px; border-radius: 50%;
+      border: 3px solid rgba(255,255,255,.55); box-shadow: 0 8px 24px rgba(0,0,0,.25);
+      overflow: hidden; background: #0a3d3c;
+    }
+    .photo-wrap img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
+    .rail h1 {
+      font-family: "Fraunces", Georgia, serif; font-size: 18pt; text-align: center;
+      line-height: 1.05; font-weight: 700; margin-bottom: 3px;
+    }
+    .rail .tagline {
+      text-align: center; font-size: 7.6pt; opacity: .88; letter-spacing: .04em;
+      text-transform: uppercase; margin-bottom: 10px; font-weight: 500;
+    }
+    .rail h2 {
+      font-size: 7.5pt; letter-spacing: .14em; text-transform: uppercase;
+      color: var(--gold); margin: 10px 0 5px; font-weight: 700;
+    }
+    .contact li {
+      list-style: none; display: flex; gap: 7px; align-items: flex-start;
+      margin: 0 0 7px; font-size: 8pt; line-height: 1.25;
+    }
+    .contact .ico {
+      width: 14px; height: 14px; flex: 0 0 14px; margin-top: 1px;
+      fill: none; stroke: var(--gold); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round;
+    }
+    .contact strong { display: block; font-size: 7pt; opacity: .75; font-weight: 500; letter-spacing: .04em; }
+    .chip {
+      display: inline-block; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.22);
+      border-radius: 999px; padding: 2px 7px; margin: 0 3px 4px 0; font-size: 7.2pt;
+    }
+    .lang { margin: 0 0 4px; font-size: 8pt; }
+    .lang span { opacity: .75; font-size: 7.2pt; }
+    .edu p { margin: 0 0 7px; font-size: 7.8pt; line-height: 1.25; }
+    .edu strong { display: block; font-size: 8.2pt; }
+    .edu em { opacity: .8; font-style: normal; font-size: 7.2pt; }
+
+    /* MAIN */
+    .main { padding: 10mm 9mm 8mm 10mm; background: var(--card); position: relative; }
+    .main::before {
+      content: ""; position: absolute; top: 0; left: 0; right: 0; height: 5px;
+      background: linear-gradient(90deg, var(--teal), var(--gold));
+    }
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(14,124,123,.08); color: var(--teal-deep);
+      border: 1px solid rgba(14,124,123,.2); border-radius: 999px;
+      padding: 3px 10px; font-size: 7.4pt; font-weight: 600; margin-bottom: 7px;
+    }
+    .badge i {
+      width: 7px; height: 7px; border-radius: 50%; background: var(--teal); display: inline-block;
+    }
+    .summary {
+      font-size: 8.6pt; color: var(--muted); margin-bottom: 8px;
+      padding: 7px 8px; background: var(--paper); border-left: 3px solid var(--gold); border-radius: 0 8px 8px 0;
+    }
+    .main h2 {
+      font-size: 8pt; letter-spacing: .12em; text-transform: uppercase; color: var(--teal-deep);
+      margin: 7px 0 5px; display: flex; align-items: center; gap: 7px;
+    }
+    .main h2::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+    .job { margin: 0 0 6px; }
+    .job h3 { font-size: 9pt; font-weight: 700; line-height: 1.2; }
+    .job .meta { color: var(--teal); font-size: 7.3pt; font-weight: 600; margin: 1px 0 2px; }
+    .job ul { padding-left: 12px; color: var(--muted); }
+    .job li { margin: 0 0 1px; font-size: 8pt; }
+    .earlier { color: var(--muted); font-size: 7.5pt; margin-top: 2px; }
+    .fit {
+      margin-top: 4px; padding: 6px 8px; border-radius: 10px;
+      background: linear-gradient(135deg, rgba(14,124,123,.07), rgba(196,163,90,.12));
+      border: 1px solid rgba(14,124,123,.15); font-size: 7.8pt; color: var(--ink);
+    }
+    .fit strong { color: var(--teal-deep); }
+
+    @media print {
+      html, body { background: #fff; }
+      .sheet { box-shadow: none; margin: 0; }
+      @page { size: A4; margin: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="sheet">
+    <aside class="rail">
+      <div class="photo-wrap">
+        <img src="file:///D:/circle-d-flow-web/_application_batgroup/Hope_Bruce_CV_photo_bg_blur.png" alt="Hope Bruce" />
+      </div>
+      <h1>Hope<br />Bruce</h1>
+      <div class="tagline">Process Excellence · CX · Ops</div>
+
+      <h2>Contact</h2>
+      <ul class="contact">
+        <li>
+          <svg class="ico" viewBox="0 0 24 24"><path d="M22 16.9v2a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h2a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L7.1 9.5a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.4c.8.3 1.7.5 2.6.6A2 2 0 0 1 22 16.9z"/></svg>
+          <div><strong>PHONE</strong>+351 933 742 853</div>
+        </li>
+        <li>
+          <svg class="ico" viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="m22 6-10 7L2 6"/></svg>
+          <div><strong>EMAIL</strong>d.hope2772@gmail.com</div>
+        </li>
+        <li>
+          <svg class="ico" viewBox="0 0 24 24"><path d="M12 21s7-4.5 7-11a7 7 0 1 0-14 0c0 6.5 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+          <div><strong>LOCATION</strong>Lisbon, Portugal · Hybrid</div>
+        </li>
+      </ul>
+
+      <h2>Strengths</h2>
+      <div>
+        <span class="chip">Process mapping</span>
+        <span class="chip">SOP writing</span>
+        <span class="chip">Frontline immersion</span>
+        <span class="chip">Service quality</span>
+        <span class="chip">Escalations</span>
+        <span class="chip">Peer mentoring</span>
+        <span class="chip">Change adoption</span>
+        <span class="chip">AI workflows</span>
+        <span class="chip">Google Workspace</span>
+      </div>
+
+      <h2>Languages</h2>
+      <div class="lang">German <span>— native</span></div>
+      <div class="lang">English <span>— fluent</span></div>
+      <div class="lang">Ewe <span>— native</span></div>
+      <div class="lang">Portuguese <span>— beginner</span></div>
+      <div class="lang">French <span>— beginner</span></div>
+
+      <h2>Education</h2>
+      <div class="edu">
+        <p><strong>Hotelfachmann</strong><em>Hospitality Management · Munich</em></p>
+        <p><strong>Einzelhandelskaufmann</strong><em>Retail Management · Munich</em></p>
+        <p><strong>Google Ads Certification</strong><em>Google</em></p>
+        <p><strong>Nikon Professional Services</strong><em>NPS Network</em></p>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="badge"><i></i> Application · Process Excellence Manager · Batgroup</div>
+
+      <p class="summary">
+        Hands-on operations &amp; CX professional who immerses with frontline teams, maps how work is
+        actually done, and turns know-how into clear, repeatable standards. Experience across
+        high-volume support (SaaS, licensing, hardware), hospitality leadership, and Lisbon community/event operations —
+        ready to standardise Batgroup processes for quality, consistency and AI readiness.
+      </p>
+
+      <h2>Experience</h2>
+
+      <div class="job">
+        <h3>Technical Customer Support — Nikon Project, Foundever</h3>
+        <div class="meta">Sep 2025 – Present · Remote / Lisbon</div>
+        <ul>
+          <li>Tier-2 support in a high-volume hardware/software ecosystem; structured diagnostics &amp; clear case docs.</li>
+          <li>Peer knowledge-sharing to raise resolution consistency; close to real customer-journey friction.</li>
+        </ul>
+      </div>
+
+      <div class="job">
+        <h3>Founder / Operations Lead — Circle D Flow</h3>
+        <div class="meta">Sep 2024 – Present · Lisbon</div>
+        <ul>
+          <li>End-to-end live delivery: venues, artists, vendors, schedules, budgets.</li>
+          <li>Capture informal know-how into repeatable patterns; AI-assisted tools (Cursor) for planning &amp; follow-up.</li>
+        </ul>
+      </div>
+
+      <div class="job">
+        <h3>Web Development &amp; Client Support — Wix, Concentrix</h3>
+        <div class="meta">Apr 2025 – Sep 2025 · Remote</div>
+        <ul>
+          <li>SaaS troubleshooting, publishing workflows, structured issue resolution; retention-focused guidance.</li>
+        </ul>
+      </div>
+
+      <div class="job">
+        <h3>Google Ads &amp; Microsoft Licensing — Teleperformance</h3>
+        <div class="meta">Sep 2023 – Apr 2025 · Remote</div>
+        <ul>
+          <li>B2B Ads &amp; enterprise licensing/billing at scale; mentored peers on tools &amp; handling standards.</li>
+        </ul>
+      </div>
+
+      <div class="job">
+        <h3>F&amp;B Supervisor — Jaz in the City (Steigenberger)</h3>
+        <div class="meta">Sep 2020 – Aug 2023 · Stuttgart</div>
+        <ul>
+          <li>Premium high-volume floor ops; trained staff on procedures, communication &amp; guest recovery.</li>
+        </ul>
+      </div>
+
+      <div class="job">
+        <h3>Night Audit &amp; Front Office — Marriott (Westin / Sheraton)</h3>
+        <div class="meta">Aug 2017 – Aug 2020 · Munich</div>
+        <ul>
+          <li>Overnight operations, night-audit processes, VIP relations &amp; escalations.</li>
+        </ul>
+      </div>
+      <p class="earlier">Earlier: F&amp;B Supervisor &amp; Entertainer (Netherlands) · Work &amp; Travel (Japan)</p>
+
+      <div class="fit">
+        <strong>Why Batgroup:</strong> I work closest to where execution happens — observing reality, simplifying ownership,
+        and writing procedures teams can follow. That foundation makes engagement journeys and AI/automation safer to scale.
+      </div>
+    </main>
+  </div>
+</body>
+</html>

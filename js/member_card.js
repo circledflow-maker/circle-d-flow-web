@@ -57,7 +57,7 @@
     'Almost there. Confirm how we reach you so the profile can bind.',
     'No profile yet? Create a password. Already in the Circle? Sign in with the same credentials.',
     'Claim locks your member number + QR into inventory, then we open the 3D Sanctuary.',
-    'Optional Stripe upgrade — or enter the Sanctuary with your free Registered card.',
+    'Optional Silver (€5) or Gold (€10) — or enter Sanctuary with Bronze free.',
   ];
 
   const state = {
@@ -308,6 +308,12 @@
     }
   }
 
+  function tierLabel(tier) {
+    if (tier === 'flow_crew') return 'Gold · €10';
+    if (tier === 'flow_supporter') return 'Silver · €5';
+    return 'Bronze · Free';
+  }
+
   function setChips(card, exp) {
     if (els.expChip) els.expChip.innerHTML = 'EXP <strong>' + (exp != null ? exp : '—') + '</strong>';
     if (els.memberChip) {
@@ -318,6 +324,15 @@
       els.statusChip.innerHTML = card.claimed
         ? 'Card <strong>Active</strong>'
         : 'Card <strong>Draft</strong>';
+    }
+    const tierChip = document.getElementById('wk-tier-chip');
+    if (tierChip) tierChip.textContent = tierLabel(card.tier || 'registered');
+    const upBtn = document.getElementById('wk-upgrade-btn');
+    if (upBtn) {
+      const t = card.tier || 'registered';
+      if (t === 'flow_crew') upBtn.textContent = 'Gold · Active';
+      else if (t === 'flow_supporter') upBtn.textContent = 'Upgrade · Gold €10';
+      else upBtn.textContent = 'Upgrade · Silver / Gold';
     }
   }
 
@@ -762,13 +777,23 @@
       goStep(1);
       return;
     }
-    speak('Opening Stripe — secure monthly membership.', 'guide');
+    const billing =
+      document.querySelector('input[name="wk-billing"]:checked')?.value || 'month';
+    const billToggle = document.getElementById('wk-billing-toggle');
+    if (billToggle) billToggle.hidden = false;
+    speak(
+      billing === 'year'
+        ? 'Opening Stripe — yearly membership (2 months free).'
+        : 'Opening Stripe — monthly membership.',
+      'guide'
+    );
     try {
       const res = await fetch('/api/create-membership-checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           tier,
+          interval: billing,
           displayName: name,
           email: email || user?.email || '',
           userId: user?.id || '',
@@ -776,10 +801,10 @@
         }),
       });
       const data = await res.json().catch(() => ({}));
-      if (!res.ok || !data.url) throw new Error(data.error || 'Checkout unavailable');
+      if (!res.ok || !data.url) throw new Error(data.error || 'Checkout failed');
       window.location.href = data.url;
-    } catch (e) {
-      speak(e.message || 'Stripe checkout failed', 'error');
+    } catch (err) {
+      speak(err.message || 'Checkout failed', 'error');
     }
   }
 

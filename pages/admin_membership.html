@@ -129,7 +129,8 @@
         <h2>Visitor pipeline</h2>
         <p class="sub" style="margin:0">
           Shared link → Flowee chat (PT/EN/DE) → Register / Login → Member Card + benefits → 3D Artist Sanctuary.
-          Membership tier ≠ Artist status. Flow Pool matching = Phase 2.
+          Status: <strong>Bronze</strong> (free) · <strong>Silver</strong> (€5 · coupons / +1 guest / 1 drink) · <strong>Gold</strong> (€10 · folders / 1h shoot / 3 drinks).
+          Membership status ≠ Artist status. Flow Pool matching = Phase 2.
         </p>
       </div>
     </section>
@@ -207,11 +208,11 @@
           <textarea id="c-benefit" rows="2" placeholder="Shown to members after claim"></textarea>
           <label>Discount %</label>
           <input id="c-discount" type="number" placeholder="15 (optional)">
-          <label>Min tier</label>
+          <label>Min status</label>
           <select id="c-tier">
-            <option value="registered">registered (all members)</option>
-            <option value="flow_supporter">flow_supporter+</option>
-            <option value="flow_crew">flow_crew only rank+</option>
+            <option value="flow_supporter" selected>Silver+ (€5 · coupons)</option>
+            <option value="flow_crew">Gold only (€10)</option>
+            <option value="registered">Bronze+ (all members — avoid for paid coupons)</option>
           </select>
           <button type="button" id="c-save">Save coupon</button>
         </div>
@@ -368,14 +369,23 @@
       }
     }
 
+    function tierStatus(code) {
+      const c = String(code || 'registered');
+      if (c === 'flow_crew') return { label: 'Gold · €10', badge: 'gold' };
+      if (c === 'flow_supporter') return { label: 'Silver · €5', badge: 'silver' };
+      return { label: 'Bronze · Free', badge: 'bronze' };
+    }
+
     function renderStats(s) {
+      const bt = s.byTier || {};
       els.stats.innerHTML = [
         ['Members', s.members],
+        ['Bronze', bt.registered ?? 0],
+        ['Silver €5', bt.flow_supporter ?? 0],
+        ['Gold €10', bt.flow_crew ?? 0],
         ['Events', s.events || 0],
         ['Locations', s.locations || 0],
-        ['Saves', s.saves || 0],
-        ['Partners', s.partners],
-        ['Coupons', s.coupons],
+        ['Coupons (Silver+)', s.coupons],
         ['7d claims', s.claimsLast7Days],
         ['Grants', s.grants],
       ].map(([label, val]) => `<div class="stat"><b>${val}</b><span>${label}</span></div>`).join('');
@@ -526,10 +536,11 @@
         const name = r.member_display_name || r.full_name || r.username || '—';
         const contact = [r.email, r.instagram || r.instagram_handle].filter(Boolean).join('<br>');
         const when = r.member_card_claimed_at ? new Date(r.member_card_claimed_at).toLocaleString() : '—';
+        const st = tierStatus(r.membership_tier);
         return `<tr>
           <td>${esc(name)}<div class="badge">${esc(r.member_card_public_id || '')}</div></td>
           <td>${contact || '—'}</td>
-          <td>${esc(r.membership_tier || 'registered')}<br><span class="badge">${esc(r.membership_status || 'none')}</span></td>
+          <td><strong>${esc(st.label)}</strong><br><span class="badge">${esc(r.membership_tier || 'registered')} · ${esc(r.membership_status || 'none')}</span></td>
           <td>${r.exp ?? '—'}</td>
           <td>${when}</td>
         </tr>`;
@@ -556,16 +567,17 @@
       els.couponsBody.innerHTML = (rows || []).map((c) => {
         const partner = c.partner?.name || c.partner_id;
         const grants = Array.isArray(c.grants) ? (c.grants[0]?.count ?? c.grants.length) : (c.grants?.count ?? '—');
+        const st = tierStatus(c.min_tier);
         return `<tr>
           <td><span class="code">${esc(c.code)}</span><br>${esc(c.title)}<br><small style="color:var(--muted)">${esc(c.benefit_text || '')}</small></td>
           <td>${esc(partner)}<br><small>grants: ${grants}</small></td>
-          <td>${esc(c.min_tier)}</td>
+          <td><strong>${esc(st.label)}</strong><br><span class="badge">${esc(c.min_tier || 'flow_supporter')}</span></td>
           <td>${c.active ? 'yes' : 'no'}</td>
           <td class="row-actions">
             <button type="button" class="ghost" data-toggle-coupon="${c.id}" data-active="${c.active ? '1' : '0'}">${c.active ? 'Disable' : 'Enable'}</button>
           </td>
         </tr>`;
-      }).join('') || '<tr><td colspan="5">No coupons</td></tr>';
+      }).join('') || '<tr><td colspan="5">No coupons — create Silver+ (€5) codes for paid members.</td></tr>';
     }
 
     function esc(s) {
