@@ -359,10 +359,10 @@ body.mp-phase-intro #flowee-agent {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+  bottom: calc(7.25rem + env(safe-area-inset-bottom, 0px));
   z-index: 6;
   padding: 0 1rem;
-  max-height: min(42vh, 320px);
+  max-height: min(38vh, 300px);
   overflow: auto;
   pointer-events: none;
 }
