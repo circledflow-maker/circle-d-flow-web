@@ -67,12 +67,32 @@
     .row-actions button { font-size: 0.65rem; padding: 0.4rem 0.65rem; }
     .hub-links { display: flex; flex-wrap: wrap; gap: 0.45rem; margin: 0.5rem 0 1rem; }
     .invite-box textarea { min-height: 72px; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 0.78rem; }
+    /* Flowee-readable admin chrome */
+    body { font-size: 16px; line-height: 1.55; padding-bottom: 7.5rem; }
+    h1 { font-size: 1.55rem; margin-bottom: 0.45rem; line-height: 1.3; }
+    h2 { font-size: 1.12rem; margin: 0 0 0.8rem; line-height: 1.35; }
+    .sub { font-size: 0.95rem; line-height: 1.7; margin-bottom: 1.1rem; }
+    .stat b { font-size: 1.5rem; }
+    .stat span { font-size: 0.82rem; line-height: 1.4; }
+    .panel p, .panel li { line-height: 1.7; font-size: 0.98rem; }
+    .flowee-banner {
+      display: flex; flex-wrap: wrap; align-items: center; gap: 0.65rem 1rem;
+      margin-bottom: 1rem; padding: 0.85rem 1rem; border-radius: 14px;
+      border: 1px solid rgba(61,224,255,0.4);
+      background: linear-gradient(120deg, rgba(61,224,255,0.1), rgba(212,175,55,0.08));
+    }
+    .flowee-banner strong { font-family: Cinzel, Georgia, serif; color: var(--gold); }
+    .flowee-banner span { color: var(--muted); font-size: 0.92rem; line-height: 1.55; flex: 1; min-width: 180px; }
   </style>
 </head>
 <body>
+  <div class="flowee-banner" role="status">
+    <strong>Flowee</strong>
+    <span>I guide Flow Control — unlock below, then use my dock (bottom-right) for Impact → Members → Events → Invite. Visitor path lands on Member Card with language + Login/Register.</span>
+  </div>
   <div id="gate" class="gate">
     <h1>Welt Heart</h1>
-    <p class="sub">Circle D Flow admin · Flow Control. Same password as Membership Admin.</p>
+    <p class="sub">Circle D Flow admin · Flow Control. Same password as Membership Admin. Flowee stays with you after unlock.</p>
     <div class="err" id="gate-err"></div>
     <label for="admin-key">Admin password</label>
     <input id="admin-key" type="password" autocomplete="current-password" placeholder="FlowCreator!">
@@ -805,7 +825,7 @@
   </script>
   <div id="flowee-agent"></div>
   <script src="/js/cdf_runtime_config.js"></script>
-  <script src="/js/agents/flowee.js?v=20260918c" defer></script>
-  <script src="/js/agents/admin_flowee_guide.js?v=20260918c" defer></script>
+  <script src="/js/agents/flowee.js?v=20260918d" defer></script>
+  <script src="/js/agents/admin_flowee_guide.js?v=20260918d" defer></script>
 </body>
 </html>

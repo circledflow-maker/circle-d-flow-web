@@ -1,18 +1,27 @@
 /* Membership plans + Flowee cinematic landing */
-.mp-page .mp-shell { gap: 1.15rem; max-width: 920px; }
+/* Critical: author display rules must not override the hidden attribute */
+.mp-gate[hidden],
+.mp-intro[hidden],
+#mp-main[hidden],
+.mp-pip[hidden],
+.mp-cine-cta[hidden] {
+  display: none !important;
+}
+
+.mp-page .mp-shell { gap: 1.35rem; max-width: 920px; }
 .mp-title {
   font-family: Cinzel, Georgia, serif;
   color: var(--wk-gold);
-  font-size: clamp(1.65rem, 4vw, 2.1rem);
-  margin: 0.5rem 0 0.45rem;
+  font-size: clamp(1.75rem, 4.2vw, 2.25rem);
+  margin: 0.5rem 0 0.55rem;
   letter-spacing: 0.04em;
-  line-height: 1.25;
+  line-height: 1.3;
 }
 .mp-lead {
   color: rgba(244, 239, 230, 0.82);
-  font-size: 1.05rem;
-  line-height: 1.7;
-  margin: 0 0 0.85rem;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  margin: 0 0 1rem;
   max-width: 42rem;
 }
 .mp-billing {
@@ -60,55 +69,55 @@
   font-weight: 700;
 }
 .mp-tier ul {
-  margin: 0 0 1rem;
+  margin: 0 0 1.1rem;
   padding-left: 1.15rem;
   color: rgba(244, 239, 230, 0.82);
-  font-size: 0.98rem;
-  line-height: 1.65;
+  font-size: 1.02rem;
+  line-height: 1.75;
 }
-.mp-tier li + li { margin-top: 0.35rem; }
+.mp-tier li + li { margin-top: 0.55rem; }
 
 .mp-panel {
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-  padding-top: 1.15rem;
-  margin-top: 0.55rem;
+  padding-top: 1.35rem;
+  margin-top: 0.85rem;
 }
 .mp-panel h2 {
   font-family: Cinzel, Georgia, serif;
-  font-size: 1.2rem;
+  font-size: 1.28rem;
   color: var(--wk-gold-soft);
-  margin: 0 0 0.65rem;
-  line-height: 1.3;
+  margin: 0 0 0.85rem;
+  line-height: 1.35;
 }
 .mp-panel p,
 .mp-panel li {
   color: rgba(244, 239, 230, 0.8);
-  font-size: 1.02rem;
-  line-height: 1.7;
+  font-size: 1.06rem;
+  line-height: 1.8;
 }
-.mp-panel p + p { margin-top: 0.85rem; }
-.mp-panel ul { padding-left: 1.15rem; margin: 0.35rem 0 0; }
-.mp-panel li + li { margin-top: 0.55rem; }
+.mp-panel p + p { margin-top: 1rem; }
+.mp-panel ul { padding-left: 1.15rem; margin: 0.45rem 0 0; }
+.mp-panel li + li { margin-top: 0.75rem; }
 .mp-panel a { color: var(--wk-cyan); }
 
 .mp-qa {
   border: 1px solid rgba(212, 175, 55, 0.22);
   border-radius: 12px;
-  padding: 0.85rem 1rem;
-  margin-bottom: 0.65rem;
+  padding: 1rem 1.1rem;
+  margin-bottom: 0.85rem;
   background: rgba(0, 0, 0, 0.22);
 }
 .mp-qa summary {
   cursor: pointer;
   font-weight: 600;
-  font-size: 1.02rem;
+  font-size: 1.08rem;
   color: var(--wk-cream);
-  line-height: 1.45;
+  line-height: 1.5;
 }
 .mp-qa p {
-  margin: 0.75rem 0 0.15rem;
-  font-size: 1rem;
-  line-height: 1.7;
+  margin: 0.9rem 0 0.2rem;
+  font-size: 1.04rem;
+  line-height: 1.8;
 }
 
 .mp-msg {
@@ -260,20 +269,44 @@
 }
 .mp-cine-caption p {
   margin: 0;
-  font-size: 1.12rem;
-  line-height: 1.65;
+  font-size: 1.18rem;
+  line-height: 1.7;
   color: var(--wk-cream);
   max-width: 36rem;
   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.65);
+}
+/* Last scene: Follow / Join / Support — larger + spaced */
+.mp-cine-cta {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding: 0.35rem 1.15rem 0.65rem;
+  background: linear-gradient(transparent, rgba(5, 8, 15, 0.94));
+}
+.mp-cine-cta span {
+  font-family: Cinzel, Georgia, serif;
+  font-size: clamp(1.55rem, 5.5vw, 2.35rem);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.15;
+  color: var(--wk-gold);
+  text-shadow: 0 3px 18px rgba(0, 0, 0, 0.7);
 }
 .mp-cine-actions {
   position: relative;
   z-index: 3;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.55rem;
-  padding: 0.75rem 1.15rem 1.15rem;
+  gap: 0.65rem;
+  padding: 0.85rem 1.15rem 1.25rem;
   background: rgba(5, 8, 15, 0.92);
+}
+.mp-cine-actions .wk-btn {
+  font-size: 0.95rem;
+  padding: 0.7rem 1.1rem;
 }
 .mp-cine-progress {
   height: 3px;

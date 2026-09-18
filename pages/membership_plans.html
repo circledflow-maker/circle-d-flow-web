@@ -7,10 +7,10 @@
   <meta name="description" content="Bronze, Silver, Gold — Flowee intro, Wako Kungo Lisbon culture, Circle D Flow values, plans, Q&A and DATEV-ready policy.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/member_card.css?v=20260918c">
-  <link rel="stylesheet" href="/css/membership_plans.css?v=20260918c">
+  <link rel="stylesheet" href="/css/member_card.css?v=20260918d">
+  <link rel="stylesheet" href="/css/membership_plans.css?v=20260918d">
 </head>
-<body class="wk-card-page mp-page mp-landing">
+<body class="wk-card-page mp-page mp-landing mp-phase-gate">
 
   <!-- Flowee gate: language → cinematic -->
   <div id="mp-gate" class="mp-gate" role="dialog" aria-label="Flowee welcome">
@@ -26,16 +26,21 @@
     </div>
   </div>
 
-  <!-- Cinematic intro with PiP 1–4s -->
+  <!-- Cinematic intro with PiP 1–4s (portraits only) -->
   <div id="mp-intro" class="mp-intro" hidden>
     <div class="mp-cine" id="mp-cine">
-      <img id="mp-cine-main" class="mp-cine-main" alt="" src="/Assets/membership/intro/cine_01_cafe.png">
+      <img id="mp-cine-main" class="mp-cine-main" alt="" src="/Assets/membership/wako_card_front.webp">
       <div class="mp-pip" id="mp-pip" hidden>
-        <img id="mp-pip-img" alt="Prototype preview" src="/Assets/membership/intro/pip_plans.png">
-        <span class="mp-pip-label" id="mp-pip-label">Prototype</span>
+        <img id="mp-pip-img" alt="Lisbon moment" src="/Assets/membership/intro/cine_03_smile.png">
+        <span class="mp-pip-label" id="mp-pip-label">Family</span>
       </div>
       <div class="mp-cine-caption">
-        <p id="mp-cine-line">Lisbon culture · Wako stages · your Member Card.</p>
+        <p id="mp-cine-line">Your Wako Member Card prototype — free Bronze is enough to enter.</p>
+      </div>
+      <div class="mp-cine-cta" id="mp-cine-cta" hidden aria-hidden="true">
+        <span>Follow</span>
+        <span>Join</span>
+        <span>Support</span>
       </div>
       <div class="mp-cine-actions">
         <button type="button" class="wk-btn wk-btn--cyan" id="mp-intro-login">Log in</button>
@@ -179,8 +184,8 @@
 
   <div id="flowee-agent"></div>
   <script src="/js/cdf_runtime_config.js"></script>
-  <script src="/js/data/cdf_i18n.js?v=20260918c" defer></script>
-  <script src="/js/agents/flowee.js?v=20260918c" defer></script>
-  <script src="/js/membership_plans.js?v=20260918c" defer></script>
+  <script src="/js/data/cdf_i18n.js?v=20260918d" defer></script>
+  <script src="/js/agents/flowee.js?v=20260918d" defer></script>
+  <script src="/js/membership_plans.js?v=20260918d" defer></script>
 </body>
 </html>

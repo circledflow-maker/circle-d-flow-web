@@ -1,36 +1,45 @@
 /**
- * Membership plans — Flowee language gate, cinematic PiP intro (1–4s), plans + DATEV Q&A
+ * Membership plans — Flowee language → cinematic intro (portraits + card proto) → plans
+ * PiP 1–4s uses lifestyle portraits only (not membership UI screenshots).
  */
 (function () {
   const LANG_KEY = 'cdf_lang';
-  const SKIP_KEY = 'cdf_mp_intro_skip';
 
+  // Main cinematic: card prototype + Lisbon / Wako portraits
   const CINE = [
+    '/Assets/membership/wako_card_front.webp',
     '/Assets/membership/intro/cine_01_cafe.png',
     '/Assets/membership/intro/cine_02_handpan.png',
     '/Assets/membership/intro/cine_03_smile.png',
     '/Assets/membership/intro/cine_04_gallery.png',
     '/Assets/membership/intro/cine_05_lapa71.png',
   ];
+
+  // Video-in-video 1–4s: portraits only (never membership UI)
   const PIP = [
-    { src: '/Assets/membership/intro/pip_plans.png', label: 'Plans' },
-    { src: '/Assets/membership/intro/pip_member.png', label: 'Member Card' },
-    { src: '/Assets/membership/intro/pip_admin.png', label: 'Flow Control' },
-    { src: '/Assets/membership/intro/pip_admin2.png', label: 'Orbit Admin' },
+    { src: '/Assets/membership/intro/cine_03_smile.png', label: 'Family' },
+    { src: '/Assets/membership/intro/cine_02_handpan.png', label: 'Sound' },
+    { src: '/Assets/membership/intro/cine_01_cafe.png', label: 'Lisbon' },
+    { src: '/Assets/membership/intro/cine_05_lapa71.png', label: 'Lapa71' },
+    { src: '/Assets/membership/intro/cine_04_gallery.png', label: 'Crew' },
   ];
 
   const I18N = {
     en: {
       gate_title: 'Welcome, navigator.',
       gate_lead:
-        'We are glad you are on this journey with us. Choose a language — then a short cinematic shows what lives behind Membership.',
+        'We are glad you walk this journey with us. Pick a language — then a short cinematic opens Membership: card, culture, values.',
       cine: [
-        'Lisbon culture · Wako stages · your Member Card.',
-        'Prototype peek — plans, card, Sanctuary behind the curtain.',
+        'Your Wako Member Card prototype — free Bronze is enough to enter.',
+        'Lisbon tables · real stages · real people behind the Circle.',
+        'Music without borders — handpan, guitar, voice in the Flow.',
+        'Joy on the journey — we are happy you are here.',
         'Goals: bridges between artists, audiences, and the city.',
         'Values: kiss your heart · share the Flow · fair exchange.',
-        'Thank you for walking with Circle D Flow × Wako Kungo.',
       ],
+      cta_follow: 'Follow',
+      cta_join: 'Join',
+      cta_support: 'Support',
       title: 'Membership plans',
       lead: 'Bronze is free and enough for Sanctuary. Silver and Gold keep Wako nights and partners alive — thank you for walking with us.',
       about_title: 'About us',
@@ -91,19 +100,24 @@
       p5: 'GDPR — Contract, legitimate interest, consent for cookies/notifications. Rights: access, erasure, portability, complaint.',
       p6: 'Fair use — Benefit QR personal, one scan, monthly refill. Abuse may pause perks without deleting EXP.',
       p7: 'Processors — Stripe, Supabase, Vercel. No sale of personal data.',
-      flowee_hi: 'Language locked. Short cinematic — then plans. Skip anytime. Login or Register when you feel ready.',
+      flowee_hi:
+        'Language locked. Cinematic starts — Member Card + Lisbon moments. Skip anytime. Log in or Register when ready.',
     },
     pt: {
       gate_title: 'Bem-vindo/a, navigator.',
       gate_lead:
-        'Ficamos felizes por caminhares connosco. Escolhe o idioma — depois um cinematic curto mostra o que há por trás da Membership.',
+        'Ficamos felizes por caminhares connosco. Escolhe o idioma — depois um cinematic abre a Membership: cartão, cultura, valores.',
       cine: [
-        'Cultura de Lisboa · palcos Wako · o teu Member Card.',
-        'Protótipo — planos, cartão, Santuário por detrás da cortina.',
+        'Protótipo do teu Wako Member Card — Bronze grátis chega para entrar.',
+        'Mesas de Lisboa · palcos reais · pessoas reais no Circle.',
+        'Música sem fronteiras — handpan, guitarra, voz no Flow.',
+        'Alegria na jornada — estamos felizes por estares aqui.',
         'Objetivos: pontes entre artistas, públicos e a cidade.',
         'Valores: kiss your heart · partilhar o Flow · troca justa.',
-        'Obrigado por caminhares com Circle D Flow × Wako Kungo.',
       ],
+      cta_follow: 'Follow',
+      cta_join: 'Join',
+      cta_support: 'Support',
       title: 'Planos de membership',
       lead: 'Bronze é grátis e chega para o Santuário. Silver e Gold mantêm as noites Wako vivas — obrigado por estares connosco.',
       about_title: 'Sobre nós',
@@ -163,19 +177,24 @@
       p5: 'RGPD — contrato, interesse legítimo, consentimento. Direitos de acesso, apagamento, portabilidade.',
       p6: 'Uso justo — QR pessoal, um scan, refill mensal.',
       p7: 'Processadores — Stripe, Supabase, Vercel. Sem venda de dados.',
-      flowee_hi: 'Idioma definido. Cinematic curto — depois os planos. Podes saltar. Login ou Registo quando quiseres.',
+      flowee_hi:
+        'Idioma definido. Cinematic — Member Card + momentos de Lisboa. Podes saltar. Login ou Registo quando quiseres.',
     },
     de: {
       gate_title: 'Willkommen, Navigator.',
       gate_lead:
-        'Schön, dass du uns auf der Reise begleitest. Sprache wählen — dann zeigt ein kurzes Cinematic, was hinter Membership steckt.',
+        'Schön, dass du uns auf der Reise begleitest. Sprache wählen — dann öffnet ein kurzes Cinematic Membership: Karte, Kultur, Values.',
       cine: [
-        'Lisbon Culture · Wako Stages · deine Member Card.',
-        'Prototype — Pläne, Karte, Sanctuary hinter dem Vorhang.',
+        'Dein Wako-Member-Card-Prototype — Free Bronze reicht zum Einstieg.',
+        'Lisbon tables · echte Stages · echte Menschen hinter dem Circle.',
+        'Musik ohne Grenzen — Handpan, Gitarre, Stimme im Flow.',
+        'Freude auf der Reise — wir freuen uns, dass du da bist.',
         'Ziele: Brücken zwischen Artists, Publikum und Stadt.',
         'Values: Kiss your heart · Flow teilen · fairer Austausch.',
-        'Danke, dass du mit Circle D Flow × Wako Kungo gehst.',
       ],
+      cta_follow: 'Follow',
+      cta_join: 'Join',
+      cta_support: 'Support',
       title: 'Membership-Pläne',
       lead: 'Bronze ist kostenlos und reicht für die Sanctuary. Silver und Gold halten Wako-Nächte am Leben — danke, dass du dabei bist.',
       about_title: 'Über uns',
@@ -223,35 +242,49 @@
       q3: 'Was ist Flowee?',
       a3: 'Dein Guide im Circle — Sprache, Registrierung, Erinnerungen und Hilfe in Membership und Admin.',
       q4: 'Rechnungen / DATEV?',
-      a4: 'Stripe liefert Belege. Wir führen buchungsfähige Datensätze (Kunde, Betrag, USt falls, Periode, Stripe-ID) und exportieren DATEV-kompatibel auf Anfrage.',
+      a4: 'Stripe liefert Belege. Wir führen buchungsfähige Datensätze und exportieren DATEV-kompatibel auf Anfrage.',
       q5: 'Wo liegen meine Daten?',
       a5: 'Profil in Supabase. Zahlungen bei Stripe. Cookies für Sprache/Karte; Notifications nur mit Einwilligung.',
       policy_title: 'Rechtliches · Datenschutz · DATEV',
       policy_lead:
         'Transparente Membership-Bedingungen im Einklang mit DSGVO und deutscher Buchführungspraxis (DATEV-ready).',
       p1: 'Vertrag — Digitale Membership via Stripe. Kontakt Instagram @wako.kungo.',
-      p2: 'Widerruf/Kündigung — jederzeit zum nächsten Zeitraum; digitale Leistung kann sofort beginnen.',
+      p2: 'Widerruf/Kündigung — jederzeit zum nächsten Zeitraum.',
       p3: 'Preise & USt — angezeigter Betrag; USt auf Stripe-Belegen wenn anwendbar.',
-      p4: 'DATEV — Aufbewahrung: Zahlungs-ID, Datum, Kunde, Netto/Brutto, Produkt, Periode. Export für Steuerberater auf Anfrage. Aufbewahrung i. d. R. 10 Jahre (§147 AO).',
-      p5: 'DSGVO — Vertrag, berechtigtes Interesse, Einwilligung für Cookies/Notifications. Rechte: Auskunft, Löschung, Portabilität, Beschwerde.',
+      p4: 'DATEV — Aufbewahrung: Zahlungs-ID, Datum, Kunde, Netto/Brutto, Produkt, Periode. Export für Steuerberater auf Anfrage. i. d. R. 10 Jahre (§147 AO).',
+      p5: 'DSGVO — Vertrag, berechtigtes Interesse, Einwilligung. Rechte: Auskunft, Löschung, Portabilität, Beschwerde.',
       p6: 'Fair Use — Benefit-QR persönlich, ein Scan, monatlicher Refill.',
       p7: 'Auftragsverarbeiter — Stripe, Supabase, Vercel. Kein Verkauf personenbezogener Daten.',
-      flowee_hi: 'Sprache steht. Kurzes Cinematic — dann die Pläne. Skip jederzeit. Login oder Registration, wann du bereit bist.',
+      flowee_hi:
+        'Sprache steht. Cinematic startet — Member Card + Lisbon Moments. Skip jederzeit. Login oder Registration, wann du bereit bist.',
     },
   };
 
   let lang = 'en';
   let introTimer = null;
   let introStart = 0;
-  const INTRO_MS = 12000;
+  const INTRO_MS = 14000;
 
   function t(key) {
     return (I18N[lang] && I18N[lang][key]) || I18N.en[key] || key;
   }
 
   function say(text) {
-    const a = window.flowee || window.Flowee;
-    if (a && typeof a.talk === 'function') a.talk(true, text, 'guide');
+    try {
+      const a = window.flowee || window.Flowee;
+      if (a && typeof a.talk === 'function') a.talk(true, text, 'guide');
+    } catch (_) { /* never block intro */ }
+  }
+
+  function setPhase(phase) {
+    document.body.classList.remove('mp-phase-gate', 'mp-phase-intro', 'mp-phase-main');
+    document.body.classList.add('mp-phase-' + phase);
+    const gate = document.getElementById('mp-gate');
+    const intro = document.getElementById('mp-intro');
+    const main = document.getElementById('mp-main');
+    if (gate) gate.hidden = phase !== 'gate';
+    if (intro) intro.hidden = phase !== 'intro';
+    if (main) main.hidden = phase !== 'main';
   }
 
   function applyI18n() {
@@ -314,10 +347,7 @@
   }
 
   function showMain() {
-    document.getElementById('mp-gate')?.setAttribute('hidden', '');
-    document.getElementById('mp-intro')?.setAttribute('hidden', '');
-    const main = document.getElementById('mp-main');
-    if (main) main.hidden = false;
+    setPhase('main');
     applyI18n();
     syncPrices();
     say(t('lead'));
@@ -345,7 +375,7 @@
     if (bar) bar.style.width = p * 100 + '%';
 
     const sec = elapsed / 1000;
-    const mainIdx = Math.min(CINE.length - 1, Math.floor(sec / 2.2));
+    const mainIdx = Math.min(CINE.length - 1, Math.floor(sec / 2.3));
     const main = document.getElementById('mp-cine-main');
     if (main && main.dataset.idx !== String(mainIdx)) {
       main.dataset.idx = String(mainIdx);
@@ -354,12 +384,29 @@
 
     const line = document.getElementById('mp-cine-line');
     const lines = I18N[lang]?.cine || I18N.en.cine;
-    if (line) line.textContent = lines[Math.min(lines.length - 1, mainIdx)];
+    const last = mainIdx >= lines.length - 1;
+    if (line) {
+      line.textContent = lines[Math.min(lines.length - 1, mainIdx)];
+      line.hidden = last;
+    }
+    const cta = document.getElementById('mp-cine-cta');
+    if (cta) {
+      if (last) {
+        const spans = cta.querySelectorAll('span');
+        if (spans[0]) spans[0].textContent = t('cta_follow');
+        if (spans[1]) spans[1].textContent = t('cta_join');
+        if (spans[2]) spans[2].textContent = t('cta_support');
+        cta.hidden = false;
+        cta.setAttribute('aria-hidden', 'false');
+      } else {
+        cta.hidden = true;
+        cta.setAttribute('aria-hidden', 'true');
+      }
+    }
 
-    // Video-in-video screenshots between 1s and 4s
+    // Portraits as video-in-video between 1s and 4s (not membership UI)
     if (sec >= 1 && sec < 4) {
-      const pipIdx = Math.floor((sec - 1) / 0.75);
-      setPip(true, pipIdx);
+      setPip(true, Math.floor((sec - 1) / 0.6));
     } else {
       setPip(false, 0);
     }
@@ -372,22 +419,29 @@
   }
 
   function startIntro() {
-    document.getElementById('mp-gate')?.setAttribute('hidden', '');
-    const intro = document.getElementById('mp-intro');
-    if (intro) intro.hidden = false;
-    document.getElementById('mp-main')?.setAttribute('hidden', '');
+    setPhase('intro');
+    const main = document.getElementById('mp-cine-main');
+    if (main) {
+      main.dataset.idx = '0';
+      main.src = CINE[0];
+    }
+    setPip(false, 0);
+    const cta = document.getElementById('mp-cine-cta');
+    if (cta) {
+      cta.hidden = true;
+      cta.setAttribute('aria-hidden', 'true');
+    }
+    const line = document.getElementById('mp-cine-line');
+    if (line) line.hidden = false;
     introStart = Date.now();
     say(t('flowee_hi'));
-    cancelAnimationFrame(introTimer);
+    if (introTimer) cancelAnimationFrame(introTimer);
     introTimer = requestAnimationFrame(tickIntro);
   }
 
   function finishIntro() {
-    cancelAnimationFrame(introTimer);
+    if (introTimer) cancelAnimationFrame(introTimer);
     introTimer = null;
-    try {
-      sessionStorage.setItem(SKIP_KEY, '1');
-    } catch (_) {}
     showMain();
   }
 
@@ -395,18 +449,30 @@
     lang = code === 'pt' || code === 'de' ? code : 'en';
     try {
       localStorage.setItem(LANG_KEY, lang);
-      window.CDFi18n?.setLang?.(lang);
+      if (window.CDFi18n && typeof window.CDFi18n.setLang === 'function') {
+        window.CDFi18n.setLang(lang);
+      }
     } catch (_) {}
     document.documentElement.lang = lang;
     applyI18n();
+    // Always start cinematic after language — do not skip
     startIntro();
   }
 
   function boot() {
+    setPhase('gate');
+
     document.querySelectorAll('.mp-lang-btn').forEach((btn) => {
-      btn.addEventListener('click', () => pickLang(btn.getAttribute('data-lang')));
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        pickLang(btn.getAttribute('data-lang'));
+      });
     });
-    document.getElementById('mp-intro-skip')?.addEventListener('click', finishIntro);
+    document.getElementById('mp-intro-skip')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      finishIntro();
+    });
     document.getElementById('mp-intro-login')?.addEventListener('click', () => {
       window.location.href = '/member-card?auth=login';
     });
@@ -422,7 +488,15 @@
     });
 
     const params = new URLSearchParams(window.location.search);
-    if (params.get('skip') === '1' || params.get('tier')) {
+    // Only skip cinematic when explicitly requested or returning from Stripe tier deep-link
+    if (params.get('skip') === '1') {
+      try {
+        lang = localStorage.getItem(LANG_KEY) || 'en';
+      } catch (_) {}
+      showMain();
+      return;
+    }
+    if (params.get('tier') && params.get('cine') !== '1') {
       try {
         lang = localStorage.getItem(LANG_KEY) || 'en';
       } catch (_) {}
@@ -438,6 +512,8 @@
 
     applyI18n();
   }
+
+  window.MembershipPlansIntro = { startIntro, pickLang, finishIntro };
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();
