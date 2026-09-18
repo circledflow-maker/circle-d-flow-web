@@ -536,8 +536,10 @@
     // Explicit Login / Registration must show auth UI — never skip to Orbit
     if (p.get('auth') === 'login' || p.get('auth') === 'register') return false;
     if (p.get('orbit') === '0') return false;
-    if (p.get('orbit') === '1' || p.get('view')) return isClaimed(card) || p.get('preview') === '1';
-    return isClaimed(card);
+    // Deep-link preview only — real Orbit entry is gated by member_card.js after session check
+    if (p.get('preview') === '1' && (p.get('orbit') === '1' || p.get('view'))) return true;
+    // Do not auto-enter from localStorage "claimed" alone (blocks mock profile without login)
+    return false;
   }
 
   function init() {

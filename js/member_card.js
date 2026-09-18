@@ -99,10 +99,20 @@
     loginEmail: document.getElementById('wk-login-email'),
     loginPassword: document.getElementById('wk-login-password'),
     loginPanel: document.getElementById('wk-login-panel'),
+    loginMsg: document.getElementById('wk-login-msg'),
     loginBtn: document.getElementById('wk-login-btn'),
     loginGoogleBtn: document.getElementById('wk-login-google-btn'),
+    loginPassWrap: document.getElementById('wk-login-pass-wrap'),
+    loginNewPassWrap: document.getElementById('wk-login-newpass-wrap'),
+    loginNewPass: document.getElementById('wk-login-newpass'),
+    forgotBtn: document.getElementById('wk-forgot-btn'),
+    resetSendBtn: document.getElementById('wk-reset-send-btn'),
+    newPassBtn: document.getElementById('wk-newpass-btn'),
+    forgotCancelBtn: document.getElementById('wk-forgot-cancel-btn'),
+    loginHint: document.getElementById('wk-login-hint'),
     showLoginBtn: document.getElementById('wk-show-login-btn'),
     startRegisterBtn: document.getElementById('wk-start-register-btn'),
+    tierChip: document.getElementById('wk-tier-chip'),
     fieldIg: document.getElementById('field-instagram'),
     fieldOther: document.getElementById('field-other'),
     fieldEmail: document.getElementById('field-email'),
@@ -606,17 +616,161 @@
     }
   }
 
+  function showGuestIdentity() {
+    renderName('', '');
+    renderQr(WAKO_IG);
+    setChips({ claimed: false, memberNumber: '' }, 0);
+    if (els.tierChip) els.tierChip.textContent = 'Bronze · Free';
+  }
+
+  function setAuthGate(on) {
+    document.body.classList.toggle('wk-auth-gate', !!on);
+    document.getElementById('wk-orbit-shell')?.setAttribute('hidden', '');
+    document.getElementById('wk-claim-shell')?.removeAttribute('hidden');
+    document.body.classList.remove('wk-orbit-mode');
+  }
+
+  function setLoginMode(mode) {
+    // mode: login | reset | newpass
+    const isLogin = mode === 'login';
+    const isReset = mode === 'reset';
+    const isNew = mode === 'newpass';
+    if (els.loginPassWrap) els.loginPassWrap.hidden = isReset;
+    if (els.loginNewPassWrap) els.loginNewPassWrap.hidden = !isNew;
+    if (els.loginBtn) els.loginBtn.hidden = !isLogin;
+    if (els.loginGoogleBtn) els.loginGoogleBtn.hidden = !isLogin;
+    if (els.forgotBtn) els.forgotBtn.hidden = !isLogin;
+    if (els.resetSendBtn) els.resetSendBtn.hidden = !isReset;
+    if (els.newPassBtn) els.newPassBtn.hidden = !isNew;
+    if (els.forgotCancelBtn) els.forgotCancelBtn.hidden = isLogin;
+    if (els.loginHint) {
+      els.loginHint.textContent = isNew
+        ? 'Choose a new password (min 6). Then we open your Member Card.'
+        : isReset
+          ? 'Enter your email — we send a secure reset link. Open it, then set a new password here.'
+          : 'Use the email of your Circle profile. Forgot password? Use the reset link.';
+    }
+  }
+
   function showLoginPanel(open) {
     goStep(0, { silent: true });
     if (els.loginPanel) els.loginPanel.hidden = !open;
-    if (open) els.loginEmail?.focus();
+    if (open) {
+      setLoginMode('login');
+      setMsg(els.loginMsg, '', true);
+      els.loginEmail?.focus();
+    }
+  }
+
+  function enterAuthMode(mode) {
+    try {
+      sessionStorage.setItem('cdf_flowee_auth_gate', '1');
+    } catch (_) {}
+    setAuthGate(true);
+    showGuestIdentity();
+    if (mode === 'login') {
+      showLoginPanel(true);
+      speak('Welcome — Log in with email + password (or Google) to open your Member Card. Local drafts stay hidden until you sign in.', 'guide');
+    } else {
+      if (els.loginPanel) els.loginPanel.hidden = true;
+      startRegister();
+      speak('Registration — create your free Bronze Member Card (+EXP). Sign in is required before your profile opens.', 'guide');
+    }
   }
 
   function startRegister() {
     if (els.loginPanel) els.loginPanel.hidden = true;
+    setAuthGate(true);
+    showGuestIdentity();
     goStep(1);
     speak(GUIDE[1], 'guide');
     els.nameInput?.focus();
+  }
+
+  async function sendPasswordReset() {
+    try {
+      await ensureLibs();
+    } catch (_) {}
+    const sc = initSupabaseClient() || window.supabaseClient;
+    if (!sc) {
+      setMsg(els.loginMsg, 'Auth offline — refresh and try again.', false);
+      return;
+    }
+    const email = (els.loginEmail?.value || '').trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setMsg(els.loginMsg, 'Enter your profile email first.', false);
+      els.loginEmail?.focus();
+      return;
+    }
+    setMsg(els.loginMsg, 'Sending reset link…', true);
+    const redirectTo = window.location.origin + '/member-card?auth=login&orbit=0&reset=1';
+    const { error } = await sc.auth.resetPasswordForEmail(email, { redirectTo });
+    if (error) {
+      setMsg(els.loginMsg, error.message || 'Could not send reset link.', false);
+      speak(error.message || 'Reset failed', 'error');
+      return;
+    }
+    setMsg(els.loginMsg, 'Reset link sent — check your email, then return here.', true);
+    speak('Password reset link sent. Open it from your inbox, then set a new password.', 'guide');
+  }
+
+  async function saveNewPassword() {
+    try {
+      await ensureLibs();
+    } catch (_) {}
+    const sc = initSupabaseClient() || window.supabaseClient;
+    if (!sc) {
+      setMsg(els.loginMsg, 'Auth offline — refresh and try again.', false);
+      return;
+    }
+    const password = els.loginNewPass?.value || '';
+    if (password.length < 6) {
+      setMsg(els.loginMsg, 'New password needs at least 6 characters.', false);
+      return;
+    }
+    const { error } = await sc.auth.updateUser({ password });
+    if (error) {
+      setMsg(els.loginMsg, error.message || 'Could not update password.', false);
+      speak(error.message || 'Password update failed', 'error');
+      return;
+    }
+    setMsg(els.loginMsg, 'Password updated. Opening your profile…', true);
+    speak('Password saved. Welcome back.', 'guide');
+    const { card, profile } = await applySessionToCard();
+    setAuthGate(false);
+    if (card.claimed || profile.publicId) {
+      await enterProfileOrbit(card, profile);
+    } else {
+      goStep(card.displayName ? 5 : 1);
+    }
+  }
+
+  async function consumeRecoverySession() {
+    try {
+      await ensureLibs();
+    } catch (_) {}
+    const sc = initSupabaseClient() || window.supabaseClient;
+    if (!sc) return false;
+    const hash = String(window.location.hash || '');
+    const params = new URLSearchParams(window.location.search);
+    const isRecovery =
+      hash.includes('type=recovery') || params.get('reset') === '1' || params.get('type') === 'recovery';
+    if (!isRecovery) return false;
+    // Give Supabase a moment to parse hash tokens
+    for (let i = 0; i < 20; i++) {
+      const { data } = await sc.auth.getSession();
+      if (data?.session) break;
+      await new Promise((r) => setTimeout(r, 50));
+    }
+    try {
+      history.replaceState(null, '', window.location.pathname + '?auth=login&orbit=0&reset=1');
+    } catch (_) {}
+    enterAuthMode('login');
+    setLoginMode('newpass');
+    setMsg(els.loginMsg, 'Reset link accepted — choose your new password.', true);
+    speak('Set a new password to finish recovery.', 'guide');
+    els.loginNewPass?.focus();
+    return true;
   }
 
   async function enterProfileOrbit(card, profile) {
@@ -665,6 +819,7 @@
     } catch (_) { /* ignore */ }
     const sc = initSupabaseClient() || window.supabaseClient;
     if (!sc) {
+      setMsg(els.loginMsg, 'Auth is offline. Refresh once, then try again.', false);
       speak('Auth is offline. Refresh once, then try again.', 'error');
       return;
     }
@@ -681,13 +836,21 @@
       return;
     }
     speak('Signing you in…', 'guide');
+    setMsg(els.loginMsg, 'Signing you in…', true);
     const { error } = await sc.auth.signInWithPassword({ email, password });
     if (error) {
+      setMsg(els.loginMsg, error.message || 'Login failed', false);
       speak(error.message || 'Login failed', 'error');
+      // Stay on auth gate — do not reveal local mock card
+      setAuthGate(true);
+      showGuestIdentity();
       return;
     }
     const { card, profile } = await applySessionToCard();
+    setAuthGate(false);
     if (card.claimed || profile.publicId) {
+      renderName(card.displayName || '', card.memberNumber || '');
+      setChips(card, profile.exp);
       await enterProfileOrbit(card, profile);
       return;
     }
@@ -890,8 +1053,21 @@
     if (els.claimBtn) els.claimBtn.hidden = true;
 
     speak('Card ' + card.memberNumber + ' claimed. Opening your Flow Orbit…', 'guide');
-    setTimeout(() => {
-      if (typeof window.cdfEnterFlowOrbit === 'function') window.cdfEnterFlowOrbit();
+    setTimeout(async () => {
+      const { user } = await sessionJwt();
+      if (user && typeof window.cdfEnterFlowOrbit === 'function') {
+        setAuthGate(false);
+        window.cdfEnterFlowOrbit();
+        return;
+      }
+      // Offline / no session — keep card draft but require login for profile
+      enterAuthMode('login');
+      setMsg(
+        els.loginMsg,
+        'Card saved on this device. Log in to sync EXP and open your profile Orbit.',
+        true
+      );
+      speak('Log in to open your profile Orbit and sync EXP.', 'guide');
     }, 650);
   }
 
@@ -1017,15 +1193,31 @@
 
   // ——— Events ———
   els.showLoginBtn?.addEventListener('click', () => {
-    showLoginPanel(true);
-    speak('Email + password opens your profile Orbit.', 'guide');
+    enterAuthMode('login');
   });
-  els.startRegisterBtn?.addEventListener('click', () => startRegister());
-  els.loginBtn?.addEventListener('click', () => loginWithPassword());
+  els.startRegisterBtn?.addEventListener('click', () => enterAuthMode('register'));
+  document.getElementById('wk-login-form')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!els.newPassBtn?.hidden) saveNewPassword();
+    else if (!els.resetSendBtn?.hidden) sendPasswordReset();
+    else loginWithPassword();
+  });
+  els.loginBtn?.addEventListener('click', (e) => {
+    e.preventDefault();
+    loginWithPassword();
+  });
   els.loginGoogleBtn?.addEventListener('click', () => startGoogleOAuth());
-  els.loginPassword?.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') loginWithPassword();
+  els.forgotBtn?.addEventListener('click', () => {
+    setLoginMode('reset');
+    setMsg(els.loginMsg, '', true);
+    els.loginEmail?.focus();
   });
+  els.forgotCancelBtn?.addEventListener('click', () => {
+    setLoginMode('login');
+    setMsg(els.loginMsg, '', true);
+  });
+  els.resetSendBtn?.addEventListener('click', () => sendPasswordReset());
+  els.newPassBtn?.addEventListener('click', () => saveNewPassword());
 
   document.querySelectorAll('[data-next]').forEach((btn) => {
     btn.addEventListener('click', async () => {
@@ -1107,10 +1299,12 @@
   window.MemberCardFlow = {
     goStep,
     startRegister,
-    showLogin: () => showLoginPanel(true),
+    showLogin: () => enterAuthMode('login'),
     loginWithPassword,
     startGoogleOAuth,
     claimAndEnter,
+    sendPasswordReset,
+    enterAuthMode,
   };
 
   async function boot() {
@@ -1118,37 +1312,19 @@
       await ensureLibs();
     } catch (_) { /* ignore */ }
     const params = new URLSearchParams(window.location.search);
-    const card = loadCard();
+
+    // Password recovery from email link first
+    if (await consumeRecoverySession()) return;
+
     const profile = await readExp();
+    let card = loadCard();
 
-    if (params.get('n') && !card.displayName) {
-      card.displayName = params.get('n');
-      saveCard(card);
-    }
-    if (profile.name && !card.displayName) {
-      card.displayName = profile.name;
-      saveCard(card);
-    }
-    if (profile.publicId) {
-      card.publicId = profile.publicId;
-      card.claimed = true;
-      saveCard(card);
-    }
-    if (profile.email && els.emailInput) els.emailInput.value = profile.email;
-    if (card.displayName && els.nameInput) els.nameInput.value = card.displayName;
-    if ((card.instagram || profile.instagram) && els.igInput) {
-      els.igInput.value = card.instagram || profile.instagram;
-    }
-    if (card.otherContact && els.otherInput) els.otherInput.value = card.otherContact;
-    if (card.contactMethod) state.contact = card.contactMethod;
-
-    if (card.claimed) memberNumber(card);
-    renderName(card.displayName || '', card.memberNumber || '');
-    renderQr(WAKO_IG);
-    setChips(card, profile.exp);
-
-    // Paid return
+    // Paid return (requires prior session typically)
     if (params.get('paid') === '1' && params.get('session_id')) {
+      if (card.claimed) memberNumber(card);
+      renderName(card.displayName || '', card.memberNumber || '');
+      renderQr(WAKO_IG);
+      setChips(card, profile.exp);
       goStep(6, { silent: true });
       speak('Payment return — confirming membership…', 'guide');
       try {
@@ -1170,77 +1346,89 @@
       return;
     }
 
+    // Explicit Login / Registration from Membership sky
+    const authMode = params.get('auth');
+    if (authMode === 'login') {
+      enterAuthMode('login');
+      return;
+    }
+    if (authMode === 'register') {
+      enterAuthMode('register');
+      return;
+    }
+
+    // OAuth return
     if (params.get('oauth') === '1' || params.get('step') === 'issue') {
       const { user } = await sessionJwt();
       if (user) {
+        const applied = await applySessionToCard();
+        card = applied.card;
         if (card.displayName) {
+          renderName(card.displayName, card.memberNumber || '');
+          setChips(card, applied.profile.exp);
           goStep(5);
           speak('Google connected. Claim your card to enter the Sanctuary.', 'guide');
         } else {
+          showGuestIdentity();
           goStep(1);
           speak('Google connected. First — your name on the card.', 'guide');
         }
         return;
       }
+      enterAuthMode('login');
+      return;
     }
 
-    const authMode = params.get('auth');
-    if (authMode === 'login') {
+    // Returning member with real Supabase session
+    if (profile.authed && (card.claimed || profile.publicId || card.displayName)) {
+      const applied = await applySessionToCard();
+      card = applied.card;
+      if (card.claimed) memberNumber(card);
+      renderName(card.displayName || '', card.memberNumber || '');
+      renderQr(WAKO_IG);
+      setChips(card, applied.profile.exp);
       try {
         sessionStorage.setItem('cdf_flowee_auth_gate', '1');
       } catch (_) {}
-      // Ensure Orbit shell stays hidden while logging in
-      document.getElementById('wk-orbit-shell')?.setAttribute('hidden', '');
-      document.getElementById('wk-claim-shell')?.removeAttribute('hidden');
-      document.body.classList.remove('wk-orbit-mode');
-      showLoginPanel(true);
-      speak('Welcome — Log in with email + password (or Google) to open your Member Card.', 'guide');
-      return;
-    }
-    if (authMode === 'register') {
-      try {
-        sessionStorage.setItem('cdf_flowee_auth_gate', '1');
-      } catch (_) {}
-      document.getElementById('wk-orbit-shell')?.setAttribute('hidden', '');
-      document.getElementById('wk-claim-shell')?.removeAttribute('hidden');
-      document.body.classList.remove('wk-orbit-mode');
-      startRegister();
-      speak('Registration — we create your free Bronze Member Card together (+EXP).', 'guide');
-      return;
-    }
-
-    if (card.claimed && profile.authed) {
-      try {
-        sessionStorage.setItem('cdf_flowee_auth_gate', '1');
-      } catch (_) { /* ignore */ }
-      if (typeof window.cdfEnterFlowOrbit === 'function') {
-        window.cdfEnterFlowOrbit();
-        return;
-      }
-      goStep(5, { silent: true });
-      try {
-        const saved = JSON.parse(localStorage.getItem('cdf_member_coupons') || 'null');
-        renderCoupons(saved || card.coupons || DEFAULT_COUPONS);
-      } catch (_) {
-        renderCoupons(DEFAULT_COUPONS);
-      }
-      if (els.afterClaimNav) els.afterClaimNav.hidden = false;
-      if (els.claimBtn) els.claimBtn.hidden = true;
-      speak('Welcome back. Your card and partner codes are ready.', 'guide');
-      return;
-    }
-
-    if (card.claimed) {
-      try {
-        sessionStorage.setItem('cdf_flowee_auth_gate', '1');
-      } catch (_) { /* ignore */ }
-      if (typeof window.cdfEnterFlowOrbit === 'function') {
-        window.cdfEnterFlowOrbit();
+      if (card.claimed || profile.publicId) {
+        if (typeof window.cdfEnterFlowOrbit === 'function') {
+          window.cdfEnterFlowOrbit();
+          return;
+        }
+        goStep(5, { silent: true });
+        try {
+          const saved = JSON.parse(localStorage.getItem('cdf_member_coupons') || 'null');
+          renderCoupons(saved || card.coupons || DEFAULT_COUPONS);
+        } catch (_) {
+          renderCoupons(DEFAULT_COUPONS);
+        }
+        if (els.afterClaimNav) els.afterClaimNav.hidden = false;
+        if (els.claimBtn) els.claimBtn.hidden = true;
+        speak('Welcome back. Your card and partner codes are ready.', 'guide');
         return;
       }
     }
 
+    // Local mock / claimed without session → force login (do not open profile)
+    if (card.claimed && !profile.authed) {
+      enterAuthMode('login');
+      setMsg(
+        els.loginMsg,
+        'A local card draft was found — Log in to open your real Member Card profile.',
+        true
+      );
+      return;
+    }
+
+    // Fresh visitor — blank guest identity + welcome slide
+    showGuestIdentity();
+    if (params.get('n') && !card.displayName) {
+      card.displayName = params.get('n');
+      saveCard(card);
+    }
+    if (profile.email && els.emailInput) els.emailInput.value = profile.email;
     goStep(0, { silent: true });
+    speak('Pick Login if you already have a profile — or Registration for a free Bronze card.', 'guide');
   }
 
   if (document.readyState === 'loading') {

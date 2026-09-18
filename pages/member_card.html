@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
   <noscript><link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
-  <link rel="stylesheet" href="/css/member_card.css?v=20260918auth1">
+  <link rel="stylesheet" href="/css/member_card.css?v=20260918auth2">
   <link rel="preload" as="image" href="/Assets/membership/wako_card_front.webp">
   <link rel="preload" as="image" href="/Assets/membership/wako_card_back.webp">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -100,19 +100,32 @@
               <button type="button" class="wk-btn wk-btn--gold" id="wk-start-register-btn">New here · Register</button>
             </div>
             <div id="wk-login-panel" class="wk-login-panel" hidden>
+              <form id="wk-login-form" action="#" method="post">
+              <div id="wk-login-msg" class="wk-status" hidden></div>
               <div class="wk-field">
                 <label for="wk-login-email">Email</label>
-                <input id="wk-login-email" type="email" autocomplete="email" placeholder="you@email.com">
+                <input id="wk-login-email" name="email" type="email" autocomplete="email" placeholder="you@email.com" required>
               </div>
-              <div class="wk-field">
+              <div class="wk-field" id="wk-login-pass-wrap">
                 <label for="wk-login-password">Password</label>
-                <input id="wk-login-password" type="password" autocomplete="current-password" minlength="6" placeholder="••••••••">
+                <input id="wk-login-password" name="password" type="password" autocomplete="current-password" minlength="6" placeholder="••••••••">
+              </div>
+              <div class="wk-field" id="wk-login-newpass-wrap" hidden>
+                <label for="wk-login-newpass">New password</label>
+                <input id="wk-login-newpass" name="newpassword" type="password" autocomplete="new-password" minlength="6" placeholder="••••••••">
               </div>
               <div class="wk-nav">
-                <button type="button" class="wk-btn wk-btn--gold" id="wk-login-btn">Login · Open profile</button>
+                <button type="submit" class="wk-btn wk-btn--gold" id="wk-login-btn">Login · Open profile</button>
                 <button type="button" class="wk-btn wk-btn--ghost" id="wk-login-google-btn">Google</button>
               </div>
-              <p class="wk-hint">Also: <a href="/login?next=/member-card">/login</a></p>
+              <div class="wk-nav" style="margin-top:0.45rem">
+                <button type="button" class="wk-btn wk-btn--ghost" id="wk-forgot-btn">Forgot password?</button>
+                <button type="button" class="wk-btn wk-btn--cyan" id="wk-reset-send-btn" hidden>Send reset link</button>
+                <button type="button" class="wk-btn wk-btn--gold" id="wk-newpass-btn" hidden>Save new password</button>
+                <button type="button" class="wk-btn wk-btn--ghost" id="wk-forgot-cancel-btn" hidden>Back to login</button>
+              </div>
+              <p class="wk-hint" id="wk-login-hint">Use the email of your Circle profile. Reset sends a secure link to your inbox.</p>
+              </form>
             </div>
           </div>
         </section>
@@ -296,10 +309,10 @@
   <div id="flowee-agent"></div>
 
   <!-- Heavy scripts deferred; supabase + qrcode loaded on demand by member_card.js -->
-  <script src="/js/data/cdf_i18n.js?v=20260918auth1" defer></script>
-  <script src="/js/agents/flowee.js?v=20260918auth1" defer></script>
-  <script src="/js/agents/flowee_member_card_guide.js?v=20260918auth1" defer></script>
-  <script src="/js/member_card.js?v=20260918auth1" defer></script>
-  <script src="/js/flow_orbit.js?v=20260918auth1" defer></script>
+  <script src="/js/data/cdf_i18n.js?v=20260918auth2" defer></script>
+  <script src="/js/agents/flowee.js?v=20260918auth2" defer></script>
+  <script src="/js/agents/flowee_member_card_guide.js?v=20260918auth2" defer></script>
+  <script src="/js/member_card.js?v=20260918auth2" defer></script>
+  <script src="/js/flow_orbit.js?v=20260918auth2" defer></script>
 </body>
 </html>

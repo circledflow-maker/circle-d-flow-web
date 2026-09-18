@@ -263,14 +263,17 @@
       setStage('dock');
       showBenefitsPanel(false);
       setTimeout(() => {
-        if (auth === 'login') startLoginPath();
+        if (window.MemberCardFlow?.enterAuthMode) {
+          window.MemberCardFlow.enterAuthMode(auth);
+        } else if (auth === 'login') startLoginPath();
         else startRegisterPath();
-      }, 600);
+      }, 500);
       return;
     }
 
     try {
       const card = JSON.parse(localStorage.getItem('cdf_wako_member_card') || '{}');
+      // Do not skip auth when only a local claimed draft exists
       if (card.claimed && typeof window.cdfEnterFlowOrbit === 'function') {
         const seen = sessionStorage.getItem('cdf_flowee_auth_gate');
         if (seen === '1') {

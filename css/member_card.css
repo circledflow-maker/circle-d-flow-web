@@ -285,6 +285,28 @@ body.wk-card-page {
 .wk-login-panel .wk-nav { margin-top: 0.55rem; }
 .wk-login-panel a { color: var(--wk-cyan); }
 
+/* Auth gate: hide claimed/mock identity until a real session exists */
+body.wk-auth-gate .wk-ben-actions,
+body.wk-auth-gate .wk-benefits {
+  display: none !important;
+}
+body.wk-auth-gate #wk-card-stage {
+  opacity: 0.28;
+  filter: blur(2px) saturate(0.7);
+  pointer-events: none;
+  transform: scale(0.98);
+}
+body.wk-auth-gate .wk-meta .wk-chip strong {
+  color: rgba(244, 239, 230, 0.55);
+}
+body.wk-auth-gate .wk-deck {
+  position: relative;
+  z-index: 3;
+}
+body.wk-auth-gate #wk-guide {
+  color: var(--wk-cyan, #3de0ff);
+}
+
 /* Intro: keep first viewport clean until auth gate resolves */
 body.wk-intro-dim .wk-benefits,
 body.wk-intro-dim .wk-ben-actions {
