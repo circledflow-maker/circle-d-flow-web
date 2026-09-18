@@ -36,6 +36,13 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          # npm install may dirty package-lock; do not commit it from sync
+          git checkout -- package-lock.json 2>/dev/null || true
+          git restore --staged package-lock.json 2>/dev/null || true
+          if git diff --quiet -- js/data/akademie_data.js; then
+            echo "No akademie_data.js changes — skip commit"
+            exit 0
+          fi
           git add js/data/akademie_data.js
-          git diff-index --quiet HEAD || git commit -m "Automated Google Drive Sync [skip ci]"
+          git commit -m "Automated Google Drive Sync [skip ci]"
           git push
