@@ -235,14 +235,14 @@
   flex-direction: column;
   justify-content: flex-end;
 }
-.mp-cine-video {
+.mp-cine-veil {
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  background: #05080f;
-  z-index: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 80% 55% at 50% 15%, rgba(61, 224, 255, 0.12), transparent 55%),
+    linear-gradient(180deg, rgba(5, 8, 15, 0.15) 0%, transparent 28%, rgba(5, 8, 15, 0.55) 70%, rgba(5, 8, 15, 0.92) 100%);
 }
 .mp-cine-main {
   position: absolute;
@@ -251,16 +251,20 @@
   height: 100%;
   object-fit: cover;
   transform: scale(1.06);
-  animation: mpKen 8s ease-in-out infinite alternate;
+  animation: mpKen 7s ease-in-out infinite alternate;
   z-index: 0;
+  opacity: 1;
+  transition: opacity 0.55s ease;
 }
-.mp-cine-main[hidden] { display: none !important; }
+.mp-cine-main.is-swap {
+  opacity: 0.35;
+}
 .mp-flowee-line {
   position: relative;
   z-index: 3;
   margin: 0;
   padding: 0.55rem 1.15rem 0.25rem;
-  font-size: 0.92rem;
+  font-size: 0.95rem;
   line-height: 1.55;
   color: var(--wk-cyan);
   letter-spacing: 0.02em;
