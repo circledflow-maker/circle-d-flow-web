@@ -13,13 +13,32 @@
       gate_confirm: 'Confirm · Continue',
       gate_confirm_need: 'Select a language first.',
       flowee_hi:
-        'Akwaaba — welcome. You are in Membership: the Circle D Flow × Wako Kungo gate for your Member Card, plans, and partners.',
+        'Akwaaba, navigator — I am Flowee. Soft welcome: you arrived in a good place.',
       flowee_lines: [
-        { t: 0, text: 'You are here: Membership. I am Flowee, your guide in this space.' },
-        { t: 5, text: 'Log in opens your existing Member Card and Flow Orbit.' },
-        { t: 10, text: 'Registration starts your free Bronze card (+EXP) — no payment needed.' },
-        { t: 15, text: 'About us and Partner system explain Circle D Flow, Wako Kungo, and perks.' },
-        { t: 20, text: 'Silver and Gold are optional upgrades — only when you are ready.' },
+        {
+          t: 0,
+          text: 'Akwaaba. I am Flowee — glad you are here. Take a breath; I will guide you gently.',
+        },
+        {
+          t: 7,
+          text: 'Right now you stand in Membership: the door to your Wako Kungo Member Card, plans, and partner perks.',
+        },
+        {
+          t: 15,
+          text: 'This is Circle D Flow × Wako Kungo — a Lisbon culture community. Artists, audiences, and city spaces meet through presence and play.',
+        },
+        {
+          t: 24,
+          text: 'Our purpose is simple: build bridges, share the Flow, and turn real nights in Lisbon into belonging — with EXP, Sanctuary, and fair exchange.',
+        },
+        {
+          t: 34,
+          text: 'Free Bronze is enough to begin — no payment. Log in if you already walk with us; Registration if this is your first step.',
+        },
+        {
+          t: 43,
+          text: 'Curious first? Open About us or Partner system. I stay with you here until you choose.',
+        },
       ],
       login: 'Log in',
       register: 'Registration',
@@ -100,13 +119,32 @@
       gate_confirm: 'Confirmar · Continuar',
       gate_confirm_need: 'Escolhe um idioma primeiro.',
       flowee_hi:
-        'Akwaaba — bem-vindo/a. Estás em Membership: o portal Circle D Flow × Wako Kungo para o teu Member Card, planos e parceiros.',
+        'Akwaaba, navigator — sou a Flowee. Boas-vindas suaves: chegaste a um bom lugar.',
       flowee_lines: [
-        { t: 0, text: 'Estás aqui: Membership. Sou a Flowee, a tua guia neste espaço.' },
-        { t: 5, text: 'Log in abre o teu Member Card e Flow Orbit existentes.' },
-        { t: 10, text: 'Registo começa o cartão Bronze grátis (+EXP) — sem pagamento.' },
-        { t: 15, text: 'Sobre nós e Parceiros explicam o Circle, Wako Kungo e os benefícios.' },
-        { t: 20, text: 'Silver e Gold são upgrades opcionais — só quando quiseres.' },
+        {
+          t: 0,
+          text: 'Akwaaba. Sou a Flowee — fico feliz por estares aqui. Respira; guio-te com calma.',
+        },
+        {
+          t: 7,
+          text: 'Agora estás em Membership: a porta para o teu Member Card Wako Kungo, planos e benefícios de parceiros.',
+        },
+        {
+          t: 15,
+          text: 'Isto é Circle D Flow × Wako Kungo — comunidade cultural em Lisboa. Artistas, públicos e espaços da cidade encontram-se na presença e no jogo.',
+        },
+        {
+          t: 24,
+          text: 'O propósito é simples: construir pontes, partilhar o Flow, e transformar noites reais em Lisboa em pertença — com EXP, Santuário e troca justa.',
+        },
+        {
+          t: 34,
+          text: 'Bronze grátis chega para começar — sem pagamento. Log in se já caminhas connosco; Registo se é o teu primeiro passo.',
+        },
+        {
+          t: 43,
+          text: 'Curioso primeiro? Abre Sobre nós ou Sistema de parceiros. Fico contigo aqui até escolheres.',
+        },
       ],
       login: 'Log in',
       register: 'Registo',
@@ -186,13 +224,32 @@
       gate_confirm: 'Bestätigen · Weiter',
       gate_confirm_need: 'Bitte zuerst eine Sprache wählen.',
       flowee_hi:
-        'Akwaaba — willkommen. Du bist in Membership: dem Circle D Flow × Wako Kungo Tor für Member Card, Pläne und Partner.',
+        'Akwaaba, Navigator — ich bin Flowee. Sanfte Willkommensgrüße: du bist an einem guten Ort angekommen.',
       flowee_lines: [
-        { t: 0, text: 'Du bist hier: Membership. Ich bin Flowee, dein Guide in diesem Raum.' },
-        { t: 5, text: 'Log in öffnet deine bestehende Member Card und Flow Orbit.' },
-        { t: 10, text: 'Registration startet die Free Bronze Card (+EXP) — ohne Zahlung.' },
-        { t: 15, text: 'About us und Partner system erklären Circle, Wako Kungo und Perks.' },
-        { t: 20, text: 'Silver und Gold sind optionale Upgrades — erst wenn du bereit bist.' },
+        {
+          t: 0,
+          text: 'Akwaaba. Ich bin Flowee — schön, dass du da bist. Atme kurz durch; ich führe dich ruhig.',
+        },
+        {
+          t: 7,
+          text: 'Gerade stehst du in Membership: der Tür zu deiner Wako Kungo Member Card, Plänen und Partner-Perks.',
+        },
+        {
+          t: 15,
+          text: 'Das ist Circle D Flow × Wako Kungo — eine Kultur-Community in Lissabon. Artists, Publikum und Stadträume treffen sich durch Präsenz und Play.',
+        },
+        {
+          t: 24,
+          text: 'Unser Zweck ist einfach: Brücken bauen, den Flow teilen und echte Nächte in Lissabon zu Zugehörigkeit machen — mit EXP, Sanctuary und fairem Tausch.',
+        },
+        {
+          t: 34,
+          text: 'Free Bronze reicht zum Start — ohne Zahlung. Log in, wenn du schon mitgehst; Registration für den ersten Schritt.',
+        },
+        {
+          t: 43,
+          text: 'Erst neugierig? Öffne About us oder Partner system. Ich bleibe hier bei dir, bis du wählst.',
+        },
       ],
       login: 'Log in',
       register: 'Registration',
