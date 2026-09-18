@@ -7,17 +7,17 @@
   <meta name="description" content="Bronze, Silver, Gold — Flowee intro, Wako Kungo Lisbon culture, Circle D Flow values, plans, Q&A and DATEV-ready policy.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/member_card.css?v=20260918live">
-  <link rel="stylesheet" href="/css/membership_plans.css?v=20260918live">
+  <link rel="stylesheet" href="/css/member_card.css?v=20260918sky2">
+  <link rel="stylesheet" href="/css/membership_plans.css?v=20260918sky2">
 </head>
 <body class="wk-card-page mp-page mp-landing mp-phase-gate">
 
-  <!-- Flowee gate: language → cinematic -->
+  <!-- Flowee gate: language → floating sky intro -->
   <div id="mp-gate" class="mp-gate" role="dialog" aria-label="Flowee welcome">
     <div class="mp-gate-card">
       <p class="mp-gate-kicker">Flowee</p>
       <h1 class="mp-gate-title" id="mp-gate-title">Welcome, navigator.</h1>
-      <p class="mp-gate-lead" id="mp-gate-lead">We are glad you are on this journey with us. Choose a language — then a short cinematic shows what lives behind Membership.</p>
+      <p class="mp-gate-lead" id="mp-gate-lead">We are glad you walk this journey with us. Pick a language, confirm — then Flowee greets you in the sky.</p>
       <div class="mp-lang" role="group" aria-label="Language">
         <button type="button" class="mp-lang-btn" data-lang="pt" aria-pressed="false">Português</button>
         <button type="button" class="mp-lang-btn" data-lang="en" aria-pressed="false">English</button>
@@ -29,30 +29,51 @@
     </div>
   </div>
 
-  <!-- Cinematic intro: Member Card + Lisbon moments + Flowee (no reel) -->
+  <!-- Sky intro: Flowee floats center until Login / Registration -->
   <div id="mp-intro" class="mp-intro" hidden>
-    <div class="mp-cine" id="mp-cine">
-      <div class="mp-cine-veil" aria-hidden="true"></div>
-      <img id="mp-cine-main" class="mp-cine-main" alt="" src="/Assets/membership/wako_card_front.webp">
-      <div class="mp-pip" id="mp-pip" hidden>
-        <img id="mp-pip-img" alt="Lisbon moment" src="/Assets/membership/intro/pip_viv_01.png">
-        <span class="mp-pip-label" id="mp-pip-label">Lisbon</span>
+    <div class="mp-sky" id="mp-sky" aria-hidden="true">
+      <canvas id="mp-sky-canvas" class="mp-sky-canvas"></canvas>
+      <div class="mp-sky-glow"></div>
+      <div class="mp-sky-clouds"></div>
+    </div>
+
+    <div class="mp-flowee-stage" id="mp-flowee-stage">
+      <div class="mp-flowee-orbit" aria-hidden="true"></div>
+      <div class="mp-flowee-hero" id="mp-flowee-hero">
+        <img src="/Assets/images/flowee.png" alt="Flowee" class="mp-flowee-img" width="160" height="160">
       </div>
-      <div class="mp-flowee-line" id="mp-flowee-line" role="status">Flowee guides this short intro.</div>
-      <div class="mp-cine-caption">
-        <p id="mp-cine-line">Your Wako Member Card — free Bronze is enough to enter.</p>
-      </div>
-      <div class="mp-cine-cta" id="mp-cine-cta" hidden aria-hidden="true">
-        <span>Follow</span>
-        <span>Join</span>
-        <span>Support</span>
-      </div>
-      <div class="mp-cine-actions">
+      <p class="mp-flowee-kicker">Flowee</p>
+      <p class="mp-flowee-line" id="mp-flowee-line" role="status">Akwaaba. I am Flowee — your guide in Membership.</p>
+    </div>
+
+    <div class="mp-intro-panels">
+      <aside class="mp-intro-panel" id="mp-panel-about" hidden>
+        <h2 data-i18n="about_title">About us</h2>
+        <p data-i18n="about_p1">Circle D Flow turns Lisbon into a living culture-tech RPG.</p>
+        <p data-i18n="about_p2">Wako Kungo builds bridges between artists, audiences, and city spaces.</p>
+        <button type="button" class="wk-btn wk-btn--ghost mp-panel-close" data-close-panel="about">Close</button>
+      </aside>
+      <aside class="mp-intro-panel" id="mp-panel-partners" hidden>
+        <h2 data-i18n="partners_title">Partner system</h2>
+        <p data-i18n="partners_lead">Member perks redeem with partners in the Circle. Free Bronze unlocks the path; Silver/Gold add coupons and guest access.</p>
+        <div class="mp-partner-links">
+          <a class="wk-btn wk-btn--ghost" href="https://linktr.ee/wako.kungo" target="_blank" rel="noopener">Wako Linktree</a>
+          <a class="wk-btn wk-btn--ghost" href="https://humble-project.com/" target="_blank" rel="noopener">Humble.project</a>
+          <a class="wk-btn wk-btn--ghost" href="https://www.kreativlon.shop" target="_blank" rel="noopener">Kreativlon.art</a>
+        </div>
+        <button type="button" class="wk-btn wk-btn--ghost mp-panel-close" data-close-panel="partners">Close</button>
+      </aside>
+    </div>
+
+    <div class="mp-sky-actions" role="group" aria-label="Membership actions">
+      <div class="mp-sky-actions-primary">
         <button type="button" class="wk-btn wk-btn--cyan" id="mp-intro-login">Log in</button>
         <button type="button" class="wk-btn wk-btn--gold" id="mp-intro-register">Registration</button>
-        <button type="button" class="wk-btn wk-btn--ghost" id="mp-intro-skip">Skip intro</button>
       </div>
-      <div class="mp-cine-progress"><span id="mp-cine-bar"></span></div>
+      <div class="mp-sky-actions-secondary">
+        <button type="button" class="wk-btn wk-btn--ghost" id="mp-intro-about">About us</button>
+        <button type="button" class="wk-btn wk-btn--ghost" id="mp-intro-partners">Partner system</button>
+      </div>
     </div>
   </div>
 
@@ -149,6 +170,16 @@
       </ul>
     </section>
 
+    <section class="mp-panel" id="mp-partners">
+      <h2 data-i18n="partners_title">Partner system</h2>
+      <p data-i18n="partners_lead">Member perks redeem with partners in the Circle. Free Bronze unlocks the path; Silver/Gold add coupons and guest access.</p>
+      <div class="mp-partner-links">
+        <a class="wk-btn wk-btn--ghost" href="https://linktr.ee/wako.kungo" target="_blank" rel="noopener">Wako Linktree</a>
+        <a class="wk-btn wk-btn--ghost" href="https://humble-project.com/" target="_blank" rel="noopener">Humble.project</a>
+        <a class="wk-btn wk-btn--ghost" href="https://www.kreativlon.shop" target="_blank" rel="noopener">Kreativlon.art</a>
+      </div>
+    </section>
+
     <section class="mp-panel" id="mp-qa">
       <h2 data-i18n="qa_title">Q &amp; A</h2>
       <details class="mp-qa">
@@ -198,8 +229,8 @@
 
   <div id="flowee-agent"></div>
   <script src="/js/cdf_runtime_config.js"></script>
-  <script src="/js/data/cdf_i18n.js?v=20260918live" defer></script>
-  <script src="/js/agents/flowee.js?v=20260918live" defer></script>
-  <script src="/js/membership_plans.js?v=20260918live" defer></script>
+  <script src="/js/data/cdf_i18n.js?v=20260918sky2" defer></script>
+  <script src="/js/agents/flowee.js?v=20260918sky2" defer></script>
+  <script src="/js/membership_plans.js?v=20260918sky2" defer></script>
 </body>
 </html>
