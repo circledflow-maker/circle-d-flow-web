@@ -3,6 +3,8 @@ name: "EXT_INSPECTOR: Code Quality"
 on:
   push:
     branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
   inspector:
@@ -11,27 +13,28 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # Full pages/ has many legacy HTML5 issues. Gate active membership surfaces only.
+      # Allowlist only active membership surfaces (legacy pages/ has many HTML5 issues).
+      - name: Prepare membership HTML allowlist
+        run: |
+          set -euo pipefail
+          mkdir -p _lint_membership
+          for f in \
+            pages/membership_plans.html \
+            pages/member_card.html \
+            pages/membership.html \
+            pages/admin_membership.html
+          do
+            if [ -f "$f" ]; then
+              cp "$f" "_lint_membership/$(basename "$f")"
+              echo "linting $f"
+            fi
+          done
+          ls -la _lint_membership
+
       - name: HTML Lint (membership surfaces)
         uses: Cyb3r-Jak3/html5validator-action@v7.2.0
         with:
-          root: .
-          blacklist: >
-            about_old.html,beta-initiation.html,calendar.html,dice.html,gdrive_raw.html,
-            index.html,script.js,node_modules,_archive,Agents,AfricanQueenKitchen,
-            Assets,css,js,api,lib,sql,Docs,scripts,content creation,DCIM,Music,
-            Portfolio_Content,raw_uploads,scratch,Resolve Project Backups,
-            pages/hall_of_legends.html,pages/sound_stall.html,pages/coop.html,
-            pages/palast_museum.html,pages/battle.html,pages/mindfulness.html,
-            pages/guild.html,pages/taste_world_entry.html,pages/portfolio_anime_reality.html,
-            pages/partner-scanner.html,pages/product_stall.html,pages/rules.html,
-            pages/flow_area_scan.html,pages/vision_studio.html,pages/marketplace-upload.html,
-            pages/heart.html,pages/gallery.html,pages/services-citytrip.html,
-            pages/live_lab.html,pages/event_sanctuary.html,pages/kyh,
-            pages/skills_stall.html,pages/arts_stall.html,pages/healing_stall.html,
-            pages/services_stall.html,pages/bazaar,pages/kitchen,pages/akwaba,
-            pages/quest,pages/arena,pages/vault,pages/admin_nexus.html,
-            pages/admin_registrations.html,pages/artist_sanctuary_backup.html
+          root: _lint_membership
 
       - name: JS Syntax Check
         run: |

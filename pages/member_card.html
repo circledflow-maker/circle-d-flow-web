@@ -13,7 +13,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
   <noscript><link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
   <link rel="stylesheet" href="/css/member_card.css?v=20260918b">
-  <link rel="preload" as="image" href="/Assets/membership/wako_card_front.webp" fetchpriority="high">
+  <link rel="preload" as="image" href="/Assets/membership/wako_card_front.webp">
   <link rel="preload" as="image" href="/Assets/membership/wako_card_back.webp">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="/js/cdf_runtime_config.js"></script>
@@ -75,7 +75,7 @@
 
     <div class="wk-stage" aria-label="Membership card" id="wk-card-stage">
       <div class="wk-card" id="wk-card" role="button" tabindex="0" aria-label="Flip membership card">
-        <div class="wk-face wk-face--front" title="Wako Kungo Emblem" fetchpriority="high"></div>
+        <div class="wk-face wk-face--front" title="Wako Kungo Emblem"></div>
         <div class="wk-face wk-face--back">
           <div class="wk-name-slot is-empty" id="wk-member-name">
             <span id="wk-name-text">Your name here</span>
@@ -102,7 +102,7 @@
             <div id="wk-login-panel" class="wk-login-panel" hidden>
               <div class="wk-field">
                 <label for="wk-login-email">Email</label>
-                <input id="wk-login-email" type="email" autocomplete="username" placeholder="you@email.com">
+                <input id="wk-login-email" type="email" autocomplete="email" placeholder="you@email.com">
               </div>
               <div class="wk-field">
                 <label for="wk-login-password">Password</label>
