@@ -392,11 +392,12 @@ body.mp-phase-intro #flowee-agent {
 .mp-sky-actions {
   position: relative;
   z-index: 5;
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.55rem;
-  padding: 0.85rem 1rem calc(1.15rem + env(safe-area-inset-bottom, 0px));
+  padding: 0.85rem 1rem calc(1.35rem + env(safe-area-inset-bottom, 0px));
   background: linear-gradient(transparent, rgba(4, 8, 18, 0.92) 35%);
 }
 .mp-sky-actions-primary,
@@ -405,11 +406,14 @@ body.mp-phase-intro #flowee-agent {
   flex-wrap: wrap;
   justify-content: center;
   gap: 0.55rem;
+  width: 100%;
+  max-width: 28rem;
 }
 .mp-sky-actions .wk-btn {
   font-size: 0.92rem;
   padding: 0.7rem 1rem;
   min-width: 8.5rem;
+  flex: 1 1 auto;
 }
 
 @media (min-width: 720px) {
