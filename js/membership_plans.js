@@ -1,11 +1,13 @@
 /**
- * Membership plans — Flowee language → cinematic intro (portraits + card proto) → plans
- * PiP 1–4s uses lifestyle portraits only (not membership UI screenshots).
+ * Membership plans — Flowee language → Confirm → Lapa71 ViV reel intro → plans
+ * Reel: Assets/membership/intro/lapa71_moodboard_viv_9x16.mp4
+ * (export from D:\...\Lapa71_Moodboard_ViV_35s_KissYourHeart_9x16.mp4 via scripts/lapa71_viv_pip_cta.py)
  */
 (function () {
   const LANG_KEY = 'cdf_lang';
+  const REEL_SRC = '/Assets/membership/intro/lapa71_moodboard_viv_9x16.mp4';
 
-  // Main cinematic: card prototype + Lisbon / Wako portraits
+  // Fallback stills if video cannot play
   const CINE = [
     '/Assets/membership/wako_card_front.webp',
     '/Assets/membership/intro/cine_01_cafe.png',
@@ -15,7 +17,6 @@
     '/Assets/membership/intro/cine_05_lapa71.png',
   ];
 
-  // Video-in-video 1–4s: Stories portraits only (not membership UI)
   const PIP = [
     { src: '/Assets/membership/intro/pip_viv_01.png', label: 'Lisbon' },
     { src: '/Assets/membership/intro/pip_viv_02.png', label: 'Sound' },
@@ -28,20 +29,32 @@
     en: {
       gate_title: 'Welcome, navigator.',
       gate_lead:
-        'We are glad you walk this journey with us. Pick a language, confirm — then a short cinematic opens Membership: card, culture, values.',
+        'We are glad you walk this journey with us. Pick a language, confirm — then Flowee plays a short Lapa71 cinematic and explains Membership.',
       gate_confirm: 'Confirm · Continue',
       gate_confirm_need: 'Select a language first.',
+      flowee_hi:
+        'Akwaaba. I am Flowee. This short reel is Lapa71 — real Lisbon culture behind Circle D Flow. Skip anytime for Log in or Registration.',
+      flowee_lines: [
+        { t: 0, text: 'This is the mood of Wako nights — tables, stages, people who show up.' },
+        { t: 4, text: 'Membership starts free: Bronze Member Card, Sanctuary, Orbit alerts, +EXP.' },
+        { t: 9, text: 'Silver and Gold are optional support — venues, artists, partners stay alive.' },
+        { t: 14, text: 'Kiss your heart · share the Flow · fair exchange. Follow · Join · Support.' },
+        { t: 19, text: 'Ready? Log in if you already walk with us — or Register for your free card.' },
+      ],
       cine: [
-        'Your Wako Member Card prototype — free Bronze is enough to enter.',
-        'Lisbon tables · real stages · real people behind the Circle.',
-        'Music without borders — handpan, guitar, voice in the Flow.',
-        'Joy on the journey — we are happy you are here.',
-        'Goals: bridges between artists, audiences, and the city.',
-        'Values: kiss your heart · share the Flow · fair exchange.',
+        'Lapa71 moodboard — Lisbon culture behind Membership.',
+        'Real stages · real people · Circle D Flow.',
+        'Free Bronze card · Sanctuary · Orbit.',
+        'Optional Silver / Gold keeps nights alive.',
+        'Values: kiss your heart · share the Flow.',
+        'Follow · Join · Support — Log in or Register when ready.',
       ],
       cta_follow: 'Follow',
       cta_join: 'Join',
       cta_support: 'Support',
+      skip_hint: 'Skip intro',
+      login: 'Log in',
+      register: 'Registration',
       title: 'Membership plans',
       lead: 'Bronze is free and enough for Sanctuary. Silver and Gold keep Wako nights and partners alive — thank you for walking with us.',
       now_title: 'What you can do now',
@@ -106,26 +119,36 @@
       p5: 'GDPR — Contract, legitimate interest, consent for cookies/notifications. Rights: access, erasure, portability, complaint.',
       p6: 'Fair use — Benefit QR personal, one scan, monthly refill. Abuse may pause perks without deleting EXP.',
       p7: 'Processors — Stripe, Supabase, Vercel. No sale of personal data.',
-      flowee_hi:
-        'Language locked. Cinematic starts — Member Card + Lisbon moments. Skip anytime. Log in or Register when ready.',
     },
     pt: {
       gate_title: 'Bem-vindo/a, navigator.',
       gate_lead:
-        'Ficamos felizes por caminhares connosco. Escolhe o idioma, confirma — depois um cinematic abre a Membership: cartão, cultura, valores.',
+        'Ficamos felizes por caminhares connosco. Escolhe o idioma, confirma — a Flowee mostra um cinematic Lapa71 e explica a Membership.',
       gate_confirm: 'Confirmar · Continuar',
       gate_confirm_need: 'Escolhe um idioma primeiro.',
+      flowee_hi:
+        'Akwaaba. Sou a Flowee. Este reel é Lapa71 — cultura real de Lisboa no Circle D Flow. Podes saltar para Login ou Registo.',
+      flowee_lines: [
+        { t: 0, text: 'Este é o mood das noites Wako — mesas, palcos, pessoas que aparecem.' },
+        { t: 4, text: 'Membership começa grátis: cartão Bronze, Santuário, Orbit, +EXP.' },
+        { t: 9, text: 'Silver e Gold são apoio opcional — venues, artistas, parceiros.' },
+        { t: 14, text: 'Kiss your heart · partilhar o Flow · troca justa. Follow · Join · Support.' },
+        { t: 19, text: 'Pronto? Login se já caminhas connosco — ou Registo para o cartão grátis.' },
+      ],
       cine: [
-        'Protótipo do teu Wako Member Card — Bronze grátis chega para entrar.',
-        'Mesas de Lisboa · palcos reais · pessoas reais no Circle.',
-        'Música sem fronteiras — handpan, guitarra, voz no Flow.',
-        'Alegria na jornada — estamos felizes por estares aqui.',
-        'Objetivos: pontes entre artistas, públicos e a cidade.',
-        'Valores: kiss your heart · partilhar o Flow · troca justa.',
+        'Moodboard Lapa71 — cultura de Lisboa na Membership.',
+        'Palcos reais · pessoas reais · Circle D Flow.',
+        'Cartão Bronze grátis · Santuário · Orbit.',
+        'Silver / Gold opcional mantém as noites vivas.',
+        'Valores: kiss your heart · partilhar o Flow.',
+        'Follow · Join · Support — Login ou Registo quando quiseres.',
       ],
       cta_follow: 'Follow',
       cta_join: 'Join',
       cta_support: 'Support',
+      skip_hint: 'Saltar intro',
+      login: 'Log in',
+      register: 'Registo',
       title: 'Planos de membership',
       lead: 'Bronze é grátis e chega para o Santuário. Silver e Gold mantêm as noites Wako vivas — obrigado por estares connosco.',
       now_title: 'O que podes fazer agora',
@@ -189,26 +212,36 @@
       p5: 'RGPD — contrato, interesse legítimo, consentimento. Direitos de acesso, apagamento, portabilidade.',
       p6: 'Uso justo — QR pessoal, um scan, refill mensal.',
       p7: 'Processadores — Stripe, Supabase, Vercel. Sem venda de dados.',
-      flowee_hi:
-        'Idioma definido. Cinematic — Member Card + momentos de Lisboa. Podes saltar. Login ou Registo quando quiseres.',
     },
     de: {
       gate_title: 'Willkommen, Navigator.',
       gate_lead:
-        'Schön, dass du uns auf der Reise begleitest. Sprache wählen, bestätigen — dann öffnet ein kurzes Cinematic Membership: Karte, Kultur, Values.',
+        'Schön, dass du uns auf der Reise begleitest. Sprache wählen, bestätigen — Flowee spielt ein kurzes Lapa71-Cinematic und erklärt Membership.',
       gate_confirm: 'Bestätigen · Weiter',
       gate_confirm_need: 'Bitte zuerst eine Sprache wählen.',
+      flowee_hi:
+        'Akwaaba. Ich bin Flowee. Dieses Reel ist Lapa71 — echte Lisbon-Kultur hinter Circle D Flow. Skip jederzeit für Login oder Registration.',
+      flowee_lines: [
+        { t: 0, text: 'Das ist der Mood der Wako-Nächte — Tische, Stages, Menschen die kommen.' },
+        { t: 4, text: 'Membership startet gratis: Bronze Member Card, Sanctuary, Orbit, +EXP.' },
+        { t: 9, text: 'Silver und Gold sind optionaler Support — Venues, Artists, Partner.' },
+        { t: 14, text: 'Kiss your heart · Flow teilen · fairer Austausch. Follow · Join · Support.' },
+        { t: 19, text: 'Bereit? Login wenn du schon dabei bist — oder Registration für die Free Card.' },
+      ],
       cine: [
-        'Dein Wako-Member-Card-Prototype — Free Bronze reicht zum Einstieg.',
-        'Lisbon tables · echte Stages · echte Menschen hinter dem Circle.',
-        'Musik ohne Grenzen — Handpan, Gitarre, Stimme im Flow.',
-        'Freude auf der Reise — wir freuen uns, dass du da bist.',
-        'Ziele: Brücken zwischen Artists, Publikum und Stadt.',
-        'Values: Kiss your heart · Flow teilen · fairer Austausch.',
+        'Lapa71 Moodboard — Lisbon-Kultur hinter Membership.',
+        'Echte Stages · echte Menschen · Circle D Flow.',
+        'Free Bronze Card · Sanctuary · Orbit.',
+        'Optional Silver / Gold hält Nächte am Leben.',
+        'Values: Kiss your heart · Flow teilen.',
+        'Follow · Join · Support — Login oder Registration.',
       ],
       cta_follow: 'Follow',
       cta_join: 'Join',
       cta_support: 'Support',
+      skip_hint: 'Intro überspringen',
+      login: 'Log in',
+      register: 'Registration',
       title: 'Membership-Pläne',
       lead: 'Bronze ist kostenlos und reicht für die Sanctuary. Silver und Gold halten Wako-Nächte am Leben — danke, dass du dabei bist.',
       now_title: 'Was du jetzt tun kannst',
@@ -273,15 +306,15 @@
       p5: 'DSGVO — Vertrag, berechtigtes Interesse, Einwilligung. Rechte: Auskunft, Löschung, Portabilität, Beschwerde.',
       p6: 'Fair Use — Benefit-QR persönlich, ein Scan, monatlicher Refill.',
       p7: 'Auftragsverarbeiter — Stripe, Supabase, Vercel. Kein Verkauf personenbezogener Daten.',
-      flowee_hi:
-        'Sprache steht. Cinematic startet — Member Card + Lisbon Moments. Skip jederzeit. Login oder Registration, wann du bereit bist.',
     },
   };
 
   let lang = 'en';
   let introTimer = null;
   let introStart = 0;
-  const INTRO_MS = 14000;
+  let useVideo = true;
+  let lastFloweeIdx = -1;
+  const FALLBACK_INTRO_MS = 20000;
 
   function t(key) {
     return (I18N[lang] && I18N[lang][key]) || I18N.en[key] || key;
@@ -316,8 +349,13 @@
     const confirmBtn = document.getElementById('mp-lang-confirm');
     if (gateTitle) gateTitle.textContent = t('gate_title');
     if (gateLead) gateLead.textContent = t('gate_lead');
-    if (confirmBtn && !confirmBtn.disabled) confirmBtn.textContent = t('gate_confirm');
-    else if (confirmBtn) confirmBtn.textContent = t('gate_confirm');
+    if (confirmBtn) confirmBtn.textContent = t('gate_confirm');
+    const skip = document.getElementById('mp-intro-skip');
+    const login = document.getElementById('mp-intro-login');
+    const register = document.getElementById('mp-intro-register');
+    if (skip) skip.textContent = t('skip_hint');
+    if (login) login.textContent = t('login');
+    if (register) register.textContent = t('register');
   }
 
   let pendingLang = null;
@@ -433,63 +471,133 @@
     pip.hidden = false;
   }
 
-  function tickIntro() {
-    const elapsed = Date.now() - introStart;
-    const p = Math.min(1, elapsed / INTRO_MS);
-    const bar = document.getElementById('mp-cine-bar');
-    if (bar) bar.style.width = p * 100 + '%';
-
-    const sec = elapsed / 1000;
-    const mainIdx = Math.min(CINE.length - 1, Math.floor(sec / 2.3));
-    const main = document.getElementById('mp-cine-main');
-    if (main && main.dataset.idx !== String(mainIdx)) {
-      main.dataset.idx = String(mainIdx);
-      main.src = CINE[mainIdx];
+  function syncFloweeAt(sec) {
+    const lines = I18N[lang]?.flowee_lines || I18N.en.flowee_lines;
+    let idx = 0;
+    for (let i = 0; i < lines.length; i++) {
+      if (sec >= lines[i].t) idx = i;
     }
-
-    const line = document.getElementById('mp-cine-line');
-    const lines = I18N[lang]?.cine || I18N.en.cine;
-    const last = mainIdx >= lines.length - 1;
-    if (line) {
-      line.textContent = lines[Math.min(lines.length - 1, mainIdx)];
-      line.hidden = last;
+    if (idx === lastFloweeIdx) return;
+    lastFloweeIdx = idx;
+    const text = lines[idx].text;
+    const guide = document.getElementById('mp-flowee-line');
+    if (guide) guide.textContent = 'Flowee · ' + text;
+    const caption = document.getElementById('mp-cine-line');
+    const cineLines = I18N[lang]?.cine || I18N.en.cine;
+    if (caption) {
+      caption.hidden = false;
+      caption.textContent = cineLines[Math.min(cineLines.length - 1, idx)] || text;
     }
+    say(text);
+  }
+
+  function syncEndCta(sec, duration) {
+    const nearEnd = duration > 0 ? sec >= duration - 6 : sec >= 14;
     const cta = document.getElementById('mp-cine-cta');
-    if (cta) {
-      if (last) {
-        const spans = cta.querySelectorAll('span');
-        if (spans[0]) spans[0].textContent = t('cta_follow');
-        if (spans[1]) spans[1].textContent = t('cta_join');
-        if (spans[2]) spans[2].textContent = t('cta_support');
-        cta.hidden = false;
-        cta.setAttribute('aria-hidden', 'false');
-      } else {
-        cta.hidden = true;
-        cta.setAttribute('aria-hidden', 'true');
+    const caption = document.getElementById('mp-cine-line');
+    if (!cta) return;
+    if (nearEnd) {
+      const spans = cta.querySelectorAll('span');
+      if (spans[0]) spans[0].textContent = t('cta_follow');
+      if (spans[1]) spans[1].textContent = t('cta_join');
+      if (spans[2]) spans[2].textContent = t('cta_support');
+      cta.hidden = false;
+      cta.setAttribute('aria-hidden', 'false');
+      if (caption) caption.hidden = true;
+    } else {
+      cta.hidden = true;
+      cta.setAttribute('aria-hidden', 'true');
+    }
+  }
+
+  function tickIntro() {
+    const video = document.getElementById('mp-cine-video');
+    let sec = 0;
+    let duration = FALLBACK_INTRO_MS / 1000;
+    let p = 0;
+
+    if (useVideo && video && !video.error && isFinite(video.duration) && video.duration > 0) {
+      sec = video.currentTime || 0;
+      duration = video.duration;
+      p = Math.min(1, sec / duration);
+      if (video.ended) {
+        finishIntro();
+        return;
+      }
+    } else {
+      const elapsed = Date.now() - introStart;
+      sec = elapsed / 1000;
+      duration = FALLBACK_INTRO_MS / 1000;
+      p = Math.min(1, elapsed / FALLBACK_INTRO_MS);
+      const mainIdx = Math.min(CINE.length - 1, Math.floor(sec / 2.8));
+      const main = document.getElementById('mp-cine-main');
+      if (main && main.dataset.idx !== String(mainIdx)) {
+        main.dataset.idx = String(mainIdx);
+        main.src = CINE[mainIdx];
+      }
+      if (elapsed >= FALLBACK_INTRO_MS) {
+        finishIntro();
+        return;
       }
     }
 
-    // Portraits as video-in-video between 1s and 4s (not membership UI)
-    if (sec >= 1 && sec < 4) {
-      setPip(true, Math.floor((sec - 1) / 0.6));
-    } else {
-      setPip(false, 0);
-    }
+    const bar = document.getElementById('mp-cine-bar');
+    if (bar) bar.style.width = p * 100 + '%';
 
-    if (elapsed >= INTRO_MS) {
-      finishIntro();
-      return;
-    }
+    syncFloweeAt(sec);
+    syncEndCta(sec, duration);
+
+    // Soft PiP accents 1–4s (Stories portraits)
+    if (sec >= 1 && sec < 4) setPip(true, Math.floor((sec - 1) / 0.6));
+    else setPip(false, 0);
+
     introTimer = requestAnimationFrame(tickIntro);
+  }
+
+  function stopVideo() {
+    const video = document.getElementById('mp-cine-video');
+    if (!video) return;
+    try {
+      video.pause();
+      video.currentTime = 0;
+    } catch (_) {}
+  }
+
+  function startVideoIntro() {
+    const video = document.getElementById('mp-cine-video');
+    const still = document.getElementById('mp-cine-main');
+    if (!video) {
+      useVideo = false;
+      if (still) still.hidden = false;
+      return Promise.resolve(false);
+    }
+    video.muted = true;
+    video.playsInline = true;
+    video.src = REEL_SRC;
+    video.load();
+    return video
+      .play()
+      .then(() => {
+        useVideo = true;
+        if (still) still.hidden = true;
+        video.hidden = false;
+        return true;
+      })
+      .catch(() => {
+        useVideo = false;
+        video.hidden = true;
+        if (still) {
+          still.hidden = false;
+          still.src = CINE[0];
+        }
+        return false;
+      });
   }
 
   function startIntro() {
     setPhase('intro');
-    const main = document.getElementById('mp-cine-main');
-    if (main) {
-      main.dataset.idx = '0';
-      main.src = CINE[0];
-    }
+    applyI18n();
+    lastFloweeIdx = -1;
     setPip(false, 0);
     const cta = document.getElementById('mp-cine-cta');
     if (cta) {
@@ -498,15 +606,22 @@
     }
     const line = document.getElementById('mp-cine-line');
     if (line) line.hidden = false;
-    introStart = Date.now();
+    const guide = document.getElementById('mp-flowee-line');
+    if (guide) guide.textContent = 'Flowee · ' + t('flowee_hi');
     say(t('flowee_hi'));
+    introStart = Date.now();
     if (introTimer) cancelAnimationFrame(introTimer);
-    introTimer = requestAnimationFrame(tickIntro);
+
+    startVideoIntro().finally(() => {
+      introStart = Date.now();
+      introTimer = requestAnimationFrame(tickIntro);
+    });
   }
 
   function finishIntro() {
     if (introTimer) cancelAnimationFrame(introTimer);
     introTimer = null;
+    stopVideo();
     showMain();
   }
 

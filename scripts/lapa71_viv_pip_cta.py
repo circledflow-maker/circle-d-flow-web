@@ -164,6 +164,18 @@ def main() -> int:
         ]
     )
     print("DONE", out)
+    # Also publish a web-compressed copy into the repo Assets path for /membership intro
+    web = REPO_INTRO / "lapa71_moodboard_viv_9x16.mp4"
+    REPO_INTRO.mkdir(parents=True, exist_ok=True)
+    run(
+        [
+            "ffmpeg", "-y", "-i", str(out),
+            "-vf", "scale=720:1280:force_original_aspect_ratio=increase,crop=720:1280",
+            "-c:v", "libx264", "-crf", "23", "-preset", "fast", "-an",
+            "-pix_fmt", "yuv420p", "-movflags", "+faststart", str(web),
+        ]
+    )
+    print("WEB", web)
     return 0
 
 
