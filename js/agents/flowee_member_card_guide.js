@@ -262,12 +262,14 @@
     if (auth === 'login' || auth === 'register') {
       setStage('dock');
       showBenefitsPanel(false);
+      // member_card.js boot already enters auth mode — only assist if it has not
       setTimeout(() => {
+        if (document.body.classList.contains('wk-auth-gate')) return;
         if (window.MemberCardFlow?.enterAuthMode) {
           window.MemberCardFlow.enterAuthMode(auth);
         } else if (auth === 'login') startLoginPath();
         else startRegisterPath();
-      }, 500);
+      }, 700);
       return;
     }
 
