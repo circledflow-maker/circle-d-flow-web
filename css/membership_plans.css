@@ -77,11 +77,13 @@
 }
 .mp-tier li + li { margin-top: 0.55rem; }
 
-.mp-panel {
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  padding-top: 1.35rem;
-  margin-top: 0.85rem;
+.mp-now-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 0.35rem;
 }
+.mp-now-actions .wk-btn { font-size: 0.95rem; }
 .mp-panel h2 {
   font-family: Cinzel, Georgia, serif;
   font-size: 1.28rem;
@@ -191,12 +193,28 @@
   font-size: 1.02rem;
   padding: 0.75rem 1rem;
   cursor: pointer;
-  transition: border-color 0.2s, background 0.2s;
+  transition: border-color 0.2s, background 0.2s, transform 0.15s;
 }
 .mp-lang-btn:hover,
 .mp-lang-btn:focus-visible {
   border-color: var(--wk-gold);
   background: rgba(212, 175, 55, 0.12);
+}
+.mp-lang-btn.is-selected {
+  border-color: var(--wk-gold);
+  background: rgba(212, 175, 55, 0.22);
+  box-shadow: 0 0 0 1px rgba(212, 175, 55, 0.35);
+}
+.mp-lang-confirm {
+  width: 100%;
+  margin-top: 1rem;
+  font-size: 1.05rem !important;
+  padding: 0.85rem 1.1rem !important;
+}
+.mp-lang-confirm:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  filter: grayscale(0.35);
 }
 
 /* —— Cinematic + PiP —— */

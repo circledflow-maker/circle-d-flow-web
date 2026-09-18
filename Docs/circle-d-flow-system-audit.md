@@ -1,158 +1,123 @@
-# Circle D Flow — System Audit
+# Circle D Flow — Full System Audit (updated)
 
-**Date:** 15 September 2026  
-**Scope:** Phase 1 inspection before membership architecture  
-**Stack:** Vanilla HTML/CSS/JS · Vercel serverless · Supabase Auth + Postgres
+**Date:** 18 September 2026  
+**Principle:** Make the existing ecosystem easier to understand, participate in, operate, safer, and more valuable — not a feature dump.
 
 ---
 
-## 1. Current architecture
+## A. Existing system
 
 | Layer | Reality |
 |-------|---------|
-| Frontend | Static pages under `/pages`, root `index.html`, `beta-initiation.html`, `dice.html` |
-| Design | Animus / cinematic CSS; many pages also Tailwind CDN |
-| Backend | `api/*.js` → `lib/cdf-api/*` (Hobby-consolidated via `api/registrations.js`, `api/payments.js`) |
-| Auth | Supabase Auth (`js/agents/supabase_client.js`, `js/auth-handler.js`) |
-| Deploy | Vercel `cleanUrls` + redirects in `vercel.json` |
-| Media | Heavy content on D: (`Wakungo_Content_Studio`, etc.) — not in repo |
+| Frontend | Vanilla HTML/CSS/JS under `/pages`, Animus / Tech-Noir / Lisbon Gold |
+| Backend | Vercel serverless `api/*` → `lib/cdf-api/*` |
+| Auth | Supabase Auth + member card claim / shadow profiles |
+| Data | Postgres (Supabase): profiles, event_registrations, memberships-related fields, orbit events/locations |
+| Design agents | Flowee (+ domain guides), QuestEngine, Soul Pass, kitchens, KYH |
+| Content | Heavy media on D: Wakungo Content Studio (not in repo) |
+
+### Journey map vs routes
+
+| Persona | Ideal path | Live routes |
+|---------|------------|-------------|
+| Public | Land → Discover → CTA | `/`, `/join`, `/membership`, Sanctuary, events |
+| Member | Register → Card → Events → Benefits | `/member-card`, `/membership`, Orbit views |
+| Artist | Register → Pool → Invite | `/pages/artist_registration.html`, Sanctuary |
+| Admin | Unlock → Today → Manage | `/admin`, `/heart`, `/admin/registrations` |
 
 ---
 
-## 2. Current user journey (as implemented)
+## B. Working well (preserve)
 
-1. Land on Orbit / beta-initiation / event QR  
-2. Optional Resonance / Class (`beta-initiation.html`)  
-3. Auth (signup/login) or event registration without forcing login  
-4. Event form (Lapa71 / create_impact / dice)  
-5. Success CTAs → Sanctuary / Bantaba / Login  
-6. RPG XP via QuestEngine → `profiles.exp` (+ localStorage mirrors)  
-7. Membership page exists (`pages/membership.html`) but is a **client stub** (confirm + localStorage), not Stripe subscription
-
----
-
-## 3. Registration flows
-
-| Form | Entry | API | Store |
-|------|-------|-----|--------|
-| Lapa71 Member & Jam | `/join` → `pages/lapa71_register.html` | `POST /api/register-event` | `event_registrations` + shadow profile |
-| Circle D Flow Event guest | `pages/create_impact.html` | `POST /api/register-guest` | `user_rolls` (+ email QR) |
-| Chris Listening Party / Dice | `dice.html` (`eventId`, e.g. `listening-party-june-2`, `criz`) | `/api/roll`, payment intents | `user_rolls` / Stripe session |
-
-Flowee coaching: `js/agents/flowee_join_guide.js` on Lapa71.
+- Member Card claim + EXP (+25) path is usable now
+- `/membership` cinematic intro + plans + DATEV/Q&A copy
+- Stripe membership checkout + activate hooks
+- Flow Control admin (members / events / locations / invite)
+- Flowee as guide (not free chatbot)
+- Lapa71 join + registrations pipeline
 
 ---
 
-## 4. Event flows
+## C. UX problems (friction)
 
-- Event-specific pages + `create_impact?id=`  
-- Dice protocol for paid / roll entry  
-- Lapa71 deep jam registration (`sql/event_registrations_lapa71.sql`)  
-- Admin: `/admin/registrations` + `x-admin-key`
-
----
-
-## 5. Authentication
-
-- Supabase session in browser  
-- Register → beta-initiation; Login → dashboard / photographer hub by `flow_class`  
-- Lapa71 can create **shadow** Auth users (random password) + `profiles` upsert — claim via Login not fully productized
+| ID | Issue | Priority |
+|----|-------|----------|
+| UX1 | Language gate fired cinematic on first tap — needs select + Confirm | P1 — fixed this pass |
+| UX2 | Many worlds / pages; first 5s “what is CDF?” still uneven on root | P1 |
+| UX3 | Artist pool ≠ opportunity matching UI | P2 |
+| UX4 | Event pages feel like records more than interactive experiences | P2 |
+| UX5 | Competing CTAs on some hubs | P2 |
 
 ---
 
-## 6. Supabase structure (relevant)
+## D. Technical problems
 
-- `profiles` — `exp`, `karma`, `level`, `flow_credits`, identity fields  
-- `event_registrations` — Lapa71  
-- `guest_registrations` / `user_rolls` — guests & dice  
-- Quests / kitchen / artists tables exist separately  
-- **No** first-class `memberships` / `membership_tiers` tables in production use yet
-
----
-
-## 7. Admin
-
-- `pages/admin_registrations.html` — list/patch Lapa71 registrations  
-- Key-gated API — not full member/XP admin yet
+| ID | Issue | Priority |
+|----|-------|----------|
+| T1 | Dual XP stores (`profiles.exp` vs local gamification) | P2 |
+| T2 | `/dashboard` → KYH, empty RPG dashboard debt | P2 |
+| T3 | Duplicate register-event entry points | P3 |
+| T4 | Tailwind CDN on older pages | P3 |
 
 ---
 
-## 8. Flowee
+## E. Security risks
 
-- Core: `js/agents/flowee.js` + many domain guides  
-- Join: field-by-field coaching  
-- Should stay concise; extend for membership card (not a free chatbot)
-
----
-
-## 9. Orbit
-
-- Cinematic orbit / horizon bar / initiation orbit  
-- RPG `pages/dashboard.html` is empty; `/dashboard` redirects to **KYH** dashboard — known debt  
-- Soul Pass (`js/agents/soul_pass.js`) shows EXP/karma — closest to “digital ID”
+| ID | Risk | Severity | Status |
+|----|------|----------|--------|
+| S1 | Hardcoded admin password in API | CRITICAL | Mitigated — password removed from UI; set `MEMBERSHIP_ADMIN_PASSWORD` on Vercel; rotate legacy |
+| S2 | Admin password in HTML placeholder | HIGH | Fixed |
+| S3 | `adminKey` query-string support | MEDIUM | Documented — prefer header only next |
+| S4 | CORS `*` on admin routes | MEDIUM | Open |
+| S5 | Shadow Auth users / claim flow | MEDIUM | Open |
 
 ---
 
-## 10. RPG / XP
+## F. Business gaps
 
-- **Primary:** `profiles.exp` via QuestEngine + `POINTS_SYNCED`  
-- **Secondary:** `js/gamification.js` localStorage (`user_gamification_data`)  
-- Naming drift: historical `xp` vs live `exp`
-
----
-
-## 11. Issues / inconsistencies
-
-- Membership UI tiers ≠ product tiers in master prompt (€5 / €15)  
-- No `/membership` vercel route  
-- No digital Wako Kungo card  
-- Post-registration does not invite Flow Crew  
-- Dual XP stores  
-- Empty RPG dashboard vs KYH `/dashboard`  
-- Shadow profiles without clear claim email flow
+- Opportunity / slot system (DJ, photo, workshop…) — not first-class
+- Structured artist matching for admins — partial (profiles exist, no match UI)
+- Member retention loops (next event after claim) — soft CTAs only
+- DATEV export automation — policy text exists; export not automated
 
 ---
 
-## 12. Duplicate systems
+## G. Mobile problems
 
-- `api/register-event.js` vs `lib/cdf-api/register-event.js` (live via registrations router)  
-- Multiple gamification modules  
-- Many Flowee variants
-
----
-
-## 13. Reusable components
-
-- Join form + FloweeJoinGuide pattern  
-- Registrations API consolidation  
-- Stripe payment router (events/support) — reusable later for subscriptions  
-- Soul Pass / EXP display patterns  
-- Admin key gate pattern
+- Admin tables need card/drawer treatment on ≤390px (partial)
+- Flowee chat historically blocked taps (fixed pointer-events)
+- Membership cinematic OK; plans typography improved
 
 ---
 
-## 14. Technical debt
+## H. Quick wins (done / doing)
 
-- Tailwind CDN on production pages  
-- Client-only membership upgrades  
-- RLS must be reviewed before member benefits API  
-- Vercel Hobby function limits — keep APIs consolidated
+1. Language → Confirm → gate disappears → cinematic  
+2. PiP Stories portraits on membership intro  
+3. Admin Flowee coach dock  
+4. Remove password from client placeholder  
+5. Env-first admin auth  
+6. IG carousel for today’s post  
+7. Windows script for Lapa71 ViV master edit  
 
 ---
 
-## 15. Recommended sequence (aligned with master prompt)
+## I. Structural improvements (next)
 
-| Phase | Action | Status |
-|-------|--------|--------|
-| 1 | Audit docs | **This file** |
-| 2 | Map registration architecture | Done in audit |
-| 3 | Soft identity link (email / shadow claim) | Next |
-| 4 | Post-registration invitation CTA | **In progress with card** |
-| 5 | Membership card UI + `/membership` routes | **In progress** |
-| 6 | Direct membership page (tiers €0/€5/€15) | After card |
-| 7 | Payment provider (Stripe subscriptions) | After approval |
-| 8 | Server-side benefits + partners | Later |
-| 9 | Orbit connection / XP awards on card claim | With card (soft) |
-| 10+ | Events entity model, analytics, security audit | Phase 0 continuation |
+1. Opportunity table + admin create/match/invite statuses  
+2. Event feed filters + RSVP state on member card Orbit  
+3. Artist registration sections → searchable pool fields  
+4. Header-only admin auth; rotate `MEMBERSHIP_ADMIN_PASSWORD`  
+5. Unify EXP writes through one API  
 
-**Do not** implement Patreon/Stripe subscriptions until card + identity path are validated.
+---
+
+## Prioritization (active)
+
+| Pri | Item |
+|-----|------|
+| P0 | Admin secret hygiene (env) |
+| P1 | Membership lang Confirm; member card remains primary usable surface |
+| P1 | Continuity: after card / plans → Orbit / Sanctuary / events |
+| P2 | Opportunities + artist matching |
+| P3 | Visual polish / Tailwind migration |

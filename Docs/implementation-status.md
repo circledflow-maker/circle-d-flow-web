@@ -1,29 +1,37 @@
-# Implementation Status
+# Implementation Status — Circle D Flow Web
 
-| Phase | Item | Status |
-|-------|------|--------|
-| 1 | System audit | Done — `docs/circle-d-flow-system-audit.md` |
-| 1 | User journey | Done — `docs/circle-d-flow-user-journey.md` |
-| 5 | Wako Kungo member card UI | Done — `/member-card` |
-| 5 | `/membership` route alias | Done — vercel redirect |
-| 4 | Post-Lapa71 membership invite | Done — soft CTA on success |
-| 5 | Flowee card guide | Done |
-| 5 | XP link (`profiles.exp`) | Done — `/api/claim-member-card` |
-| 6 | €5 / €15 Stripe Checkout | Done — `/api/create-membership-checkout` |
-| 6 | Activate tier on profile | Done — `/api/membership-activate` |
-| 5 | Partner links (Wako / Humble / Kreativlon) | Done |
-| 7 | RLS private promo codes | Not started |
-| 0 | Phase 0 env / smoke tests | Ongoing |
-| 1b | Join Flowee invite → Card → Sanctuary | Done — `/join` |
-| 1b | Welt Heart = Flow Control admin | Done — `/heart` `/admin` |
-| 1b | Login `?next=` → Sanctuary | Done — `auth-handler.js` |
+Member Card is **usable now**. Remaining work finalizes the ecosystem around it.
 
-**Share / test (after deploy):**
+| Phase | Focus | Status |
+|-------|-------|--------|
+| 0 | Env / smoke / Vercel redirects | Ongoing |
+| 1 | System audit + journey map | Done — `Docs/circle-d-flow-system-audit.md` (2026-09-18) |
+| 1b | Join → Card → Sanctuary · Welt Heart admin | Done |
+| 2 | Membership Flowee gate (lang → **Confirm** → cinematic → plans) | Done this pass |
+| 2b | DATEV / GDPR policy + Q&A on plans | Done |
+| 3 | Admin Flowee coach + readability | Done (iterate) |
+| 3b | Admin auth env-first (no prod hardcoded password) | Done this pass |
+| 4 | Lapa71 ViV PiP + CTA script + IG carousel today | Script + carousel done; D: master render on Windows |
+| 5 | Member Card daily use (claim, Orbit, benefits) | **Live — primary surface** |
+| 6 | Stripe Silver/Gold checkout + activate | Done |
+| 7 | Opportunity / slot + artist matching | Next (P2) |
+| 8 | Event interactive feed + RSVP clarity | Next (P2) |
+| 9 | RLS promo codes / partner redeem hardening | Not started |
+| 10 | Analytics events (page_view, claim, rsvp…) | Not started |
 
-- https://circle-d-flow-web.vercel.app/join?invite=1&src=ig
-- https://circle-d-flow-web.vercel.app/member-card
-- https://circle-d-flow-web.vercel.app/pages/artist_sanctuary?welcome=register
-- https://circle-d-flow-web.vercel.app/heart
-- https://circle-d-flow-web.vercel.app/admin/membership
+## Share / test
+
 - https://circle-d-flow-web.vercel.app/membership
-- https://circle-d-flow-web.vercel.app/join
+- https://circle-d-flow-web.vercel.app/member-card
+- https://circle-d-flow-web.vercel.app/join?invite=1&src=ig
+- https://circle-d-flow-web.vercel.app/admin
+- https://circle-d-flow-web.vercel.app/sanctuary
+
+## Content ops (Windows D:)
+
+```bat
+python scripts\lapa71_viv_pip_cta.py
+python scripts\lapa71_ig_carousel_today.py
+```
+
+IG slides also in repo: `Assets/membership/ig_carousel_today/`

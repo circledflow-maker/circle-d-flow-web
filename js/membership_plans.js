@@ -15,20 +15,22 @@
     '/Assets/membership/intro/cine_05_lapa71.png',
   ];
 
-  // Video-in-video 1–4s: portraits only (never membership UI)
+  // Video-in-video 1–4s: Stories portraits only (not membership UI)
   const PIP = [
-    { src: '/Assets/membership/intro/cine_03_smile.png', label: 'Family' },
-    { src: '/Assets/membership/intro/cine_02_handpan.png', label: 'Sound' },
-    { src: '/Assets/membership/intro/cine_01_cafe.png', label: 'Lisbon' },
-    { src: '/Assets/membership/intro/cine_05_lapa71.png', label: 'Lapa71' },
-    { src: '/Assets/membership/intro/cine_04_gallery.png', label: 'Crew' },
+    { src: '/Assets/membership/intro/pip_viv_01.png', label: 'Lisbon' },
+    { src: '/Assets/membership/intro/pip_viv_02.png', label: 'Sound' },
+    { src: '/Assets/membership/intro/pip_viv_03.png', label: 'Joy' },
+    { src: '/Assets/membership/intro/pip_viv_04.png', label: 'Crew' },
+    { src: '/Assets/membership/intro/pip_viv_05.png', label: 'Lapa71' },
   ];
 
   const I18N = {
     en: {
       gate_title: 'Welcome, navigator.',
       gate_lead:
-        'We are glad you walk this journey with us. Pick a language — then a short cinematic opens Membership: card, culture, values.',
+        'We are glad you walk this journey with us. Pick a language, confirm — then a short cinematic opens Membership: card, culture, values.',
+      gate_confirm: 'Confirm · Continue',
+      gate_confirm_need: 'Select a language first.',
       cine: [
         'Your Wako Member Card prototype — free Bronze is enough to enter.',
         'Lisbon tables · real stages · real people behind the Circle.',
@@ -42,6 +44,10 @@
       cta_support: 'Support',
       title: 'Membership plans',
       lead: 'Bronze is free and enough for Sanctuary. Silver and Gold keep Wako nights and partners alive — thank you for walking with us.',
+      now_title: 'What you can do now',
+      now_card: 'Claim / open Member Card',
+      now_sanctuary: 'Enter Sanctuary',
+      now_join: 'Join an event',
       about_title: 'About us',
       about_p1:
         'Circle D Flow turns Lisbon into a living culture-tech RPG: Navigators explore real places, earn EXP, and meet artists through digital narrative.',
@@ -106,7 +112,9 @@
     pt: {
       gate_title: 'Bem-vindo/a, navigator.',
       gate_lead:
-        'Ficamos felizes por caminhares connosco. Escolhe o idioma — depois um cinematic abre a Membership: cartão, cultura, valores.',
+        'Ficamos felizes por caminhares connosco. Escolhe o idioma, confirma — depois um cinematic abre a Membership: cartão, cultura, valores.',
+      gate_confirm: 'Confirmar · Continuar',
+      gate_confirm_need: 'Escolhe um idioma primeiro.',
       cine: [
         'Protótipo do teu Wako Member Card — Bronze grátis chega para entrar.',
         'Mesas de Lisboa · palcos reais · pessoas reais no Circle.',
@@ -120,6 +128,10 @@
       cta_support: 'Support',
       title: 'Planos de membership',
       lead: 'Bronze é grátis e chega para o Santuário. Silver e Gold mantêm as noites Wako vivas — obrigado por estares connosco.',
+      now_title: 'O que podes fazer agora',
+      now_card: 'Pedir / abrir Member Card',
+      now_sanctuary: 'Entrar no Santuário',
+      now_join: 'Juntar a um evento',
       about_title: 'Sobre nós',
       about_p1:
         'Circle D Flow transforma Lisboa num RPG culture-tech: Navigators exploram lugares reais, ganham EXP e encontram artistas.',
@@ -183,7 +195,9 @@
     de: {
       gate_title: 'Willkommen, Navigator.',
       gate_lead:
-        'Schön, dass du uns auf der Reise begleitest. Sprache wählen — dann öffnet ein kurzes Cinematic Membership: Karte, Kultur, Values.',
+        'Schön, dass du uns auf der Reise begleitest. Sprache wählen, bestätigen — dann öffnet ein kurzes Cinematic Membership: Karte, Kultur, Values.',
+      gate_confirm: 'Bestätigen · Weiter',
+      gate_confirm_need: 'Bitte zuerst eine Sprache wählen.',
       cine: [
         'Dein Wako-Member-Card-Prototype — Free Bronze reicht zum Einstieg.',
         'Lisbon tables · echte Stages · echte Menschen hinter dem Circle.',
@@ -197,6 +211,10 @@
       cta_support: 'Support',
       title: 'Membership-Pläne',
       lead: 'Bronze ist kostenlos und reicht für die Sanctuary. Silver und Gold halten Wako-Nächte am Leben — danke, dass du dabei bist.',
+      now_title: 'Was du jetzt tun kannst',
+      now_card: 'Member Card holen / öffnen',
+      now_sanctuary: 'Sanctuary betreten',
+      now_join: 'Bei Event anmelden',
       about_title: 'Über uns',
       about_p1:
         'Circle D Flow macht Lissabon zum Culture-Tech-RPG: Navigators erkunden echte Orte, sammeln EXP und treffen Artists.',
@@ -295,8 +313,55 @@
     });
     const gateTitle = document.getElementById('mp-gate-title');
     const gateLead = document.getElementById('mp-gate-lead');
+    const confirmBtn = document.getElementById('mp-lang-confirm');
     if (gateTitle) gateTitle.textContent = t('gate_title');
     if (gateLead) gateLead.textContent = t('gate_lead');
+    if (confirmBtn && !confirmBtn.disabled) confirmBtn.textContent = t('gate_confirm');
+    else if (confirmBtn) confirmBtn.textContent = t('gate_confirm');
+  }
+
+  let pendingLang = null;
+
+  function selectLang(code) {
+    pendingLang = code === 'pt' || code === 'de' ? code : 'en';
+    document.querySelectorAll('.mp-lang-btn').forEach((btn) => {
+      const on = btn.getAttribute('data-lang') === pendingLang;
+      btn.classList.toggle('is-selected', on);
+      btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+    const confirmBtn = document.getElementById('mp-lang-confirm');
+    if (confirmBtn) {
+      confirmBtn.disabled = false;
+      confirmBtn.textContent = t('gate_confirm');
+    }
+    // Preview copy in selected language before confirm
+    lang = pendingLang;
+    applyI18n();
+    say(t('gate_confirm'));
+  }
+
+  function confirmLang() {
+    if (!pendingLang) {
+      say(t('gate_confirm_need'));
+      return;
+    }
+    lang = pendingLang;
+    try {
+      localStorage.setItem(LANG_KEY, lang);
+      if (window.CDFi18n && typeof window.CDFi18n.setLang === 'function') {
+        window.CDFi18n.setLang(lang);
+      }
+    } catch (_) {}
+    document.documentElement.lang = lang;
+    applyI18n();
+    // Gate disappears → cinematic starts
+    startIntro();
+  }
+
+  function pickLang(code) {
+    // Back-compat for MembershipPlansIntro.pickLang
+    selectLang(code);
+    confirmLang();
   }
 
   function billing() {
@@ -445,20 +510,6 @@
     showMain();
   }
 
-  function pickLang(code) {
-    lang = code === 'pt' || code === 'de' ? code : 'en';
-    try {
-      localStorage.setItem(LANG_KEY, lang);
-      if (window.CDFi18n && typeof window.CDFi18n.setLang === 'function') {
-        window.CDFi18n.setLang(lang);
-      }
-    } catch (_) {}
-    document.documentElement.lang = lang;
-    applyI18n();
-    // Always start cinematic after language — do not skip
-    startIntro();
-  }
-
   function boot() {
     setPhase('gate');
 
@@ -466,8 +517,13 @@
       btn.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        pickLang(btn.getAttribute('data-lang'));
+        selectLang(btn.getAttribute('data-lang'));
       });
+    });
+    document.getElementById('mp-lang-confirm')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      confirmLang();
     });
     document.getElementById('mp-intro-skip')?.addEventListener('click', (e) => {
       e.preventDefault();
@@ -513,7 +569,7 @@
     applyI18n();
   }
 
-  window.MembershipPlansIntro = { startIntro, pickLang, finishIntro };
+  window.MembershipPlansIntro = { startIntro, pickLang, finishIntro, selectLang, confirmLang };
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();
