@@ -1140,7 +1140,9 @@ class FloweeAgent {
         chatDiv.style.transformOrigin = 'bottom right';
         chatDiv.style.boxShadow = '0 25px 50px -12px rgba(0, 0, 0, 0.7)';
         chatDiv.style.fontFamily = "'Montserrat', sans-serif";
-        chatDiv.style.pointerEvents = 'auto';
+        // Hidden chat must never steal clicks from language gates / CTAs
+        chatDiv.style.pointerEvents = 'none';
+        chatDiv.setAttribute('aria-hidden', 'true');
 
         const path = window.location.pathname;
         const isRoot = path.endsWith('index.html') || path.endsWith('/') || path.endsWith('beta-initiation.html');
@@ -1243,6 +1245,8 @@ class FloweeAgent {
         
         if(chat.style.display === 'none') {
             chat.style.display = 'flex';
+            chat.style.pointerEvents = 'auto';
+            chat.setAttribute('aria-hidden', 'false');
             // Small delay for transition
             setTimeout(() => {
                 chat.style.transform = 'scale(1)';
@@ -1254,6 +1258,8 @@ class FloweeAgent {
         } else {
             chat.style.transform = 'scale(0.95)';
             chat.style.opacity = '0';
+            chat.style.pointerEvents = 'none';
+            chat.setAttribute('aria-hidden', 'true');
             setTimeout(() => {
                 chat.style.display = 'none';
             }, 300);

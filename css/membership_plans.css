@@ -140,21 +140,25 @@
 .mp-gate {
   position: fixed;
   inset: 0;
-  z-index: 9000;
+  z-index: 1000002; /* above Flowee vessel so language buttons receive clicks */
   display: grid;
   place-items: center;
   padding: 1.25rem;
   background:
     radial-gradient(ellipse 70% 50% at 50% 20%, rgba(61, 224, 255, 0.14), transparent 55%),
     rgba(4, 8, 16, 0.92);
+  pointer-events: auto;
 }
 .mp-gate-card {
+  position: relative;
+  z-index: 1;
   width: min(440px, 100%);
   padding: 1.5rem 1.35rem;
   border-radius: 18px;
   border: 1px solid rgba(212, 175, 55, 0.4);
   background: rgba(10, 18, 32, 0.96);
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+  pointer-events: auto;
 }
 .mp-gate-kicker {
   margin: 0;
@@ -199,10 +203,11 @@
 .mp-intro {
   position: fixed;
   inset: 0;
-  z-index: 8500;
+  z-index: 1000001;
   background: #05080f;
   display: flex;
   flex-direction: column;
+  pointer-events: auto;
 }
 .mp-cine {
   position: relative;
