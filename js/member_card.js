@@ -1,12 +1,14 @@
 /**
- * Wako Kungo Member Card — Flowee-guided swipe claim flow
- * Steps: welcome → name → contact method → details → password/profile → claim → optional tier → sanctuary
+ * Wako Kungo Member Card — Flowee-guided Login / Registration → free Bronze card (+EXP) → Orbit
  */
 (function () {
   const STORAGE_KEY = 'cdf_wako_member_card';
   const INVENTORY_KEY = 'cdf_inventory';
   const XP_CLAIM = 25;
-  const SANCTUARY_URL = '/pages/artist_sanctuary.html?welcome=card';
+  const XP_NAME = 5;
+  const XP_PROFILE = 10;
+  const SANCTUARY_URL = '/sanctuary?welcome=card';
+  const SUPABASE_CDN = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
 
   function loadScript(src) {
     return new Promise((resolve, reject) => {
@@ -23,19 +25,31 @@
     });
   }
 
+  function initSupabaseClient() {
+    if (window.supabaseClient) return window.supabaseClient;
+    const cfg = window.__CDF_CONFIG__ || {};
+    const url = cfg.supabaseUrl || window.CDF_SUPABASE_URL;
+    const key = cfg.supabaseKey || window.CDF_SUPABASE_KEY;
+    if (!window.supabase?.createClient || !url || !key) return null;
+    window.supabaseClient = window.supabase.createClient(url, key, {
+      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true },
+    });
+    return window.supabaseClient;
+  }
+
   let libsPromise = null;
   function ensureLibs() {
     if (!libsPromise) {
       libsPromise = Promise.all([
         window.supabase || window.supabaseClient
           ? Promise.resolve()
-          : loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2'),
+          : loadScript(SUPABASE_CDN),
         window.QRCode
           ? Promise.resolve()
           : loadScript('https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js'),
       ]).then(() => {
-        // supabase_client.js (defer) may init after CDN loads
-        return new Promise((r) => setTimeout(r, 50));
+        initSupabaseClient();
+        return new Promise((r) => setTimeout(r, 30));
       });
     }
     return libsPromise;
@@ -51,13 +65,13 @@
   const TOTAL_STEPS = 7;
 
   const GUIDE = [
-    'Tap the card to see the Wako Kungo emblem. Then swipe — I guide every step.',
-    'What name goes on the gold plate? Type it, then Next.',
-    'How do you want to connect? Google, email, Instagram, or another contact — same spirit as Circle D Flow.',
-    'Almost there. Confirm how we reach you so the profile can bind.',
-    'No profile yet? Create a password. Already in the Circle? Sign in with the same credentials.',
-    'Claim locks your member number + QR into inventory, then we open the 3D Sanctuary.',
-    'Optional Stripe upgrade — or enter the Sanctuary with your free Registered card.',
+    'Login opens your profile Orbit — or Register for the free Bronze Member Card (+25 EXP on claim).',
+    'Name on the gold plate · +5 EXP when saved. Then Next.',
+    'How do you join? Email keeps EXP + Stripe in sync.',
+    'Confirm contact so the profile can bind.',
+    'Create password · +10 EXP when profile is ready. Already registered? Same email signs you in.',
+    'Claim card · +25 EXP · member number + QR. Free Bronze is enough.',
+    'Optional Silver / Gold on Plans — or stay Bronze and enter Orbit / Sanctuary.',
   ];
 
   const state = {
@@ -82,6 +96,13 @@
     otherInput: document.getElementById('member-other-input'),
     passwordInput: document.getElementById('member-password-input'),
     password2Input: document.getElementById('member-password2-input'),
+    loginEmail: document.getElementById('wk-login-email'),
+    loginPassword: document.getElementById('wk-login-password'),
+    loginPanel: document.getElementById('wk-login-panel'),
+    loginBtn: document.getElementById('wk-login-btn'),
+    loginGoogleBtn: document.getElementById('wk-login-google-btn'),
+    showLoginBtn: document.getElementById('wk-show-login-btn'),
+    startRegisterBtn: document.getElementById('wk-start-register-btn'),
     fieldIg: document.getElementById('field-instagram'),
     fieldOther: document.getElementById('field-other'),
     fieldEmail: document.getElementById('field-email'),
@@ -376,13 +397,32 @@
     try {
       await ensureLibs();
     } catch (_) { /* ignore */ }
-    const sc = window.supabaseClient;
+    const sc = initSupabaseClient() || window.supabaseClient;
     if (!sc) return { jwt: '', user: null };
     const { data } = await sc.auth.getSession();
     return {
       jwt: data?.session?.access_token || '',
       user: data?.session?.user || null,
     };
+  }
+
+  function awardLocalXp(key, amount) {
+    const card = loadCard();
+    const flag = 'xp_' + key;
+    if (card[flag]) return card.exp || 0;
+    try {
+      const g = JSON.parse(localStorage.getItem('user_gamification_data') || '{}');
+      g.xp = (g.xp || 0) + amount;
+      g.exp = (g.exp || 0) + amount;
+      localStorage.setItem('user_gamification_data', JSON.stringify(g));
+      card.exp = g.exp;
+      card[flag] = true;
+      saveCard(card);
+      setChips(card, g.exp);
+      return g.exp;
+    } catch (_) {
+      return card.exp || 0;
+    }
   }
 
   async function refreshAuthUi() {
@@ -492,6 +532,8 @@
     card.displayName = name;
     saveCard(card);
     renderName(name, card.memberNumber);
+    const exp = awardLocalXp('name', XP_NAME);
+    speak('Name locked · +' + XP_NAME + ' EXP (now ' + exp + '). Next: how you join.', 'guide');
     return name;
   }
 
@@ -543,14 +585,17 @@
   }
 
   async function startGoogleOAuth() {
-    const sc = window.supabaseClient;
+    try {
+      await ensureLibs();
+    } catch (_) { /* ignore */ }
+    const sc = initSupabaseClient() || window.supabaseClient;
     if (!sc) {
-      speak('Auth is offline. Try email instead.', 'error');
+      speak('Auth is offline. Try email login instead.', 'error');
+      showLoginPanel(true);
       return;
     }
-    const redirectTo =
-      window.location.origin + '/member-card?step=issue&oauth=1';
-    speak('Opening Google… come back and we issue the card.', 'guide');
+    const redirectTo = window.location.origin + '/member-card?step=issue&oauth=1';
+    speak('Opening Google… we bring you back to claim your card.', 'guide');
     const { error } = await sc.auth.signInWithOAuth({
       provider: 'google',
       options: { redirectTo },
@@ -561,10 +606,109 @@
     }
   }
 
+  function showLoginPanel(open) {
+    goStep(0, { silent: true });
+    if (els.loginPanel) els.loginPanel.hidden = !open;
+    if (open) els.loginEmail?.focus();
+  }
+
+  function startRegister() {
+    if (els.loginPanel) els.loginPanel.hidden = true;
+    goStep(1);
+    speak(GUIDE[1], 'guide');
+    els.nameInput?.focus();
+  }
+
+  async function enterProfileOrbit(card, profile) {
+    try {
+      sessionStorage.setItem('cdf_flowee_auth_gate', '1');
+    } catch (_) { /* ignore */ }
+    if (card.displayName) renderName(card.displayName, card.memberNumber || '');
+    setChips(card, profile?.exp ?? card.exp ?? 0);
+    if (typeof window.cdfEnterFlowOrbit === 'function') {
+      window.cdfEnterFlowOrbit();
+      speak('Welcome back — your Member Card profile Orbit is open.', 'guide');
+      return true;
+    }
+    goStep(5, { silent: true });
+    if (els.afterClaimNav) els.afterClaimNav.hidden = false;
+    if (els.claimBtn) els.claimBtn.hidden = true;
+    return false;
+  }
+
+  async function applySessionToCard() {
+    const profile = await readExp();
+    const card = loadCard();
+    if (profile.name) card.displayName = card.displayName || profile.name;
+    if (profile.email) card.email = profile.email;
+    if (profile.instagram) card.instagram = card.instagram || profile.instagram;
+    if (profile.publicId) {
+      card.publicId = profile.publicId;
+      card.claimed = true;
+    }
+    if (profile.tier) card.tier = profile.tier;
+    if (profile.uid) card.userId = profile.uid;
+    if (typeof profile.exp === 'number') card.exp = profile.exp;
+    if (profile.authed && (card.claimed || profile.publicId || card.displayName)) {
+      card.claimed = true;
+      memberNumber(card);
+    }
+    saveCard(card);
+    if (profile.email && els.emailInput) els.emailInput.value = profile.email;
+    if (card.displayName && els.nameInput) els.nameInput.value = card.displayName;
+    return { card, profile };
+  }
+
+  async function loginWithPassword() {
+    try {
+      await ensureLibs();
+    } catch (_) { /* ignore */ }
+    const sc = initSupabaseClient() || window.supabaseClient;
+    if (!sc) {
+      speak('Auth is offline. Refresh once, then try again.', 'error');
+      return;
+    }
+    const email = (els.loginEmail?.value || '').trim();
+    const password = els.loginPassword?.value || '';
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      speak('Enter the email of your Circle profile.', 'error');
+      els.loginEmail?.focus();
+      return;
+    }
+    if (password.length < 6) {
+      speak('Password needs at least 6 characters.', 'error');
+      els.loginPassword?.focus();
+      return;
+    }
+    speak('Signing you in…', 'guide');
+    const { error } = await sc.auth.signInWithPassword({ email, password });
+    if (error) {
+      speak(error.message || 'Login failed', 'error');
+      return;
+    }
+    const { card, profile } = await applySessionToCard();
+    if (card.claimed || profile.publicId) {
+      await enterProfileOrbit(card, profile);
+      return;
+    }
+    if (card.displayName) {
+      goStep(5);
+      speak('Signed in. Claim your free Bronze card · +25 EXP.', 'guide');
+    } else {
+      goStep(1);
+      speak('Signed in. Add your name, then we stamp the card.', 'guide');
+    }
+  }
+
   async function ensureProfile() {
+    try {
+      await ensureLibs();
+    } catch (_) { /* ignore */ }
     const { user } = await sessionJwt();
     if (user) {
+      awardLocalXp('profile', XP_PROFILE);
       goStep(5);
+      speak('Profile ready. Claim card for +25 EXP.', 'guide');
       return true;
     }
 
@@ -594,14 +738,14 @@
       return false;
     }
 
-    const sc = window.supabaseClient;
+    const sc = initSupabaseClient() || window.supabaseClient;
     if (!sc) {
       speak('Supabase client missing — refresh and try again.', 'error');
       return false;
     }
 
     setMsg(els.msg, 'Creating your Circle profile…', true);
-    speak('Forging your profile in the Circle…', 'guide');
+    speak('Forging your profile · +' + XP_PROFILE + ' EXP when ready…', 'guide');
 
     const meta = {
       member_display_name: card.displayName || '',
@@ -619,7 +763,6 @@
     });
 
     if (error) {
-      // Existing user → sign in
       if (/already|registered|exists/i.test(error.message)) {
         const signed = await sc.auth.signInWithPassword({ email, password });
         if (signed.error) {
@@ -636,7 +779,6 @@
     }
 
     if (!data?.session && data?.user) {
-      // Email confirm may be required
       const signed = await sc.auth.signInWithPassword({ email, password });
       if (signed.error) {
         setMsg(
@@ -649,8 +791,9 @@
       }
     }
 
-    setMsg(els.msg, 'Profile ready.', true);
-    speak('Profile locked in. Now we stamp your membership card.', 'guide');
+    awardLocalXp('profile', XP_PROFILE);
+    setMsg(els.msg, 'Profile ready · +' + XP_PROFILE + ' EXP', true);
+    speak('Profile locked in · +' + XP_PROFILE + ' EXP. Claim card for +' + XP_CLAIM + ' EXP.', 'guide');
     goStep(5);
     return true;
   }
@@ -873,6 +1016,17 @@
   }
 
   // ——— Events ———
+  els.showLoginBtn?.addEventListener('click', () => {
+    showLoginPanel(true);
+    speak('Email + password opens your profile Orbit.', 'guide');
+  });
+  els.startRegisterBtn?.addEventListener('click', () => startRegister());
+  els.loginBtn?.addEventListener('click', () => loginWithPassword());
+  els.loginGoogleBtn?.addEventListener('click', () => startGoogleOAuth());
+  els.loginPassword?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') loginWithPassword();
+  });
+
   document.querySelectorAll('[data-next]').forEach((btn) => {
     btn.addEventListener('click', async () => {
       if (btn.id === 'contact-continue-btn' || btn.hasAttribute('data-next')) {
@@ -932,16 +1086,36 @@
     btn.addEventListener('click', () => {
       const tier = btn.getAttribute('data-tier-select');
       if (tier === 'registered') {
+        if (typeof window.cdfEnterFlowOrbit === 'function') {
+          window.cdfEnterFlowOrbit();
+          return;
+        }
         window.location.href = sanctuaryDest();
         return;
       }
-      startCheckout(tier);
+      const q = tier ? '?tier=' + encodeURIComponent(tier) : '';
+      window.location.href = '/pages/membership_plans' + q;
     });
+  });
+  document.getElementById('wk-upgrade-btn')?.addEventListener('click', () => {
+    window.location.href = '/pages/membership_plans';
   });
 
   bindSwipe();
 
+  window.MemberCardFlow = {
+    goStep,
+    startRegister,
+    showLogin: () => showLoginPanel(true),
+    loginWithPassword,
+    startGoogleOAuth,
+    claimAndEnter,
+  };
+
   async function boot() {
+    try {
+      await ensureLibs();
+    } catch (_) { /* ignore */ }
     const params = new URLSearchParams(window.location.search);
     const card = loadCard();
     const profile = await readExp();
@@ -1010,6 +1184,9 @@
     }
 
     if (card.claimed && profile.authed) {
+      try {
+        sessionStorage.setItem('cdf_flowee_auth_gate', '1');
+      } catch (_) { /* ignore */ }
       if (typeof window.cdfEnterFlowOrbit === 'function') {
         window.cdfEnterFlowOrbit();
         return;
@@ -1028,14 +1205,16 @@
     }
 
     if (card.claimed) {
-      // Local claim without session — still open Orbit
+      try {
+        sessionStorage.setItem('cdf_flowee_auth_gate', '1');
+      } catch (_) { /* ignore */ }
       if (typeof window.cdfEnterFlowOrbit === 'function') {
         window.cdfEnterFlowOrbit();
         return;
       }
     }
 
-    goStep(0);
+    goStep(0, { silent: true });
   }
 
   if (document.readyState === 'loading') {

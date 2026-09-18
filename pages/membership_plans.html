@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Membership Plans · Wako Kungo | Circle D Flow</title>
+  <meta name="description" content="Bronze, Silver and Gold — plans, how funds are used, community values, and policy.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/member_card.css?v=20260918a">
+  <link rel="stylesheet" href="/css/membership_plans.css?v=20260918a">
+</head>
+<body class="wk-card-page mp-page">
+  <main class="wk-shell mp-shell">
+    <header class="wk-top">
+      <p class="wk-brand">Circle D Flow · Wako Kungo</p>
+      <a class="wk-btn wk-btn--ghost" href="/member-card">← Member Card</a>
+    </header>
+
+    <h1 class="mp-title">Membership plans</h1>
+    <p class="mp-lead">Bronze is free and enough for Sanctuary. Silver and Gold keep Wako nights and partners alive.</p>
+
+    <div class="mp-billing" id="mp-billing">
+      <label><input type="radio" name="mp-billing" value="month" checked> Monthly</label>
+      <label><input type="radio" name="mp-billing" value="year"> Yearly (2 months free)</label>
+    </div>
+
+    <section class="mp-tiers" aria-label="Plans">
+      <article class="mp-tier">
+        <p class="mp-tier-kicker">Bronze</p>
+        <h2>Free</h2>
+        <p class="mp-price">€0</p>
+        <ul>
+          <li>Digital Wako Kungo card + QR</li>
+          <li>+25 EXP on claim · ranking</li>
+          <li>3D Artist Sanctuary</li>
+          <li>Flow Orbit event alerts</li>
+        </ul>
+        <a class="wk-btn wk-btn--ghost" href="/member-card">Stay Bronze</a>
+      </article>
+
+      <article class="mp-tier mp-tier--silver" id="tier-silver">
+        <p class="mp-tier-kicker">Silver</p>
+        <h2>Flow Supporter</h2>
+        <p class="mp-price" data-price-month="€5/mo" data-price-year="€50/yr">€5/mo</p>
+        <ul>
+          <li>Free Wako Kungo event access</li>
+          <li>Partner coupons · +1 guest</li>
+          <li>1 free drink / month</li>
+          <li>Early member alerts</li>
+        </ul>
+        <button type="button" class="wk-btn wk-btn--gold" data-checkout="flow_supporter">Choose Silver</button>
+      </article>
+
+      <article class="mp-tier mp-tier--gold" id="tier-gold">
+        <p class="mp-tier-kicker">Gold</p>
+        <h2>Flow Crew</h2>
+        <p class="mp-price" data-price-month="€10/mo" data-price-year="€100/yr">€10/mo</p>
+        <ul>
+          <li>Everything in Silver</li>
+          <li>Content folders · 1h shoot booking</li>
+          <li>Early / discounted events</li>
+          <li>3 free drinks / month</li>
+        </ul>
+        <button type="button" class="wk-btn wk-btn--gold" data-checkout="flow_crew">Choose Gold</button>
+      </article>
+    </section>
+
+    <section class="mp-panel">
+      <h2>How the money is used</h2>
+      <p>Paid memberships fund real culture work in Lisbon — not ads.</p>
+      <ul>
+        <li>Venue &amp; session costs (Botânica, stages, community nights)</li>
+        <li>Artists, documentation, and Flowee tooling</li>
+        <li>Partner perks you can redeem</li>
+        <li>Sanctuary / map / membership infrastructure</li>
+      </ul>
+    </section>
+
+    <section class="mp-panel">
+      <h2>Values &amp; goals</h2>
+      <ul>
+        <li><strong>Kiss your heart</strong> — effort over ego; come as you are.</li>
+        <li><strong>Local first</strong> — Portuguese heritage meeting digital future.</li>
+        <li><strong>Fair exchange</strong> — presence rewards the community.</li>
+        <li><strong>Transparent tiers</strong> — free path stays open; paid is optional support.</li>
+      </ul>
+    </section>
+
+    <section class="mp-panel" id="mp-policy">
+      <h2>Policy &amp; legal</h2>
+      <ul>
+        <li>Subscriptions via Stripe. Cancel anytime; paid perks end at period close; EXP and Bronze card remain.</li>
+        <li>Benefit QR codes are personal, one staff scan, refill next calendar month.</li>
+        <li>Fair-use at events and partner venues. Abuse may pause perks without deleting your card.</li>
+        <li>We process account, email, and payment metadata to deliver membership.</li>
+        <li>Questions: Instagram <a href="https://www.instagram.com/wako.kungo/" target="_blank" rel="noopener">@wako.kungo</a>.</li>
+      </ul>
+    </section>
+
+    <p class="mp-msg" id="mp-msg" hidden></p>
+    <p class="wk-hint" style="margin-top:1rem"><a href="/sanctuary">Enter Sanctuary</a> · <a href="/member-card">Back to card</a> · <a href="/admin">Admin</a></p>
+  </main>
+
+  <script src="/js/membership_plans.js?v=20260918a" defer></script>
+</body>
+</html>

@@ -31,9 +31,6 @@
       benefits_sub: 'Current tier vs upgrades you can purchase.',
       tier_now: 'Current',
       tier_buy: 'Available',
-      tier_free: 'Registered · Free',
-      tier_sup: 'Flow Supporter · €5/mo',
-      tier_crew: 'Flow Crew · €10/mo',
       b_card: 'Digital Wako Membership Card + QR',
       b_exp: '+25 EXP on claim · Brotherhood ranking',
       b_sanctuary: '3D Artist Sanctuary access',
@@ -43,7 +40,21 @@
       b_crew_extra: 'Crew badge · early access · stronger Orbit visibility',
       guide_benefits:
         'Here is your benefit table. Green = included now. Gold = unlock with upgrade.',
-      guide_upgrade: 'Optional support keeps the Circle alive. Free card is enough to enter Sanctuary.',
+      guide_upgrade: 'Optional support keeps the Circle alive. Free Bronze card is enough for Sanctuary.',
+      auth_gate:
+        'Language locked in. Do you already have a Circle login — or shall we register your free Wako Member Card together?',
+      auth_login_guide:
+        'Enter email + password. I open your Member Card profile and Flow Orbit. +EXP stays on your account.',
+      auth_register_guide:
+        'We register the free Bronze Member Card together. Name → contact → profile → Claim (+25 EXP). I guide every step.',
+      login_go: 'LOGIN · OPEN PROFILE',
+      guide_step_name: 'Type the name for the gold plate. This is how the Circle calls you.',
+      guide_step_contact: 'Choose how you join — email is safest for Stripe and EXP sync.',
+      guide_step_profile: 'Create a password. This binds your card, EXP, and Sanctuary.',
+      guide_step_claim: 'Claim stamps member number + QR · +25 EXP · free Bronze is enough.',
+      tier_free: 'Bronze · Free',
+      tier_sup: 'Silver · €5/mo',
+      tier_crew: 'Gold · €10/mo',
     },
     pt: {
       lang_label: 'Idioma',
@@ -70,9 +81,6 @@
       benefits_sub: 'Nível atual vs upgrades que podes comprar.',
       tier_now: 'Atual',
       tier_buy: 'Disponível',
-      tier_free: 'Registered · Grátis',
-      tier_sup: 'Flow Supporter · €5/mês',
-      tier_crew: 'Flow Crew · €10/mês',
       b_card: 'Cartão digital Wako + QR',
       b_exp: '+25 EXP no claim · Brotherhood ranking',
       b_sanctuary: 'Acesso ao Santuário 3D',
@@ -82,7 +90,21 @@
       b_crew_extra: 'Badge Crew · early access · mais visibilidade no Orbit',
       guide_benefits:
         'Aqui está a tabela de benefícios. Verde = incluído agora. Dourado = desbloqueia com upgrade.',
-      guide_upgrade: 'O apoio opcional mantém o Circle vivo. O cartão grátis basta para o Santuário.',
+      guide_upgrade: 'O apoio opcional mantém o Circle vivo. O cartão Bronze grátis basta para o Santuário.',
+      auth_gate:
+        'Idioma definido. Já tens login no Circle — ou registamos juntos o teu Wako Member Card grátis?',
+      auth_login_guide:
+        'Email + password. Abro o teu perfil Member Card e Flow Orbit. O EXP fica na conta.',
+      auth_register_guide:
+        'Registamos o Member Card Bronze grátis juntos. Nome → contacto → perfil → Claim (+25 EXP).',
+      login_go: 'LOGIN · ABRIR PERFIL',
+      guide_step_name: 'Escreve o nome na placa dourada — assim o Circle chama-te.',
+      guide_step_contact: 'Escolhe como entras — email é o mais seguro para Stripe e EXP.',
+      guide_step_profile: 'Cria uma password. Liga o cartão, EXP e Santuário.',
+      guide_step_claim: 'Claim grava número + QR · +25 EXP · Bronze grátis chega.',
+      tier_free: 'Bronze · Grátis',
+      tier_sup: 'Silver · €5/mês',
+      tier_crew: 'Gold · €10/mês',
     },
     de: {
       lang_label: 'Sprache',
@@ -109,9 +131,6 @@
       benefits_sub: 'Aktuelle Stufe vs. kaufbare Upgrades.',
       tier_now: 'Aktuell',
       tier_buy: 'Kaufbar',
-      tier_free: 'Registered · Kostenlos',
-      tier_sup: 'Flow Supporter · €5/Mon',
-      tier_crew: 'Flow Crew · €10/Mon',
       b_card: 'Digitale Wako Membership Card + QR',
       b_exp: '+25 EXP beim Claim · Brotherhood Ranking',
       b_sanctuary: 'Zugang zur 3D Artist Sanctuary',
@@ -121,7 +140,21 @@
       b_crew_extra: 'Crew-Badge · Early Access · stärkere Orbit-Sichtbarkeit',
       guide_benefits:
         'Hier ist deine Benefit-Tabelle. Grün = jetzt inklusive. Gold = mit Upgrade freischalten.',
-      guide_upgrade: 'Optionale Unterstützung hält den Circle am Leben. Die Free Card reicht für die Sanctuary.',
+      guide_upgrade: 'Optionale Unterstützung hält den Circle am Leben. Die Free Bronze Card reicht für die Sanctuary.',
+      auth_gate:
+        'Sprache steht. Hast du schon einen Circle-Login — oder registrieren wir zusammen deine kostenlose Wako Member Card?',
+      auth_login_guide:
+        'E-Mail + Passwort. Ich öffne dein Member-Card-Profil und Flow Orbit. EXP bleibt auf dem Konto.',
+      auth_register_guide:
+        'Wir registrieren die Free Bronze Member Card zusammen. Name → Kontakt → Profil → Claim (+25 EXP). Ich führe dich Schritt für Schritt.',
+      login_go: 'LOGIN · PROFIL ÖFFNEN',
+      guide_step_name: 'Tippe den Namen auf die Goldplatte — so ruft dich der Circle.',
+      guide_step_contact: 'Wähle den Weg rein — E-Mail ist am sichersten für Stripe und EXP.',
+      guide_step_profile: 'Passwort anlegen. Das bindet Karte, EXP und Sanctuary.',
+      guide_step_claim: 'Claim setzt Nummer + QR · +25 EXP · Free Bronze reicht.',
+      tier_free: 'Bronze · Kostenlos',
+      tier_sup: 'Silver · €5/Mon',
+      tier_crew: 'Gold · €10/Mon',
     },
   };
 

@@ -275,6 +275,26 @@ body.wk-card-page {
   font-size: 1rem;
 }
 
+.wk-login-panel {
+  margin-top: 0.85rem;
+  padding: 0.85rem;
+  border-radius: 14px;
+  border: 1px solid rgba(61, 224, 255, 0.28);
+  background: rgba(8, 16, 30, 0.72);
+}
+.wk-login-panel .wk-nav { margin-top: 0.55rem; }
+.wk-login-panel a { color: var(--wk-cyan); }
+
+/* Intro: keep first viewport clean until auth gate resolves */
+body.wk-intro-dim .wk-benefits,
+body.wk-intro-dim .wk-ben-actions {
+  opacity: 0.35;
+  pointer-events: none;
+}
+body.wk-intro-dim .wk-deck {
+  opacity: 0.4;
+}
+
 .wk-choice-grid {
   display: grid;
   gap: 0.5rem;

@@ -1,5 +1,6 @@
 /**
- * Flowee Member Card Guide — language → center welcome → dock + benefits tour
+ * Flowee Member Card Guide
+ * Language → Login OR Registration → guided free Member Card (+EXP) → Orbit profile
  */
 (function () {
   let stageDone = false;
@@ -10,6 +11,10 @@
 
   function agent() {
     return window.flowee || window.Flowee || window.floweeAgent || null;
+  }
+
+  function flow() {
+    return window.MemberCardFlow || null;
   }
 
   function refreshVessel() {
@@ -44,7 +49,7 @@
       bubble = document.createElement('div');
       bubble.className = 'wk-flowee-fallback';
       bubble.style.cssText =
-        'max-width:260px;margin:0 0 8px auto;padding:10px 12px;background:rgba(10,22,40,0.92);' +
+        'max-width:280px;margin:0 0 8px auto;padding:10px 12px;background:rgba(10,22,40,0.94);' +
         'border:1px solid rgba(212,175,55,0.45);border-radius:14px 14px 4px 14px;color:#f4efe6;font-size:13px;line-height:1.4;';
       host.prepend(bubble);
     }
@@ -126,24 +131,17 @@
   }
 
   function openUpgrade() {
-    showBenefitsPanel(true);
     say(t('guide_upgrade'), 'guide', [
       {
         label: t('tier_sup'),
         action: () => {
-          document.querySelector('[data-tier-select="flow_supporter"]')?.click();
-          const btn = document.getElementById('to-tiers-btn');
-          if (btn) btn.click();
-          else window.location.href = '/membership';
+          window.location.href = '/pages/membership_plans?tier=flow_supporter';
         },
       },
       {
         label: t('tier_crew'),
         action: () => {
-          document.querySelector('[data-tier-select="flow_crew"]')?.click();
-          const btn = document.getElementById('to-tiers-btn');
-          if (btn) btn.click();
-          else window.location.href = '/membership';
+          window.location.href = '/pages/membership_plans?tier=flow_crew';
         },
       },
       {
@@ -153,56 +151,91 @@
     ]);
   }
 
-  function glideAndGuide() {
-    if (stageDone) return;
+  function startLoginPath() {
     stageDone = true;
     setStage('dock');
-    say(t('card_glide'), 'guide', [
+    showBenefitsPanel(false);
+    const f = flow();
+    if (f?.showLogin) f.showLogin();
+    else {
+      const panel = document.getElementById('wk-login-panel');
+      if (panel) panel.hidden = false;
+      if (f?.goStep) f.goStep(0);
+    }
+    say(t('auth_login_guide'), 'guide', [
+      {
+        label: t('login_go'),
+        action: () => {
+          if (f?.loginWithPassword) f.loginWithPassword();
+          else document.getElementById('wk-login-btn')?.click();
+        },
+      },
+      {
+        label: t('register_me'),
+        action: () => startRegisterPath(),
+      },
+    ]);
+  }
+
+  function startRegisterPath() {
+    stageDone = true;
+    setStage('dock');
+    showBenefitsPanel(false);
+    const f = flow();
+    if (f?.startRegister) f.startRegister();
+    else if (f?.goStep) f.goStep(1);
+    say(t('auth_register_guide'), 'guide', [
+      {
+        label: t('start_name'),
+        action: () => {
+          if (f?.goStep) f.goStep(1);
+          document.getElementById('member-name-input')?.focus();
+          say(t('guide_step_name'), 'guide');
+        },
+      },
       {
         label: t('show_benefits'),
         action: () => {
           showBenefitsPanel(true);
-          say(t('guide_benefits'), 'guide', [
-            { label: t('upgrade'), action: () => openUpgrade() },
-            { label: t('continue_swipe'), action: () => showBenefitsPanel(false) },
-          ]);
+          say(t('guide_benefits'), 'guide');
         },
       },
-      { label: t('upgrade'), action: () => openUpgrade() },
-      { label: t('continue_swipe'), action: () => showBenefitsPanel(false) },
     ]);
   }
 
-  function welcomeCenter() {
+  /** After language: Login or Registration — not the old HELLO → benefits path */
+  function askAuthGate() {
     setStage('center');
-    say(t('card_welcome'), 'guide', [
-      { label: t('hello_btn'), action: () => glideAndGuide() },
+    showBenefitsPanel(false);
+    say(t('auth_gate'), 'guide', [
+      { label: t('have_login'), action: () => startLoginPath() },
+      { label: t('register_me'), action: () => startRegisterPath() },
     ]);
-    // Wait for user tap — no auto-advance
   }
 
   function askLanguage() {
     setStage('center');
+    showBenefitsPanel(false);
     say(t('pick_lang'), 'guide', [
       {
         label: 'PORTUGUÊS',
         action: () => {
           window.CDFi18n?.setLang('pt');
-          welcomeCenter();
+          askAuthGate();
         },
       },
       {
         label: 'ENGLISH',
         action: () => {
           window.CDFi18n?.setLang('en');
-          welcomeCenter();
+          askAuthGate();
         },
       },
       {
         label: 'DEUTSCH',
         action: () => {
           window.CDFi18n?.setLang('de');
-          welcomeCenter();
+          askAuthGate();
         },
       },
     ]);
@@ -221,10 +254,24 @@
       showBenefitsPanel(!!open);
       if (open) say(t('guide_benefits'), 'guide');
     });
-    document.getElementById('wk-upgrade-btn')?.addEventListener('click', () => openUpgrade());
+    document.getElementById('wk-upgrade-btn')?.addEventListener('click', () => {
+      window.location.href = '/pages/membership_plans';
+    });
 
-    // Benefits visible by default
-    showBenefitsPanel(true);
+    // Returning members: skip gate if already claimed + session
+    try {
+      const card = JSON.parse(localStorage.getItem('cdf_wako_member_card') || '{}');
+      if (card.claimed && typeof window.cdfEnterFlowOrbit === 'function') {
+        // member_card.js boot may open Orbit; still allow language if first visit this session
+        const seen = sessionStorage.getItem('cdf_flowee_auth_gate');
+        if (seen === '1') {
+          setStage('dock');
+          return;
+        }
+      }
+    } catch (_) { /* ignore */ }
+
+    showBenefitsPanel(false);
     renderBenefitsTable();
     askLanguage();
   }
@@ -233,10 +280,13 @@
     say,
     showBenefits: () => showBenefitsPanel(true),
     renderBenefitsTable,
+    askAuthGate,
+    startLoginPath,
+    startRegisterPath,
     boot,
   };
 
   document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(boot, 500);
+    setTimeout(boot, 450);
   });
 })();
