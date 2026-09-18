@@ -282,8 +282,18 @@ body.wk-card-page {
   border: 1px solid rgba(61, 224, 255, 0.28);
   background: rgba(8, 16, 30, 0.72);
 }
-.wk-login-panel .wk-nav { margin-top: 0.55rem; }
+.wk-login-panel .wk-nav { margin-top: 0.55rem; flex-wrap: wrap; }
 .wk-login-panel a { color: var(--wk-cyan); }
+.wk-login-panel [hidden],
+.wk-login-panel [hidden].wk-btn,
+.wk-login-panel .wk-field[hidden],
+.wk-login-panel .wk-nav [hidden] {
+  display: none !important;
+}
+body.wk-auth-gate #wk-show-login-btn,
+body.wk-auth-gate #wk-start-register-btn {
+  display: none !important;
+}
 
 /* Auth gate: hide claimed/mock identity until a real session exists */
 body.wk-auth-gate .wk-ben-actions,
