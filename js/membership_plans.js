@@ -421,6 +421,7 @@
   }
 
   function syncFloweeAt(sec) {
+    if (panelOpen) return;
     const lines = I18N[lang]?.flowee_lines || I18N.en.flowee_lines;
     let idx = 0;
     for (let i = 0; i < lines.length; i++) {
@@ -552,18 +553,24 @@
   }
 
   function closePanels() {
-    document.getElementById('mp-panel-about')?.setAttribute('hidden', '');
-    document.getElementById('mp-panel-partners')?.setAttribute('hidden', '');
+    panelOpen = false;
     const about = document.getElementById('mp-panel-about');
     const partners = document.getElementById('mp-panel-partners');
-    if (about) about.hidden = true;
-    if (partners) partners.hidden = true;
+    if (about) {
+      about.hidden = true;
+      about.setAttribute('hidden', '');
+    }
+    if (partners) {
+      partners.hidden = true;
+      partners.setAttribute('hidden', '');
+    }
   }
 
   function openPanel(which) {
     closePanels();
     const el = document.getElementById(which === 'partners' ? 'mp-panel-partners' : 'mp-panel-about');
     if (!el) return;
+    panelOpen = true;
     el.hidden = false;
     el.removeAttribute('hidden');
     el.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
