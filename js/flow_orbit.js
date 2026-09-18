@@ -514,6 +514,27 @@
   }
 
   async function enterOrbit() {
+    // Require live Supabase session — never open Orbit from localStorage mock alone
+    try {
+      const sb = window.supabaseClient || window.cdfSupabase;
+      let session = null;
+      if (sb?.auth?.getSession) {
+        const { data } = await sb.auth.getSession();
+        session = data?.session || null;
+      }
+      if (!session?.access_token) {
+        showClaim();
+        if (typeof window.MemberCardFlow?.enterAuthMode === 'function') {
+          window.MemberCardFlow.enterAuthMode('login');
+        }
+        setGuide('Log in to enter your Flow Orbit.');
+        return;
+      }
+    } catch (_) {
+      showClaim();
+      return;
+    }
+
     const card = loadCard();
     showOrbit();
     setGuide('Loading your Orbit…');
@@ -538,6 +559,8 @@
     if (p.get('orbit') === '0') return false;
     // Deep-link preview only — real Orbit entry is gated by member_card.js after session check
     if (p.get('preview') === '1' && (p.get('orbit') === '1' || p.get('view'))) return true;
+    // Any view/orbit deep link without preview is handled by member_card.js after session check
+    if (p.has('view') || p.get('orbit') === '1') return false;
     // Do not auto-enter from localStorage "claimed" alone (blocks mock profile without login)
     return false;
   }

@@ -12,12 +12,20 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
   <noscript><link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
-  <link rel="stylesheet" href="/css/member_card.css?v=20260918auth3">
-  <link rel="preload" as="image" href="/Assets/membership/wako_card_front.webp">
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+  <link rel="dns-prefetch" href="https://agkmbaephgsnunlarntm.supabase.co">
+  <link rel="stylesheet" href="/css/member_card.css?v=20260918perf1">
+  <link rel="preload" as="image" href="/Assets/membership/wako_card_front.webp" fetchpriority="high">
   <link rel="preload" as="image" href="/Assets/membership/wako_card_back.webp">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="/js/cdf_runtime_config.js"></script>
-  <script src="/js/agents/supabase_client.js"></script>
+  <!-- Runtime config + Supabase loaded on demand by member_card.js (non-blocking) -->
+  <script>
+    window.__CDF_CONFIG__ = window.__CDF_CONFIG__ || {
+      supabaseUrl: 'https://agkmbaephgsnunlarntm.supabase.co',
+      supabaseKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFna21iYWVwaGdzbnVubGFybnRtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5MTAwNjEsImV4cCI6MjA4NjQ4NjA2MX0.XTuM8TTPWgbe65OzNnD8YQkfXY_nTAiYH_Cu-oiRM-k'
+    };
+    window.CDF_SUPABASE_URL = window.__CDF_CONFIG__.supabaseUrl;
+    window.CDF_SUPABASE_KEY = window.__CDF_CONFIG__.supabaseKey;
+  </script>
 </head>
 <body class="wk-card-page">
   <div class="cdf-lang-bar" role="group" aria-label="Language">
@@ -75,7 +83,9 @@
 
     <div class="wk-stage" aria-label="Membership card" id="wk-card-stage">
       <div class="wk-card" id="wk-card" role="button" tabindex="0" aria-label="Flip membership card">
-        <div class="wk-face wk-face--front" title="Wako Kungo Emblem"></div>
+        <div class="wk-face wk-face--front" title="Wako Kungo Emblem">
+          <img class="wk-face-img" src="/Assets/membership/wako_card_front.webp" alt="" width="672" height="400" fetchpriority="high" decoding="async">
+        </div>
         <div class="wk-face wk-face--back">
           <div class="wk-name-slot is-empty" id="wk-member-name">
             <span id="wk-name-text">Your name here</span>
@@ -149,20 +159,20 @@
         <section class="wk-slide" data-step="2">
           <div class="wk-panel">
             <h2>How do you join?</h2>
-            <div class="wk-choice-grid" role="listbox" aria-label="Contact options">
-              <button type="button" class="wk-choice" data-contact="google">
+            <div class="wk-choice-grid" role="group" aria-label="Contact options">
+              <button type="button" class="wk-choice" data-contact="google" aria-pressed="false">
                 <strong>Google</strong>
                 <span>Fast sign-in — same as Circle D Flow</span>
               </button>
-              <button type="button" class="wk-choice" data-contact="email">
+              <button type="button" class="wk-choice" data-contact="email" aria-pressed="false">
                 <strong>Email</strong>
                 <span>Classic mail + password profile</span>
               </button>
-              <button type="button" class="wk-choice" data-contact="instagram">
+              <button type="button" class="wk-choice" data-contact="instagram" aria-pressed="false">
                 <strong>Instagram handle</strong>
                 <span>@name + email for your account</span>
               </button>
-              <button type="button" class="wk-choice" data-contact="other">
+              <button type="button" class="wk-choice" data-contact="other" aria-pressed="false">
                 <strong>Other contact</strong>
                 <span>WhatsApp, Discord, or phone + email</span>
               </button>
@@ -309,10 +319,10 @@
   <div id="flowee-agent"></div>
 
   <!-- Heavy scripts deferred; supabase + qrcode loaded on demand by member_card.js -->
-  <script src="/js/data/cdf_i18n.js?v=20260918auth3" defer></script>
-  <script src="/js/agents/flowee.js?v=20260918auth3" defer></script>
-  <script src="/js/agents/flowee_member_card_guide.js?v=20260918auth3" defer></script>
-  <script src="/js/member_card.js?v=20260918auth3" defer></script>
-  <script src="/js/flow_orbit.js?v=20260918auth3" defer></script>
+  <script src="/js/data/cdf_i18n.js?v=20260918perf1" defer></script>
+  <script src="/js/agents/flowee.js?v=20260918perf1" defer></script>
+  <script src="/js/agents/flowee_member_card_guide.js?v=20260918perf1" defer></script>
+  <script src="/js/member_card.js?v=20260918perf1" defer></script>
+  <script src="/js/flow_orbit.js?v=20260918perf1" defer></script>
 </body>
 </html>

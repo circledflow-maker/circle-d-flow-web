@@ -49,7 +49,6 @@
           : loadScript('https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js'),
       ]).then(() => {
         initSupabaseClient();
-        return new Promise((r) => setTimeout(r, 30));
       });
     }
     return libsPromise;
@@ -1237,7 +1236,9 @@
     btn.addEventListener('click', () => {
       state.contact = btn.getAttribute('data-contact') || '';
       document.querySelectorAll('[data-contact]').forEach((b) => {
-        b.classList.toggle('is-selected', b === btn);
+        const on = b === btn;
+        b.classList.toggle('is-selected', on);
+        b.setAttribute('aria-pressed', on ? 'true' : 'false');
       });
       const card = loadCard();
       card.contactMethod = state.contact;
@@ -1308,10 +1309,121 @@
   };
 
   async function boot() {
+    const params = new URLSearchParams(window.location.search);
+
+    // Never flash localStorage mock identity before session check
+    showGuestIdentity();
+
+    // Explicit Login / Registration from Membership sky — paint auth UI first (libs later)
+    const authMode = params.get('auth');
+    if (authMode === 'login') {
+      enterAuthMode('login');
+      try {
+        await ensureLibs();
+        if (await consumeRecoverySession()) return;
+      } catch (_) { /* ignore */ }
+      return;
+    }
+    if (authMode === 'register') {
+      enterAuthMode('register');
+      ensureLibs().catch(() => {});
+      return;
+    }
+
+    const wantsOrbit = params.has('view') || params.get('orbit') === '1';
+    const needsSessionFirst =
+      wantsOrbit ||
+      params.get('oauth') === '1' ||
+      params.get('step') === 'issue' ||
+      params.get('paid') === '1';
+
+    // Cold guest visit — paint welcome before loading Supabase (FCP/LCP)
+    if (!needsSessionFirst) {
+      goStep(0, { silent: true });
+      speak('Pick Login if you already have a profile — or Registration for a free Bronze card.', 'guide');
+      try {
+        await ensureLibs();
+      } catch (_) { /* ignore */ }
+      if (await consumeRecoverySession()) return;
+      const profile = await readExp();
+      let card = loadCard();
+      if (profile.authed && (card.claimed || profile.publicId || card.displayName)) {
+        const applied = await applySessionToCard();
+        card = applied.card;
+        if (card.claimed) memberNumber(card);
+        renderName(card.displayName || '', card.memberNumber || '');
+        renderQr(WAKO_IG);
+        setChips(card, applied.profile.exp);
+        try {
+          sessionStorage.setItem('cdf_flowee_auth_gate', '1');
+        } catch (_) {}
+        if (card.claimed || profile.publicId) {
+          if (typeof window.cdfEnterFlowOrbit === 'function') {
+            window.cdfEnterFlowOrbit();
+            return;
+          }
+        }
+      }
+      if (card.claimed && !profile.authed) {
+        enterAuthMode('login');
+        setMsg(
+          els.loginMsg,
+          'A local card draft was found — Log in to open your real Member Card profile.',
+          true
+        );
+        return;
+      }
+      if (params.get('n') && !card.displayName) {
+        card.displayName = params.get('n');
+        saveCard(card);
+      }
+      if (profile.email && els.emailInput) els.emailInput.value = profile.email;
+      return;
+    }
+
+    // Orbit deep-link — paint auth gate first, then verify session
+    if (wantsOrbit) {
+      enterAuthMode('login');
+      try {
+        await ensureLibs();
+      } catch (_) { /* ignore */ }
+      if (await consumeRecoverySession()) return;
+      const profile = await readExp();
+      if (!profile.authed) {
+        setMsg(
+          els.loginMsg,
+          'Log in to open your Member Card Orbit. Local drafts stay hidden until you sign in.',
+          true
+        );
+        return;
+      }
+      let card = loadCard();
+      if (profile.authed && (card.claimed || profile.publicId || card.displayName)) {
+        const applied = await applySessionToCard();
+        card = applied.card;
+        if (card.claimed) memberNumber(card);
+        renderName(card.displayName || '', card.memberNumber || '');
+        renderQr(WAKO_IG);
+        setChips(card, applied.profile.exp);
+        try {
+          sessionStorage.setItem('cdf_flowee_auth_gate', '1');
+        } catch (_) {}
+        if ((card.claimed || profile.publicId) && typeof window.cdfEnterFlowOrbit === 'function') {
+          window.cdfEnterFlowOrbit();
+          return;
+        }
+      }
+      setMsg(
+        els.loginMsg,
+        'Signed in — claim or sync your card to open Orbit.',
+        true
+      );
+      return;
+    }
+
     try {
       await ensureLibs();
     } catch (_) { /* ignore */ }
-    const params = new URLSearchParams(window.location.search);
 
     // Password recovery from email link first
     if (await consumeRecoverySession()) return;
@@ -1346,17 +1458,6 @@
       return;
     }
 
-    // Explicit Login / Registration from Membership sky
-    const authMode = params.get('auth');
-    if (authMode === 'login') {
-      enterAuthMode('login');
-      return;
-    }
-    if (authMode === 'register') {
-      enterAuthMode('register');
-      return;
-    }
-
     // OAuth return
     if (params.get('oauth') === '1' || params.get('step') === 'issue') {
       const { user } = await sessionJwt();
@@ -1379,7 +1480,7 @@
       return;
     }
 
-    // Returning member with real Supabase session
+    // Returning member with real Supabase session (e.g. ?view=card with live session)
     if (profile.authed && (card.claimed || profile.publicId || card.displayName)) {
       const applied = await applySessionToCard();
       card = applied.card;
