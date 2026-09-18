@@ -1183,6 +1183,24 @@
       }
     }
 
+    const authMode = params.get('auth');
+    if (authMode === 'login') {
+      try {
+        sessionStorage.setItem('cdf_flowee_auth_gate', '1');
+      } catch (_) {}
+      showLoginPanel(true);
+      speak('Welcome back — email + password opens your profile Orbit.', 'guide');
+      return;
+    }
+    if (authMode === 'register') {
+      try {
+        sessionStorage.setItem('cdf_flowee_auth_gate', '1');
+      } catch (_) {}
+      startRegister();
+      speak('New navigator — we register your free Bronze card together (+EXP).', 'guide');
+      return;
+    }
+
     if (card.claimed && profile.authed) {
       try {
         sessionStorage.setItem('cdf_flowee_auth_gate', '1');

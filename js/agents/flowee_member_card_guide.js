@@ -258,11 +258,20 @@
       window.location.href = '/pages/membership_plans';
     });
 
-    // Returning members: skip gate if already claimed + session
+    const auth = new URLSearchParams(location.search).get('auth');
+    if (auth === 'login' || auth === 'register') {
+      setStage('dock');
+      showBenefitsPanel(false);
+      setTimeout(() => {
+        if (auth === 'login') startLoginPath();
+        else startRegisterPath();
+      }, 600);
+      return;
+    }
+
     try {
       const card = JSON.parse(localStorage.getItem('cdf_wako_member_card') || '{}');
       if (card.claimed && typeof window.cdfEnterFlowOrbit === 'function') {
-        // member_card.js boot may open Orbit; still allow language if first visit this session
         const seen = sessionStorage.getItem('cdf_flowee_auth_gate');
         if (seen === '1') {
           setStage('dock');

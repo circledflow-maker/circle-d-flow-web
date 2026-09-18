@@ -82,9 +82,10 @@
   <div id="app" hidden>
     <h1>Welt Heart · Flow Control</h1>
     <p class="sub">
-      Members · Events · Locations · Impact · Invite links.
-      Visitor path: <span class="code">/join</span> → Member Card → Sanctuary.
-      <a href="/member-card" style="color:var(--cyan)">Open member card</a>
+      Members · Events · Locations · Impact · Invite · <strong>Flowee guides you</strong>.
+      Visitor path: <span class="code">/member-card</span> → language → Login/Register → Bronze (+EXP) → Orbit / Sanctuary.
+      <a href="/member-card" style="color:var(--cyan)">Open member card</a> ·
+      <a href="/pages/membership_plans" style="color:var(--cyan)">Membership plans</a>
     </p>
     <div class="hub-links">
       <a class="btn ghost" href="/admin/registrations">Event registrations</a>
@@ -802,5 +803,9 @@
       tryUnlock(adminKey());
     }
   </script>
+  <div id="flowee-agent"></div>
+  <script src="/js/cdf_runtime_config.js"></script>
+  <script src="/js/agents/flowee.js?v=20260918c" defer></script>
+  <script src="/js/agents/admin_flowee_guide.js?v=20260918c" defer></script>
 </body>
 </html>
