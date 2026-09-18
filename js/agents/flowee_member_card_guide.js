@@ -135,13 +135,13 @@
       {
         label: t('tier_sup'),
         action: () => {
-          window.location.href = '/pages/membership_plans?tier=flow_supporter';
+          window.location.href = '/membership?skip=1&tier=flow_supporter#tier-silver';
         },
       },
       {
         label: t('tier_crew'),
         action: () => {
-          window.location.href = '/pages/membership_plans?tier=flow_crew';
+          window.location.href = '/membership?skip=1&tier=flow_crew#tier-gold';
         },
       },
       {
@@ -255,7 +255,7 @@
       if (open) say(t('guide_benefits'), 'guide');
     });
     document.getElementById('wk-upgrade-btn')?.addEventListener('click', () => {
-      window.location.href = '/pages/membership_plans';
+      window.location.href = '/membership?skip=1#mp-billing';
     });
 
     const auth = new URLSearchParams(location.search).get('auth');

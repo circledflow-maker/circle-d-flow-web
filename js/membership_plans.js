@@ -13,13 +13,13 @@
       gate_confirm: 'Confirm · Continue',
       gate_confirm_need: 'Select a language first.',
       flowee_hi:
-        'Akwaaba. I am Flowee. I stay with you here until you Log in or Register — or open About us / Partner system.',
+        'Akwaaba — welcome. You are in Membership: the Circle D Flow × Wako Kungo gate for your Member Card, plans, and partners.',
       flowee_lines: [
-        { t: 0, text: 'I am Flowee — your guide in Circle D Flow and Wako Kungo.' },
-        { t: 5, text: 'Free Bronze Member Card opens Sanctuary, Orbit alerts, and +EXP.' },
-        { t: 10, text: 'Silver and Gold are optional support for venues, artists, and partners.' },
-        { t: 15, text: 'Kiss your heart · share the Flow · fair exchange.' },
-        { t: 20, text: 'When you are ready: Log in, or Registration for your free card.' },
+        { t: 0, text: 'You are here: Membership. I am Flowee, your guide in this space.' },
+        { t: 5, text: 'Log in opens your existing Member Card and Flow Orbit.' },
+        { t: 10, text: 'Registration starts your free Bronze card (+EXP) — no payment needed.' },
+        { t: 15, text: 'About us and Partner system explain Circle D Flow, Wako Kungo, and perks.' },
+        { t: 20, text: 'Silver and Gold are optional upgrades — only when you are ready.' },
       ],
       login: 'Log in',
       register: 'Registration',
@@ -100,13 +100,13 @@
       gate_confirm: 'Confirmar · Continuar',
       gate_confirm_need: 'Escolhe um idioma primeiro.',
       flowee_hi:
-        'Akwaaba. Sou a Flowee. Fico contigo aqui até fazeres Login ou Registo — ou abrires Sobre nós / Parceiros.',
+        'Akwaaba — bem-vindo/a. Estás em Membership: o portal Circle D Flow × Wako Kungo para o teu Member Card, planos e parceiros.',
       flowee_lines: [
-        { t: 0, text: 'Sou a Flowee — a tua guia no Circle D Flow e Wako Kungo.' },
-        { t: 5, text: 'O cartão Bronze grátis abre Santuário, Orbit e +EXP.' },
-        { t: 10, text: 'Silver e Gold são apoio opcional para venues, artistas e parceiros.' },
-        { t: 15, text: 'Kiss your heart · partilhar o Flow · troca justa.' },
-        { t: 20, text: 'Quando estiveres pronto: Login, ou Registo para o cartão grátis.' },
+        { t: 0, text: 'Estás aqui: Membership. Sou a Flowee, a tua guia neste espaço.' },
+        { t: 5, text: 'Log in abre o teu Member Card e Flow Orbit existentes.' },
+        { t: 10, text: 'Registo começa o cartão Bronze grátis (+EXP) — sem pagamento.' },
+        { t: 15, text: 'Sobre nós e Parceiros explicam o Circle, Wako Kungo e os benefícios.' },
+        { t: 20, text: 'Silver e Gold são upgrades opcionais — só quando quiseres.' },
       ],
       login: 'Log in',
       register: 'Registo',
@@ -186,13 +186,13 @@
       gate_confirm: 'Bestätigen · Weiter',
       gate_confirm_need: 'Bitte zuerst eine Sprache wählen.',
       flowee_hi:
-        'Akwaaba. Ich bin Flowee. Ich bleibe hier, bis du Log in oder Registration wählst — oder About us / Partner system öffnest.',
+        'Akwaaba — willkommen. Du bist in Membership: dem Circle D Flow × Wako Kungo Tor für Member Card, Pläne und Partner.',
       flowee_lines: [
-        { t: 0, text: 'Ich bin Flowee — dein Guide in Circle D Flow und Wako Kungo.' },
-        { t: 5, text: 'Free Bronze Member Card öffnet Sanctuary, Orbit und +EXP.' },
-        { t: 10, text: 'Silver und Gold sind optionaler Support für Venues, Artists und Partner.' },
-        { t: 15, text: 'Kiss your heart · Flow teilen · fairer Austausch.' },
-        { t: 20, text: 'Wenn du bereit bist: Log in — oder Registration für die Free Card.' },
+        { t: 0, text: 'Du bist hier: Membership. Ich bin Flowee, dein Guide in diesem Raum.' },
+        { t: 5, text: 'Log in öffnet deine bestehende Member Card und Flow Orbit.' },
+        { t: 10, text: 'Registration startet die Free Bronze Card (+EXP) — ohne Zahlung.' },
+        { t: 15, text: 'About us und Partner system erklären Circle, Wako Kungo und Perks.' },
+        { t: 20, text: 'Silver und Gold sind optionale Upgrades — erst wenn du bereit bist.' },
       ],
       login: 'Log in',
       register: 'Registration',
@@ -617,10 +617,11 @@
       confirmLang();
     });
     document.getElementById('mp-intro-login')?.addEventListener('click', () => {
-      window.location.href = '/member-card?auth=login';
+      // Force login UI — do not auto-open Orbit even if a local card exists
+      window.location.href = '/member-card?auth=login&orbit=0';
     });
     document.getElementById('mp-intro-register')?.addEventListener('click', () => {
-      window.location.href = '/member-card?auth=register';
+      window.location.href = '/member-card?auth=register&orbit=0';
     });
     document.getElementById('mp-intro-about')?.addEventListener('click', (e) => {
       e.preventDefault();
@@ -642,11 +643,11 @@
     });
 
     const params = new URLSearchParams(window.location.search);
-    if (params.get('skip') === '1') {
+    if (params.get('skip') === '1' || params.get('from') === 'upgrade') {
       try {
         lang = localStorage.getItem(LANG_KEY) || 'en';
       } catch (_) {}
-      showMain();
+      showMain(params.get('from') === 'upgrade' ? 'mp-billing' : null);
       return;
     }
     if (params.get('tier') && params.get('cine') !== '1') {

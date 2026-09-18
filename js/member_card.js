@@ -1093,12 +1093,13 @@
         window.location.href = sanctuaryDest();
         return;
       }
-      const q = tier ? '?tier=' + encodeURIComponent(tier) : '';
-      window.location.href = '/pages/membership_plans' + q;
+      const q = tier ? '?skip=1&tier=' + encodeURIComponent(tier) : '?skip=1';
+      window.location.href = '/membership' + q + '#mp-billing';
     });
   });
   document.getElementById('wk-upgrade-btn')?.addEventListener('click', () => {
-    window.location.href = '/pages/membership_plans';
+    // Skip language/sky gate — go straight to Silver/Gold plans
+    window.location.href = '/membership?skip=1#mp-billing';
   });
 
   bindSwipe();
@@ -1188,16 +1189,23 @@
       try {
         sessionStorage.setItem('cdf_flowee_auth_gate', '1');
       } catch (_) {}
+      // Ensure Orbit shell stays hidden while logging in
+      document.getElementById('wk-orbit-shell')?.setAttribute('hidden', '');
+      document.getElementById('wk-claim-shell')?.removeAttribute('hidden');
+      document.body.classList.remove('wk-orbit-mode');
       showLoginPanel(true);
-      speak('Welcome back — email + password opens your profile Orbit.', 'guide');
+      speak('Welcome — Log in with email + password (or Google) to open your Member Card.', 'guide');
       return;
     }
     if (authMode === 'register') {
       try {
         sessionStorage.setItem('cdf_flowee_auth_gate', '1');
       } catch (_) {}
+      document.getElementById('wk-orbit-shell')?.setAttribute('hidden', '');
+      document.getElementById('wk-claim-shell')?.removeAttribute('hidden');
+      document.body.classList.remove('wk-orbit-mode');
       startRegister();
-      speak('New navigator — we register your free Bronze card together (+EXP).', 'guide');
+      speak('Registration — we create your free Bronze Member Card together (+EXP).', 'guide');
       return;
     }
 
