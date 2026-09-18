@@ -275,6 +275,7 @@
   let lastFloweeIdx = -1;
   let skyRaf = null;
   let skyStars = [];
+  let panelOpen = false;
 
   function t(key) {
     return (I18N[lang] && I18N[lang][key]) || I18N.en[key] || key;
@@ -562,8 +563,14 @@
   function openPanel(which) {
     closePanels();
     const el = document.getElementById(which === 'partners' ? 'mp-panel-partners' : 'mp-panel-about');
-    if (el) el.hidden = false;
-    say(which === 'partners' ? t('partners_lead') : t('about_p1'));
+    if (!el) return;
+    el.hidden = false;
+    el.removeAttribute('hidden');
+    el.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    const guide = document.getElementById('mp-flowee-line');
+    const line = which === 'partners' ? t('partners_lead') : t('about_p1');
+    if (guide) guide.textContent = line;
+    say(line);
   }
 
   function startIntro() {
