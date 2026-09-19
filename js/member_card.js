@@ -1331,8 +1331,9 @@
     }
 
     const wantsOrbit = params.has('view') || params.get('orbit') === '1';
+    const previewOrbit = params.get('preview') === '1';
     const needsSessionFirst =
-      wantsOrbit ||
+      (wantsOrbit && !previewOrbit) ||
       params.get('oauth') === '1' ||
       params.get('step') === 'issue' ||
       params.get('paid') === '1';
