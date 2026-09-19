@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Orbit nav smoke</title>
+  <link rel="stylesheet" href="/css/member_card.css?v=20260919nav1">
+  <style>
+    body { margin: 0; background: #05080f; color: #f4efe6; font-family: system-ui, sans-serif; }
+    #log { position: fixed; top: 0; left: 0; right: 0; z-index: 9999; background: #111; padding: 0.5rem; font-size: 12px; }
+  </style>
+</head>
+<body class="wk-card-page wk-orbit-mode">
+  <div id="log">Orbit nav smoke…</div>
+  <main class="wk-shell">
+    <p class="wk-flowee-line" id="wk-guide" role="status">Smoke</p>
+    <div class="wk-meta">
+      <span class="wk-chip" id="chip-status">Card <strong>Active</strong></span>
+      <span class="wk-chip" id="chip-member">No. <strong>WK-1</strong></span>
+      <span class="wk-chip" id="chip-exp">EXP <strong>10</strong></span>
+    </div>
+    <div id="wk-claim-shell" hidden></div>
+    <div id="wk-orbit-shell">
+      <div class="orbit-stage" id="orbit-stage">
+        <div class="orbit-track" id="orbit-track"></div>
+      </div>
+      <nav class="orbit-dock" id="orbit-dock" aria-label="Orbit navigation">
+        <button type="button" data-orbit-mode="card">◉ Card</button>
+        <button type="button" class="on" data-orbit-mode="flow">✦ Flow</button>
+        <button type="button" data-orbit-mode="saved">♥ Saved</button>
+        <button type="button" data-orbit-mode="me">◎ Me</button>
+      </nav>
+      <div class="orbit-detail" id="orbit-detail" hidden>
+        <button type="button" class="orbit-detail-close" id="orbit-detail-close">↓</button>
+        <div id="orbit-detail-body"></div>
+      </div>
+    </div>
+  </main>
+  <script>
+    // Offline feed for smoke — intercept before flow_orbit loads
+    const demo = {
+      cards: [{
+        type: 'event', id: '1', slug: 'botanical-groove-session',
+        data: {
+          title: 'The Botanical Groove Session',
+          statusLabel: 'NEXT FLOW', status: 'upcoming',
+          description: 'Demo event',
+          location: {
+            name: 'Botânica Lisboa', city: 'Lisbon',
+            mapUrl: 'https://maps.google.com/?q=Botanica+Lisboa',
+            instagramUrl: 'https://www.instagram.com/wako.kungo/'
+          },
+          memberBenefit: 'Early entry',
+          eventDate: '2026-10-01', startTime: '20:00:00',
+          ctaUrl: 'https://www.instagram.com/wako.kungo/'
+        },
+        saved: false
+      }, {
+        type: 'benefit', id: 'b1', slug: 'wk',
+        data: { title: 'Benefit', code: 'WK', benefitText: 'Demo', partner: { name: 'Wako', url: 'https://www.instagram.com/wako.kungo/' } },
+        saved: false
+      }],
+      events: [], coupons: [], locations: [], saves: [],
+      flowee: { line: 'Smoke feed' }
+    };
+    const _fetch = window.fetch.bind(window);
+    window.fetch = async (url, opts) => {
+      if (String(url).includes('member-orbit') || String(url).includes('action=feed')) {
+        return new Response(JSON.stringify(demo), { status: 200, headers: { 'Content-Type': 'application/json' } });
+      }
+      return _fetch(url, opts);
+    };
+    localStorage.setItem('cdf_wako_member_card', JSON.stringify({
+      claimed: true, claimedAt: new Date().toISOString(),
+      displayName: 'Hope', memberNumber: 'WK-346337', exp: 295
+    }));
+  </script>
+  <script src="/js/flow_orbit.js?v=20260919nav1"></script>
+  <script>
+    (async () => {
+      const log = document.getElementById('log');
+      // Force enter even if shouldEnterOrbit skipped (no preview in URL of this harness)
+      history.replaceState({}, '', '/pages/_orbit_nav_smoke.html?preview=1&orbit=1&view=event');
+      if (typeof window.cdfEnterFlowOrbit === 'function') {
+        await window.cdfEnterFlowOrbit();
+      }
+      await new Promise((r) => setTimeout(r, 400));
+      const ig = document.querySelector('a.wk-btn[href*="instagram.com"]');
+      const track = document.getElementById('orbit-track');
+      const before = track && track.style.transform;
+      document.querySelector('[data-orbit-mode="saved"]').click();
+      await new Promise((r) => setTimeout(r, 50));
+      const afterSaved = track.style.transform;
+      document.querySelector('[data-orbit-mode="flow"]').click();
+      await new Promise((r) => setTimeout(r, 50));
+      const afterFlow = track.style.transform;
+      log.textContent = JSON.stringify({
+        hasInstagram: Boolean(ig),
+        igHref: ig && ig.getAttribute('href'),
+        before, afterSaved, afterFlow,
+        transition: track.style.transition,
+        ok: Boolean(ig) && afterSaved !== afterFlow
+      }, null, 2);
+      document.title = ig ? 'ORBIT_SMOKE_PASS' : 'ORBIT_SMOKE_FAIL';
+    })();
+  </script>
+</body>
+</html>

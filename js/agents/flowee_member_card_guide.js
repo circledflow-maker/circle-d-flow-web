@@ -258,7 +258,8 @@
       window.location.href = '/membership?skip=1#mp-billing';
     });
 
-    const auth = new URLSearchParams(location.search).get('auth');
+    const params = new URLSearchParams(location.search);
+    const auth = params.get('auth');
     if (auth === 'login' || auth === 'register') {
       setStage('dock');
       showBenefitsPanel(false);
@@ -270,6 +271,14 @@
         } else if (auth === 'login') startLoginPath();
         else startRegisterPath();
       }, 700);
+      return;
+    }
+
+    // Orbit deep links are session-gated by member_card.js — stay docked, no language interrupt
+    // Preview peeks also skip language gate
+    if (params.has('view') || params.get('orbit') === '1' || params.get('preview') === '1') {
+      setStage('dock');
+      showBenefitsPanel(false);
       return;
     }
 

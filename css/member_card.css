@@ -89,6 +89,7 @@ body.wk-card-page {
   width: 100%;
   max-width: 380px;
   flex-shrink: 0;
+  contain: layout style;
 }
 
 .wk-card {
@@ -120,6 +121,16 @@ body.wk-card-page {
 }
 
 .wk-face--front { background-image: var(--wk-card-front); }
+
+.wk-face-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+}
 
 .wk-face--back {
   transform: rotateY(180deg);
@@ -794,3 +805,17 @@ body.wk-flowee-docked #flowee-agent {
 }
 body.wk-orbit-mode #wk-dots { display: none; }
 body.wk-orbit-mode #wk-card-stage { max-height: 0; opacity: 0; overflow: hidden; margin: 0; padding: 0; transition: 0.3s; }
+
+/* Reserve Flowee dock — avoid CLS when vessel mounts */
+#flowee-agent {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  width: 76px;
+  height: 76px;
+  z-index: 10000;
+  pointer-events: none;
+  contain: layout size;
+}
+#flowee-agent > * { pointer-events: auto; }
+#flowee-agent.group { transition: opacity 0.3s ease !important; }
