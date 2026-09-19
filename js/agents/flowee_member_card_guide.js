@@ -275,7 +275,8 @@
     }
 
     // Orbit deep links are session-gated by member_card.js — stay docked, no language interrupt
-    if (params.has('view') || params.get('orbit') === '1') {
+    // Preview peeks also skip language gate
+    if (params.has('view') || params.get('orbit') === '1' || params.get('preview') === '1') {
       setStage('dock');
       showBenefitsPanel(false);
       return;
