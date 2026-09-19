@@ -570,25 +570,31 @@
   }
 
   async function enterOrbit() {
+    const p = qs();
+    const allowPreview = p.get('preview') === '1';
+
     // Require live Supabase session — never open Orbit from localStorage mock alone
-    try {
-      const sb = window.supabaseClient || window.cdfSupabase;
-      let session = null;
-      if (sb?.auth?.getSession) {
-        const { data } = await sb.auth.getSession();
-        session = data?.session || null;
-      }
-      if (!session?.access_token) {
-        showClaim();
-        if (typeof window.MemberCardFlow?.enterAuthMode === 'function') {
-          window.MemberCardFlow.enterAuthMode('login');
+    // Exception: explicit ?preview=1 deep links (public event peek)
+    if (!allowPreview) {
+      try {
+        const sb = window.supabaseClient || window.cdfSupabase;
+        let session = null;
+        if (sb?.auth?.getSession) {
+          const { data } = await sb.auth.getSession();
+          session = data?.session || null;
         }
-        setGuide('Log in to enter your Flow Orbit.');
+        if (!session?.access_token) {
+          showClaim();
+          if (typeof window.MemberCardFlow?.enterAuthMode === 'function') {
+            window.MemberCardFlow.enterAuthMode('login');
+          }
+          setGuide('Log in to enter your Flow Orbit.');
+          return;
+        }
+      } catch (_) {
+        showClaim();
         return;
       }
-    } catch (_) {
-      showClaim();
-      return;
     }
 
     const card = loadCard();
@@ -599,6 +605,34 @@
       feed = await fetchFeed();
     } catch (_) {
       feed = { cards: [], events: [], coupons: [], locations: [], saves: [], flowee: { line: 'Offline Orbit — local card ready.' } };
+    }
+    // Preview / offline: ensure at least one Next Flow card so dock + Instagram CTA are testable
+    if (allowPreview && !(feed.cards || []).some((c) => c.type === 'event')) {
+      const demo = {
+        type: 'event',
+        id: 'preview_botanical',
+        slug: 'botanical-groove-session',
+        data: {
+          title: 'The Botanical Groove Session',
+          statusLabel: 'NEXT FLOW',
+          status: 'upcoming',
+          description:
+            'Wako Kungo presents The Botanical Groove Session — music, movement and connection at Botânica Lisboa.',
+          location: {
+            name: 'Botânica Lisboa',
+            city: 'Lisbon',
+            mapUrl: 'https://maps.google.com/?q=Botanica+Lisboa',
+            instagramUrl: 'https://www.instagram.com/wako.kungo/',
+          },
+          memberBenefit: 'Silver+ free Wako event access · Early entry',
+          eventDate: '2026-10-01',
+          startTime: '20:00:00',
+          ctaUrl: 'https://www.instagram.com/wako.kungo/',
+        },
+        saved: false,
+      };
+      feed.cards = [demo].concat(feed.cards || []);
+      feed.flowee = feed.flowee || { line: 'Preview Orbit — Instagram + dock ready.' };
     }
     state.feed = feed;
     state.cards = buildCards(feed, card);
