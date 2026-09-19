@@ -805,3 +805,17 @@ body.wk-flowee-docked #flowee-agent {
 }
 body.wk-orbit-mode #wk-dots { display: none; }
 body.wk-orbit-mode #wk-card-stage { max-height: 0; opacity: 0; overflow: hidden; margin: 0; padding: 0; transition: 0.3s; }
+
+/* Reserve Flowee dock — avoid CLS when vessel mounts */
+#flowee-agent {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  width: 76px;
+  height: 76px;
+  z-index: 10000;
+  pointer-events: none;
+  contain: layout size;
+}
+#flowee-agent > * { pointer-events: auto; }
+#flowee-agent.group { transition: opacity 0.3s ease !important; }

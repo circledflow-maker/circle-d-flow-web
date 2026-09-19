@@ -14,7 +14,7 @@
   <noscript><link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
   <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
   <link rel="dns-prefetch" href="https://agkmbaephgsnunlarntm.supabase.co">
-  <link rel="stylesheet" href="/css/member_card.css?v=20260918perf1">
+  <link rel="stylesheet" href="/css/member_card.css?v=20260919orbit1">
   <link rel="preload" as="image" href="/Assets/membership/wako_card_front.webp" fetchpriority="high">
   <link rel="preload" as="image" href="/Assets/membership/wako_card_back.webp">
   <!-- Runtime config + Supabase loaded on demand by member_card.js (non-blocking) -->
@@ -269,10 +269,10 @@
           <div class="wk-panel">
             <h2>Bronze · Silver · Gold</h2>
             <p class="wk-hint" style="margin-top:0">Bronze free is enough. Silver / Gold on the plans page (values, policy, Stripe).</p>
-            <div class="wk-choice-grid">
-              <button type="button" class="wk-choice" data-tier-select="registered"><strong>Stay Bronze · Free</strong><span>Open Orbit / Sanctuary</span></button>
-              <button type="button" class="wk-choice" data-tier-select="flow_supporter"><strong>Silver · €5/mo</strong><span>Plans &amp; policy</span></button>
-              <button type="button" class="wk-choice" data-tier-select="flow_crew"><strong>Gold · €10/mo</strong><span>Plans &amp; policy</span></button>
+            <div class="wk-choice-grid" role="group" aria-label="Membership tier">
+              <button type="button" class="wk-choice" data-tier-select="registered" aria-pressed="false"><strong>Stay Bronze · Free</strong><span>Open Orbit / Sanctuary</span></button>
+              <button type="button" class="wk-choice" data-tier-select="flow_supporter" aria-pressed="false"><strong>Silver · €5/mo</strong><span>Plans &amp; policy</span></button>
+              <button type="button" class="wk-choice" data-tier-select="flow_crew" aria-pressed="false"><strong>Gold · €10/mo</strong><span>Plans &amp; policy</span></button>
             </div>
             <div class="wk-nav">
               <a class="wk-btn wk-btn--gold" id="go-sanctuary-btn" href="/sanctuary?welcome=card">Enter 3D Sanctuary</a>
@@ -319,10 +319,10 @@
   <div id="flowee-agent"></div>
 
   <!-- Heavy scripts deferred; supabase + qrcode loaded on demand by member_card.js -->
-  <script src="/js/data/cdf_i18n.js?v=20260918perf1" defer></script>
-  <script src="/js/agents/flowee.js?v=20260918perf1" defer></script>
-  <script src="/js/agents/flowee_member_card_guide.js?v=20260918perf1" defer></script>
-  <script src="/js/member_card.js?v=20260918perf1" defer></script>
-  <script src="/js/flow_orbit.js?v=20260918perf1" defer></script>
+  <script src="/js/data/cdf_i18n.js?v=20260919orbit1" defer></script>
+  <script src="/js/agents/flowee.js?v=20260919orbit1" defer></script>
+  <script src="/js/agents/flowee_member_card_guide.js?v=20260919orbit1" defer></script>
+  <script src="/js/member_card.js?v=20260919orbit1" defer></script>
+  <script src="/js/flow_orbit.js?v=20260919orbit1" defer></script>
 </body>
 </html>

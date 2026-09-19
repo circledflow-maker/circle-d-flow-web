@@ -6,6 +6,7 @@
 (function () {
   const STORAGE_KEY = 'cdf_wako_member_card';
   const SAVED_LOCAL_KEY = 'cdf_flow_saves';
+  const WAKO_IG = 'https://www.instagram.com/wako.kungo/';
 
   const els = {
     claimShell: document.getElementById('wk-claim-shell'),
@@ -159,10 +160,31 @@
       </article>`;
   }
 
+  function eventInstagramUrl(ev) {
+    if (!ev) return WAKO_IG;
+    const raw =
+      ev.ctaUrl ||
+      ev.instagramUrl ||
+      ev.location?.instagramUrl ||
+      ev.location?.websiteUrl ||
+      '';
+    const u = String(raw || '').trim();
+    if (/instagram\.com/i.test(u)) return u;
+    if (u && /^https?:\/\//i.test(u) && /instagram|wako/i.test(u)) return u;
+    // Prefer IG for social CTA; map stays on Get directions
+    return WAKO_IG;
+  }
+
+  function eventMapUrl(ev) {
+    const u = String(ev?.location?.mapUrl || '').trim();
+    return u || 'https://maps.google.com/?q=Lisbon';
+  }
+
   function renderEventCard(item) {
     const ev = item.data || {};
     const loc = ev.location?.name || 'Lisbon';
     const city = ev.location?.city || '';
+    const ig = eventInstagramUrl(ev);
     return `
       <article class="orbit-card orbit-card--event" data-type="event" data-id="${esc(ev.id || '')}" data-slug="${esc(ev.slug || '')}">
         <p class="orbit-kicker">${esc(ev.statusLabel || 'EVENT')} ${ev.status === 'live' ? '●' : ''}</p>
@@ -172,7 +194,8 @@
         <p class="orbit-sub">${esc(loc)}${city ? ' · ' + esc(city) : ''}</p>
         <div class="orbit-actions">
           <button type="button" class="wk-btn wk-btn--gold" data-orbit-save="event" data-orbit-id="${esc(ev.slug || ev.id)}">${item.saved ? 'Saved ♥' : 'Save'}</button>
-          <button type="button" class="wk-btn wk-btn--cyan" data-orbit-detail="event">Details ↑</button>
+          <a class="wk-btn wk-btn--cyan" href="${esc(ig)}" target="_blank" rel="noopener noreferrer">Instagram</a>
+          <button type="button" class="wk-btn wk-btn--ghost" data-orbit-detail="event">Details ↑</button>
         </div>
         <p class="orbit-hint">↑ swipe for access · details</p>
       </article>`;
@@ -303,12 +326,42 @@
   function goTo(i, animate) {
     const n = state.cards.length;
     if (!n) return;
+    if (!Number.isFinite(i) || i < 0) i = 0;
     state.index = ((i % n) + n) % n;
     const x = -state.index * 100;
+    // Dock / deep-link: animate === false → instant (no fly-through of intermediate cards)
     els.track.style.transition = animate === false ? 'none' : 'transform 0.35s cubic-bezier(.2,.8,.2,1)';
     els.track.style.transform = `translateX(${x}%)`;
     updateGuideForCard(state.cards[state.index]);
     updateDeepLink(state.cards[state.index]);
+    syncDockHighlight(state.cards[state.index]);
+  }
+
+  function syncDockHighlight(c) {
+    if (!els.dock || !c) return;
+    let mode = 'flow';
+    if (c.type === 'member') mode = 'card';
+    else if (c.type === 'saved') mode = 'saved';
+    else if (c.type === 'profile') mode = 'me';
+    else mode = 'flow';
+    state.mode = mode;
+    els.dock.querySelectorAll('[data-orbit-mode]').forEach((b) => {
+      b.classList.toggle('on', b.getAttribute('data-orbit-mode') === mode);
+    });
+  }
+
+  function indexForDockMode(mode) {
+    if (mode === 'card') return state.cards.findIndex((c) => c.type === 'member');
+    if (mode === 'saved') return state.cards.findIndex((c) => c.type === 'saved');
+    if (mode === 'me') return state.cards.findIndex((c) => c.type === 'profile');
+    if (mode === 'flow') {
+      let i = state.cards.findIndex((c) => c.type === 'event');
+      if (i < 0) i = state.cards.findIndex((c) => c.type === 'benefit');
+      if (i < 0) i = state.cards.findIndex((c) => c.type === 'location');
+      if (i < 0) i = state.cards.findIndex((c) => c.type === 'partner');
+      return i;
+    }
+    return 0;
   }
 
   function updateGuideForCard(c) {
@@ -367,7 +420,7 @@
     els.track.querySelectorAll('[data-orbit-nav="saved"]').forEach((btn) => {
       btn.addEventListener('click', () => {
         const i = state.cards.findIndex((c) => c.type === 'saved');
-        if (i >= 0) goTo(i);
+        if (i >= 0) goTo(i, false);
       });
     });
     els.track.querySelectorAll('[data-jump-slug]').forEach((btn) => {
@@ -375,7 +428,7 @@
         const slug = btn.getAttribute('data-jump-slug');
         const type = btn.getAttribute('data-jump-type');
         const i = state.cards.findIndex((c) => c.type === type && c.slug === slug);
-        if (i >= 0) goTo(i);
+        if (i >= 0) goTo(i, false);
       });
     });
   }
@@ -385,6 +438,8 @@
     let html = '';
     if (card.type === 'event') {
       const ev = card.data || {};
+      const ig = eventInstagramUrl(ev);
+      const map = eventMapUrl(ev);
       html = `
         <p class="orbit-kicker">${esc(ev.statusLabel)}</p>
         <h3>${esc(ev.title)}</h3>
@@ -394,13 +449,15 @@
         <p><strong>Your access</strong><br>✓ Member access<br>✓ ${esc(ev.memberBenefit || 'Community benefit')}</p>
         <div class="orbit-actions">
           <button type="button" class="wk-btn wk-btn--gold" data-orbit-save="event" data-orbit-id="${esc(ev.slug || ev.id)}">Save event</button>
-          <a class="wk-btn wk-btn--cyan" href="${esc(ev.location?.mapUrl || '#')}" target="_blank" rel="noopener">Get directions</a>
+          <a class="wk-btn wk-btn--cyan" href="${esc(ig)}" target="_blank" rel="noopener noreferrer">Instagram</a>
+          <a class="wk-btn wk-btn--ghost" href="${esc(map)}" target="_blank" rel="noopener noreferrer">Get directions</a>
         </div>`;
     } else if (card.type === 'location') {
       const loc = card.data || {};
       const upcoming = (loc.upcoming || [])
         .map((e) => `<li><strong>${esc(e.title)}</strong> · ${esc(formatDate(e.eventDate))}</li>`)
         .join('') || '<li>No upcoming listed</li>';
+      const ig = loc.instagramUrl || WAKO_IG;
       html = `
         <p class="orbit-kicker">LOCATION</p>
         <h3>${esc(loc.name)}</h3>
@@ -408,8 +465,8 @@
         <p><strong>Upcoming</strong></p>
         <ul>${upcoming}</ul>
         <div class="orbit-actions">
-          <a class="wk-btn wk-btn--gold" href="${esc(loc.mapUrl || '#')}" target="_blank" rel="noopener">Map</a>
-          <a class="wk-btn wk-btn--cyan" href="${esc(loc.instagramUrl || '#')}" target="_blank" rel="noopener">Venue</a>
+          <a class="wk-btn wk-btn--gold" href="${esc(loc.mapUrl || eventMapUrl({ location: loc }))}" target="_blank" rel="noopener noreferrer">Map</a>
+          <a class="wk-btn wk-btn--cyan" href="${esc(ig)}" target="_blank" rel="noopener noreferrer">Instagram</a>
         </div>`;
     } else {
       return;
@@ -464,11 +521,10 @@
     els.dock.querySelectorAll('[data-orbit-mode]').forEach((btn) => {
       btn.addEventListener('click', () => {
         const mode = btn.getAttribute('data-orbit-mode');
-        els.dock.querySelectorAll('[data-orbit-mode]').forEach((b) => b.classList.toggle('on', b === btn));
-        if (mode === 'card') goTo(state.cards.findIndex((c) => c.type === 'member'));
-        if (mode === 'flow') goTo(Math.max(1, state.cards.findIndex((c) => c.type === 'event')));
-        if (mode === 'saved') goTo(state.cards.findIndex((c) => c.type === 'saved'));
-        if (mode === 'me') goTo(state.cards.findIndex((c) => c.type === 'profile'));
+        closeDetail();
+        const i = indexForDockMode(mode);
+        // Instant jump — never animate across benefits/partners/locations between Flow ↔ Saved
+        goTo(i < 0 ? 0 : i, false);
       });
     });
   }
