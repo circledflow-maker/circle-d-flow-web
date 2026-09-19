@@ -1340,6 +1340,16 @@
 
     // Cold guest visit — paint welcome before loading Supabase (FCP/LCP)
     if (!needsSessionFirst) {
+      if (previewOrbit) {
+        // Public Orbit peek — do not force login; flow_orbit / enterOrbit handles UI
+        try {
+          await ensureLibs();
+        } catch (_) { /* ignore */ }
+        if (typeof window.cdfEnterFlowOrbit === 'function') {
+          window.cdfEnterFlowOrbit();
+        }
+        return;
+      }
       goStep(0, { silent: true });
       speak('Pick Login if you already have a profile — or Registration for a free Bronze card.', 'guide');
       try {
@@ -1383,7 +1393,8 @@
     }
 
     // Orbit deep-link — paint auth gate first, then verify session
-    if (wantsOrbit) {
+    // (skip for ?preview=1 public peeks)
+    if (wantsOrbit && !previewOrbit) {
       enterAuthMode('login');
       try {
         await ensureLibs();
