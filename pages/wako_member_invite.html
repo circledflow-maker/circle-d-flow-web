@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Wako Kungo Member Card · Circle D Flow</title>
+  <meta name="description" content="Scan from the flyer — open Wako Kungo Linktree or claim your free digital Member Card with Flowee.">
+  <meta property="og:title" content="Wako Kungo · Digital Member Card">
+  <meta property="og:description" content="Bronze free · Silver €5 · Gold €10 — guided by Flowee.">
+  <meta property="og:image" content="/Assets/membership/wako_card_front.webp">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="/css/print_wako_invite.css?v=20260924flyer1">
+</head>
+<body class="invite-landing">
+  <div class="invite-shell">
+    <div class="invite-brand-row" aria-label="Partners">
+      <img src="/Assets/branding/partners/circle-d-flow-logo-gradient.png" alt="Circle D Flow" width="72" height="72">
+      <span class="partner-mark partner-mark--humble">Humble</span>
+      <span class="partner-mark partner-mark--lapa">Lapa71</span>
+      <img src="/Assets/membership/wako_card_front.webp" alt="Wako Kungo" width="48" height="28" style="height:28px;border-radius:4px">
+      <span class="partner-mark partner-mark--kreativ">Kreativlon.Art</span>
+    </div>
+
+    <div class="invite-lang" role="group" aria-label="Language">
+      <button type="button" class="on" data-lang="en">EN</button>
+      <button type="button" data-lang="pt">PT</button>
+      <button type="button" data-lang="de">DE</button>
+    </div>
+
+    <p class="invite-kicker" data-i18n="kicker">Circle D Flow · Lisbon</p>
+    <h1 class="invite-title" data-i18n="title">Your digital Member Card is almost here</h1>
+    <p class="invite-lead" data-i18n="lead">Wako Kungo × Circle D Flow — claim a free Bronze card, unlock Flow Orbit &amp; Sanctuary, or support the Circle with Silver / Gold. Flowee walks with you.</p>
+
+    <div class="invite-flowee-hint" role="status">
+      <b>Flowee</b>
+      <span id="flowee-greet" data-i18n="flowee">Welcome, Navigator. I am Flowee — tap Member Card and I open your Circle. Or visit Wako’s Linktree for music, nights and partners.</span>
+    </div>
+
+    <div class="invite-actions">
+      <a class="invite-btn invite-btn--gold" id="btn-card" href="/member-card?auth=register&amp;orbit=0&amp;from=flyer">
+        <span data-i18n="cta_card">Digital Member Card · with Flowee</span>
+      </a>
+      <a class="invite-btn invite-btn--cyan" href="https://linktr.ee/wako.kungo" target="_blank" rel="noopener noreferrer">
+        <span data-i18n="cta_linktree">Wako Kungo · Linktree</span>
+      </a>
+      <a class="invite-btn invite-btn--ghost" href="/membership?skip=1#mp-billing">
+        <span data-i18n="cta_plans">See Bronze · Silver · Gold</span>
+      </a>
+    </div>
+
+    <div class="invite-tiers" aria-label="Tiers">
+      <div class="invite-tier">
+        <strong data-i18n="t1_title">Bronze · Free</strong>
+        <span data-i18n="t1_body">Digital card · member number · +EXP · Flow Orbit &amp; 3D Sanctuary. Enough to enter the Circle.</span>
+      </div>
+      <div class="invite-tier">
+        <strong data-i18n="t2_title">Silver · €5 / month</strong>
+        <span data-i18n="t2_body">Partner codes · 1 free drink / month · support venues &amp; nights that keep Lisbon flowing.</span>
+      </div>
+      <div class="invite-tier">
+        <strong data-i18n="t3_title">Gold · €10 / month</strong>
+        <span data-i18n="t3_body">Everything in Silver · more guest access · 3 free drinks / month · crew status.</span>
+      </div>
+    </div>
+
+    <p class="invite-note" data-i18n="book">At the venue: write your name in the book — be among the first when the Member Card goes live. Online: tap the gold button and Flowee starts your registration now.</p>
+  </div>
+
+  <div id="flowee-agent"></div>
+  <script src="/js/cdf_runtime_config.js" defer></script>
+  <script src="/js/agents/flowee.js?v=20260924flyer1" defer></script>
+  <script src="/js/wako_member_invite.js?v=20260924flyer1" defer></script>
+</body>
+</html>

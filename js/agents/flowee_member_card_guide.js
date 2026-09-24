@@ -258,10 +258,25 @@
       window.location.href = '/membership?skip=1#mp-billing';
     });
 
-    const auth = new URLSearchParams(location.search).get('auth');
+    const params = new URLSearchParams(location.search);
+    const auth = params.get('auth');
     if (auth === 'login' || auth === 'register') {
       setStage('dock');
       showBenefitsPanel(false);
+      // Flyer invite: Flowee greets before / during auth
+      if (params.get('from') === 'flyer') {
+        setTimeout(() => {
+          let line = '';
+          try {
+            line = sessionStorage.getItem('cdf_flowee_flyer_greet') || '';
+          } catch (_) { /* ignore */ }
+          if (!line) {
+            line =
+              'Welcome to the Circle. I am Flowee — let’s create your free Bronze Member Card.';
+          }
+          say(line, 'guide');
+        }, 500);
+      }
       // member_card.js boot already enters auth mode — only assist if it has not
       setTimeout(() => {
         if (document.body.classList.contains('wk-auth-gate')) return;

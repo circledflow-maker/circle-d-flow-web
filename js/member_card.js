@@ -674,7 +674,17 @@
     } else {
       if (els.loginPanel) els.loginPanel.hidden = true;
       startRegister();
-      speak('Registration — create your free Bronze Member Card (+EXP). Sign in is required before your profile opens.', 'guide');
+      let flyerLine = '';
+      try {
+        if (new URLSearchParams(location.search).get('from') === 'flyer') {
+          flyerLine = sessionStorage.getItem('cdf_flowee_flyer_greet') || '';
+        }
+      } catch (_) { /* ignore */ }
+      speak(
+        flyerLine ||
+          'Registration — create your free Bronze Member Card (+EXP). Sign in is required before your profile opens.',
+        'guide'
+      );
     }
   }
 

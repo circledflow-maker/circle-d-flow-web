@@ -1,0 +1,542 @@
+/* Wako Member Card — invite landing + print flyer / stickers */
+:root {
+  --ink: #0a0f1a;
+  --cream: #f7f0e4;
+  --gold: #d4af37;
+  --gold-deep: #a8841f;
+  --cyan: #3de0ff;
+  --navy: #12243d;
+  --muted: #5c6575;
+  --panel: rgba(255, 255, 255, 0.92);
+  --serif: "Cinzel", Georgia, "Times New Roman", serif;
+  --sans: "Plus Jakarta Sans", "Segoe UI", sans-serif;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body.invite-landing {
+  margin: 0;
+  min-height: 100dvh;
+  font-family: var(--sans);
+  color: var(--cream);
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(61, 224, 255, 0.18), transparent 55%),
+    radial-gradient(ellipse 60% 40% at 90% 80%, rgba(212, 175, 55, 0.12), transparent 50%),
+    linear-gradient(165deg, #12243d 0%, #05080f 45%, #0a1524 100%);
+}
+
+.invite-shell {
+  max-width: 440px;
+  margin: 0 auto;
+  padding: 1.25rem 1.15rem 6.5rem;
+}
+
+.invite-brand-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.invite-brand-row img,
+.invite-brand-row .partner-mark {
+  height: 36px;
+  width: auto;
+  max-width: 72px;
+  object-fit: contain;
+}
+
+.partner-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.2rem 0.45rem;
+  border-radius: 8px;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  background: rgba(0, 0, 0, 0.35);
+  font-family: var(--serif);
+  font-size: 0.58rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gold);
+  white-space: nowrap;
+}
+
+.partner-mark--humble { color: #9dffc2; border-color: rgba(157, 255, 194, 0.35); }
+.partner-mark--lapa { color: #ffb4a8; border-color: rgba(255, 180, 168, 0.4); }
+.partner-mark--kreativ { color: #cd7f32; border-color: rgba(205, 127, 50, 0.45); }
+
+.invite-kicker {
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  margin: 0 0 0.35rem;
+}
+
+.invite-title {
+  font-family: var(--serif);
+  font-size: clamp(1.55rem, 6vw, 2rem);
+  color: var(--gold);
+  line-height: 1.2;
+  margin: 0 0 0.65rem;
+}
+
+.invite-lead {
+  color: rgba(244, 239, 230, 0.78);
+  line-height: 1.65;
+  font-size: 0.98rem;
+  margin: 0 0 1.25rem;
+}
+
+.invite-lang {
+  display: flex;
+  gap: 0.35rem;
+  margin-bottom: 1rem;
+}
+.invite-lang button {
+  border-radius: 999px;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  background: transparent;
+  color: var(--cream);
+  font: inherit;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  padding: 0.4rem 0.75rem;
+  cursor: pointer;
+}
+.invite-lang button.on {
+  background: linear-gradient(145deg, #e0c15a, #a8841f);
+  color: #1a1205;
+  border-color: transparent;
+}
+
+.invite-actions {
+  display: grid;
+  gap: 0.65rem;
+  margin: 1.35rem 0 1rem;
+}
+
+.invite-btn {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  font-family: var(--serif);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  padding: 0.95rem 1.1rem;
+  font-size: 0.88rem;
+  border: none;
+  cursor: pointer;
+}
+
+.invite-btn--gold {
+  background: linear-gradient(145deg, #e0c15a, #a8841f);
+  color: #1a1205;
+  box-shadow: 0 10px 28px rgba(212, 175, 55, 0.25);
+}
+
+.invite-btn--cyan {
+  background: transparent;
+  color: var(--cyan);
+  border: 1px solid rgba(61, 224, 255, 0.45);
+}
+
+.invite-btn--ghost {
+  background: rgba(0, 0, 0, 0.35);
+  color: var(--cream);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 0.78rem;
+}
+
+.invite-tiers {
+  display: grid;
+  gap: 0.55rem;
+  margin: 1rem 0 1.25rem;
+}
+
+.invite-tier {
+  border: 1px solid rgba(212, 175, 55, 0.28);
+  border-radius: 14px;
+  padding: 0.85rem 0.95rem;
+  background: rgba(8, 12, 20, 0.55);
+}
+
+.invite-tier strong {
+  font-family: var(--serif);
+  color: var(--gold);
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.invite-tier span {
+  color: rgba(244, 239, 230, 0.72);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.invite-note {
+  font-size: 0.85rem;
+  color: rgba(244, 239, 230, 0.65);
+  line-height: 1.55;
+  margin: 0;
+}
+
+.invite-flowee-hint {
+  margin-top: 1.1rem;
+  padding: 0.85rem 1rem;
+  border-radius: 14px;
+  border: 1px solid rgba(61, 224, 255, 0.35);
+  background: linear-gradient(120deg, rgba(61, 224, 255, 0.1), rgba(212, 175, 55, 0.08));
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: rgba(244, 239, 230, 0.88);
+}
+
+.invite-flowee-hint b { color: var(--gold); font-family: var(--serif); }
+
+[hidden] { display: none !important; }
+
+/* ——— Print flyer A4 ——— */
+body.print-flyer,
+body.print-stickers {
+  margin: 0;
+  background: #d8d2c6;
+  color: var(--ink);
+  font-family: var(--sans);
+}
+
+.print-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 1rem;
+  background: #0a0f1a;
+  color: var(--cream);
+  font-size: 0.85rem;
+}
+
+.print-toolbar a,
+.print-toolbar button {
+  font-family: var(--serif);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  border-radius: 999px;
+  padding: 0.55rem 0.9rem;
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  background: linear-gradient(145deg, #e0c15a, #a8841f);
+  color: #1a1205;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.print-toolbar .ghost {
+  background: transparent;
+  color: var(--cyan);
+  border-color: rgba(61, 224, 255, 0.4);
+}
+
+.sheet-a4 {
+  width: 210mm;
+  min-height: 297mm;
+  margin: 12mm auto;
+  background: var(--cream);
+  color: var(--ink);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.28);
+  page-break-after: always;
+}
+
+.sheet-a4::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(18, 36, 61, 0.06), transparent 28%),
+    radial-gradient(ellipse 70% 40% at 100% 0%, rgba(212, 175, 55, 0.18), transparent 55%);
+  pointer-events: none;
+}
+
+.flyer-inner {
+  position: relative;
+  z-index: 1;
+  padding: 12mm 14mm 18mm;
+  min-height: 297mm;
+  display: flex;
+  flex-direction: column;
+}
+
+.flyer-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 10mm;
+  align-items: flex-start;
+  margin-bottom: 8mm;
+}
+
+.flyer-brand h1 {
+  font-family: var(--serif);
+  font-size: 22pt;
+  color: #8a6a14;
+  margin: 0 0 2mm;
+  line-height: 1.15;
+}
+
+.flyer-brand .sub {
+  margin: 0;
+  font-size: 9pt;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.flyer-logos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3mm;
+  justify-content: flex-end;
+  align-items: center;
+  max-width: 95mm;
+}
+
+.flyer-logos img {
+  height: 11mm;
+  width: auto;
+  max-width: 18mm;
+  object-fit: contain;
+}
+
+.flyer-logos .partner-mark {
+  height: auto;
+  font-size: 6.5pt;
+  background: #fff;
+  border-color: rgba(168, 132, 31, 0.45);
+  color: #8a6a14;
+  padding: 1.5mm 2.5mm;
+}
+
+.flyer-hero {
+  margin: 2mm 0 6mm;
+  padding: 5mm 6mm;
+  border-left: 2.5pt solid var(--gold);
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.flyer-hero p {
+  margin: 0;
+  font-size: 11pt;
+  line-height: 1.45;
+}
+
+.flyer-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7mm;
+  flex: 1;
+}
+
+.flyer-lang h2 {
+  font-family: var(--serif);
+  font-size: 12pt;
+  color: #8a6a14;
+  margin: 0 0 3mm;
+  letter-spacing: 0.04em;
+}
+
+.flyer-lang h3 {
+  font-family: var(--serif);
+  font-size: 10pt;
+  margin: 4mm 0 1.5mm;
+  color: var(--navy);
+}
+
+.flyer-lang p,
+.flyer-lang li {
+  font-size: 8.5pt;
+  line-height: 1.45;
+  margin: 0 0 2mm;
+  color: #2a3140;
+}
+
+.flyer-lang ul {
+  margin: 0 0 3mm;
+  padding-left: 4.5mm;
+}
+
+.flyer-tier-box {
+  border: 1px solid rgba(168, 132, 31, 0.35);
+  border-radius: 3mm;
+  padding: 2.5mm 3mm;
+  margin-bottom: 2.5mm;
+  background: #fff;
+}
+
+.flyer-tier-box strong {
+  font-family: var(--serif);
+  color: #8a6a14;
+  font-size: 9pt;
+}
+
+.flyer-cta {
+  margin-top: 3mm;
+  padding: 3mm;
+  border-radius: 3mm;
+  background: linear-gradient(120deg, rgba(212, 175, 55, 0.22), rgba(61, 224, 255, 0.12));
+  border: 1px solid rgba(168, 132, 31, 0.4);
+  font-size: 8.5pt;
+  line-height: 1.4;
+}
+
+.flyer-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 6mm;
+  margin-top: 6mm;
+  padding-top: 4mm;
+  border-top: 1px solid rgba(168, 132, 31, 0.3);
+}
+
+.flyer-footer .meta {
+  font-size: 7.5pt;
+  color: var(--muted);
+  line-height: 1.4;
+  max-width: 110mm;
+}
+
+.flyer-qr {
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.flyer-qr img {
+  width: 32mm;
+  height: 32mm;
+  display: block;
+  border: 1.5pt solid rgba(168, 132, 31, 0.45);
+  border-radius: 2mm;
+  background: #fff;
+  padding: 1.5mm;
+}
+
+.flyer-qr span {
+  display: block;
+  margin-top: 1.5mm;
+  font-size: 6.5pt;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ——— Stickers ——— */
+.sticker-sheet {
+  width: 210mm;
+  min-height: 297mm;
+  margin: 12mm auto;
+  background: #fff;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.28);
+  padding: 10mm;
+  page-break-after: always;
+}
+
+.sticker-sheet h1 {
+  font-family: var(--serif);
+  font-size: 14pt;
+  color: #8a6a14;
+  margin: 0 0 2mm;
+}
+
+.sticker-sheet .hint {
+  font-size: 8pt;
+  color: var(--muted);
+  margin: 0 0 5mm;
+}
+
+.sticker-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8mm 6mm;
+  justify-items: center;
+}
+
+.sticker {
+  width: 55mm;
+  height: 55mm;
+  border-radius: 50%;
+  border: 0.6pt dashed rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2mm;
+  padding: 3mm;
+  background:
+    radial-gradient(circle at 50% 30%, rgba(212, 175, 55, 0.15), transparent 60%),
+    #f7f0e4;
+  position: relative;
+}
+
+.sticker--square {
+  border-radius: 4mm;
+}
+
+.sticker img.logo {
+  width: 16mm;
+  height: 16mm;
+  object-fit: contain;
+}
+
+.sticker img.qr {
+  width: 22mm;
+  height: 22mm;
+  background: #fff;
+  border-radius: 1.5mm;
+  padding: 1mm;
+}
+
+.sticker .label {
+  font-family: var(--serif);
+  font-size: 6pt;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #8a6a14;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.sticker-cut {
+  position: absolute;
+  inset: -1.5mm;
+  border: 0.4pt dotted rgba(0, 0, 0, 0.2);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+@media print {
+  body.print-flyer,
+  body.print-stickers {
+    background: #fff;
+  }
+  .print-toolbar { display: none !important; }
+  .sheet-a4,
+  .sticker-sheet {
+    margin: 0;
+    box-shadow: none;
+    width: 210mm;
+    min-height: 297mm;
+  }
+  @page {
+    size: A4;
+    margin: 0;
+  }
+}
