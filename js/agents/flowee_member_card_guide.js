@@ -288,6 +288,14 @@
       return;
     }
 
+    // Orbit deep links are session-gated by member_card.js — stay docked, no language interrupt
+    // Preview peeks also skip language gate
+    if (params.has('view') || params.get('orbit') === '1' || params.get('preview') === '1') {
+      setStage('dock');
+      showBenefitsPanel(false);
+      return;
+    }
+
     try {
       const card = JSON.parse(localStorage.getItem('cdf_wako_member_card') || '{}');
       // Do not skip auth when only a local claimed draft exists

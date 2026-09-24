@@ -4,7 +4,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Welt Heart · Flow Control | Circle D Flow</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta name="description" content="Flow Control admin for Circle D Flow — members, events, locations, impact and invites, guided by Flowee.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
+  <script>
+    try {
+      if (localStorage.getItem('cdf_membership_admin_key')) {
+        document.documentElement.classList.add('admin-prefers-app');
+      }
+    } catch (e) { /* ignore */ }
+  </script>
   <style>
     :root {
       --bg: #05080f;
@@ -17,7 +28,7 @@
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
       background: linear-gradient(180deg, #12243d 0%, var(--bg) 55%);
       color: var(--text);
       min-height: 100vh;
@@ -33,6 +44,10 @@
       border-radius: 12px;
       padding: 1rem;
       margin-bottom: 0.9rem;
+    }
+    .gate {
+      min-height: 240px;
+      contain: layout style;
     }
     label { display: block; font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.3rem; }
     input, select, textarea {
@@ -56,13 +71,16 @@
     table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
     th, td { text-align: left; padding: 0.5rem 0.35rem; border-bottom: 1px solid rgba(255,255,255,0.06); vertical-align: top; }
     th { color: var(--cyan); font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; }
-    .err { color: #ffb4a8; font-size: 0.85rem; margin-bottom: 0.5rem; }
+    .err { color: #ffb4a8; font-size: 0.85rem; margin-bottom: 0.5rem; min-height: 1.2em; }
     .ok { color: #9dffc2; font-size: 0.85rem; margin-bottom: 0.5rem; }
     .grid2 { display: grid; gap: 0.75rem; }
     @media (min-width: 860px) { .grid2 { grid-template-columns: 1fr 1fr; } }
     .code { font-family: ui-monospace, Menlo, Consolas, monospace; color: #fff; }
     .badge { display: inline-block; padding: 0.12rem 0.4rem; border-radius: 999px; border: 1px solid var(--line); color: var(--gold); font-size: 0.68rem; }
     #app[hidden], #gate[hidden], .tab-pane[hidden] { display: none !important; }
+    /* Avoid CLS when returning admin unlocks: hide gate before paint */
+    html.admin-prefers-app #gate { display: none !important; }
+    html.admin-prefers-app #app { display: block !important; }
     .row-actions { display: flex; flex-wrap: wrap; gap: 0.35rem; }
     .row-actions button { font-size: 0.65rem; padding: 0.4rem 0.65rem; }
     .hub-links { display: flex; flex-wrap: wrap; gap: 0.45rem; margin: 0.5rem 0 1rem; }
@@ -80,9 +98,25 @@
       margin-bottom: 1rem; padding: 0.85rem 1rem; border-radius: 14px;
       border: 1px solid rgba(61,224,255,0.4);
       background: linear-gradient(120deg, rgba(61,224,255,0.1), rgba(212,175,55,0.08));
+      min-height: 4.5rem;
+      contain: layout style;
     }
     .flowee-banner strong { font-family: Cinzel, Georgia, serif; color: var(--gold); }
     .flowee-banner span { color: var(--muted); font-size: 0.92rem; line-height: 1.55; flex: 1; min-width: 180px; }
+    /* Reserve Flowee dock space to prevent CLS when vessel mounts */
+    #flowee-agent {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      width: 76px;
+      height: 76px;
+      z-index: 10000;
+      pointer-events: none;
+      contain: layout size;
+    }
+    #flowee-agent > * { pointer-events: auto; }
+    /* Avoid layout animation CLS from Flowee vessel class */
+    #flowee-agent.group { transition: opacity 0.3s ease !important; }
   </style>
 </head>
 <body>
@@ -90,10 +124,11 @@
     <strong>Flowee</strong>
     <span>I guide Flow Control — unlock below, then use my dock (bottom-right) for Impact → Members → Events → Invite. Visitor path lands on Member Card with language + Login/Register.</span>
   </div>
+  <main id="admin-main">
   <div id="gate" class="gate">
     <h1>Welt Heart</h1>
     <p class="sub">Circle D Flow admin · Flow Control. Same password as Membership Admin. Flowee stays with you after unlock.</p>
-    <div class="err" id="gate-err"></div>
+    <div class="err" id="gate-err" aria-live="polite"></div>
     <label for="admin-key">Admin password</label>
     <input id="admin-key" type="password" autocomplete="current-password" placeholder="Admin password">
     <button type="button" id="gate-btn">Unlock</button>
@@ -319,6 +354,7 @@
       </div>
     </section>
   </div>
+  </main>
 
   <script>
     const KEY = 'cdf_membership_admin_key';
@@ -366,6 +402,7 @@
     }
 
     function unlock() {
+      document.documentElement.classList.add('admin-prefers-app');
       els.gate.hidden = true;
       els.app.hidden = false;
       refreshAll();
@@ -375,6 +412,9 @@
       const trimmed = String(key || '').trim();
       if (!trimmed) {
         els.gateErr.textContent = 'Enter password FlowCreator!';
+        document.documentElement.classList.remove('admin-prefers-app');
+        els.gate.hidden = false;
+        els.app.hidden = true;
         return;
       }
       localStorage.setItem(KEY, trimmed);
@@ -384,6 +424,9 @@
         unlock();
       } catch (e) {
         localStorage.removeItem(KEY);
+        document.documentElement.classList.remove('admin-prefers-app');
+        els.gate.hidden = false;
+        els.app.hidden = true;
         els.gateErr.textContent =
           (e.message || 'Unauthorized') + ' — use FlowCreator! (exact spelling, capital F/C)';
       }
@@ -823,9 +866,9 @@
       tryUnlock(adminKey());
     }
   </script>
-  <div id="flowee-agent"></div>
-  <script src="/js/cdf_runtime_config.js"></script>
-  <script src="/js/agents/flowee.js?v=20260918f" defer></script>
-  <script src="/js/agents/admin_flowee_guide.js?v=20260918f" defer></script>
+  <div id="flowee-agent" aria-hidden="true"></div>
+  <script src="/js/cdf_runtime_config.js" defer></script>
+  <script src="/js/agents/flowee.js?v=20260919nav1" defer></script>
+  <script src="/js/agents/admin_flowee_guide.js?v=20260919nav1" defer></script>
 </body>
 </html>
