@@ -110,6 +110,9 @@
     });
   });
 
+  // Expose for toolbar / debugging
+  window.cdfInviteSetLang = apply;
+
   apply(lang);
 
   document.getElementById('btn-card')?.addEventListener('click', () => {
