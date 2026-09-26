@@ -16,15 +16,27 @@ ffmpeg -version
 # 2) Put raw event video + Concept9-16.mp4 under:
 #    D:\Wakungo_Content_Studio\Botanica\
 
-# 3) From the repo:
-cd path\to\circle-d-flow-web
-powershell -ExecutionPolicy Bypass -File .\scripts\botanica_90s_recap\run_botanica_recap.ps1
+# 3) From a clean checkout of this branch:
+cd D:\circle-d-flow-web-botanica
+# or: D:\circle-d-flow-web  (after fetching this branch / scripts folder)
+git pull origin cursor/botanica-90s-recap-pipeline-f46a
+
+# 4) Full quality rebuild (fixes empty text plates from v1):
+python .\scripts\botanica_90s_recap\run_botanica_recap.py --root "D:\Wakungo_Content_Studio\Botanica" --force
 ```
 
-Or:
+### v2 fixes (quality + empty content)
 
-```bash
-python scripts/botanica_90s_recap/run_botanica_recap.py --root "D:/Wakungo_Content_Studio/Botanica"
+- **Empty text cards:** v1 fell back to a blank dark plate when Windows had no default `drawtext` font. v2 uses `C:\Windows\Fonts\arial*.ttf` / Segoe UI and **never inserts blank cards**.
+- **Empty / black clips:** mid-frame blackframe check; unusable shots dropped from the master.
+- **Reel pacing:** chapter-aware crops, mid-band sampling (skip black heads/tails), snappier Stages timing.
+- **Encode:** CRF 17, warmer low-light grade, audio loudnorm + fade, 256k AAC.
+- **`--force`:** clears `00_work/recap_tmp` clips/cards and re-renders everything.
+
+Optional font override:
+
+```powershell
+$env:BOTANICA_FONT = "C:\Windows\Fonts\arialbd.ttf"
 ```
 
 ## Outputs (never overwrites originals)

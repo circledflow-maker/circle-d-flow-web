@@ -14,4 +14,10 @@ if (-not (Get-Command ffmpeg -ErrorAction SilentlyContinue)) {
 }
 Write-Host "Root: $Root"
 Write-Host "Repo: $Repo"
-python "$PSScriptRoot\run_botanica_recap.py" --root "$Root" --repo "$Repo" @args
+Write-Host "Tip: add -ForceRebuild for a clean v2 re-encode (fixes empty text plates)"
+$pyArgs = @("--root", "$Root", "--repo", "$Repo")
+if ($args -contains "-ForceRebuild" -or $env:BOTANICA_FORCE -eq "1") {
+  $pyArgs += "--force"
+  $args = @($args | Where-Object { $_ -ne "-ForceRebuild" })
+}
+python "$PSScriptRoot\run_botanica_recap.py" @pyArgs @args
