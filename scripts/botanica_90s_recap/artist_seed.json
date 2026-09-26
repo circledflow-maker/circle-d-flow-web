@@ -1,0 +1,110 @@
+{
+  "event": {
+    "title": "The Botanical Groove Session",
+    "presenter": "Wako Kungo",
+    "venue": "Botânica Lisboa",
+    "date": "2026-09-24",
+    "time": "20:00–23:00",
+    "city": "Lisbon",
+    "instagram_post": "wako.kungo",
+    "notes": "FREE ENTRANCE · RESPONSIBLE DONATIONS · live music community vs AI"
+  },
+  "visual_language": {
+    "palette": ["deep green monstera", "cream/gold type", "warm skin", "stage purple/magenta/blue", "wood grain warm brown"],
+    "grade": "CINEMATIC + AUTHENTIC + LIVE + WARM + IMMERSIVE",
+    "denoise": "light hqdn3d — keep live grain/atmosphere",
+    "format": "Circle D Stages (energy, rhythm, fake multi-cam crops from ONE camera)"
+  },
+  "artists": [
+    {
+      "id": "ARTIST_001",
+      "handle": "lyssa.bl",
+      "display_name": "Lyssa",
+      "ref_image": "Assets/content/botanica/refs/ARTIST_lyssa_bl.png",
+      "notes": "Portrait ref: curly hair, crochet cardigan, warm wood background"
+    },
+    {
+      "id": "ARTIST_002",
+      "handle": "chriskristoffer",
+      "display_name": "Chris Kristoffer",
+      "ref_image": "Assets/content/botanica/refs/ARTIST_chriskristoffer.png",
+      "notes": "Bass / stage energy — purple-magenta stage light, raised arm"
+    },
+    {
+      "id": "ARTIST_003",
+      "handle": "diazaofficial",
+      "display_name": "Diaza",
+      "ref_image": "Assets/content/botanica/refs/ARTIST_diazaofficial.png",
+      "notes": "Close-up emotional performance, warm spotlight, eyes closed"
+    },
+    {
+      "id": "ARTIST_004",
+      "handle": "joaoredondomaia",
+      "display_name": "João Redondo Maia",
+      "ref_image": "Assets/content/botanica/refs/ARTIST_joaoredondomaia.png",
+      "notes": "Curly hair, sunglasses, low-angle sky — outdoor/daylight look"
+    },
+    {
+      "id": "ARTIST_005",
+      "handle": "zeus_atro",
+      "display_name": "Zeus Atro",
+      "ref_image": "Assets/content/botanica/refs/ARTIST_zeus_atro.png",
+      "notes": "Blonde hair/goatee, green vest, graffiti wall — stylized portrait"
+    },
+    {
+      "id": "ARTIST_006",
+      "handle": "noua",
+      "display_name": "Noua",
+      "ref_image": null,
+      "notes": "Line-up from event flyer — match in footage"
+    },
+    {
+      "id": "ARTIST_007",
+      "handle": "mistah_isaac",
+      "display_name": "Mistah Isaac",
+      "ref_image": null,
+      "notes": "Line-up — Hanna & Mr Isaac circle; match guitar/voice"
+    },
+    {
+      "id": "ARTIST_008",
+      "handle": "silso_n6",
+      "display_name": "Silso",
+      "ref_image": null,
+      "notes": "Line-up from flyer"
+    },
+    {
+      "id": "ARTIST_009",
+      "handle": "_edoardostatuto_",
+      "display_name": "Edoardo Statuto",
+      "ref_image": null,
+      "notes": "Very special guest"
+    },
+    {
+      "id": "ARTIST_010",
+      "handle": "wako.kungo",
+      "display_name": "Wako Kungo",
+      "ref_image": "Assets/content/botanica/refs/00_event_flyer_botanical_groove.png",
+      "notes": "Host / presenter — brand presence in intro/outro"
+    }
+  ],
+  "text_interruptions": [
+    "EXPERIENCE",
+    "CONNECT",
+    "FEEL",
+    "MOVE",
+    "TOGETHER",
+    "IN THE MOMENT",
+    "LIVE IN LISBON",
+    "BOTÂNICA"
+  ],
+  "story_chapters": [
+    {"id": "arrival", "t": [0, 8], "label": "ARRIVAL"},
+    {"id": "venue", "t": [8, 16], "label": "VENUE"},
+    {"id": "people", "t": [16, 26], "label": "PEOPLE"},
+    {"id": "artists", "t": [26, 42], "label": "ARTISTS"},
+    {"id": "performance", "t": [42, 62], "label": "PERFORMANCE"},
+    {"id": "audience", "t": [62, 72], "label": "AUDIENCE"},
+    {"id": "peak", "t": [72, 84], "label": "PEAK"},
+    {"id": "closing", "t": [84, 90], "label": "CLOSING"}
+  ]
+}
