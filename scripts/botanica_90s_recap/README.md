@@ -122,8 +122,15 @@ powershell -ExecutionPolicy Bypass -File .\scripts\botanica_90s_recap\run_wako_f
 
 Outputs:
 - `Botanica\DRIVE_UPLOAD\ARTISTS\…` — sorted performances / portraits / frames
-- `Botanica\EXPORT\BOTANICA_90s_RECAP_9x16.mp4` — full 90s reel
-- also copied to `Botanica\DRIVE_UPLOAD\EVENT\`
+- `Botanica\EXPORT\BOTANICA_90s_RECAP_9x16.mp4` — 90s full-bleed cinematic reel
+- `Botanica\EXPORT\BOTANICA_90s_ENGAGING_LETTERBOX_9x16.mp4` — second 90s reel (black canvas, landscape center, Engaging badge, big word captions)
+- both also copied to `Botanica\DRIVE_UPLOAD\EVENT\`
+
+### Letterbox reel only (screenshot style)
+
+```powershell
+python .\scripts\botanica_90s_recap\run_botanica_letterbox_reel.py --root "D:\Wakungo_Content_Studio\Botanica" --force
+```
 
 ## Face-organize artists (Wako Kungo → folders)
 

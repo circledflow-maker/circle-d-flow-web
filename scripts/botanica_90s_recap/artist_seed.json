@@ -117,6 +117,23 @@
     "LIVE",
     "BOTÂNICA"
   ],
+  "letterbox_captions": [
+    "LIVE",
+    "SO",
+    "FEEL",
+    "NOW",
+    "MOVE",
+    "BREATHE",
+    "TOGETHER",
+    "ENERGY",
+    "LISBON",
+    "GROOVE",
+    "SOUND",
+    "NIGHT",
+    "HEART",
+    "BOTANICA",
+    "WAKO"
+  ],
   "story_chapters": [
     {"id": "arrival", "t": [0, 8], "label": "ARRIVAL"},
     {"id": "venue", "t": [8, 16], "label": "VENUE"},

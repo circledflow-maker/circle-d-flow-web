@@ -79,7 +79,7 @@ def main() -> int:
     if r.returncode != 0:
         return r.returncode
 
-    print("\nSTEP C - Build 90s cinematic reel (9:16) from Wako Kungo...")
+    print("\nSTEP C - Build 90s cinematic full-bleed reel (9:16) from Wako Kungo...")
     r = subprocess.run(
         [
             sys.executable,
@@ -99,23 +99,47 @@ def main() -> int:
     if r.returncode != 0:
         return r.returncode
 
+    print("\nSTEP D - Build second 90s Engaging letterbox reel (screenshot style)...")
+    r = subprocess.run(
+        [
+            sys.executable,
+            str(here / "run_botanica_letterbox_reel.py"),
+            "--root",
+            str(root),
+            "--repo",
+            str(repo),
+            "--seconds",
+            "90",
+            "--force",
+        ],
+        check=False,
+    )
+    if r.returncode != 0:
+        return r.returncode
+
     reel = root / "EXPORT" / "BOTANICA_90s_RECAP_9x16.mp4"
+    reel2 = root / "EXPORT" / "BOTANICA_90s_ENGAGING_LETTERBOX_9x16.mp4"
     event_dir = root / "DRIVE_UPLOAD" / "EVENT"
     event_dir.mkdir(parents=True, exist_ok=True)
     if not reel.exists():
         print(f"WARN: reel file missing at {reel}")
         return 5
-
     shutil.copy2(reel, event_dir / reel.name)
+    if reel2.exists():
+        shutil.copy2(reel2, event_dir / reel2.name)
+
     print("\nDONE")
-    print(f"  Reel:    {reel}")
+    print(f"  Reel 1 (full-bleed): {reel}")
+    print(f"  Reel 2 (Engaging):   {reel2}")
     print(f"  Artists: {root / 'DRIVE_UPLOAD' / 'ARTISTS'}")
     print(f"  Log:     {root / 'ANALYSIS' / 'face_match_log.json'}")
 
-    # Best-effort open folders on Windows
     if os.name == "nt":
         os.startfile(str(root / "DRIVE_UPLOAD"))  # type: ignore[attr-defined]
-        os.startfile(str(reel))  # type: ignore[attr-defined]
+        if reel2.exists():
+            os.startfile(str(reel2))  # type: ignore[attr-defined]
+        else:
+            os.startfile(str(reel))  # type: ignore[attr-defined]
     return 0
 
 
