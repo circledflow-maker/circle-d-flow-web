@@ -7,84 +7,106 @@
     "time": "20:00–23:00",
     "city": "Lisbon",
     "instagram_post": "wako.kungo",
-    "notes": "FREE ENTRANCE · RESPONSIBLE DONATIONS · live music community vs AI"
+    "notes": "FREE ENTRANCE · RESPONSIBLE DONATIONS · live music community vs AI · line-up from @wako.kungo IG post"
   },
   "visual_language": {
     "palette": ["deep green monstera", "cream/gold type", "warm skin", "stage purple/magenta/blue", "wood grain warm brown"],
     "grade": "CINEMATIC + AUTHENTIC + LIVE + WARM + IMMERSIVE",
     "denoise": "light hqdn3d — keep live grain/atmosphere",
-    "format": "Circle D Stages (energy, rhythm, fake multi-cam crops from ONE camera)"
+    "format": "Circle D Stages (energy, rhythm, fake multi-cam crops from ONE camera)",
+    "photo_grade": "warm botanical — lift shadows, soft contrast, natural skin, slight gold warmth"
   },
   "artists": [
     {
       "id": "ARTIST_001",
+      "folder": "01_lyssa.bl_Lyssa",
       "handle": "lyssa.bl",
       "display_name": "Lyssa",
+      "aliases": ["lyssa", "lyssa.bl", "lyssa_bl"],
       "ref_image": "Assets/content/botanica/refs/ARTIST_lyssa_bl.png",
       "notes": "Portrait ref: curly hair, crochet cardigan, warm wood background"
     },
     {
       "id": "ARTIST_002",
-      "handle": "chriskristoffer",
-      "display_name": "Chris Kristoffer",
-      "ref_image": "Assets/content/botanica/refs/ARTIST_chriskristoffer.png",
-      "notes": "Bass / stage energy — purple-magenta stage light, raised arm"
+      "folder": "02_noua_Noua",
+      "handle": "noua",
+      "display_name": "Noua",
+      "aliases": ["noua"],
+      "ref_image": null,
+      "notes": "Line-up from @wako.kungo Botanical Groove Session post"
     },
     {
       "id": "ARTIST_003",
-      "handle": "diazaofficial",
-      "display_name": "Diaza",
-      "ref_image": "Assets/content/botanica/refs/ARTIST_diazaofficial.png",
-      "notes": "Close-up emotional performance, warm spotlight, eyes closed"
+      "folder": "03_chriskristoffer_Chris_Kristoffer",
+      "handle": "chriskristoffer",
+      "display_name": "Chris Kristoffer",
+      "aliases": ["chriskristoffer", "chris kristoffer", "chris_kristoffer"],
+      "ref_image": "Assets/content/botanica/refs/ARTIST_chriskristoffer.png",
+      "notes": "Bass / stage energy — studded vest, raised arm"
     },
     {
       "id": "ARTIST_004",
-      "handle": "joaoredondomaia",
-      "display_name": "João Redondo Maia",
-      "ref_image": "Assets/content/botanica/refs/ARTIST_joaoredondomaia.png",
-      "notes": "Curly hair, sunglasses, low-angle sky — outdoor/daylight look"
+      "folder": "04_diazaofficial_Diaza",
+      "handle": "diazaofficial",
+      "display_name": "Diaza",
+      "aliases": ["diaza", "diazaofficial", "rita nunes"],
+      "ref_image": "Assets/content/botanica/refs/ARTIST_diazaofficial.png",
+      "notes": "Close-up emotional performance, warm spotlight"
     },
     {
       "id": "ARTIST_005",
-      "handle": "zeus_atro",
-      "display_name": "Zeus Atro",
-      "ref_image": "Assets/content/botanica/refs/ARTIST_zeus_atro.png",
-      "notes": "Blonde hair/goatee, green vest, graffiti wall — stylized portrait"
+      "folder": "05_joaoredondomaia_Joao_Redondo_Maia",
+      "handle": "joaoredondomaia",
+      "display_name": "João Redondo Maia",
+      "aliases": ["joaoredondomaia", "joao redondo", "redondo maia", "joão"],
+      "ref_image": "Assets/content/botanica/refs/ARTIST_joaoredondomaia.png",
+      "notes": "Curly hair, sunglasses, low-angle sky"
     },
     {
       "id": "ARTIST_006",
-      "handle": "noua",
-      "display_name": "Noua",
-      "ref_image": null,
-      "notes": "Line-up from event flyer — match in footage"
+      "folder": "06_zeus_atro_Zeus_Atro",
+      "handle": "zeus_atro",
+      "display_name": "Zeus Atro",
+      "aliases": ["zeus_atro", "zeus atro", "zeus"],
+      "ref_image": "Assets/content/botanica/refs/ARTIST_zeus_atro.png",
+      "notes": "Blonde hair/goatee, green vest"
     },
     {
       "id": "ARTIST_007",
-      "handle": "mistah_isaac",
-      "display_name": "Mistah Isaac",
+      "folder": "07_silso_n6_Silso",
+      "handle": "silso_n6",
+      "display_name": "Silso",
+      "aliases": ["silso", "silso_n6", "silson6"],
       "ref_image": null,
-      "notes": "Line-up — Hanna & Mr Isaac circle; match guitar/voice"
+      "notes": "Line-up from IG caption"
     },
     {
       "id": "ARTIST_008",
-      "handle": "silso_n6",
-      "display_name": "Silso",
+      "folder": "08_mistah_isaac_Mistah_Isaac",
+      "handle": "mistah_isaac",
+      "display_name": "Mistah Isaac",
+      "aliases": ["mistah_isaac", "mistah isaac", "mr isaac", "mr_isaac", "isaac", "hanna"],
       "ref_image": null,
-      "notes": "Line-up from flyer"
+      "notes": "Requested artist pack — guitar/voice; Hanna & Mr Isaac circle"
     },
     {
       "id": "ARTIST_009",
+      "folder": "09_edoardostatuto_Edo_Edoardo_Statuto",
       "handle": "_edoardostatuto_",
       "display_name": "Edoardo Statuto",
+      "short_name": "Edo",
+      "aliases": ["edoardostatuto", "_edoardostatuto_", "edoardo", "statuto", "edo"],
       "ref_image": null,
-      "notes": "Very special guest"
+      "notes": "Very special guest — pack folder labeled Edo / Edoardo Statuto"
     },
     {
       "id": "ARTIST_010",
+      "folder": "10_wako.kungo_Wako_Kungo",
       "handle": "wako.kungo",
       "display_name": "Wako Kungo",
+      "aliases": ["wako", "wako.kungo", "wako kungo", "wakungo"],
       "ref_image": "Assets/content/botanica/refs/00_event_flyer_botanical_groove.png",
-      "notes": "Host / presenter — brand presence in intro/outro"
+      "notes": "Host / presenter"
     }
   ],
   "text_interruptions": [

@@ -231,8 +231,13 @@ def load_artist_seed(repo_root: Path) -> dict[str, Any]:
 
 def seed_artist_folders(artists_root: Path, seed: dict[str, Any]) -> None:
     for a in seed.get("artists", []):
-        base = artists_root / a["id"]
+        folder = a.get("folder") or a["id"]
+        base = artists_root / folder
         for sub in (
+            "00_REF",
+            "01_VIDEOS_STABILIZED",
+            "02_PHOTOS_EDITED",
+            "03_FRAMES_FROM_VIDEO",
             "PORTRAIT",
             "PERFORMANCE",
             "DETAIL",

@@ -72,3 +72,38 @@ Reference stills live in repo: `Assets/content/botanica/refs/`.
 ```powershell
 python scripts/botanica_90s_recap/run_botanica_recap.py --root "D:/Wakungo_Content_Studio/Botanica" --inventory-only
 ```
+
+## Artist Drive pack (stabilize + photos)
+
+Builds Google-Drive-ready folders for the full IG line-up (Lyssa, Noua, Chris Kristoffer, Diaza, João Redondo Maia, Zeus Atro, Silso, **Mistah Isaac**, **Edo / Edoardo Statuto**, Wako Kungo):
+
+```powershell
+cd D:\circle-d-flow-web
+git fetch origin cursor/botanica-90s-recap-pipeline-f46a
+git checkout origin/cursor/botanica-90s-recap-pipeline-f46a -- scripts/botanica_90s_recap Assets/content/botanica/refs
+
+python .\scripts\botanica_90s_recap\prepare_artist_drive_pack.py --root "D:\Wakungo_Content_Studio\Botanica" --force
+```
+
+Output:
+
+```
+D:\Wakungo_Content_Studio\Botanica\DRIVE_UPLOAD\
+  README_UPLOAD.txt
+  MANIFEST.json
+  EVENT\BOTANICA_90s_RECAP_9x16.mp4   (if recap already rendered)
+  ARTISTS\
+    01_lyssa.bl_Lyssa\
+    02_noua_Noua\
+    …
+    08_mistah_isaac_Mistah_Isaac\
+    09_edoardostatuto_Edo_Edoardo_Statuto\
+    10_wako.kungo_Wako_Kungo\
+      00_REF\
+      01_VIDEOS_STABILIZED\     ← less shake
+      02_PHOTOS_EDITED\         ← graded stills
+      03_FRAMES_FROM_VIDEO\     ← graded frames
+  _UNASSIGNED_REVIEW\           ← sort manually if filename had no artist hint
+```
+
+Upload the whole `DRIVE_UPLOAD` folder to Google Drive.
