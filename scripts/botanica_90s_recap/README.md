@@ -107,3 +107,17 @@ D:\Wakungo_Content_Studio\Botanica\DRIVE_UPLOAD\
 ```
 
 Upload the whole `DRIVE_UPLOAD` folder to Google Drive.
+
+## Face-organize artists (Wako Kungo → folders)
+
+Analyzes `Botanica\Wako Kungo` (and other Botanica media), matches faces to IG refs, writes stabilized performance clips + graded portraits/frames, then cleans empty/legacy folders:
+
+```powershell
+cd D:\circle-d-flow-web
+git fetch origin cursor/botanica-90s-recap-pipeline-f46a
+git checkout origin/cursor/botanica-90s-recap-pipeline-f46a -- scripts/botanica_90s_recap Assets/content/botanica/refs
+
+powershell -ExecutionPolicy Bypass -File .\scripts\botanica_90s_recap\organize_artists_face.ps1 -ForceRebuild
+```
+
+Then open `D:\Wakungo_Content_Studio\Botanica\DRIVE_UPLOAD\ARTISTS`.
