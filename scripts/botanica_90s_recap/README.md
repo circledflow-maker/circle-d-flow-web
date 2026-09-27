@@ -108,6 +108,23 @@ D:\Wakungo_Content_Studio\Botanica\DRIVE_UPLOAD\
 
 Upload the whole `DRIVE_UPLOAD` folder to Google Drive.
 
+## Full pipeline (analyze Wako Kungo + 90s reel)
+
+One command on the Windows PC with D: — face-sorts `Wako Kungo` into artist folders **and** builds the 90s reel:
+
+```powershell
+cd D:\circle-d-flow-web
+git fetch origin cursor/botanica-90s-recap-pipeline-f46a
+git checkout origin/cursor/botanica-90s-recap-pipeline-f46a -- scripts/botanica_90s_recap Assets/content/botanica/refs
+
+powershell -ExecutionPolicy Bypass -File .\scripts\botanica_90s_recap\run_wako_full_pipeline.ps1
+```
+
+Outputs:
+- `Botanica\DRIVE_UPLOAD\ARTISTS\…` — sorted performances / portraits / frames
+- `Botanica\EXPORT\BOTANICA_90s_RECAP_9x16.mp4` — full 90s reel
+- also copied to `Botanica\DRIVE_UPLOAD\EVENT\`
+
 ## Face-organize artists (Wako Kungo → folders)
 
 Analyzes `Botanica\Wako Kungo` (and other Botanica media), matches faces to IG refs, writes stabilized performance clips + graded portraits/frames, then cleans empty/legacy folders:
