@@ -255,7 +255,11 @@ def seed_artist_folders(artists_root: Path, seed: dict[str, Any]) -> None:
         (base / "artist.json").write_text(json.dumps(meta, indent=2), encoding="utf-8")
 
 
-def pick_source_videos(inventory: list[dict[str, Any]], concept_name: str = "concept9-16") -> dict[str, Any]:
+def pick_source_videos(
+    inventory: list[dict[str, Any]],
+    concept_name: str = "concept9-16",
+    prefer_subdir: str = "wako kungo",
+) -> dict[str, Any]:
     vids = [
         v
         for v in inventory
@@ -265,16 +269,27 @@ def pick_source_videos(inventory: list[dict[str, Any]], concept_name: str = "con
     ]
     event = [v for v in vids if concept_name not in Path(v["name"]).stem.lower()]
     concept = [v for v in vids if concept_name in Path(v["name"]).stem.lower()]
-    # Prefer longer + higher res; deprioritize tiny / phone leftovers
-    event.sort(
-        key=lambda v: (
+
+    def in_prefer(v: dict[str, Any]) -> bool:
+        p = str(v.get("path", "")).lower().replace("\\", "/")
+        return prefer_subdir.lower() in p if prefer_subdir else False
+
+    preferred = [v for v in event if in_prefer(v)]
+    others = [v for v in event if not in_prefer(v)]
+
+    def qkey(v: dict[str, Any]) -> tuple:
+        return (
             v.get("width", 0) * v.get("height", 0),
             v.get("duration", 0),
             v.get("bitrate", 0),
-        ),
-        reverse=True,
-    )
-    return {"event": event, "concept": concept, "all": vids}
+        )
+
+    preferred.sort(key=qkey, reverse=True)
+    others.sort(key=qkey, reverse=True)
+    # Wako Kungo first (primary event footage), then anything else under Botanica
+    event = preferred + others
+    print(f"   prefer '{prefer_subdir}': {len(preferred)} clips | other: {len(others)}")
+    return {"event": event, "concept": concept, "all": vids, "preferred": preferred}
 
 
 @dataclass
@@ -893,6 +908,11 @@ def main() -> int:
         action="store_true",
         help="Re-render all clips/cards (fixes empty text plates from v1)",
     )
+    ap.add_argument(
+        "--prefer-subdir",
+        default="wako kungo",
+        help="Prioritize videos under this folder name (default: Wako Kungo)",
+    )
     args = ap.parse_args()
 
     if not which("ffmpeg") or not which("ffprobe"):
@@ -946,14 +966,15 @@ def main() -> int:
         encoding="utf-8",
     )
 
-    picked = pick_source_videos(inv)
+    picked = pick_source_videos(inv, prefer_subdir=args.prefer_subdir)
     analyze_concept(picked["concept"], tree["ANALYSIS"])
     event_videos = picked["event"]
+    preferred = picked.get("preferred") or []
     print(
         f"   videos={sum(1 for i in inv if i['kind']=='video')} "
         f"photos={sum(1 for i in inv if i['kind']=='photo')}"
     )
-    print(f"   event source clips used: {len(event_videos)}")
+    print(f"   event source clips used: {len(event_videos)} (from Wako Kungo pool: {len(preferred)})")
 
     if args.inventory_only:
         print("Inventory only — done.")
@@ -961,10 +982,15 @@ def main() -> int:
 
     if not event_videos:
         print("BLOCKER: No event video files found under Botanica (excluding Concept).")
+        print("  Expected footage in: <root>\\Wako Kungo\\*.MOV / *.mp4")
         return 4
 
+    # Build the 90s reel primarily from Wako Kungo when available
+    reel_sources = preferred if preferred else event_videos
+    print(f"   90s reel source clips: {len(reel_sources)}")
+
     print("05/09 — Plan + render virtual camera clips…")
-    jobs = plan_jobs(event_videos, tree, seed, args.seconds)
+    jobs = plan_jobs(reel_sources, tree, seed, args.seconds)
     ok = 0
     for j in jobs:
         if render_clip(j, tree["WORK"], force=args.force):
@@ -976,7 +1002,7 @@ def main() -> int:
     write_edit_decisions(jobs, tree, tree["EXPORT"] / "BOTANICA_90s_RECAP_9x16.mp4")
 
     print("22 — Audio bed…")
-    audio = extract_audio_bed(event_videos, tree["WORK"], args.seconds)
+    audio = extract_audio_bed(reel_sources, tree["WORK"], args.seconds)
 
     print("17/24 — Assemble 90s master (skip empty content)…")
     master = assemble_master(jobs, tree, seed, audio, args.seconds, force=args.force)
