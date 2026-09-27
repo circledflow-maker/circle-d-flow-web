@@ -154,10 +154,13 @@ def build_artist_galleries(seed: dict[str, Any], repo: Path, casc: cv2.CascadeCl
         folder = artist_folder(a)
         galleries[folder] = []
         ref = a.get("ref_image")
+        # Flyer / collage refs are useless for face ID — skip
+        if ref and ("flyer" in ref.lower() or "00_event" in ref.lower()):
+            print(f"   gallery {folder}: SKIP flyer/collage ref (not a face ID source)")
+            continue
         paths: list[Path] = []
         if ref:
             paths.append(repo / ref)
-        # also any files already in ARTISTS/*/00_REF if present later
         for p in paths:
             if not p.exists():
                 continue
@@ -166,10 +169,8 @@ def build_artist_galleries(seed: dict[str, Any], repo: Path, casc: cv2.CascadeCl
                 continue
             boxes = detect_faces_bgr(img, casc)
             if not boxes:
-                # flyer / stylized — use center crop as weak descriptor
-                h, w = img.shape[:2]
-                box = (w // 4, h // 8, w // 2, int(h * 0.55))
-                boxes = [box]
+                print(f"   gallery {folder}: no face in ref {p.name}")
+                continue
             for box in boxes[:2]:
                 d = face_descriptor(img, box)
                 if d is not None:
@@ -178,35 +179,98 @@ def build_artist_galleries(seed: dict[str, Any], repo: Path, casc: cv2.CascadeCl
     return galleries
 
 
+def reset_sorted_media(root: Path) -> int:
+    """Clear previously sorted media so a bad Wako-folder alias run can be redone."""
+    n = 0
+    for base in (root / "DRIVE_UPLOAD" / "ARTISTS", root / "ARTISTS"):
+        if not base.exists():
+            continue
+        for artist_dir in base.iterdir():
+            if not artist_dir.is_dir():
+                continue
+            for sub in (
+                "01_VIDEOS_PERFORMANCE",
+                "02_PORTRAITS",
+                "03_FRAMES",
+                "01_VIDEOS_STABILIZED",
+                "02_PHOTOS_EDITED",
+                "03_FRAMES_FROM_VIDEO",
+                "_needs_sort",
+            ):
+                p = artist_dir / sub
+                if p.exists():
+                    shutil.rmtree(p, ignore_errors=True)
+                    p.mkdir(parents=True, exist_ok=True)
+                    n += 1
+    un = root / "DRIVE_UPLOAD" / "_UNASSIGNED_REVIEW"
+    if un.exists():
+        shutil.rmtree(un, ignore_errors=True)
+        for sub in ("VIDEOS", "PHOTOS", "FRAMES"):
+            (un / sub).mkdir(parents=True, exist_ok=True)
+    return n
+
+
 def match_artist(
     desc: np.ndarray,
     galleries: dict[str, list[np.ndarray]],
-    threshold: float = 0.42,
+    threshold: float = 0.48,
+    min_margin: float = 0.04,
 ) -> Optional[tuple[str, float]]:
-    best_folder = None
-    best_score = -1.0
+    """Return best artist only if clearly ahead of the runner-up."""
+    scores: list[tuple[float, str]] = []
     for folder, gal in galleries.items():
         if not gal:
             continue
         score = max(cosine(desc, g) for g in gal)
-        if score > best_score:
-            best_score = score
-            best_folder = folder
-    if best_folder is None or best_score < threshold:
+        scores.append((score, folder))
+    if not scores:
         return None
+    scores.sort(reverse=True)
+    best_score, best_folder = scores[0]
+    second = scores[1][0] if len(scores) > 1 else -1.0
+    if best_score < threshold:
+        return None
+    if second >= 0 and (best_score - second) < min_margin:
+        return None  # ambiguous — leave unassigned
     return best_folder, best_score
 
 
+# Parent folders that must NEVER trigger artist alias matching
+# (everything lives under Botanica\Wako Kungo — that would dump all clips into Wako)
+EVENT_PATH_NOISE = {
+    "wako kungo",
+    "wako.kungo",
+    "wakungo",
+    "botanica",
+    "wakungo_content_studio",
+    "content studio",
+    "drive_upload",
+    "artists",
+    "event_selects",
+}
+
+
 def match_by_alias(path: Path, artists: list[dict[str, Any]]) -> Optional[str]:
-    hay = str(path).lower().replace("\\", "/")
+    """Filename-only alias match. Never use parent folder names like 'Wako Kungo'."""
+    stem = path.stem.lower().replace("_", " ").replace("-", " ")
+    name = path.name.lower()
     scored: list[tuple[int, str]] = []
     for a in artists:
-        aliases = list(a.get("aliases") or []) + [a.get("handle", ""), a.get("display_name", ""), a.get("short_name", "")]
+        aliases = list(a.get("aliases") or []) + [
+            a.get("handle", ""),
+            a.get("display_name", ""),
+            a.get("short_name", ""),
+        ]
         for al in aliases:
             if not al:
                 continue
-            token = str(al).lower()
-            if token and token in hay:
+            token = str(al).lower().strip()
+            if not token or len(token) < 3:
+                continue
+            if token in EVENT_PATH_NOISE:
+                continue
+            # require token in filename stem/name only
+            if token in stem or token.replace(" ", "") in stem.replace(" ", "") or token in name:
                 scored.append((len(token), artist_folder(a)))
     if not scored:
         return None
@@ -406,79 +470,136 @@ def process_videos(
     artists: list[dict[str, Any]],
     casc: cv2.CascadeClassifier,
     force: bool,
-    samples_per_video: int = 8,
+    samples_per_video: int = 12,
 ) -> dict[str, Any]:
+    """Face-first sort. Filename alias is only a weak hint, never parent-folder 'Wako Kungo'."""
     stats = defaultdict(int)
     match_log: list[dict[str, Any]] = []
 
-    # longest first
     scored = [(ffprobe_duration(v), v) for v in videos]
     scored.sort(reverse=True)
 
-    for dur, src in scored[:60]:
+    for dur, src in scored[:80]:
         if dur < 2.5:
             continue
-        alias_folder = match_by_alias(src, artists)
-        # sample mid band
-        hits: dict[str, list[float]] = defaultdict(list)
+        name_hint = match_by_alias(src, artists)  # filename only
+        # Per-frame face votes: folder -> list of (t, score)
+        votes: dict[str, list[tuple[float, float]]] = defaultdict(list)
+        frame_buf: list[tuple[float, np.ndarray, list]] = []
+
         for k in range(samples_per_video):
-            t = max(1.0, dur * (0.15 + 0.7 * (k + 0.5) / samples_per_video))
+            t = max(1.0, dur * (0.12 + 0.76 * (k + 0.5) / samples_per_video))
             tmp = work / "frames" / f"{src.stem[:30]}_{k:02d}.jpg"
             img = extract_frame_ffmpeg(src, t, tmp)
             if img is None:
                 continue
             boxes = detect_faces_bgr(img, casc)
-            folder = alias_folder
-            score = None
-            if boxes:
-                d = face_descriptor(img, boxes[0])
-                if d is not None:
-                    m = match_artist(d, galleries, threshold=0.40)
-                    if m:
-                        folder, score = m
-            if folder:
-                hits[folder].append(t)
-                graded = photo_grade_bgr(img)
-                out_frame = work / "graded" / f"{src.stem[:30]}_{k:02d}_{folder}.jpg"
-                save_jpg(out_frame, graded)
-                place_for_artist(root, folder, "frame", out_frame, force)
-                # portraits = larger face share
-                if boxes and boxes[0][2] * boxes[0][3] > 0.04 * img.shape[0] * img.shape[1]:
-                    place_for_artist(root, folder, "portrait", out_frame, force)
-                    stats["portraits"] += 1
-                stats["frames"] += 1
-                match_log.append(
-                    {
-                        "source": str(src),
-                        "t": t,
-                        "folder": folder,
-                        "score": score,
-                        "alias": alias_folder == folder,
-                    }
-                )
-            else:
-                # keep a few unassigned frames for review
-                if k % 3 == 0:
-                    graded = photo_grade_bgr(img)
-                    out_u = root / "DRIVE_UPLOAD" / "_UNASSIGNED_REVIEW" / "FRAMES" / f"{src.stem[:30]}_{k:02d}.jpg"
-                    save_jpg(out_u, graded)
-                    stats["unassigned_frames"] += 1
+            frame_buf.append((t, img, boxes))
+            if not boxes:
+                continue
+            # score up to 2 largest faces (duets)
+            for box in boxes[:2]:
+                d = face_descriptor(img, box)
+                if d is None:
+                    continue
+                m = match_artist(d, galleries, threshold=0.48, min_margin=0.035)
+                if m:
+                    folder, score = m
+                    votes[folder].append((t, score))
+                    match_log.append(
+                        {
+                            "source": str(src),
+                            "t": round(t, 2),
+                            "folder": folder,
+                            "score": round(score, 4),
+                            "name_hint": name_hint,
+                        }
+                    )
 
-        # stabilize best windows per matched artist
-        for folder, times in hits.items():
-            # pick up to 3 distinct moments
-            times = sorted(set(round(t, 1) for t in times))[:3]
-            for i, t0 in enumerate(times):
-                start = max(0.5, t0 - 1.2)
-                out = work / "clips" / f"{src.stem[:28]}_{folder[-12:]}_{i:02d}_stable.mp4"
-                if stabilize_clip(src, out, start, 3.8, force):
-                    place_for_artist(root, folder, "video", out, force)
+        if not votes and name_hint:
+            # weak fallback: only if filename literally contains artist (rare for DSC_####)
+            stats["name_hint_only_videos"] += 1
+
+        if not votes:
+            # dump a few review frames; optional short unassigned clip from mid
+            for t, img, boxes in frame_buf[::3][:4]:
+                graded = photo_grade_bgr(img)
+                out_u = (
+                    root
+                    / "DRIVE_UPLOAD"
+                    / "_UNASSIGNED_REVIEW"
+                    / "FRAMES"
+                    / f"{src.stem[:30]}_{int(t)}s.jpg"
+                )
+                save_jpg(out_u, graded)
+                stats["unassigned_frames"] += 1
+            mid = max(0.5, dur * 0.4)
+            out = work / "clips" / f"{src.stem[:28]}_unassigned_stable.mp4"
+            if stabilize_clip(src, out, mid, 4.0, force):
+                dest = root / "DRIVE_UPLOAD" / "_UNASSIGNED_REVIEW" / "VIDEOS" / out.name
+                dest.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(out, dest)
+                stats["unassigned_videos"] += 1
+            continue
+
+        # Majority / strength ranking — allow top 2 artists if both have solid votes
+        ranked = sorted(
+            votes.items(),
+            key=lambda kv: (len(kv[1]), sum(s for _, s in kv[1])),
+            reverse=True,
+        )
+        # name hint can boost an existing face vote, never invent one alone
+        if name_hint and name_hint in votes:
+            ranked = sorted(
+                votes.items(),
+                key=lambda kv: (
+                    1 if kv[0] == name_hint else 0,
+                    len(kv[1]),
+                    sum(s for _, s in kv[1]),
+                ),
+                reverse=True,
+            )
+
+        winners = [ranked[0][0]]
+        if len(ranked) > 1 and len(ranked[1][1]) >= 2:
+            # second artist present in several frames (e.g. duet)
+            winners.append(ranked[1][0])
+
+        for folder in winners:
+            times = sorted({round(t, 1) for t, _ in votes[folder]})
+            # spread picks across the clip
+            picks = times[:: max(1, len(times) // 3)][:3]
+            if not picks:
+                picks = times[:3]
+            for i, t0 in enumerate(picks):
+                start = max(0.5, t0 - 1.3)
+                out = work / "clips" / f"{src.stem[:28]}_{folder.split('_')[0]}_{i:02d}_stable.mp4"
+                if stabilize_clip(src, out, start, 4.0, force):
+                    place_for_artist(root, folder, "video", out, force=True)
                     stats["videos"] += 1
                     stats[f"artist:{folder}"] += 1
 
+            # frames / portraits for this artist from matching timestamps
+            tset = {round(t, 1) for t, _ in votes[folder]}
+            for t, img, boxes in frame_buf:
+                if round(t, 1) not in tset and abs(min(tset, key=lambda x: abs(x - t)) - t) > 1.2:
+                    continue
+                graded = photo_grade_bgr(img)
+                out_frame = work / "graded" / f"{src.stem[:30]}_{int(t)}_{folder.split('_')[0]}.jpg"
+                save_jpg(out_frame, graded)
+                place_for_artist(root, folder, "frame", out_frame, force=True)
+                stats["frames"] += 1
+                if boxes and boxes[0][2] * boxes[0][3] > 0.035 * img.shape[0] * img.shape[1]:
+                    place_for_artist(root, folder, "portrait", out_frame, force=True)
+                    stats["portraits"] += 1
+
+        vote_summary = ", ".join(f"{k.split('_')[0]}:{len(v)}" for k, v in ranked[:3])
+        win_summary = ", ".join(w.split("_", 1)[-1][:22] for w in winners)
+        print(f"   {src.name}: → {win_summary}  (votes {vote_summary})")
+
     (root / "ANALYSIS").mkdir(exist_ok=True)
     (root / "ANALYSIS" / "face_match_log.json").write_text(
-        json.dumps({"created_at": utc_now(), "matches": match_log[:2000], "stats": dict(stats)}, indent=2),
+        json.dumps({"created_at": utc_now(), "matches": match_log[:3000], "stats": dict(stats)}, indent=2),
         encoding="utf-8",
     )
     return dict(stats)
@@ -493,26 +614,29 @@ def process_photos(
     force: bool,
 ) -> dict[str, Any]:
     stats = defaultdict(int)
-    for src in photos[:300]:
+    for src in photos[:400]:
         img = load_image_bgr(src)
         if img is None:
             continue
-        folder = match_by_alias(src, artists)
-        boxes = detect_faces_bgr(img, casc)
+        name_hint = match_by_alias(src, artists)
+        folder = None
         score = None
+        boxes = detect_faces_bgr(img, casc)
         if boxes:
             d = face_descriptor(img, boxes[0])
             if d is not None:
-                m = match_artist(d, galleries, threshold=0.40)
+                m = match_artist(d, galleries, threshold=0.48, min_margin=0.035)
                 if m:
                     folder, score = m
+        if folder is None and name_hint:
+            folder = name_hint  # filename only — safe
         graded = photo_grade_bgr(img)
         stem = re.sub(r"[^\w\-]+", "_", src.stem)[:50]
         tmp = root / "00_work" / "artist_face_tmp" / "photos" / f"{stem}_edit.jpg"
         save_jpg(tmp, graded)
         if folder:
-            place_for_artist(root, folder, "portrait", tmp, force)
-            place_for_artist(root, folder, "frame", tmp, force)
+            place_for_artist(root, folder, "portrait", tmp, force=True)
+            place_for_artist(root, folder, "frame", tmp, force=True)
             stats["matched_photos"] += 1
         else:
             dest = root / "DRIVE_UPLOAD" / "_UNASSIGNED_REVIEW" / "PHOTOS" / f"{stem}_edit.jpg"
@@ -679,10 +803,17 @@ def main() -> int:
 
     print("01 — Artist folders…")
     ensure_artist_dirs(root, seed, repo)
+    if args.force:
+        n = reset_sorted_media(root)
+        print(f"   reset previous sort outputs ({n} folders cleared) — fixes bad Wako-folder aliasing")
 
     print("02 — Build face galleries from IG refs…")
     casc = face_cascade()
     galleries = build_artist_galleries(seed, repo, casc)
+    with_faces = sum(1 for g in galleries.values() if g)
+    print(f"   artists with face refs: {with_faces}/{len(galleries)}")
+    if with_faces < 3:
+        print("WARN: few face galleries — add clearer portrait refs under Assets/content/botanica/refs/")
 
     print("03 — Inventory (Wako Kungo first)…")
     videos, photos = inventory_sources(root, source if source.exists() else None)

@@ -11,6 +11,10 @@ python -m pip install --quiet opencv-python-headless numpy Pillow
 $force = @()
 if ($args -contains "-ForceRebuild" -or $env:BOTANICA_FORCE -eq "1") { $force = @("--force") }
 
-python "$PSScriptRoot\organize_artists_face.py" --root "$Root" --repo "$Repo" --source "$Root\Wako Kungo" @force
+# Always force-rebuild sort when using this helper (clears wrong Wako-folder assignments)
+if (-not $force) { $force = @("--force") }
+python "$PSScriptRoot\organize_artists_face.py" --root "$Root" --repo "$Repo" --source "$Root\Wako Kungo" --samples 14 @force
+Write-Host ""
+Write-Host "Check ANALYSIS\face_match_log.json for per-clip winners."
 Write-Host "Open: $Root\DRIVE_UPLOAD\ARTISTS"
 explorer "$Root\DRIVE_UPLOAD\ARTISTS"

@@ -104,9 +104,9 @@
       "folder": "10_wako.kungo_Wako_Kungo",
       "handle": "wako.kungo",
       "display_name": "Wako Kungo",
-      "aliases": ["wako", "wako.kungo", "wako kungo", "wakungo"],
+      "aliases": ["wako.kungo"],
       "ref_image": "Assets/content/botanica/refs/00_event_flyer_botanical_groove.png",
-      "notes": "Host / presenter"
+      "notes": "Host / presenter — do NOT alias bare 'wako'/'Wako Kungo' folder (would steal all clips)"
     }
   ],
   "text_interruptions": [
