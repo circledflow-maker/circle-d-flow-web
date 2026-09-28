@@ -132,6 +132,16 @@ Outputs:
 python .\scripts\botanica_90s_recap\run_botanica_letterbox_reel.py --root "D:\Wakungo_Content_Studio\Botanica" --force
 ```
 
+### 16:9 full-frame reel (NO crop — quality / full image)
+
+Shows the complete source frame inside 1920×1080 (scale + black pad, never crop):
+
+```powershell
+python .\scripts\botanica_90s_recap\run_botanica_recap_16x9.py --root "D:\Wakungo_Content_Studio\Botanica" --force
+```
+
+→ `EXPORT\BOTANICA_90s_RECAP_16x9.mp4`
+
 ## Face-organize artists (Wako Kungo → folders)
 
 Analyzes `Botanica\Wako Kungo` (and other Botanica media), matches faces to IG refs, writes stabilized performance clips + graded portraits/frames, then cleans empty/legacy folders:

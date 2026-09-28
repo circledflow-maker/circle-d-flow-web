@@ -226,10 +226,27 @@ def main() -> int:
     if r.returncode != 0:
         print("WARN: letterbox reel failed")
 
+    print("\nSTEP E - Build 90s 16:9 FULL FRAME reel (no crop)...")
+    r = subprocess.run(
+        [
+            sys.executable,
+            str(here / "run_botanica_recap_16x9.py"),
+            "--root",
+            str(root),
+            "--seconds",
+            "90",
+            "--force",
+        ],
+        check=False,
+    )
+    if r.returncode != 0:
+        print("WARN: 16:9 full-frame reel failed")
+
     # Final sync + report
     sync_existing_masters_to_export(root)
     reel = root / "EXPORT" / "BOTANICA_90s_RECAP_9x16.mp4"
     reel2 = root / "EXPORT" / "BOTANICA_90s_ENGAGING_LETTERBOX_9x16.mp4"
+    reel16 = root / "EXPORT" / "BOTANICA_90s_RECAP_16x9.mp4"
     event_dir = root / "DRIVE_UPLOAD" / "EVENT"
     event_dir.mkdir(parents=True, exist_ok=True)
 
@@ -242,21 +259,24 @@ def main() -> int:
         shutil.copy2(reel, event_dir / reel.name)
     if reel2.exists():
         shutil.copy2(reel2, event_dir / reel2.name)
+    if reel16.exists():
+        shutil.copy2(reel16, event_dir / reel16.name)
 
     print("\nDONE — open these:")
-    print(f"  EXPORT reel 1: {reel}  exists={reel.exists()}")
-    print(f"  EXPORT reel 2: {reel2}  exists={reel2.exists()}")
-    print(f"  DRIVE EVENT:   {drive_reel}  exists={drive_reel.exists()}")
-    print(f"  Artists:       {root / 'DRIVE_UPLOAD' / 'ARTISTS'}")
+    print(f"  EXPORT 9:16 full-bleed: {reel}  exists={reel.exists()}")
+    print(f"  EXPORT Engaging:        {reel2}  exists={reel2.exists()}")
+    print(f"  EXPORT 16:9 NO CROP:    {reel16}  exists={reel16.exists()}")
+    print(f"  DRIVE EVENT:            {drive_reel}  exists={drive_reel.exists()}")
+    print(f"  Artists:                {root / 'DRIVE_UPLOAD' / 'ARTISTS'}")
 
     if os.name == "nt":
         export = root / "EXPORT"
-        os.startfile(str(export if any(export.glob('*.mp4')) else event_dir))  # type: ignore[attr-defined]
-        play = reel2 if reel2.exists() else reel if reel.exists() else drive_reel
+        os.startfile(str(export if any(export.glob("*.mp4")) else event_dir))  # type: ignore[attr-defined]
+        play = reel16 if reel16.exists() else reel if reel.exists() else drive_reel
         if play.exists():
             os.startfile(str(play))  # type: ignore[attr-defined]
 
-    if not reel.exists() and not drive_reel.exists() and not reel2.exists():
+    if not reel.exists() and not drive_reel.exists() and not reel2.exists() and not reel16.exists():
         return 5
     return 0
 
