@@ -134,13 +134,27 @@ python .\scripts\botanica_90s_recap\run_botanica_letterbox_reel.py --root "D:\Wa
 
 ### 16:9 full-frame reel (NO crop — quality / full image)
 
-Shows the complete source frame inside 1920×1080 (scale + black pad, never crop):
+Shows the complete source frame inside 1920×1080 (scale + black pad, never crop).
+If raw clips are gone, it **auto-falls back** to the finished 9:16 master and pillarboxes it.
+
+**Easiest (force-syncs scripts, ignores membership conflicts):**
+
+```bat
+cd D:\circle-d-flow-web
+git fetch origin cursor/botanica-90s-recap-pipeline-f46a
+git checkout -f origin/cursor/botanica-90s-recap-pipeline-f46a -- scripts/botanica_90s_recap
+scripts\botanica_90s_recap\RUN_16x9.cmd
+```
+
+Or manually:
 
 ```powershell
 python .\scripts\botanica_90s_recap\run_botanica_recap_16x9.py --root "D:\Wakungo_Content_Studio\Botanica" --force
+# force 9:16 → 16:9 pillarbox only:
+python .\scripts\botanica_90s_recap\run_botanica_recap_16x9.py --root "D:\Wakungo_Content_Studio\Botanica" --force --from-9x16
 ```
 
-→ `EXPORT\BOTANICA_90s_RECAP_16x9.mp4`
+→ `EXPORT\BOTANICA_90s_RECAP_16x9.mp4` (+ copy in `DRIVE_UPLOAD\EVENT\`)
 
 ## Face-organize artists (Wako Kungo → folders)
 
