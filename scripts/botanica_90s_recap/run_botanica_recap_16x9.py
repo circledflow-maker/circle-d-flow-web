@@ -24,9 +24,9 @@ from pathlib import Path
 from typing import Any, Optional
 
 VIDEO_EXT = {".mp4", ".mov", ".m4v", ".mkv", ".avi", ".webm"}
+# Do NOT skip ARTISTS — raw Wako folder may be gone; performance clips live there.
 SKIP_DIR_NAMES = {
     "ANALYSIS",
-    "ARTISTS",
     "EVENT_SELECTS",
     "STILLS",
     "EDIT",
@@ -38,8 +38,8 @@ SKIP_DIR_NAMES = {
     ".git",
 }
 # Prefer original event masters over already-stabilized artist selects when possible
-PREFER_PATH_HINTS = ("wako kungo", "assets", "raw", "01_raw")
-DEPRIORITIZE_HINTS = ("_stable", "recap_tmp", "letterbox", "drive_upload")
+PREFER_PATH_HINTS = ("wako kungo", "assets", "raw", "01_raw", "01_videos_performance")
+DEPRIORITIZE_HINTS = ("recap_tmp", "letterbox", "drive_upload", "engaging")
 
 
 def utc_now() -> str:
@@ -355,34 +355,43 @@ def main() -> int:
 
     print("01 — Inventory…")
     videos = inventory_videos(root)
-    # Also allow already-sorted artist performance clips if no raw left
+    print(f"   videos={len(videos)}")
     if not videos:
-        artists = root / "ARTISTS"
-        if artists.exists():
-            for p in artists.rglob("*.mp4"):
-                if p.stat().st_size < 50_000:
+        # Last-chance scan: any video under Botanica except export/work
+        print("   retry: deep scan ARTISTS + ASSETS…")
+        for base_name in ("ARTISTS", "ASSETS", "Wako Kungo", "Wako_Kungo"):
+            base = root / base_name
+            if not base.exists():
+                continue
+            for p in base.rglob("*"):
+                if not p.is_file() or p.suffix.lower() not in VIDEO_EXT:
+                    continue
+                if p.stat().st_size < 40_000:
                     continue
                 try:
                     info = ffprobe(p)
                     dur = float(info.get("format", {}).get("duration") or 0)
+                    vs = next((s for s in info.get("streams", []) if s.get("codec_type") == "video"), {})
                 except Exception:
-                    dur = 0
+                    continue
                 if dur > 2:
                     videos.append(
                         {
                             "path": str(p),
                             "name": p.name,
                             "duration": dur,
-                            "width": 1920,
-                            "height": 1080,
+                            "width": int(vs.get("width") or 0),
+                            "height": int(vs.get("height") or 0),
                             "has_audio": False,
-                            "prefer": False,
-                            "depri": True,
+                            "prefer": "artists" in str(p).lower(),
+                            "depri": False,
                         }
                     )
-    print(f"   videos={len(videos)}")
+        print(f"   videos after retry={len(videos)}")
     if not videos:
-        print("BLOCKER: no videos found")
+        print("BLOCKER: no videos found under Botanica/ARTISTS")
+        print("  Tip: open existing 9:16 reel:")
+        print(f"  {root / 'DRIVE_UPLOAD' / 'EVENT' / 'BOTANICA_90s_RECAP_9x16.mp4'}")
         return 4
 
     segs = plan_segments(videos, args.seconds)
