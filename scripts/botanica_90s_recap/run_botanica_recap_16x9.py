@@ -23,23 +23,25 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Optional
 
-VIDEO_EXT = {".mp4", ".mov", ".m4v", ".mkv", ".avi", ".webm"}
-# Do NOT skip ARTISTS — raw Wako folder may be gone; performance clips live there.
+VIDEO_EXT = {".mp4", ".mov", ".m4v", ".mkv", ".avi", ".webm", ".mts", ".mxf"}
+# Hard-skip only junk / finished masters trees we must not re-ingest as "sources"
 SKIP_DIR_NAMES = {
     "ANALYSIS",
-    "EVENT_SELECTS",
-    "STILLS",
     "EDIT",
-    "EXPORT",
-    "DRIVE_UPLOAD",
-    "00_work",
-    "03_Proxies_Compressed",
     "__pycache__",
     ".git",
 }
 # Prefer original event masters over already-stabilized artist selects when possible
-PREFER_PATH_HINTS = ("wako kungo", "assets", "raw", "01_raw", "01_videos_performance")
-DEPRIORITIZE_HINTS = ("recap_tmp", "letterbox", "drive_upload", "engaging")
+PREFER_PATH_HINTS = (
+    "wako kungo",
+    "assets",
+    "raw",
+    "01_raw",
+    "01_videos_performance",
+    "event_selects",
+    "artists",
+)
+DEPRIORITIZE_HINTS = ("letterbox_reel_tmp", "engaging_letterbox")
 
 
 def utc_now() -> str:
@@ -71,50 +73,82 @@ def ffprobe(path: Path) -> dict[str, Any]:
     return json.loads(r.stdout or "{}")
 
 
-def is_skipped(path: Path, root: Path) -> bool:
+def should_skip_file(path: Path, root: Path) -> bool:
+    """Skip finished masters and tiny temps; keep ARTISTS / DRIVE_UPLOAD / 00_work clips."""
     try:
         rel = path.relative_to(root)
     except ValueError:
         return True
-    return any(part in SKIP_DIR_NAMES for part in rel.parts)
+    parts_l = [p.lower() for p in rel.parts]
+    name_l = path.name.lower()
+
+    if any(p in SKIP_DIR_NAMES for p in rel.parts):
+        return True
+    # Skip final EXPORT masters (but allow other folders)
+    if "export" in parts_l and name_l.startswith("botanica_90s"):
+        return True
+    if name_l.startswith("botanica_90s") and name_l.endswith(".mp4"):
+        return True
+    if "concept9-16" in name_l:
+        return True
+    if name_l.endswith("_silent.mp4"):
+        return True
+    # Skip stills photos mistaken as video — only by extension already
+    return False
+
+
+def probe_video(path: Path) -> Optional[dict[str, Any]]:
+    if path.stat().st_size < 30_000:
+        return None
+    try:
+        info = ffprobe(path)
+    except Exception:
+        return None
+    dur = float(info.get("format", {}).get("duration") or 0)
+    if dur < 1.2:
+        return None
+    vs = next((s for s in info.get("streams", []) if s.get("codec_type") == "video"), {})
+    as_ = next((s for s in info.get("streams", []) if s.get("codec_type") == "audio"), None)
+    path_l = str(path).lower().replace("\\", "/")
+    name_l = path.name.lower()
+    prefer = any(h in path_l for h in PREFER_PATH_HINTS)
+    depri = any(h in path_l or h in name_l for h in DEPRIORITIZE_HINTS)
+    # Prefer longer / higher-res slightly when under ARTISTS
+    return {
+        "path": str(path),
+        "name": path.name,
+        "duration": dur,
+        "width": int(vs.get("width") or 0),
+        "height": int(vs.get("height") or 0),
+        "has_audio": bool(as_),
+        "bitrate": int(info.get("format", {}).get("bit_rate") or 0),
+        "prefer": prefer,
+        "depri": depri,
+    }
 
 
 def inventory_videos(root: Path) -> list[dict[str, Any]]:
+    """Scan whole Botanica tree for usable clips (ARTISTS, DRIVE_UPLOAD, 00_work, …)."""
     items: list[dict[str, Any]] = []
-    for p in sorted(root.rglob("*")):
-        if not p.is_file() or is_skipped(p, root):
+    seen: set[str] = set()
+    print("   scanning for .mp4/.mov under Botanica (this can take a minute)…")
+    for p in root.rglob("*"):
+        if not p.is_file():
             continue
         if p.suffix.lower() not in VIDEO_EXT:
             continue
-        name_l = p.name.lower()
-        if "concept9-16" in name_l:
+        if should_skip_file(p, root):
             continue
-        if "botanica_90s" in name_l or "letterbox" in name_l:
+        key = str(p.resolve()).lower()
+        if key in seen:
             continue
-        try:
-            info = ffprobe(p)
-            vs = next((s for s in info.get("streams", []) if s.get("codec_type") == "video"), {})
-            as_ = next((s for s in info.get("streams", []) if s.get("codec_type") == "audio"), None)
-            path_l = str(p).lower().replace("\\", "/")
-            prefer = any(h in path_l for h in PREFER_PATH_HINTS)
-            depri = any(h in path_l or h in name_l for h in DEPRIORITIZE_HINTS)
-            items.append(
-                {
-                    "path": str(p),
-                    "name": p.name,
-                    "duration": float(info.get("format", {}).get("duration") or 0),
-                    "width": int(vs.get("width") or 0),
-                    "height": int(vs.get("height") or 0),
-                    "has_audio": bool(as_),
-                    "bitrate": int(info.get("format", {}).get("bit_rate") or 0),
-                    "prefer": prefer,
-                    "depri": depri,
-                }
-            )
-        except Exception as e:
-            items.append({"path": str(p), "name": p.name, "duration": 0, "error": str(e)})
+        seen.add(key)
+        meta = probe_video(p)
+        if meta:
+            items.append(meta)
+            if len(items) <= 12:
+                print(f"   + {meta['name']}  {meta['duration']:.1f}s  {p.parent.name}")
 
-    items = [v for v in items if v.get("duration", 0) > 2.5]
     items.sort(
         key=lambda v: (
             0 if v.get("depri") else 1,
@@ -354,44 +388,18 @@ def main() -> int:
     clips_dir.mkdir(parents=True, exist_ok=True)
 
     print("01 — Inventory…")
+    # Quick folder presence hint
+    for label in ("ARTISTS", "DRIVE_UPLOAD", "00_work", "EVENT_SELECTS", "ASSETS", "Wako Kungo"):
+        p = root / label
+        print(f"   folder {label}: {'OK' if p.exists() else 'missing'}")
     videos = inventory_videos(root)
-    print(f"   videos={len(videos)}")
+    print(f"   usable source videos={len(videos)}")
     if not videos:
-        # Last-chance scan: any video under Botanica except export/work
-        print("   retry: deep scan ARTISTS + ASSETS…")
-        for base_name in ("ARTISTS", "ASSETS", "Wako Kungo", "Wako_Kungo"):
-            base = root / base_name
-            if not base.exists():
-                continue
-            for p in base.rglob("*"):
-                if not p.is_file() or p.suffix.lower() not in VIDEO_EXT:
-                    continue
-                if p.stat().st_size < 40_000:
-                    continue
-                try:
-                    info = ffprobe(p)
-                    dur = float(info.get("format", {}).get("duration") or 0)
-                    vs = next((s for s in info.get("streams", []) if s.get("codec_type") == "video"), {})
-                except Exception:
-                    continue
-                if dur > 2:
-                    videos.append(
-                        {
-                            "path": str(p),
-                            "name": p.name,
-                            "duration": dur,
-                            "width": int(vs.get("width") or 0),
-                            "height": int(vs.get("height") or 0),
-                            "has_audio": False,
-                            "prefer": "artists" in str(p).lower(),
-                            "depri": False,
-                        }
-                    )
-        print(f"   videos after retry={len(videos)}")
-    if not videos:
-        print("BLOCKER: no videos found under Botanica/ARTISTS")
-        print("  Tip: open existing 9:16 reel:")
+        print("BLOCKER: no source clips left under Botanica.")
+        print("  The original 'Wako Kungo' folder is gone and ARTISTS clips may have been cleared.")
+        print("  Existing finished reel (9:16):")
         print(f"  {root / 'DRIVE_UPLOAD' / 'EVENT' / 'BOTANICA_90s_RECAP_9x16.mp4'}")
+        print("  Restore raw footage into Botanica\\Wako Kungo\\ then re-run.")
         return 4
 
     segs = plan_segments(videos, args.seconds)
