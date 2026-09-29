@@ -1,0 +1,4974 @@
+{
+  "meta": {
+    "phase": "PHASE 3 \u2014 EXISTING AGENT MAPPING",
+    "created_at": "2026-09-29T05:08:04Z",
+    "rule": "Prefer reuse; no new agents created in this phase",
+    "sources": [
+      "pipeline/config/agent_registry.json",
+      "pipeline/data/drive_inventory.json",
+      "pipeline/reports/infrastructure_report.md",
+      "pipeline/reports/drive_discovery_report.md"
+    ],
+    "drive_discovery_totals": {
+      "folders": 332,
+      "files": 3307,
+      "media": 2706
+    },
+    "agent_profiles_included": 142,
+    "web_runtime_agents_total_in_registry": 142
+  },
+  "classification_legend": {
+    "EXISTING": "Capable agent/tool already present",
+    "PARTIALLY_EXISTING": "Pieces exist; needs wiring/extension, not a new agent",
+    "MISSING": "No reasonable existing component",
+    "CONFLICTING": "Multiple overlapping implementations",
+    "UNKNOWN": "Insufficient evidence"
+  },
+  "desired_pipeline_capabilities": [
+    {
+      "id": 1,
+      "capability": "Drive Discovery",
+      "classification": "EXISTING",
+      "existing_agents": [
+        {
+          "name": "drive_discovery_crawl",
+          "location": "pipeline/tools/drive_discovery_crawl.py",
+          "processing_cost": "low",
+          "metadata_only": true,
+          "requires_download": false,
+          "requires_rendering": false,
+          "modifies_drive": false
+        },
+        {
+          "name": "v9_deep_scout",
+          "location": "scripts/v9_deep_scout.py",
+          "processing_cost": "low",
+          "metadata_only": true,
+          "requires_download": false,
+          "requires_rendering": false,
+          "modifies_drive": false
+        },
+        {
+          "name": "v9_full_scout_run",
+          "location": "scripts/v9_full_scout_run.py",
+          "processing_cost": "low",
+          "metadata_only": true,
+          "requires_download": false,
+          "requires_rendering": false,
+          "modifies_drive": false
+        },
+        {
+          "name": "sync_gdrive",
+          "location": "scripts/sync_gdrive.js",
+          "processing_cost": "low",
+          "metadata_only": true,
+          "requires_download": false,
+          "requires_rendering": false,
+          "modifies_drive": false
+        },
+        {
+          "name": "scrape_gdrive",
+          "location": "scripts/scrape_gdrive.js",
+          "processing_cost": "low",
+          "metadata_only": true,
+          "requires_download": false,
+          "requires_rendering": false,
+          "modifies_drive": false
+        },
+        {
+          "name": "extract_gdrive_ids",
+          "location": "scripts/extract_gdrive_ids.py",
+          "processing_cost": "low",
+          "metadata_only": true,
+          "requires_download": false,
+          "requires_rendering": false,
+          "modifies_drive": false
+        },
+        {
+          "name": "gdrive_forensic",
+          "location": "scripts/gdrive_forensic.py",
+          "processing_cost": "low",
+          "metadata_only": true,
+          "requires_download": false,
+          "requires_rendering": false,
+          "modifies_drive": false
+        },
+        {
+          "name": "list_gdrive",
+          "location": "scripts/list_gdrive.py",
+          "processing_cost": "medium",
+          "metadata_only": false,
+          "requires_download": true,
+          "requires_rendering": false,
+          "modifies_drive": false
+        },
+        {
+          "name": "search_gdrive_events",
+          "location": "scripts/search_gdrive_events.py",
+          "processing_cost": "medium",
+          "metadata_only": false,
+          "requires_download": true,
+          "requires_rendering": false,
+          "modifies_drive": false
+        }
+      ],
+      "existing_tools": [
+        "pipeline/data/*",
+        "google drive public metadata",
+        "googleapis"
+      ],
+      "new_component_necessary": false,
+      "extend_existing": "drive_discovery_crawl + v9_deep_scout (API auth) for size/duration completeness",
+      "cheapest_processing_method": "Public metadata crawl / Drive API files.list fields only \u2014 no downloads",
+      "recommended_primary": "pipeline/tools/drive_discovery_crawl.py"
+    },
+    {
+      "id": 2,
+      "capability": "Project Detection",
+      "classification": "PARTIALLY_EXISTING",
+      "existing_agents": [
+        {
+          "name": "drive_discovery_crawl",
+          "location": "pipeline/tools/drive_discovery_crawl.py",
+          "processing_cost": "low",
+          "metadata_only": true,
+          "requires_download": false,
+          "requires_rendering": false,
+          "modifies_drive": false
+        },
+        {
+          "name": "v9_deep_scout",
+          "location": "scripts/v9_deep_scout.py",
+          "processing_cost": "low",
+          "metadata_only": true,
+          "requires_download": false,
+          "requires_rendering": false,
+          "modifies_drive": false
+        },
+        {
+          "name": "v27_c4c_event_organizer",
+          "location": "scripts/v27_c4c_event_organizer.py",
+          "processing_cost": "low_to_medium",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": false,
+          "modifies_drive": false
+        },
+        {
+          "name": "intake_sort",
+          "location": "scripts/content_pipeline/intake_sort.py",
+          "processing_cost": "high",
+          "metadata_only": true,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        }
+      ],
+      "existing_tools": [
+        "folder_map.json classification",
+        "seed root IDs Planning/Lapa71/Botanica"
+      ],
+      "new_component_necessary": false,
+      "extend_existing": "Extend folder_map classification rules; optional thin detector over inventory JSON",
+      "cheapest_processing_method": "Metadata path/name heuristics on folder_map.json (already seeded)",
+      "recommended_primary": "pipeline/tools/drive_discovery_crawl.py"
+    },
+    {
+      "id": 3,
+      "capability": "Artist Detection",
+      "classification": "PARTIALLY_EXISTING",
+      "existing_agents": [
+        {
+          "name": "organize_artists_face",
+          "location": "scripts/botanica_90s_recap/organize_artists_face.ps1",
+          "processing_cost": "medium",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "organize_artists_face",
+          "location": "scripts/botanica_90s_recap/organize_artists_face.py",
+          "processing_cost": "medium",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "intake_sort",
+          "location": "scripts/content_pipeline/intake_sort.py",
+          "processing_cost": "high",
+          "metadata_only": true,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "destiny_0324_face_assign",
+          "location": "scripts/destiny_0324_face_assign.py",
+          "processing_cost": "medium",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "destiny_0322_face_assign",
+          "location": "scripts/destiny_0322_face_assign.py",
+          "processing_cost": "medium",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": false,
+          "modifies_drive": false
+        },
+        {
+          "name": "v30_c4c_face_classifier",
+          "location": "scripts/v30_c4c_face_classifier.py",
+          "processing_cost": "medium",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "prepare_artist_drive_pack",
+          "location": "scripts/botanica_90s_recap/prepare_artist_drive_pack.ps1",
+          "processing_cost": "high",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "prepare_artist_drive_pack",
+          "location": "scripts/botanica_90s_recap/prepare_artist_drive_pack.py",
+          "processing_cost": "high",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "artist_profile_sync",
+          "location": "js/agents/artist_profile_sync.js",
+          "processing_cost": "low_to_medium",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": false,
+          "modifies_drive": false
+        }
+      ],
+      "existing_tools": [
+        "artist_registry.json",
+        "artist_seed.json",
+        "00_REF face refs",
+        "OpenCV cascades"
+      ],
+      "new_component_necessary": false,
+      "extend_existing": "intake_sort (name+ears) + organize_artists_face (vision) using BotanicaArtistPack 00_REF",
+      "cheapest_processing_method": "Filename/alias match first; face only on short proxies/samples",
+      "recommended_primary": "scripts/botanica_90s_recap/organize_artists_face.py"
+    },
+    {
+      "id": 4,
+      "capability": "Media Classification",
+      "classification": "PARTIALLY_EXISTING",
+      "existing_agents": [
+        {
+          "name": "ears",
+          "location": "scripts/content_pipeline/ears.py",
+          "processing_cost": "medium",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "intake_sort",
+          "location": "scripts/content_pipeline/intake_sort.py",
+          "processing_cost": "high",
+          "metadata_only": true,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "v14_content_sorter",
+          "location": "scripts/v14_content_sorter.py",
+          "processing_cost": "low_to_medium",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": false,
+          "modifies_drive": false
+        },
+        {
+          "name": "v14_content_sorter_v2",
+          "location": "scripts/v14_content_sorter_v2.py",
+          "processing_cost": "low_to_medium",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": false,
+          "modifies_drive": false
+        },
+        {
+          "name": "v10_vision_analyzer",
+          "location": "scripts/v10_vision_analyzer.py",
+          "processing_cost": "low_to_medium",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": false,
+          "modifies_drive": false
+        },
+        {
+          "name": "find_botanica_media",
+          "location": "scripts/botanica_90s_recap/find_botanica_media.ps1",
+          "processing_cost": "low_to_medium",
+          "metadata_only": true,
+          "requires_download": false,
+          "requires_rendering": false,
+          "modifies_drive": false
+        }
+      ],
+      "existing_tools": [
+        "ffprobe",
+        "ffmpeg silencedetect/ebur128",
+        "media_manifest.json"
+      ],
+      "new_component_necessary": false,
+      "extend_existing": "ears + intake_sort format routing (Stages/FlowTalk/Akademie/events)",
+      "cheapest_processing_method": "Extension+ffprobe metadata; ears sample \u226445s; no full decode",
+      "recommended_primary": "scripts/content_pipeline/ears.py"
+    },
+    {
+      "id": 5,
+      "capability": "Quality Analysis",
+      "classification": "PARTIALLY_EXISTING",
+      "existing_agents": [
+        {
+          "name": "v16_portfolio_health_check",
+          "location": "scripts/v16_portfolio_health_check.py",
+          "processing_cost": "high",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "v10_vision_analyzer",
+          "location": "scripts/v10_vision_analyzer.py",
+          "processing_cost": "low_to_medium",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": false,
+          "modifies_drive": false
+        },
+        {
+          "name": "vision_local_agent",
+          "location": "scripts/vision_local_agent.py",
+          "processing_cost": "low_to_medium",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": false,
+          "modifies_drive": false
+        },
+        {
+          "name": "v24_vision_kurator",
+          "location": "scripts/v24_vision_kurator.py",
+          "processing_cost": "low_to_medium",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": false,
+          "modifies_drive": false
+        },
+        {
+          "name": "v25_vision_kurator",
+          "location": "scripts/v25_vision_kurator.py",
+          "processing_cost": "medium",
+          "metadata_only": false,
+          "requires_download": true,
+          "requires_rendering": false,
+          "modifies_drive": false
+        },
+        {
+          "name": "v26_vision_kurator",
+          "location": "scripts/v26_vision_kurator.py",
+          "processing_cost": "medium",
+          "metadata_only": false,
+          "requires_download": true,
+          "requires_rendering": false,
+          "modifies_drive": false
+        },
+        {
+          "name": "ears",
+          "location": "scripts/content_pipeline/ears.py",
+          "processing_cost": "medium",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        }
+      ],
+      "existing_tools": [
+        "ffprobe bitrate/resolution",
+        "ffmpeg signalstats (selective)",
+        "OpenCV blur/exposure samples"
+      ],
+      "new_component_necessary": false,
+      "extend_existing": "Lightweight probe scoring on proxies; reuse vision_kurator patterns without full render",
+      "cheapest_processing_method": "ffprobe + few-frame sample metrics; skip full-file analysis",
+      "recommended_primary": "scripts/v16_portfolio_health_check.py"
+    },
+    {
+      "id": 6,
+      "capability": "Best Moment Detection",
+      "classification": "PARTIALLY_EXISTING",
+      "existing_agents": [
+        {
+          "name": "v15_storyboard_builder",
+          "location": "scripts/v15_storyboard_builder.py",
+          "processing_cost": "low_to_medium",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": false,
+          "modifies_drive": false
+        },
+        {
+          "name": "v11_audio_scout",
+          "location": "scripts/v11_audio_scout.py",
+          "processing_cost": "medium",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": false,
+          "modifies_drive": false
+        },
+        {
+          "name": "v16_concert_vision_agent",
+          "location": "scripts/v16_concert_vision_agent.py",
+          "processing_cost": "high",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "v23_curation_agent",
+          "location": "scripts/v23_curation_agent.py",
+          "processing_cost": "low_to_medium",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": false,
+          "modifies_drive": false
+        },
+        {
+          "name": "v23_advanced_editor",
+          "location": "scripts/v23_advanced_editor.py",
+          "processing_cost": "high",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "run_botanica_recap",
+          "location": "scripts/botanica_90s_recap/run_botanica_recap.ps1",
+          "processing_cost": "high",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "run_botanica_recap",
+          "location": "scripts/botanica_90s_recap/run_botanica_recap.py",
+          "processing_cost": "high",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        }
+      ],
+      "existing_tools": [
+        "librosa beats (optional)",
+        "scene/silence heuristics",
+        "chapter templates in artist_seed"
+      ],
+      "new_component_necessary": false,
+      "extend_existing": "Combine ears energy + existing storyboard/chapter windows; avoid new detector agent",
+      "cheapest_processing_method": "Audio peaks + fixed chapter windows on proxies; not every-frame vision",
+      "recommended_primary": "scripts/v15_storyboard_builder.py"
+    },
+    {
+      "id": 7,
+      "capability": "Virtual Crop Generation",
+      "classification": "EXISTING",
+      "existing_agents": [
+        {
+          "name": "run_botanica_recap",
+          "location": "scripts/botanica_90s_recap/run_botanica_recap.ps1",
+          "processing_cost": "high",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "run_botanica_recap",
+          "location": "scripts/botanica_90s_recap/run_botanica_recap.py",
+          "processing_cost": "high",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "run_botanica_letterbox_reel",
+          "location": "scripts/botanica_90s_recap/run_botanica_letterbox_reel.py",
+          "processing_cost": "high",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "v15_jam_reel_agent",
+          "location": "scripts/v15_jam_reel_agent.py",
+          "processing_cost": "high",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "v15_festival_aftermovie_agent",
+          "location": "scripts/v15_festival_aftermovie_agent.py",
+          "processing_cost": "high",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        }
+      ],
+      "existing_tools": [
+        "ffmpeg crop/scale/pad",
+        "VIRTUAL_CROPS in run_botanica_recap.py"
+      ],
+      "new_component_necessary": false,
+      "extend_existing": "Reuse Botanica VIRTUAL_CROPS / letterbox paths for other events",
+      "cheapest_processing_method": "Generate crops only for selected moments on proxies, not full masters",
+      "recommended_primary": "scripts/botanica_90s_recap/run_botanica_recap.py"
+    },
+    {
+      "id": 8,
+      "capability": "Still Extraction",
+      "classification": "EXISTING",
+      "existing_agents": [
+        {
+          "name": "organize_artists_face",
+          "location": "scripts/botanica_90s_recap/organize_artists_face.ps1",
+          "processing_cost": "medium",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "organize_artists_face",
+          "location": "scripts/botanica_90s_recap/organize_artists_face.py",
+          "processing_cost": "medium",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "prepare_artist_drive_pack",
+          "location": "scripts/botanica_90s_recap/prepare_artist_drive_pack.ps1",
+          "processing_cost": "high",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "prepare_artist_drive_pack",
+          "location": "scripts/botanica_90s_recap/prepare_artist_drive_pack.py",
+          "processing_cost": "high",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "destiny_0324_face_assign",
+          "location": "scripts/destiny_0324_face_assign.py",
+          "processing_cost": "medium",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "run_botanica_recap",
+          "location": "scripts/botanica_90s_recap/run_botanica_recap.ps1",
+          "processing_cost": "high",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "run_botanica_recap",
+          "location": "scripts/botanica_90s_recap/run_botanica_recap.py",
+          "processing_cost": "high",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "v30_c4c_face_classifier",
+          "location": "scripts/v30_c4c_face_classifier.py",
+          "processing_cost": "medium",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        }
+      ],
+      "existing_tools": [
+        "ffmpeg -ss frame grab",
+        "OpenCV imwrite"
+      ],
+      "new_component_necessary": false,
+      "extend_existing": "Existing face/frame extractors; limit to N frames per clip",
+      "cheapest_processing_method": "Single ffmpeg seek extract per selected timestamp",
+      "recommended_primary": "scripts/botanica_90s_recap/organize_artists_face.py"
+    },
+    {
+      "id": 9,
+      "capability": "Image Enhancement",
+      "classification": "EXISTING",
+      "existing_agents": [
+        {
+          "name": "organize_artists_face",
+          "location": "scripts/botanica_90s_recap/organize_artists_face.ps1",
+          "processing_cost": "medium",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "organize_artists_face",
+          "location": "scripts/botanica_90s_recap/organize_artists_face.py",
+          "processing_cost": "medium",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "prepare_artist_drive_pack",
+          "location": "scripts/botanica_90s_recap/prepare_artist_drive_pack.ps1",
+          "processing_cost": "high",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "prepare_artist_drive_pack",
+          "location": "scripts/botanica_90s_recap/prepare_artist_drive_pack.py",
+          "processing_cost": "high",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "v20_lightroom_gdrive_sync",
+          "location": "scripts/v20_lightroom_gdrive_sync.py",
+          "processing_cost": "medium",
+          "metadata_only": false,
+          "requires_download": true,
+          "requires_rendering": false,
+          "modifies_drive": false
+        },
+        {
+          "name": "v11_lightroom_vision",
+          "location": "scripts/v11_lightroom_vision.py",
+          "processing_cost": "low_to_medium",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": false,
+          "modifies_drive": false
+        },
+        {
+          "name": "v22_lightroom_api_bridge",
+          "location": "scripts/v22_lightroom_api_bridge.py",
+          "processing_cost": "low",
+          "metadata_only": true,
+          "requires_download": false,
+          "requires_rendering": false,
+          "modifies_drive": false
+        },
+        {
+          "name": "content_agent",
+          "location": "scripts/content_agent.py",
+          "processing_cost": "low_to_medium",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": false,
+          "modifies_drive": false
+        }
+      ],
+      "existing_tools": [
+        "OpenCV grade",
+        "Lightroom/Adobe bridge",
+        "PIL"
+      ],
+      "new_component_necessary": false,
+      "extend_existing": "Reuse botanical grade in organize_artists_face; LR sync when needed",
+      "cheapest_processing_method": "OpenCV batch grade on stills/proxies; LR only for hero selects",
+      "recommended_primary": "scripts/botanica_90s_recap/organize_artists_face.py"
+    },
+    {
+      "id": 10,
+      "capability": "Video Enhancement",
+      "classification": "EXISTING",
+      "existing_agents": [
+        {
+          "name": "lapa71_tagus_pipeline",
+          "location": "scripts/lapa71_tagus_pipeline.ps1",
+          "processing_cost": "low",
+          "metadata_only": true,
+          "requires_download": false,
+          "requires_rendering": false,
+          "modifies_drive": false
+        },
+        {
+          "name": "lapa71_tagus_pipeline",
+          "location": "scripts/lapa71_tagus_pipeline.py",
+          "processing_cost": "high",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "organize_artists_face",
+          "location": "scripts/botanica_90s_recap/organize_artists_face.ps1",
+          "processing_cost": "medium",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "organize_artists_face",
+          "location": "scripts/botanica_90s_recap/organize_artists_face.py",
+          "processing_cost": "medium",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "v7_audio_alchemist",
+          "location": "scripts/v7_audio_alchemist.py",
+          "processing_cost": "high",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "v9_media_optimizer",
+          "location": "scripts/v9_media_optimizer.py",
+          "processing_cost": "high",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "premium_video_agent",
+          "location": "01_AGENT_PROCESSING/premium_video_agent.py",
+          "processing_cost": "high",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "video_production_agent",
+          "location": "01_AGENT_PROCESSING/video_production_agent.py",
+          "processing_cost": "high",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "run_botanica_recap_16x9",
+          "location": "scripts/botanica_90s_recap/run_botanica_recap_16x9.py",
+          "processing_cost": "high",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        }
+      ],
+      "existing_tools": [
+        "ffmpeg hqdn3d/eq/loudnorm/stabilize",
+        "proxy pipelines"
+      ],
+      "new_component_necessary": false,
+      "extend_existing": "Existing proxy/stabilize/grade chains; one encode lane policy",
+      "cheapest_processing_method": "Proxy CRF 18\u201321 from source; never re-enhance finals",
+      "recommended_primary": "scripts/lapa71_tagus_pipeline.py"
+    },
+    {
+      "id": 11,
+      "capability": "Event Recap Editing",
+      "classification": "EXISTING",
+      "existing_agents": [
+        {
+          "name": "run_botanica_recap",
+          "location": "scripts/botanica_90s_recap/run_botanica_recap.ps1",
+          "processing_cost": "high",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "run_botanica_recap",
+          "location": "scripts/botanica_90s_recap/run_botanica_recap.py",
+          "processing_cost": "high",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "run_botanica_recap_16x9",
+          "location": "scripts/botanica_90s_recap/run_botanica_recap_16x9.py",
+          "processing_cost": "high",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "run_botanica_letterbox_reel",
+          "location": "scripts/botanica_90s_recap/run_botanica_letterbox_reel.py",
+          "processing_cost": "high",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "run_wako_full_pipeline",
+          "location": "scripts/botanica_90s_recap/run_wako_full_pipeline.ps1",
+          "processing_cost": "low",
+          "metadata_only": true,
+          "requires_download": false,
+          "requires_rendering": false,
+          "modifies_drive": false
+        },
+        {
+          "name": "run_wako_full_pipeline",
+          "location": "scripts/botanica_90s_recap/run_wako_full_pipeline.py",
+          "processing_cost": "high",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "v15_festival_aftermovie_agent",
+          "location": "scripts/v15_festival_aftermovie_agent.py",
+          "processing_cost": "high",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "v20_immersive_aftermovie_agent",
+          "location": "scripts/v20_immersive_aftermovie_agent.py",
+          "processing_cost": "high",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "v18_party_concert_mashup_agent",
+          "location": "scripts/v18_party_concert_mashup_agent.py",
+          "processing_cost": "high",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        }
+      ],
+      "existing_tools": [
+        "ffmpeg concat",
+        "chapter plans",
+        "ANALYSIS JSON"
+      ],
+      "new_component_necessary": false,
+      "extend_existing": "Parameterize Botanica recap runners for Lapa71/Oneness seeds",
+      "cheapest_processing_method": "Reuse selected proxies + existing segment planner; render once",
+      "recommended_primary": "scripts/botanica_90s_recap/run_botanica_recap.py"
+    },
+    {
+      "id": 12,
+      "capability": "Social Export",
+      "classification": "CONFLICTING",
+      "existing_agents": [
+        {
+          "name": "v24_chronological_shorts_agent",
+          "location": "scripts/v24_chronological_shorts_agent.py",
+          "processing_cost": "high",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "v25_revised_shorts_agent",
+          "location": "scripts/v25_revised_shorts_agent.py",
+          "processing_cost": "high",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "v26_ai_rotation_agent",
+          "location": "scripts/v26_ai_rotation_agent.py",
+          "processing_cost": "high",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "v14_kyheart_social_agent",
+          "location": "scripts/v14_kyheart_social_agent.py",
+          "processing_cost": "low",
+          "metadata_only": true,
+          "requires_download": false,
+          "requires_rendering": false,
+          "modifies_drive": false
+        },
+        {
+          "name": "v21_social_curator",
+          "location": "scripts/v21_social_curator.py",
+          "processing_cost": "low_to_medium",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": false,
+          "modifies_drive": false
+        },
+        {
+          "name": "v28_c4c_social_curator",
+          "location": "scripts/v28_c4c_social_curator.py",
+          "processing_cost": "high",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "v19_stage_performance_highlights",
+          "location": "scripts/v19_stage_performance_highlights.py",
+          "processing_cost": "high",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        }
+      ],
+      "existing_tools": [
+        "9:16 ffmpeg exports",
+        "DRIVE_UPLOAD/EVENT",
+        "Ready_To_Post"
+      ],
+      "new_component_necessary": false,
+      "extend_existing": "Pick one shorts lane (v25/v26) as canonical to reduce CONFLICTING overlap",
+      "cheapest_processing_method": "Export from already-cut recap masters; avoid new full edits",
+      "recommended_primary": "scripts/v25_revised_shorts_agent.py"
+    },
+    {
+      "id": 13,
+      "capability": "YouTube Export",
+      "classification": "EXISTING",
+      "existing_agents": [
+        {
+          "name": "v19_youtube_jam_agent",
+          "location": "scripts/v19_youtube_jam_agent.py",
+          "processing_cost": "high",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "v22_youtube_master_editor",
+          "location": "scripts/v22_youtube_master_editor.py",
+          "processing_cost": "high",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "run_botanica_recap_16x9",
+          "location": "scripts/botanica_90s_recap/run_botanica_recap_16x9.py",
+          "processing_cost": "high",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "v15_festival_aftermovie_agent",
+          "location": "scripts/v15_festival_aftermovie_agent.py",
+          "processing_cost": "high",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        }
+      ],
+      "existing_tools": [
+        "16:9 ffmpeg",
+        "YouTube_Master_Renders folders on Drive"
+      ],
+      "new_component_necessary": false,
+      "extend_existing": "16x9 full-frame runner + existing YT agents; prefer no-crop path when quality matters",
+      "cheapest_processing_method": "One 16:9 master from selected sources; thumbnail still from peak frame",
+      "recommended_primary": "scripts/botanica_90s_recap/run_botanica_recap_16x9.py"
+    },
+    {
+      "id": 14,
+      "capability": "Artist Content Pack",
+      "classification": "EXISTING",
+      "existing_agents": [
+        {
+          "name": "prepare_artist_drive_pack",
+          "location": "scripts/botanica_90s_recap/prepare_artist_drive_pack.ps1",
+          "processing_cost": "high",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "prepare_artist_drive_pack",
+          "location": "scripts/botanica_90s_recap/prepare_artist_drive_pack.py",
+          "processing_cost": "high",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "organize_artists_face",
+          "location": "scripts/botanica_90s_recap/organize_artists_face.ps1",
+          "processing_cost": "medium",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "organize_artists_face",
+          "location": "scripts/botanica_90s_recap/organize_artists_face.py",
+          "processing_cost": "medium",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "intake_sort",
+          "location": "scripts/content_pipeline/intake_sort.py",
+          "processing_cost": "high",
+          "metadata_only": true,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        }
+      ],
+      "existing_tools": [
+        "Arpan schema folders",
+        "BotanicaArtistPack 00_REF",
+        "DRIVE_UPLOAD/ARTISTS"
+      ],
+      "new_component_necessary": false,
+      "extend_existing": "prepare_artist_drive_pack + Arpan schema; map to Content Pipeline Artists",
+      "cheapest_processing_method": "Hardlink/proxy into pack structure; refs from Drive IDs/thumbnails",
+      "recommended_primary": "scripts/botanica_90s_recap/prepare_artist_drive_pack.py"
+    },
+    {
+      "id": 15,
+      "capability": "Artist Delivery",
+      "classification": "PARTIALLY_EXISTING",
+      "existing_agents": [
+        {
+          "name": "prepare_artist_drive_pack",
+          "location": "scripts/botanica_90s_recap/prepare_artist_drive_pack.ps1",
+          "processing_cost": "high",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "prepare_artist_drive_pack",
+          "location": "scripts/botanica_90s_recap/prepare_artist_drive_pack.py",
+          "processing_cost": "high",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "sync_gdrive",
+          "location": "scripts/sync_gdrive.js",
+          "processing_cost": "low",
+          "metadata_only": true,
+          "requires_download": false,
+          "requires_rendering": false,
+          "modifies_drive": false
+        },
+        {
+          "name": "v21_gdrive_portfolio_populator",
+          "location": "scripts/v21_gdrive_portfolio_populator.py",
+          "processing_cost": "medium",
+          "metadata_only": false,
+          "requires_download": true,
+          "requires_rendering": false,
+          "modifies_drive": false
+        },
+        {
+          "name": "v20_lightroom_gdrive_sync",
+          "location": "scripts/v20_lightroom_gdrive_sync.py",
+          "processing_cost": "medium",
+          "metadata_only": false,
+          "requires_download": true,
+          "requires_rendering": false,
+          "modifies_drive": false
+        },
+        {
+          "name": "update_gdrive_links",
+          "location": "scripts/update_gdrive_links.py",
+          "processing_cost": "low",
+          "metadata_only": true,
+          "requires_download": false,
+          "requires_rendering": false,
+          "modifies_drive": false
+        }
+      ],
+      "existing_tools": [
+        "DRIVE_UPLOAD upload packs",
+        "Google Drive share folders",
+        "akademie_data.js"
+      ],
+      "new_component_necessary": false,
+      "extend_existing": "Delivery = local DRIVE_UPLOAD pack + optional Drive API folder ensure (not built yet as orchestrator)",
+      "cheapest_processing_method": "Publish pack folder IDs/links; upload only finals/proxies not raw",
+      "recommended_primary": "scripts/botanica_90s_recap/prepare_artist_drive_pack.py"
+    },
+    {
+      "id": 16,
+      "capability": "QA",
+      "classification": "PARTIALLY_EXISTING",
+      "existing_agents": [
+        {
+          "name": "v16_portfolio_health_check",
+          "location": "scripts/v16_portfolio_health_check.py",
+          "processing_cost": "high",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": true,
+          "modifies_drive": false
+        },
+        {
+          "name": "v18_fix_portfolio",
+          "location": "scripts/v18_fix_portfolio.py",
+          "processing_cost": "low_to_medium",
+          "metadata_only": false,
+          "requires_download": false,
+          "requires_rendering": false,
+          "modifies_drive": false
+        },
+        {
+          "name": "daily_system_health_agent",
+          "location": "scripts/daily_system_health_agent.py",
+          "processing_cost": "low",
+          "metadata_only": true,
+          "requires_download": false,
+          "requires_rendering": false,
+          "modifies_drive": false
+        },
+        {
+          "name": "find_botanica_media",
+          "location": "scripts/botanica_90s_recap/find_botanica_media.ps1",
+          "processing_cost": "low_to_medium",
+          "metadata_only": true,
+          "requires_download": false,
+          "requires_rendering": false,
+          "modifies_drive": false
+        }
+      ],
+      "existing_tools": [
+        "ffprobe duration/resolution checks",
+        "ANALYSIS plan JSON",
+        "inventory diffs"
+      ],
+      "new_component_necessary": false,
+      "extend_existing": "Checklist over media_manifest + export presence; no new QA agent required",
+      "cheapest_processing_method": "Metadata QA gates before any render",
+      "recommended_primary": "scripts/v16_portfolio_health_check.py"
+    },
+    {
+      "id": 17,
+      "capability": "Reporting",
+      "classification": "EXISTING",
+      "existing_agents": [
+        {
+          "name": "drive_discovery_crawl",
+          "location": "pipeline/tools/drive_discovery_crawl.py",
+          "processing_cost": "low",
+          "metadata_only": true,
+          "requires_download": false,
+          "requires_rendering": false,
+          "modifies_drive": false
+        },
+        {
+          "name": "v7_doc_agent",
+          "location": "scripts/v7_doc_agent.py",
+          "processing_cost": "low",
+          "metadata_only": true,
+          "requires_download": false,
+          "requires_rendering": false,
+          "modifies_drive": false
+        },
+        {
+          "name": "v9_pillar_doc",
+          "location": "scripts/v9_pillar_doc.py",
+          "processing_cost": "low",
+          "metadata_only": true,
+          "requires_download": false,
+          "requires_rendering": false,
+          "modifies_drive": false
+        },
+        {
+          "name": "daily_system_health_agent",
+          "location": "scripts/daily_system_health_agent.py",
+          "processing_cost": "low",
+          "metadata_only": true,
+          "requires_download": false,
+          "requires_rendering": false,
+          "modifies_drive": false
+        }
+      ],
+      "existing_tools": [
+        "pipeline/reports/*",
+        "ANALYSIS/*.json",
+        "agent_registry.json"
+      ],
+      "new_component_necessary": false,
+      "extend_existing": "Continue markdown+JSON reports under pipeline/reports",
+      "cheapest_processing_method": "Generate from existing inventories (no media IO)",
+      "recommended_primary": "pipeline/tools/drive_discovery_crawl.py"
+    }
+  ],
+  "conflicts": [
+    {
+      "area": "Social shorts / rotation",
+      "status": "CONFLICTING",
+      "agents": [
+        "v24_chronological_shorts_agent",
+        "v25_revised_shorts_agent",
+        "v26_ai_rotation_agent",
+        "v21_social_curator",
+        "v28_c4c_social_curator"
+      ],
+      "note": "Multiple overlapping shorts/social curators \u2014 pick canonical before orchestration"
+    },
+    {
+      "area": "Aftermovie / recap",
+      "status": "CONFLICTING",
+      "agents": [
+        "run_botanica_recap",
+        "v15_festival_aftermovie_agent",
+        "v20_immersive_aftermovie_agent",
+        "v21_immersive_revised_agent",
+        "v18_party_concert_mashup_agent"
+      ],
+      "note": "Prefer Botanica runners for Botanica; do not run immersive+botanica together"
+    },
+    {
+      "area": "Artist folder trees",
+      "status": "CONFLICTING",
+      "agents": [
+        "organize_artists_face",
+        "prepare_artist_drive_pack",
+        "Content Pipeline Artists",
+        "BotanicaArtistPack"
+      ],
+      "note": "Two Drive ARTISTS roots \u2014 map, do not flatten/merge destructively"
+    }
+  ],
+  "agent_profiles": [
+    {
+      "name": "v10_archive_handler",
+      "location": "scripts/v10_archive_handler.py",
+      "kind": "script_agent",
+      "purpose": "Agent responsible for daily vaulting and cleanup.",
+      "input": [
+        "D:/Vision_World/Archive"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [],
+      "drive_access": true,
+      "media_access": true,
+      "processing_cost": "low",
+      "metadata_only": true,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v10_vision_analyzer",
+      "location": "scripts/v10_vision_analyzer.py",
+      "kind": "script_agent",
+      "purpose": "AI Narrative Analyzer: Analyzes raw footage to identify \"The Question\" and \"The Flow\". Detects energy peaks for Hip Hop style beat-synchronized cuts and transcription for philosophical keywords.",
+      "input": [],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "low_to_medium",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v10_vision_vortex",
+      "location": "scripts/v10_vision_vortex.py",
+      "kind": "script_agent",
+      "purpose": "Automated Assembly Engine: Renders 5-min episodes and three 9:16 vertical shorts daily. Incorporates Graffiti Title Boards (Darkside aesthetic) and sidechain ducking.",
+      "input": [],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "ffmpeg"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v11_audio_scout",
+      "location": "scripts/v11_audio_scout.py",
+      "kind": "script_agent",
+      "purpose": "Load audio (mono, 22050Hz) - Just the FIRST 5 minutes to be safe",
+      "input": [
+        "D:\\circle-d-flow-web\\Music\\qter-deelem",
+        "D:\\KyheartLx_Studio\\alter_life_2026\\audio_analysis.json"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "librosa"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "medium",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v11_ingest_engine",
+      "location": "scripts/v11_ingest_engine.py",
+      "kind": "script_agent",
+      "purpose": "Samples frames from video and saves one if a face is detected. Used for the Community Credits / Instagram Story workflow.",
+      "input": [
+        "D:\\alterlife",
+        "D:\\KyheartLx_Studio\\alter_life_2026",
+        "D:\\circle-d-flow-web\\assets\\live_ingest"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "ffmpeg",
+        "opencv/cv2"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v11_lightroom_vision",
+      "location": "scripts/v11_lightroom_vision.py",
+      "kind": "script_agent",
+      "purpose": "Automated pipeline that uses the Adobe Lightroom API to auto-tone artist pictures, then categorizes them as Studio or Outdoor shots and pushes them to the portfolio system.",
+      "input": [],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "low_to_medium",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v11_local_scout",
+      "location": "scripts/v11_local_scout.py",
+      "kind": "script_agent",
+      "purpose": "Parse FPS (e.g. \"25/1\" or \"2997/100\")",
+      "input": [
+        "D:\\KyheartLx_Studio\\alter_life_2026\\ingest_manifest.json",
+        "D:\\circle-d-flow-web\\assets\\live_ingest"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "ffmpeg",
+        "ffprobe"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v11_update_web_portfolio",
+      "location": "scripts/v11_update_web_portfolio.py",
+      "kind": "script_agent",
+      "purpose": "Convert manifest items to Portfolio format",
+      "input": [
+        "D:\\KyheartLx_Studio\\alter_life_2026\\ingest_manifest.json",
+        "D:\\KyheartLx_Studio\\alter_life_2026\\03_DaVinci_Projects",
+        "D:\\KyheartLx_Studio\\alter_life_2026\\05_Ready_to_Post",
+        "D:\\circle-d-flow-web\\assets\\studio\\alter_life_2026\\05_Ready_to_Post"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "low_to_medium",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v11_xml_conductor_v2",
+      "location": "scripts/v11_xml_conductor_v2.py",
+      "kind": "script_agent",
+      "purpose": "--- CONFIG ---",
+      "input": [
+        "D:\\KyheartLx_Studio\\alter_life_2026\\ingest_manifest.json",
+        "D:\\KyheartLx_Studio\\alter_life_2026\\03_DaVinci_Projects",
+        "D:\\circle-d-flow-web\\assets\\live_ingest",
+        "D:\\circle-d-flow-web\\Music\\qter-deelem",
+        "D:\\circle-d-flow-web\\CDF"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "low_to_medium",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v12_alterlife_master_reel",
+      "location": "scripts/v12_alterlife_master_reel.py",
+      "kind": "script_agent",
+      "purpose": "Generates a 720p proxy if it doesn't exist",
+      "input": [
+        "D:\\alterlife",
+        "D:\\KyheartLx_Studio\\alter_life_2026\\02_Proxies",
+        "D:\\KyheartLx_Studio\\alter_life_2026\\03_DaVinci_Projects",
+        "D:/...)"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "ffmpeg"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v12_curator_agent",
+      "location": "scripts/v12_curator_agent.py",
+      "kind": "script_agent",
+      "purpose": "Du bist der 'Circle D Flow Curator', ein hochintelligenter Bild- und Video-Analyst. Deine Aufgabe ist es, eingehende Medien aus Lightroom und Google Drive zu scannen und basierend auf visuellen Merkmalen, Metadaten und Ordnerstrukturen in exakte Portfolio-Kategorien einzuordnen. ",
+      "input": [],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "gemini",
+        "supabase"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "low_to_medium",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v12_production_master",
+      "location": "scripts/v12_production_master.py",
+      "kind": "script_agent",
+      "purpose": "Simple hash to detect duplicates by content.",
+      "input": [
+        "01_AGENT_PROCESSING\\unzipped",
+        "01_AGENT_PROCESSING\\Rui_Reel",
+        "01_AGENT_PROCESSING\\Rui_Reel\\Rui_Session_V6_Audio.mp3",
+        "01_AGENT_PROCESSING\\Indian_Festival"
+      ],
+      "output": [
+        "01_AGENT_PROCESSING\\Premium_Cuts"
+      ],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "ffmpeg",
+        "numpy",
+        "opencv/cv2"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v13_alchemist_agent",
+      "location": "scripts/v13_alchemist_agent.py",
+      "kind": "script_agent",
+      "purpose": "Du bist der 'Circle D Flow Alchemist', ein professioneller Video-Editor-Agent. Deine Aufgabe ist es, rohes Video- und Fotomaterial aus Google Drive zu analysieren und hochprofessionelle, stimmungsvolle Videos zu generieren. Du orientierst dich am Vibe der 'Circle D Flow' und 'Kis",
+      "input": [],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [],
+      "drive_access": true,
+      "media_access": true,
+      "processing_cost": "low",
+      "metadata_only": true,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v13_production_revision",
+      "location": "scripts/v13_production_revision.py",
+      "kind": "script_agent",
+      "purpose": "Processes asset with 'Fit' mode and rotation support.",
+      "input": [
+        "01_AGENT_PROCESSING\\unzipped",
+        "01_AGENT_PROCESSING\\Rui_Reel",
+        "01_AGENT_PROCESSING\\Rui_Reel\\Rui_Session_V6_Audio.mp3",
+        "01_AGENT_PROCESSING\\Indian_Festival"
+      ],
+      "output": [
+        "01_AGENT_PROCESSING\\Premium_Cuts"
+      ],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "ffmpeg",
+        "numpy",
+        "opencv/cv2"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v14_content_sorter",
+      "location": "scripts/v14_content_sorter.py",
+      "kind": "script_agent",
+      "purpose": "--- CONFIGURATION ---",
+      "input": [
+        "D:\\alterlife"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "low_to_medium",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": true,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v14_content_sorter_v2",
+      "location": "scripts/v14_content_sorter_v2.py",
+      "kind": "script_agent",
+      "purpose": "--- CONFIGURATION ---",
+      "input": [
+        "D:\\alterlife"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "low_to_medium",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": true,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v14_kyheart_social_agent",
+      "location": "scripts/v14_kyheart_social_agent.py",
+      "kind": "script_agent",
+      "purpose": "Sets up Agent 2 (Video Master) directory structure.",
+      "input": [
+        "D:\\KYHeart_Social_Media"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [],
+      "drive_access": true,
+      "media_access": true,
+      "processing_cost": "low",
+      "metadata_only": true,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v14_rui_multi_song_reels",
+      "location": "scripts/v14_rui_multi_song_reels.py",
+      "kind": "script_agent",
+      "purpose": "Processes a segment, optionally as a split screen.",
+      "input": [
+        "01_AGENT_PROCESSING\\unzipped",
+        "01_AGENT_PROCESSING\\Rui_Reel",
+        "01_AGENT_PROCESSING\\Rui_Reel\\Rui_Session_Master_Audio.mp3",
+        "01_AGENT_PROCESSING\\Rui_Reel\\Rui_Session_Alt_Audio.mp3",
+        "01_AGENT_PROCESSING\\Rui_Reel\\Rui_Session_V6_Audio.mp3"
+      ],
+      "output": [
+        "01_AGENT_PROCESSING\\Premium_Cuts"
+      ],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "ffmpeg",
+        "numpy",
+        "opencv/cv2"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v14_yggdrasil_pipeline",
+      "location": "scripts/v14_yggdrasil_pipeline.py",
+      "kind": "script_agent",
+      "purpose": "Du bist 'The Archive Poet', der Chef-Archivar von Circle D Flow. Aufgabe: Rohe Dateinamen (z.B. DSC0207.MOV) analysieren und basierend auf Ordnernamen (Ort/Kontext) und visueller KI-Analyse einen poetischen, aber klaren Titel vergeben. Regeln: 1. Analyse: Lies den Ordnernamen als",
+      "input": [
+        "01_AGENT_PROCESSING"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "supabase"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "low_to_medium",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v15_festival_aftermovie_agent",
+      "location": "scripts/v15_festival_aftermovie_agent.py",
+      "kind": "script_agent",
+      "purpose": "Finds the horizontal center of interest (face or pose).",
+      "input": [
+        "01_AGENT_PROCESSING\\unzipped",
+        "01_AGENT_PROCESSING\\Rui_Reel",
+        "01_AGENT_PROCESSING\\Rui_Reel\\Rui_Session_V6_Audio.mp3"
+      ],
+      "output": [
+        "01_AGENT_PROCESSING\\Premium_Cuts"
+      ],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "ffmpeg",
+        "numpy",
+        "opencv/cv2"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v15_jam_reel_agent",
+      "location": "scripts/v15_jam_reel_agent.py",
+      "kind": "script_agent",
+      "purpose": "Crop a horizontal video to 9:16 vertical.",
+      "input": [
+        "D:\\KYHeart_Social_Media\\Instagram\\2026-05-19_Tuesday_ArtistFlow"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "numpy"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v15_master_flow_agent",
+      "location": "scripts/v15_master_flow_agent.py",
+      "kind": "script_agent",
+      "purpose": "Configuration",
+      "input": [
+        "D:\\circle-d-flow-web\\scripts",
+        "D:\\circle-d-flow-web\\Portfolio_Content\\portfolio_state.json"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [],
+      "drive_access": false,
+      "media_access": false,
+      "processing_cost": "low",
+      "metadata_only": true,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v15_storyboard_builder",
+      "location": "scripts/v15_storyboard_builder.py",
+      "kind": "script_agent",
+      "purpose": "--- CONFIGURATION ---",
+      "input": [
+        "D:\\alterlife"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "low_to_medium",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v16_carousel_filler",
+      "location": "scripts/v16_carousel_filler.py",
+      "kind": "script_agent",
+      "purpose": "Scans specific folders for images and videos, applying date and size filters.",
+      "input": [
+        "D:\\KYHeart_Social_Media"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": true,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v16_concert_vision_agent",
+      "location": "scripts/v16_concert_vision_agent.py",
+      "kind": "script_agent",
+      "purpose": "Analyzes clip for close-up and subject position.",
+      "input": [
+        "01_AGENT_PROCESSING\\unzipped",
+        "01_AGENT_PROCESSING\\Rui_Reel",
+        "01_AGENT_PROCESSING\\Rui_Reel\\Rui_Session_Master_Audio.mp3"
+      ],
+      "output": [
+        "01_AGENT_PROCESSING\\Premium_Cuts"
+      ],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "ffmpeg",
+        "numpy",
+        "opencv/cv2"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v16_portfolio_health_check",
+      "location": "scripts/v16_portfolio_health_check.py",
+      "kind": "script_agent",
+      "purpose": "Paths",
+      "input": [
+        "D:\\circle-d-flow-web\\js\\data\\portfolio_data.js",
+        "D:\\circle-d-flow-web\\Portfolio_Content\\Live_Website",
+        "D:\\circle-d-flow-web\\assets\\live_ingest"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "ffmpeg"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v17_archive_master",
+      "location": "scripts/v17_archive_master.py",
+      "kind": "script_agent",
+      "purpose": "Generates a caption following the [Anchor | Crack | Flow] formula.",
+      "input": [
+        "D:\\circle-d-flow-web\\Portfolio_Content",
+        "D:\\circle-d-flow-web\\Assets\\images\\Portrait",
+        "D:\\circle-d-flow-web\\js\\data\\portfolio_data.js"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "ffmpeg"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v17_jam_intro_reel",
+      "location": "scripts/v17_jam_intro_reel.py",
+      "kind": "script_agent",
+      "purpose": "Crop a horizontal video to 9:16 vertical.",
+      "input": [
+        "D:\\KYHeart_Social_Media\\Instagram"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v17_secret_garden_lx_agent",
+      "location": "scripts/v17_secret_garden_lx_agent.py",
+      "kind": "script_agent",
+      "purpose": "Finds face center and close-up status.",
+      "input": [
+        "D:\\tag"
+      ],
+      "output": [
+        "01_AGENT_PROCESSING\\Premium_Cuts"
+      ],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "ffmpeg",
+        "numpy",
+        "opencv/cv2"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v18_adventure_scout",
+      "location": "scripts/v18_adventure_scout.py",
+      "kind": "script_agent",
+      "purpose": "Analyzes an OpenCV frame to score how much 'Waterfall/Horizon' (Blue/White) and 'Nature' (Green) it contains.",
+      "input": [
+        "D:\\Free"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "numpy",
+        "opencv/cv2"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "medium",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v18_fix_portfolio",
+      "location": "scripts/v18_fix_portfolio.py",
+      "kind": "script_agent",
+      "purpose": "Paths",
+      "input": [
+        "D:\\circle-d-flow-web\\Portfolio_Content",
+        "D:\\circle-d-flow-web\\js\\data\\portfolio_data.js"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "low_to_medium",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v18_party_concert_mashup_agent",
+      "location": "scripts/v18_party_concert_mashup_agent.py",
+      "kind": "script_agent",
+      "purpose": "v18_party_concert_mashup_agent",
+      "input": [
+        "01_AGENT_PROCESSING\\unzipped",
+        "01_AGENT_PROCESSING\\Rui_Reel"
+      ],
+      "output": [
+        "01_AGENT_PROCESSING\\Premium_Cuts",
+        "01_AGENT_PROCESSING\\Premium_Cuts\\LX_Concert_Audio_5277.mp3"
+      ],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "ffmpeg",
+        "numpy",
+        "opencv/cv2"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v19_c4c_asset_scout",
+      "location": "scripts/v19_c4c_asset_scout.py",
+      "kind": "script_agent",
+      "purpose": "We search for images and videos",
+      "input": [],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "googleapiclient"
+      ],
+      "drive_access": true,
+      "media_access": true,
+      "processing_cost": "low",
+      "metadata_only": true,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v19_stage_performance_highlights",
+      "location": "scripts/v19_stage_performance_highlights.py",
+      "kind": "script_agent",
+      "purpose": "v19_stage_performance_highlights",
+      "input": [
+        "D:\\tag"
+      ],
+      "output": [
+        "01_AGENT_PROCESSING\\Premium_Cuts",
+        "01_AGENT_PROCESSING\\Premium_Cuts\\LX_Concert_Audio_5277.mp3"
+      ],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "ffmpeg",
+        "numpy",
+        "opencv/cv2"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v19_youtube_jam_agent",
+      "location": "scripts/v19_youtube_jam_agent.py",
+      "kind": "script_agent",
+      "purpose": "Creates a cinematic text intro matching the requested branding.",
+      "input": [
+        "D:\\KYHeart_Social_Media\\YouTube"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "gemini"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v20_flow_talk_agent",
+      "location": "scripts/v20_flow_talk_agent.py",
+      "kind": "script_agent",
+      "purpose": "Downloads the YouTube audio track using yt-dlp.",
+      "input": [
+        "D:\\KYHeart_Social_Media\\02_Flow_Talks_Interviews",
+        "D:\\circle-d-flow-web\\temp_flowtalk"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v20_immersive_aftermovie_agent",
+      "location": "scripts/v20_immersive_aftermovie_agent.py",
+      "kind": "script_agent",
+      "purpose": "v20_immersive_aftermovie_agent",
+      "input": [
+        "D:\\tag"
+      ],
+      "output": [
+        "01_AGENT_PROCESSING\\Premium_Cuts"
+      ],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "ffmpeg",
+        "numpy",
+        "opencv/cv2"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v20_lightroom_gdrive_sync",
+      "location": "scripts/v20_lightroom_gdrive_sync.py",
+      "kind": "script_agent",
+      "purpose": "<?xml version=\"1.0\" encoding=\"UTF-8\"?> <x:xmpmeta xmlns:x=\"adobe:ns:meta/\"> <rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"> <rdf:Description rdf:about=\"\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\"> <dc:subject> <rdf:Bag> <rdf:li>{category}</rdf:li> </rdf:Bag> <",
+      "input": [
+        "D:\\circle-d-flow-web\\Portfolio_Content\\Source_Lightroom\\Auto_Import",
+        "D:\\circle-d-flow-web\\Portfolio_Content\\Err"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "googleapiclient"
+      ],
+      "drive_access": true,
+      "media_access": true,
+      "processing_cost": "medium",
+      "metadata_only": false,
+      "requires_download": true,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v21_gdrive_portfolio_populator",
+      "location": "scripts/v21_gdrive_portfolio_populator.py",
+      "kind": "script_agent",
+      "purpose": "The Target Categories so the UI renders them even if empty",
+      "input": [
+        "D:\\circle-d-flow-web\\js\\data\\portfolio_data.js"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "googleapiclient"
+      ],
+      "drive_access": true,
+      "media_access": true,
+      "processing_cost": "medium",
+      "metadata_only": false,
+      "requires_download": true,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v21_immersive_revised_agent",
+      "location": "scripts/v21_immersive_revised_agent.py",
+      "kind": "script_agent",
+      "purpose": "v21_immersive_revised_agent",
+      "input": [
+        "D:\\tag"
+      ],
+      "output": [
+        "01_AGENT_PROCESSING\\Premium_Cuts"
+      ],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "ffmpeg",
+        "ffprobe",
+        "numpy",
+        "opencv/cv2"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v21_social_curator",
+      "location": "scripts/v21_social_curator.py",
+      "kind": "script_agent",
+      "purpose": "Copies large files in chunks to avoid Windows Error 1450.",
+      "input": [
+        "D:\\KYHeart_Social_Media\\Instagram\\Schedule"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "low_to_medium",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v22_immersive_final_polish",
+      "location": "scripts/v22_immersive_final_polish.py",
+      "kind": "script_agent",
+      "purpose": "v22_immersive_final_polish",
+      "input": [
+        "D:\\tag"
+      ],
+      "output": [
+        "01_AGENT_PROCESSING\\Premium_Cuts"
+      ],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "ffmpeg",
+        "ffprobe",
+        "numpy",
+        "opencv/cv2"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v22_lightroom_api_bridge",
+      "location": "scripts/v22_lightroom_api_bridge.py",
+      "kind": "script_agent",
+      "purpose": "--- CONFIGURATION ---",
+      "input": [],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [],
+      "drive_access": false,
+      "media_access": false,
+      "processing_cost": "low",
+      "metadata_only": true,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v22_youtube_master_editor",
+      "location": "scripts/v22_youtube_master_editor.py",
+      "kind": "script_agent",
+      "purpose": "Generates the structured YouTube Metadata.",
+      "input": [
+        "D:\\KYHeart_Social_Media\\YouTube_Master_Renders",
+        "D:\\circle-d-flow-web\\temp_youtube",
+        "D:\\circle-d-flow-web\\assets\\mascot_transparent.png"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "numpy"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v23_advanced_editor",
+      "location": "scripts/v23_advanced_editor.py",
+      "kind": "script_agent",
+      "purpose": "--- CONFIGURATION ---",
+      "input": [
+        "D:\\compressed_DCIM\\MainRolls",
+        "D:\\compressed_DCIM\\Drive_BRolls",
+        "D:\\compressed_DCIM\\Final_Exports"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "ffmpeg",
+        "librosa",
+        "numpy"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v23_curation_agent",
+      "location": "scripts/v23_curation_agent.py",
+      "kind": "script_agent",
+      "purpose": "v23_curation_agent",
+      "input": [
+        "D:\\tag"
+      ],
+      "output": [
+        "01_AGENT_PROCESSING\\Ready_To_Post"
+      ],
+      "trigger": "manual_cli",
+      "dependencies": [],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "low_to_medium",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v23_master_portfolio_sync",
+      "location": "scripts/v23_master_portfolio_sync.py",
+      "kind": "script_agent",
+      "purpose": "v23_master_portfolio_sync",
+      "input": [
+        "D:\\circle-d-flow-web\\js\\data\\portfolio_data.js",
+        "D:\\circle-d-flow-web\\assets\\lightroom_sync"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "googleapiclient"
+      ],
+      "drive_access": true,
+      "media_access": true,
+      "processing_cost": "medium",
+      "metadata_only": false,
+      "requires_download": true,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v24_chronological_shorts_agent",
+      "location": "scripts/v24_chronological_shorts_agent.py",
+      "kind": "script_agent",
+      "purpose": "Audio extraction for Indian Festival",
+      "input": [
+        "D:\\tag",
+        "01_AGENT_PROCESSING\\unzipped"
+      ],
+      "output": [
+        "01_AGENT_PROCESSING\\Ready_To_Post",
+        "01_AGENT_PROCESSING\\Premium_Cuts\\Immersive_Audio_5332.mp3"
+      ],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "ffmpeg",
+        "ffprobe",
+        "numpy",
+        "opencv/cv2"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v24_vision_kurator",
+      "location": "scripts/v24_vision_kurator.py",
+      "kind": "script_agent",
+      "purpose": "Du bist der digitale Griot und Master-Kurator f\u00fcr das Fotografie- und Video-Portfolio von \"Kiss Your Heart\" und der \"Circle D Flow\" Community in Lissabon. Deine Aufgabe ist es, hochgeladene visuelle Medien (Bilder/Videos) autonom zu analysieren, ihre Qualit\u00e4t zu pr\u00fcfen, sie in da",
+      "input": [
+        "D:\\circle-d-flow-web\\.env",
+        "D:\\circle-d-flow-web\\js\\data\\portfolio_data.js",
+        "D:\\circle-d-flow-web\\assets\\lightroom_sync"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "gemini"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "low_to_medium",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v25_revised_shorts_agent",
+      "location": "scripts/v25_revised_shorts_agent.py",
+      "kind": "script_agent",
+      "purpose": "v25_revised_shorts_agent",
+      "input": [
+        "D:\\tag",
+        "01_AGENT_PROCESSING\\unzipped"
+      ],
+      "output": [
+        "01_AGENT_PROCESSING\\Ready_To_Post\\Tag_Mit_Rui_Portraits",
+        "01_AGENT_PROCESSING\\Ready_To_Post\\Indian_Festival_Portraits",
+        "01_AGENT_PROCESSING\\Ready_To_Post",
+        "01_AGENT_PROCESSING\\Premium_Cuts\\Immersive_Audio_5332.mp3"
+      ],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "ffmpeg",
+        "ffprobe",
+        "opencv/cv2"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v25_vision_kurator",
+      "location": "scripts/v25_vision_kurator.py",
+      "kind": "script_agent",
+      "purpose": "Du bist der Master-Kurator. Analysiere dieses {'Video' if is_video else 'Bild'} aus der Perspektive des {target_ring} (Miyamoto Musashi). Fokus des Rings: - Earth: Fundament, Struktur, Handwerk, Stabilit\u00e4t, Architektur. - Water: Fluss, Anpassung, Technik, Flexibilit\u00e4t, Bewegung. ",
+      "input": [
+        "D:\\circle-d-flow-web\\js\\data\\portfolio_data.js",
+        "D:\\circle-d-flow-web\\assets\\lightroom_sync",
+        "D:\\circle-d-flow-web\\assets\\gdrive_sync",
+        "Assets/{"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "gemini",
+        "googleapiclient"
+      ],
+      "drive_access": true,
+      "media_access": true,
+      "processing_cost": "medium",
+      "metadata_only": false,
+      "requires_download": true,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v26_ai_rotation_agent",
+      "location": "scripts/v26_ai_rotation_agent.py",
+      "kind": "script_agent",
+      "purpose": "v26_ai_rotation_agent",
+      "input": [],
+      "output": [
+        "01_AGENT_PROCESSING\\Ready_To_Post\\Indian_Festival_Portraits",
+        "01_AGENT_PROCESSING\\Ready_To_Post"
+      ],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "ffmpeg",
+        "ffprobe",
+        "opencv/cv2"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v26_vision_kurator",
+      "location": "scripts/v26_vision_kurator.py",
+      "kind": "script_agent",
+      "purpose": "Du bist der Master-Kurator. Analysiere dieses Asset. W\u00e4hle aus folgenden Kategorien die PASSENDSTE aus: - Ring of Earth (Struktur, Handwerk, Architektur) - Ring of Water (Fluss, Technik, Bewegung) - Ring of Fire (Leidenschaft, Konflikt, Dynamik) - Ring of Wind (Tradition, Kultur,",
+      "input": [
+        "D:\\circle-d-flow-web\\js\\data\\portfolio_data.js",
+        "D:\\circle-d-flow-web\\Assets\\lightroom_sync",
+        "D:\\circle-d-flow-web\\Assets\\gdrive_sync",
+        "Assets/{"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "gemini",
+        "googleapiclient",
+        "numpy"
+      ],
+      "drive_access": true,
+      "media_access": true,
+      "processing_cost": "medium",
+      "metadata_only": false,
+      "requires_download": true,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v27_c4c_event_organizer",
+      "location": "scripts/v27_c4c_event_organizer.py",
+      "kind": "script_agent",
+      "purpose": "C for C Event \u2014 content organizer Sorts media by artist (folder/filename) and event moments. Outputs manifest JSON + English caption stubs for IG/YouTube calendar. Usage: python scripts/v27_c4c_event_organizer.py python scripts/v27_c4c_event_organizer.py --source \"D:/cdf27jue/cdf",
+      "input": [
+        "D:/cdf27jue/cdfevent",
+        "D:\\cdf27jue\\cdfevent",
+        "01_AGENT_PROCESSING"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "low_to_medium",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": true,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v28_c4c_social_curator",
+      "location": "scripts/v28_c4c_social_curator.py",
+      "kind": "script_agent",
+      "purpose": "C4C Social Media Curator (v28) Scans artist folders + root pool, scores media, grades contrast, creates short clips, and packages dated channel folders. Usage: python scripts/v28_c4c_social_curator.py python scripts/v28_c4c_social_curator.py --dry-run",
+      "input": [
+        "D:\\cdf27jue\\cdfevent",
+        "01_AGENT_PROCESSING",
+        "D:\\KYHeart_Social_Media\\C4C_ReadyToPost"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "ffmpeg",
+        "numpy",
+        "opencv/cv2"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": true,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v29_c4c_video_master",
+      "location": "scripts/v29_c4c_video_master.py",
+      "kind": "script_agent",
+      "purpose": "C4C Video Master (v29) - Stone-balanced color grade (warm, neutral mids) - Interview preset (soft contrast, face-centered crop) - Circle wipe transitions (xfade circleopen) - 2x 15s reels with music + full aftermovie Usage: python scripts/v29_c4c_video_master.py",
+      "input": [
+        "D:\\cdf27jue\\cdfevent",
+        "01_AGENT_PROCESSING",
+        "D:\\KYHeart_Social_Media\\C4C_Video_Masters"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "ffmpeg",
+        "numpy",
+        "opencv/cv2"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v30_c4c_face_classifier",
+      "location": "scripts/v30_c4c_face_classifier.py",
+      "kind": "script_agent",
+      "purpose": "C4C Face-based artist classifier (v30) - Learns face references from each artist folder in cdfevent - Classifies root pool media by face similarity - Exports graded share packs per artist (_ReadyToShare) - Writes face_buckets.json for social curator Usage: python scripts/v30_c4c_",
+      "input": [
+        "D:\\cdf27jue\\cdfevent",
+        "01_AGENT_PROCESSING"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "ffmpeg",
+        "numpy",
+        "opencv/cv2"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "medium",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": true,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v31_c4c_stage_producer",
+      "location": "scripts/v31_c4c_stage_producer.py",
+      "kind": "script_agent",
+      "purpose": "C4C Stage Producer (v31) - Jannes Tattoo Portfolio (Secret Garden LX) - Full Aftermovie: intro/outro, profile cards, split-screen, stone grade Usage: python scripts/v31_c4c_stage_producer.py python scripts/v31_c4c_stage_producer.py --jannes-only python scripts/v31_c4c_stage_produ",
+      "input": [
+        "D:\\cdf27jue\\cdfevent",
+        "01_AGENT_PROCESSING",
+        "D:\\KYHeart_Social_Media\\C4C_Video_Masters"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "ffmpeg",
+        "numpy",
+        "opencv/cv2"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v6_director_agent",
+      "location": "scripts/v6_director_agent.py",
+      "kind": "script_agent",
+      "purpose": "--- CONFIG ---",
+      "input": [
+        "D:/Vision_World/Raw"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "googleapiclient"
+      ],
+      "drive_access": true,
+      "media_access": true,
+      "processing_cost": "medium",
+      "metadata_only": false,
+      "requires_download": true,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v7_asset_discovery",
+      "location": "scripts/v7_asset_discovery.py",
+      "kind": "script_agent",
+      "purpose": "--- CONFIG ---",
+      "input": [],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "googleapiclient"
+      ],
+      "drive_access": true,
+      "media_access": true,
+      "processing_cost": "low",
+      "metadata_only": true,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v7_audio_alchemist",
+      "location": "scripts/v7_audio_alchemist.py",
+      "kind": "script_agent",
+      "purpose": "Agent responsible for equalization, normalization, and balance. Syncs interviews with music using sidechain principles.",
+      "input": [],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "ffmpeg"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v7_doc_agent",
+      "location": "scripts/v7_doc_agent.py",
+      "kind": "script_agent",
+      "purpose": "Agent responsible for storyboarding and creative assembly. Focuses on build-up of space, jam vibrant sessions, and community.",
+      "input": [
+        "D:/Vision_World/Raw"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "ffprobe",
+        "googleapiclient"
+      ],
+      "drive_access": true,
+      "media_access": true,
+      "processing_cost": "low",
+      "metadata_only": true,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v8_check_accounts",
+      "location": "scripts/v8_check_accounts.py",
+      "kind": "script_agent",
+      "purpose": "1. Get Facebook Pages",
+      "input": [],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [],
+      "drive_access": false,
+      "media_access": false,
+      "processing_cost": "low",
+      "metadata_only": true,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v9_deep_scout",
+      "location": "scripts/v9_deep_scout.py",
+      "kind": "script_agent",
+      "purpose": "Inventory Agent: Systematically crawls GDrive to create a master database. Performs initial Chakra-Classification with 'Lebensfreude' priority.",
+      "input": [
+        "D:/Vision_World/inventory.json"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "googleapiclient"
+      ],
+      "drive_access": true,
+      "media_access": true,
+      "processing_cost": "low",
+      "metadata_only": true,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v9_find_root",
+      "location": "scripts/v9_find_root.py",
+      "kind": "script_agent",
+      "purpose": "v9_find_root",
+      "input": [],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "googleapiclient"
+      ],
+      "drive_access": true,
+      "media_access": false,
+      "processing_cost": "low",
+      "metadata_only": true,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v9_full_scout_run",
+      "location": "scripts/v9_full_scout_run.py",
+      "kind": "script_agent",
+      "purpose": "1. Connect",
+      "input": [],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "googleapiclient"
+      ],
+      "drive_access": true,
+      "media_access": false,
+      "processing_cost": "low",
+      "metadata_only": true,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v9_media_optimizer",
+      "location": "scripts/v9_media_optimizer.py",
+      "kind": "script_agent",
+      "purpose": "Agent responsible for web-performance and loudness. Resizes images to 800px WebP and normalizes audio.",
+      "input": [],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "ffmpeg"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v9_pillar_doc",
+      "location": "scripts/v9_pillar_doc.py",
+      "kind": "script_agent",
+      "purpose": "Agent responsible for the 'Wise Teacher' documentary style. Orchestrates the 5 Pillars within the Circle D Flow story.",
+      "input": [],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [],
+      "drive_access": false,
+      "media_access": false,
+      "processing_cost": "low",
+      "metadata_only": true,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v9_portal_launch",
+      "location": "scripts/v9_portal_launch.py",
+      "kind": "script_agent",
+      "purpose": "Start server in background",
+      "input": [],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [],
+      "drive_access": false,
+      "media_access": false,
+      "processing_cost": "low",
+      "metadata_only": true,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "v9_sankofa_sentinel",
+      "location": "scripts/v9_sankofa_sentinel.py",
+      "kind": "script_agent",
+      "purpose": "Weekly Archive Agent: Package curated volumes from the inventory.",
+      "input": [
+        "D:/Vision_World/inventory.json",
+        "D:/Vision_World/Archive"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "googleapiclient"
+      ],
+      "drive_access": true,
+      "media_access": false,
+      "processing_cost": "medium",
+      "metadata_only": false,
+      "requires_download": true,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "vision_local_agent",
+      "location": "scripts/vision_local_agent.py",
+      "kind": "script_agent",
+      "purpose": "The Local Vision Agent v5.0 - Professional Cinema Hub",
+      "input": [
+        "D:/Vision_World",
+        "D:/circle-d-flow-web/js/api_config.js"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "low_to_medium",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "agent_c_riz_director",
+      "location": "scripts/agent_c_riz_director.py",
+      "kind": "script_agent",
+      "purpose": "Zwischenschritt: Prevents OS crashes by checking available disk space before heavy operations.",
+      "input": [
+        "D:\\circle-d-flow-web\\scratch\\c_riz_project",
+        "D:\\circle-d-flow-web\\Assets\\generated_videos",
+        "D:\\\\",
+        "D:\\circle-d-flow-web\\Assets\\images\\c-riz-flyer.jpg",
+        "D:\\circle-d-flow-web\\scratch\\c_riz_project\\folder1\\Compressed_1080p"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [],
+      "drive_access": true,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "agent_c_riz_musicvideo",
+      "location": "scripts/agent_c_riz_musicvideo.py",
+      "kind": "script_agent",
+      "purpose": "--- CONFIGURATION ---",
+      "input": [
+        "D:\\circle-d-flow-web\\scratch\\c_riz_project\\folder1\\Compressed_1080p",
+        "D:\\circle-d-flow-web\\Assets\\images",
+        "D:\\circle-d-flow-web\\Assets\\generated_videos"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "agent_drive_cleaner",
+      "location": "scripts/agent_drive_cleaner.py",
+      "kind": "script_agent",
+      "purpose": "Download image to memory and compute perceptual hash.",
+      "input": [],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "googleapiclient",
+        "googleapis"
+      ],
+      "drive_access": true,
+      "media_access": true,
+      "processing_cost": "medium",
+      "metadata_only": false,
+      "requires_download": true,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": true,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "agent_studio_gemini",
+      "location": "scripts/agent_studio_gemini.py",
+      "kind": "script_agent",
+      "purpose": "You are the Circle D Flow Studio Agent, a highly creative director and social media expert. Watch this video and provide: 1. A cinematic summary of the mood and energy. 2. 3 engaging social media captions (Instagram/TikTok style). 3. A list of 10 highly relevant SEO hashtags. 4. ",
+      "input": [
+        "ANALYSIS"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "gemini"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "low_to_medium",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "extract_gdrive_ids",
+      "location": "scripts/extract_gdrive_ids.py",
+      "kind": "script_agent",
+      "purpose": "Try to find file metadata JSON objects in the page source",
+      "input": [],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [],
+      "drive_access": true,
+      "media_access": false,
+      "processing_cost": "low",
+      "metadata_only": true,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "gdrive_forensic",
+      "location": "scripts/gdrive_forensic.py",
+      "kind": "script_agent",
+      "purpose": "--- CONFIG ---",
+      "input": [],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "googleapiclient"
+      ],
+      "drive_access": true,
+      "media_access": true,
+      "processing_cost": "low",
+      "metadata_only": true,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "gdrive_setup",
+      "location": "scripts/gdrive_setup.py",
+      "kind": "script_agent",
+      "purpose": "Guides the user through the Google Drive OAuth flow.",
+      "input": [],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "googleapis"
+      ],
+      "drive_access": true,
+      "media_access": false,
+      "processing_cost": "low",
+      "metadata_only": true,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "list_gdrive",
+      "location": "scripts/list_gdrive.py",
+      "kind": "script_agent",
+      "purpose": "gdown uses a specific URL to list folder contents:",
+      "input": [],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [],
+      "drive_access": true,
+      "media_access": false,
+      "processing_cost": "medium",
+      "metadata_only": false,
+      "requires_download": true,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "read_gdrive_pdfs",
+      "location": "scripts/read_gdrive_pdfs.py",
+      "kind": "script_agent",
+      "purpose": "read_gdrive_pdfs",
+      "input": [],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "googleapiclient"
+      ],
+      "drive_access": true,
+      "media_access": false,
+      "processing_cost": "medium",
+      "metadata_only": false,
+      "requires_download": true,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "scrape_gdrive",
+      "location": "scripts/scrape_gdrive.js",
+      "kind": "script_agent",
+      "purpose": "Go to the GDrive public link",
+      "input": [
+        "D:/circle-d-flow-web/js/data/portfolio_data.js"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [],
+      "drive_access": true,
+      "media_access": true,
+      "processing_cost": "low",
+      "metadata_only": true,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "search_gdrive_events",
+      "location": "scripts/search_gdrive_events.py",
+      "kind": "script_agent",
+      "purpose": "Search for Google Docs or plain text files",
+      "input": [],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "googleapiclient"
+      ],
+      "drive_access": true,
+      "media_access": false,
+      "processing_cost": "medium",
+      "metadata_only": false,
+      "requires_download": true,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "sync_gdrive",
+      "location": "scripts/sync_gdrive.js",
+      "kind": "script_agent",
+      "purpose": "sync_gdrive",
+      "input": [],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "googleapis"
+      ],
+      "drive_access": true,
+      "media_access": true,
+      "processing_cost": "low",
+      "metadata_only": true,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "test_gdrive_search",
+      "location": "scripts/test_gdrive_search.py",
+      "kind": "script_agent",
+      "purpose": "--- CONFIG ---",
+      "input": [],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "googleapiclient"
+      ],
+      "drive_access": true,
+      "media_access": true,
+      "processing_cost": "low",
+      "metadata_only": true,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "update_gdrive_links",
+      "location": "scripts/update_gdrive_links.py",
+      "kind": "script_agent",
+      "purpose": "1. Update bantaba.html",
+      "input": [
+        "D:\\circle-d-flow-web\\pages\\bantaba.html",
+        "D:\\circle-d-flow-web\\pages\\partners.html"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [],
+      "drive_access": true,
+      "media_access": false,
+      "processing_cost": "low",
+      "metadata_only": true,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "dcim_pipeline",
+      "location": "scripts/dcim_pipeline.py",
+      "kind": "script_agent",
+      "purpose": "DCIM media pipeline for F:\\\\DCIM - Mirrors originals into F:\\\\DCIM\\\\_compressed\\\\<relative-path> (visually lossless) - Edited concert grade -> F:\\\\DCIM\\\\_edited\\\\... - YouTube-ready Wakungo export -> F:\\\\DCIM\\\\_youtube_ready\\\\wakungo\\\\",
+      "input": [],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "ffmpeg",
+        "ffprobe"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "destiny_0322_sd_pipeline",
+      "location": "scripts/destiny_0322_sd_pipeline.ps1",
+      "kind": "script_agent",
+      "purpose": "Destiny Hostel \u2014 SD F: encode DSC_0322 artist cuts + Guest (0325) + Manu (0326) + moment frame per artist",
+      "input": [
+        "D:\\Wakungo_Content_Studio\\Destiny",
+        "D:\\circle-d-flow-web\\scripts\\fonts\\fonts.conf",
+        "D:\\circle-d-flow-web\\scripts\\fonts"
+      ],
+      "output": [],
+      "trigger": "manual_powershell",
+      "dependencies": [
+        "ffmpeg",
+        "ffprobe"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "destiny_hostel_002_pipeline",
+      "location": "scripts/destiny_hostel_002_pipeline.ps1",
+      "kind": "script_agent",
+      "purpose": "Destiny Hostel 31 July \u2014 compress 106NZ502 for edit/share/Drive",
+      "input": [
+        "D:\\Wakungo_Content_Studio\\Destiny"
+      ],
+      "output": [],
+      "trigger": "manual_powershell",
+      "dependencies": [
+        "ffmpeg",
+        "ffprobe"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "hanna_mr_isaac_pipeline",
+      "location": "scripts/hanna_mr_isaac_pipeline.ps1",
+      "kind": "script_agent",
+      "purpose": "hanna_mr_isaac_pipeline",
+      "input": [
+        "D:\\Wakungo_Content_Studio\\hanna_mr_isaac"
+      ],
+      "output": [],
+      "trigger": "manual_powershell",
+      "dependencies": [
+        "ffmpeg",
+        "ffprobe"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "homecoming_elisa_pipeline",
+      "location": "scripts/homecoming_elisa_pipeline.ps1",
+      "kind": "script_agent",
+      "purpose": "Homecoming Host Elisa \u2014 copy already done; compress + grade + audio master",
+      "input": [
+        "D:\\Homecoming."
+      ],
+      "output": [],
+      "trigger": "manual_powershell",
+      "dependencies": [
+        "ffmpeg",
+        "ffprobe"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "july17_meetup_pipeline",
+      "location": "scripts/july17_meetup_pipeline.ps1",
+      "kind": "script_agent",
+      "purpose": "july17_meetup_pipeline",
+      "input": [
+        "D:\\Wakungo_Content_Studio\\17"
+      ],
+      "output": [],
+      "trigger": "manual_powershell",
+      "dependencies": [
+        "ffmpeg",
+        "ffprobe",
+        "opencv/cv2"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "lapa71_tagus_pipeline",
+      "location": "scripts/lapa71_tagus_pipeline.ps1",
+      "kind": "script_agent",
+      "purpose": "lapa71_tagus_pipeline",
+      "input": [
+        "D:\\Wakungo_Content_Studio\\Lapa71",
+        "D:\\circle-d-flow-web\\scripts\\lapa71_tagus_pipeline.py"
+      ],
+      "output": [],
+      "trigger": "manual_powershell",
+      "dependencies": [],
+      "drive_access": false,
+      "media_access": false,
+      "processing_cost": "low",
+      "metadata_only": true,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": true,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "lapa71_tagus_pipeline",
+      "location": "scripts/lapa71_tagus_pipeline.py",
+      "kind": "script_agent",
+      "purpose": "Lapa71 / Tagus Drop Rhythm \u2014 compress SD batch + face-ID artist folders. Source: F:\\\\DCIM\\\\106NZ502 (flat Nikon Z50II MOVs + JPGs) Output: D:\\\\Wakungo_Content_Studio\\\\Lapa71 Encode via NTFS temp (D: is FAT32). Face-ID uses 720p proxies; cuts from SD master.",
+      "input": [
+        "D:\\\\Wakungo_Content_Studio\\\\Lapa71",
+        "D:\\Wakungo_Content_Studio\\Lapa71"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "ffmpeg",
+        "ffprobe",
+        "numpy",
+        "opencv/cv2"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": true,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "pipeline_c_cleanup",
+      "location": "scripts/pipeline_c_cleanup.ps1",
+      "kind": "script_agent",
+      "purpose": "Safe C: cleanup after outputs are on D: (video pipeline + dev caches)",
+      "input": [
+        "D:\\Wakungo_Content_Studio\\Lapa71\\04_videos_compressed\\Full_Takes",
+        "D:\\npm-cache"
+      ],
+      "output": [],
+      "trigger": "manual_powershell",
+      "dependencies": [
+        "ffmpeg"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "wakungo_pipeline",
+      "location": "scripts/wakungo_pipeline.ps1",
+      "kind": "script_agent",
+      "purpose": "wakungo_pipeline",
+      "input": [
+        "D:\\D",
+        "D:\\Wakungo_Content_Studio\\week27_wakungo"
+      ],
+      "output": [],
+      "trigger": "manual_powershell",
+      "dependencies": [
+        "ffmpeg"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "copy_then_face_0324",
+      "location": "scripts/copy_then_face_0324.ps1",
+      "kind": "script_agent",
+      "purpose": "copy_then_face_0324",
+      "input": [
+        "D:\\Wakungo_Content_Studio\\Destiny",
+        "D:\\circle-d-flow-web\\scripts\\destiny_0324_face_assign.py"
+      ],
+      "output": [],
+      "trigger": "manual_powershell",
+      "dependencies": [],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "medium",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "destiny_0322_face_assign",
+      "location": "scripts/destiny_0322_face_assign.py",
+      "kind": "script_agent",
+      "purpose": "DSC_0322: DeepFace artist segments for face-guided Stages cuts (batch 003).",
+      "input": [
+        "D:\\Wakungo_Content_Studio\\Destiny"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "medium",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": true,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "destiny_0324_face_assign",
+      "location": "scripts/destiny_0324_face_assign.py",
+      "kind": "script_agent",
+      "purpose": "DSC_0324: face-ID artist assignment + 16:9 / 9:16 Stage exports. Uses DeepFace (RetinaFace + Facenet) against IG profile refs in 00_artist_refs. Silence gaps only refine cut edges; identity comes from face matches.",
+      "input": [
+        "D:\\Wakungo_Content_Studio\\Destiny"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "ffmpeg",
+        "ffprobe",
+        "numpy",
+        "opencv/cv2"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "medium",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": true,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "proxy_then_face_0324",
+      "location": "scripts/proxy_then_face_0324.ps1",
+      "kind": "script_agent",
+      "purpose": "proxy_then_face_0324",
+      "input": [
+        "D:\\Wakungo_Content_Studio\\Destiny",
+        "D:\\circle-d-flow-web\\scripts\\destiny_0324_face_assign.py"
+      ],
+      "output": [],
+      "trigger": "manual_powershell",
+      "dependencies": [
+        "ffmpeg"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "medium",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "content_agent",
+      "location": "scripts/content_agent.py",
+      "kind": "script_agent",
+      "purpose": "Creates the 30 daily folders for Instagram content.",
+      "input": [
+        "D:\\\\circle-d-flow-web\\\\Pipeline_Ready_to_Publish",
+        "D:\\\\Lightroom",
+        "D:\\\\Portfolio_Content"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "low_to_medium",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": true,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "content_router",
+      "location": "scripts/content_router.py",
+      "kind": "script_agent",
+      "purpose": "Paths",
+      "input": [
+        "D:\\circle-d-flow-web\\Portfolio_Content",
+        "D:\\circle-d-flow-web\\Assets\\images\\Portrait",
+        "D:\\circle-d-flow-web\\js\\data\\portfolio_data.js"
+      ],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "ffmpeg"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "register_agent",
+      "location": "scripts/register_agent.py",
+      "kind": "script_agent",
+      "purpose": "Registers the Director Agent on the Masumi/Sokosumi Network.",
+      "input": [],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "low_to_medium",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "daily_system_health_agent",
+      "location": "scripts/daily_system_health_agent.py",
+      "kind": "script_agent",
+      "purpose": "Daily system health agent \u2014 lightweight Lighthouse-style page scan. Writes data/system_health_latest.json and optional Supabase system_reports row. Run via cron / Task Scheduler once per day.",
+      "input": [],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "supabase"
+      ],
+      "drive_access": false,
+      "media_access": false,
+      "processing_cost": "low",
+      "metadata_only": true,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "find_botanica_media",
+      "location": "scripts/botanica_90s_recap/find_botanica_media.ps1",
+      "kind": "content_pipeline_script",
+      "purpose": "find_botanica_media",
+      "input": [
+        "D:\\Wakungo_Content_Studio\\Botanica",
+        "Botanica",
+        "ANALYSIS"
+      ],
+      "output": [
+        "EXPORT",
+        "DRIVE_UPLOAD"
+      ],
+      "trigger": "manual_powershell",
+      "dependencies": [],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "low_to_medium",
+      "metadata_only": true,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "organize_artists_face",
+      "location": "scripts/botanica_90s_recap/organize_artists_face.ps1",
+      "kind": "content_pipeline_script",
+      "purpose": "Face-organize Botanica / Wako Kungo \u2192 artist Drive folders",
+      "input": [
+        "Botanica",
+        "D:\\Wakungo_Content_Studio\\Botanica",
+        "ANALYSIS"
+      ],
+      "output": [
+        "DRIVE_UPLOAD"
+      ],
+      "trigger": "manual_powershell",
+      "dependencies": [
+        "ffmpeg",
+        "numpy",
+        "opencv/cv2"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "medium",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": true,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "organize_artists_face",
+      "location": "scripts/botanica_90s_recap/organize_artists_face.py",
+      "kind": "content_pipeline_script",
+      "purpose": "Organize Botanica / Wako Kungo footage into artist folders with face matching. Run on the Windows PC that has D: (permission granted by owner): cd D:\\\\circle-d-flow-web pip install opencv-python-headless numpy Pillow python scripts/botanica_90s_recap/organize_artists_face.py --fo",
+      "input": [
+        "Botanica",
+        "D:\\\\circle-d-flow-web",
+        "D:\\\\Wakungo_Content_Studio\\\\Botanica\\\\Wako",
+        "ANALYSIS",
+        "D:/Wakungo_Content_Studio/Botanica",
+        "Wakungo_Content_Studio/Botanica"
+      ],
+      "output": [
+        "DRIVE_UPLOAD",
+        "EXPORT"
+      ],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "ffmpeg",
+        "ffprobe",
+        "numpy",
+        "opencv/cv2"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "medium",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": true,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "prepare_artist_drive_pack",
+      "location": "scripts/botanica_90s_recap/prepare_artist_drive_pack.ps1",
+      "kind": "content_pipeline_script",
+      "purpose": "Botanica artist Drive pack \u2014 stabilize + graded photos into artist folders",
+      "input": [
+        "Botanica",
+        "D:\\Wakungo_Content_Studio\\Botanica"
+      ],
+      "output": [],
+      "trigger": "manual_powershell",
+      "dependencies": [
+        "ffmpeg"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": true,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "prepare_artist_drive_pack",
+      "location": "scripts/botanica_90s_recap/prepare_artist_drive_pack.py",
+      "kind": "content_pipeline_script",
+      "purpose": "Botanica \u2192 Google-Drive-ready artist packs On the Windows PC with D: (ffmpeg required): python scripts/botanica_90s_recap/prepare_artist_drive_pack.py ^ --root \"D:\\\\Wakungo_Content_Studio\\\\Botanica\" --force Creates / refreshes: Botanica/ARTISTS/<folder>/\u2026 Botanica/DRIVE_UPLOAD/AR",
+      "input": [
+        "Botanica",
+        "D:\\\\Wakungo_Content_Studio\\\\Botanica",
+        "ANALYSIS",
+        "D:/Wakungo_Content_Studio/Botanica",
+        "Wakungo_Content_Studio/Botanica"
+      ],
+      "output": [
+        "DRIVE_UPLOAD",
+        "EXPORT"
+      ],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "ffmpeg",
+        "ffprobe"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": true,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "run_botanica_letterbox_reel",
+      "location": "scripts/botanica_90s_recap/run_botanica_letterbox_reel.py",
+      "kind": "content_pipeline_script",
+      "purpose": "Second Botanica 90s reel \u2014 vertical story / CapCut-style layout (screenshot look): - 1080x1920 black canvas - landscape clip centered (letterboxed) - top-left red badge + \"Engaging\" - large white word captions in the lower band - ~90s, Stages pacing, loudnorm audio Sources: all e",
+      "input": [
+        "Botanica",
+        "D:\\\\Wakungo_Content_Studio\\\\Botanica",
+        "ANALYSIS",
+        "D:/Wakungo_Content_Studio/Botanica",
+        "Wakungo_Content_Studio/Botanica"
+      ],
+      "output": [
+        "EXPORT",
+        "DRIVE_UPLOAD"
+      ],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "ffmpeg",
+        "ffprobe"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "run_botanica_recap",
+      "location": "scripts/botanica_90s_recap/run_botanica_recap.ps1",
+      "kind": "content_pipeline_script",
+      "purpose": "Botanica 90s Recap \u2014 run on the PC that has D:",
+      "input": [
+        "Botanica",
+        "D:\\Wakungo_Content_Studio\\Botanica"
+      ],
+      "output": [],
+      "trigger": "manual_powershell",
+      "dependencies": [
+        "ffmpeg"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "run_botanica_recap",
+      "location": "scripts/botanica_90s_recap/run_botanica_recap.py",
+      "kind": "content_pipeline_script",
+      "purpose": "BOTANICA \u2014 90s CINEMATIC EVENT RECAP pipeline (v2 quality + empty-content fix) One-camera source \u2192 virtual crops \u2192 9:16 master on D:\\\\Wakungo_Content_Studio\\\\Botanica python scripts/botanica_90s_recap/run_botanica_recap.py --root \"D:/Wakungo_Content_Studio/Botanica\" --force Requi",
+      "input": [
+        "D:\\\\Wakungo_Content_Studio\\\\Botanica",
+        "D:/Wakungo_Content_Studio/Botanica",
+        "Botanica",
+        "ANALYSIS",
+        "Wakungo_Content_Studio/Botanica",
+        "D:\\\\\\\\Wakungo_Content_Studio\\\\\\\\Botanica\\n"
+      ],
+      "output": [
+        "EXPORT"
+      ],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "ffmpeg",
+        "ffprobe"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "run_botanica_recap_16x9",
+      "location": "scripts/botanica_90s_recap/run_botanica_recap_16x9.py",
+      "kind": "content_pipeline_script",
+      "purpose": "Botanica 90s reel \u2014 16:9 FULL FRAME (no crop). Keeps the entire source image: scale to fit inside 1920x1080, pad with black if needed (never crop). Soft grade + light denoise only. python scripts/botanica_90s_recap/run_botanica_recap_16x9.py --root \"D:\\\\Wakungo_Content_Studio\\\\Bo",
+      "input": [
+        "Botanica",
+        "D:\\\\Wakungo_Content_Studio\\\\Botanica",
+        "ANALYSIS",
+        "D:/Wakungo_Content_Studio/Botanica",
+        "Wakungo_Content_Studio/Botanica"
+      ],
+      "output": [
+        "EXPORT",
+        "DRIVE_UPLOAD"
+      ],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "ffmpeg",
+        "ffprobe"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "run_wako_full_pipeline",
+      "location": "scripts/botanica_90s_recap/run_wako_full_pipeline.ps1",
+      "kind": "content_pipeline_script",
+      "purpose": "Avoids Windows PowerShell 5.1 parse issues with longer scripts.",
+      "input": [],
+      "output": [],
+      "trigger": "manual_powershell",
+      "dependencies": [],
+      "drive_access": false,
+      "media_access": false,
+      "processing_cost": "low",
+      "metadata_only": true,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": true,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "run_wako_full_pipeline",
+      "location": "scripts/botanica_90s_recap/run_wako_full_pipeline.py",
+      "kind": "content_pipeline_script",
+      "purpose": "Full Botanica pipeline: sort artists + build 90s reels. Works even when the original 'Wako Kungo' folder was moved/removed \u2014 falls back to videos already under Botanica/ARTISTS and other folders. cd D:\\\\circle-d-flow-web python scripts\\\\botanica_90s_recap\\\\run_wako_full_pipeline.",
+      "input": [
+        "Botanica",
+        "D:\\\\circle-d-flow-web",
+        "ANALYSIS",
+        "D:\\Wakungo_Content_Studio\\Botanica"
+      ],
+      "output": [
+        "EXPORT",
+        "DRIVE_UPLOAD"
+      ],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "ffmpeg",
+        "ffprobe",
+        "numpy",
+        "opencv/cv2"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": true,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "ears",
+      "location": "scripts/content_pipeline/ears.py",
+      "kind": "content_pipeline_script",
+      "purpose": "Content Pipeline \u2014 EARS (lightweight audio listening). Uses ffmpeg/ffprobe only (no full decode library required). Listens to a short sample (default first 45s) to classify: speech | music | mixed | silence | no_audio Also estimates loudness (ebur128) and silence ratio for format",
+      "input": [],
+      "output": [],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "ffmpeg",
+        "ffprobe"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "medium",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "intake_sort",
+      "location": "scripts/content_pipeline/intake_sort.py",
+      "kind": "content_pipeline_script",
+      "purpose": "Content Pipeline \u2014 Intake + Sort agent (eyes + ears). Extends the existing Drive Artists ecosystem (Arpan schema). Does NOT rebuild folder architecture. Does NOT delete/rename Drive folders. Does NOT render. For a new upload root (e.g. Botanica / Wako Kungo local): 1) Inventory m",
+      "input": [
+        "Botanica",
+        "D:\\\\Wakungo_Content_Studio\\\\Botanica",
+        "ANALYSIS",
+        "D:/Wakungo_Content_Studio/Botanica",
+        "Wakungo_Content_Studio/Botanica",
+        "D:\\\\Wakungo_Content_Studio\\\\Botanica\\"
+      ],
+      "output": [
+        "EXPORT",
+        "DRIVE_UPLOAD"
+      ],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "ffmpeg",
+        "ffprobe"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": true,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": true,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "create_agent_cut",
+      "location": "01_AGENT_PROCESSING/create_agent_cut.ps1",
+      "kind": "local_processing_agent",
+      "purpose": "Source Clips",
+      "input": [
+        "01_AGENT_PROCESSING\\Rui_Reel"
+      ],
+      "output": [],
+      "trigger": "manual_powershell",
+      "dependencies": [
+        "ffmpeg"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "premium_video_agent",
+      "location": "01_AGENT_PROCESSING/premium_video_agent.py",
+      "kind": "local_processing_agent",
+      "purpose": "premium_video_agent",
+      "input": [
+        "D:\\tag",
+        "D:\\circle-d-flow-web\\01_AGENT_PROCESSING\\unzipped",
+        "D:\\circle-d-flow-web\\01_AGENT_PROCESSING\\Rui_Reel\\Rui_Session_Master_Audio.mp3"
+      ],
+      "output": [
+        "D:\\circle-d-flow-web\\01_AGENT_PROCESSING\\Premium_Cuts"
+      ],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "ffmpeg",
+        "ffprobe"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "video_production_agent",
+      "location": "01_AGENT_PROCESSING/video_production_agent.py",
+      "kind": "local_processing_agent",
+      "purpose": "Enhances photo and fixes rotation based on EXIF.",
+      "input": [
+        "D:\\tag",
+        "D:\\circle-d-flow-web\\01_AGENT_PROCESSING\\unzipped",
+        "D:\\circle-d-flow-web\\01_AGENT_PROCESSING\\Rui_Reel\\Rui_Session_V6_Audio.mp3",
+        "D:\\Indian"
+      ],
+      "output": [
+        "D:\\circle-d-flow-web\\01_AGENT_PROCESSING\\Premium_Cuts"
+      ],
+      "trigger": "manual_cli",
+      "dependencies": [
+        "ffmpeg",
+        "numpy",
+        "opencv/cv2"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "create_full_cut",
+      "location": "01_AGENT_PROCESSING/create_full_cut.ps1",
+      "kind": "local_processing_agent",
+      "purpose": "Source Clips",
+      "input": [
+        "01_AGENT_PROCESSING\\Rui_Reel"
+      ],
+      "output": [],
+      "trigger": "manual_powershell",
+      "dependencies": [
+        "ffmpeg"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": true,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "artist_profile_sync",
+      "location": "js/agents/artist_profile_sync.js",
+      "kind": "web_runtime_agent",
+      "purpose": "artist_profile_sync",
+      "input": [],
+      "output": [],
+      "trigger": "page_load_or_ui_event",
+      "dependencies": [
+        "supabase"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "low_to_medium",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": false,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "event_agent",
+      "location": "js/agents/event_agent.js",
+      "kind": "web_runtime_agent",
+      "purpose": "event_agent",
+      "input": [],
+      "output": [],
+      "trigger": "page_load_or_ui_event",
+      "dependencies": [],
+      "drive_access": false,
+      "media_access": false,
+      "processing_cost": "low",
+      "metadata_only": true,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": false,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "event_scout",
+      "location": "js/agents/event_scout.js",
+      "kind": "web_runtime_agent",
+      "purpose": "Mock Event Data source",
+      "input": [],
+      "output": [],
+      "trigger": "page_load_or_ui_event",
+      "dependencies": [],
+      "drive_access": false,
+      "media_access": false,
+      "processing_cost": "low",
+      "metadata_only": true,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": false,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "expansion_scout",
+      "location": "js/agents/expansion_scout.js",
+      "kind": "web_runtime_agent",
+      "purpose": "If we are on the dashboard, we might want to render a mini-map or log output",
+      "input": [],
+      "output": [],
+      "trigger": "page_load_or_ui_event",
+      "dependencies": [],
+      "drive_access": false,
+      "media_access": false,
+      "processing_cost": "low",
+      "metadata_only": true,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": false,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "flowee",
+      "location": "js/agents/flowee.js",
+      "kind": "web_runtime_agent",
+      "purpose": "--- KNOWLEDGE BASE (FAQ) ---",
+      "input": [
+        "Assets/images/"
+      ],
+      "output": [],
+      "trigger": "page_load_or_ui_event",
+      "dependencies": [
+        "supabase"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "low_to_medium",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": false,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "scout",
+      "location": "js/agents/scout.js",
+      "kind": "web_runtime_agent",
+      "purpose": "Find links or buttons that trigger map actions",
+      "input": [],
+      "output": [],
+      "trigger": "page_load_or_ui_event",
+      "dependencies": [],
+      "drive_access": false,
+      "media_access": false,
+      "processing_cost": "low",
+      "metadata_only": true,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": false,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "vision_cinema_engine",
+      "location": "js/agents/vision_cinema_engine.js",
+      "kind": "web_runtime_agent",
+      "purpose": "vision_cinema_engine",
+      "input": [],
+      "output": [],
+      "trigger": "page_load_or_ui_event",
+      "dependencies": [
+        "supabase"
+      ],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "low_to_medium",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": false,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "visual_eye",
+      "location": "js/agents/visual_eye.js",
+      "kind": "web_runtime_agent",
+      "purpose": "1. Theme Awareness",
+      "input": [],
+      "output": [],
+      "trigger": "page_load_or_ui_event",
+      "dependencies": [],
+      "drive_access": false,
+      "media_access": true,
+      "processing_cost": "low_to_medium",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": false,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "whatsapp_agent",
+      "location": "js/agents/whatsapp_agent.js",
+      "kind": "web_runtime_agent",
+      "purpose": "whatsapp_agent",
+      "input": [],
+      "output": [],
+      "trigger": "page_load_or_ui_event",
+      "dependencies": [],
+      "drive_access": false,
+      "media_access": false,
+      "processing_cost": "low",
+      "metadata_only": true,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": false,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "akademie",
+      "location": "api/akademie.js",
+      "kind": "api_endpoint",
+      "purpose": "Fallback for local development if env vars are missing (optional)",
+      "input": [],
+      "output": [],
+      "trigger": "http_request",
+      "dependencies": [
+        "googleapis"
+      ],
+      "drive_access": true,
+      "media_access": true,
+      "processing_cost": "low",
+      "metadata_only": true,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "flowee",
+      "location": "api/flowee.js",
+      "kind": "api_endpoint",
+      "purpose": "Vercel Serverless Function to securely proxy Gemini API for Flowee",
+      "input": [],
+      "output": [],
+      "trigger": "http_request",
+      "dependencies": [
+        "gemini",
+        "googleapis"
+      ],
+      "drive_access": true,
+      "media_access": false,
+      "processing_cost": "low",
+      "metadata_only": true,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "image-proxy",
+      "location": "api/image-proxy.js",
+      "kind": "api_endpoint",
+      "purpose": "image-proxy",
+      "input": [],
+      "output": [],
+      "trigger": "http_request",
+      "dependencies": [
+        "supabase"
+      ],
+      "drive_access": true,
+      "media_access": true,
+      "processing_cost": "low",
+      "metadata_only": true,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "kitchen-sync",
+      "location": "api/kitchen-sync.js",
+      "kind": "api_endpoint",
+      "purpose": "kitchen-sync",
+      "input": [],
+      "output": [],
+      "trigger": "http_request",
+      "dependencies": [
+        "supabase"
+      ],
+      "drive_access": false,
+      "media_access": false,
+      "processing_cost": "low",
+      "metadata_only": true,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "payments",
+      "location": "api/payments.js",
+      "kind": "api_endpoint",
+      "purpose": "payments",
+      "input": [],
+      "output": [],
+      "trigger": "http_request",
+      "dependencies": [],
+      "drive_access": false,
+      "media_access": false,
+      "processing_cost": "low",
+      "metadata_only": true,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "register-event",
+      "location": "api/register-event.js",
+      "kind": "api_endpoint",
+      "purpose": "register-event",
+      "input": [
+        "Botanica"
+      ],
+      "output": [],
+      "trigger": "http_request",
+      "dependencies": [
+        "supabase"
+      ],
+      "drive_access": false,
+      "media_access": false,
+      "processing_cost": "low",
+      "metadata_only": true,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "registrations",
+      "location": "api/registrations.js",
+      "kind": "api_endpoint",
+      "purpose": "registrations",
+      "input": [],
+      "output": [],
+      "trigger": "http_request",
+      "dependencies": [],
+      "drive_access": false,
+      "media_access": false,
+      "processing_cost": "low",
+      "metadata_only": true,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "roll",
+      "location": "api/roll.js",
+      "kind": "api_endpoint",
+      "purpose": "roll",
+      "input": [],
+      "output": [],
+      "trigger": "http_request",
+      "dependencies": [
+        "supabase"
+      ],
+      "drive_access": false,
+      "media_access": false,
+      "processing_cost": "low",
+      "metadata_only": true,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "verify-session",
+      "location": "api/verify-session.js",
+      "kind": "api_endpoint",
+      "purpose": "verify-session",
+      "input": [],
+      "output": [],
+      "trigger": "http_request",
+      "dependencies": [
+        "supabase"
+      ],
+      "drive_access": false,
+      "media_access": false,
+      "processing_cost": "low",
+      "metadata_only": true,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "whatsapp",
+      "location": "api/whatsapp.js",
+      "kind": "api_endpoint",
+      "purpose": "whatsapp",
+      "input": [],
+      "output": [],
+      "trigger": "http_request",
+      "dependencies": [
+        "supabase"
+      ],
+      "drive_access": false,
+      "media_access": false,
+      "processing_cost": "low",
+      "metadata_only": true,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "gdrive-sync",
+      "location": ".github/workflows/gdrive-sync.yml",
+      "kind": "ci_workflow",
+      "purpose": "gdrive-sync",
+      "input": [],
+      "output": [],
+      "trigger": "ci_schedule_or_push",
+      "dependencies": [
+        "googleapis"
+      ],
+      "drive_access": true,
+      "media_access": false,
+      "processing_cost": "low",
+      "metadata_only": true,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "scrape_drive",
+      "location": ".github/workflows/scrape_drive.yml",
+      "kind": "ci_workflow",
+      "purpose": "Runs at 00:00 every Sunday",
+      "input": [],
+      "output": [],
+      "trigger": "ci_schedule_or_push",
+      "dependencies": [],
+      "drive_access": false,
+      "media_access": false,
+      "processing_cost": "medium",
+      "metadata_only": false,
+      "requires_download": true,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": false,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    },
+    {
+      "name": "drive_discovery_crawl",
+      "location": "pipeline/tools/drive_discovery_crawl.py",
+      "kind": "pipeline_tool",
+      "purpose": "Phase 2 read-only Google Drive metadata inventory crawler",
+      "input": [
+        "seed folder IDs"
+      ],
+      "output": [
+        "pipeline/data/drive_inventory.json",
+        "folder_map.json",
+        "media_manifest.json"
+      ],
+      "trigger": "manual_cli",
+      "dependencies": [],
+      "drive_access": true,
+      "media_access": false,
+      "processing_cost": "low",
+      "metadata_only": true,
+      "requires_download": false,
+      "requires_rendering": false,
+      "callable_by_other_agent": true,
+      "modifies_drive": false,
+      "creates_files": true,
+      "creates_folders": false,
+      "status": "discovered_existing"
+    }
+  ],
+  "reuse_policy": {
+    "new_agents_proposed": 0,
+    "new_agents_created": 0,
+    "orchestration_note": "If later approved, add a thin orchestrator config that calls existing scripts \u2014 not a replacement agent suite"
+  }
+}
