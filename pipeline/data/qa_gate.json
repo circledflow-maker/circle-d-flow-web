@@ -1,0 +1,30 @@
+{
+  "created_at": "2026-09-29T05:18:40Z",
+  "ok": true,
+  "checks": [
+    {
+      "name": "media_manifest_present",
+      "ok": true,
+      "detail": "media=2706"
+    },
+    {
+      "name": "media_non_zero",
+      "ok": true,
+      "detail": "total_media=2706"
+    },
+    {
+      "name": "intake_plan_present",
+      "ok": false,
+      "detail": "missing \u2014 run stage 3 when local source available"
+    }
+  ],
+  "blockers": [],
+  "warnings": [
+    "intake_plan_present: missing \u2014 run stage 3 when local source available"
+  ],
+  "canonical_locks": {
+    "social_export": "v25_revised_shorts_agent.py",
+    "recap": "run_botanica_recap.py",
+    "youtube": "run_botanica_recap_16x9.py"
+  }
+}

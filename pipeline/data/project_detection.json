@@ -1,0 +1,96 @@
+{
+  "created_at": "2026-09-29T05:18:40Z",
+  "projects": [
+    {
+      "name": "Planning",
+      "path": "Planning",
+      "folder_id": "1sul4yh-EExPOz5w16Z8-u25zCB1tjp89",
+      "classification": "PROJECT",
+      "files": 3,
+      "subfolders": 2
+    },
+    {
+      "name": "Lapa71",
+      "path": "Lapa71",
+      "folder_id": "1nBInu1gGhkq1RkFWJO0VlVN4HHbf1ikZ",
+      "classification": "PROJECT",
+      "files": 6,
+      "subfolders": 5
+    },
+    {
+      "name": "Botanica",
+      "path": "Botanica",
+      "folder_id": "1itnbL-aVGQtY7BHDVCGDmsa8sQni1v8r",
+      "classification": "PROJECT",
+      "files": 6,
+      "subfolders": 6
+    },
+    {
+      "name": "Content Pipeline",
+      "path": "Content Pipeline",
+      "folder_id": "1scqyPtXRz0teWjUBQXBXHdGywXR83cOH",
+      "classification": "SYSTEM",
+      "files": 6,
+      "subfolders": 6
+    }
+  ],
+  "artists_roots": [
+    {
+      "name": "Artists",
+      "path": "Artists",
+      "folder_id": "1OLOk__QJ2TWVvcgnhu9wEV4rYF6ALc7Q",
+      "files": 28,
+      "subfolders": 28
+    },
+    {
+      "name": "BotanicaArtistPack",
+      "path": "BotanicaArtistPack",
+      "folder_id": "1Ss3ypxTiJgTCW-ucsLLbjEbG653RuRbk",
+      "files": 10,
+      "subfolders": 10
+    }
+  ],
+  "source": "/workspace/pipeline/data/folder_map.json",
+  "arpan_schema_nodes": [
+    {
+      "path": "Artists/Arpan",
+      "files": 5,
+      "subs": 5
+    },
+    {
+      "path": "Artists/Arpan/Flow Talk",
+      "files": 0,
+      "subs": 0
+    },
+    {
+      "path": "Artists/Arpan/Just in Flow with the beat",
+      "files": 0,
+      "subs": 0
+    },
+    {
+      "path": "Artists/Arpan/Performance - CircleDStages",
+      "files": 0,
+      "subs": 0
+    },
+    {
+      "path": "Artists/Arpan/Wisdom to share- Akademie",
+      "files": 0,
+      "subs": 0
+    },
+    {
+      "path": "Artists/Arpan/events",
+      "files": 2,
+      "subs": 2
+    },
+    {
+      "path": "Artists/Arpan/events/CDF 27 june",
+      "files": 10,
+      "subs": 0
+    },
+    {
+      "path": "Artists/Arpan/events/Oneness 31Jul26",
+      "files": 1,
+      "subs": 0
+    }
+  ]
+}
