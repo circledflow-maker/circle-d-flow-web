@@ -1,0 +1,242 @@
+{
+  "meta": {
+    "phase": "PHASE 4 — THIN ORCHESTRATOR (REUSE ONLY)",
+    "rule": "Call existing agents/tools. Do not replace them. Prefer metadata-only stages first.",
+    "drive_source_of_truth": true,
+    "default_mode": "dry_run",
+    "encode_lanes_max": 1,
+    "canonical_choices": {
+      "social_export": "scripts/v25_revised_shorts_agent.py",
+      "event_recap": "scripts/botanica_90s_recap/run_botanica_recap.py",
+      "youtube_export": "scripts/botanica_90s_recap/run_botanica_recap_16x9.py",
+      "artist_pack": "scripts/botanica_90s_recap/prepare_artist_drive_pack.py",
+      "artist_face_sort": "scripts/botanica_90s_recap/organize_artists_face.py",
+      "media_ears": "scripts/content_pipeline/ears.py",
+      "intake_sort": "scripts/content_pipeline/intake_sort.py",
+      "drive_discovery": "pipeline/tools/drive_discovery_crawl.py",
+      "video_enhance_proxy": "scripts/lapa71_tagus_pipeline.py"
+    },
+    "drive_roots": {
+      "planning": "1sul4yh-EExPOz5w16Z8-u25zCB1tjp89",
+      "lapa71": "1nBInu1gGhkq1RkFWJO0VlVN4HHbf1ikZ",
+      "botanica": "1itnbL-aVGQtY7BHDVCGDmsa8sQni1v8r",
+      "content_pipeline": "1scqyPtXRz0teWjUBQXBXHdGywXR83cOH",
+      "artists_content_pipeline": "1OLOk__QJ2TWVvcgnhu9wEV4rYF6ALc7Q",
+      "botanica_artist_pack": "1Ss3ypxTiJgTCW-ucsLLbjEbG653RuRbk"
+    },
+    "do_not_parallelize": [
+      ["run_botanica_recap", "v15_festival_aftermovie_agent", "v20_immersive_aftermovie_agent"],
+      ["v24_chronological_shorts_agent", "v25_revised_shorts_agent", "v26_ai_rotation_agent"],
+      ["flatten Content Pipeline Artists", "flatten BotanicaArtistPack"]
+    ]
+  },
+  "stages": [
+    {
+      "id": 1,
+      "name": "Drive Discovery",
+      "capability_id": 1,
+      "cost": "low",
+      "metadata_only": true,
+      "requires_download": false,
+      "requires_render": false,
+      "modifies_drive": false,
+      "enabled_by_default": true,
+      "callable": {
+        "script": "pipeline/tools/drive_discovery_crawl.py",
+        "args": []
+      },
+      "outputs": [
+        "pipeline/data/drive_inventory.json",
+        "pipeline/data/folder_map.json",
+        "pipeline/data/media_manifest.json"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Project Detection",
+      "capability_id": 2,
+      "cost": "low",
+      "metadata_only": true,
+      "requires_download": false,
+      "requires_render": false,
+      "modifies_drive": false,
+      "enabled_by_default": true,
+      "callable": {
+        "script": "pipeline/tools/orchestrate.py",
+        "args": ["--internal-project-detect"]
+      },
+      "inputs": ["pipeline/data/folder_map.json"],
+      "outputs": ["pipeline/data/project_detection.json"]
+    },
+    {
+      "id": 3,
+      "name": "Artist Detection + Intake Plan",
+      "capability_id": 3,
+      "cost": "low_to_medium",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_render": false,
+      "modifies_drive": false,
+      "enabled_by_default": true,
+      "callable": {
+        "script": "scripts/content_pipeline/intake_sort.py",
+        "args": [
+          "--source",
+          "{local_project_root}",
+          "--event",
+          "{event_name}",
+          "--limit",
+          "40",
+          "--propose-drive-create",
+          "--out",
+          "pipeline/data/intake_plan.json"
+        ]
+      },
+      "notes": "Name+ears plan. Use --no-listen for metadata/name-only. Does not mutate Drive."
+    },
+    {
+      "id": 4,
+      "name": "Media Classification (ears sample)",
+      "capability_id": 4,
+      "cost": "medium",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_render": false,
+      "modifies_drive": false,
+      "enabled_by_default": true,
+      "callable": {
+        "script": "scripts/content_pipeline/ears.py",
+        "args": ["{sample_media_path}"],
+        "mode": "per_file_optional"
+      },
+      "notes": "Short ffmpeg samples only. Prefer running via intake_sort unless debugging a single file."
+    },
+    {
+      "id": 5,
+      "name": "QA Metadata Gates",
+      "capability_id": 16,
+      "cost": "low",
+      "metadata_only": true,
+      "requires_download": false,
+      "requires_render": false,
+      "modifies_drive": false,
+      "enabled_by_default": true,
+      "callable": {
+        "script": "pipeline/tools/orchestrate.py",
+        "args": ["--internal-qa"]
+      },
+      "inputs": [
+        "pipeline/data/media_manifest.json",
+        "pipeline/data/intake_plan.json"
+      ],
+      "outputs": ["pipeline/data/qa_gate.json"]
+    },
+    {
+      "id": 6,
+      "name": "Artist Face Sort (selective)",
+      "capability_id": 3,
+      "cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_render": true,
+      "modifies_drive": false,
+      "enabled_by_default": false,
+      "requires_flag": "--allow-render",
+      "callable": {
+        "script": "scripts/botanica_90s_recap/organize_artists_face.py",
+        "args": ["--root", "{local_project_root}"]
+      },
+      "notes": "Local only. Uses 00_REF. One encode/stabilize lane."
+    },
+    {
+      "id": 7,
+      "name": "Event Recap Edit",
+      "capability_id": 11,
+      "cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_render": true,
+      "modifies_drive": false,
+      "enabled_by_default": false,
+      "requires_flag": "--allow-render",
+      "callable": {
+        "script": "scripts/botanica_90s_recap/run_botanica_recap.py",
+        "args": ["--root", "{local_project_root}", "--force"]
+      },
+      "do_not_run_with": [
+        "scripts/v15_festival_aftermovie_agent.py",
+        "scripts/v20_immersive_aftermovie_agent.py"
+      ]
+    },
+    {
+      "id": 8,
+      "name": "YouTube 16:9 Export",
+      "capability_id": 13,
+      "cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_render": true,
+      "modifies_drive": false,
+      "enabled_by_default": false,
+      "requires_flag": "--allow-render",
+      "callable": {
+        "script": "scripts/botanica_90s_recap/run_botanica_recap_16x9.py",
+        "args": ["--root", "{local_project_root}", "--force"]
+      }
+    },
+    {
+      "id": 9,
+      "name": "Social Export (canonical shorts)",
+      "capability_id": 12,
+      "cost": "high",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_render": true,
+      "modifies_drive": false,
+      "enabled_by_default": false,
+      "requires_flag": "--allow-render",
+      "callable": {
+        "script": "scripts/v25_revised_shorts_agent.py",
+        "args": []
+      },
+      "do_not_run_with": [
+        "scripts/v24_chronological_shorts_agent.py",
+        "scripts/v26_ai_rotation_agent.py"
+      ],
+      "notes": "Canonical choice among CONFLICTING social agents."
+    },
+    {
+      "id": 10,
+      "name": "Artist Content Pack",
+      "capability_id": 14,
+      "cost": "medium",
+      "metadata_only": false,
+      "requires_download": false,
+      "requires_render": true,
+      "modifies_drive": false,
+      "enabled_by_default": false,
+      "requires_flag": "--allow-render",
+      "callable": {
+        "script": "scripts/botanica_90s_recap/prepare_artist_drive_pack.py",
+        "args": ["--root", "{local_project_root}"]
+      },
+      "notes": "Local DRIVE_UPLOAD pack. Do not flatten Content Pipeline Artists."
+    },
+    {
+      "id": 11,
+      "name": "Reporting",
+      "capability_id": 17,
+      "cost": "low",
+      "metadata_only": true,
+      "requires_download": false,
+      "requires_render": false,
+      "modifies_drive": false,
+      "enabled_by_default": true,
+      "callable": {
+        "script": "pipeline/tools/orchestrate.py",
+        "args": ["--internal-report"]
+      },
+      "outputs": ["pipeline/reports/orchestrator_run_report.md"]
+    }
+  ]
+}

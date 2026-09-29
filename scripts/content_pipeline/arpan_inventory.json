@@ -1,0 +1,36 @@
+{
+  "mapped_at": "2026-09-28",
+  "method": "public Drive embed/HTML metadata only — no media downloaded",
+  "artist": {
+    "name": "Arpan",
+    "id": "185CwA75aIOECI5T0x5Ktf7m7ss9AJ_sR"
+  },
+  "tree": {
+    "events": {
+      "CDF 27 june": {
+        "files": [
+          {"name": "01_photo.jpg", "kind": "photo"},
+          {"name": "03_video.mp4", "kind": "video"},
+          {"name": "04_video.mp4", "kind": "video"},
+          {"name": "05_video.mp4", "kind": "video"},
+          {"name": "DSC_9215.MOV", "kind": "video"},
+          {"name": "DSC_9216.MOV", "kind": "video"},
+          {"name": "DSC_9217.MOV", "kind": "video"},
+          {"name": "DSC_9218.MOV", "kind": "video"},
+          {"name": "DSC_9222.JPG", "kind": "photo"},
+          {"name": "DSC_9224.MOV", "kind": "video"}
+        ]
+      },
+      "Oneness 31Jul26": {
+        "files": [
+          {"name": "Arpanito 31_07.mp4", "kind": "video"}
+        ]
+      }
+    },
+    "Flow Talk": {"files": [], "status": "empty_placeholder"},
+    "Just in Flow with the beat": {"files": [], "status": "empty_placeholder"},
+    "Performance - CircleDStages": {"files": [], "status": "empty_placeholder"},
+    "Wisdom to share- Akademie": {"files": [], "status": "empty_placeholder"}
+  },
+  "totals": {"folders": 7, "files": 11}
+}

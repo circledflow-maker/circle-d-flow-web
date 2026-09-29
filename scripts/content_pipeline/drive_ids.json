@@ -1,0 +1,52 @@
+{
+  "source_of_truth": "Google Drive Content Pipeline",
+  "root": {
+    "name": "Content Pipeline",
+    "id": "1scqyPtXRz0teWjUBQXBXHdGywXR83cOH",
+    "url": "https://drive.google.com/drive/folders/1scqyPtXRz0teWjUBQXBXHdGywXR83cOH"
+  },
+  "pillars": {
+    "Artists": {
+      "id": "1OLOk__QJ2TWVvcgnhu9wEV4rYF6ALc7Q",
+      "url": "https://drive.google.com/drive/folders/1OLOk__QJ2TWVvcgnhu9wEV4rYF6ALc7Q"
+    },
+    "Circle Akademie": {
+      "id": "1Ane9asNz0bSPBPVyKRKQ4oPf3XNebWp-",
+      "url": "https://drive.google.com/drive/folders/1Ane9asNz0bSPBPVyKRKQ4oPf3XNebWp-"
+    },
+    "Circle D Stage": {
+      "id": "1upMrYio7O7VFwKqqadCf2LPWByS7h1qi",
+      "url": "https://drive.google.com/drive/folders/1upMrYio7O7VFwKqqadCf2LPWByS7h1qi"
+    },
+    "FlowTalk": {
+      "id": "1kMQmFH58NL0kCps--JHPjHWbXFh54-He",
+      "url": "https://drive.google.com/drive/folders/1kMQmFH58NL0kCps--JHPjHWbXFh54-He"
+    },
+    "FlowTour": {
+      "id": "1Jy7uZ0vbS_qNRaqSqB12P244LOa-N-IH",
+      "url": "https://drive.google.com/drive/folders/1Jy7uZ0vbS_qNRaqSqB12P244LOa-N-IH"
+    },
+    "Podcast": {
+      "id": "1uK-NMNEYFew8ES4TRZBQ4QUWVTOGpFBW",
+      "url": "https://drive.google.com/drive/folders/1uK-NMNEYFew8ES4TRZBQ4QUWVTOGpFBW"
+    }
+  },
+  "reference_artist": {
+    "name": "Arpan",
+    "id": "185CwA75aIOECI5T0x5Ktf7m7ss9AJ_sR",
+    "url": "https://drive.google.com/drive/folders/185CwA75aIOECI5T0x5Ktf7m7ss9AJ_sR",
+    "schema_folders": [
+      "events",
+      "Flow Talk",
+      "Just in Flow with the beat",
+      "Performance - CircleDStages",
+      "Wisdom to share- Akademie"
+    ],
+    "notes": "Canonical artist-folder layout. New artists should mirror this schema."
+  },
+  "notes": [
+    "Do NOT rename or move existing Drive folders.",
+    "Do NOT duplicate large media. Prefer IDs, thumbnails, proxies.",
+    "Separate Akademie web sync parent 1dvi9DrFVVqfT8wBA13e4u8D1V-0TtdUo remains untouched."
+  ]
+}
