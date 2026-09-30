@@ -1,28 +1,22 @@
 # Organization — continue
 
-**Updated:** 2026-09-30T22:12:28Z
+**Updated:** 2026-09-30T22:19:19Z
 
 ## Done on Drive
-| Batch | Count | Destination | Status |
-|-------|------:|-------------|--------|
-| HIGH Arpan Upload | 8 | `Artists/Arpan/events/Lapa71` | executed |
-| MEDIUM Wako Botanica | 56 | `Artists/Wako Kungo/Botanica` | executed |
+| Batch | Status |
+|-------|--------|
+| HIGH Arpan Upload (8) | executed |
+| MEDIUM Wako Botanica (56) | executed |
+| UNASSIGNED thumbs (68) | saved locally |
 
-## Next — NO auto-move
-| Batch | Count | Action |
-|-------|------:|--------|
-| UNASSIGNED review | ~69 | Face leftovers — review pack ready |
-| LOW / protected | 81 | leave untouched |
-
-### Why UNASSIGNED stays
-These are `*_unassigned_stable` / frames from `organize_artists_face` that did **not** match Diaza (or other primary hits). Same Botanica roll, multi-artist — needs visual/`00_REF` check.
-
-### Windows
+## Next — human gallery → approvals → moves
 ```bat
 cd D:\circle-d-flow-web
 git fetch origin cursor/content-pipeline-org-execute-f46a
 git checkout -f origin/cursor/content-pipeline-org-execute-f46a -- pipeline
-pipeline\REVIEW_UNASSIGNED.cmd
+pipeline\REVIEW_UNASSIGNED_GALLERY.cmd
 ```
 
-Reports: `pipeline/reports/unassigned_review_pack.md`
+1. Assign artists in HTML (00_REF strip at top)
+2. Download `unassigned_approvals.json` → `pipeline\data\`
+3. `pipeline\EXECUTE_UNASSIGNED_APPROVALS.cmd`
