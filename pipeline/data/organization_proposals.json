@@ -3,7 +3,7 @@
     "phase": "PHASE 4 \u2014 SAFE ORGANIZATION PROPOSAL",
     "created_at": "2026-09-29T05:34:58Z",
     "drive_modified": true,
-    "moves_executed": 8,
+    "moves_executed": 64,
     "rule": "Existing structure has priority. Different \u2260 wrong. No deletes/overwrites/duplicates.",
     "sources": [
       "pipeline/data/drive_inventory.json",
@@ -14,9 +14,9 @@
       "pipeline/config/capability_matrix.json"
     ],
     "protected_path_pattern": "(^|/)(_?FINAL|_?FINALS|_?APPROVED|_?DELIVERED|_?ARCHIVE|_?ARCHIVED|_?PROTECTED|_?DO_NOT_TOUCH|_?MASTER|_?MASTERS|_ReadyToShare|ReadyToShare|EXPORT|YouTube_Master|Phase\\s*4|Post Ready|Finals_)(/|$)",
-    "last_execution_note": "HIGH Arpan Upload (8) executed 2026-09-30; MEDIUM Wako batch ready; UNASSIGNED review-only",
+    "last_execution_note": "HIGH Arpan 8 + MEDIUM Wako 56 executed 2026-09-30; UNASSIGNED 72 review-only next",
     "high_batch_status": "executed",
-    "medium_wako_status": "ready_for_windows_execute"
+    "medium_wako_status": "executed"
   },
   "summary": {
     "total_file_proposals": 217,
@@ -35,8 +35,9 @@
     "protected_files_skipped_count": 72,
     "folder_policies": 3,
     "high_executed": 8,
-    "medium_wako_pending": 56,
-    "medium_review_only": 72
+    "medium_wako_pending": 0,
+    "medium_review_only": 72,
+    "medium_wako_executed": 56
   },
   "folder_policies": [
     {
@@ -226,7 +227,9 @@
       "content_type": "image",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1RVLmhwhdTNZS1tjOtWYyzpRJKlsXTukN",
@@ -243,7 +246,9 @@
       "content_type": "image",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1BQ-aPOLThlZSxYgW8lCxCxtOUy4y9Yf5",
@@ -260,7 +265,9 @@
       "content_type": "image",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1hhzDgZKjwBf61pZrgQjAfXn33p3tQh4O",
@@ -277,7 +284,9 @@
       "content_type": "video",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1P85ZNL5Ukdz0Ckpx9YInwyiP-01p2t8O",
@@ -294,7 +303,9 @@
       "content_type": "video",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "19QyJUipQKPux2TZUqDRobOuMI1Hv8l-t",
@@ -311,7 +322,9 @@
       "content_type": "video",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1FJGDLL_86-UdVKjVHnIZWrIwYeFDPcdE",
@@ -328,7 +341,9 @@
       "content_type": "video",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "14TmexwXANnXY9NHVyPQoi6HdDLt_6bz1",
@@ -345,7 +360,9 @@
       "content_type": "video",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1eKj3GctqsOtGX40lNVb0_6PzRQyAtgPE",
@@ -362,7 +379,9 @@
       "content_type": "video",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1of9YZ1haAd5J9_6MybTMyEUzYXz6ajWO",
@@ -379,7 +398,9 @@
       "content_type": "video",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1sz0hIgGt3OdDk37ZinGI_rp0GdDU_oUC",
@@ -396,7 +417,9 @@
       "content_type": "video",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1dDlO35FJ0c6u_TVH2tPOQY5czU4AHpHa",
@@ -413,7 +436,9 @@
       "content_type": "video",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1zG22AjftlKzcC2vUSBseXKzePzAbYzU_",
@@ -430,7 +455,9 @@
       "content_type": "video",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1PjsmKxzep6T-bBg1hqOiwuzPPvtZzrH6",
@@ -447,7 +474,9 @@
       "content_type": "video",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1UOUfF96jrczwdxgF7kHk8rvrXujIJbI_",
@@ -464,7 +493,9 @@
       "content_type": "video",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1xwqouXOz-8-izr3AfsNGPRvS0kCWepKN",
@@ -481,7 +512,9 @@
       "content_type": "video",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "13t2j8TFKJIeEl-bjK8ZKm7c7pXnL7zSd",
@@ -498,7 +531,9 @@
       "content_type": "video",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1nIkYgMMsnnEYOLzWm7ZI5uyNU0OMhP_p",
@@ -515,7 +550,9 @@
       "content_type": "video",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1kvCdFdJkE14iZfZgvl08jk7IdU09yYqJ",
@@ -532,7 +569,9 @@
       "content_type": "video",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "11jjFA0-27uifpkiILoud0ElpoLWzpVi7",
@@ -549,7 +588,9 @@
       "content_type": "video",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1VAYMocP6n17qwS_K7cMZw2uwstP3ly4v",
@@ -566,7 +607,9 @@
       "content_type": "video",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1ldY1TG6uMJkT0nvvzNiQA9bkF961RvEX",
@@ -583,7 +626,9 @@
       "content_type": "video",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1uxxVWt-4ogciKEJ4Y0-E6CFb_r-Ts3oa",
@@ -600,7 +645,9 @@
       "content_type": "video",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1vZxYbJGPZv7faYhpCpt8J4q3g6KHwTNy",
@@ -617,7 +664,9 @@
       "content_type": "video",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1tqNTD1lUVO-ozSbpfGgXIFvdMla2Mty8",
@@ -634,7 +683,9 @@
       "content_type": "video",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1hgsg8oi8M-YN0DCy-JsLZwDVm65xOr-N",
@@ -651,7 +702,9 @@
       "content_type": "video",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1m0hvkK46acuB_5FBZ-0my0Ln0JPMMS4r",
@@ -668,7 +721,9 @@
       "content_type": "image",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1J7cjTPXekIw3ojqMgjvK1Ci6FZIeDif6",
@@ -685,7 +740,9 @@
       "content_type": "image",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1VHILYqlpkYqsLx7KwVO7-gBen7dtXWE4",
@@ -702,7 +759,9 @@
       "content_type": "image",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1vkCnd7gQTPbAgwk2Cok_QiFyV_e6KNUp",
@@ -719,7 +778,9 @@
       "content_type": "image",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1sG6byheIk3YCSZMjLVONE0wDVusVEcYd",
@@ -736,7 +797,9 @@
       "content_type": "image",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1HVjZxm_fx-2zJUYjjxoG7rkHJW0VJKZs",
@@ -753,7 +816,9 @@
       "content_type": "video",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "15LwP3o19VvQeo9_B-TlGdD1BGFow9dZ-",
@@ -770,7 +835,9 @@
       "content_type": "video",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1hJtVJ4_OEIpKP7QrRmeLPYl5m6B0gbV0",
@@ -787,7 +854,9 @@
       "content_type": "image",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1Pc-mCcd_oFrds0SBg5WQFGrR8BkWjOCK",
@@ -804,7 +873,9 @@
       "content_type": "video",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1FXpxd-kWNv9sW7brQa0TxyknXAVNOyEw",
@@ -821,7 +892,9 @@
       "content_type": "video",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1p93_jyi4InClimPeQ-LyX2hd4vus9LBY",
@@ -838,7 +911,9 @@
       "content_type": "video",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "13piQ9B2NQ-MWYQaHhhjMLPh1WOrNl8kk",
@@ -855,7 +930,9 @@
       "content_type": "video",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1KCKRIjnBtfaRJoibC1hLAln5nsNyTzPM",
@@ -872,7 +949,9 @@
       "content_type": "video",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1X6bLiGvPeaDNdIKJII80yHLKJAIkjC9l",
@@ -889,7 +968,9 @@
       "content_type": "video",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1WweMyOT4ceC-OO_ghsXO7VdQ_bgr7g4k",
@@ -906,7 +987,9 @@
       "content_type": "video",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1lUOuDKAK4XulLOz-v81wKX0vsNRfxPLG",
@@ -923,7 +1006,9 @@
       "content_type": "video",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1mwQ4iW_3p8mBNV_DD8QCvqPdLlyv9wyu",
@@ -940,7 +1025,9 @@
       "content_type": "video",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1MWWrpnVKRF35_D8ktzZg32h2446ghF5t",
@@ -957,7 +1044,9 @@
       "content_type": "video",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1MO5SWZXy7Uiq6PF_o7lBY9c0bHP_FSqp",
@@ -974,7 +1063,9 @@
       "content_type": "video",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1KPZU2RIBYwNkNNrPi7r8uj9SiZxh8TUo",
@@ -991,7 +1082,9 @@
       "content_type": "video",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1_Zfjq8ciyLuVBaEo6olix73adBGlKyme",
@@ -1008,7 +1101,9 @@
       "content_type": "video",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1BnrG3wF6cK-XikyFyjVGM_QrQOFiWD9Q",
@@ -1025,7 +1120,9 @@
       "content_type": "video",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1mGs1KspwwFZu1FoAtm8daA8_Cg_inf_P",
@@ -1042,7 +1139,9 @@
       "content_type": "video",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1Sv-94pdVAe5M9p-g71g9UIfszVeFakgo",
@@ -1059,7 +1158,9 @@
       "content_type": "video",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1yjAkLQIGklmjQn3WScjPTyIxHor8BpEJ",
@@ -1076,7 +1177,9 @@
       "content_type": "video",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1xR_Ms0ZDX1CDkywafWbClQnN5wPWgwIK",
@@ -1093,7 +1196,9 @@
       "content_type": "video",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1tnVH19NCmJ6hpVGPEFi7wYfrB78F8lPP",
@@ -1110,7 +1215,9 @@
       "content_type": "video",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1qvYIA_kmadAbobG0EwHJA9z__K4f3AKW",
@@ -1127,7 +1234,9 @@
       "content_type": "video",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1niz153IW5Tj_Zh37jlEe_v7T07dN775C",
@@ -1144,7 +1253,9 @@
       "content_type": "video",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "10fxhDJlGfJyRjkv8bHBoZJ4ErwyGvP1d",
@@ -1161,7 +1272,9 @@
       "content_type": "video",
       "action_if_approved": "move_or_keep",
       "automatic_eligible": false,
-      "alternative_keep_current": true
+      "alternative_keep_current": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Wako Kungo/Botanica"
     },
     {
       "file_id": "1bTNPLV7rC_8zru5mBkDySN094znuR39p",

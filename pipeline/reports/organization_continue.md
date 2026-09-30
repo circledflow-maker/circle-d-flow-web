@@ -1,23 +1,28 @@
-# Organization — continue after HIGH
+# Organization — continue
 
-**Updated:** 2026-09-30T22:04:45Z
+**Updated:** 2026-09-30T22:12:28Z
 
-## Done
-- **HIGH (8/8)** `Lapa71/Arpan Upload` → `Artists/Arpan/events/Lapa71` — executed
+## Done on Drive
+| Batch | Count | Destination | Status |
+|-------|------:|-------------|--------|
+| HIGH Arpan Upload | 8 | `Artists/Arpan/events/Lapa71` | executed |
+| MEDIUM Wako Botanica | 56 | `Artists/Wako Kungo/Botanica` | executed |
 
-## Next batch (MEDIUM)
-- **56 files** from `Botanica/Wako Kungo- botanica`
-- → `Artists/Wako Kungo/Botanica` (creates leaf under existing Wako artist folder)
-- Respects Wako’s event-folder style (sibling to Oneness), not Arpan Performance nesting
+## Next — NO auto-move
+| Batch | Count | Action |
+|-------|------:|--------|
+| UNASSIGNED review | ~69 | Face leftovers — review pack ready |
+| LOW / protected | 81 | leave untouched |
 
-## Still NOT auto-moved
-- **72** `_UNASSIGNED_REVIEW` items — need face/name review
-- LOW / protected / workflow Phase 3 Review
+### Why UNASSIGNED stays
+These are `*_unassigned_stable` / frames from `organize_artists_face` that did **not** match Diaza (or other primary hits). Same Botanica roll, multi-artist — needs visual/`00_REF` check.
 
-## Windows
+### Windows
 ```bat
 cd D:\circle-d-flow-web
 git fetch origin cursor/content-pipeline-org-execute-f46a
-git checkout -f origin/cursor/content-pipeline-org-execute-f46a -- pipeline scripts/gdrive_setup.py
-pipeline\EXECUTE_ORG_MEDIUM_WAKO.cmd
+git checkout -f origin/cursor/content-pipeline-org-execute-f46a -- pipeline
+pipeline\REVIEW_UNASSIGNED.cmd
 ```
+
+Reports: `pipeline/reports/unassigned_review_pack.md`
