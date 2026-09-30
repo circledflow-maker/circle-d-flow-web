@@ -1,18 +1,25 @@
 @echo off
 setlocal
 cd /d "%~dp0.."
-echo === Execute HIGH organization proposals (Arpan Upload -^> Arpan/events/Lapa71) ===
-echo Requires token.json with Drive write scope.
-if not exist token.json (
-  echo token.json missing — running setup...
-  python scripts\gdrive_setup.py
-)
+echo === HIGH org moves: Lapa71/Arpan Upload -^> Artists/Arpan/events/Lapa71 ===
+echo.
+echo FIX for 403 appNotAuthorizedToFile:
+echo   Old token was drive.file/readonly. Need FULL Drive scope.
+echo.
 pip install google-api-python-client google-auth-oauthlib google-auth-httplib2 -q
 echo.
-echo Dry-run first:
+echo [1/3] Force re-auth with full Drive write scope...
+python scripts\gdrive_setup.py --force
+if errorlevel 1 (
+  echo AUTH FAILED
+  pause
+  exit /b 1
+)
+echo.
+echo [2/3] Dry-run...
 python pipeline\tools\execute_organization.py --dry-run
 echo.
-echo Execute HIGH moves:
+echo [3/3] Execute HIGH moves...
 python pipeline\tools\execute_organization.py --execute
 echo.
 echo Report: pipeline\reports\organization_execution_report.md
