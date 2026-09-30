@@ -2,8 +2,8 @@
   "meta": {
     "phase": "PHASE 4 \u2014 SAFE ORGANIZATION PROPOSAL",
     "created_at": "2026-09-29T05:34:58Z",
-    "drive_modified": false,
-    "moves_executed": 0,
+    "drive_modified": true,
+    "moves_executed": 8,
     "rule": "Existing structure has priority. Different \u2260 wrong. No deletes/overwrites/duplicates.",
     "sources": [
       "pipeline/data/drive_inventory.json",
@@ -13,7 +13,10 @@
       "pipeline/config/agent_registry.json",
       "pipeline/config/capability_matrix.json"
     ],
-    "protected_path_pattern": "(^|/)(_?FINAL|_?FINALS|_?APPROVED|_?DELIVERED|_?ARCHIVE|_?ARCHIVED|_?PROTECTED|_?DO_NOT_TOUCH|_?MASTER|_?MASTERS|_ReadyToShare|ReadyToShare|EXPORT|YouTube_Master|Phase\\s*4|Post Ready|Finals_)(/|$)"
+    "protected_path_pattern": "(^|/)(_?FINAL|_?FINALS|_?APPROVED|_?DELIVERED|_?ARCHIVE|_?ARCHIVED|_?PROTECTED|_?DO_NOT_TOUCH|_?MASTER|_?MASTERS|_ReadyToShare|ReadyToShare|EXPORT|YouTube_Master|Phase\\s*4|Post Ready|Finals_)(/|$)",
+    "last_execution_note": "HIGH Arpan Upload (8) executed 2026-09-30; MEDIUM Wako batch ready; UNASSIGNED review-only",
+    "high_batch_status": "executed",
+    "medium_wako_status": "ready_for_windows_execute"
   },
   "summary": {
     "total_file_proposals": 217,
@@ -30,7 +33,10 @@
     },
     "high_automatic_candidates": 8,
     "protected_files_skipped_count": 72,
-    "folder_policies": 3
+    "folder_policies": 3,
+    "high_executed": 8,
+    "medium_wako_pending": 56,
+    "medium_review_only": 72
   },
   "folder_policies": [
     {
@@ -76,7 +82,8 @@
       "artist": "Arpan",
       "content_type": "video",
       "action_if_approved": "move",
-      "automatic_eligible": true
+      "automatic_eligible": true,
+      "execution_status": "executed_2026-09-30"
     },
     {
       "file_id": "1PVZbuBbWP-WVLDh8f6WjoQawUc5NcO22",
@@ -93,7 +100,8 @@
       "artist": "Arpan",
       "content_type": "video",
       "action_if_approved": "move",
-      "automatic_eligible": true
+      "automatic_eligible": true,
+      "execution_status": "executed_2026-09-30"
     },
     {
       "file_id": "1Kb5AXgsnni-Y3fjjcQ5uK47xKK4yvpUC",
@@ -110,7 +118,8 @@
       "artist": "Arpan",
       "content_type": "video",
       "action_if_approved": "move",
-      "automatic_eligible": true
+      "automatic_eligible": true,
+      "execution_status": "executed_2026-09-30"
     },
     {
       "file_id": "1HR45pT-EJMX6fsCqsIJP1Q6j48DWl9Ja",
@@ -127,7 +136,8 @@
       "artist": "Arpan",
       "content_type": "video",
       "action_if_approved": "move",
-      "automatic_eligible": true
+      "automatic_eligible": true,
+      "execution_status": "executed_2026-09-30"
     },
     {
       "file_id": "1umHPCzxSJs00ZAvf6lR0jDSllqV6mR2P",
@@ -144,7 +154,8 @@
       "artist": "Arpan",
       "content_type": "video",
       "action_if_approved": "move",
-      "automatic_eligible": true
+      "automatic_eligible": true,
+      "execution_status": "executed_2026-09-30"
     },
     {
       "file_id": "1GwvMQhNH5KZgBxQV3zZK8SwpbT7RD48_",
@@ -161,7 +172,8 @@
       "artist": "Arpan",
       "content_type": "video",
       "action_if_approved": "move",
-      "automatic_eligible": true
+      "automatic_eligible": true,
+      "execution_status": "executed_2026-09-30"
     },
     {
       "file_id": "1B65rR5KsDG27y5GDJHFZd8adIoe2sm0Z",
@@ -178,7 +190,8 @@
       "artist": "Arpan",
       "content_type": "video",
       "action_if_approved": "move",
-      "automatic_eligible": true
+      "automatic_eligible": true,
+      "execution_status": "executed_2026-09-30"
     },
     {
       "file_id": "1geFQRUMwccLuJMH_QrI_yydCuv6xdrTt",
@@ -195,7 +208,8 @@
       "artist": "Arpan",
       "content_type": "video",
       "action_if_approved": "move",
-      "automatic_eligible": true
+      "automatic_eligible": true,
+      "execution_status": "executed_2026-09-30"
     },
     {
       "file_id": "1u2IQeMAqys5QnHgrfLjtFZGicJzKAa6V",
@@ -3614,7 +3628,9 @@
       "artist": "Arpan",
       "content_type": "video",
       "action_if_approved": "move",
-      "automatic_eligible": true
+      "automatic_eligible": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Arpan/events/Lapa71"
     },
     {
       "file_id": "1PVZbuBbWP-WVLDh8f6WjoQawUc5NcO22",
@@ -3631,7 +3647,9 @@
       "artist": "Arpan",
       "content_type": "video",
       "action_if_approved": "move",
-      "automatic_eligible": true
+      "automatic_eligible": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Arpan/events/Lapa71"
     },
     {
       "file_id": "1Kb5AXgsnni-Y3fjjcQ5uK47xKK4yvpUC",
@@ -3648,7 +3666,9 @@
       "artist": "Arpan",
       "content_type": "video",
       "action_if_approved": "move",
-      "automatic_eligible": true
+      "automatic_eligible": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Arpan/events/Lapa71"
     },
     {
       "file_id": "1HR45pT-EJMX6fsCqsIJP1Q6j48DWl9Ja",
@@ -3665,7 +3685,9 @@
       "artist": "Arpan",
       "content_type": "video",
       "action_if_approved": "move",
-      "automatic_eligible": true
+      "automatic_eligible": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Arpan/events/Lapa71"
     },
     {
       "file_id": "1umHPCzxSJs00ZAvf6lR0jDSllqV6mR2P",
@@ -3682,7 +3704,9 @@
       "artist": "Arpan",
       "content_type": "video",
       "action_if_approved": "move",
-      "automatic_eligible": true
+      "automatic_eligible": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Arpan/events/Lapa71"
     },
     {
       "file_id": "1GwvMQhNH5KZgBxQV3zZK8SwpbT7RD48_",
@@ -3699,7 +3723,9 @@
       "artist": "Arpan",
       "content_type": "video",
       "action_if_approved": "move",
-      "automatic_eligible": true
+      "automatic_eligible": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Arpan/events/Lapa71"
     },
     {
       "file_id": "1B65rR5KsDG27y5GDJHFZd8adIoe2sm0Z",
@@ -3716,7 +3742,9 @@
       "artist": "Arpan",
       "content_type": "video",
       "action_if_approved": "move",
-      "automatic_eligible": true
+      "automatic_eligible": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Arpan/events/Lapa71"
     },
     {
       "file_id": "1geFQRUMwccLuJMH_QrI_yydCuv6xdrTt",
@@ -3733,7 +3761,9 @@
       "artist": "Arpan",
       "content_type": "video",
       "action_if_approved": "move",
-      "automatic_eligible": true
+      "automatic_eligible": true,
+      "execution_status": "executed_2026-09-30",
+      "executed_destination": "Artists/Arpan/events/Lapa71"
     }
   ],
   "protected_samples": [
