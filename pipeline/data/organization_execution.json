@@ -1,0 +1,72 @@
+{
+  "created_at": "2026-09-30T21:51:13Z",
+  "mode": "dry_run",
+  "candidates": 8,
+  "results": [
+    {
+      "file_id": "1u2SezjsdyBu3k_1egf3tVq_ZWUgJShQ9",
+      "name": "IMG_8920.MOV",
+      "status": "dry_run_planned",
+      "from": "Lapa71/Arpan Upload/IMG_8920.MOV",
+      "to": "Artists/Arpan/events/Lapa71/IMG_8920.MOV"
+    },
+    {
+      "file_id": "1PVZbuBbWP-WVLDh8f6WjoQawUc5NcO22",
+      "name": "IMG_8921.MOV",
+      "status": "dry_run_planned",
+      "from": "Lapa71/Arpan Upload/IMG_8921.MOV",
+      "to": "Artists/Arpan/events/Lapa71/IMG_8921.MOV"
+    },
+    {
+      "file_id": "1Kb5AXgsnni-Y3fjjcQ5uK47xKK4yvpUC",
+      "name": "IMG_8924.MOV",
+      "status": "dry_run_planned",
+      "from": "Lapa71/Arpan Upload/IMG_8924.MOV",
+      "to": "Artists/Arpan/events/Lapa71/IMG_8924.MOV"
+    },
+    {
+      "file_id": "1HR45pT-EJMX6fsCqsIJP1Q6j48DWl9Ja",
+      "name": "IMG_8925.MOV",
+      "status": "dry_run_planned",
+      "from": "Lapa71/Arpan Upload/IMG_8925.MOV",
+      "to": "Artists/Arpan/events/Lapa71/IMG_8925.MOV"
+    },
+    {
+      "file_id": "1umHPCzxSJs00ZAvf6lR0jDSllqV6mR2P",
+      "name": "IMG_8926.MOV",
+      "status": "dry_run_planned",
+      "from": "Lapa71/Arpan Upload/IMG_8926.MOV",
+      "to": "Artists/Arpan/events/Lapa71/IMG_8926.MOV"
+    },
+    {
+      "file_id": "1GwvMQhNH5KZgBxQV3zZK8SwpbT7RD48_",
+      "name": "IMG_8927.MOV",
+      "status": "dry_run_planned",
+      "from": "Lapa71/Arpan Upload/IMG_8927.MOV",
+      "to": "Artists/Arpan/events/Lapa71/IMG_8927.MOV"
+    },
+    {
+      "file_id": "1B65rR5KsDG27y5GDJHFZd8adIoe2sm0Z",
+      "name": "IMG_8931.MOV",
+      "status": "dry_run_planned",
+      "from": "Lapa71/Arpan Upload/IMG_8931.MOV",
+      "to": "Artists/Arpan/events/Lapa71/IMG_8931.MOV"
+    },
+    {
+      "file_id": "1geFQRUMwccLuJMH_QrI_yydCuv6xdrTt",
+      "name": "IMG_8932.MOV",
+      "status": "dry_run_planned",
+      "from": "Lapa71/Arpan Upload/IMG_8932.MOV",
+      "to": "Artists/Arpan/events/Lapa71/IMG_8932.MOV"
+    }
+  ],
+  "moved": 0,
+  "errors": 0,
+  "medium_included": false,
+  "low_executed": false,
+  "notes": [
+    "HIGH automatic-eligible only by default",
+    "MEDIUM/LOW not executed unless explicitly included (MEDIUM only)",
+    "No deletes/overwrites/duplicates"
+  ]
+}
