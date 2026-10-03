@@ -1,0 +1,74 @@
+{
+  "drive_artists_root_id": "1OLOk__QJ2TWVvcgnhu9wEV4rYF6ALc7Q",
+  "schema_from": "Arpan",
+  "artist_subfolders": [
+    "events",
+    "Flow Talk",
+    "Just in Flow with the beat",
+    "Performance - CircleDStages",
+    "Wisdom to share- Akademie"
+  ],
+  "artists": [
+    {"name": "Arpan", "id": "185CwA75aIOECI5T0x5Ktf7m7ss9AJ_sR", "aliases": ["arpan", "arpanito"]},
+    {"name": "Big Mike", "id": "1DOu7FcdaTfi9D2x0gmITKHcy4dOd-YtL", "aliases": ["big mike", "bigmike"]},
+    {"name": "Black.es", "id": "1xOZ-pJP3qv2o8Ffp3682D4OIlSLjOSDF", "aliases": ["black.es", "blackes"]},
+    {"name": "C-Riz", "id": "1igNbShTHw473P9imOJLtv-cqnHVCb1y-", "aliases": ["c-riz", "c riz", "criz", "c_riz"]},
+    {"name": "Caiou", "id": "1MDW5UxiaDQ7yLNkNqNGq4sgUagMYMBSB", "aliases": ["caiou"]},
+    {"name": "Cambodsha", "id": "12-AxQXTWxmovAtkuQpjcPGxRTHJqKbDd", "aliases": ["cambodsha"]},
+    {"name": "Chris Inácio", "id": "1gzbcRULLoTAG82X3spDLOHTU6ozjSefW", "aliases": ["chris inácio", "chris inacio", "chriskristoffer", "chris kristoffer"]},
+    {"name": "Dennis", "id": "1L6LugmYLq8t7PakI8TBQiBS1zo_EvDWB", "aliases": ["dennis"]},
+    {"name": "Diego HempyRootsLisboa", "id": "1k9TC9kfS9-qGFkPSuI-AuEDvVpyAshdz", "aliases": ["diego", "hempy"]},
+    {"name": "Edo", "id": "1cvQxvOqF4OhwS2JjToVYoqwxs1THSG9K", "aliases": ["edo", "edoardo", "edoardostatuto", "statuto"]},
+    {"name": "Elisa", "id": "1z1AM67lVCMQhWneZzbNMGY4n2ulg8w9Q", "aliases": ["elisa"]},
+    {"name": "Hannah and Mr Isaac", "id": "1hVo7llZk-0H-sxywGuH0MpARfNpab6o3", "aliases": ["hanna", "hannah", "mr isaac", "mistah isaac", "mistah_isaac"]},
+    {"name": "HempyRootsLisboaCrew", "id": "1787tMEVqEDhOvIl3w2uwYKpsGn-_erwC", "aliases": ["hempyroots"]},
+    {"name": "Hope Loading", "id": "184vwSNLViLtNFMqV9WXauEO0UcJxtJWO", "aliases": ["hope loading", "hope"]},
+    {"name": "Jannes - Tattoo Artist", "id": "1dkPx_K5t9LnQUEG-rIgWm2IyuGcLEvij", "aliases": ["jannes"]},
+    {"name": "Leo", "id": "14MA8YV4XE70jVnN-cGRASh-t-9oLXnED", "aliases": ["leo"]},
+    {"name": "Mr Isaac", "id": "1InjslclagMySJHdktiSkXPfh-kbIR3id", "aliases": ["mr isaac solo"]},
+    {"name": "N I C K E   K L E I N", "id": "1nTDYgtaE6-hqxKxX3SKau_Py-gGUj8HJ", "aliases": ["nicke", "nicke klein"]},
+    {"name": "Naruthe Token", "id": "1K8Jk6WQ7kt3WzhZgitbA9yErGWVATUDM", "aliases": ["naru", "naruthe", "naruthe token"]},
+    {"name": "Oak", "id": "1InlJcj8q8rqMgqlnkIY3Lo8AzeeOyJ3x", "aliases": ["oak"]},
+    {"name": "OG", "id": "1G9PkP19oU3grTpnBdo6SpJZhyTmGJAlY", "aliases": ["og"]},
+    {"name": "Sandu", "id": "1r-rO8NIZwVQa3teFJTK_EhrlqO-f3UY6", "aliases": ["sandu"]},
+    {"name": "SeMaria", "id": "1YkpHk1sjNqJoTUhmcGUFVPiCo3Ss-EU3", "aliases": ["semaria"]},
+    {"name": "Simba", "id": "1_zdaDN79FaBKpN-wWVLCaH05CziooO3G", "aliases": ["simba"]},
+    {"name": "Sime", "id": "1wzK_EqXDuTDLktWdc4N3kQ4N9GbgXApi", "aliases": ["sime"]},
+    {"name": "Soluna", "id": "1xRDXIhXvLnU14UcbaEkNF5kfelQcd9G3", "aliases": ["soluna"]},
+    {"name": "Wako Kungo", "id": "1oDFvtuC1-aQTxUe7i4AZZx12EvVLvX0j", "aliases": ["wako kungo", "wako.kungo"]},
+    {"name": "Willpower", "id": "1Xsjo8SBZgz75zyxQDoHHy2DdarDreJ85", "aliases": ["willpower"]},
+    {
+      "name": "Felippe Sax",
+      "id": null,
+      "aliases": [
+        "felippe sax",
+        "filipe sax",
+        "filipesax",
+        "filipesax_",
+        "filipe bohlke",
+        "felippe bohlke",
+        "bohlke"
+      ],
+      "instagram": "filipesax_",
+      "legal_name": "Filipe Bohlke",
+      "pack_folder": "11_filipesax_Felippe_Sax",
+      "action": "create_if_missing",
+      "notes": "Brazilian saxophonist — Botanica lineup add 2026-10-03"
+    }
+  ],
+  "botanica_lineup_proposals": [
+    {"display_name": "Lyssa", "aliases": ["lyssa", "lyssa.bl"], "action": "create_if_missing"},
+    {"display_name": "Noua", "aliases": ["noua"], "action": "create_if_missing"},
+    {"display_name": "Diaza", "aliases": ["diaza", "diazaofficial"], "action": "create_if_missing"},
+    {"display_name": "João Redondo Maia", "aliases": ["joaoredondomaia", "joao redondo", "redondo maia"], "action": "create_if_missing"},
+    {"display_name": "Zeus Atro", "aliases": ["zeus_atro", "zeus atro", "zeus"], "action": "create_if_missing"},
+    {"display_name": "Silso", "aliases": ["silso", "silso_n6"], "action": "create_if_missing"},
+    {
+      "display_name": "Felippe Sax",
+      "aliases": ["filipesax_", "filipe bohlke", "felippe sax", "bohlke"],
+      "pack_folder": "11_filipesax_Felippe_Sax",
+      "instagram": "filipesax_",
+      "action": "create_if_missing"
+    }
+  ]
+}

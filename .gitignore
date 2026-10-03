@@ -1,52 +1,39 @@
-# OS & IDE
-.DS_Store
-.vscode/
-
-# Large Media Files (Use external links instead)
-*.MOV
-*.mp4
-*.avi
-*.mkv
-*.webm
 
 # Archives & Documents
-*.zip
-*.tar
-*.gz
-*.pdf
-*.dmg
-
-# Specific Large Files
-Multiversos.pdf
-PRODUCT_LAB-20260126T205805Z-3-001.zip
-
-# Node
-node_modules/
-*.pdf
-*.mp4
-node_modules/
-*.pdf
-*.MOV
-rclone
-
+*.avi
 # Cleanup large folders
 content creation/
-Resolve Project Backups/
+*.crdownload
 DCIM/
+*.dmg
+.DS_Store
+.env
+*.gz
+# Large Media Files (Use external links instead)
+*.mkv
+*.MOV
+*.mp4
+Multiversos.pdf
 Music*/
-Portfolio_Content/
-raw_uploads/
-scratch/
+# Node
 node.exe
+node_modules/
 npm*
 npx*
-*.crdownload
+# OS & IDE
+*.pdf
+pipeline/work/unassigned_thumbs/
+Portfolio_Content/
+PRODUCT_LAB-20260126T205805Z-3-001.zip
+raw_uploads/
+rclone
+Resolve Project Backups/
+scratch/
+# Specific Large Files
+*.tar
 temp*/
-.env
-
-token.json
-
-
-.env
 token.json
 .vercel
+.vscode/
+*.webm
+*.zip

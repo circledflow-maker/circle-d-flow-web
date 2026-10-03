@@ -1,0 +1,4 @@
+__pycache__/
+*.pyc
+LAST_PLAN.json
+*.log

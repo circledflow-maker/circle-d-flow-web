@@ -1,0 +1,14 @@
+{
+  "created_at": "2026-09-30T22:11:24Z",
+  "batch": "medium-wako",
+  "mode": "execute",
+  "destination": "Artists/Wako Kungo/Botanica",
+  "candidates": 56,
+  "moved": 56,
+  "errors": 0,
+  "source": "windows_user_screenshot_2026-09-30",
+  "notes": [
+    "Confirmed 56/56 moved via user terminal screenshot",
+    "UNASSIGNED not touched"
+  ]
+}
