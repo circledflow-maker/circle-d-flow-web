@@ -221,17 +221,35 @@ def build_pack(inv: dict[str, Any], ai: dict[str, Any]) -> dict[str, Any]:
         )
 
     pack_meta = []
+    seen_pack = set()
     for a in ai.get("botanica_artist_pack") or []:
         folder = a.get("name")
+        seen_pack.add(folder)
         pack_meta.append(
             {
                 "folder": folder,
                 "path": a.get("path"),
                 "folder_id": a.get("folder_id"),
-                "artists_folder": PACK_TO_ARTISTS.get(folder or ""),
+                "artists_folder": PACK_TO_ARTISTS.get(folder or "") or a.get("display_name") or "",
                 "refs": pack_refs.get(folder or [], []),
             }
         )
+    # Ensure mapped artists (e.g. Felippe Sax) appear even before Drive folder exists
+    for folder, display in PACK_TO_ARTISTS.items():
+        if folder in seen_pack:
+            continue
+        pack_meta.append(
+            {
+                "folder": folder,
+                "path": f"BotanicaArtistPack/{folder}",
+                "folder_id": None,
+                "artists_folder": display,
+                "refs": pack_refs.get(folder, []),
+                "status": "create_on_execute",
+            }
+        )
+        if folder not in review_artists:
+            review_artists.append(folder)
 
     return {
         "created_at": utc_now(),

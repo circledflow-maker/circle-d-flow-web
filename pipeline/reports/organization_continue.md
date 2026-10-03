@@ -1,26 +1,32 @@
 # Organization — continue
 
-**Updated:** 2026-10-03T11:24:45Z
+**Updated:** 2026-10-03T12:10:31Z
 
-## Felippe Sax added
-- IG: `filipesax_` · Filipe Bohlke
-- Pack: `BotanicaArtistPack/11_filipesax_Felippe_Sax` (create on execute)
-- Artists: `Artists/Felippe Sax` + `Botanica` (Arpan schema)
-- 00_REF: `pipeline/assets/artist_refs/Felippe_Sax/`
+## Done on Drive
+| Step | Status |
+|------|--------|
+| HIGH Arpan Upload (8) | executed |
+| MEDIUM Wako Botanica (56) | executed |
+| UNASSIGNED approvals (48) | executed — includes Felippe Sax |
+| Felippe Sax artist folder | created via apply |
 
-## Approvals ready
-| Dest | Moves |
-|------|------:|
-| Felippe Sax (DSC_1580/83/85/86/88) | 18 |
-| All moves | 48 |
-| Skips | 18 |
+## Next (in order)
+### 1) Ensure Botanica Artists folders
+Creates Arpan schema + `events/Botanica` for Felippe, Noua, Diaza, João, Lyssa, Zeus, Silso; syncs registry ids.
 
-Diaza picks on those DSC kept. Wako stills / Noua / Edo / João unchanged.
-
-## Windows — execute
 ```bat
 cd D:\circle-d-flow-web
 git fetch origin cursor/content-pipeline-org-execute-f46a
-git checkout -f origin/cursor/content-pipeline-org-execute-f46a -- pipeline scripts/content_pipeline/artist_registry.json
-pipeline\EXECUTE_UNASSIGNED_APPROVALS.cmd
+git checkout -f origin/cursor/content-pipeline-org-execute-f46a -- pipeline scripts/content_pipeline
+pipeline\ENSURE_BOTANICA_ARTISTS.cmd
 ```
+
+### 2) MEDIUM skip-sibling moves (6 files)
+Skips with a **single** sibling artist (Edo / Noua / João). Leaves DSC_1568 + DSC_1601 + mixed 1565 for later review.
+
+```bat
+pipeline\EXECUTE_SKIP_SIBLINGS.cmd
+```
+
+### 3) Still held for visual review
+12 files — see `pipeline/reports/unassigned_skip_sibling.md`
