@@ -41,6 +41,7 @@ PACK_TO_ARTISTS = {
     "09_edoardostatuto_Edo_Edoardo_Statuto": "Edo",
     "10_wako.kungo_Wako_Kungo": "Wako Kungo",
     "03_chriskristoffer_Chris_Kristoffer": "Chris Inácio",
+    "11_filipesax_Felippe_Sax": "Felippe Sax",
 }
 
 SUBFOLDER_BY_KIND = {

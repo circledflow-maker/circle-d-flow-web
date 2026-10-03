@@ -1,22 +1,26 @@
 # Organization — continue
 
-**Updated:** 2026-09-30T22:19:19Z
+**Updated:** 2026-10-03T11:24:45Z
 
-## Done on Drive
-| Batch | Status |
-|-------|--------|
-| HIGH Arpan Upload (8) | executed |
-| MEDIUM Wako Botanica (56) | executed |
-| UNASSIGNED thumbs (68) | saved locally |
+## Felippe Sax added
+- IG: `filipesax_` · Filipe Bohlke
+- Pack: `BotanicaArtistPack/11_filipesax_Felippe_Sax` (create on execute)
+- Artists: `Artists/Felippe Sax` + `Botanica` (Arpan schema)
+- 00_REF: `pipeline/assets/artist_refs/Felippe_Sax/`
 
-## Next — human gallery → approvals → moves
+## Approvals ready
+| Dest | Moves |
+|------|------:|
+| Felippe Sax (DSC_1580/83/85/86/88) | 18 |
+| All moves | 48 |
+| Skips | 18 |
+
+Diaza picks on those DSC kept. Wako stills / Noua / Edo / João unchanged.
+
+## Windows — execute
 ```bat
 cd D:\circle-d-flow-web
 git fetch origin cursor/content-pipeline-org-execute-f46a
-git checkout -f origin/cursor/content-pipeline-org-execute-f46a -- pipeline
-pipeline\REVIEW_UNASSIGNED_GALLERY.cmd
+git checkout -f origin/cursor/content-pipeline-org-execute-f46a -- pipeline scripts/content_pipeline/artist_registry.json
+pipeline\EXECUTE_UNASSIGNED_APPROVALS.cmd
 ```
-
-1. Assign artists in HTML (00_REF strip at top)
-2. Download `unassigned_approvals.json` → `pipeline\data\`
-3. `pipeline\EXECUTE_UNASSIGNED_APPROVALS.cmd`

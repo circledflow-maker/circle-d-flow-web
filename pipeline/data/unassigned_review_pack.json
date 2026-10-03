@@ -24,13 +24,15 @@
     "07_silso_n6_Silso",
     "08_mistah_isaac_Mistah_Isaac",
     "09_edoardostatuto_Edo_Edoardo_Statuto",
-    "10_wako.kungo_Wako_Kungo"
+    "10_wako.kungo_Wako_Kungo",
+    "11_filipesax_Felippe_Sax"
   ],
   "pack_to_artists": {
     "08_mistah_isaac_Mistah_Isaac": "Mr Isaac",
     "09_edoardostatuto_Edo_Edoardo_Statuto": "Edo",
     "10_wako.kungo_Wako_Kungo": "Wako Kungo",
-    "03_chriskristoffer_Chris_Kristoffer": "Chris In\u00e1cio"
+    "03_chriskristoffer_Chris_Kristoffer": "Chris In\u00e1cio",
+    "11_filipesax_Felippe_Sax": "Felippe Sax"
   },
   "artist_pack": [
     {
@@ -136,6 +138,22 @@
           "file_id": "1xeiQgXHOzReAm3j2bGwE7EyvY7PfxuDL",
           "name": "00_event_flyer_botanical_groove.png",
           "thumbnail_hint": "https://drive.google.com/thumbnail?id=1xeiQgXHOzReAm3j2bGwE7EyvY7PfxuDL&sz=w400"
+        }
+      ]
+    },
+    {
+      "folder": "11_filipesax_Felippe_Sax",
+      "path": "BotanicaArtistPack/11_filipesax_Felippe_Sax",
+      "folder_id": null,
+      "artists_folder": "Felippe Sax",
+      "refs": [
+        {
+          "name": "ARTIST_filipesax_ig.png",
+          "thumb_file": "11_filipesax_Felippe_Sax/ARTIST_filipesax_ig.png"
+        },
+        {
+          "name": "REF_performance_sax.png",
+          "thumb_file": "11_filipesax_Felippe_Sax/REF_performance_sax.png"
         }
       ]
     }

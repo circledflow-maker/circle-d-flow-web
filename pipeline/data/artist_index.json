@@ -297,6 +297,17 @@
       "path": "BotanicaArtistPack/10_wako.kungo_Wako_Kungo",
       "files": 2,
       "subfolders": 1
+    },
+    {
+      "name": "11_filipesax_Felippe_Sax",
+      "folder_id": null,
+      "path": "BotanicaArtistPack/11_filipesax_Felippe_Sax",
+      "files": 0,
+      "subfolders": 0,
+      "status": "create_on_execute",
+      "instagram": "filipesax_",
+      "legal_name": "Filipe Bohlke",
+      "display_name": "Felippe Sax"
     }
   ]
 }
