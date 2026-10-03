@@ -1,19 +1,18 @@
 # Organization — continue
 
-**Updated:** 2026-10-03T12:10:31Z
+**Updated:** 2026-10-03T12:16:36Z
 
-## Done on Drive
+## Done
 | Step | Status |
 |------|--------|
-| HIGH Arpan Upload (8) | executed |
-| MEDIUM Wako Botanica (56) | executed |
-| UNASSIGNED approvals (48) | executed — includes Felippe Sax |
-| Felippe Sax artist folder | created via apply |
+| HIGH Arpan (8) | executed |
+| MEDIUM Wako (56) | executed |
+| UNASSIGNED approvals (48) | executed |
+| Skip-siblings (6) | executed |
+| **Total Drive moves** | **118** |
 
-## Next (in order)
-### 1) Ensure Botanica Artists folders
-Creates Arpan schema + `events/Botanica` for Felippe, Noua, Diaza, João, Lyssa, Zeus, Silso; syncs registry ids.
-
+## Next
+### A) Ensure Botanica Artists folders (if not run yet)
 ```bat
 cd D:\circle-d-flow-web
 git fetch origin cursor/content-pipeline-org-execute-f46a
@@ -21,12 +20,10 @@ git checkout -f origin/cursor/content-pipeline-org-execute-f46a -- pipeline scri
 pipeline\ENSURE_BOTANICA_ARTISTS.cmd
 ```
 
-### 2) MEDIUM skip-sibling moves (6 files)
-Skips with a **single** sibling artist (Edo / Noua / João). Leaves DSC_1568 + DSC_1601 + mixed 1565 for later review.
-
+### B) Review last 12 held files
 ```bat
-pipeline\EXECUTE_SKIP_SIBLINGS.cmd
+pipeline\REVIEW_HELD_UNASSIGNED.cmd
 ```
+Then save JSON → `pipeline\EXECUTE_UNASSIGNED_APPROVALS.cmd`
 
-### 3) Still held for visual review
-12 files — see `pipeline/reports/unassigned_skip_sibling.md`
+Clusters: DSC_1565 (Noua vs Wako), DSC_1568, DSC_1601.

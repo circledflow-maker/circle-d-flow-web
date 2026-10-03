@@ -3,7 +3,7 @@
     "phase": "PHASE 4 \u2014 SAFE ORGANIZATION PROPOSAL",
     "created_at": "2026-09-29T05:34:58Z",
     "drive_modified": true,
-    "moves_executed": 112,
+    "moves_executed": 118,
     "rule": "Existing structure has priority. Different \u2260 wrong. No deletes/overwrites/duplicates.",
     "sources": [
       "pipeline/data/drive_inventory.json",
@@ -14,10 +14,11 @@
       "pipeline/config/capability_matrix.json"
     ],
     "protected_path_pattern": "(^|/)(_?FINAL|_?FINALS|_?APPROVED|_?DELIVERED|_?ARCHIVE|_?ARCHIVED|_?PROTECTED|_?DO_NOT_TOUCH|_?MASTER|_?MASTERS|_ReadyToShare|ReadyToShare|EXPORT|YouTube_Master|Phase\\s*4|Post Ready|Finals_)(/|$)",
-    "last_execution_note": "UNASSIGNED 48/48 executed 2026-10-03 incl. Felippe Sax; skip-siblings + ensure artists next",
+    "last_execution_note": "skip-siblings 6/6 executed; 12 held for visual review; ensure Botanica artists still recommended",
     "high_batch_status": "executed",
     "medium_wako_status": "executed",
-    "unassigned_approvals_executed": 48
+    "unassigned_approvals_executed": 48,
+    "skip_siblings_executed": 6
   },
   "summary": {
     "total_file_proposals": 217,
