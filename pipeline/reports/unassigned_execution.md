@@ -1,5 +1,5 @@
-# UNASSIGNED approvals execution
+# UNASSIGNED pass-2 execution
 
-**Moved:** 48/48
+**Moved:** 46/46
 **Errors:** 0
-**Confirmed:** user terminal 2026-10-03
+**Confirmed:** 2026-10-05

@@ -1,28 +1,35 @@
-# Held / pass-2 approvals ready
+# Organization — continue
 
-**Ingested:** 2026-10-05T20:43:10Z
-**Source file:** `unassigned_approvals (2).json`
-**Moves:** 46 · **Skips:** 18 · prefer normalized: 28
+**Updated:** 2026-10-05T20:48:01Z
 
-## By destination
-- `10_wako.kungo_Wako_Kungo` → Artists/Wako Kungo/Botanica: **29**
-- `02_noua_Noua` → BotanicaArtistPack/02_noua_Noua/…: **6**
-- `05_joaoredondomaia_Joao_Redondo_Maia` → BotanicaArtistPack/05_joaoredondomaia_Joao_Redondo_Maia/…: **3**
-- `11_filipesax_Felippe_Sax` → Artists/Felippe Sax/Botanica: **3**
-- `09_edoardostatuto_Edo_Edoardo_Statuto` → BotanicaArtistPack/09_edoardostatuto_Edo_Edoardo_Statuto/…: **2**
-- `04_diazaofficial_Diaza` → BotanicaArtistPack/04_diazaofficial_Diaza/…: **2**
-- `07_silso_n6_Silso` → BotanicaArtistPack/07_silso_n6_Silso/…: **1**
+## Done
+| Batch | Count | Status |
+|-------|------:|--------|
+| HIGH Arpan | 8 | executed |
+| MEDIUM Wako | 56 | executed |
+| UNASSIGNED round 1 | 48 | executed |
+| Skip-siblings | 6 | executed |
+| UNASSIGNED pass-2 | 46 | executed |
 
-## Windows execute
+## Next (in order)
+
+### 1) Ensure Botanica Artists folders
+Creates/syncs Arpan schema + `events/Botanica` for Felippe, Noua, Diaza, João, Lyssa, Zeus, Silso.
+
 ```bat
 cd D:\circle-d-flow-web
 git fetch origin cursor/content-pipeline-org-execute-f46a
-git checkout -f origin/cursor/content-pipeline-org-execute-f46a -- pipeline
-pipeline\EXECUTE_UNASSIGNED_APPROVALS.cmd
+git checkout -f origin/cursor/content-pipeline-org-execute-f46a -- pipeline scripts/content_pipeline
+pipeline\ENSURE_BOTANICA_ARTISTS.cmd
 ```
 
-Already-moved files report `already_in_destination` (safe). New/changed dests move.
+### 2) DSC_1601 (if still in `_UNASSIGNED_REVIEW`)
+Not in pass-2 export. Names previously held: ['DSC_1601_103s.jpg', 'DSC_1601_138s.jpg', 'DSC_1601_32s.jpg', 'DSC_1601_67s.jpg', 'DSC_1601_unassigned_stable.mp4']
+```bat
+pipeline\REVIEW_HELD_UNASSIGNED.cmd
+```
 
-## Still missing from this export
-- DSC_1601_* (if still under `_UNASSIGNED_REVIEW`) — run `REVIEW_HELD_UNASSIGNED.cmd` again after this batch if needed.
-- Recommended after: `ENSURE_BOTANICA_ARTISTS.cmd` (Noua/Diaza/João/Silso/Felippe folders)
+### 3) After folders exist — optional Phase 5
+Lightweight ears/proxy QA on new Botanica artist leaves (no full masters).
+
+See also `pipeline/reports/remaining_unassigned.md` (9 files).

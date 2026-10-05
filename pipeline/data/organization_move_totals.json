@@ -1,0 +1,27 @@
+{
+  "created_at": "2026-10-05T20:48:01Z",
+  "batches": [
+    {
+      "name": "HIGH Arpan Upload",
+      "count": 8
+    },
+    {
+      "name": "MEDIUM Wako Botanica",
+      "count": 56
+    },
+    {
+      "name": "UNASSIGNED approvals",
+      "count": 48
+    },
+    {
+      "name": "Skip-siblings",
+      "count": 6
+    },
+    {
+      "name": "UNASSIGNED pass-2",
+      "count": 46
+    }
+  ],
+  "sum_batch_counts": 164,
+  "note": "pass-2 may re-parent files already moved earlier; unique moves \u2264 sum"
+}
