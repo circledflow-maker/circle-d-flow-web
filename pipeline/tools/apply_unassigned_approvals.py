@@ -34,6 +34,15 @@ BOTANICA_PACK_ROOT = "1Ss3ypxTiJgTCW-ucsLLbjEbG653RuRbk"
 BOTANICA_PROJECT_ROOT = "1itnbL-aVGQtY7BHDVCGDmsa8sQni1v8r"  # Botanica/
 ARTISTS_ROOT = "1OLOk__QJ2TWVvcgnhu9wEV4rYF6ALc7Q"
 WAKO_ARTIST_ID = "1oDFvtuC1-aQTxUe7i4AZZx12EvVLvX0j"
+EVENT_SELECTS_CROWD_WIDE = "1A7eSBn7SEebbrXuzQ_kqsoRKVgSUh2zV"
+EVENT_SELECTS_ROOT = "1s7lGUiCsjw-yGukRFLs4yOy5IobL3oT9"
+
+# Role / TBD artists (names pending) — pack folders under BotanicaArtistPack
+ROLE_PACKS = {
+    "12_piano_player_TBD": "Piano Player (TBD)",
+    "13_other_guitar_TBD": "Other Guitar (TBD)",
+    "crowd": None,  # special → EVENT_SELECTS/CROWD_WIDE
+}
 
 ARPAN_SUBS = [
     "events",
@@ -202,7 +211,18 @@ def resolve_dest(
     pack = assignment.get("pack_folder")
     if not pack:
         raise SystemExit(f"Assignment missing pack_folder: {assignment.get('name')}")
+
+    # Crowd role → existing EVENT_SELECTS/CROWD_WIDE
+    if pack == "crowd" or assignment.get("destination_mode") == "event_selects_crowd":
+        return EVENT_SELECTS_CROWD_WIDE, "Botanica/EVENT_SELECTS/CROWD_WIDE"
+
     sub = assignment.get("pack_subfolder") or "03_FRAMES"
+
+    # TBD role artists → create pack under BotanicaArtistPack
+    if pack in ROLE_PACKS and ROLE_PACKS[pack] is not None:
+        parent = ensure_pack_artist(service, pack, pack_ids, dry=dry)
+        dest = ensure_folder(service, sub, parent, dry=dry)
+        return dest, f"BotanicaArtistPack/{pack}/{sub}"
 
     if assignment.get("prefer_artists_botanica") and pack in ARTISTS_BOTANICA:
         display, known_id = ARTISTS_BOTANICA[pack]

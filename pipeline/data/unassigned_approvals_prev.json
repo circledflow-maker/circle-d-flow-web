@@ -1,39 +1,95 @@
 {
-  "created_at": "2026-10-05T20:52:57.585Z",
-  "source": "held_review_gallery",
-  "policy": "Human-approved held items only",
+  "created_at": "2026-10-07T15:48:15Z",
+  "source": "place_broll_closeout",
+  "policy": "Human confirmed: remaining frames are place-only, no artist assignment",
   "assignments": [
     {
-      "file_id": "10PMC5CuHc-gComBiAXkB2j-_tcfJ_J6V",
-      "name": "DSC_1565_25s.jpg",
+      "file_id": "1PBZFvyEvREhl3JsgIA6Gcz392lSJffjB",
+      "name": "DSC_1568_6s.jpg",
       "action": "move",
-      "pack_folder": "10_wako.kungo_Wako_Kungo",
-      "pack_subfolder": "03_FRAMES",
-      "artists_folder": "Wako Kungo",
-      "prefer_artists_botanica": true
+      "destination_mode": "botanica_place_broll",
+      "pack_folder": null,
+      "pack_subfolder": null,
+      "place_folder": "PLACE_BROLL",
+      "prefer_artists_botanica": false,
+      "confidence": "HUMAN",
+      "reason": "Place/venue only \u2014 no artist assignment necessary"
     },
     {
-      "file_id": "1fBv5uEg4aBJC_w7MQWzJy61ISqN-YOZC",
-      "name": "DSC_1565_5s.jpg",
-      "action": "skip",
-      "pack_folder": null
+      "file_id": "1YlOd7hm2IUWgIuwR3CI0gb94cpls4rI1",
+      "name": "DSC_1568_8s.jpg",
+      "action": "move",
+      "destination_mode": "botanica_place_broll",
+      "pack_folder": null,
+      "pack_subfolder": null,
+      "place_folder": "PLACE_BROLL",
+      "prefer_artists_botanica": false,
+      "confidence": "HUMAN",
+      "reason": "Place/venue only \u2014 no artist assignment necessary"
     },
     {
-      "file_id": "1DoEyhTas7odTs8p_sN3TBv8Hj6s7pSRj",
-      "name": "DSC_1568_2s.jpg",
-      "action": "skip",
-      "pack_folder": null
+      "file_id": "1uCFPXoYdeG9ZUnNXPX54auZR7T2QhTfL",
+      "name": "DSC_1568_unassigned_stable.mp4",
+      "action": "move",
+      "destination_mode": "botanica_place_broll",
+      "pack_folder": null,
+      "pack_subfolder": null,
+      "place_folder": "PLACE_BROLL",
+      "prefer_artists_botanica": false,
+      "confidence": "HUMAN",
+      "reason": "Place/venue only \u2014 no artist assignment necessary"
     },
     {
-      "file_id": "1ONWkxXKCN2mnMko0vubXRH4aj2SM5cgf",
-      "name": "DSC_1601_32s.jpg",
-      "action": "skip",
-      "pack_folder": null
+      "file_id": "1FqdJo2xJB7lyQAR9NPZtv154130R93rB",
+      "name": "DSC_1601_103s.jpg",
+      "action": "move",
+      "destination_mode": "botanica_place_broll",
+      "pack_folder": null,
+      "pack_subfolder": null,
+      "place_folder": "PLACE_BROLL",
+      "prefer_artists_botanica": false,
+      "confidence": "HUMAN",
+      "reason": "Place/venue only \u2014 no artist assignment necessary"
+    },
+    {
+      "file_id": "1n3pO8TMataTGlkkoSrQenUe79tMvTZ1q",
+      "name": "DSC_1601_138s.jpg",
+      "action": "move",
+      "destination_mode": "botanica_place_broll",
+      "pack_folder": null,
+      "pack_subfolder": null,
+      "place_folder": "PLACE_BROLL",
+      "prefer_artists_botanica": false,
+      "confidence": "HUMAN",
+      "reason": "Place/venue only \u2014 no artist assignment necessary"
+    },
+    {
+      "file_id": "1HL89eDWoLDbi2L6wymXgOMVk7uTnhJbB",
+      "name": "DSC_1601_67s.jpg",
+      "action": "move",
+      "destination_mode": "botanica_place_broll",
+      "pack_folder": null,
+      "pack_subfolder": null,
+      "place_folder": "PLACE_BROLL",
+      "prefer_artists_botanica": false,
+      "confidence": "HUMAN",
+      "reason": "Place/venue only \u2014 no artist assignment necessary"
+    },
+    {
+      "file_id": "1I6YCvxTTWFK2bp3Fjnbpb4X7OD4okyto",
+      "name": "DSC_1601_unassigned_stable.mp4",
+      "action": "move",
+      "destination_mode": "botanica_place_broll",
+      "pack_folder": null,
+      "pack_subfolder": null,
+      "place_folder": "PLACE_BROLL",
+      "prefer_artists_botanica": false,
+      "confidence": "HUMAN",
+      "reason": "Place/venue only \u2014 no artist assignment necessary"
     }
   ],
-  "ingested_at": "2026-10-05T20:53:49Z",
   "notes": [
-    "Uploaded as unassigned_approvals (3).json 2026-10-05",
-    "Normalized prefer_artists_botanica for Wako + Felippe Sax"
+    "Move to Botanica/PLACE_BROLL (creates folder if missing)",
+    "Does not assign to any BotanicaArtistPack / Artists folder"
   ]
 }

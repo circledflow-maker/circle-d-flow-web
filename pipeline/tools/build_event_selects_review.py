@@ -43,10 +43,15 @@ ARTISTS = [
     ("09_edoardostatuto_Edo_Edoardo_Statuto", "Edo"),
     ("10_wako.kungo_Wako_Kungo", "Wako Kungo"),
     ("11_filipesax_Felippe_Sax", "Felippe Sax"),
+    # Names TBD — role placeholders
+    ("12_piano_player_TBD", "Piano Player (TBD)"),
+    ("13_other_guitar_TBD", "Other Guitar (TBD)"),
+    ("crowd", "Crowd"),
 ]
 
 PACK_TO_ARTISTS = {a: b for a, b in ARTISTS}
 PREF_ARTISTS = {"10_wako.kungo_Wako_Kungo", "11_filipesax_Felippe_Sax"}
+ROLE_PACKS = {"12_piano_player_TBD", "13_other_guitar_TBD", "crowd"}
 
 
 def utc_now() -> str:
@@ -71,8 +76,11 @@ def get_service():
     return build("drive", "v3", credentials=creds, cache_discovery=False)
 
 
-def download_thumb(service, file_id: str, hint: Optional[str], out: Path) -> bool:
-    if out.exists() and out.stat().st_size > 0:
+def download_thumb(
+    service, file_id: str, hint: Optional[str], out: Path, *, force: bool = False, size: str = "w1920"
+) -> bool:
+    """Fetch Drive thumbnail. Use large sz= and gallery object-fit:contain (no crop)."""
+    if out.exists() and out.stat().st_size > 0 and not force:
         return True
     meta = (
         service.files()
@@ -83,11 +91,11 @@ def download_thumb(service, file_id: str, hint: Optional[str], out: Path) -> boo
     if not link:
         return False
     if "sz=" in link:
-        link = re.sub(r"sz=[^&]+", "sz=w800", link)
+        link = re.sub(r"sz=[^&]+", f"sz={size}", link)
     else:
-        link = link + ("&" if "?" in link else "?") + "sz=w800"
+        link = link + ("&" if "?" in link else "?") + f"sz={size}"
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_bytes(urlopen(link, timeout=60).read())
+    out.write_bytes(urlopen(link, timeout=90).read())
     return True
 
 
@@ -150,6 +158,7 @@ def write_gallery(perf: list[dict[str, Any]], meta: dict[str, Any]) -> Path:
         "artists": artists,
         "pack_to_artists": PACK_TO_ARTISTS,
         "pref_artists": list(PREF_ARTISTS),
+        "role_packs": list(ROLE_PACKS),
         "items": [
             {
                 "file_id": i["file_id"],
@@ -171,7 +180,7 @@ def write_gallery(perf: list[dict[str, Any]], meta: dict[str, Any]) -> Path:
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>EVENT_SELECTS Performance Review</title>
 <style>
-:root {{ --bg:#12100e; --ink:#f3ebe0; --muted:#a89884; --line:#3a322a; --gold:#c9a227; --panel:#1c1814; }}
+:root {{ --bg:#12100e; --ink:#f3ebe0; --muted:#a89884; --line:#3a322a; --gold:#c9a227; --panel:#1c1814; --role:#7a9e6a; }}
 body {{ margin:0; font-family:"Segoe UI",sans-serif; background:radial-gradient(1000px 500px at 10% -10%,#2a2218,var(--bg)); color:var(--ink); }}
 header {{ position:sticky; top:0; z-index:5; display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between; padding:14px 18px; background:rgba(18,16,14,.92); border-bottom:1px solid var(--line); }}
 h1 {{ margin:0; font-size:1.05rem; color:var(--gold); }}
@@ -179,22 +188,24 @@ h1 {{ margin:0; font-size:1.05rem; color:var(--gold); }}
 button {{ background:var(--gold); color:#1a140c; border:0; border-radius:4px; padding:8px 14px; font-weight:700; cursor:pointer; }}
 .refs {{ display:flex; gap:10px; overflow-x:auto; padding:12px 18px; border-bottom:1px solid var(--line); background:var(--panel); }}
 .ref {{ flex:0 0 auto; width:96px; font-size:.68rem; color:var(--muted); text-align:center; }}
-.ref img {{ width:96px; height:96px; object-fit:cover; border:1px solid var(--line); display:block; margin-bottom:4px; background:#000; }}
+.ref img {{ width:96px; height:96px; object-fit:contain; border:1px solid var(--line); display:block; margin-bottom:4px; background:#000; }}
 main {{ padding:16px 18px 80px; display:grid; gap:14px; }}
-.card {{ display:grid; grid-template-columns:220px 1fr; gap:14px; background:var(--panel); border:1px solid var(--line); padding:12px; }}
-.card img.thumb {{ width:220px; height:140px; object-fit:cover; background:#000; border:1px solid var(--line); }}
+.card {{ display:grid; grid-template-columns:320px 1fr; gap:14px; background:var(--panel); border:1px solid var(--line); padding:12px; }}
+.card img.thumb {{ width:320px; height:200px; object-fit:contain; background:#000; border:1px solid var(--line); }}
 .choices {{ display:flex; flex-wrap:wrap; gap:6px; }}
 .choices label {{ border:1px solid var(--line); padding:5px 8px; font-size:.75rem; cursor:pointer; border-radius:3px; }}
+.choices label.role {{ border-color:#4a5e42; }}
 .choices label:has(input:checked) {{ border-color:var(--gold); color:var(--gold); }}
+.choices label.role:has(input:checked) {{ border-color:var(--role); color:var(--role); }}
 .choices input {{ display:none; }}
-@media (max-width:720px) {{ .card {{ grid-template-columns:1fr; }} .card img.thumb {{ width:100%; height:180px; }} }}
+@media (max-width:720px) {{ .card {{ grid-template-columns:1fr; }} .card img.thumb {{ width:100%; height:220px; }} }}
 </style>
 </head>
 <body>
 <header>
   <div>
     <h1>EVENT_SELECTS — PERFORMANCE</h1>
-    <div class="meta">Assign artist · VENUE/CROWD/DETAILS already typed — leave</div>
+    <div class="meta">Thumbs: contain (no crop) · Roles: Piano / Other Guitar / Crowd (names TBD)</div>
   </div>
   <div class="meta" id="progress">0 reviewed</div>
   <button type="button" id="btnExport">Download approvals JSON</button>
@@ -227,13 +238,14 @@ function render() {{
   for (const item of DATA.items) {{
     const card = document.createElement('article');
     card.className = 'card';
-    const choices = [...DATA.artists.map(a => ({{v:a.folder,l:a.label}})), {{v:'',l:'SKIP / keep in PERFORMANCE'}}];
+    const roleSet = new Set(DATA.role_packs || []);
+    const choices = [...DATA.artists.map(a => ({{v:a.folder,l:a.label,role:roleSet.has(a.folder)}})), {{v:'',l:'SKIP / keep in PERFORMANCE',role:false}}];
     card.innerHTML = `
       <img class="thumb" src="${{item.src}}" alt="${{item.name}}" loading="lazy"/>
       <div>
         <h2 style="margin:0 0 6px;font-size:.95rem">${{item.name}}</h2>
         <div class="meta" style="margin-bottom:8px">${{item.note}}</div>
-        <div class="choices">${{choices.map(c => `<label><input type="radio" name="${{item.file_id}}" value="${{c.v}}"/> ${{c.l}}</label>`).join('')}}</div>
+        <div class="choices">${{choices.map(c => `<label class="${{c.role ? 'role' : ''}}"><input type="radio" name="${{item.file_id}}" value="${{c.v}}"/> ${{c.l}}</label>`).join('')}}</div>
       </div>`;
     main.appendChild(card);
     card.querySelectorAll('input').forEach(inp => {{
@@ -251,21 +263,23 @@ document.getElementById('btnExport').onclick = () => {{
       assignments.push({{file_id:item.file_id, name:item.name, action:'skip', pack_folder:null}});
       continue;
     }}
+    const isCrowd = pack === 'crowd';
     assignments.push({{
       file_id: item.file_id,
       name: item.name,
       action: 'move',
       pack_folder: pack,
-      pack_subfolder: item.subfolder,
+      pack_subfolder: isCrowd ? null : item.subfolder,
       artists_folder: DATA.pack_to_artists[pack] || null,
       prefer_artists_botanica: DATA.pref_artists.includes(pack),
+      destination_mode: isCrowd ? 'event_selects_crowd' : null,
       source_bucket: 'EVENT_SELECTS/PERFORMANCE',
     }});
   }}
   const out = {{
     created_at: new Date().toISOString(),
     source: 'event_selects_performance_gallery',
-    policy: 'Human-approved EVENT_SELECTS performance assignments',
+    policy: 'Human-approved EVENT_SELECTS performance assignments (incl. Piano/Guitar TBD + Crowd)',
     assignments,
   }};
   const a = document.createElement('a');
@@ -286,6 +300,11 @@ renderRefs(); render();
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--fetch-thumbs", action="store_true")
+    ap.add_argument(
+        "--force-thumbs",
+        action="store_true",
+        help="Re-download thumbs at sz=w1920 (fixes soft/cropped previews)",
+    )
     args = ap.parse_args()
 
     buckets = load_event_selects()
@@ -310,14 +329,17 @@ def main() -> int:
     REPORTS.mkdir(parents=True, exist_ok=True)
     (DATA / "event_selects_review_pack.json").write_text(json.dumps(pack, indent=2), encoding="utf-8")
 
-    if args.fetch_thumbs:
+    if args.fetch_thumbs or args.force_thumbs:
         service = get_service()
         THUMB_DIR.mkdir(parents=True, exist_ok=True)
+        force = bool(args.force_thumbs)
         for i in perf:
             out = THUMB_DIR / i["thumb_file"]
             try:
-                ok = download_thumb(service, i["file_id"], i.get("thumbnail_hint"), out)
-                print(("saved" if ok else "no thumb"), i["name"])
+                ok = download_thumb(
+                    service, i["file_id"], i.get("thumbnail_hint"), out, force=force, size="w1920"
+                )
+                print(("refetch" if force else "saved" if ok else "no thumb"), i["name"])
             except Exception as e:
                 print(f"ERROR {i['name']}: {e}")
 
