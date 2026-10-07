@@ -1,95 +1,198 @@
 {
-  "created_at": "2026-10-07T15:48:15Z",
-  "source": "place_broll_closeout",
-  "policy": "Human confirmed: remaining frames are place-only, no artist assignment",
+  "created_at": "2026-10-07T16:43:58.806Z",
+  "source": "event_selects_performance_gallery",
+  "policy": "Human-approved EVENT_SELECTS performance assignments",
   "assignments": [
     {
-      "file_id": "1PBZFvyEvREhl3JsgIA6Gcz392lSJffjB",
-      "name": "DSC_1568_6s.jpg",
+      "file_id": "1ID0D5C7kQ_Z_ddPJX87cOGGzemH3UTcn",
+      "name": "shot_000_wide.mp4",
       "action": "move",
-      "destination_mode": "botanica_place_broll",
-      "pack_folder": null,
-      "pack_subfolder": null,
-      "place_folder": "PLACE_BROLL",
-      "prefer_artists_botanica": false,
-      "confidence": "HUMAN",
-      "reason": "Place/venue only \u2014 no artist assignment necessary"
+      "pack_folder": "11_filipesax_Felippe_Sax",
+      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "artists_folder": "Felippe Sax",
+      "prefer_artists_botanica": true,
+      "source_bucket": "EVENT_SELECTS/PERFORMANCE"
     },
     {
-      "file_id": "1YlOd7hm2IUWgIuwR3CI0gb94cpls4rI1",
-      "name": "DSC_1568_8s.jpg",
+      "file_id": "1-Ix-H4d08I8ppu2WD57x2Ks_nugJEHkF",
+      "name": "shot_001_medium.mp4",
       "action": "move",
-      "destination_mode": "botanica_place_broll",
-      "pack_folder": null,
-      "pack_subfolder": null,
-      "place_folder": "PLACE_BROLL",
+      "pack_folder": "02_noua_Noua",
+      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "artists_folder": "Noua",
       "prefer_artists_botanica": false,
-      "confidence": "HUMAN",
-      "reason": "Place/venue only \u2014 no artist assignment necessary"
+      "source_bucket": "EVENT_SELECTS/PERFORMANCE"
     },
     {
-      "file_id": "1uCFPXoYdeG9ZUnNXPX54auZR7T2QhTfL",
-      "name": "DSC_1568_unassigned_stable.mp4",
+      "file_id": "1BMugZ4mM3ZgHBsNL_UzG5_wfakM2uIco",
+      "name": "shot_001_wide.mp4",
       "action": "move",
-      "destination_mode": "botanica_place_broll",
-      "pack_folder": null,
-      "pack_subfolder": null,
-      "place_folder": "PLACE_BROLL",
+      "pack_folder": "02_noua_Noua",
+      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "artists_folder": "Noua",
       "prefer_artists_botanica": false,
-      "confidence": "HUMAN",
-      "reason": "Place/venue only \u2014 no artist assignment necessary"
+      "source_bucket": "EVENT_SELECTS/PERFORMANCE"
     },
     {
-      "file_id": "1FqdJo2xJB7lyQAR9NPZtv154130R93rB",
-      "name": "DSC_1601_103s.jpg",
+      "file_id": "1o3NkvzJo_9L4rHv7c1KOinITNlShKZaI",
+      "name": "shot_002_medium.mp4",
       "action": "move",
-      "destination_mode": "botanica_place_broll",
-      "pack_folder": null,
-      "pack_subfolder": null,
-      "place_folder": "PLACE_BROLL",
+      "pack_folder": "09_edoardostatuto_Edo_Edoardo_Statuto",
+      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "artists_folder": "Edo",
       "prefer_artists_botanica": false,
-      "confidence": "HUMAN",
-      "reason": "Place/venue only \u2014 no artist assignment necessary"
+      "source_bucket": "EVENT_SELECTS/PERFORMANCE"
     },
     {
-      "file_id": "1n3pO8TMataTGlkkoSrQenUe79tMvTZ1q",
-      "name": "DSC_1601_138s.jpg",
+      "file_id": "11HtwKIG16CRdgOS2nTVKM3DcJWoIvgfR",
+      "name": "shot_004_wide.mp4",
       "action": "move",
-      "destination_mode": "botanica_place_broll",
-      "pack_folder": null,
-      "pack_subfolder": null,
-      "place_folder": "PLACE_BROLL",
-      "prefer_artists_botanica": false,
-      "confidence": "HUMAN",
-      "reason": "Place/venue only \u2014 no artist assignment necessary"
+      "pack_folder": "10_wako.kungo_Wako_Kungo",
+      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "artists_folder": "Wako Kungo",
+      "prefer_artists_botanica": true,
+      "source_bucket": "EVENT_SELECTS/PERFORMANCE"
     },
     {
-      "file_id": "1HL89eDWoLDbi2L6wymXgOMVk7uTnhJbB",
-      "name": "DSC_1601_67s.jpg",
+      "file_id": "1mCGdJCugrmTXn337CPQ95qpA5QcVpIdE",
+      "name": "shot_009_medium.mp4",
       "action": "move",
-      "destination_mode": "botanica_place_broll",
-      "pack_folder": null,
-      "pack_subfolder": null,
-      "place_folder": "PLACE_BROLL",
+      "pack_folder": "06_zeus_atro_Zeus_Atro",
+      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "artists_folder": "Zeus Atro",
       "prefer_artists_botanica": false,
-      "confidence": "HUMAN",
-      "reason": "Place/venue only \u2014 no artist assignment necessary"
+      "source_bucket": "EVENT_SELECTS/PERFORMANCE"
     },
     {
-      "file_id": "1I6YCvxTTWFK2bp3Fjnbpb4X7OD4okyto",
-      "name": "DSC_1601_unassigned_stable.mp4",
+      "file_id": "1UIBuNb6DewfYomaSJLNa7gr4bOxAszHx",
+      "name": "shot_009_wide.mp4",
       "action": "move",
-      "destination_mode": "botanica_place_broll",
-      "pack_folder": null,
-      "pack_subfolder": null,
-      "place_folder": "PLACE_BROLL",
+      "pack_folder": "06_zeus_atro_Zeus_Atro",
+      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "artists_folder": "Zeus Atro",
       "prefer_artists_botanica": false,
-      "confidence": "HUMAN",
-      "reason": "Place/venue only \u2014 no artist assignment necessary"
+      "source_bucket": "EVENT_SELECTS/PERFORMANCE"
+    },
+    {
+      "file_id": "1_8RWw1969U7-pHEz3tBjIruetxl0LsTR",
+      "name": "shot_010_close_up.mp4",
+      "action": "move",
+      "pack_folder": "06_zeus_atro_Zeus_Atro",
+      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "artists_folder": "Zeus Atro",
+      "prefer_artists_botanica": false,
+      "source_bucket": "EVENT_SELECTS/PERFORMANCE"
+    },
+    {
+      "file_id": "1I1axNYs3yDulBrv1J0qmemafkxHFmtKH",
+      "name": "shot_014_portrait.mp4",
+      "action": "move",
+      "pack_folder": "10_wako.kungo_Wako_Kungo",
+      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "artists_folder": "Wako Kungo",
+      "prefer_artists_botanica": true,
+      "source_bucket": "EVENT_SELECTS/PERFORMANCE"
+    },
+    {
+      "file_id": "1wrQdeVriS24PTp7Vc-xDxdZitIVIVSVx",
+      "name": "shot_016_close_up.mp4",
+      "action": "skip",
+      "pack_folder": null
+    },
+    {
+      "file_id": "1p-PdYLYrDqKkb6C6fLqvkj56J-Y07NXG",
+      "name": "shot_016_wide.mp4",
+      "action": "skip",
+      "pack_folder": null
+    },
+    {
+      "file_id": "1fg4SKxbePQnCpb48xDmRSuxUakbPEpHN",
+      "name": "shot_018_portrait.mp4",
+      "action": "skip",
+      "pack_folder": null
+    },
+    {
+      "file_id": "1nWi1T_jqpfZVMGp_aCwrfr0YpmCGMLRQ",
+      "name": "shot_024_close_up.mp4",
+      "action": "move",
+      "pack_folder": "09_edoardostatuto_Edo_Edoardo_Statuto",
+      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "artists_folder": "Edo",
+      "prefer_artists_botanica": false,
+      "source_bucket": "EVENT_SELECTS/PERFORMANCE"
+    },
+    {
+      "file_id": "1ZXw21lgSp1nt_3KHHttJdaHaU6K_HAAB",
+      "name": "shot_024_wide.mp4",
+      "action": "move",
+      "pack_folder": "08_mistah_isaac_Mistah_Isaac",
+      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "artists_folder": "Mistah Isaac",
+      "prefer_artists_botanica": false,
+      "source_bucket": "EVENT_SELECTS/PERFORMANCE"
+    },
+    {
+      "file_id": "10rYogLu9pFxmC7eXhDVtvsk9biFLw7mo",
+      "name": "shot_025_medium.mp4",
+      "action": "move",
+      "pack_folder": "11_filipesax_Felippe_Sax",
+      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "artists_folder": "Felippe Sax",
+      "prefer_artists_botanica": true,
+      "source_bucket": "EVENT_SELECTS/PERFORMANCE"
+    },
+    {
+      "file_id": "1p0sigg2UVoK8stMbAOhW1mrRzxsybRw7",
+      "name": "shot_029_medium.mp4",
+      "action": "move",
+      "pack_folder": "08_mistah_isaac_Mistah_Isaac",
+      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "artists_folder": "Mistah Isaac",
+      "prefer_artists_botanica": false,
+      "source_bucket": "EVENT_SELECTS/PERFORMANCE"
+    },
+    {
+      "file_id": "1Qwt7XXzhbMMFtCmile7swag2kbi9EDHV",
+      "name": "shot_031_wide.mp4",
+      "action": "move",
+      "pack_folder": "10_wako.kungo_Wako_Kungo",
+      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "artists_folder": "Wako Kungo",
+      "prefer_artists_botanica": true,
+      "source_bucket": "EVENT_SELECTS/PERFORMANCE"
+    },
+    {
+      "file_id": "1YjUg-yCovvhVEBFrwdRTXQEDK_gSebGK",
+      "name": "shot_033_medium.mp4",
+      "action": "move",
+      "pack_folder": "11_filipesax_Felippe_Sax",
+      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "artists_folder": "Felippe Sax",
+      "prefer_artists_botanica": true,
+      "source_bucket": "EVENT_SELECTS/PERFORMANCE"
+    },
+    {
+      "file_id": "1G4-DW44R3Y1gS9nUjatspc0buSK99h4s",
+      "name": "shot_034_close_up.mp4",
+      "action": "skip",
+      "pack_folder": null
+    },
+    {
+      "file_id": "15A26K0bsSAJwoz4BJPHY_xP4UcOtaLXv",
+      "name": "shot_038_portrait.mp4",
+      "action": "skip",
+      "pack_folder": null
+    },
+    {
+      "file_id": "1oGxRgpXd3CBI_BI383ppYhyTbPw4x7cN",
+      "name": "shot_039_wide.mp4",
+      "action": "skip",
+      "pack_folder": null
     }
   ],
+  "ingested_at": "2026-10-07T16:47:13Z",
   "notes": [
-    "Move to Botanica/PLACE_BROLL (creates folder if missing)",
-    "Does not assign to any BotanicaArtistPack / Artists folder"
+    "Uploaded as unassigned_approvals (7).json \u2014 EVENT_SELECTS PERFORMANCE pass",
+    "Gallery updated: Piano Player TBD, Other Guitar TBD, Crowd + sharper thumbs"
   ]
 }
