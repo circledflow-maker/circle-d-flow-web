@@ -72,82 +72,47 @@
   ],
   "held_for_review": [
     {
-      "file_id": "10PMC5CuHc-gComBiAXkB2j-_tcfJ_J6V",
-      "name": "DSC_1565_25s.jpg",
-      "reason": "ambiguous_or_no_sibling",
-      "sibling_packs": [
-        "02_noua_Noua",
-        "10_wako.kungo_Wako_Kungo"
-      ]
-    },
-    {
-      "file_id": "1fBv5uEg4aBJC_w7MQWzJy61ISqN-YOZC",
-      "name": "DSC_1565_5s.jpg",
-      "reason": "ambiguous_or_no_sibling",
-      "sibling_packs": [
-        "02_noua_Noua",
-        "10_wako.kungo_Wako_Kungo"
-      ]
-    },
-    {
-      "file_id": "1DoEyhTas7odTs8p_sN3TBv8Hj6s7pSRj",
-      "name": "DSC_1568_2s.jpg",
-      "reason": "ambiguous_or_no_sibling",
-      "sibling_packs": []
-    },
-    {
-      "file_id": "1EspCmu-b6AKTvK-_LJjwyhR4IiDKl3FI",
-      "name": "DSC_1568_4s.jpg",
-      "reason": "ambiguous_or_no_sibling",
-      "sibling_packs": []
-    },
-    {
       "file_id": "1PBZFvyEvREhl3JsgIA6Gcz392lSJffjB",
       "name": "DSC_1568_6s.jpg",
-      "reason": "ambiguous_or_no_sibling",
-      "sibling_packs": []
+      "sibling_packs": [],
+      "reason": "post_pass3_remaining"
     },
     {
       "file_id": "1YlOd7hm2IUWgIuwR3CI0gb94cpls4rI1",
       "name": "DSC_1568_8s.jpg",
-      "reason": "ambiguous_or_no_sibling",
-      "sibling_packs": []
+      "sibling_packs": [],
+      "reason": "post_pass3_remaining"
     },
     {
       "file_id": "1uCFPXoYdeG9ZUnNXPX54auZR7T2QhTfL",
       "name": "DSC_1568_unassigned_stable.mp4",
-      "reason": "ambiguous_or_no_sibling",
-      "sibling_packs": []
+      "sibling_packs": [],
+      "reason": "post_pass3_remaining"
     },
     {
       "file_id": "1FqdJo2xJB7lyQAR9NPZtv154130R93rB",
       "name": "DSC_1601_103s.jpg",
-      "reason": "ambiguous_or_no_sibling",
-      "sibling_packs": []
+      "sibling_packs": [],
+      "reason": "post_pass3_remaining"
     },
     {
       "file_id": "1n3pO8TMataTGlkkoSrQenUe79tMvTZ1q",
       "name": "DSC_1601_138s.jpg",
-      "reason": "ambiguous_or_no_sibling",
-      "sibling_packs": []
-    },
-    {
-      "file_id": "1ONWkxXKCN2mnMko0vubXRH4aj2SM5cgf",
-      "name": "DSC_1601_32s.jpg",
-      "reason": "ambiguous_or_no_sibling",
-      "sibling_packs": []
+      "sibling_packs": [],
+      "reason": "post_pass3_remaining"
     },
     {
       "file_id": "1HL89eDWoLDbi2L6wymXgOMVk7uTnhJbB",
       "name": "DSC_1601_67s.jpg",
-      "reason": "ambiguous_or_no_sibling",
-      "sibling_packs": []
+      "sibling_packs": [],
+      "reason": "post_pass3_remaining"
     },
     {
       "file_id": "1I6YCvxTTWFK2bp3Fjnbpb4X7OD4okyto",
       "name": "DSC_1601_unassigned_stable.mp4",
-      "reason": "ambiguous_or_no_sibling",
-      "sibling_packs": []
+      "sibling_packs": [],
+      "reason": "post_pass3_remaining"
     }
-  ]
+  ],
+  "updated_at": "2026-10-07T15:36:03Z"
 }

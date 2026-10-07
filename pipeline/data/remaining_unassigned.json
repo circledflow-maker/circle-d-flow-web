@@ -1,109 +1,90 @@
 {
-  "created_at": "2026-10-05T20:48:15Z",
-  "count": 9,
+  "created_at": "2026-10-07T15:36:03Z",
+  "count": 7,
+  "pass3_pending_execute": true,
+  "pass3_moves": 1,
+  "pass3_skips": 3,
   "items": [
-    {
-      "file_id": "1DoEyhTas7odTs8p_sN3TBv8Hj6s7pSRj",
-      "name": "DSC_1568_2s.jpg",
-      "action": "skip_in_pass2",
-      "cluster": "1568",
-      "thumb_file": "DSC_1568_2s.jpg.jpg",
-      "pack_subfolder": "03_FRAMES",
-      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1DoEyhTas7odTs8p_sN3TBv8Hj6s7pSRj&sz=w400",
-      "kind": "frame",
-      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES"
-    },
     {
       "file_id": "1PBZFvyEvREhl3JsgIA6Gcz392lSJffjB",
       "name": "DSC_1568_6s.jpg",
-      "action": "skip_in_pass2",
       "cluster": "1568",
       "thumb_file": "DSC_1568_6s.jpg.jpg",
       "pack_subfolder": "03_FRAMES",
       "thumbnail_hint": "https://drive.google.com/thumbnail?id=1PBZFvyEvREhl3JsgIA6Gcz392lSJffjB&sz=w400",
       "kind": "frame",
-      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES"
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "status": "needs_visual_review"
     },
     {
       "file_id": "1YlOd7hm2IUWgIuwR3CI0gb94cpls4rI1",
       "name": "DSC_1568_8s.jpg",
-      "action": "skip_in_pass2",
       "cluster": "1568",
       "thumb_file": "DSC_1568_8s.jpg.jpg",
       "pack_subfolder": "03_FRAMES",
       "thumbnail_hint": "https://drive.google.com/thumbnail?id=1YlOd7hm2IUWgIuwR3CI0gb94cpls4rI1&sz=w400",
       "kind": "frame",
-      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES"
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "status": "needs_visual_review"
     },
     {
       "file_id": "1uCFPXoYdeG9ZUnNXPX54auZR7T2QhTfL",
       "name": "DSC_1568_unassigned_stable.mp4",
-      "action": "skip_in_pass2",
       "cluster": "1568",
       "thumb_file": "DSC_1568_unassigned_stable.mp4.jpg",
       "pack_subfolder": "01_VIDEOS_PERFORMANCE",
       "thumbnail_hint": "https://drive.google.com/thumbnail?id=1uCFPXoYdeG9ZUnNXPX54auZR7T2QhTfL&sz=w400",
       "kind": "video",
-      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/VIDEOS"
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/VIDEOS",
+      "status": "needs_visual_review"
     },
     {
       "file_id": "1FqdJo2xJB7lyQAR9NPZtv154130R93rB",
       "name": "DSC_1601_103s.jpg",
-      "action": "missing_from_pass2",
       "cluster": "1601",
       "thumb_file": "DSC_1601_103s.jpg.jpg",
       "pack_subfolder": "03_FRAMES",
       "thumbnail_hint": "https://drive.google.com/thumbnail?id=1FqdJo2xJB7lyQAR9NPZtv154130R93rB&sz=w400",
       "kind": "frame",
-      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES"
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "status": "needs_visual_review"
     },
     {
       "file_id": "1n3pO8TMataTGlkkoSrQenUe79tMvTZ1q",
       "name": "DSC_1601_138s.jpg",
-      "action": "missing_from_pass2",
       "cluster": "1601",
       "thumb_file": "DSC_1601_138s.jpg.jpg",
       "pack_subfolder": "03_FRAMES",
       "thumbnail_hint": "https://drive.google.com/thumbnail?id=1n3pO8TMataTGlkkoSrQenUe79tMvTZ1q&sz=w400",
       "kind": "frame",
-      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES"
-    },
-    {
-      "file_id": "1ONWkxXKCN2mnMko0vubXRH4aj2SM5cgf",
-      "name": "DSC_1601_32s.jpg",
-      "action": "missing_from_pass2",
-      "cluster": "1601",
-      "thumb_file": "DSC_1601_32s.jpg.jpg",
-      "pack_subfolder": "03_FRAMES",
-      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1ONWkxXKCN2mnMko0vubXRH4aj2SM5cgf&sz=w400",
-      "kind": "frame",
-      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES"
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "status": "needs_visual_review"
     },
     {
       "file_id": "1HL89eDWoLDbi2L6wymXgOMVk7uTnhJbB",
       "name": "DSC_1601_67s.jpg",
-      "action": "missing_from_pass2",
       "cluster": "1601",
       "thumb_file": "DSC_1601_67s.jpg.jpg",
       "pack_subfolder": "03_FRAMES",
       "thumbnail_hint": "https://drive.google.com/thumbnail?id=1HL89eDWoLDbi2L6wymXgOMVk7uTnhJbB&sz=w400",
       "kind": "frame",
-      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES"
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "status": "needs_visual_review"
     },
     {
       "file_id": "1I6YCvxTTWFK2bp3Fjnbpb4X7OD4okyto",
       "name": "DSC_1601_unassigned_stable.mp4",
-      "action": "missing_from_pass2",
       "cluster": "1601",
       "thumb_file": "DSC_1601_unassigned_stable.mp4.jpg",
       "pack_subfolder": "01_VIDEOS_PERFORMANCE",
       "thumbnail_hint": "https://drive.google.com/thumbnail?id=1I6YCvxTTWFK2bp3Fjnbpb4X7OD4okyto&sz=w400",
       "kind": "video",
-      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/VIDEOS"
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/VIDEOS",
+      "status": "needs_visual_review"
     }
   ],
   "notes": [
-    "After pass-2: only DSC_1568 leftover skips + DSC_1601 (never in pass-2)",
-    "Use REVIEW_HELD_UNASSIGNED or assign manually"
+    "Pass-3 (1 move + 3 skips) still needs EXECUTE_UNASSIGNED_APPROVALS if not run yet",
+    "These remaining items need another held gallery pass"
   ]
 }
