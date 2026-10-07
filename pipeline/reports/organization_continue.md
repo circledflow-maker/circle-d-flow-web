@@ -1,25 +1,17 @@
-# UNASSIGNED closeout — place B-roll
+# Organization — continue (next frames)
 
-**Updated:** 2026-10-07T15:48:15Z
+**Updated:** 2026-10-07T16:31:01Z
 
-Human confirmed remaining frames are **place/venue only** — no artist assignment.
+UNASSIGNED artist queue closed (place B-roll). Next:
 
-## Move (7) → `Botanica/PLACE_BROLL`
-- `DSC_1568_6s.jpg`
-- `DSC_1568_8s.jpg`
-- `DSC_1568_unassigned_stable.mp4`
-- `DSC_1601_103s.jpg`
-- `DSC_1601_138s.jpg`
-- `DSC_1601_67s.jpg`
-- `DSC_1601_unassigned_stable.mp4`
-
-## Windows
+## EVENT_SELECTS / PERFORMANCE — 44 shots
 ```bat
 cd D:\circle-d-flow-web
 git fetch origin cursor/content-pipeline-org-execute-f46a
 git checkout -f origin/cursor/content-pipeline-org-execute-f46a -- pipeline scripts/content_pipeline
-pipeline\EXECUTE_UNASSIGNED_APPROVALS.cmd
-pipeline\ENSURE_BOTANICA_ARTISTS.cmd
+pipeline\REVIEW_EVENT_SELECTS.cmd
 ```
 
-After this, UNASSIGNED artist-review queue is **clear**.
+VENUE (9) / CROWD (8) / DETAILS (11) stay typed — no artist pass.
+
+If place B-roll + ensure artists not run yet: `pipeline\CONTINUE_ORG.cmd` first.

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>EVENT_SELECTS Performance Review</title>
+<style>
+:root { --bg:#12100e; --ink:#f3ebe0; --muted:#a89884; --line:#3a322a; --gold:#c9a227; --panel:#1c1814; }
+body { margin:0; font-family:"Segoe UI",sans-serif; background:radial-gradient(1000px 500px at 10% -10%,#2a2218,var(--bg)); color:var(--ink); }
+header { position:sticky; top:0; z-index:5; display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between; padding:14px 18px; background:rgba(18,16,14,.92); border-bottom:1px solid var(--line); }
+h1 { margin:0; font-size:1.05rem; color:var(--gold); }
+.meta { color:var(--muted); font-size:.85rem; }
+button { background:var(--gold); color:#1a140c; border:0; border-radius:4px; padding:8px 14px; font-weight:700; cursor:pointer; }
+.refs { display:flex; gap:10px; overflow-x:auto; padding:12px 18px; border-bottom:1px solid var(--line); background:var(--panel); }
+.ref { flex:0 0 auto; width:96px; font-size:.68rem; color:var(--muted); text-align:center; }
+.ref img { width:96px; height:96px; object-fit:cover; border:1px solid var(--line); display:block; margin-bottom:4px; background:#000; }
+main { padding:16px 18px 80px; display:grid; gap:14px; }
+.card { display:grid; grid-template-columns:220px 1fr; gap:14px; background:var(--panel); border:1px solid var(--line); padding:12px; }
+.card img.thumb { width:220px; height:140px; object-fit:cover; background:#000; border:1px solid var(--line); }
+.choices { display:flex; flex-wrap:wrap; gap:6px; }
+.choices label { border:1px solid var(--line); padding:5px 8px; font-size:.75rem; cursor:pointer; border-radius:3px; }
+.choices label:has(input:checked) { border-color:var(--gold); color:var(--gold); }
+.choices input { display:none; }
+@media (max-width:720px) { .card { grid-template-columns:1fr; } .card img.thumb { width:100%; height:180px; } }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>EVENT_SELECTS — PERFORMANCE</h1>
+    <div class="meta">Assign artist · VENUE/CROWD/DETAILS already typed — leave</div>
+  </div>
+  <div class="meta" id="progress">0 reviewed</div>
+  <button type="button" id="btnExport">Download approvals JSON</button>
+</header>
+<section class="refs" id="refs"></section>
+<main id="main"></main>
+<script>
+const DATA = {"created_at": "2026-10-07T16:31:01Z", "title": "EVENT_SELECTS / PERFORMANCE", "artists": [{"folder": "01_lyssa.bl_Lyssa", "label": "Lyssa", "refs": []}, {"folder": "02_noua_Noua", "label": "Noua", "refs": []}, {"folder": "03_chriskristoffer_Chris_Kristoffer", "label": "Chris Kristoffer", "refs": []}, {"folder": "04_diazaofficial_Diaza", "label": "Diaza", "refs": []}, {"folder": "05_joaoredondomaia_Joao_Redondo_Maia", "label": "Jo\u00e3o Redondo Maia", "refs": []}, {"folder": "06_zeus_atro_Zeus_Atro", "label": "Zeus Atro", "refs": []}, {"folder": "07_silso_n6_Silso", "label": "Silso", "refs": []}, {"folder": "08_mistah_isaac_Mistah_Isaac", "label": "Mistah Isaac", "refs": []}, {"folder": "09_edoardostatuto_Edo_Edoardo_Statuto", "label": "Edo", "refs": []}, {"folder": "10_wako.kungo_Wako_Kungo", "label": "Wako Kungo", "refs": []}, {"folder": "11_filipesax_Felippe_Sax", "label": "Felippe Sax", "refs": [{"name": "ARTIST_filipesax_ig.png", "src": "artist_ref_thumbs/11_filipesax_Felippe_Sax/ARTIST_filipesax_ig.png"}, {"name": "REF_performance_sax.png", "src": "artist_ref_thumbs/11_filipesax_Felippe_Sax/REF_performance_sax.png"}]}], "pack_to_artists": {"01_lyssa.bl_Lyssa": "Lyssa", "02_noua_Noua": "Noua", "03_chriskristoffer_Chris_Kristoffer": "Chris Kristoffer", "04_diazaofficial_Diaza": "Diaza", "05_joaoredondomaia_Joao_Redondo_Maia": "Jo\u00e3o Redondo Maia", "06_zeus_atro_Zeus_Atro": "Zeus Atro", "07_silso_n6_Silso": "Silso", "08_mistah_isaac_Mistah_Isaac": "Mistah Isaac", "09_edoardostatuto_Edo_Edoardo_Statuto": "Edo", "10_wako.kungo_Wako_Kungo": "Wako Kungo", "11_filipesax_Felippe_Sax": "Felippe Sax"}, "pref_artists": ["11_filipesax_Felippe_Sax", "10_wako.kungo_Wako_Kungo"], "items": [{"file_id": "1ID0D5C7kQ_Z_ddPJX87cOGGzemH3UTcn", "name": "shot_000_wide.mp4", "kind": "video", "subfolder": "01_VIDEOS_PERFORMANCE", "src": "event_selects_thumbs/shot_000_wide.mp4.jpg", "note": "Botanica/EVENT_SELECTS/PERFORMANCE"}, {"file_id": "1-Ix-H4d08I8ppu2WD57x2Ks_nugJEHkF", "name": "shot_001_medium.mp4", "kind": "video", "subfolder": "01_VIDEOS_PERFORMANCE", "src": "event_selects_thumbs/shot_001_medium.mp4.jpg", "note": "Botanica/EVENT_SELECTS/PERFORMANCE"}, {"file_id": "1BMugZ4mM3ZgHBsNL_UzG5_wfakM2uIco", "name": "shot_001_wide.mp4", "kind": "video", "subfolder": "01_VIDEOS_PERFORMANCE", "src": "event_selects_thumbs/shot_001_wide.mp4.jpg", "note": "Botanica/EVENT_SELECTS/PERFORMANCE"}, {"file_id": "1waXCs_VtWWw536gR7OdyUTba7YtbSIpJ", "name": "shot_002_close_up.mp4", "kind": "video", "subfolder": "01_VIDEOS_PERFORMANCE", "src": "event_selects_thumbs/shot_002_close_up.mp4.jpg", "note": "Botanica/EVENT_SELECTS/PERFORMANCE"}, {"file_id": "1o3NkvzJo_9L4rHv7c1KOinITNlShKZaI", "name": "shot_002_medium.mp4", "kind": "video", "subfolder": "01_VIDEOS_PERFORMANCE", "src": "event_selects_thumbs/shot_002_medium.mp4.jpg", "note": "Botanica/EVENT_SELECTS/PERFORMANCE"}, {"file_id": "1aM-y3zbWgiCisHbjU3id6yQORjjy4tav", "name": "shot_003_portrait.mp4", "kind": "video", "subfolder": "01_VIDEOS_PERFORMANCE", "src": "event_selects_thumbs/shot_003_portrait.mp4.jpg", "note": "Botanica/EVENT_SELECTS/PERFORMANCE"}, {"file_id": "11HtwKIG16CRdgOS2nTVKM3DcJWoIvgfR", "name": "shot_004_wide.mp4", "kind": "video", "subfolder": "01_VIDEOS_PERFORMANCE", "src": "event_selects_thumbs/shot_004_wide.mp4.jpg", "note": "Botanica/EVENT_SELECTS/PERFORMANCE"}, {"file_id": "1fhXg1yCaZ0G7DCBw-OAIflGWLH9Qhvpg", "name": "shot_005_medium.mp4", "kind": "video", "subfolder": "01_VIDEOS_PERFORMANCE", "src": "event_selects_thumbs/shot_005_medium.mp4.jpg", "note": "Botanica/EVENT_SELECTS/PERFORMANCE"}, {"file_id": "1Ie6E0MBSc7_cJJXX5VVb7pXZ8vlzJuGT", "name": "shot_006_wide.mp4", "kind": "video", "subfolder": "01_VIDEOS_PERFORMANCE", "src": "event_selects_thumbs/shot_006_wide.mp4.jpg", "note": "Botanica/EVENT_SELECTS/PERFORMANCE"}, {"file_id": "1q_VZ3yodjsVX0sZjBzOp8Jw7p4_l7Y8p", "name": "shot_008_wide.mp4", "kind": "video", "subfolder": "01_VIDEOS_PERFORMANCE", "src": "event_selects_thumbs/shot_008_wide.mp4.jpg", "note": "Botanica/EVENT_SELECTS/PERFORMANCE"}, {"file_id": "1mCGdJCugrmTXn337CPQ95qpA5QcVpIdE", "name": "shot_009_medium.mp4", "kind": "video", "subfolder": "01_VIDEOS_PERFORMANCE", "src": "event_selects_thumbs/shot_009_medium.mp4.jpg", "note": "Botanica/EVENT_SELECTS/PERFORMANCE"}, {"file_id": "1UIBuNb6DewfYomaSJLNa7gr4bOxAszHx", "name": "shot_009_wide.mp4", "kind": "video", "subfolder": "01_VIDEOS_PERFORMANCE", "src": "event_selects_thumbs/shot_009_wide.mp4.jpg", "note": "Botanica/EVENT_SELECTS/PERFORMANCE"}, {"file_id": "1_8RWw1969U7-pHEz3tBjIruetxl0LsTR", "name": "shot_010_close_up.mp4", "kind": "video", "subfolder": "01_VIDEOS_PERFORMANCE", "src": "event_selects_thumbs/shot_010_close_up.mp4.jpg", "note": "Botanica/EVENT_SELECTS/PERFORMANCE"}, {"file_id": "1ZZn_WLlSWBuVrKEbnJ60kn37W15vQ2_0", "name": "shot_011_portrait.mp4", "kind": "video", "subfolder": "01_VIDEOS_PERFORMANCE", "src": "event_selects_thumbs/shot_011_portrait.mp4.jpg", "note": "Botanica/EVENT_SELECTS/PERFORMANCE"}, {"file_id": "139D9p6VROisnV4rfZlwTeZoJ1KJekdcI", "name": "shot_013_medium.mp4", "kind": "video", "subfolder": "01_VIDEOS_PERFORMANCE", "src": "event_selects_thumbs/shot_013_medium.mp4.jpg", "note": "Botanica/EVENT_SELECTS/PERFORMANCE"}, {"file_id": "1I1axNYs3yDulBrv1J0qmemafkxHFmtKH", "name": "shot_014_portrait.mp4", "kind": "video", "subfolder": "01_VIDEOS_PERFORMANCE", "src": "event_selects_thumbs/shot_014_portrait.mp4.jpg", "note": "Botanica/EVENT_SELECTS/PERFORMANCE"}, {"file_id": "1wrQdeVriS24PTp7Vc-xDxdZitIVIVSVx", "name": "shot_016_close_up.mp4", "kind": "video", "subfolder": "01_VIDEOS_PERFORMANCE", "src": "event_selects_thumbs/shot_016_close_up.mp4.jpg", "note": "Botanica/EVENT_SELECTS/PERFORMANCE"}, {"file_id": "1p-PdYLYrDqKkb6C6fLqvkj56J-Y07NXG", "name": "shot_016_wide.mp4", "kind": "video", "subfolder": "01_VIDEOS_PERFORMANCE", "src": "event_selects_thumbs/shot_016_wide.mp4.jpg", "note": "Botanica/EVENT_SELECTS/PERFORMANCE"}, {"file_id": "14TWeEeqwL12L5usMlqoZqk-XQSmBksLM", "name": "shot_017_medium.mp4", "kind": "video", "subfolder": "01_VIDEOS_PERFORMANCE", "src": "event_selects_thumbs/shot_017_medium.mp4.jpg", "note": "Botanica/EVENT_SELECTS/PERFORMANCE"}, {"file_id": "1E0OKaMxTLbjYO47Hfk1uUD6FSCyd48WX", "name": "shot_018_close_up.mp4", "kind": "video", "subfolder": "01_VIDEOS_PERFORMANCE", "src": "event_selects_thumbs/shot_018_close_up.mp4.jpg", "note": "Botanica/EVENT_SELECTS/PERFORMANCE"}, {"file_id": "1fg4SKxbePQnCpb48xDmRSuxUakbPEpHN", "name": "shot_018_portrait.mp4", "kind": "video", "subfolder": "01_VIDEOS_PERFORMANCE", "src": "event_selects_thumbs/shot_018_portrait.mp4.jpg", "note": "Botanica/EVENT_SELECTS/PERFORMANCE"}, {"file_id": "1dKHC3I4hv479SXn0zSdpo9azDSBcmq8S", "name": "shot_019_close_up.mp4", "kind": "video", "subfolder": "01_VIDEOS_PERFORMANCE", "src": "event_selects_thumbs/shot_019_close_up.mp4.jpg", "note": "Botanica/EVENT_SELECTS/PERFORMANCE"}, {"file_id": "1UViVo4sgL-_B18xSOSNoDM2N88sANElV", "name": "shot_019_portrait.mp4", "kind": "video", "subfolder": "01_VIDEOS_PERFORMANCE", "src": "event_selects_thumbs/shot_019_portrait.mp4.jpg", "note": "Botanica/EVENT_SELECTS/PERFORMANCE"}, {"file_id": "1uqFI75bU77o_F2KenNmE7gHg1rH2VuzT", "name": "shot_020_medium.mp4", "kind": "video", "subfolder": "01_VIDEOS_PERFORMANCE", "src": "event_selects_thumbs/shot_020_medium.mp4.jpg", "note": "Botanica/EVENT_SELECTS/PERFORMANCE"}, {"file_id": "1cTQpnKozo9TA9CnYjcTszPSmZMf6ZOdC", "name": "shot_021_medium.mp4", "kind": "video", "subfolder": "01_VIDEOS_PERFORMANCE", "src": "event_selects_thumbs/shot_021_medium.mp4.jpg", "note": "Botanica/EVENT_SELECTS/PERFORMANCE"}, {"file_id": "1ROlI91opHwqnq86VBXdagWtAZDIe0ozx", "name": "shot_023_wide.mp4", "kind": "video", "subfolder": "01_VIDEOS_PERFORMANCE", "src": "event_selects_thumbs/shot_023_wide.mp4.jpg", "note": "Botanica/EVENT_SELECTS/PERFORMANCE"}, {"file_id": "1nWi1T_jqpfZVMGp_aCwrfr0YpmCGMLRQ", "name": "shot_024_close_up.mp4", "kind": "video", "subfolder": "01_VIDEOS_PERFORMANCE", "src": "event_selects_thumbs/shot_024_close_up.mp4.jpg", "note": "Botanica/EVENT_SELECTS/PERFORMANCE"}, {"file_id": "1ZXw21lgSp1nt_3KHHttJdaHaU6K_HAAB", "name": "shot_024_wide.mp4", "kind": "video", "subfolder": "01_VIDEOS_PERFORMANCE", "src": "event_selects_thumbs/shot_024_wide.mp4.jpg", "note": "Botanica/EVENT_SELECTS/PERFORMANCE"}, {"file_id": "10rYogLu9pFxmC7eXhDVtvsk9biFLw7mo", "name": "shot_025_medium.mp4", "kind": "video", "subfolder": "01_VIDEOS_PERFORMANCE", "src": "event_selects_thumbs/shot_025_medium.mp4.jpg", "note": "Botanica/EVENT_SELECTS/PERFORMANCE"}, {"file_id": "1VckhI1QvIRPBu-WYA6nAInAeRKV7YP3_", "name": "shot_026_close_up.mp4", "kind": "video", "subfolder": "01_VIDEOS_PERFORMANCE", "src": "event_selects_thumbs/shot_026_close_up.mp4.jpg", "note": "Botanica/EVENT_SELECTS/PERFORMANCE"}, {"file_id": "1wk_YOyNroE8GG2KW8CizotFGkmEkKKE0", "name": "shot_027_portrait.mp4", "kind": "video", "subfolder": "01_VIDEOS_PERFORMANCE", "src": "event_selects_thumbs/shot_027_portrait.mp4.jpg", "note": "Botanica/EVENT_SELECTS/PERFORMANCE"}, {"file_id": "1DafJlkX9xNxE6dwpc0RqtGhnrNjSe6uN", "name": "shot_028_wide.mp4", "kind": "video", "subfolder": "01_VIDEOS_PERFORMANCE", "src": "event_selects_thumbs/shot_028_wide.mp4.jpg", "note": "Botanica/EVENT_SELECTS/PERFORMANCE"}, {"file_id": "1p0sigg2UVoK8stMbAOhW1mrRzxsybRw7", "name": "shot_029_medium.mp4", "kind": "video", "subfolder": "01_VIDEOS_PERFORMANCE", "src": "event_selects_thumbs/shot_029_medium.mp4.jpg", "note": "Botanica/EVENT_SELECTS/PERFORMANCE"}, {"file_id": "1Qwt7XXzhbMMFtCmile7swag2kbi9EDHV", "name": "shot_031_wide.mp4", "kind": "video", "subfolder": "01_VIDEOS_PERFORMANCE", "src": "event_selects_thumbs/shot_031_wide.mp4.jpg", "note": "Botanica/EVENT_SELECTS/PERFORMANCE"}, {"file_id": "1HMsUmN11L6ur_KuWiCIxqw1Y-XHt-M26", "name": "shot_032_close_up.mp4", "kind": "video", "subfolder": "01_VIDEOS_PERFORMANCE", "src": "event_selects_thumbs/shot_032_close_up.mp4.jpg", "note": "Botanica/EVENT_SELECTS/PERFORMANCE"}, {"file_id": "1HMzKGIdVQm7j6P9eSaXGT6REYZygMp1j", "name": "shot_032_wide.mp4", "kind": "video", "subfolder": "01_VIDEOS_PERFORMANCE", "src": "event_selects_thumbs/shot_032_wide.mp4.jpg", "note": "Botanica/EVENT_SELECTS/PERFORMANCE"}, {"file_id": "1YjUg-yCovvhVEBFrwdRTXQEDK_gSebGK", "name": "shot_033_medium.mp4", "kind": "video", "subfolder": "01_VIDEOS_PERFORMANCE", "src": "event_selects_thumbs/shot_033_medium.mp4.jpg", "note": "Botanica/EVENT_SELECTS/PERFORMANCE"}, {"file_id": "1G4-DW44R3Y1gS9nUjatspc0buSK99h4s", "name": "shot_034_close_up.mp4", "kind": "video", "subfolder": "01_VIDEOS_PERFORMANCE", "src": "event_selects_thumbs/shot_034_close_up.mp4.jpg", "note": "Botanica/EVENT_SELECTS/PERFORMANCE"}, {"file_id": "1Za7ww_kuPQGeN04xrZe0cf11aqCVdA_s", "name": "shot_035_portrait.mp4", "kind": "video", "subfolder": "01_VIDEOS_PERFORMANCE", "src": "event_selects_thumbs/shot_035_portrait.mp4.jpg", "note": "Botanica/EVENT_SELECTS/PERFORMANCE"}, {"file_id": "1ZjKu-OJs4be6AuMBrTgCDIQSSdq9-kaL", "name": "shot_035_wide.mp4", "kind": "video", "subfolder": "01_VIDEOS_PERFORMANCE", "src": "event_selects_thumbs/shot_035_wide.mp4.jpg", "note": "Botanica/EVENT_SELECTS/PERFORMANCE"}, {"file_id": "1c8Vq4FIiL1ja2BdjqQgWGPi4sAf4QLPb", "name": "shot_036_close_up.mp4", "kind": "video", "subfolder": "01_VIDEOS_PERFORMANCE", "src": "event_selects_thumbs/shot_036_close_up.mp4.jpg", "note": "Botanica/EVENT_SELECTS/PERFORMANCE"}, {"file_id": "15A26K0bsSAJwoz4BJPHY_xP4UcOtaLXv", "name": "shot_038_portrait.mp4", "kind": "video", "subfolder": "01_VIDEOS_PERFORMANCE", "src": "event_selects_thumbs/shot_038_portrait.mp4.jpg", "note": "Botanica/EVENT_SELECTS/PERFORMANCE"}, {"file_id": "1oGxRgpXd3CBI_BI383ppYhyTbPw4x7cN", "name": "shot_039_wide.mp4", "kind": "video", "subfolder": "01_VIDEOS_PERFORMANCE", "src": "event_selects_thumbs/shot_039_wide.mp4.jpg", "note": "Botanica/EVENT_SELECTS/PERFORMANCE"}, {"file_id": "1O37pkKYx-vrzuu1KRbp-9dzFKBu-VBiX", "name": "shot_041_portrait.mp4", "kind": "video", "subfolder": "01_VIDEOS_PERFORMANCE", "src": "event_selects_thumbs/shot_041_portrait.mp4.jpg", "note": "Botanica/EVENT_SELECTS/PERFORMANCE"}]};
+const state = {};
+function renderRefs() {
+  const el = document.getElementById('refs');
+  el.innerHTML = '';
+  for (const a of DATA.artists) {
+    for (const r of a.refs) {
+      const d = document.createElement('div');
+      d.className = 'ref';
+      d.innerHTML = `<img src="${r.src}" alt="${a.label}" loading="lazy"/><div>${a.label}</div>`;
+      el.appendChild(d);
+    }
+  }
+}
+function count() {
+  const done = DATA.items.filter(i => state[i.file_id] !== undefined).length;
+  const moves = DATA.items.filter(i => state[i.file_id]).length;
+  document.getElementById('progress').textContent = done + ' / ' + DATA.items.length + ' reviewed · ' + moves + ' to move';
+}
+function render() {
+  const main = document.getElementById('main');
+  main.innerHTML = '';
+  for (const item of DATA.items) {
+    const card = document.createElement('article');
+    card.className = 'card';
+    const choices = [...DATA.artists.map(a => ({v:a.folder,l:a.label})), {v:'',l:'SKIP / keep in PERFORMANCE'}];
+    card.innerHTML = `
+      <img class="thumb" src="${item.src}" alt="${item.name}" loading="lazy"/>
+      <div>
+        <h2 style="margin:0 0 6px;font-size:.95rem">${item.name}</h2>
+        <div class="meta" style="margin-bottom:8px">${item.note}</div>
+        <div class="choices">${choices.map(c => `<label><input type="radio" name="${item.file_id}" value="${c.v}"/> ${c.l}</label>`).join('')}</div>
+      </div>`;
+    main.appendChild(card);
+    card.querySelectorAll('input').forEach(inp => {
+      inp.addEventListener('change', () => { state[item.file_id] = inp.value; count(); });
+    });
+  }
+  count();
+}
+document.getElementById('btnExport').onclick = () => {
+  const assignments = [];
+  for (const item of DATA.items) {
+    if (!(item.file_id in state)) continue;
+    const pack = state[item.file_id];
+    if (!pack) {
+      assignments.push({file_id:item.file_id, name:item.name, action:'skip', pack_folder:null});
+      continue;
+    }
+    assignments.push({
+      file_id: item.file_id,
+      name: item.name,
+      action: 'move',
+      pack_folder: pack,
+      pack_subfolder: item.subfolder,
+      artists_folder: DATA.pack_to_artists[pack] || null,
+      prefer_artists_botanica: DATA.pref_artists.includes(pack),
+      source_bucket: 'EVENT_SELECTS/PERFORMANCE',
+    });
+  }
+  const out = {
+    created_at: new Date().toISOString(),
+    source: 'event_selects_performance_gallery',
+    policy: 'Human-approved EVENT_SELECTS performance assignments',
+    assignments,
+  };
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(out,null,2)], {type:'application/json'}));
+  a.download = 'unassigned_approvals.json';
+  a.click();
+};
+renderRefs(); render();
+</script>
+</body>
+</html>
