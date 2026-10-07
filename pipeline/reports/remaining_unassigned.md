@@ -1,11 +1,3 @@
-# Remaining after pass-4
+# Remaining UNASSIGNED
 
-**Count:** 7
-
-- `DSC_1568_6s.jpg`
-- `DSC_1568_8s.jpg`
-- `DSC_1568_unassigned_stable.mp4`
-- `DSC_1601_103s.jpg`
-- `DSC_1601_138s.jpg`
-- `DSC_1601_67s.jpg`
-- `DSC_1601_unassigned_stable.mp4`
+**Count:** 0 — closed as place B-roll (2026-10-07T15:48:15Z)

@@ -31,6 +31,7 @@ LIST_KW = {"supportsAllDrives": True, "includeItemsFromAllDrives": True}
 FILE_KW = {"supportsAllDrives": True}
 
 BOTANICA_PACK_ROOT = "1Ss3ypxTiJgTCW-ucsLLbjEbG653RuRbk"
+BOTANICA_PROJECT_ROOT = "1itnbL-aVGQtY7BHDVCGDmsa8sQni1v8r"  # Botanica/
 ARTISTS_ROOT = "1OLOk__QJ2TWVvcgnhu9wEV4rYF6ALc7Q"
 WAKO_ARTIST_ID = "1oDFvtuC1-aQTxUe7i4AZZx12EvVLvX0j"
 
@@ -190,7 +191,17 @@ def resolve_dest(
     dry: bool,
     artists_cache: dict[str, str],
 ) -> tuple[str, str]:
-    pack = assignment["pack_folder"]
+    # Place/venue B-roll — no artist (Botanica/PLACE_BROLL)
+    if assignment.get("destination_mode") == "botanica_place_broll" or (
+        not assignment.get("pack_folder") and assignment.get("place_folder")
+    ):
+        place_name = assignment.get("place_folder") or "PLACE_BROLL"
+        dest = ensure_folder(service, place_name, BOTANICA_PROJECT_ROOT, dry=dry)
+        return dest, f"Botanica/{place_name}"
+
+    pack = assignment.get("pack_folder")
+    if not pack:
+        raise SystemExit(f"Assignment missing pack_folder: {assignment.get('name')}")
     sub = assignment.get("pack_subfolder") or "03_FRAMES"
 
     if assignment.get("prefer_artists_botanica") and pack in ARTISTS_BOTANICA:
@@ -232,10 +243,16 @@ def main() -> int:
     assignments = [a for a in data.get("assignments") or [] if a.get("action") == "move"]
     skipped = sum(1 for a in data.get("assignments") or [] if a.get("action") == "skip")
 
+    place_n = sum(
+        1
+        for a in assignments
+        if a.get("destination_mode") == "botanica_place_broll" or a.get("place_folder")
+    )
     print(f"Mode: {'DRY-RUN' if dry else 'EXECUTE'}")
-    print(f"To move: {len(assignments)}  skipped: {skipped}")
+    print(f"To move: {len(assignments)}  skipped: {skipped}  place_broll: {place_n}")
     filippe = sum(1 for a in assignments if a.get("pack_folder") == "11_filipesax_Felippe_Sax")
-    print(f"Felippe Sax assignments: {filippe}")
+    if filippe:
+        print(f"Felippe Sax assignments: {filippe}")
     if not assignments:
         print("Nothing to move.")
         return 0
@@ -245,7 +262,12 @@ def main() -> int:
     artists_cache: dict[str, str] = {}
     results = []
     for i, a in enumerate(assignments, 1):
-        print(f"[{i}/{len(assignments)}] {a.get('name')} → {a.get('pack_folder')}")
+        dest_label = (
+            f"Botanica/{a.get('place_folder') or 'PLACE_BROLL'}"
+            if a.get("destination_mode") == "botanica_place_broll" or a.get("place_folder")
+            else a.get("pack_folder")
+        )
+        print(f"[{i}/{len(assignments)}] {a.get('name')} → {dest_label}")
         try:
             dest_id, label = resolve_dest(service, a, pack_ids, dry=dry, artists_cache=artists_cache)
             r = move_file(service, a["file_id"], dest_id, dry=dry)
@@ -264,6 +286,7 @@ def main() -> int:
         "dry_run": sum(1 for r in results if r.get("status") == "dry_run"),
         "errors": sum(1 for r in results if r.get("status") == "error"),
         "skipped_in_approvals": skipped,
+        "place_broll": place_n,
         "felippe_sax": filippe,
         "results": results,
         "notes": data.get("notes") or [],
