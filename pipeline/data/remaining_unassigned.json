@@ -1,9 +1,8 @@
 {
-  "created_at": "2026-10-07T15:36:03Z",
+  "created_at": "2026-10-07T15:41:18Z",
   "count": 7,
-  "pass3_pending_execute": true,
-  "pass3_moves": 1,
-  "pass3_skips": 3,
+  "pass4_moves": 1,
+  "pass4_skips": 3,
   "items": [
     {
       "file_id": "1PBZFvyEvREhl3JsgIA6Gcz392lSJffjB",
@@ -84,7 +83,6 @@
     }
   ],
   "notes": [
-    "Pass-3 (1 move + 3 skips) still needs EXECUTE_UNASSIGNED_APPROVALS if not run yet",
-    "These remaining items need another held gallery pass"
+    "After pass-4 ingest; execute pass-4 next"
   ]
 }
