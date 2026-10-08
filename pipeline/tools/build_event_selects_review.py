@@ -305,14 +305,38 @@ def main() -> int:
         action="store_true",
         help="Re-download thumbs at sz=w1920 (fixes soft/cropped previews)",
     )
+    ap.add_argument(
+        "--remaining-only",
+        action="store_true",
+        help="Only show items listed in pipeline/data/event_selects_remaining.json",
+    )
     args = ap.parse_args()
 
     buckets = load_event_selects()
     perf = buckets.get("PERFORMANCE") or []
+    rem_path = DATA / "event_selects_remaining.json"
+    if args.remaining_only and rem_path.exists():
+        rem = json.loads(rem_path.read_text(encoding="utf-8"))
+        want = {i["file_id"] for i in rem.get("items") or []}
+        # Prefer remaining metadata; fall back to inventory PERFORMANCE
+        by_id = {i["file_id"]: i for i in perf}
+        filtered = []
+        for item in rem.get("items") or []:
+            base = by_id.get(item["file_id"], {})
+            merged = {**base, **item}
+            if not merged.get("thumb_file"):
+                merged["thumb_file"] = f"{safe_name(merged.get('name') or 'file')}.jpg"
+            if not merged.get("pack_subfolder"):
+                merged["pack_subfolder"] = "01_VIDEOS_PERFORMANCE"
+            if not merged.get("parent_folder_path"):
+                merged["parent_folder_path"] = "Botanica/EVENT_SELECTS/PERFORMANCE"
+            filtered.append(merged)
+        perf = filtered
+        print(f"Remaining-only filter: {len(perf)} items")
     now = utc_now()
     pack = {
         "created_at": now,
-        "batch": "event_selects_performance",
+        "batch": "event_selects_performance_remaining" if args.remaining_only else "event_selects_performance",
         "performance_count": len(perf),
         "leave_typed": {
             "VENUE": len(buckets.get("VENUE") or []),
@@ -320,7 +344,7 @@ def main() -> int:
             "DETAILS": len(buckets.get("DETAILS") or []),
         },
         "policy": [
-            "PERFORMANCE → artist review gallery",
+            "PERFORMANCE → artist review gallery (Piano/Guitar TBD + Crowd available)",
             "VENUE / CROWD_WIDE / DETAILS already typed — leave in EVENT_SELECTS",
         ],
         "items": perf,

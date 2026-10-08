@@ -1,5 +1,5 @@
-# UNASSIGNED pass-2 execution
+# EVENT_SELECTS pass-3 execution
 
-**Moved:** 46/46
+**Moved:** 23/23
 **Errors:** 0
-**Confirmed:** 2026-10-05
+**Confirmed:** 2026-10-08T23:11:33Z
