@@ -1,17 +1,21 @@
-# Organization — continue (next frames)
+# Organization — continue (no more PERFORMANCE assign)
 
-**Updated:** 2026-10-08T23:17:53Z
+**Updated:** 2026-10-08T23:20:08Z
 
-UNASSIGNED artist queue closed (place B-roll). Next:
+## Closed
+EVENT_SELECTS PERFORMANCE artist assignment **stopped by request**.
+9 leftovers stay in `Botanica/EVENT_SELECTS/PERFORMANCE` (no move).
 
-## EVENT_SELECTS / PERFORMANCE — 9 shots
-```bat
-cd D:\circle-d-flow-web
+## Next frames / next step
+**1) Ensure Botanica Artists folders** (recommended now):
+```powershell
 git fetch origin cursor/content-pipeline-org-execute-f46a
 git checkout -f origin/cursor/content-pipeline-org-execute-f46a -- pipeline scripts/content_pipeline
-pipeline\REVIEW_EVENT_SELECTS.cmd
+pipeline\ENSURE_BOTANICA_ARTISTS.cmd
 ```
 
-VENUE (9) / CROWD (8) / DETAILS (11) stay typed — no artist pass.
+Creates/syncs Arpan schema + `events/Botanica` for Felippe, Noua, Diaza, João, Lyssa, Zeus, Silso, Piano TBD, etc.
 
-If place B-roll + ensure artists not run yet: `pipeline\CONTINUE_ORG.cmd` first.
+**2) After that** — Phase 5 lite (proxy/ears QA) or optional DETAILS tagging later.
+
+VENUE / CROWD_WIDE / DETAILS already typed — leave.

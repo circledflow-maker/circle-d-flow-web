@@ -1,11 +1,10 @@
 # EVENT_SELECTS remaining
 
-**Count:** 11
+**Closed:** 2026-10-08T23:20:08Z — no further artist assignment.
 
+Left in PERFORMANCE:
 - `shot_008_wide.mp4`
 - `shot_011_portrait.mp4`
-- `shot_013_medium.mp4`
-- `shot_018_close_up.mp4`
 - `shot_018_portrait.mp4`
 - `shot_019_close_up.mp4`
 - `shot_019_portrait.mp4`

@@ -1,24 +1,9 @@
 {
-  "created_at": "2026-10-08T23:15:59.150Z",
-  "source": "event_selects_performance_gallery",
-  "policy": "Human-approved EVENT_SELECTS performance assignments (incl. Piano/Guitar TBD + Crowd)",
-  "assignments": [
-    {
-      "file_id": "139D9p6VROisnV4rfZlwTeZoJ1KJekdcI",
-      "name": "shot_013_medium.mp4",
-      "action": "skip",
-      "pack_folder": null
-    },
-    {
-      "file_id": "1E0OKaMxTLbjYO47Hfk1uUD6FSCyd48WX",
-      "name": "shot_018_close_up.mp4",
-      "action": "skip",
-      "pack_folder": null
-    }
-  ],
-  "ingested_at": "2026-10-08T23:17:32Z",
+  "created_at": "2026-10-08T23:20:08Z",
+  "source": "performance_assignment_closed",
+  "policy": "No further PERFORMANCE artist assignment",
+  "assignments": [],
   "notes": [
-    "Uploaded as unassigned_approvals (10).json \u2014 remaining PERFORMANCE pass",
-    "Normalized Wako/Felippe prefer + crowd/piano/guitar roles"
+    "Queue closed by user \u2014 continue next frames"
   ]
 }

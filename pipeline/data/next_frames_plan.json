@@ -1,0 +1,32 @@
+{
+  "created_at": "2026-10-08T23:20:08Z",
+  "performance_assignment": "CLOSED",
+  "left_in_performance": [
+    "shot_008_wide.mp4",
+    "shot_011_portrait.mp4",
+    "shot_018_portrait.mp4",
+    "shot_019_close_up.mp4",
+    "shot_019_portrait.mp4",
+    "shot_020_medium.mp4",
+    "shot_032_wide.mp4",
+    "shot_034_close_up.mp4",
+    "shot_036_close_up.mp4"
+  ],
+  "recommended_next": [
+    {
+      "id": "ensure_botanica_artists",
+      "action": "pipeline\\ENSURE_BOTANICA_ARTISTS.cmd",
+      "why": "Create/sync Artists folders + events/Botanica for lineup (Felippe, Noua, Diaza, Piano TBD, \u2026)"
+    },
+    {
+      "id": "event_selects_details_optional",
+      "bucket": "Botanica/EVENT_SELECTS/DETAILS",
+      "count": 11,
+      "why": "Instrument/detail clips \u2014 optional role tagging later, not required now"
+    },
+    {
+      "id": "phase5_proxy_qa",
+      "why": "Lightweight ears/proxy QA on assigned PERFORMANCE packs \u2014 no full masters"
+    }
+  ]
+}
