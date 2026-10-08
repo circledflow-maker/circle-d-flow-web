@@ -1,18 +1,24 @@
-# Phase 4 complete → Phase 5 lite
+# Phase 5 lite — complete
 
-**Updated:** 2026-10-08T23:27:05Z
+**Updated:** 2026-10-08T23:29:18Z
 
-## Phase 4 — DONE
-Drive organization + Botanica Artists ensure finished.
+| Stage | Result |
+|-------|--------|
+| Project Detection | ok (4 projects, 8 Arpan nodes) |
+| QA Metadata Gates | ok (**0 blockers**) |
+| Reporting | ok (report at end) |
 
-## Phase 5 lite — next (metadata / ears sample, no full masters)
+Render stages still gated.
+
+## Optional next
+**A) Ears on local Botanica proxies** (no Drive masters):
 ```powershell
-git fetch origin cursor/content-pipeline-org-execute-f46a
-git checkout -f origin/cursor/content-pipeline-org-execute-f46a -- pipeline scripts/content_pipeline
-pipeline\PHASE5_LITE.cmd
+python pipeline\tools\orchestrate.py --only 4 --execute --local-root "D:\Wakungo_Content_Studio\Botanica"
 ```
 
-Runs orchestrator dry stages: project detect, QA metadata gates, reporting.
-Optional local ears sample only if `--local-root` has proxies (never downloads masters).
+**B) Refresh Drive inventory** (metadata crawl):
+```powershell
+python pipeline\tools\orchestrate.py --only 1 --execute
+```
 
-Heavy render (recap / YouTube) stays gated behind `--allow-render --execute`.
+**C) Stop here** — Phase 4 org + Phase 5 QA green. Recap/YouTube only with explicit `--allow-render --execute`.

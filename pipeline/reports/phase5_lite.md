@@ -1,16 +1,7 @@
-# Phase 5 lite
+# Phase 5 lite — COMPLETE
 
-**Created:** 2026-10-08T23:27:05Z
+**Confirmed:** 2026-10-08T23:29:18Z
 
-## Scope
-- Metadata QA gates
-- Reporting
-- Optional ears on **local proxies only** (no Drive master download)
-
-## Out of scope here
-- Full EVENT recap render
-- YouTube 16:9 master encode
-- Face-sort re-run
-
-## Windows
-`pipeline\PHASE5_LITE.cmd`
+- QA blockers: **0**
+- Report: `pipeline/reports/orchestrator_run_report.md`
+- Next optional: ears local (`--only 4`) or Drive rediscovery (`--only 1`)
