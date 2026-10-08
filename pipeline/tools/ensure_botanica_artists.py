@@ -75,6 +75,16 @@ ENSURE = [
         "pack_folder": "07_silso_n6_Silso",
         "aliases": ["silso", "silso_n6"],
     },
+    {
+        "name": "Piano Player",
+        "pack_folder": "12_piano_player_TBD",
+        "aliases": ["piano player", "piano", "pianist"],
+    },
+    {
+        "name": "Other Guitar",
+        "pack_folder": "13_other_guitar_TBD",
+        "aliases": ["other guitar", "other guitarplayer", "guitar player tbd"],
+    },
 ]
 
 
