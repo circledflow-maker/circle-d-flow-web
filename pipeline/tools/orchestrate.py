@@ -337,10 +337,11 @@ def main() -> int:
             continue
 
         if script.endswith("orchestrate.py") and "--internal-report" in (callable_.get("args") or []):
-            # written at end
-            status = "deferred_end"
-            run["stages"].append({"id": sid, "name": s["name"], "status": status})
-            print(f"[{sid}] deferred: {s['name']}")
+            # Always materialized at end via write_run_report() — not a failure.
+            status = "ok_end"
+            detail = "report written after stage loop"
+            run["stages"].append({"id": sid, "name": s["name"], "status": status, "detail": detail})
+            print(f"[{sid}] ok: {s['name']} (finalized at end)")
             continue
 
         if callable_.get("mode") == "per_file_optional" and not variables.get("sample_media_path"):
