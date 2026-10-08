@@ -1,7 +1,7 @@
 {
-  "created_at": "2026-10-08T23:13:02Z",
+  "created_at": "2026-10-08T23:17:53Z",
   "batch": "event_selects_performance_remaining",
-  "performance_count": 11,
+  "performance_count": 9,
   "leave_typed": {
     "VENUE": 9,
     "CROWD_WIDE": 8,
@@ -32,30 +32,6 @@
       "thumbnail_hint": "https://drive.google.com/thumbnail?id=1ZZn_WLlSWBuVrKEbnJ60kn37W15vQ2_0&sz=w400",
       "url": "https://drive.google.com/file/d/1ZZn_WLlSWBuVrKEbnJ60kn37W15vQ2_0/view",
       "thumb_file": "shot_011_portrait.mp4.jpg",
-      "kind": "video",
-      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
-      "status": "skip"
-    },
-    {
-      "file_id": "139D9p6VROisnV4rfZlwTeZoJ1KJekdcI",
-      "name": "shot_013_medium.mp4",
-      "parent_folder_path": "Botanica/EVENT_SELECTS/PERFORMANCE",
-      "extension": ".mp4",
-      "thumbnail_hint": "https://drive.google.com/thumbnail?id=139D9p6VROisnV4rfZlwTeZoJ1KJekdcI&sz=w400",
-      "url": "https://drive.google.com/file/d/139D9p6VROisnV4rfZlwTeZoJ1KJekdcI/view",
-      "thumb_file": "shot_013_medium.mp4.jpg",
-      "kind": "video",
-      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
-      "status": "skip"
-    },
-    {
-      "file_id": "1E0OKaMxTLbjYO47Hfk1uUD6FSCyd48WX",
-      "name": "shot_018_close_up.mp4",
-      "parent_folder_path": "Botanica/EVENT_SELECTS/PERFORMANCE",
-      "extension": ".mp4",
-      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1E0OKaMxTLbjYO47Hfk1uUD6FSCyd48WX&sz=w400",
-      "url": "https://drive.google.com/file/d/1E0OKaMxTLbjYO47Hfk1uUD6FSCyd48WX/view",
-      "thumb_file": "shot_018_close_up.mp4.jpg",
       "kind": "video",
       "pack_subfolder": "01_VIDEOS_PERFORMANCE",
       "status": "skip"

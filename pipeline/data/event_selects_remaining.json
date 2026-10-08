@@ -1,6 +1,6 @@
 {
-  "created_at": "2026-10-08T23:11:33Z",
-  "count": 11,
+  "created_at": "2026-10-08T23:17:32Z",
+  "count": 9,
   "items": [
     {
       "file_id": "1q_VZ3yodjsVX0sZjBzOp8Jw7p4_l7Y8p",
@@ -19,26 +19,6 @@
       "thumbnail_hint": "https://drive.google.com/thumbnail?id=1ZZn_WLlSWBuVrKEbnJ60kn37W15vQ2_0&sz=w400",
       "status": "skip",
       "thumb_file": "shot_011_portrait.mp4.jpg",
-      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
-      "kind": "video"
-    },
-    {
-      "file_id": "139D9p6VROisnV4rfZlwTeZoJ1KJekdcI",
-      "name": "shot_013_medium.mp4",
-      "parent_folder_path": "Botanica/EVENT_SELECTS/PERFORMANCE",
-      "thumbnail_hint": "https://drive.google.com/thumbnail?id=139D9p6VROisnV4rfZlwTeZoJ1KJekdcI&sz=w400",
-      "status": "skip",
-      "thumb_file": "shot_013_medium.mp4.jpg",
-      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
-      "kind": "video"
-    },
-    {
-      "file_id": "1E0OKaMxTLbjYO47Hfk1uUD6FSCyd48WX",
-      "name": "shot_018_close_up.mp4",
-      "parent_folder_path": "Botanica/EVENT_SELECTS/PERFORMANCE",
-      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1E0OKaMxTLbjYO47Hfk1uUD6FSCyd48WX&sz=w400",
-      "status": "skip",
-      "thumb_file": "shot_018_close_up.mp4.jpg",
       "pack_subfolder": "01_VIDEOS_PERFORMANCE",
       "kind": "video"
     },
@@ -114,8 +94,6 @@
     }
   ],
   "notes": [
-    "After pass-3 execute 23/23",
-    "Remaining = latest skips + never-reviewed PERFORMANCE shots",
-    "Inventory may be stale until re-crawl"
+    "After approvals (10) ingest"
   ]
 }

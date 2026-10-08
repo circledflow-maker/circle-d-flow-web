@@ -1,55 +1,11 @@
 {
-  "created_at": "2026-10-07T16:55:37.483Z",
+  "created_at": "2026-10-08T23:05:11.970Z",
   "source": "event_selects_performance_gallery",
   "policy": "Human-approved EVENT_SELECTS performance assignments (incl. Piano/Guitar TBD + Crowd)",
   "assignments": [
     {
       "file_id": "1ID0D5C7kQ_Z_ddPJX87cOGGzemH3UTcn",
       "name": "shot_000_wide.mp4",
-      "action": "move",
-      "pack_folder": "08_mistah_isaac_Mistah_Isaac",
-      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
-      "artists_folder": "Mistah Isaac",
-      "prefer_artists_botanica": false,
-      "destination_mode": null,
-      "source_bucket": "EVENT_SELECTS/PERFORMANCE"
-    },
-    {
-      "file_id": "1BMugZ4mM3ZgHBsNL_UzG5_wfakM2uIco",
-      "name": "shot_001_wide.mp4",
-      "action": "move",
-      "pack_folder": "02_noua_Noua",
-      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
-      "artists_folder": "Noua",
-      "prefer_artists_botanica": false,
-      "destination_mode": null,
-      "source_bucket": "EVENT_SELECTS/PERFORMANCE"
-    },
-    {
-      "file_id": "1waXCs_VtWWw536gR7OdyUTba7YtbSIpJ",
-      "name": "shot_002_close_up.mp4",
-      "action": "move",
-      "pack_folder": "02_noua_Noua",
-      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
-      "artists_folder": "Noua",
-      "prefer_artists_botanica": false,
-      "destination_mode": null,
-      "source_bucket": "EVENT_SELECTS/PERFORMANCE"
-    },
-    {
-      "file_id": "1aM-y3zbWgiCisHbjU3id6yQORjjy4tav",
-      "name": "shot_003_portrait.mp4",
-      "action": "move",
-      "pack_folder": "08_mistah_isaac_Mistah_Isaac",
-      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
-      "artists_folder": "Mistah Isaac",
-      "prefer_artists_botanica": false,
-      "destination_mode": null,
-      "source_bucket": "EVENT_SELECTS/PERFORMANCE"
-    },
-    {
-      "file_id": "11HtwKIG16CRdgOS2nTVKM3DcJWoIvgfR",
-      "name": "shot_004_wide.mp4",
       "action": "move",
       "pack_folder": "10_wako.kungo_Wako_Kungo",
       "pack_subfolder": "01_VIDEOS_PERFORMANCE",
@@ -59,13 +15,25 @@
       "source_bucket": "EVENT_SELECTS/PERFORMANCE"
     },
     {
-      "file_id": "1fhXg1yCaZ0G7DCBw-OAIflGWLH9Qhvpg",
-      "name": "shot_005_medium.mp4",
+      "file_id": "1-Ix-H4d08I8ppu2WD57x2Ks_nugJEHkF",
+      "name": "shot_001_medium.mp4",
+      "action": "skip",
+      "pack_folder": null
+    },
+    {
+      "file_id": "1BMugZ4mM3ZgHBsNL_UzG5_wfakM2uIco",
+      "name": "shot_001_wide.mp4",
+      "action": "skip",
+      "pack_folder": null
+    },
+    {
+      "file_id": "1waXCs_VtWWw536gR7OdyUTba7YtbSIpJ",
+      "name": "shot_002_close_up.mp4",
       "action": "move",
-      "pack_folder": "11_filipesax_Felippe_Sax",
+      "pack_folder": "02_noua_Noua",
       "pack_subfolder": "01_VIDEOS_PERFORMANCE",
-      "artists_folder": "Felippe Sax",
-      "prefer_artists_botanica": true,
+      "artists_folder": "Noua",
+      "prefer_artists_botanica": false,
       "destination_mode": null,
       "source_bucket": "EVENT_SELECTS/PERFORMANCE"
     },
@@ -103,18 +71,6 @@
       "source_bucket": "EVENT_SELECTS/PERFORMANCE"
     },
     {
-      "file_id": "1ZZn_WLlSWBuVrKEbnJ60kn37W15vQ2_0",
-      "name": "shot_011_portrait.mp4",
-      "action": "skip",
-      "pack_folder": null
-    },
-    {
-      "file_id": "139D9p6VROisnV4rfZlwTeZoJ1KJekdcI",
-      "name": "shot_013_medium.mp4",
-      "action": "skip",
-      "pack_folder": null
-    },
-    {
       "file_id": "1I1axNYs3yDulBrv1J0qmemafkxHFmtKH",
       "name": "shot_014_portrait.mp4",
       "action": "move",
@@ -139,20 +95,41 @@
     {
       "file_id": "1p-PdYLYrDqKkb6C6fLqvkj56J-Y07NXG",
       "name": "shot_016_wide.mp4",
-      "action": "skip",
-      "pack_folder": null
+      "action": "move",
+      "pack_folder": "crowd",
+      "pack_subfolder": null,
+      "artists_folder": "Crowd",
+      "prefer_artists_botanica": false,
+      "destination_mode": "event_selects_crowd",
+      "source_bucket": "EVENT_SELECTS/PERFORMANCE"
     },
     {
-      "file_id": "1E0OKaMxTLbjYO47Hfk1uUD6FSCyd48WX",
-      "name": "shot_018_close_up.mp4",
-      "action": "skip",
-      "pack_folder": null
+      "file_id": "14TWeEeqwL12L5usMlqoZqk-XQSmBksLM",
+      "name": "shot_017_medium.mp4",
+      "action": "move",
+      "pack_folder": "13_other_guitar_TBD",
+      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "artists_folder": "Other Guitar",
+      "prefer_artists_botanica": false,
+      "destination_mode": null,
+      "source_bucket": "EVENT_SELECTS/PERFORMANCE"
     },
     {
       "file_id": "1fg4SKxbePQnCpb48xDmRSuxUakbPEpHN",
       "name": "shot_018_portrait.mp4",
       "action": "skip",
       "pack_folder": null
+    },
+    {
+      "file_id": "1cTQpnKozo9TA9CnYjcTszPSmZMf6ZOdC",
+      "name": "shot_021_medium.mp4",
+      "action": "move",
+      "pack_folder": "13_other_guitar_TBD",
+      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "artists_folder": "Other Guitar",
+      "prefer_artists_botanica": false,
+      "destination_mode": null,
+      "source_bucket": "EVENT_SELECTS/PERFORMANCE"
     },
     {
       "file_id": "1ROlI91opHwqnq86VBXdagWtAZDIe0ozx",
@@ -166,45 +143,12 @@
       "source_bucket": "EVENT_SELECTS/PERFORMANCE"
     },
     {
-      "file_id": "1nWi1T_jqpfZVMGp_aCwrfr0YpmCGMLRQ",
-      "name": "shot_024_close_up.mp4",
-      "action": "move",
-      "pack_folder": "09_edoardostatuto_Edo_Edoardo_Statuto",
-      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
-      "artists_folder": "Edo",
-      "prefer_artists_botanica": false,
-      "destination_mode": null,
-      "source_bucket": "EVENT_SELECTS/PERFORMANCE"
-    },
-    {
-      "file_id": "1ZXw21lgSp1nt_3KHHttJdaHaU6K_HAAB",
-      "name": "shot_024_wide.mp4",
-      "action": "move",
-      "pack_folder": "10_wako.kungo_Wako_Kungo",
-      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
-      "artists_folder": "Wako Kungo",
-      "prefer_artists_botanica": true,
-      "destination_mode": null,
-      "source_bucket": "EVENT_SELECTS/PERFORMANCE"
-    },
-    {
       "file_id": "10rYogLu9pFxmC7eXhDVtvsk9biFLw7mo",
       "name": "shot_025_medium.mp4",
       "action": "move",
       "pack_folder": "11_filipesax_Felippe_Sax",
       "pack_subfolder": "01_VIDEOS_PERFORMANCE",
       "artists_folder": "Felippe Sax",
-      "prefer_artists_botanica": true,
-      "destination_mode": null,
-      "source_bucket": "EVENT_SELECTS/PERFORMANCE"
-    },
-    {
-      "file_id": "1VckhI1QvIRPBu-WYA6nAInAeRKV7YP3_",
-      "name": "shot_026_close_up.mp4",
-      "action": "move",
-      "pack_folder": "10_wako.kungo_Wako_Kungo",
-      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
-      "artists_folder": "Wako Kungo",
       "prefer_artists_botanica": true,
       "destination_mode": null,
       "source_bucket": "EVENT_SELECTS/PERFORMANCE"
@@ -246,10 +190,10 @@
       "file_id": "1Qwt7XXzhbMMFtCmile7swag2kbi9EDHV",
       "name": "shot_031_wide.mp4",
       "action": "move",
-      "pack_folder": "10_wako.kungo_Wako_Kungo",
+      "pack_folder": "08_mistah_isaac_Mistah_Isaac",
       "pack_subfolder": "01_VIDEOS_PERFORMANCE",
-      "artists_folder": "Wako Kungo",
-      "prefer_artists_botanica": true,
+      "artists_folder": "Mistah Isaac",
+      "prefer_artists_botanica": false,
       "destination_mode": null,
       "source_bucket": "EVENT_SELECTS/PERFORMANCE"
     },
@@ -263,12 +207,6 @@
       "prefer_artists_botanica": false,
       "destination_mode": "event_selects_crowd",
       "source_bucket": "EVENT_SELECTS/PERFORMANCE"
-    },
-    {
-      "file_id": "1HMzKGIdVQm7j6P9eSaXGT6REYZygMp1j",
-      "name": "shot_032_wide.mp4",
-      "action": "skip",
-      "pack_folder": null
     },
     {
       "file_id": "1YjUg-yCovvhVEBFrwdRTXQEDK_gSebGK",
@@ -318,23 +256,28 @@
       "file_id": "1oGxRgpXd3CBI_BI383ppYhyTbPw4x7cN",
       "name": "shot_039_wide.mp4",
       "action": "move",
+      "pack_folder": "11_filipesax_Felippe_Sax",
+      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "artists_folder": "Felippe Sax",
+      "prefer_artists_botanica": true,
+      "destination_mode": null,
+      "source_bucket": "EVENT_SELECTS/PERFORMANCE"
+    },
+    {
+      "file_id": "1O37pkKYx-vrzuu1KRbp-9dzFKBu-VBiX",
+      "name": "shot_041_portrait.mp4",
+      "action": "move",
       "pack_folder": "crowd",
       "pack_subfolder": null,
       "artists_folder": "Crowd",
       "prefer_artists_botanica": false,
       "destination_mode": "event_selects_crowd",
       "source_bucket": "EVENT_SELECTS/PERFORMANCE"
-    },
-    {
-      "file_id": "1O37pkKYx-vrzuu1KRbp-9dzFKBu-VBiX",
-      "name": "shot_041_portrait.mp4",
-      "action": "skip",
-      "pack_folder": null
     }
   ],
-  "ingested_at": "2026-10-07T16:56:46Z",
+  "ingested_at": "2026-10-08T23:07:35Z",
   "notes": [
-    "Uploaded as unassigned_approvals (8).json",
+    "Uploaded as unassigned_approvals (9).json \u2014 EVENT_SELECTS pass-3",
     "Normalized Wako/Felippe prefer + crowd/piano/guitar roles"
   ]
 }

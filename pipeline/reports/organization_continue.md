@@ -1,10 +1,10 @@
 # Organization — continue (next frames)
 
-**Updated:** 2026-10-08T23:13:02Z
+**Updated:** 2026-10-08T23:17:53Z
 
 UNASSIGNED artist queue closed (place B-roll). Next:
 
-## EVENT_SELECTS / PERFORMANCE — 11 shots
+## EVENT_SELECTS / PERFORMANCE — 9 shots
 ```bat
 cd D:\circle-d-flow-web
 git fetch origin cursor/content-pipeline-org-execute-f46a
