@@ -1,14 +1,14 @@
 # Content Pipeline — Orchestrator Run Report
 
-**Created:** 2026-09-29T05:18:40Z
-**Mode:** dry_run
+**Created:** 2026-10-08T23:27:12Z
+**Mode:** execute
 **Allow render:** False
-**Execute:** False
+**Execute:** True
 
 ## Stages
 
 - **2. Project Detection** — `ok` — projects=4 arpan_nodes=8
-- **5. QA Metadata Gates** — `ok_dry_computed` — ok=True blockers=0
+- **5. QA Metadata Gates** — `ok` — blockers=0
 - **11. Reporting** — `deferred_end`
 
 ## Policy

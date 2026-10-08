@@ -1,21 +1,18 @@
-# Organization — continue (no more PERFORMANCE assign)
+# Phase 4 complete → Phase 5 lite
 
-**Updated:** 2026-10-08T23:20:08Z
+**Updated:** 2026-10-08T23:27:05Z
 
-## Closed
-EVENT_SELECTS PERFORMANCE artist assignment **stopped by request**.
-9 leftovers stay in `Botanica/EVENT_SELECTS/PERFORMANCE` (no move).
+## Phase 4 — DONE
+Drive organization + Botanica Artists ensure finished.
 
-## Next frames / next step
-**1) Ensure Botanica Artists folders** (recommended now):
+## Phase 5 lite — next (metadata / ears sample, no full masters)
 ```powershell
 git fetch origin cursor/content-pipeline-org-execute-f46a
 git checkout -f origin/cursor/content-pipeline-org-execute-f46a -- pipeline scripts/content_pipeline
-pipeline\ENSURE_BOTANICA_ARTISTS.cmd
+pipeline\PHASE5_LITE.cmd
 ```
 
-Creates/syncs Arpan schema + `events/Botanica` for Felippe, Noua, Diaza, João, Lyssa, Zeus, Silso, Piano TBD, etc.
+Runs orchestrator dry stages: project detect, QA metadata gates, reporting.
+Optional local ears sample only if `--local-root` has proxies (never downloads masters).
 
-**2) After that** — Phase 5 lite (proxy/ears QA) or optional DETAILS tagging later.
-
-VENUE / CROWD_WIDE / DETAILS already typed — leave.
+Heavy render (recap / YouTube) stays gated behind `--allow-render --execute`.
