@@ -1,10 +1,10 @@
 # EVENT_SELECTS — next frames
 
-**Created:** 2026-10-07T16:47:13Z
+**Created:** 2026-10-08T23:13:02Z
 
 | Bucket | Count | Action |
 |--------|------:|--------|
-| PERFORMANCE | 44 | artist review gallery |
+| PERFORMANCE | 11 | artist review gallery |
 | VENUE | 9 | leave (typed) |
 | CROWD_WIDE | 8 | leave (typed) |
 | DETAILS | 11 | leave (typed) |
