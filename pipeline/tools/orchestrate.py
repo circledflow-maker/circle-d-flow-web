@@ -34,6 +34,38 @@ def load_cfg() -> dict[str, Any]:
     return json.loads(CFG_PATH.read_text(encoding="utf-8"))
 
 
+_MEDIA_EXTS = {".mp4", ".mov", ".m4v", ".mkv", ".avi", ".webm", ".wav", ".mp3", ".m4a", ".aac"}
+
+
+def _pick_sample_media(root: Path, limit_scan: int = 400) -> Optional[Path]:
+    """Pick a local media file for ears smoke sample. Prefer compressed/proxy paths."""
+    if not root.exists():
+        return None
+    prefer_parts = ("proxy", "proxies", "compressed", "03_proxies", "04_videos_compressed", "event_selects")
+    found: list[Path] = []
+    preferred: list[Path] = []
+    n = 0
+    for p in root.rglob("*"):
+        if not p.is_file():
+            continue
+        if p.suffix.lower() not in _MEDIA_EXTS:
+            continue
+        n += 1
+        low = str(p).lower().replace("\\", "/")
+        if any(x in low for x in prefer_parts):
+            preferred.append(p)
+        else:
+            found.append(p)
+        if n >= limit_scan:
+            break
+    pool = preferred or found
+    if not pool:
+        return None
+    # Prefer smaller files (likely proxies)
+    pool.sort(key=lambda x: x.stat().st_size if x.exists() else 1 << 60)
+    return pool[0]
+
+
 def fill(args: list[str], variables: dict[str, str]) -> list[str]:
     out = []
     for a in args:
