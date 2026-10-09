@@ -133,19 +133,24 @@ def match_proposed(
 
 def inventory_media(root: Path, limit: int = 0) -> list[Path]:
     items: list[Path] = []
-    for p in sorted(root.rglob("*")):
-        if not p.is_file():
-            continue
+    try:
+        walker = root.rglob("*")
+    except OSError as e:
+        print(f"WARN: cannot scan {root}: {e}")
+        return items
+    for p in sorted(walker):
         try:
+            if not p.is_file():
+                continue
             rel = p.relative_to(root)
             if any(part in SKIP_DIR for part in rel.parts):
                 continue
-        except ValueError:
+        except (ValueError, OSError):
             continue
         if p.suffix.lower() not in VIDEO_EXT | AUDIO_EXT | PHOTO_EXT:
             continue
         if p.name.lower().startswith("botanica_90s"):
-            continue  # finished masters — not intake sources
+            continue  # finished masters - not intake sources
         items.append(p)
         if limit and len(items) >= limit:
             break
@@ -309,7 +314,27 @@ def print_arpan_inventory() -> None:
         print(f"  events/{ev}: {len(data.get('files') or [])} files")
 
 
+def _configure_stdio() -> None:
+    """Avoid UnicodeEncodeError on Windows cp1252 consoles (arrows/accents)."""
+    for stream in (sys.stdout, sys.stderr):
+        try:
+            stream.reconfigure(encoding="utf-8", errors="replace")  # type: ignore[attr-defined]
+        except Exception:
+            pass
+
+
+def _safe_text(s: str) -> str:
+    """Best-effort ASCII-safe console text when reconfigure is unavailable."""
+    enc = getattr(sys.stdout, "encoding", None) or "utf-8"
+    try:
+        s.encode(enc)
+        return s
+    except UnicodeEncodeError:
+        return s.encode(enc, errors="replace").decode(enc, errors="replace")
+
+
 def main() -> int:
+    _configure_stdio()
     ap = argparse.ArgumentParser(description="Content Pipeline intake+sort (ears+names)")
     ap.add_argument("--source", type=Path, default=None, help="Local new-upload root (Botanica)")
     ap.add_argument("--event", type=str, default="Botanica 90s", help="Event leaf under events/")
@@ -325,13 +350,27 @@ def main() -> int:
     ap.add_argument("--out", type=Path, default=None, help="Write plan JSON")
     args = ap.parse_args()
 
+    try:
+        return _run(args)
+    except Exception as e:  # noqa: BLE001
+        print(f"ERROR: intake_sort failed: {type(e).__name__}: {e}", file=sys.stderr)
+        import traceback
+
+        traceback.print_exc()
+        return 1
+
+
+def _run(args: argparse.Namespace) -> int:
     registry = load_registry()
     drive = load_drive_ids()
 
-    print("Content Pipeline — Intake+Sort")
+    print("Content Pipeline - Intake+Sort")
     print(f"Drive root: {drive['root']['name']} ({drive['root']['id']})")
     print(f"Artists:    {len(registry.get('artists') or [])} registered from Drive")
-    print(f"Schema:     Arpan → {', '.join(drive['reference_artist']['schema_folders'])}")
+    print(
+        "Schema:     Arpan -> "
+        + ", ".join(drive["reference_artist"]["schema_folders"])
+    )
 
     if args.artist and args.artist.lower() == "arpan":
         print_arpan_inventory()
@@ -342,7 +381,7 @@ def main() -> int:
         print_arpan_inventory()
         print("\nDrive Artists registry:")
         for a in registry.get("artists") or []:
-            print(f"  - {a['name']}  [{a.get('id')}]")
+            print(f"  - {_safe_text(a['name'])}  [{a.get('id')}]")
         return 0
 
     source = args.source or default_source()
@@ -358,7 +397,7 @@ def main() -> int:
             "event": args.event,
             "items": [],
             "drive_create_proposals": [],
-            "note": "source missing here — proposals only",
+            "note": "source missing here - proposals only",
         }
         for p in registry.get("botanica_lineup_proposals") or []:
             plan["drive_create_proposals"].append(
@@ -372,25 +411,27 @@ def main() -> int:
                 }
             )
         out = args.out or (HERE / "LAST_PLAN.json")
+        out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(json.dumps(plan, indent=2), encoding="utf-8")
-        print(f"Wrote proposals → {out}")
+        print(f"Wrote proposals -> {out}")
         print("STOP: no local media to analyze in this environment.")
         return 0
 
     listen_audio = args.listen and not args.no_listen
     media = inventory_media(source, limit=args.limit)
-    print(f"01 — Inventory: {len(media)} media files (limit={args.limit})")
+    print(f"01 - Inventory: {len(media)} media files (limit={args.limit})")
 
     items: list[dict[str, Any]] = []
-    print("02 — Analyze (ears + name)…")
+    print("02 - Analyze (ears + name)...")
     for i, p in enumerate(media, 1):
         it = classify_item(p, registry, args.event, listen_audio=listen_audio)
         items.append(it)
         ear = it["ears"]
-        print(
-            f"  [{i:02d}] {it['name'][:40]:40} → {it['action']:22} "
-            f"{it['artist'][:22]:22} ears={ear.get('class')} → {it['dest_rel'][:60]}"
+        line = (
+            f"  [{i:02d}] {it['name'][:40]:40} -> {it['action']:22} "
+            f"{it['artist'][:22]:22} ears={ear.get('class')} -> {it['dest_rel'][:60]}"
         )
+        print(_safe_text(line))
 
     # Aggregate Drive create proposals
     create_names = sorted({it["artist"] for it in items if it["action"] == "create_artist_then_sort"})
@@ -425,11 +466,11 @@ def main() -> int:
     staging = args.staging or (source / "00_work" / "content_pipeline_staging")
     apply_stats = None
     if args.apply:
-        print(f"03 — APPLY local staging → {staging}")
+        print(f"03 - APPLY local staging -> {staging}")
         apply_stats = apply_local(items, staging)
         print(f"   {apply_stats}")
     else:
-        print("03 — DRY RUN (no files moved). Pass --apply for local hardlink staging.")
+        print("03 - DRY RUN (no files moved). Pass --apply for local hardlink staging.")
 
     plan = {
         "created_at": utc_now(),
@@ -461,18 +502,22 @@ def main() -> int:
     out = args.out or (source / "ANALYSIS" / "content_pipeline_intake_plan.json")
     try:
         out.parent.mkdir(parents=True, exist_ok=True)
-        out.write_text(json.dumps(plan, indent=2), encoding="utf-8")
+        out.write_text(json.dumps(plan, indent=2, ensure_ascii=False), encoding="utf-8")
     except OSError:
         out = HERE / "LAST_PLAN.json"
-        out.write_text(json.dumps(plan, indent=2), encoding="utf-8")
+        try:
+            out.write_text(json.dumps(plan, indent=2, ensure_ascii=False), encoding="utf-8")
+        except OSError as e:
+            print(f"ERROR: cannot write plan JSON: {e}", file=sys.stderr)
+            return 1
 
-    print(f"\nPlan → {out}")
+    print(f"\nPlan -> {out}")
     print("Summary:", json.dumps(plan["summary"], indent=2))
     if drive_creates:
-        print(f"Drive CREATE proposals ({len(drive_creates)}) — not executed:")
+        print(f"Drive CREATE proposals ({len(drive_creates)}) - not executed:")
         for d in drive_creates:
-            print(f"  + Artists/{d['name']}/  (schema from Arpan)")
-    print("\nSTOP — awaiting approval before Drive folder creation or any render.")
+            print(_safe_text(f"  + Artists/{d['name']}/  (schema from Arpan)"))
+    print("\nSTOP - awaiting approval before Drive folder creation or any render.")
     return 0
 
 

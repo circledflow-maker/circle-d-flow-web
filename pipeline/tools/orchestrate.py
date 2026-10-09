@@ -37,21 +37,49 @@ def load_cfg() -> dict[str, Any]:
 _MEDIA_EXTS = {".mp4", ".mov", ".m4v", ".mkv", ".avi", ".webm", ".wav", ".mp3", ".m4a", ".aac"}
 
 
+_SKIP_SAMPLE_PARTS = (
+    "00_work",
+    "recap_tmp",
+    "/cards/",
+    "\\cards\\",
+    "analysis",
+    "__pycache__",
+    ".git",
+    "drive_upload",
+)
+
+
 def _pick_sample_media(root: Path, limit_scan: int = 400) -> Optional[Path]:
     """Pick a local media file for ears smoke sample. Prefer compressed/proxy paths."""
     if not root.exists():
         return None
-    prefer_parts = ("proxy", "proxies", "compressed", "03_proxies", "04_videos_compressed", "event_selects")
+    prefer_parts = (
+        "proxy",
+        "proxies",
+        "compressed",
+        "03_proxies",
+        "04_videos_compressed",
+        "event_selects",
+    )
     found: list[Path] = []
     preferred: list[Path] = []
     n = 0
-    for p in root.rglob("*"):
-        if not p.is_file():
+    try:
+        walker = root.rglob("*")
+    except OSError:
+        return None
+    for p in walker:
+        try:
+            if not p.is_file():
+                continue
+        except OSError:
             continue
         if p.suffix.lower() not in _MEDIA_EXTS:
             continue
-        n += 1
         low = str(p).lower().replace("\\", "/")
+        if any(x in low for x in _SKIP_SAMPLE_PARTS):
+            continue
+        n += 1
         if any(x in low for x in prefer_parts):
             preferred.append(p)
         else:
@@ -62,7 +90,13 @@ def _pick_sample_media(root: Path, limit_scan: int = 400) -> Optional[Path]:
     if not pool:
         return None
     # Prefer smaller files (likely proxies)
-    pool.sort(key=lambda x: x.stat().st_size if x.exists() else 1 << 60)
+    def _size(x: Path) -> int:
+        try:
+            return x.stat().st_size
+        except OSError:
+            return 1 << 60
+
+    pool.sort(key=_size)
     return pool[0]
 
 
@@ -227,7 +261,9 @@ def run_cmd(cmd: list[str], dry: bool) -> tuple[int, str]:
         return 0, "dry_run"
     try:
         r = subprocess.run(cmd, cwd=str(ROOT), capture_output=True, text=True)
-        detail = (r.stderr or r.stdout or "")[-500:]
+        # Combine streams so Windows UnicodeEncodeError (stderr) is visible with stdout.
+        combined = "\n".join(x for x in (r.stdout or "", r.stderr or "") if x).strip()
+        detail = combined[-1200:] if combined else ""
         return r.returncode, detail
     except Exception as e:  # noqa: BLE001
         return 2, str(e)
@@ -416,16 +452,27 @@ def main() -> int:
             {"id": sid, "name": s["name"], "status": status, "detail": detail, "cmd": cmd, "cost": s.get("cost")}
         )
         print(f"[{sid}] {status}: {s['name']}")
+        if code != 0 and detail and not dry:
+            # Surface failure tail so Windows console shows root cause without opening JSON.
+            print("--- stage output (tail) ---")
+            print(detail)
+            print("--- end stage output ---")
 
     # Always write run report
     report_path = write_run_report(run)
     run_path = DATA / "orchestrator_last_run.json"
     DATA.mkdir(parents=True, exist_ok=True)
     run_path.write_text(json.dumps(run, indent=2), encoding="utf-8")
-    print(f"\nRun JSON → {run_path}")
-    print(f"Report  → {report_path}")
+    print(f"\nRun JSON -> {run_path}")
+    print(f"Report  -> {report_path}")
     print("STOP: render stages remain gated unless --allow-render --execute")
-    return 0
+    failed = [
+        s
+        for s in run["stages"]
+        if str(s.get("status") or "").startswith("exit_")
+        or s.get("status") in ("missing_script", "error_no_script", "qa_failed")
+    ]
+    return 1 if failed else 0
 
 
 if __name__ == "__main__":
