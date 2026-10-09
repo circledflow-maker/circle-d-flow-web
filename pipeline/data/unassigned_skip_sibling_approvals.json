@@ -1,0 +1,76 @@
+{
+  "created_at": "2026-10-03T12:10:31Z",
+  "source": "skip_sibling_inference",
+  "policy": "MEDIUM \u2014 single-sibling skips only; human may edit before execute",
+  "assignments": [
+    {
+      "file_id": "1nn0ioN_eFzWHfShukAqj-9EmxFkv8pgZ",
+      "name": "DSC_1551_unassigned_stable.mp4",
+      "action": "move",
+      "pack_folder": "09_edoardostatuto_Edo_Edoardo_Statuto",
+      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "artists_folder": "Edo",
+      "prefer_artists_botanica": false,
+      "confidence": "MEDIUM",
+      "reason": "Single sibling artist on DSC_1551: 09_edoardostatuto_Edo_Edoardo_Statuto"
+    },
+    {
+      "file_id": "1LX79-KYjuVT7mQ74xkNXXOHA_1gCVOQ-",
+      "name": "DSC_1560_2s.jpg",
+      "action": "move",
+      "pack_folder": "02_noua_Noua",
+      "pack_subfolder": "03_FRAMES",
+      "artists_folder": "Noua",
+      "prefer_artists_botanica": false,
+      "confidence": "MEDIUM",
+      "reason": "Single sibling artist on DSC_1560: 02_noua_Noua"
+    },
+    {
+      "file_id": "129piy1r5QYDcb9RMWj5RviHmHSO0Esn0",
+      "name": "DSC_1562_5s.jpg",
+      "action": "move",
+      "pack_folder": "05_joaoredondomaia_Joao_Redondo_Maia",
+      "pack_subfolder": "03_FRAMES",
+      "artists_folder": "Jo\u00e3o Redondo Maia",
+      "prefer_artists_botanica": false,
+      "confidence": "MEDIUM",
+      "reason": "Single sibling artist on DSC_1562: 05_joaoredondomaia_Joao_Redondo_Maia"
+    },
+    {
+      "file_id": "1bKBwBk9NOsKSbBi1YTNFXM_GNrjjTiON",
+      "name": "DSC_1562_unassigned_stable.mp4",
+      "action": "move",
+      "pack_folder": "05_joaoredondomaia_Joao_Redondo_Maia",
+      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "artists_folder": "Jo\u00e3o Redondo Maia",
+      "prefer_artists_botanica": false,
+      "confidence": "MEDIUM",
+      "reason": "Single sibling artist on DSC_1562: 05_joaoredondomaia_Joao_Redondo_Maia"
+    },
+    {
+      "file_id": "1Ohvk9eBEYNC3RIlZv_UWU_luc5K1agvE",
+      "name": "DSC_1564_5s.jpg",
+      "action": "move",
+      "pack_folder": "02_noua_Noua",
+      "pack_subfolder": "03_FRAMES",
+      "artists_folder": "Noua",
+      "prefer_artists_botanica": false,
+      "confidence": "MEDIUM",
+      "reason": "Single sibling artist on DSC_1564: 02_noua_Noua"
+    },
+    {
+      "file_id": "1ftbNPxBBmC98Uuv982O_mX_qfAk0cEv2",
+      "name": "DSC_1564_unassigned_stable.mp4",
+      "action": "move",
+      "pack_folder": "02_noua_Noua",
+      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "artists_folder": "Noua",
+      "prefer_artists_botanica": false,
+      "confidence": "MEDIUM",
+      "reason": "Single sibling artist on DSC_1564: 02_noua_Noua"
+    }
+  ],
+  "held_for_review": [],
+  "updated_at": "2026-10-07T15:48:15Z",
+  "closeout": "place_broll"
+}

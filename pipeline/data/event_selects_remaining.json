@@ -1,0 +1,49 @@
+{
+  "created_at": "2026-10-08T23:20:08Z",
+  "count": 0,
+  "closed": true,
+  "closed_reason": "human_skip_no_more_artist_assignment",
+  "closed_items": [
+    {
+      "file_id": "1q_VZ3yodjsVX0sZjBzOp8Jw7p4_l7Y8p",
+      "name": "shot_008_wide.mp4"
+    },
+    {
+      "file_id": "1ZZn_WLlSWBuVrKEbnJ60kn37W15vQ2_0",
+      "name": "shot_011_portrait.mp4"
+    },
+    {
+      "file_id": "1fg4SKxbePQnCpb48xDmRSuxUakbPEpHN",
+      "name": "shot_018_portrait.mp4"
+    },
+    {
+      "file_id": "1dKHC3I4hv479SXn0zSdpo9azDSBcmq8S",
+      "name": "shot_019_close_up.mp4"
+    },
+    {
+      "file_id": "1UViVo4sgL-_B18xSOSNoDM2N88sANElV",
+      "name": "shot_019_portrait.mp4"
+    },
+    {
+      "file_id": "1uqFI75bU77o_F2KenNmE7gHg1rH2VuzT",
+      "name": "shot_020_medium.mp4"
+    },
+    {
+      "file_id": "1HMzKGIdVQm7j6P9eSaXGT6REYZygMp1j",
+      "name": "shot_032_wide.mp4"
+    },
+    {
+      "file_id": "1G4-DW44R3Y1gS9nUjatspc0buSK99h4s",
+      "name": "shot_034_close_up.mp4"
+    },
+    {
+      "file_id": "1c8Vq4FIiL1ja2BdjqQgWGPi4sAf4QLPb",
+      "name": "shot_036_close_up.mp4"
+    }
+  ],
+  "items": [],
+  "notes": [
+    "User opted out of further PERFORMANCE artist assignment",
+    "Leftovers stay in Botanica/EVENT_SELECTS/PERFORMANCE"
+  ]
+}

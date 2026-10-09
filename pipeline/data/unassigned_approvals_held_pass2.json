@@ -1,0 +1,536 @@
+{
+  "created_at": "2026-10-05T20:41:19.844Z",
+  "source": "unassigned_review_gallery",
+  "policy": "Human-approved assignments only",
+  "assignments": [
+    {
+      "file_id": "1iasjJGnLlwko9zrPsnqQVEeJMQbK4dzo",
+      "name": "DSC_1546_edit.jpg",
+      "action": "skip",
+      "pack_folder": null
+    },
+    {
+      "file_id": "1cNRt7DkLUIcnhxfejySmaqfBGKEm6v_h",
+      "name": "DSC_1547_edit.jpg",
+      "action": "move",
+      "pack_folder": "10_wako.kungo_Wako_Kungo",
+      "pack_subfolder": "02_PORTRAITS",
+      "artists_folder": "Wako Kungo",
+      "prefer_artists_botanica": true
+    },
+    {
+      "file_id": "14pMQZz0tW3QD6m1KqTn4V_9v1TsxTgbW",
+      "name": "DSC_1548_edit.jpg",
+      "action": "skip",
+      "pack_folder": null
+    },
+    {
+      "file_id": "10-ziK8tTfN6DIGXkAJ4wKIOxNyyYxhV1",
+      "name": "DSC_1551_1s.jpg",
+      "action": "move",
+      "pack_folder": "09_edoardostatuto_Edo_Edoardo_Statuto",
+      "pack_subfolder": "03_FRAMES",
+      "artists_folder": "Edo",
+      "prefer_artists_botanica": false
+    },
+    {
+      "file_id": "1fvC_-qS4ni50gA7YxevSUWMW7LBXBzxw",
+      "name": "DSC_1551_2s.jpg",
+      "action": "move",
+      "pack_folder": "09_edoardostatuto_Edo_Edoardo_Statuto",
+      "pack_subfolder": "03_FRAMES",
+      "artists_folder": "Edo",
+      "prefer_artists_botanica": false
+    },
+    {
+      "file_id": "1nn0ioN_eFzWHfShukAqj-9EmxFkv8pgZ",
+      "name": "DSC_1551_unassigned_stable.mp4",
+      "action": "skip",
+      "pack_folder": null
+    },
+    {
+      "file_id": "1TvJZoYVs9cUYG7dCtO6Uo4Sabkmiel4g",
+      "name": "DSC_1560_1s.jpg",
+      "action": "move",
+      "pack_folder": "10_wako.kungo_Wako_Kungo",
+      "pack_subfolder": "03_FRAMES",
+      "artists_folder": "Wako Kungo",
+      "prefer_artists_botanica": true
+    },
+    {
+      "file_id": "1LX79-KYjuVT7mQ74xkNXXOHA_1gCVOQ-",
+      "name": "DSC_1560_2s.jpg",
+      "action": "skip",
+      "pack_folder": null
+    },
+    {
+      "file_id": "1jWAXBxB2GYq1tIgpfwAOgK6xtr8YoGf6",
+      "name": "DSC_1560_unassigned_stable.mp4",
+      "action": "skip",
+      "pack_folder": null
+    },
+    {
+      "file_id": "1kN1H5Bdl_70yEdjpt4Oxf-ckUlOFQIWh",
+      "name": "DSC_1561_1s.jpg",
+      "action": "move",
+      "pack_folder": "07_silso_n6_Silso",
+      "pack_subfolder": "03_FRAMES",
+      "artists_folder": "Silso",
+      "prefer_artists_botanica": false
+    },
+    {
+      "file_id": "1jB-b6GvlhXtY1geC-cBRw6mXugiivRj4",
+      "name": "DSC_1561_2s.jpg",
+      "action": "move",
+      "pack_folder": "02_noua_Noua",
+      "pack_subfolder": "03_FRAMES",
+      "artists_folder": "Noua",
+      "prefer_artists_botanica": false
+    },
+    {
+      "file_id": "1tG7e0kNjgj3Bh7UZ94fk-fHtoQ9baxUa",
+      "name": "DSC_1561_3s.jpg",
+      "action": "move",
+      "pack_folder": "10_wako.kungo_Wako_Kungo",
+      "pack_subfolder": "03_FRAMES",
+      "artists_folder": "Wako Kungo",
+      "prefer_artists_botanica": true
+    },
+    {
+      "file_id": "1GS43BMsWGOTHTOHB7R6GMbT8PDA4NEFC",
+      "name": "DSC_1561_unassigned_stable.mp4",
+      "action": "move",
+      "pack_folder": "02_noua_Noua",
+      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "artists_folder": "Noua",
+      "prefer_artists_botanica": false
+    },
+    {
+      "file_id": "1CXf4Jg8-BEWzzk7rHZ7QuKc-QiRPgqtX",
+      "name": "DSC_1562_1s.jpg",
+      "action": "move",
+      "pack_folder": "05_joaoredondomaia_Joao_Redondo_Maia",
+      "pack_subfolder": "03_FRAMES",
+      "artists_folder": "Jo\u00e3o Redondo Maia",
+      "prefer_artists_botanica": false
+    },
+    {
+      "file_id": "1fQWih4-EZQ771HwevDD9_ClEpcMsICRy",
+      "name": "DSC_1562_2s.jpg",
+      "action": "move",
+      "pack_folder": "05_joaoredondomaia_Joao_Redondo_Maia",
+      "pack_subfolder": "03_FRAMES",
+      "artists_folder": "Jo\u00e3o Redondo Maia",
+      "prefer_artists_botanica": false
+    },
+    {
+      "file_id": "1F0bki__tIpvWgbtvThqLQPKHJEd9_hoT",
+      "name": "DSC_1562_4s.jpg",
+      "action": "move",
+      "pack_folder": "05_joaoredondomaia_Joao_Redondo_Maia",
+      "pack_subfolder": "03_FRAMES",
+      "artists_folder": "Jo\u00e3o Redondo Maia",
+      "prefer_artists_botanica": false
+    },
+    {
+      "file_id": "129piy1r5QYDcb9RMWj5RviHmHSO0Esn0",
+      "name": "DSC_1562_5s.jpg",
+      "action": "move",
+      "pack_folder": "10_wako.kungo_Wako_Kungo",
+      "pack_subfolder": "03_FRAMES",
+      "artists_folder": "Wako Kungo",
+      "prefer_artists_botanica": true
+    },
+    {
+      "file_id": "1bKBwBk9NOsKSbBi1YTNFXM_GNrjjTiON",
+      "name": "DSC_1562_unassigned_stable.mp4",
+      "action": "skip",
+      "pack_folder": null
+    },
+    {
+      "file_id": "1t8DaktOSjOTZP982ehbEUrMQ-r1qnC0n",
+      "name": "DSC_1564_1s.jpg",
+      "action": "move",
+      "pack_folder": "02_noua_Noua",
+      "pack_subfolder": "03_FRAMES",
+      "artists_folder": "Noua",
+      "prefer_artists_botanica": false
+    },
+    {
+      "file_id": "1BPnRRtEpwh0vWAVoO33TKAkI1BbsDda6",
+      "name": "DSC_1564_3s.jpg",
+      "action": "move",
+      "pack_folder": "02_noua_Noua",
+      "pack_subfolder": "03_FRAMES",
+      "artists_folder": "Noua",
+      "prefer_artists_botanica": false
+    },
+    {
+      "file_id": "1Ohvk9eBEYNC3RIlZv_UWU_luc5K1agvE",
+      "name": "DSC_1564_5s.jpg",
+      "action": "move",
+      "pack_folder": "10_wako.kungo_Wako_Kungo",
+      "pack_subfolder": "03_FRAMES",
+      "artists_folder": "Wako Kungo",
+      "prefer_artists_botanica": true
+    },
+    {
+      "file_id": "12-qmJnRBvwB0CWuFKDpxha4uTgVxAMNh",
+      "name": "DSC_1564_7s.jpg",
+      "action": "move",
+      "pack_folder": "10_wako.kungo_Wako_Kungo",
+      "pack_subfolder": "03_FRAMES",
+      "artists_folder": "Wako Kungo",
+      "prefer_artists_botanica": true
+    },
+    {
+      "file_id": "1ftbNPxBBmC98Uuv982O_mX_qfAk0cEv2",
+      "name": "DSC_1564_unassigned_stable.mp4",
+      "action": "move",
+      "pack_folder": "10_wako.kungo_Wako_Kungo",
+      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "artists_folder": "Wako Kungo",
+      "prefer_artists_botanica": true
+    },
+    {
+      "file_id": "1DD1mfftKeIKsXdtIXdBV7R_caf5mMOz_",
+      "name": "DSC_1565_12s.jpg",
+      "action": "move",
+      "pack_folder": "02_noua_Noua",
+      "pack_subfolder": "03_FRAMES",
+      "artists_folder": "Noua",
+      "prefer_artists_botanica": false
+    },
+    {
+      "file_id": "1z1vl-f5jO_t43qzvRSyItRsJ9I_P3uX3",
+      "name": "DSC_1565_18s.jpg",
+      "action": "move",
+      "pack_folder": "10_wako.kungo_Wako_Kungo",
+      "pack_subfolder": "03_FRAMES",
+      "artists_folder": "Wako Kungo",
+      "prefer_artists_botanica": true
+    },
+    {
+      "file_id": "10PMC5CuHc-gComBiAXkB2j-_tcfJ_J6V",
+      "name": "DSC_1565_25s.jpg",
+      "action": "move",
+      "pack_folder": "10_wako.kungo_Wako_Kungo",
+      "pack_subfolder": "03_FRAMES",
+      "artists_folder": "Wako Kungo",
+      "prefer_artists_botanica": true
+    },
+    {
+      "file_id": "1fBv5uEg4aBJC_w7MQWzJy61ISqN-YOZC",
+      "name": "DSC_1565_5s.jpg",
+      "action": "move",
+      "pack_folder": "02_noua_Noua",
+      "pack_subfolder": "03_FRAMES",
+      "artists_folder": "Noua",
+      "prefer_artists_botanica": false
+    },
+    {
+      "file_id": "1tdqeWY0URI2Wunfq2NRzddM4hMpxVmZL",
+      "name": "DSC_1565_unassigned_stable.mp4",
+      "action": "move",
+      "pack_folder": "10_wako.kungo_Wako_Kungo",
+      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "artists_folder": "Wako Kungo",
+      "prefer_artists_botanica": true
+    },
+    {
+      "file_id": "1DoEyhTas7odTs8p_sN3TBv8Hj6s7pSRj",
+      "name": "DSC_1568_2s.jpg",
+      "action": "skip",
+      "pack_folder": null
+    },
+    {
+      "file_id": "1EspCmu-b6AKTvK-_LJjwyhR4IiDKl3FI",
+      "name": "DSC_1568_4s.jpg",
+      "action": "move",
+      "pack_folder": "10_wako.kungo_Wako_Kungo",
+      "pack_subfolder": "03_FRAMES",
+      "artists_folder": "Wako Kungo",
+      "prefer_artists_botanica": true
+    },
+    {
+      "file_id": "1PBZFvyEvREhl3JsgIA6Gcz392lSJffjB",
+      "name": "DSC_1568_6s.jpg",
+      "action": "skip",
+      "pack_folder": null
+    },
+    {
+      "file_id": "1YlOd7hm2IUWgIuwR3CI0gb94cpls4rI1",
+      "name": "DSC_1568_8s.jpg",
+      "action": "skip",
+      "pack_folder": null
+    },
+    {
+      "file_id": "1uCFPXoYdeG9ZUnNXPX54auZR7T2QhTfL",
+      "name": "DSC_1568_unassigned_stable.mp4",
+      "action": "skip",
+      "pack_folder": null
+    },
+    {
+      "file_id": "1eqL9COiLxlEYR9FDJOqH3mIBgIHFgJ7d",
+      "name": "DSC_1572_edit.jpg",
+      "action": "skip",
+      "pack_folder": null
+    },
+    {
+      "file_id": "1aT8IzdNGNHas419juWNR2B-ZRCUh3v-t",
+      "name": "DSC_1573_edit.jpg",
+      "action": "skip",
+      "pack_folder": null
+    },
+    {
+      "file_id": "1TxbgIE0woosGK_faVxFr2pQJs58EXbN9",
+      "name": "DSC_1574_edit.jpg",
+      "action": "move",
+      "pack_folder": "10_wako.kungo_Wako_Kungo",
+      "pack_subfolder": "02_PORTRAITS",
+      "artists_folder": "Wako Kungo",
+      "prefer_artists_botanica": true
+    },
+    {
+      "file_id": "1l6le2gefRgpVDmWsgCfRAQvj60Uthg7t",
+      "name": "DSC_1575_edit.jpg",
+      "action": "move",
+      "pack_folder": "10_wako.kungo_Wako_Kungo",
+      "pack_subfolder": "02_PORTRAITS",
+      "artists_folder": "Wako Kungo",
+      "prefer_artists_botanica": true
+    },
+    {
+      "file_id": "12ePy9U0F6yTKYHZXPi5BklKHBycZ21Dw",
+      "name": "DSC_1576_edit.jpg",
+      "action": "skip",
+      "pack_folder": null
+    },
+    {
+      "file_id": "1bN7ndOwumh9r8kkjNpl7LR50mP1MgAjO",
+      "name": "DSC_1579_edit.jpg",
+      "action": "move",
+      "pack_folder": "10_wako.kungo_Wako_Kungo",
+      "pack_subfolder": "02_PORTRAITS",
+      "artists_folder": "Wako Kungo",
+      "prefer_artists_botanica": true
+    },
+    {
+      "file_id": "1FR0I8vXnPJ2ICrp3FhDOdp-36zx5kj13",
+      "name": "DSC_1580_1s.jpg",
+      "action": "move",
+      "pack_folder": "10_wako.kungo_Wako_Kungo",
+      "pack_subfolder": "03_FRAMES",
+      "artists_folder": "Wako Kungo",
+      "prefer_artists_botanica": true
+    },
+    {
+      "file_id": "1n52O7jOCxquJmTQw5CSewVFG8H8ei21-",
+      "name": "DSC_1580_3s.jpg",
+      "action": "skip",
+      "pack_folder": null
+    },
+    {
+      "file_id": "10ebpg2gkqAq0pkPwvQpvp_16kgXQTsb9",
+      "name": "DSC_1580_5s.jpg",
+      "action": "skip",
+      "pack_folder": null
+    },
+    {
+      "file_id": "1EnqK5K700BvmEIkkdOQSvjhy7zXkTXn9",
+      "name": "DSC_1580_7s.jpg",
+      "action": "skip",
+      "pack_folder": null
+    },
+    {
+      "file_id": "1ClhrbiwQq2Xu_74-EGa8834xBNrkwpJC",
+      "name": "DSC_1580_unassigned_stable.mp4",
+      "action": "skip",
+      "pack_folder": null
+    },
+    {
+      "file_id": "1wQTPJaV2lL9vzinYYhjle-rOrmTEOGhv",
+      "name": "DSC_1583_12s.jpg",
+      "action": "move",
+      "pack_folder": "11_filipesax_Felippe_Sax",
+      "pack_subfolder": "03_FRAMES",
+      "artists_folder": "Felippe Sax",
+      "prefer_artists_botanica": true
+    },
+    {
+      "file_id": "1ONBH9p1vbif0g7KhuIsCQ8Vu7Zssn5ws",
+      "name": "DSC_1583_2s.jpg",
+      "action": "skip",
+      "pack_folder": null
+    },
+    {
+      "file_id": "1pPPVh-zl3pnGzXJvn4uUbWFwtTr1DbJD",
+      "name": "DSC_1583_6s.jpg",
+      "action": "move",
+      "pack_folder": "11_filipesax_Felippe_Sax",
+      "pack_subfolder": "03_FRAMES",
+      "artists_folder": "Felippe Sax",
+      "prefer_artists_botanica": true
+    },
+    {
+      "file_id": "1ATf0xp42jLohXpAfqHZh_9ogVCkGs9Lp",
+      "name": "DSC_1583_9s.jpg",
+      "action": "move",
+      "pack_folder": "11_filipesax_Felippe_Sax",
+      "pack_subfolder": "03_FRAMES",
+      "artists_folder": "Felippe Sax",
+      "prefer_artists_botanica": true
+    },
+    {
+      "file_id": "1ZUKzObd9JvUpsvh_lEy-3E9a0LBbxhMZ",
+      "name": "DSC_1583_unassigned_stable.mp4",
+      "action": "move",
+      "pack_folder": "10_wako.kungo_Wako_Kungo",
+      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "artists_folder": "Wako Kungo",
+      "prefer_artists_botanica": true
+    },
+    {
+      "file_id": "1XP0_Gxgmh8wM7UVL_ZzuzvcO7tMIdEdK",
+      "name": "DSC_1585_2s.jpg",
+      "action": "move",
+      "pack_folder": "10_wako.kungo_Wako_Kungo",
+      "pack_subfolder": "03_FRAMES",
+      "artists_folder": "Wako Kungo",
+      "prefer_artists_botanica": true
+    },
+    {
+      "file_id": "1XREKy0H5NaP39zAvPre7sGBoa-A67hSI",
+      "name": "DSC_1585_4s.jpg",
+      "action": "move",
+      "pack_folder": "10_wako.kungo_Wako_Kungo",
+      "pack_subfolder": "03_FRAMES",
+      "artists_folder": "Wako Kungo",
+      "prefer_artists_botanica": true
+    },
+    {
+      "file_id": "1uwU0zoVbxTsJbRmRbkUlUXXSPURsxZCM",
+      "name": "DSC_1585_7s.jpg",
+      "action": "move",
+      "pack_folder": "10_wako.kungo_Wako_Kungo",
+      "pack_subfolder": "03_FRAMES",
+      "artists_folder": "Wako Kungo",
+      "prefer_artists_botanica": true
+    },
+    {
+      "file_id": "1uSjVdK_0obe6U-K3VZmQV--PJ1GeOMgi",
+      "name": "DSC_1585_9s.jpg",
+      "action": "move",
+      "pack_folder": "04_diazaofficial_Diaza",
+      "pack_subfolder": "03_FRAMES",
+      "artists_folder": "Diaza",
+      "prefer_artists_botanica": false
+    },
+    {
+      "file_id": "11PGXXVZB0GrHKI9RcfpMz8q6-1GBU9fl",
+      "name": "DSC_1585_unassigned_stable.mp4",
+      "action": "move",
+      "pack_folder": "10_wako.kungo_Wako_Kungo",
+      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "artists_folder": "Wako Kungo",
+      "prefer_artists_botanica": true
+    },
+    {
+      "file_id": "1fDYELh45Nwf08og8kAg4QCugmVLZ2rlG",
+      "name": "DSC_1586_1s.jpg",
+      "action": "move",
+      "pack_folder": "04_diazaofficial_Diaza",
+      "pack_subfolder": "03_FRAMES",
+      "artists_folder": "Diaza",
+      "prefer_artists_botanica": false
+    },
+    {
+      "file_id": "1nrtOWWwVPnkC5pCXPkrL4I8mwegDpUE0",
+      "name": "DSC_1586_3s.jpg",
+      "action": "move",
+      "pack_folder": "10_wako.kungo_Wako_Kungo",
+      "pack_subfolder": "03_FRAMES",
+      "artists_folder": "Wako Kungo",
+      "prefer_artists_botanica": true
+    },
+    {
+      "file_id": "1_qP6xk8Q-uJb1Eu6Z0wEVuyHJiBC6WuS",
+      "name": "DSC_1586_5s.jpg",
+      "action": "move",
+      "pack_folder": "10_wako.kungo_Wako_Kungo",
+      "pack_subfolder": "03_FRAMES",
+      "artists_folder": "Wako Kungo",
+      "prefer_artists_botanica": true
+    },
+    {
+      "file_id": "1KTwyUe2pjRE8CFF0kVVgJXe3HdbEKsuU",
+      "name": "DSC_1586_7s.jpg",
+      "action": "move",
+      "pack_folder": "10_wako.kungo_Wako_Kungo",
+      "pack_subfolder": "03_FRAMES",
+      "artists_folder": "Wako Kungo",
+      "prefer_artists_botanica": true
+    },
+    {
+      "file_id": "1ciIvUXzokfwQhVzl-VDl1YPrvDdvcUSs",
+      "name": "DSC_1586_unassigned_stable.mp4",
+      "action": "move",
+      "pack_folder": "10_wako.kungo_Wako_Kungo",
+      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "artists_folder": "Wako Kungo",
+      "prefer_artists_botanica": true
+    },
+    {
+      "file_id": "1VEVyAxs4MTTmD-6JDba7Y6unSaZoSg_L",
+      "name": "DSC_1588_11s.jpg",
+      "action": "move",
+      "pack_folder": "10_wako.kungo_Wako_Kungo",
+      "pack_subfolder": "03_FRAMES",
+      "artists_folder": "Wako Kungo",
+      "prefer_artists_botanica": true
+    },
+    {
+      "file_id": "1PL7uL4S1ZJwuzWMI4MddpZlC4S9zFKbH",
+      "name": "DSC_1588_15s.jpg",
+      "action": "move",
+      "pack_folder": "10_wako.kungo_Wako_Kungo",
+      "pack_subfolder": "03_FRAMES",
+      "artists_folder": "Wako Kungo",
+      "prefer_artists_botanica": true
+    },
+    {
+      "file_id": "1eCdQ9-FbQ9ObnPKwwI9u7GMRns7C0Fmq",
+      "name": "DSC_1588_3s.jpg",
+      "action": "move",
+      "pack_folder": "10_wako.kungo_Wako_Kungo",
+      "pack_subfolder": "03_FRAMES",
+      "artists_folder": "Wako Kungo",
+      "prefer_artists_botanica": true
+    },
+    {
+      "file_id": "1KFHaJEV-gOcNR9o5qmgqVT4E9afr6aGg",
+      "name": "DSC_1588_7s.jpg",
+      "action": "move",
+      "pack_folder": "10_wako.kungo_Wako_Kungo",
+      "pack_subfolder": "03_FRAMES",
+      "artists_folder": "Wako Kungo",
+      "prefer_artists_botanica": true
+    },
+    {
+      "file_id": "18w4a5RcqZGW8qEv7b8ueZt5Y0m4lGReU",
+      "name": "DSC_1588_unassigned_stable.mp4",
+      "action": "move",
+      "pack_folder": "10_wako.kungo_Wako_Kungo",
+      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "artists_folder": "Wako Kungo",
+      "prefer_artists_botanica": true
+    }
+  ],
+  "ingested_at": "2026-10-05T20:43:10Z",
+  "notes": [
+    "Uploaded as unassigned_approvals (2).json from gallery 2026-10-05",
+    "Normalized prefer_artists_botanica for Wako + Felippe Sax",
+    "Re-run may no-op already_in_destination or re-parent if dest changed",
+    "DSC_1601 cluster not in this export \u2014 still held if present on Drive"
+  ]
+}

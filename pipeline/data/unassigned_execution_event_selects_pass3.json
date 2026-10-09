@@ -1,0 +1,12 @@
+{
+  "created_at": "2026-10-08T23:11:33Z",
+  "batch": "event_selects_pass3",
+  "mode": "execute",
+  "moved": 23,
+  "errors": 0,
+  "source": "windows_user_screenshot_2026-10-08",
+  "notes": [
+    "23/23 EVENT_SELECTS pass-3 executed",
+    "last: shot_041_portrait.mp4 \u2192 CROWD_WIDE"
+  ]
+}

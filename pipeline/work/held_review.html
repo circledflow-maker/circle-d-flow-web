@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Held UNASSIGNED Review — 12</title>
+<style>
+:root { --bg:#12100e; --ink:#f3ebe0; --muted:#a89884; --line:#3a322a; --gold:#c9a227; --panel:#1c1814; }
+body { margin:0; font-family:"Segoe UI",sans-serif; background:radial-gradient(1000px 500px at 10% -10%,#2a2218,var(--bg)); color:var(--ink); }
+header { position:sticky; top:0; z-index:5; display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between; padding:14px 18px; background:rgba(18,16,14,.92); border-bottom:1px solid var(--line); }
+h1 { margin:0; font-size:1.1rem; color:var(--gold); }
+.meta { color:var(--muted); font-size:.85rem; }
+button { background:var(--gold); color:#1a140c; border:0; border-radius:4px; padding:8px 14px; font-weight:700; cursor:pointer; }
+.refs { display:flex; gap:10px; overflow-x:auto; padding:12px 18px; border-bottom:1px solid var(--line); background:var(--panel); }
+.ref { flex:0 0 auto; width:100px; font-size:.7rem; color:var(--muted); text-align:center; }
+.ref img { width:100px; height:100px; object-fit:cover; border:1px solid var(--line); display:block; margin-bottom:4px; background:#000; }
+main { padding:16px 18px 80px; display:grid; gap:14px; }
+.card { display:grid; grid-template-columns:220px 1fr; gap:14px; background:var(--panel); border:1px solid var(--line); padding:12px; }
+.card img.thumb { width:220px; height:160px; object-fit:cover; background:#000; border:1px solid var(--line); }
+.choices { display:flex; flex-wrap:wrap; gap:6px; }
+.choices label { border:1px solid var(--line); padding:5px 8px; font-size:.78rem; cursor:pointer; border-radius:3px; }
+.choices label:has(input:checked) { border-color:var(--gold); color:var(--gold); }
+.choices input { display:none; }
+@media (max-width:720px) { .card { grid-template-columns:1fr; } .card img.thumb { width:100%; height:200px; } }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>HELD REVIEW — 12 LEFT</h1>
+    <div class="meta">DSC_1565 (Noua vs Wako) · DSC_1568 · DSC_1601 — no auto-move</div>
+  </div>
+  <div class="meta" id="progress">0 reviewed</div>
+  <button type="button" id="btnExport">Download held approvals JSON</button>
+</header>
+<section class="refs" id="refs"></section>
+<main id="main"></main>
+<script>
+const DATA = {"created_at": "2026-10-07T15:41:39Z", "title": "HELD UNASSIGNED REVIEW (12)", "artists": [{"folder": "02_noua_Noua", "label": "Noua", "refs": []}, {"folder": "10_wako.kungo_Wako_Kungo", "label": "Wako Kungo", "refs": []}, {"folder": "11_filipesax_Felippe_Sax", "label": "Felippe Sax", "refs": [{"name": "ARTIST_filipesax_ig.png", "src": "artist_ref_thumbs/11_filipesax_Felippe_Sax/ARTIST_filipesax_ig.png"}, {"name": "REF_performance_sax.png", "src": "artist_ref_thumbs/11_filipesax_Felippe_Sax/REF_performance_sax.png"}, {"name": "REF_performance_sax.png", "src": "artist_ref_thumbs/11_filipesax_Felippe_Sax/REF_performance_sax.png"}, {"name": "ARTIST_filipesax_ig.png", "src": "artist_ref_thumbs/11_filipesax_Felippe_Sax/ARTIST_filipesax_ig.png"}]}, {"folder": "04_diazaofficial_Diaza", "label": "Diaza", "refs": []}, {"folder": "05_joaoredondomaia_Joao_Redondo_Maia", "label": "Jo\u00e3o Redondo Maia", "refs": []}, {"folder": "09_edoardostatuto_Edo_Edoardo_Statuto", "label": "Edo", "refs": []}, {"folder": "01_lyssa.bl_Lyssa", "label": "Lyssa", "refs": []}, {"folder": "03_chriskristoffer_Chris_Kristoffer", "label": "Chris Kristoffer", "refs": []}, {"folder": "06_zeus_atro_Zeus_Atro", "label": "Zeus Atro", "refs": []}, {"folder": "07_silso_n6_Silso", "label": "Silso", "refs": []}, {"folder": "08_mistah_isaac_Mistah_Isaac", "label": "Mistah Isaac", "refs": []}], "items": [{"file_id": "1PBZFvyEvREhl3JsgIA6Gcz392lSJffjB", "name": "DSC_1568_6s.jpg", "kind": "frame", "subfolder": "03_FRAMES", "suggested": "", "note": "siblings=[]", "src": "unassigned_thumbs/DSC_1568_6s.jpg.jpg"}, {"file_id": "1YlOd7hm2IUWgIuwR3CI0gb94cpls4rI1", "name": "DSC_1568_8s.jpg", "kind": "frame", "subfolder": "03_FRAMES", "suggested": "", "note": "siblings=[]", "src": "unassigned_thumbs/DSC_1568_8s.jpg.jpg"}, {"file_id": "1uCFPXoYdeG9ZUnNXPX54auZR7T2QhTfL", "name": "DSC_1568_unassigned_stable.mp4", "kind": "video", "subfolder": "01_VIDEOS_PERFORMANCE", "suggested": "", "note": "siblings=[]", "src": "unassigned_thumbs/DSC_1568_unassigned_stable.mp4.jpg"}, {"file_id": "1FqdJo2xJB7lyQAR9NPZtv154130R93rB", "name": "DSC_1601_103s.jpg", "kind": "frame", "subfolder": "03_FRAMES", "suggested": "", "note": "siblings=[]", "src": "unassigned_thumbs/DSC_1601_103s.jpg.jpg"}, {"file_id": "1n3pO8TMataTGlkkoSrQenUe79tMvTZ1q", "name": "DSC_1601_138s.jpg", "kind": "frame", "subfolder": "03_FRAMES", "suggested": "", "note": "siblings=[]", "src": "unassigned_thumbs/DSC_1601_138s.jpg.jpg"}, {"file_id": "1HL89eDWoLDbi2L6wymXgOMVk7uTnhJbB", "name": "DSC_1601_67s.jpg", "kind": "frame", "subfolder": "03_FRAMES", "suggested": "", "note": "siblings=[]", "src": "unassigned_thumbs/DSC_1601_67s.jpg.jpg"}, {"file_id": "1I6YCvxTTWFK2bp3Fjnbpb4X7OD4okyto", "name": "DSC_1601_unassigned_stable.mp4", "kind": "video", "subfolder": "01_VIDEOS_PERFORMANCE", "suggested": "", "note": "siblings=[]", "src": "unassigned_thumbs/DSC_1601_unassigned_stable.mp4.jpg"}], "pack_to_artists": {"02_noua_Noua": "Noua", "10_wako.kungo_Wako_Kungo": "Wako Kungo", "11_filipesax_Felippe_Sax": "Felippe Sax", "04_diazaofficial_Diaza": "Diaza", "05_joaoredondomaia_Joao_Redondo_Maia": "Jo\u00e3o Redondo Maia", "09_edoardostatuto_Edo_Edoardo_Statuto": "Edo", "01_lyssa.bl_Lyssa": "Lyssa", "03_chriskristoffer_Chris_Kristoffer": "Chris Kristoffer", "06_zeus_atro_Zeus_Atro": "Zeus Atro", "07_silso_n6_Silso": "Silso", "08_mistah_isaac_Mistah_Isaac": "Mistah Isaac"}};
+const state = {};
+const refsEl = document.getElementById('refs');
+const main = document.getElementById('main');
+const progress = document.getElementById('progress');
+function renderRefs() {
+  refsEl.innerHTML = '';
+  for (const a of DATA.artists) {
+    for (const r of a.refs) {
+      const d = document.createElement('div');
+      d.className = 'ref';
+      d.innerHTML = `<img src="${r.src}" alt="${a.label}" loading="lazy"/><div>${a.label}</div>`;
+      refsEl.appendChild(d);
+    }
+  }
+}
+function count() {
+  const done = DATA.items.filter(i => state[i.file_id] !== undefined).length;
+  const moves = DATA.items.filter(i => state[i.file_id]).length;
+  progress.textContent = done + ' / ' + DATA.items.length + ' reviewed · ' + moves + ' to move';
+}
+function render() {
+  main.innerHTML = '';
+  for (const item of DATA.items) {
+    const card = document.createElement('article');
+    card.className = 'card';
+    const choices = [...DATA.artists.map(a => ({v:a.folder,l:a.label})), {v:'',l:'SKIP / keep'}];
+    card.innerHTML = `
+      <img class="thumb" src="${item.src}" alt="${item.name}" loading="lazy"/>
+      <div>
+        <h2 style="margin:0 0 6px;font-size:1rem">${item.name}</h2>
+        <div class="meta" style="margin-bottom:8px">${item.note}</div>
+        <div class="choices">${choices.map(c => `<label><input type="radio" name="${item.file_id}" value="${c.v}"/> ${c.l}</label>`).join('')}</div>
+      </div>`;
+    main.appendChild(card);
+    card.querySelectorAll('input').forEach(inp => {
+      inp.addEventListener('change', () => { state[item.file_id] = inp.value; count(); });
+    });
+  }
+  count();
+}
+document.getElementById('btnExport').onclick = () => {
+  const assignments = [];
+  for (const item of DATA.items) {
+    if (!(item.file_id in state)) continue;
+    const pack = state[item.file_id];
+    if (!pack) { assignments.push({file_id:item.file_id,name:item.name,action:'skip',pack_folder:null}); continue; }
+    assignments.push({
+      file_id: item.file_id,
+      name: item.name,
+      action: 'move',
+      pack_folder: pack,
+      pack_subfolder: item.subfolder,
+      artists_folder: DATA.pack_to_artists[pack] || null,
+      prefer_artists_botanica: ['10_wako.kungo_Wako_Kungo','11_filipesax_Felippe_Sax'].includes(pack),
+    });
+  }
+  const out = { created_at: new Date().toISOString(), source: 'held_review_gallery', policy: 'Human-approved held items only', assignments };
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(out,null,2)], {type:'application/json'}));
+  a.download = 'unassigned_approvals.json';
+  a.click();
+};
+renderRefs(); render();
+</script>
+</body>
+</html>

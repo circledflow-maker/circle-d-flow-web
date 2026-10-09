@@ -1,0 +1,12 @@
+{
+  "created_at": "2026-10-05T20:48:01Z",
+  "batch": "unassigned_pass2",
+  "mode": "execute",
+  "moved": 46,
+  "errors": 0,
+  "source": "windows_user_screenshot_2026-10-05",
+  "notes": [
+    "46/46 pass-2 approvals executed",
+    "Wako/Felippe routed to Artists/*/Botanica when prefer flag set"
+  ]
+}

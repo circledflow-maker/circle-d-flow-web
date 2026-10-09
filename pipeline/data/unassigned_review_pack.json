@@ -1,0 +1,2281 @@
+{
+  "created_at": "2026-09-30T22:19:19Z",
+  "batch": "unassigned_review",
+  "source": "Botanica/_UNASSIGNED_REVIEW",
+  "count": 69,
+  "by_kind": {
+    "face_reject_frame": 47,
+    "edit_still": 9,
+    "face_reject_video": 13
+  },
+  "policy": [
+    "NO automatic Drive moves until approvals JSON + --execute",
+    "Leftovers from organize_artists_face (not Diaza primary)",
+    "Default dest: BotanicaArtistPack/<artist>/<01|02|03_*>",
+    "Wako stills may use Artists/Wako Kungo/Botanica after confirm",
+    "Thumbnails / 00_REF only \u2014 never full masters here"
+  ],
+  "review_against_artists": [
+    "01_lyssa.bl_Lyssa",
+    "02_noua_Noua",
+    "03_chriskristoffer_Chris_Kristoffer",
+    "05_joaoredondomaia_Joao_Redondo_Maia",
+    "06_zeus_atro_Zeus_Atro",
+    "07_silso_n6_Silso",
+    "08_mistah_isaac_Mistah_Isaac",
+    "09_edoardostatuto_Edo_Edoardo_Statuto",
+    "10_wako.kungo_Wako_Kungo",
+    "11_filipesax_Felippe_Sax"
+  ],
+  "pack_to_artists": {
+    "08_mistah_isaac_Mistah_Isaac": "Mr Isaac",
+    "09_edoardostatuto_Edo_Edoardo_Statuto": "Edo",
+    "10_wako.kungo_Wako_Kungo": "Wako Kungo",
+    "03_chriskristoffer_Chris_Kristoffer": "Chris In\u00e1cio",
+    "11_filipesax_Felippe_Sax": "Felippe Sax"
+  },
+  "artist_pack": [
+    {
+      "folder": "01_lyssa.bl_Lyssa",
+      "path": "BotanicaArtistPack/01_lyssa.bl_Lyssa",
+      "folder_id": "1hGOTQzLzias81PGEqtU8sseWP3MFGXqs",
+      "artists_folder": null,
+      "refs": [
+        {
+          "file_id": "1-yTe79DCobC8622YQrWin2FUHZoyv6ku",
+          "name": "ARTIST_lyssa_bl.png",
+          "thumbnail_hint": "https://drive.google.com/thumbnail?id=1-yTe79DCobC8622YQrWin2FUHZoyv6ku&sz=w400"
+        }
+      ]
+    },
+    {
+      "folder": "02_noua_Noua",
+      "path": "BotanicaArtistPack/02_noua_Noua",
+      "folder_id": "1U0U80ZZniB9G12QYNRiq0n61LW65lDY_",
+      "artists_folder": null,
+      "refs": []
+    },
+    {
+      "folder": "03_chriskristoffer_Chris_Kristoffer",
+      "path": "BotanicaArtistPack/03_chriskristoffer_Chris_Kristoffer",
+      "folder_id": "124bB6gCTCINF9lnj1aNt8sdfPGx0qjAM",
+      "artists_folder": "Chris In\u00e1cio",
+      "refs": [
+        {
+          "file_id": "1AjLQNP7Zk0w_ZERRl6IZwzrOT17hN4vf",
+          "name": "ARTIST_chriskristoffer.png",
+          "thumbnail_hint": "https://drive.google.com/thumbnail?id=1AjLQNP7Zk0w_ZERRl6IZwzrOT17hN4vf&sz=w400"
+        }
+      ]
+    },
+    {
+      "folder": "04_diazaofficial_Diaza",
+      "path": "BotanicaArtistPack/04_diazaofficial_Diaza",
+      "folder_id": "16HVd8NHHXLPVTcx3qfIQkRf6i02Hdr99",
+      "artists_folder": null,
+      "refs": [
+        {
+          "file_id": "1KQ27PdH4NLbav0OzJsPUzt2sgSoYG0Af",
+          "name": "ARTIST_diazaofficial.png",
+          "thumbnail_hint": "https://drive.google.com/thumbnail?id=1KQ27PdH4NLbav0OzJsPUzt2sgSoYG0Af&sz=w400"
+        }
+      ]
+    },
+    {
+      "folder": "05_joaoredondomaia_Joao_Redondo_Maia",
+      "path": "BotanicaArtistPack/05_joaoredondomaia_Joao_Redondo_Maia",
+      "folder_id": "1RxbBpKEj8SIrPr54HAdxmFJZfUZSBYeh",
+      "artists_folder": null,
+      "refs": [
+        {
+          "file_id": "1WU2FkNO-NcJFAwHDDNpK8n8_OlEG52wY",
+          "name": "ARTIST_joaoredondomaia.png",
+          "thumbnail_hint": "https://drive.google.com/thumbnail?id=1WU2FkNO-NcJFAwHDDNpK8n8_OlEG52wY&sz=w400"
+        }
+      ]
+    },
+    {
+      "folder": "06_zeus_atro_Zeus_Atro",
+      "path": "BotanicaArtistPack/06_zeus_atro_Zeus_Atro",
+      "folder_id": "1e5DrWHx9eHL99kTz6LnQUrtrR0e-Sz7F",
+      "artists_folder": null,
+      "refs": [
+        {
+          "file_id": "1YpdF19tcN_beD5RecdnxwvnXBVfRnN8K",
+          "name": "ARTIST_zeus_atro.png",
+          "thumbnail_hint": "https://drive.google.com/thumbnail?id=1YpdF19tcN_beD5RecdnxwvnXBVfRnN8K&sz=w400"
+        }
+      ]
+    },
+    {
+      "folder": "07_silso_n6_Silso",
+      "path": "BotanicaArtistPack/07_silso_n6_Silso",
+      "folder_id": "1ZmL2Ve9O8eobBeGRVCIbfDbEvLp883Ks",
+      "artists_folder": null,
+      "refs": []
+    },
+    {
+      "folder": "08_mistah_isaac_Mistah_Isaac",
+      "path": "BotanicaArtistPack/08_mistah_isaac_Mistah_Isaac",
+      "folder_id": "1SPB-CJ7b8dN0G1b4ndG9z5703Mpk1rei",
+      "artists_folder": "Mr Isaac",
+      "refs": []
+    },
+    {
+      "folder": "09_edoardostatuto_Edo_Edoardo_Statuto",
+      "path": "BotanicaArtistPack/09_edoardostatuto_Edo_Edoardo_Statuto",
+      "folder_id": "1Ff9OPjgqvB5xCtD0r2gP_ip10yyZ7BvP",
+      "artists_folder": "Edo",
+      "refs": []
+    },
+    {
+      "folder": "10_wako.kungo_Wako_Kungo",
+      "path": "BotanicaArtistPack/10_wako.kungo_Wako_Kungo",
+      "folder_id": "1wiIPrQvE8pVcop3xeaWR5mkztLtUJYy6",
+      "artists_folder": "Wako Kungo",
+      "refs": [
+        {
+          "file_id": "1xeiQgXHOzReAm3j2bGwE7EyvY7PfxuDL",
+          "name": "00_event_flyer_botanical_groove.png",
+          "thumbnail_hint": "https://drive.google.com/thumbnail?id=1xeiQgXHOzReAm3j2bGwE7EyvY7PfxuDL&sz=w400"
+        }
+      ]
+    },
+    {
+      "folder": "11_filipesax_Felippe_Sax",
+      "path": "BotanicaArtistPack/11_filipesax_Felippe_Sax",
+      "folder_id": null,
+      "artists_folder": "Felippe Sax",
+      "refs": [
+        {
+          "name": "ARTIST_filipesax_ig.png",
+          "thumb_file": "11_filipesax_Felippe_Sax/ARTIST_filipesax_ig.png"
+        },
+        {
+          "name": "REF_performance_sax.png",
+          "thumb_file": "11_filipesax_Felippe_Sax/REF_performance_sax.png"
+        }
+      ]
+    }
+  ],
+  "items": [
+    {
+      "file_id": "1iasjJGnLlwko9zrPsnqQVEeJMQbK4dzo",
+      "name": "DSC_1546_edit.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/PHOTOS",
+      "extension": ".jpg",
+      "dsc": 1546,
+      "kind": "edit_still",
+      "default_pack_subfolder": "02_PORTRAITS",
+      "thumb_file": "DSC_1546_edit.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1iasjJGnLlwko9zrPsnqQVEeJMQbK4dzo&sz=w400",
+      "url": "https://drive.google.com/file/d/1iasjJGnLlwko9zrPsnqQVEeJMQbK4dzo/view",
+      "hints": [
+        {
+          "type": "roll_align",
+          "artist_hint": "10_wako.kungo_Wako_Kungo",
+          "confidence": "MEDIUM",
+          "note": "Same DSC as Wako Botanica raw \u2014 confirm visually"
+        }
+      ],
+      "suggested_pack": "10_wako.kungo_Wako_Kungo",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1cNRt7DkLUIcnhxfejySmaqfBGKEm6v_h",
+      "name": "DSC_1547_edit.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/PHOTOS",
+      "extension": ".jpg",
+      "dsc": 1547,
+      "kind": "edit_still",
+      "default_pack_subfolder": "02_PORTRAITS",
+      "thumb_file": "DSC_1547_edit.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1cNRt7DkLUIcnhxfejySmaqfBGKEm6v_h&sz=w400",
+      "url": "https://drive.google.com/file/d/1cNRt7DkLUIcnhxfejySmaqfBGKEm6v_h/view",
+      "hints": [
+        {
+          "type": "roll_align",
+          "artist_hint": "10_wako.kungo_Wako_Kungo",
+          "confidence": "MEDIUM",
+          "note": "Same DSC as Wako Botanica raw \u2014 confirm visually"
+        }
+      ],
+      "suggested_pack": "10_wako.kungo_Wako_Kungo",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "14pMQZz0tW3QD6m1KqTn4V_9v1TsxTgbW",
+      "name": "DSC_1548_edit.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/PHOTOS",
+      "extension": ".jpg",
+      "dsc": 1548,
+      "kind": "edit_still",
+      "default_pack_subfolder": "02_PORTRAITS",
+      "thumb_file": "DSC_1548_edit.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=14pMQZz0tW3QD6m1KqTn4V_9v1TsxTgbW&sz=w400",
+      "url": "https://drive.google.com/file/d/14pMQZz0tW3QD6m1KqTn4V_9v1TsxTgbW/view",
+      "hints": [
+        {
+          "type": "roll_align",
+          "artist_hint": "10_wako.kungo_Wako_Kungo",
+          "confidence": "MEDIUM",
+          "note": "Same DSC as Wako Botanica raw \u2014 confirm visually"
+        }
+      ],
+      "suggested_pack": "10_wako.kungo_Wako_Kungo",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "10-ziK8tTfN6DIGXkAJ4wKIOxNyyYxhV1",
+      "name": "DSC_1551_1s.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "extension": ".jpg",
+      "dsc": 1551,
+      "kind": "face_reject_frame",
+      "default_pack_subfolder": "03_FRAMES",
+      "thumb_file": "DSC_1551_1s.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=10-ziK8tTfN6DIGXkAJ4wKIOxNyyYxhV1&sz=w400",
+      "url": "https://drive.google.com/file/d/10-ziK8tTfN6DIGXkAJ4wKIOxNyyYxhV1/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Frame left unassigned after face pass",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1fvC_-qS4ni50gA7YxevSUWMW7LBXBzxw",
+      "name": "DSC_1551_2s.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "extension": ".jpg",
+      "dsc": 1551,
+      "kind": "face_reject_frame",
+      "default_pack_subfolder": "03_FRAMES",
+      "thumb_file": "DSC_1551_2s.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1fvC_-qS4ni50gA7YxevSUWMW7LBXBzxw&sz=w400",
+      "url": "https://drive.google.com/file/d/1fvC_-qS4ni50gA7YxevSUWMW7LBXBzxw/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Frame left unassigned after face pass",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1nn0ioN_eFzWHfShukAqj-9EmxFkv8pgZ",
+      "name": "DSC_1551_unassigned_stable.mp4",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/VIDEOS",
+      "extension": ".mp4",
+      "dsc": 1551,
+      "kind": "face_reject_video",
+      "default_pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "thumb_file": "DSC_1551_unassigned_stable.mp4.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1nn0ioN_eFzWHfShukAqj-9EmxFkv8pgZ&sz=w400",
+      "url": "https://drive.google.com/file/d/1nn0ioN_eFzWHfShukAqj-9EmxFkv8pgZ/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Failed primary face match \u2014 review other 00_REF",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1TvJZoYVs9cUYG7dCtO6Uo4Sabkmiel4g",
+      "name": "DSC_1560_1s.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "extension": ".jpg",
+      "dsc": 1560,
+      "kind": "face_reject_frame",
+      "default_pack_subfolder": "03_FRAMES",
+      "thumb_file": "DSC_1560_1s.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1TvJZoYVs9cUYG7dCtO6Uo4Sabkmiel4g&sz=w400",
+      "url": "https://drive.google.com/file/d/1TvJZoYVs9cUYG7dCtO6Uo4Sabkmiel4g/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Frame left unassigned after face pass",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1LX79-KYjuVT7mQ74xkNXXOHA_1gCVOQ-",
+      "name": "DSC_1560_2s.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "extension": ".jpg",
+      "dsc": 1560,
+      "kind": "face_reject_frame",
+      "default_pack_subfolder": "03_FRAMES",
+      "thumb_file": "DSC_1560_2s.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1LX79-KYjuVT7mQ74xkNXXOHA_1gCVOQ-&sz=w400",
+      "url": "https://drive.google.com/file/d/1LX79-KYjuVT7mQ74xkNXXOHA_1gCVOQ-/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Frame left unassigned after face pass",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1jWAXBxB2GYq1tIgpfwAOgK6xtr8YoGf6",
+      "name": "DSC_1560_unassigned_stable.mp4",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/VIDEOS",
+      "extension": ".mp4",
+      "dsc": 1560,
+      "kind": "face_reject_video",
+      "default_pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "thumb_file": "DSC_1560_unassigned_stable.mp4.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1jWAXBxB2GYq1tIgpfwAOgK6xtr8YoGf6&sz=w400",
+      "url": "https://drive.google.com/file/d/1jWAXBxB2GYq1tIgpfwAOgK6xtr8YoGf6/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Failed primary face match \u2014 review other 00_REF",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1kN1H5Bdl_70yEdjpt4Oxf-ckUlOFQIWh",
+      "name": "DSC_1561_1s.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "extension": ".jpg",
+      "dsc": 1561,
+      "kind": "face_reject_frame",
+      "default_pack_subfolder": "03_FRAMES",
+      "thumb_file": "DSC_1561_1s.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1kN1H5Bdl_70yEdjpt4Oxf-ckUlOFQIWh&sz=w400",
+      "url": "https://drive.google.com/file/d/1kN1H5Bdl_70yEdjpt4Oxf-ckUlOFQIWh/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Frame left unassigned after face pass",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1jB-b6GvlhXtY1geC-cBRw6mXugiivRj4",
+      "name": "DSC_1561_2s.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "extension": ".jpg",
+      "dsc": 1561,
+      "kind": "face_reject_frame",
+      "default_pack_subfolder": "03_FRAMES",
+      "thumb_file": "DSC_1561_2s.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1jB-b6GvlhXtY1geC-cBRw6mXugiivRj4&sz=w400",
+      "url": "https://drive.google.com/file/d/1jB-b6GvlhXtY1geC-cBRw6mXugiivRj4/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Frame left unassigned after face pass",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1tG7e0kNjgj3Bh7UZ94fk-fHtoQ9baxUa",
+      "name": "DSC_1561_3s.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "extension": ".jpg",
+      "dsc": 1561,
+      "kind": "face_reject_frame",
+      "default_pack_subfolder": "03_FRAMES",
+      "thumb_file": "DSC_1561_3s.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1tG7e0kNjgj3Bh7UZ94fk-fHtoQ9baxUa&sz=w400",
+      "url": "https://drive.google.com/file/d/1tG7e0kNjgj3Bh7UZ94fk-fHtoQ9baxUa/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Frame left unassigned after face pass",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1GS43BMsWGOTHTOHB7R6GMbT8PDA4NEFC",
+      "name": "DSC_1561_unassigned_stable.mp4",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/VIDEOS",
+      "extension": ".mp4",
+      "dsc": 1561,
+      "kind": "face_reject_video",
+      "default_pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "thumb_file": "DSC_1561_unassigned_stable.mp4.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1GS43BMsWGOTHTOHB7R6GMbT8PDA4NEFC&sz=w400",
+      "url": "https://drive.google.com/file/d/1GS43BMsWGOTHTOHB7R6GMbT8PDA4NEFC/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Failed primary face match \u2014 review other 00_REF",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1CXf4Jg8-BEWzzk7rHZ7QuKc-QiRPgqtX",
+      "name": "DSC_1562_1s.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "extension": ".jpg",
+      "dsc": 1562,
+      "kind": "face_reject_frame",
+      "default_pack_subfolder": "03_FRAMES",
+      "thumb_file": "DSC_1562_1s.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1CXf4Jg8-BEWzzk7rHZ7QuKc-QiRPgqtX&sz=w400",
+      "url": "https://drive.google.com/file/d/1CXf4Jg8-BEWzzk7rHZ7QuKc-QiRPgqtX/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Frame left unassigned after face pass",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1fQWih4-EZQ771HwevDD9_ClEpcMsICRy",
+      "name": "DSC_1562_2s.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "extension": ".jpg",
+      "dsc": 1562,
+      "kind": "face_reject_frame",
+      "default_pack_subfolder": "03_FRAMES",
+      "thumb_file": "DSC_1562_2s.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1fQWih4-EZQ771HwevDD9_ClEpcMsICRy&sz=w400",
+      "url": "https://drive.google.com/file/d/1fQWih4-EZQ771HwevDD9_ClEpcMsICRy/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Frame left unassigned after face pass",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1F0bki__tIpvWgbtvThqLQPKHJEd9_hoT",
+      "name": "DSC_1562_4s.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "extension": ".jpg",
+      "dsc": 1562,
+      "kind": "face_reject_frame",
+      "default_pack_subfolder": "03_FRAMES",
+      "thumb_file": "DSC_1562_4s.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1F0bki__tIpvWgbtvThqLQPKHJEd9_hoT&sz=w400",
+      "url": "https://drive.google.com/file/d/1F0bki__tIpvWgbtvThqLQPKHJEd9_hoT/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Frame left unassigned after face pass",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "129piy1r5QYDcb9RMWj5RviHmHSO0Esn0",
+      "name": "DSC_1562_5s.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "extension": ".jpg",
+      "dsc": 1562,
+      "kind": "face_reject_frame",
+      "default_pack_subfolder": "03_FRAMES",
+      "thumb_file": "DSC_1562_5s.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=129piy1r5QYDcb9RMWj5RviHmHSO0Esn0&sz=w400",
+      "url": "https://drive.google.com/file/d/129piy1r5QYDcb9RMWj5RviHmHSO0Esn0/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Frame left unassigned after face pass",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1bKBwBk9NOsKSbBi1YTNFXM_GNrjjTiON",
+      "name": "DSC_1562_unassigned_stable.mp4",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/VIDEOS",
+      "extension": ".mp4",
+      "dsc": 1562,
+      "kind": "face_reject_video",
+      "default_pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "thumb_file": "DSC_1562_unassigned_stable.mp4.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1bKBwBk9NOsKSbBi1YTNFXM_GNrjjTiON&sz=w400",
+      "url": "https://drive.google.com/file/d/1bKBwBk9NOsKSbBi1YTNFXM_GNrjjTiON/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Failed primary face match \u2014 review other 00_REF",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1t8DaktOSjOTZP982ehbEUrMQ-r1qnC0n",
+      "name": "DSC_1564_1s.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "extension": ".jpg",
+      "dsc": 1564,
+      "kind": "face_reject_frame",
+      "default_pack_subfolder": "03_FRAMES",
+      "thumb_file": "DSC_1564_1s.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1t8DaktOSjOTZP982ehbEUrMQ-r1qnC0n&sz=w400",
+      "url": "https://drive.google.com/file/d/1t8DaktOSjOTZP982ehbEUrMQ-r1qnC0n/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Frame left unassigned after face pass",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1BPnRRtEpwh0vWAVoO33TKAkI1BbsDda6",
+      "name": "DSC_1564_3s.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "extension": ".jpg",
+      "dsc": 1564,
+      "kind": "face_reject_frame",
+      "default_pack_subfolder": "03_FRAMES",
+      "thumb_file": "DSC_1564_3s.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1BPnRRtEpwh0vWAVoO33TKAkI1BbsDda6&sz=w400",
+      "url": "https://drive.google.com/file/d/1BPnRRtEpwh0vWAVoO33TKAkI1BbsDda6/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Frame left unassigned after face pass",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1Ohvk9eBEYNC3RIlZv_UWU_luc5K1agvE",
+      "name": "DSC_1564_5s.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "extension": ".jpg",
+      "dsc": 1564,
+      "kind": "face_reject_frame",
+      "default_pack_subfolder": "03_FRAMES",
+      "thumb_file": "DSC_1564_5s.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1Ohvk9eBEYNC3RIlZv_UWU_luc5K1agvE&sz=w400",
+      "url": "https://drive.google.com/file/d/1Ohvk9eBEYNC3RIlZv_UWU_luc5K1agvE/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Frame left unassigned after face pass",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "12-qmJnRBvwB0CWuFKDpxha4uTgVxAMNh",
+      "name": "DSC_1564_7s.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "extension": ".jpg",
+      "dsc": 1564,
+      "kind": "face_reject_frame",
+      "default_pack_subfolder": "03_FRAMES",
+      "thumb_file": "DSC_1564_7s.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=12-qmJnRBvwB0CWuFKDpxha4uTgVxAMNh&sz=w400",
+      "url": "https://drive.google.com/file/d/12-qmJnRBvwB0CWuFKDpxha4uTgVxAMNh/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Frame left unassigned after face pass",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1ftbNPxBBmC98Uuv982O_mX_qfAk0cEv2",
+      "name": "DSC_1564_unassigned_stable.mp4",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/VIDEOS",
+      "extension": ".mp4",
+      "dsc": 1564,
+      "kind": "face_reject_video",
+      "default_pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "thumb_file": "DSC_1564_unassigned_stable.mp4.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1ftbNPxBBmC98Uuv982O_mX_qfAk0cEv2&sz=w400",
+      "url": "https://drive.google.com/file/d/1ftbNPxBBmC98Uuv982O_mX_qfAk0cEv2/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Failed primary face match \u2014 review other 00_REF",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1DD1mfftKeIKsXdtIXdBV7R_caf5mMOz_",
+      "name": "DSC_1565_12s.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "extension": ".jpg",
+      "dsc": 1565,
+      "kind": "face_reject_frame",
+      "default_pack_subfolder": "03_FRAMES",
+      "thumb_file": "DSC_1565_12s.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1DD1mfftKeIKsXdtIXdBV7R_caf5mMOz_&sz=w400",
+      "url": "https://drive.google.com/file/d/1DD1mfftKeIKsXdtIXdBV7R_caf5mMOz_/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Frame left unassigned after face pass",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1z1vl-f5jO_t43qzvRSyItRsJ9I_P3uX3",
+      "name": "DSC_1565_18s.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "extension": ".jpg",
+      "dsc": 1565,
+      "kind": "face_reject_frame",
+      "default_pack_subfolder": "03_FRAMES",
+      "thumb_file": "DSC_1565_18s.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1z1vl-f5jO_t43qzvRSyItRsJ9I_P3uX3&sz=w400",
+      "url": "https://drive.google.com/file/d/1z1vl-f5jO_t43qzvRSyItRsJ9I_P3uX3/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Frame left unassigned after face pass",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "10PMC5CuHc-gComBiAXkB2j-_tcfJ_J6V",
+      "name": "DSC_1565_25s.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "extension": ".jpg",
+      "dsc": 1565,
+      "kind": "face_reject_frame",
+      "default_pack_subfolder": "03_FRAMES",
+      "thumb_file": "DSC_1565_25s.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=10PMC5CuHc-gComBiAXkB2j-_tcfJ_J6V&sz=w400",
+      "url": "https://drive.google.com/file/d/10PMC5CuHc-gComBiAXkB2j-_tcfJ_J6V/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Frame left unassigned after face pass",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1fBv5uEg4aBJC_w7MQWzJy61ISqN-YOZC",
+      "name": "DSC_1565_5s.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "extension": ".jpg",
+      "dsc": 1565,
+      "kind": "face_reject_frame",
+      "default_pack_subfolder": "03_FRAMES",
+      "thumb_file": "DSC_1565_5s.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1fBv5uEg4aBJC_w7MQWzJy61ISqN-YOZC&sz=w400",
+      "url": "https://drive.google.com/file/d/1fBv5uEg4aBJC_w7MQWzJy61ISqN-YOZC/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Frame left unassigned after face pass",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1tdqeWY0URI2Wunfq2NRzddM4hMpxVmZL",
+      "name": "DSC_1565_unassigned_stable.mp4",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/VIDEOS",
+      "extension": ".mp4",
+      "dsc": 1565,
+      "kind": "face_reject_video",
+      "default_pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "thumb_file": "DSC_1565_unassigned_stable.mp4.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1tdqeWY0URI2Wunfq2NRzddM4hMpxVmZL&sz=w400",
+      "url": "https://drive.google.com/file/d/1tdqeWY0URI2Wunfq2NRzddM4hMpxVmZL/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Failed primary face match \u2014 review other 00_REF",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1DoEyhTas7odTs8p_sN3TBv8Hj6s7pSRj",
+      "name": "DSC_1568_2s.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "extension": ".jpg",
+      "dsc": 1568,
+      "kind": "face_reject_frame",
+      "default_pack_subfolder": "03_FRAMES",
+      "thumb_file": "DSC_1568_2s.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1DoEyhTas7odTs8p_sN3TBv8Hj6s7pSRj&sz=w400",
+      "url": "https://drive.google.com/file/d/1DoEyhTas7odTs8p_sN3TBv8Hj6s7pSRj/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Frame left unassigned after face pass",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1EspCmu-b6AKTvK-_LJjwyhR4IiDKl3FI",
+      "name": "DSC_1568_4s.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "extension": ".jpg",
+      "dsc": 1568,
+      "kind": "face_reject_frame",
+      "default_pack_subfolder": "03_FRAMES",
+      "thumb_file": "DSC_1568_4s.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1EspCmu-b6AKTvK-_LJjwyhR4IiDKl3FI&sz=w400",
+      "url": "https://drive.google.com/file/d/1EspCmu-b6AKTvK-_LJjwyhR4IiDKl3FI/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Frame left unassigned after face pass",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1PBZFvyEvREhl3JsgIA6Gcz392lSJffjB",
+      "name": "DSC_1568_6s.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "extension": ".jpg",
+      "dsc": 1568,
+      "kind": "face_reject_frame",
+      "default_pack_subfolder": "03_FRAMES",
+      "thumb_file": "DSC_1568_6s.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1PBZFvyEvREhl3JsgIA6Gcz392lSJffjB&sz=w400",
+      "url": "https://drive.google.com/file/d/1PBZFvyEvREhl3JsgIA6Gcz392lSJffjB/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Frame left unassigned after face pass",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1YlOd7hm2IUWgIuwR3CI0gb94cpls4rI1",
+      "name": "DSC_1568_8s.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "extension": ".jpg",
+      "dsc": 1568,
+      "kind": "face_reject_frame",
+      "default_pack_subfolder": "03_FRAMES",
+      "thumb_file": "DSC_1568_8s.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1YlOd7hm2IUWgIuwR3CI0gb94cpls4rI1&sz=w400",
+      "url": "https://drive.google.com/file/d/1YlOd7hm2IUWgIuwR3CI0gb94cpls4rI1/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Frame left unassigned after face pass",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1uCFPXoYdeG9ZUnNXPX54auZR7T2QhTfL",
+      "name": "DSC_1568_unassigned_stable.mp4",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/VIDEOS",
+      "extension": ".mp4",
+      "dsc": 1568,
+      "kind": "face_reject_video",
+      "default_pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "thumb_file": "DSC_1568_unassigned_stable.mp4.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1uCFPXoYdeG9ZUnNXPX54auZR7T2QhTfL&sz=w400",
+      "url": "https://drive.google.com/file/d/1uCFPXoYdeG9ZUnNXPX54auZR7T2QhTfL/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Failed primary face match \u2014 review other 00_REF",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1eqL9COiLxlEYR9FDJOqH3mIBgIHFgJ7d",
+      "name": "DSC_1572_edit.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/PHOTOS",
+      "extension": ".jpg",
+      "dsc": 1572,
+      "kind": "edit_still",
+      "default_pack_subfolder": "02_PORTRAITS",
+      "thumb_file": "DSC_1572_edit.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1eqL9COiLxlEYR9FDJOqH3mIBgIHFgJ7d&sz=w400",
+      "url": "https://drive.google.com/file/d/1eqL9COiLxlEYR9FDJOqH3mIBgIHFgJ7d/view",
+      "hints": [
+        {
+          "type": "roll_align",
+          "artist_hint": "10_wako.kungo_Wako_Kungo",
+          "confidence": "MEDIUM",
+          "note": "Same DSC as Wako Botanica raw \u2014 confirm visually"
+        }
+      ],
+      "suggested_pack": "10_wako.kungo_Wako_Kungo",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1aT8IzdNGNHas419juWNR2B-ZRCUh3v-t",
+      "name": "DSC_1573_edit.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/PHOTOS",
+      "extension": ".jpg",
+      "dsc": 1573,
+      "kind": "edit_still",
+      "default_pack_subfolder": "02_PORTRAITS",
+      "thumb_file": "DSC_1573_edit.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1aT8IzdNGNHas419juWNR2B-ZRCUh3v-t&sz=w400",
+      "url": "https://drive.google.com/file/d/1aT8IzdNGNHas419juWNR2B-ZRCUh3v-t/view",
+      "hints": [
+        {
+          "type": "roll_align",
+          "artist_hint": "10_wako.kungo_Wako_Kungo",
+          "confidence": "MEDIUM",
+          "note": "Same DSC as Wako Botanica raw \u2014 confirm visually"
+        }
+      ],
+      "suggested_pack": "10_wako.kungo_Wako_Kungo",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1TxbgIE0woosGK_faVxFr2pQJs58EXbN9",
+      "name": "DSC_1574_edit.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/PHOTOS",
+      "extension": ".jpg",
+      "dsc": 1574,
+      "kind": "edit_still",
+      "default_pack_subfolder": "02_PORTRAITS",
+      "thumb_file": "DSC_1574_edit.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1TxbgIE0woosGK_faVxFr2pQJs58EXbN9&sz=w400",
+      "url": "https://drive.google.com/file/d/1TxbgIE0woosGK_faVxFr2pQJs58EXbN9/view",
+      "hints": [
+        {
+          "type": "roll_align",
+          "artist_hint": "10_wako.kungo_Wako_Kungo",
+          "confidence": "MEDIUM",
+          "note": "Same DSC as Wako Botanica raw \u2014 confirm visually"
+        }
+      ],
+      "suggested_pack": "10_wako.kungo_Wako_Kungo",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1l6le2gefRgpVDmWsgCfRAQvj60Uthg7t",
+      "name": "DSC_1575_edit.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/PHOTOS",
+      "extension": ".jpg",
+      "dsc": 1575,
+      "kind": "edit_still",
+      "default_pack_subfolder": "02_PORTRAITS",
+      "thumb_file": "DSC_1575_edit.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1l6le2gefRgpVDmWsgCfRAQvj60Uthg7t&sz=w400",
+      "url": "https://drive.google.com/file/d/1l6le2gefRgpVDmWsgCfRAQvj60Uthg7t/view",
+      "hints": [
+        {
+          "type": "roll_align",
+          "artist_hint": "10_wako.kungo_Wako_Kungo",
+          "confidence": "MEDIUM",
+          "note": "Same DSC as Wako Botanica raw \u2014 confirm visually"
+        }
+      ],
+      "suggested_pack": "10_wako.kungo_Wako_Kungo",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "12ePy9U0F6yTKYHZXPi5BklKHBycZ21Dw",
+      "name": "DSC_1576_edit.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/PHOTOS",
+      "extension": ".jpg",
+      "dsc": 1576,
+      "kind": "edit_still",
+      "default_pack_subfolder": "02_PORTRAITS",
+      "thumb_file": "DSC_1576_edit.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=12ePy9U0F6yTKYHZXPi5BklKHBycZ21Dw&sz=w400",
+      "url": "https://drive.google.com/file/d/12ePy9U0F6yTKYHZXPi5BklKHBycZ21Dw/view",
+      "hints": [
+        {
+          "type": "roll_align",
+          "artist_hint": "10_wako.kungo_Wako_Kungo",
+          "confidence": "MEDIUM",
+          "note": "Same DSC as Wako Botanica raw \u2014 confirm visually"
+        }
+      ],
+      "suggested_pack": "10_wako.kungo_Wako_Kungo",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1bN7ndOwumh9r8kkjNpl7LR50mP1MgAjO",
+      "name": "DSC_1579_edit.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/PHOTOS",
+      "extension": ".jpg",
+      "dsc": 1579,
+      "kind": "edit_still",
+      "default_pack_subfolder": "02_PORTRAITS",
+      "thumb_file": "DSC_1579_edit.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1bN7ndOwumh9r8kkjNpl7LR50mP1MgAjO&sz=w400",
+      "url": "https://drive.google.com/file/d/1bN7ndOwumh9r8kkjNpl7LR50mP1MgAjO/view",
+      "hints": [
+        {
+          "type": "roll_align",
+          "artist_hint": "10_wako.kungo_Wako_Kungo",
+          "confidence": "MEDIUM",
+          "note": "Same DSC as Wako Botanica raw \u2014 confirm visually"
+        }
+      ],
+      "suggested_pack": "10_wako.kungo_Wako_Kungo",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1FR0I8vXnPJ2ICrp3FhDOdp-36zx5kj13",
+      "name": "DSC_1580_1s.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "extension": ".jpg",
+      "dsc": 1580,
+      "kind": "face_reject_frame",
+      "default_pack_subfolder": "03_FRAMES",
+      "thumb_file": "DSC_1580_1s.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1FR0I8vXnPJ2ICrp3FhDOdp-36zx5kj13&sz=w400",
+      "url": "https://drive.google.com/file/d/1FR0I8vXnPJ2ICrp3FhDOdp-36zx5kj13/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Frame left unassigned after face pass",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1n52O7jOCxquJmTQw5CSewVFG8H8ei21-",
+      "name": "DSC_1580_3s.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "extension": ".jpg",
+      "dsc": 1580,
+      "kind": "face_reject_frame",
+      "default_pack_subfolder": "03_FRAMES",
+      "thumb_file": "DSC_1580_3s.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1n52O7jOCxquJmTQw5CSewVFG8H8ei21-&sz=w400",
+      "url": "https://drive.google.com/file/d/1n52O7jOCxquJmTQw5CSewVFG8H8ei21-/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Frame left unassigned after face pass",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "10ebpg2gkqAq0pkPwvQpvp_16kgXQTsb9",
+      "name": "DSC_1580_5s.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "extension": ".jpg",
+      "dsc": 1580,
+      "kind": "face_reject_frame",
+      "default_pack_subfolder": "03_FRAMES",
+      "thumb_file": "DSC_1580_5s.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=10ebpg2gkqAq0pkPwvQpvp_16kgXQTsb9&sz=w400",
+      "url": "https://drive.google.com/file/d/10ebpg2gkqAq0pkPwvQpvp_16kgXQTsb9/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Frame left unassigned after face pass",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1EnqK5K700BvmEIkkdOQSvjhy7zXkTXn9",
+      "name": "DSC_1580_7s.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "extension": ".jpg",
+      "dsc": 1580,
+      "kind": "face_reject_frame",
+      "default_pack_subfolder": "03_FRAMES",
+      "thumb_file": "DSC_1580_7s.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1EnqK5K700BvmEIkkdOQSvjhy7zXkTXn9&sz=w400",
+      "url": "https://drive.google.com/file/d/1EnqK5K700BvmEIkkdOQSvjhy7zXkTXn9/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Frame left unassigned after face pass",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1ClhrbiwQq2Xu_74-EGa8834xBNrkwpJC",
+      "name": "DSC_1580_unassigned_stable.mp4",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/VIDEOS",
+      "extension": ".mp4",
+      "dsc": 1580,
+      "kind": "face_reject_video",
+      "default_pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "thumb_file": "DSC_1580_unassigned_stable.mp4.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1ClhrbiwQq2Xu_74-EGa8834xBNrkwpJC&sz=w400",
+      "url": "https://drive.google.com/file/d/1ClhrbiwQq2Xu_74-EGa8834xBNrkwpJC/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Failed primary face match \u2014 review other 00_REF",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1wQTPJaV2lL9vzinYYhjle-rOrmTEOGhv",
+      "name": "DSC_1583_12s.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "extension": ".jpg",
+      "dsc": 1583,
+      "kind": "face_reject_frame",
+      "default_pack_subfolder": "03_FRAMES",
+      "thumb_file": "DSC_1583_12s.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1wQTPJaV2lL9vzinYYhjle-rOrmTEOGhv&sz=w400",
+      "url": "https://drive.google.com/file/d/1wQTPJaV2lL9vzinYYhjle-rOrmTEOGhv/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Frame left unassigned after face pass",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1ONBH9p1vbif0g7KhuIsCQ8Vu7Zssn5ws",
+      "name": "DSC_1583_2s.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "extension": ".jpg",
+      "dsc": 1583,
+      "kind": "face_reject_frame",
+      "default_pack_subfolder": "03_FRAMES",
+      "thumb_file": "DSC_1583_2s.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1ONBH9p1vbif0g7KhuIsCQ8Vu7Zssn5ws&sz=w400",
+      "url": "https://drive.google.com/file/d/1ONBH9p1vbif0g7KhuIsCQ8Vu7Zssn5ws/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Frame left unassigned after face pass",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1pPPVh-zl3pnGzXJvn4uUbWFwtTr1DbJD",
+      "name": "DSC_1583_6s.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "extension": ".jpg",
+      "dsc": 1583,
+      "kind": "face_reject_frame",
+      "default_pack_subfolder": "03_FRAMES",
+      "thumb_file": "DSC_1583_6s.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1pPPVh-zl3pnGzXJvn4uUbWFwtTr1DbJD&sz=w400",
+      "url": "https://drive.google.com/file/d/1pPPVh-zl3pnGzXJvn4uUbWFwtTr1DbJD/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Frame left unassigned after face pass",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1ATf0xp42jLohXpAfqHZh_9ogVCkGs9Lp",
+      "name": "DSC_1583_9s.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "extension": ".jpg",
+      "dsc": 1583,
+      "kind": "face_reject_frame",
+      "default_pack_subfolder": "03_FRAMES",
+      "thumb_file": "DSC_1583_9s.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1ATf0xp42jLohXpAfqHZh_9ogVCkGs9Lp&sz=w400",
+      "url": "https://drive.google.com/file/d/1ATf0xp42jLohXpAfqHZh_9ogVCkGs9Lp/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Frame left unassigned after face pass",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1ZUKzObd9JvUpsvh_lEy-3E9a0LBbxhMZ",
+      "name": "DSC_1583_unassigned_stable.mp4",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/VIDEOS",
+      "extension": ".mp4",
+      "dsc": 1583,
+      "kind": "face_reject_video",
+      "default_pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "thumb_file": "DSC_1583_unassigned_stable.mp4.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1ZUKzObd9JvUpsvh_lEy-3E9a0LBbxhMZ&sz=w400",
+      "url": "https://drive.google.com/file/d/1ZUKzObd9JvUpsvh_lEy-3E9a0LBbxhMZ/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Failed primary face match \u2014 review other 00_REF",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1XP0_Gxgmh8wM7UVL_ZzuzvcO7tMIdEdK",
+      "name": "DSC_1585_2s.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "extension": ".jpg",
+      "dsc": 1585,
+      "kind": "face_reject_frame",
+      "default_pack_subfolder": "03_FRAMES",
+      "thumb_file": "DSC_1585_2s.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1XP0_Gxgmh8wM7UVL_ZzuzvcO7tMIdEdK&sz=w400",
+      "url": "https://drive.google.com/file/d/1XP0_Gxgmh8wM7UVL_ZzuzvcO7tMIdEdK/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Frame left unassigned after face pass",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1XREKy0H5NaP39zAvPre7sGBoa-A67hSI",
+      "name": "DSC_1585_4s.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "extension": ".jpg",
+      "dsc": 1585,
+      "kind": "face_reject_frame",
+      "default_pack_subfolder": "03_FRAMES",
+      "thumb_file": "DSC_1585_4s.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1XREKy0H5NaP39zAvPre7sGBoa-A67hSI&sz=w400",
+      "url": "https://drive.google.com/file/d/1XREKy0H5NaP39zAvPre7sGBoa-A67hSI/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Frame left unassigned after face pass",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1uwU0zoVbxTsJbRmRbkUlUXXSPURsxZCM",
+      "name": "DSC_1585_7s.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "extension": ".jpg",
+      "dsc": 1585,
+      "kind": "face_reject_frame",
+      "default_pack_subfolder": "03_FRAMES",
+      "thumb_file": "DSC_1585_7s.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1uwU0zoVbxTsJbRmRbkUlUXXSPURsxZCM&sz=w400",
+      "url": "https://drive.google.com/file/d/1uwU0zoVbxTsJbRmRbkUlUXXSPURsxZCM/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Frame left unassigned after face pass",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1uSjVdK_0obe6U-K3VZmQV--PJ1GeOMgi",
+      "name": "DSC_1585_9s.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "extension": ".jpg",
+      "dsc": 1585,
+      "kind": "face_reject_frame",
+      "default_pack_subfolder": "03_FRAMES",
+      "thumb_file": "DSC_1585_9s.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1uSjVdK_0obe6U-K3VZmQV--PJ1GeOMgi&sz=w400",
+      "url": "https://drive.google.com/file/d/1uSjVdK_0obe6U-K3VZmQV--PJ1GeOMgi/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Frame left unassigned after face pass",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "11PGXXVZB0GrHKI9RcfpMz8q6-1GBU9fl",
+      "name": "DSC_1585_unassigned_stable.mp4",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/VIDEOS",
+      "extension": ".mp4",
+      "dsc": 1585,
+      "kind": "face_reject_video",
+      "default_pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "thumb_file": "DSC_1585_unassigned_stable.mp4.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=11PGXXVZB0GrHKI9RcfpMz8q6-1GBU9fl&sz=w400",
+      "url": "https://drive.google.com/file/d/11PGXXVZB0GrHKI9RcfpMz8q6-1GBU9fl/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Failed primary face match \u2014 review other 00_REF",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1fDYELh45Nwf08og8kAg4QCugmVLZ2rlG",
+      "name": "DSC_1586_1s.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "extension": ".jpg",
+      "dsc": 1586,
+      "kind": "face_reject_frame",
+      "default_pack_subfolder": "03_FRAMES",
+      "thumb_file": "DSC_1586_1s.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1fDYELh45Nwf08og8kAg4QCugmVLZ2rlG&sz=w400",
+      "url": "https://drive.google.com/file/d/1fDYELh45Nwf08og8kAg4QCugmVLZ2rlG/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Frame left unassigned after face pass",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1nrtOWWwVPnkC5pCXPkrL4I8mwegDpUE0",
+      "name": "DSC_1586_3s.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "extension": ".jpg",
+      "dsc": 1586,
+      "kind": "face_reject_frame",
+      "default_pack_subfolder": "03_FRAMES",
+      "thumb_file": "DSC_1586_3s.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1nrtOWWwVPnkC5pCXPkrL4I8mwegDpUE0&sz=w400",
+      "url": "https://drive.google.com/file/d/1nrtOWWwVPnkC5pCXPkrL4I8mwegDpUE0/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Frame left unassigned after face pass",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1_qP6xk8Q-uJb1Eu6Z0wEVuyHJiBC6WuS",
+      "name": "DSC_1586_5s.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "extension": ".jpg",
+      "dsc": 1586,
+      "kind": "face_reject_frame",
+      "default_pack_subfolder": "03_FRAMES",
+      "thumb_file": "DSC_1586_5s.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1_qP6xk8Q-uJb1Eu6Z0wEVuyHJiBC6WuS&sz=w400",
+      "url": "https://drive.google.com/file/d/1_qP6xk8Q-uJb1Eu6Z0wEVuyHJiBC6WuS/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Frame left unassigned after face pass",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1KTwyUe2pjRE8CFF0kVVgJXe3HdbEKsuU",
+      "name": "DSC_1586_7s.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "extension": ".jpg",
+      "dsc": 1586,
+      "kind": "face_reject_frame",
+      "default_pack_subfolder": "03_FRAMES",
+      "thumb_file": "DSC_1586_7s.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1KTwyUe2pjRE8CFF0kVVgJXe3HdbEKsuU&sz=w400",
+      "url": "https://drive.google.com/file/d/1KTwyUe2pjRE8CFF0kVVgJXe3HdbEKsuU/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Frame left unassigned after face pass",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1ciIvUXzokfwQhVzl-VDl1YPrvDdvcUSs",
+      "name": "DSC_1586_unassigned_stable.mp4",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/VIDEOS",
+      "extension": ".mp4",
+      "dsc": 1586,
+      "kind": "face_reject_video",
+      "default_pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "thumb_file": "DSC_1586_unassigned_stable.mp4.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1ciIvUXzokfwQhVzl-VDl1YPrvDdvcUSs&sz=w400",
+      "url": "https://drive.google.com/file/d/1ciIvUXzokfwQhVzl-VDl1YPrvDdvcUSs/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Failed primary face match \u2014 review other 00_REF",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1VEVyAxs4MTTmD-6JDba7Y6unSaZoSg_L",
+      "name": "DSC_1588_11s.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "extension": ".jpg",
+      "dsc": 1588,
+      "kind": "face_reject_frame",
+      "default_pack_subfolder": "03_FRAMES",
+      "thumb_file": "DSC_1588_11s.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1VEVyAxs4MTTmD-6JDba7Y6unSaZoSg_L&sz=w400",
+      "url": "https://drive.google.com/file/d/1VEVyAxs4MTTmD-6JDba7Y6unSaZoSg_L/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Frame left unassigned after face pass",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1PL7uL4S1ZJwuzWMI4MddpZlC4S9zFKbH",
+      "name": "DSC_1588_15s.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "extension": ".jpg",
+      "dsc": 1588,
+      "kind": "face_reject_frame",
+      "default_pack_subfolder": "03_FRAMES",
+      "thumb_file": "DSC_1588_15s.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1PL7uL4S1ZJwuzWMI4MddpZlC4S9zFKbH&sz=w400",
+      "url": "https://drive.google.com/file/d/1PL7uL4S1ZJwuzWMI4MddpZlC4S9zFKbH/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Frame left unassigned after face pass",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1eCdQ9-FbQ9ObnPKwwI9u7GMRns7C0Fmq",
+      "name": "DSC_1588_3s.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "extension": ".jpg",
+      "dsc": 1588,
+      "kind": "face_reject_frame",
+      "default_pack_subfolder": "03_FRAMES",
+      "thumb_file": "DSC_1588_3s.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1eCdQ9-FbQ9ObnPKwwI9u7GMRns7C0Fmq&sz=w400",
+      "url": "https://drive.google.com/file/d/1eCdQ9-FbQ9ObnPKwwI9u7GMRns7C0Fmq/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Frame left unassigned after face pass",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1KFHaJEV-gOcNR9o5qmgqVT4E9afr6aGg",
+      "name": "DSC_1588_7s.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "extension": ".jpg",
+      "dsc": 1588,
+      "kind": "face_reject_frame",
+      "default_pack_subfolder": "03_FRAMES",
+      "thumb_file": "DSC_1588_7s.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1KFHaJEV-gOcNR9o5qmgqVT4E9afr6aGg&sz=w400",
+      "url": "https://drive.google.com/file/d/1KFHaJEV-gOcNR9o5qmgqVT4E9afr6aGg/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Frame left unassigned after face pass",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "18w4a5RcqZGW8qEv7b8ueZt5Y0m4lGReU",
+      "name": "DSC_1588_unassigned_stable.mp4",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/VIDEOS",
+      "extension": ".mp4",
+      "dsc": 1588,
+      "kind": "face_reject_video",
+      "default_pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "thumb_file": "DSC_1588_unassigned_stable.mp4.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=18w4a5RcqZGW8qEv7b8ueZt5Y0m4lGReU&sz=w400",
+      "url": "https://drive.google.com/file/d/18w4a5RcqZGW8qEv7b8ueZt5Y0m4lGReU/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Failed primary face match \u2014 review other 00_REF",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1FqdJo2xJB7lyQAR9NPZtv154130R93rB",
+      "name": "DSC_1601_103s.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "extension": ".jpg",
+      "dsc": 1601,
+      "kind": "face_reject_frame",
+      "default_pack_subfolder": "03_FRAMES",
+      "thumb_file": "DSC_1601_103s.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1FqdJo2xJB7lyQAR9NPZtv154130R93rB&sz=w400",
+      "url": "https://drive.google.com/file/d/1FqdJo2xJB7lyQAR9NPZtv154130R93rB/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Frame left unassigned after face pass",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1n3pO8TMataTGlkkoSrQenUe79tMvTZ1q",
+      "name": "DSC_1601_138s.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "extension": ".jpg",
+      "dsc": 1601,
+      "kind": "face_reject_frame",
+      "default_pack_subfolder": "03_FRAMES",
+      "thumb_file": "DSC_1601_138s.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1n3pO8TMataTGlkkoSrQenUe79tMvTZ1q&sz=w400",
+      "url": "https://drive.google.com/file/d/1n3pO8TMataTGlkkoSrQenUe79tMvTZ1q/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Frame left unassigned after face pass",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1ONWkxXKCN2mnMko0vubXRH4aj2SM5cgf",
+      "name": "DSC_1601_32s.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "extension": ".jpg",
+      "dsc": 1601,
+      "kind": "face_reject_frame",
+      "default_pack_subfolder": "03_FRAMES",
+      "thumb_file": "DSC_1601_32s.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1ONWkxXKCN2mnMko0vubXRH4aj2SM5cgf&sz=w400",
+      "url": "https://drive.google.com/file/d/1ONWkxXKCN2mnMko0vubXRH4aj2SM5cgf/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Frame left unassigned after face pass",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1HL89eDWoLDbi2L6wymXgOMVk7uTnhJbB",
+      "name": "DSC_1601_67s.jpg",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/FRAMES",
+      "extension": ".jpg",
+      "dsc": 1601,
+      "kind": "face_reject_frame",
+      "default_pack_subfolder": "03_FRAMES",
+      "thumb_file": "DSC_1601_67s.jpg.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1HL89eDWoLDbi2L6wymXgOMVk7uTnhJbB&sz=w400",
+      "url": "https://drive.google.com/file/d/1HL89eDWoLDbi2L6wymXgOMVk7uTnhJbB/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Frame left unassigned after face pass",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    },
+    {
+      "file_id": "1I6YCvxTTWFK2bp3Fjnbpb4X7OD4okyto",
+      "name": "DSC_1601_unassigned_stable.mp4",
+      "parent_folder_path": "Botanica/_UNASSIGNED_REVIEW/VIDEOS",
+      "extension": ".mp4",
+      "dsc": 1601,
+      "kind": "face_reject_video",
+      "default_pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "thumb_file": "DSC_1601_unassigned_stable.mp4.jpg",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1I6YCvxTTWFK2bp3Fjnbpb4X7OD4okyto&sz=w400",
+      "url": "https://drive.google.com/file/d/1I6YCvxTTWFK2bp3Fjnbpb4X7OD4okyto/view",
+      "hints": [
+        {
+          "type": "process",
+          "note": "Failed primary face match \u2014 review other 00_REF",
+          "review_against": [
+            "01_lyssa.bl_Lyssa",
+            "02_noua_Noua",
+            "03_chriskristoffer_Chris_Kristoffer",
+            "05_joaoredondomaia_Joao_Redondo_Maia",
+            "06_zeus_atro_Zeus_Atro",
+            "07_silso_n6_Silso",
+            "08_mistah_isaac_Mistah_Isaac",
+            "09_edoardostatuto_Edo_Edoardo_Statuto",
+            "10_wako.kungo_Wako_Kungo"
+          ],
+          "confidence": "REVIEW"
+        }
+      ],
+      "suggested_pack": "",
+      "action": "review_only_no_move"
+    }
+  ]
+}

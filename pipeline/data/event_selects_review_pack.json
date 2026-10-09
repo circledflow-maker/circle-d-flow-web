@@ -1,0 +1,124 @@
+{
+  "created_at": "2026-10-08T23:17:53Z",
+  "batch": "event_selects_performance_remaining",
+  "performance_count": 9,
+  "leave_typed": {
+    "VENUE": 9,
+    "CROWD_WIDE": 8,
+    "DETAILS": 11
+  },
+  "policy": [
+    "PERFORMANCE \u2192 artist review gallery (Piano/Guitar TBD + Crowd available)",
+    "VENUE / CROWD_WIDE / DETAILS already typed \u2014 leave in EVENT_SELECTS"
+  ],
+  "items": [
+    {
+      "file_id": "1q_VZ3yodjsVX0sZjBzOp8Jw7p4_l7Y8p",
+      "name": "shot_008_wide.mp4",
+      "parent_folder_path": "Botanica/EVENT_SELECTS/PERFORMANCE",
+      "extension": ".mp4",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1q_VZ3yodjsVX0sZjBzOp8Jw7p4_l7Y8p&sz=w400",
+      "url": "https://drive.google.com/file/d/1q_VZ3yodjsVX0sZjBzOp8Jw7p4_l7Y8p/view",
+      "thumb_file": "shot_008_wide.mp4.jpg",
+      "kind": "video",
+      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "status": "unreviewed"
+    },
+    {
+      "file_id": "1ZZn_WLlSWBuVrKEbnJ60kn37W15vQ2_0",
+      "name": "shot_011_portrait.mp4",
+      "parent_folder_path": "Botanica/EVENT_SELECTS/PERFORMANCE",
+      "extension": ".mp4",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1ZZn_WLlSWBuVrKEbnJ60kn37W15vQ2_0&sz=w400",
+      "url": "https://drive.google.com/file/d/1ZZn_WLlSWBuVrKEbnJ60kn37W15vQ2_0/view",
+      "thumb_file": "shot_011_portrait.mp4.jpg",
+      "kind": "video",
+      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "status": "skip"
+    },
+    {
+      "file_id": "1fg4SKxbePQnCpb48xDmRSuxUakbPEpHN",
+      "name": "shot_018_portrait.mp4",
+      "parent_folder_path": "Botanica/EVENT_SELECTS/PERFORMANCE",
+      "extension": ".mp4",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1fg4SKxbePQnCpb48xDmRSuxUakbPEpHN&sz=w400",
+      "url": "https://drive.google.com/file/d/1fg4SKxbePQnCpb48xDmRSuxUakbPEpHN/view",
+      "thumb_file": "shot_018_portrait.mp4.jpg",
+      "kind": "video",
+      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "status": "skip"
+    },
+    {
+      "file_id": "1dKHC3I4hv479SXn0zSdpo9azDSBcmq8S",
+      "name": "shot_019_close_up.mp4",
+      "parent_folder_path": "Botanica/EVENT_SELECTS/PERFORMANCE",
+      "extension": ".mp4",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1dKHC3I4hv479SXn0zSdpo9azDSBcmq8S&sz=w400",
+      "url": "https://drive.google.com/file/d/1dKHC3I4hv479SXn0zSdpo9azDSBcmq8S/view",
+      "thumb_file": "shot_019_close_up.mp4.jpg",
+      "kind": "video",
+      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "status": "unreviewed"
+    },
+    {
+      "file_id": "1UViVo4sgL-_B18xSOSNoDM2N88sANElV",
+      "name": "shot_019_portrait.mp4",
+      "parent_folder_path": "Botanica/EVENT_SELECTS/PERFORMANCE",
+      "extension": ".mp4",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1UViVo4sgL-_B18xSOSNoDM2N88sANElV&sz=w400",
+      "url": "https://drive.google.com/file/d/1UViVo4sgL-_B18xSOSNoDM2N88sANElV/view",
+      "thumb_file": "shot_019_portrait.mp4.jpg",
+      "kind": "video",
+      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "status": "unreviewed"
+    },
+    {
+      "file_id": "1uqFI75bU77o_F2KenNmE7gHg1rH2VuzT",
+      "name": "shot_020_medium.mp4",
+      "parent_folder_path": "Botanica/EVENT_SELECTS/PERFORMANCE",
+      "extension": ".mp4",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1uqFI75bU77o_F2KenNmE7gHg1rH2VuzT&sz=w400",
+      "url": "https://drive.google.com/file/d/1uqFI75bU77o_F2KenNmE7gHg1rH2VuzT/view",
+      "thumb_file": "shot_020_medium.mp4.jpg",
+      "kind": "video",
+      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "status": "unreviewed"
+    },
+    {
+      "file_id": "1HMzKGIdVQm7j6P9eSaXGT6REYZygMp1j",
+      "name": "shot_032_wide.mp4",
+      "parent_folder_path": "Botanica/EVENT_SELECTS/PERFORMANCE",
+      "extension": ".mp4",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1HMzKGIdVQm7j6P9eSaXGT6REYZygMp1j&sz=w400",
+      "url": "https://drive.google.com/file/d/1HMzKGIdVQm7j6P9eSaXGT6REYZygMp1j/view",
+      "thumb_file": "shot_032_wide.mp4.jpg",
+      "kind": "video",
+      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "status": "skip"
+    },
+    {
+      "file_id": "1G4-DW44R3Y1gS9nUjatspc0buSK99h4s",
+      "name": "shot_034_close_up.mp4",
+      "parent_folder_path": "Botanica/EVENT_SELECTS/PERFORMANCE",
+      "extension": ".mp4",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1G4-DW44R3Y1gS9nUjatspc0buSK99h4s&sz=w400",
+      "url": "https://drive.google.com/file/d/1G4-DW44R3Y1gS9nUjatspc0buSK99h4s/view",
+      "thumb_file": "shot_034_close_up.mp4.jpg",
+      "kind": "video",
+      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "status": "skip"
+    },
+    {
+      "file_id": "1c8Vq4FIiL1ja2BdjqQgWGPi4sAf4QLPb",
+      "name": "shot_036_close_up.mp4",
+      "parent_folder_path": "Botanica/EVENT_SELECTS/PERFORMANCE",
+      "extension": ".mp4",
+      "thumbnail_hint": "https://drive.google.com/thumbnail?id=1c8Vq4FIiL1ja2BdjqQgWGPi4sAf4QLPb&sz=w400",
+      "url": "https://drive.google.com/file/d/1c8Vq4FIiL1ja2BdjqQgWGPi4sAf4QLPb/view",
+      "thumb_file": "shot_036_close_up.mp4.jpg",
+      "kind": "video",
+      "pack_subfolder": "01_VIDEOS_PERFORMANCE",
+      "status": "unreviewed"
+    }
+  ]
+}

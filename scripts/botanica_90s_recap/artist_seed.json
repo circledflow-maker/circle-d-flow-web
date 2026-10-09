@@ -1,0 +1,147 @@
+{
+  "event": {
+    "title": "The Botanical Groove Session",
+    "presenter": "Wako Kungo",
+    "venue": "Botânica Lisboa",
+    "date": "2026-09-24",
+    "time": "20:00–23:00",
+    "city": "Lisbon",
+    "instagram_post": "wako.kungo",
+    "notes": "FREE ENTRANCE · RESPONSIBLE DONATIONS · live music community vs AI · line-up from @wako.kungo IG post"
+  },
+  "visual_language": {
+    "palette": ["deep green monstera", "cream/gold type", "warm skin", "stage purple/magenta/blue", "wood grain warm brown"],
+    "grade": "CINEMATIC + AUTHENTIC + LIVE + WARM + IMMERSIVE",
+    "denoise": "light hqdn3d — keep live grain/atmosphere",
+    "format": "Circle D Stages (energy, rhythm, fake multi-cam crops from ONE camera)",
+    "photo_grade": "warm botanical — lift shadows, soft contrast, natural skin, slight gold warmth"
+  },
+  "artists": [
+    {
+      "id": "ARTIST_001",
+      "folder": "01_lyssa.bl_Lyssa",
+      "handle": "lyssa.bl",
+      "display_name": "Lyssa",
+      "aliases": ["lyssa", "lyssa.bl", "lyssa_bl"],
+      "ref_image": "Assets/content/botanica/refs/ARTIST_lyssa_bl.png",
+      "notes": "Portrait ref: curly hair, crochet cardigan, warm wood background"
+    },
+    {
+      "id": "ARTIST_002",
+      "folder": "02_noua_Noua",
+      "handle": "noua",
+      "display_name": "Noua",
+      "aliases": ["noua"],
+      "ref_image": null,
+      "notes": "Line-up from @wako.kungo Botanical Groove Session post"
+    },
+    {
+      "id": "ARTIST_003",
+      "folder": "03_chriskristoffer_Chris_Kristoffer",
+      "handle": "chriskristoffer",
+      "display_name": "Chris Kristoffer",
+      "aliases": ["chriskristoffer", "chris kristoffer", "chris_kristoffer"],
+      "ref_image": "Assets/content/botanica/refs/ARTIST_chriskristoffer.png",
+      "notes": "Bass / stage energy — studded vest, raised arm"
+    },
+    {
+      "id": "ARTIST_004",
+      "folder": "04_diazaofficial_Diaza",
+      "handle": "diazaofficial",
+      "display_name": "Diaza",
+      "aliases": ["diaza", "diazaofficial", "rita nunes"],
+      "ref_image": "Assets/content/botanica/refs/ARTIST_diazaofficial.png",
+      "notes": "Close-up emotional performance, warm spotlight"
+    },
+    {
+      "id": "ARTIST_005",
+      "folder": "05_joaoredondomaia_Joao_Redondo_Maia",
+      "handle": "joaoredondomaia",
+      "display_name": "João Redondo Maia",
+      "aliases": ["joaoredondomaia", "joao redondo", "redondo maia", "joão"],
+      "ref_image": "Assets/content/botanica/refs/ARTIST_joaoredondomaia.png",
+      "notes": "Curly hair, sunglasses, low-angle sky"
+    },
+    {
+      "id": "ARTIST_006",
+      "folder": "06_zeus_atro_Zeus_Atro",
+      "handle": "zeus_atro",
+      "display_name": "Zeus Atro",
+      "aliases": ["zeus_atro", "zeus atro", "zeus"],
+      "ref_image": "Assets/content/botanica/refs/ARTIST_zeus_atro.png",
+      "notes": "Blonde hair/goatee, green vest"
+    },
+    {
+      "id": "ARTIST_007",
+      "folder": "07_silso_n6_Silso",
+      "handle": "silso_n6",
+      "display_name": "Silso",
+      "aliases": ["silso", "silso_n6", "silson6"],
+      "ref_image": null,
+      "notes": "Line-up from IG caption"
+    },
+    {
+      "id": "ARTIST_008",
+      "folder": "08_mistah_isaac_Mistah_Isaac",
+      "handle": "mistah_isaac",
+      "display_name": "Mistah Isaac",
+      "aliases": ["mistah_isaac", "mistah isaac", "mr isaac", "mr_isaac", "isaac", "hanna"],
+      "ref_image": null,
+      "notes": "Requested artist pack — guitar/voice; Hanna & Mr Isaac circle"
+    },
+    {
+      "id": "ARTIST_009",
+      "folder": "09_edoardostatuto_Edo_Edoardo_Statuto",
+      "handle": "_edoardostatuto_",
+      "display_name": "Edoardo Statuto",
+      "short_name": "Edo",
+      "aliases": ["edoardostatuto", "_edoardostatuto_", "edoardo", "statuto", "edo"],
+      "ref_image": null,
+      "notes": "Very special guest — pack folder labeled Edo / Edoardo Statuto"
+    },
+    {
+      "id": "ARTIST_010",
+      "folder": "10_wako.kungo_Wako_Kungo",
+      "handle": "wako.kungo",
+      "display_name": "Wako Kungo",
+      "aliases": ["wako.kungo"],
+      "ref_image": "Assets/content/botanica/refs/00_event_flyer_botanical_groove.png",
+      "notes": "Host / presenter — do NOT alias bare 'wako'/'Wako Kungo' folder (would steal all clips)"
+    }
+  ],
+  "text_interruptions": [
+    "EXPERIENCE",
+    "CONNECT",
+    "FEEL IT",
+    "MOVE",
+    "LIVE",
+    "BOTÂNICA"
+  ],
+  "letterbox_captions": [
+    "LIVE",
+    "SO",
+    "FEEL",
+    "NOW",
+    "MOVE",
+    "BREATHE",
+    "TOGETHER",
+    "ENERGY",
+    "LISBON",
+    "GROOVE",
+    "SOUND",
+    "NIGHT",
+    "HEART",
+    "BOTANICA",
+    "WAKO"
+  ],
+  "story_chapters": [
+    {"id": "arrival", "t": [0, 8], "label": "ARRIVAL"},
+    {"id": "venue", "t": [8, 16], "label": "VENUE"},
+    {"id": "people", "t": [16, 26], "label": "PEOPLE"},
+    {"id": "artists", "t": [26, 42], "label": "ARTISTS"},
+    {"id": "performance", "t": [42, 62], "label": "PERFORMANCE"},
+    {"id": "audience", "t": [62, 72], "label": "AUDIENCE"},
+    {"id": "peak", "t": [72, 84], "label": "PEAK"},
+    {"id": "closing", "t": [84, 90], "label": "CLOSING"}
+  ]
+}

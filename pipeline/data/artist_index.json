@@ -1,0 +1,313 @@
+{
+  "created_at": "2026-09-29T05:34:58Z",
+  "source": "derived_from_drive_inventory",
+  "content_pipeline_artists": [
+    {
+      "name": "Arpan",
+      "folder_id": "185CwA75aIOECI5T0x5Ktf7m7ss9AJ_sR",
+      "path": "Artists/Arpan",
+      "subfolders": 5,
+      "files": 5,
+      "schema_hint": "arpan_like"
+    },
+    {
+      "name": "Big Mike",
+      "folder_id": "1DOu7FcdaTfi9D2x0gmITKHcy4dOd-YtL",
+      "path": "Artists/Big Mike",
+      "subfolders": 5,
+      "files": 5,
+      "schema_hint": "custom_existing"
+    },
+    {
+      "name": "Black.es",
+      "folder_id": "1xOZ-pJP3qv2o8Ffp3682D4OIlSLjOSDF",
+      "path": "Artists/Black.es",
+      "subfolders": 0,
+      "files": 181,
+      "schema_hint": "custom_existing"
+    },
+    {
+      "name": "C-Riz",
+      "folder_id": "1igNbShTHw473P9imOJLtv-cqnHVCb1y-",
+      "path": "Artists/C-Riz",
+      "subfolders": 5,
+      "files": 5,
+      "schema_hint": "custom_existing"
+    },
+    {
+      "name": "Caiou",
+      "folder_id": "1MDW5UxiaDQ7yLNkNqNGq4sgUagMYMBSB",
+      "path": "Artists/Caiou",
+      "subfolders": 5,
+      "files": 5,
+      "schema_hint": "custom_existing"
+    },
+    {
+      "name": "Cambodsha",
+      "folder_id": "12-AxQXTWxmovAtkuQpjcPGxRTHJqKbDd",
+      "path": "Artists/Cambodsha",
+      "subfolders": 0,
+      "files": 10,
+      "schema_hint": "custom_existing"
+    },
+    {
+      "name": "Chris In\u00e1cio",
+      "folder_id": "1gzbcRULLoTAG82X3spDLOHTU6ozjSefW",
+      "path": "Artists/Chris In\u00e1cio",
+      "subfolders": 4,
+      "files": 4,
+      "schema_hint": "custom_existing"
+    },
+    {
+      "name": "Dennis",
+      "folder_id": "1L6LugmYLq8t7PakI8TBQiBS1zo_EvDWB",
+      "path": "Artists/Dennis",
+      "subfolders": 5,
+      "files": 5,
+      "schema_hint": "custom_existing"
+    },
+    {
+      "name": "Diego HempyRootsLisboa",
+      "folder_id": "1k9TC9kfS9-qGFkPSuI-AuEDvVpyAshdz",
+      "path": "Artists/Diego HempyRootsLisboa",
+      "subfolders": 0,
+      "files": 5,
+      "schema_hint": "custom_existing"
+    },
+    {
+      "name": "Edo",
+      "folder_id": "1cvQxvOqF4OhwS2JjToVYoqwxs1THSG9K",
+      "path": "Artists/Edo",
+      "subfolders": 0,
+      "files": 9,
+      "schema_hint": "custom_existing"
+    },
+    {
+      "name": "Elisa",
+      "folder_id": "1z1AM67lVCMQhWneZzbNMGY4n2ulg8w9Q",
+      "path": "Artists/Elisa",
+      "subfolders": 4,
+      "files": 4,
+      "schema_hint": "custom_existing"
+    },
+    {
+      "name": "Hannah and Mr Isaac",
+      "folder_id": "1hVo7llZk-0H-sxywGuH0MpARfNpab6o3",
+      "path": "Artists/Hannah and Mr Isaac",
+      "subfolders": 1,
+      "files": 1,
+      "schema_hint": "custom_existing"
+    },
+    {
+      "name": "HempyRootsLisboaCrew",
+      "folder_id": "1787tMEVqEDhOvIl3w2uwYKpsGn-_erwC",
+      "path": "Artists/HempyRootsLisboaCrew",
+      "subfolders": 0,
+      "files": 5,
+      "schema_hint": "custom_existing"
+    },
+    {
+      "name": "Hope Loading",
+      "folder_id": "184vwSNLViLtNFMqV9WXauEO0UcJxtJWO",
+      "path": "Artists/Hope Loading",
+      "subfolders": 12,
+      "files": 12,
+      "schema_hint": "custom_existing"
+    },
+    {
+      "name": "Jannes - Tattoo Artist",
+      "folder_id": "1dkPx_K5t9LnQUEG-rIgWm2IyuGcLEvij",
+      "path": "Artists/Jannes - Tattoo Artist",
+      "subfolders": 5,
+      "files": 5,
+      "schema_hint": "custom_existing"
+    },
+    {
+      "name": "Leo",
+      "folder_id": "14MA8YV4XE70jVnN-cGRASh-t-9oLXnED",
+      "path": "Artists/Leo",
+      "subfolders": 0,
+      "files": 8,
+      "schema_hint": "custom_existing"
+    },
+    {
+      "name": "Mr Isaac",
+      "folder_id": "1InjslclagMySJHdktiSkXPfh-kbIR3id",
+      "path": "Artists/Mr Isaac",
+      "subfolders": 4,
+      "files": 4,
+      "schema_hint": "custom_existing"
+    },
+    {
+      "name": "N I C K E   K L E I N",
+      "folder_id": "1nTDYgtaE6-hqxKxX3SKau_Py-gGUj8HJ",
+      "path": "Artists/N I C K E   K L E I N",
+      "subfolders": 5,
+      "files": 5,
+      "schema_hint": "custom_existing"
+    },
+    {
+      "name": "Naruthe Token",
+      "folder_id": "1K8Jk6WQ7kt3WzhZgitbA9yErGWVATUDM",
+      "path": "Artists/Naruthe Token",
+      "subfolders": 5,
+      "files": 5,
+      "schema_hint": "custom_existing"
+    },
+    {
+      "name": "Oak",
+      "folder_id": "1InlJcj8q8rqMgqlnkIY3Lo8AzeeOyJ3x",
+      "path": "Artists/Oak",
+      "subfolders": 2,
+      "files": 2,
+      "schema_hint": "custom_existing"
+    },
+    {
+      "name": "OG",
+      "folder_id": "1G9PkP19oU3grTpnBdo6SpJZhyTmGJAlY",
+      "path": "Artists/OG",
+      "subfolders": 0,
+      "files": 14,
+      "schema_hint": "custom_existing"
+    },
+    {
+      "name": "Sandu",
+      "folder_id": "1r-rO8NIZwVQa3teFJTK_EhrlqO-f3UY6",
+      "path": "Artists/Sandu",
+      "subfolders": 1,
+      "files": 1,
+      "schema_hint": "custom_existing"
+    },
+    {
+      "name": "SeMaria",
+      "folder_id": "1YkpHk1sjNqJoTUhmcGUFVPiCo3Ss-EU3",
+      "path": "Artists/SeMaria",
+      "subfolders": 5,
+      "files": 5,
+      "schema_hint": "custom_existing"
+    },
+    {
+      "name": "Simba",
+      "folder_id": "1_zdaDN79FaBKpN-wWVLCaH05CziooO3G",
+      "path": "Artists/Simba",
+      "subfolders": 0,
+      "files": 1,
+      "schema_hint": "custom_existing"
+    },
+    {
+      "name": "Sime",
+      "folder_id": "1wzK_EqXDuTDLktWdc4N3kQ4N9GbgXApi",
+      "path": "Artists/Sime",
+      "subfolders": 5,
+      "files": 5,
+      "schema_hint": "custom_existing"
+    },
+    {
+      "name": "Soluna",
+      "folder_id": "1xRDXIhXvLnU14UcbaEkNF5kfelQcd9G3",
+      "path": "Artists/Soluna",
+      "subfolders": 1,
+      "files": 1,
+      "schema_hint": "custom_existing"
+    },
+    {
+      "name": "Wako Kungo",
+      "folder_id": "1oDFvtuC1-aQTxUe7i4AZZx12EvVLvX0j",
+      "path": "Artists/Wako Kungo",
+      "subfolders": 3,
+      "files": 3,
+      "schema_hint": "custom_existing"
+    },
+    {
+      "name": "Willpower",
+      "folder_id": "1Xsjo8SBZgz75zyxQDoHHy2DdarDreJ85",
+      "path": "Artists/Willpower",
+      "subfolders": 5,
+      "files": 5,
+      "schema_hint": "custom_existing"
+    }
+  ],
+  "botanica_artist_pack": [
+    {
+      "name": "01_lyssa.bl_Lyssa",
+      "folder_id": "1hGOTQzLzias81PGEqtU8sseWP3MFGXqs",
+      "path": "BotanicaArtistPack/01_lyssa.bl_Lyssa",
+      "files": 2,
+      "subfolders": 1
+    },
+    {
+      "name": "02_noua_Noua",
+      "folder_id": "1U0U80ZZniB9G12QYNRiq0n61LW65lDY_",
+      "path": "BotanicaArtistPack/02_noua_Noua",
+      "files": 2,
+      "subfolders": 1
+    },
+    {
+      "name": "03_chriskristoffer_Chris_Kristoffer",
+      "folder_id": "124bB6gCTCINF9lnj1aNt8sdfPGx0qjAM",
+      "path": "BotanicaArtistPack/03_chriskristoffer_Chris_Kristoffer",
+      "files": 2,
+      "subfolders": 1
+    },
+    {
+      "name": "04_diazaofficial_Diaza",
+      "folder_id": "16HVd8NHHXLPVTcx3qfIQkRf6i02Hdr99",
+      "path": "BotanicaArtistPack/04_diazaofficial_Diaza",
+      "files": 5,
+      "subfolders": 4
+    },
+    {
+      "name": "05_joaoredondomaia_Joao_Redondo_Maia",
+      "folder_id": "1RxbBpKEj8SIrPr54HAdxmFJZfUZSBYeh",
+      "path": "BotanicaArtistPack/05_joaoredondomaia_Joao_Redondo_Maia",
+      "files": 2,
+      "subfolders": 1
+    },
+    {
+      "name": "06_zeus_atro_Zeus_Atro",
+      "folder_id": "1e5DrWHx9eHL99kTz6LnQUrtrR0e-Sz7F",
+      "path": "BotanicaArtistPack/06_zeus_atro_Zeus_Atro",
+      "files": 4,
+      "subfolders": 3
+    },
+    {
+      "name": "07_silso_n6_Silso",
+      "folder_id": "1ZmL2Ve9O8eobBeGRVCIbfDbEvLp883Ks",
+      "path": "BotanicaArtistPack/07_silso_n6_Silso",
+      "files": 2,
+      "subfolders": 1
+    },
+    {
+      "name": "08_mistah_isaac_Mistah_Isaac",
+      "folder_id": "1SPB-CJ7b8dN0G1b4ndG9z5703Mpk1rei",
+      "path": "BotanicaArtistPack/08_mistah_isaac_Mistah_Isaac",
+      "files": 2,
+      "subfolders": 1
+    },
+    {
+      "name": "09_edoardostatuto_Edo_Edoardo_Statuto",
+      "folder_id": "1Ff9OPjgqvB5xCtD0r2gP_ip10yyZ7BvP",
+      "path": "BotanicaArtistPack/09_edoardostatuto_Edo_Edoardo_Statuto",
+      "files": 2,
+      "subfolders": 1
+    },
+    {
+      "name": "10_wako.kungo_Wako_Kungo",
+      "folder_id": "1wiIPrQvE8pVcop3xeaWR5mkztLtUJYy6",
+      "path": "BotanicaArtistPack/10_wako.kungo_Wako_Kungo",
+      "files": 2,
+      "subfolders": 1
+    },
+    {
+      "name": "11_filipesax_Felippe_Sax",
+      "folder_id": null,
+      "path": "BotanicaArtistPack/11_filipesax_Felippe_Sax",
+      "files": 0,
+      "subfolders": 0,
+      "status": "create_on_execute",
+      "instagram": "filipesax_",
+      "legal_name": "Filipe Bohlke",
+      "display_name": "Felippe Sax"
+    }
+  ]
+}

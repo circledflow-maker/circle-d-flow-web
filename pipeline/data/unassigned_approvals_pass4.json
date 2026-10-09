@@ -1,0 +1,39 @@
+{
+  "created_at": "2026-10-07T15:38:47.182Z",
+  "source": "held_review_gallery",
+  "policy": "Human-approved held items only",
+  "assignments": [
+    {
+      "file_id": "10PMC5CuHc-gComBiAXkB2j-_tcfJ_J6V",
+      "name": "DSC_1565_25s.jpg",
+      "action": "move",
+      "pack_folder": "10_wako.kungo_Wako_Kungo",
+      "pack_subfolder": "03_FRAMES",
+      "artists_folder": "Wako Kungo",
+      "prefer_artists_botanica": true
+    },
+    {
+      "file_id": "1fBv5uEg4aBJC_w7MQWzJy61ISqN-YOZC",
+      "name": "DSC_1565_5s.jpg",
+      "action": "skip",
+      "pack_folder": null
+    },
+    {
+      "file_id": "1DoEyhTas7odTs8p_sN3TBv8Hj6s7pSRj",
+      "name": "DSC_1568_2s.jpg",
+      "action": "skip",
+      "pack_folder": null
+    },
+    {
+      "file_id": "1ONWkxXKCN2mnMko0vubXRH4aj2SM5cgf",
+      "name": "DSC_1601_32s.jpg",
+      "action": "skip",
+      "pack_folder": null
+    }
+  ],
+  "ingested_at": "2026-10-07T15:41:18Z",
+  "notes": [
+    "Uploaded as unassigned_approvals (4).json 2026-10-07",
+    "Normalized prefer_artists_botanica for Wako + Felippe Sax"
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "created_at": "2026-10-08T23:27:12Z",
+  "mode": "execute",
+  "allow_render": false,
+  "execute": true,
+  "local_root": "D:\\Wakungo_Content_Studio\\Botanica",
+  "event_name": "Botanica 90s",
+  "stages": [
+    {
+      "id": 2,
+      "name": "Project Detection",
+      "status": "ok",
+      "detail": "projects=4 arpan_nodes=8"
+    },
+    {
+      "id": 5,
+      "name": "QA Metadata Gates",
+      "status": "ok",
+      "detail": "blockers=0"
+    },
+    {
+      "id": 11,
+      "name": "Reporting",
+      "status": "deferred_end"
+    }
+  ]
+}
