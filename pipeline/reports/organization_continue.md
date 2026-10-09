@@ -1,24 +1,22 @@
-# Phase 5 lite — complete
+# Continue after ears skip
 
-**Updated:** 2026-10-08T23:29:18Z
+**Updated:** 2026-10-09T16:04:11Z
 
-| Stage | Result |
-|-------|--------|
-| Project Detection | ok (4 projects, 8 Arpan nodes) |
-| QA Metadata Gates | ok (**0 blockers**) |
-| Reporting | ok (report at end) |
+Stage 4 previously skipped (no `CDF_SAMPLE_MEDIA`). Fixed:
+- auto-pick a local proxy under `--local-root`
+- `PHASE5_EARS_OPTIONAL.cmd` now runs **stage 3 (intake_sort+ears)** then **stage 4 (smoke sample)**
 
-Render stages still gated.
-
-## Optional next
-**A) Ears on local Botanica proxies** (no Drive masters):
+## Windows (already in `D:\circle-d-flow-web`)
 ```powershell
-python pipeline\tools\orchestrate.py --only 4 --execute --local-root "D:\Wakungo_Content_Studio\Botanica"
+git fetch origin cursor/content-pipeline-org-execute-f46a
+git checkout -f origin/cursor/content-pipeline-org-execute-f46a -- pipeline scripts/content_pipeline
+pipeline\PHASE5_EARS_OPTIONAL.cmd
 ```
 
-**B) Refresh Drive inventory** (metadata crawl):
+If proxies are not under `D:\Wakungo_Content_Studio\Botanica`, set:
 ```powershell
-python pipeline\tools\orchestrate.py --only 1 --execute
+$env:LOCAL_ROOT="D:\path\to\your\proxies"
 ```
+(or edit the path inside the `.cmd`).
 
-**C) Stop here** — Phase 4 org + Phase 5 QA green. Recap/YouTube only with explicit `--allow-render --execute`.
+No Drive downloads. No render.

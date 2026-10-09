@@ -259,10 +259,16 @@ def main() -> int:
     variables = {
         "local_project_root": args.local_root,
         "event_name": args.event_name,
-        "sample_media_path": "",  # optional; stage 4 skipped unless provided via env
+        "sample_media_path": "",  # filled from env or auto-picked under local_root
     }
     if os.environ.get("CDF_SAMPLE_MEDIA"):
         variables["sample_media_path"] = os.environ["CDF_SAMPLE_MEDIA"]
+    elif args.local_root:
+        # Auto-pick a short-sample candidate from local proxies (no Drive download)
+        picked = _pick_sample_media(Path(args.local_root))
+        if picked:
+            variables["sample_media_path"] = str(picked)
+            print(f"Auto sample media: {picked}")
 
     dry = not args.execute
     run: dict[str, Any] = {
@@ -272,6 +278,7 @@ def main() -> int:
         "execute": bool(args.execute),
         "local_root": args.local_root,
         "event_name": args.event_name,
+        "sample_media_path": variables.get("sample_media_path") or None,
         "stages": [],
     }
 
