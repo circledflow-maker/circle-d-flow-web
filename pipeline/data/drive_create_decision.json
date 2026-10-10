@@ -13,12 +13,12 @@
   ],
   "actions": {
     "drive_folder_create_via_intake_sort": "do_not_execute",
-    "review_queue_35": "leave_unassigned_no_artist_assign",
-    "ears_no_audio_39": "expected_photo_heavy_limit40_sample; intake inventory now prefers AV on re-run"
+    "review_queue_34": "leave_unassigned_no_artist_assign",
+    "ears_no_audio_39": "mostly silent/no-audio clips in local Botanica sample"
   },
   "optional_next": [
-    "Re-run PHASE5_EARS_OPTIONAL after pull (AV-preferring inventory) for a more useful ears sample",
-    "Optional Drive rediscovery: python pipeline\\tools\\orchestrate.py --only 1 --execute",
+    "Open pipeline\\reports\\intake_plan_review.md for the 34 review filenames",
+    "Do not run Drive rediscovery unless inventory is proven stale",
     "Render stages 6-10 remain gated until explicit ask"
   ]
 }

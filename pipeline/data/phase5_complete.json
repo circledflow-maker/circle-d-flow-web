@@ -10,8 +10,7 @@
   },
   "windows_next": [
     "pipeline\\PHASE5_STATUS.cmd",
-    "optional: python pipeline\\tools\\orchestrate.py --only 1 --execute  (Drive rediscovery)",
-    "optional: pipeline\\PHASE5_LITE.cmd  (QA refresh)"
+    "open pipeline\\reports\\intake_plan_review.md (34 review names on Windows PC)"
   ],
   "do_not": [
     "Execute intake Drive CREATE proposals",
