@@ -1,25 +1,20 @@
-# Continue — fix ears float crash + proxy path
+# Continue — Phase 5 ears green
 
-**Updated:** 2026-10-10T18:54:00Z
+**Updated:** 2026-10-10T18:58:00Z
 
-## What broke
-1. Stage 4 `exit_1`: `ears.py` `ValueError: could not convert string to float: '-'` (ffmpeg astats prints `-` for RMS/Peak on some clips).
-2. `03_Proxies_Compressed` **does not exist** on this PC — do not pass that path.
+## Status
+- `[3] ok` + `[4] ok` on `Botanica\Concept9-16.mp4`
+- Flags: include proxies + skip EVENT_SELECTS
+- Drive CREATE: skip (ENSURE done)
+- Render 6–10: gated
 
-## Windows
+## Windows (one snapshot, then stop)
 ```powershell
 git fetch origin cursor/phase5-intake-sort-exit1-f46a
 git checkout -f origin/cursor/phase5-intake-sort-exit1-f46a -- pipeline scripts/content_pipeline
-pipeline\PHASE5_EARS_OPTIONAL.cmd
+pipeline\PHASE5_INTAKE_REVIEW.cmd
 ```
 
-No args needed (uses `D:\Wakungo_Content_Studio\Botanica`, auto-upgrades only if a proxy dir exists).
+Paste/screenshot the summary (item counts). Empty inventory after skipping EVENT_SELECTS is OK — means no local artist proxies beyond root clips; Drive org already covers selects.
 
-Optional real proxy/pack root if you have one:
-```powershell
-pipeline\PHASE5_EARS_OPTIONAL.cmd D:\path\to\real\proxies
-```
-
-## Still gated
-- Drive CREATE: skip (ENSURE done)
-- Render 6–10: gated
+Then: `pipeline\PHASE5_STATUS.cmd` — Phase 5 metadata/ears lane is done until you ask for render or a real proxy-folder intake.

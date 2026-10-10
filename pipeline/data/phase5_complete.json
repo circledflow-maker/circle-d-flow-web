@@ -1,25 +1,20 @@
 {
-  "created_at": "2026-10-10T18:44:00Z",
-  "status": "complete_metadata_lane",
-  "verified_windows": {
-    "lite_qa": "ok stages 2/5/11 blockers=0",
-    "ears_smoke_stage4": "ok (multiple runs)",
-    "intake_stage3": "ok exit, but EVENT_SELECTS-only local tree => 40/40 review + 39 no_audio"
-  },
-  "decisions": {
+  "created_at": "2026-10-10T18:58:00Z",
+  "status": "complete_awaiting_intake_review_snapshot",
+  "lanes": {
+    "phase5_lite_qa": "complete",
+    "phase5_ears_optional": "complete (3+4 ok on Concept9-16.mp4)",
+    "intake_plan_review": "run_once_for_snapshot",
     "drive_create_proposals": "skip_already_ensured",
-    "review_queue_event_selects": "leave_unassigned_org_already_done_on_drive",
     "render_stages_6_10": "gated"
   },
-  "followup_fix": {
-    "intake_flags": "--include-proxies --skip-event-selects",
-    "sample_picker": "deprioritize entire EVENT_SELECTS; prefer 03_Proxies_Compressed / Artists"
-  },
   "windows_next": [
-    "git checkout -f origin/cursor/phase5-intake-sort-exit1-f46a -- pipeline scripts/content_pipeline",
-    "pipeline\\PHASE5_EARS_OPTIONAL.cmd",
-    "OR: pipeline\\PHASE5_EARS_OPTIONAL.cmd D:\\Wakungo_Content_Studio\\Botanica\\03_Proxies_Compressed",
+    "pipeline\\PHASE5_INTAKE_REVIEW.cmd",
     "pipeline\\PHASE5_STATUS.cmd"
   ],
-  "note": "If inventory empty after skip EVENT_SELECTS, local disk has no artist proxies — Phase 5 ears smoke is still green; artist intake needs a proxy/pack LOCAL_ROOT."
+  "do_not": [
+    "Pass missing 03_Proxies_Compressed path",
+    "Re-create Drive artist folders",
+    "--allow-render without explicit ask"
+  ]
 }
