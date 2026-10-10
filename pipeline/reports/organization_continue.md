@@ -1,22 +1,26 @@
-# Continue after ears skip
+# Continue — Phase 5 metadata lane
 
-**Updated:** 2026-10-09T16:04:11Z
+**Updated:** 2026-10-10T12:10:00Z
 
-Stage 4 previously skipped (no `CDF_SAMPLE_MEDIA`). Fixed:
-- auto-pick a local proxy under `--local-root`
-- `PHASE5_EARS_OPTIONAL.cmd` now runs **stage 3 (intake_sort+ears)** then **stage 4 (smoke sample)**
+## Status
+- Phase 4 org: complete
+- Phase 5 lite QA: complete (0 blockers)
+- Phase 5 ears optional: **complete** — `[3] ok` + `[4] ok` on `EVENT_SELECTS\CROWD_WIDE\shot_030_crowd.mp4`
+- Intake plan written locally: `pipeline\data\intake_plan.json`
+- Render stages 6–10: still gated
 
 ## Windows (already in `D:\circle-d-flow-web`)
 ```powershell
-git fetch origin cursor/content-pipeline-org-execute-f46a
-git checkout -f origin/cursor/content-pipeline-org-execute-f46a -- pipeline scripts/content_pipeline
-pipeline\PHASE5_EARS_OPTIONAL.cmd
+git fetch origin cursor/phase5-intake-sort-exit1-f46a
+git checkout -f origin/cursor/phase5-intake-sort-exit1-f46a -- pipeline scripts/content_pipeline
+pipeline\PHASE5_INTAKE_REVIEW.cmd
+pipeline\PHASE5_LITE.cmd
 ```
 
-If proxies are not under `D:\Wakungo_Content_Studio\Botanica`, set:
-```powershell
-$env:LOCAL_ROOT="D:\path\to\your\proxies"
-```
-(or edit the path inside the `.cmd`).
+1. **INTAKE_REVIEW** — human-readable summary of sort/create/review + Drive CREATE proposals (not executed)
+2. **PHASE5_LITE** — refresh QA so `intake_plan_present` flips to true
 
-No Drive downloads. No render.
+## STOP
+- Approve before any Drive artist-folder creation
+- Approve before `--allow-render --execute`
+- No full-master downloads

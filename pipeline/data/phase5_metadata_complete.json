@@ -1,0 +1,20 @@
+{
+  "created_at": "2026-10-10T12:10:00Z",
+  "status": "metadata_lane_complete",
+  "lanes": {
+    "phase5_lite_qa": "complete (2026-10-08, blockers=0)",
+    "phase5_ears_optional": "complete (2026-10-10, stages 3+4 ok)",
+    "intake_plan_review": "pending_windows_run",
+    "drive_create_proposals": "awaiting_human_approval",
+    "render_stages_6_10": "gated"
+  },
+  "windows_next": [
+    "pipeline\\PHASE5_INTAKE_REVIEW.cmd",
+    "pipeline\\PHASE5_LITE.cmd"
+  ],
+  "do_not": [
+    "Drive folder creation without approval",
+    "Full master downloads",
+    "--allow-render without explicit ask"
+  ]
+}
