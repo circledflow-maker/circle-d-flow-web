@@ -199,8 +199,28 @@ Avoid stage 9 until Botanica recap path is proven.
 
 ---
 
-## 11. STOP
+## 11. STOP (initial validation)
 
 Validation complete.  
 **No** Drive rediscovery, sorting, artist-folder creation, ears re-analysis, or render was executed while producing this report.  
 Completion markers were **not** modified.
+
+---
+
+## 12. Addendum — inventory-only completed (2026-10-10T19:53Z)
+
+**VERIFIED** (Windows screenshot): 
+```text
+python scripts\botanica_90s_recap\run_botanica_recap.py --root "D:\Wakungo_Content_Studio\Botanica" --inventory-only
+Inventory only - done.
+prefer 'wako kungo': 46 | other: 1
+videos=49 photos=9
+event source clips used: 47 (Wako pool 46)
+Concept9-16.mp4 probed
+```
+
+Marker: `pipeline/data/phase5_inventory_only_complete.json`  
+Expected on disk: `Botanica\ANALYSIS\media_inventory.json` (+ artist_database / event_timeline / concept analysis).
+
+**Still NOT done:** encode / `--force` / orchestrator `--allow-render`.  
+**Next:** confirm ANALYSIS JSON files exist (see `organization_continue.md`), then await explicit approval for a bounded `--seconds` test render.
