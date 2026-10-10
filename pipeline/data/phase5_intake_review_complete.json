@@ -1,0 +1,23 @@
+{
+  "created_at": "2026-10-10T19:04:00Z",
+  "status": "complete",
+  "source": "windows_PHASE5_INTAKE_REVIEW_screenshot_2026-10-10_1904",
+  "plan_items": 40,
+  "summary": {
+    "total": 40,
+    "sort_existing": 3,
+    "create_artist_then_sort": 3,
+    "review": 34,
+    "ears_music": 0,
+    "ears_speech": 0,
+    "ears_mixed": 0,
+    "ears_no_audio": 39
+  },
+  "drive_create_proposals": 6,
+  "review_queue": 34,
+  "decisions": {
+    "drive_create": "skip_already_ensured",
+    "review_queue": "leave_unassigned",
+    "render": "gated"
+  }
+}

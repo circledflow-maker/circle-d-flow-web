@@ -1,0 +1,20 @@
+{
+  "created_at": "2026-10-10T18:58:00Z",
+  "status": "complete",
+  "source": "windows_PHASE5_EARS_OPTIONAL_screenshot_2026-10-10_1858",
+  "local_root": "D:\\Wakungo_Content_Studio\\Botanica",
+  "flags": {
+    "CDF_INTAKE_INCLUDE_PROXIES": "1",
+    "CDF_INTAKE_SKIP_EVENT_SELECTS": "1"
+  },
+  "sample_media": "D:\\Wakungo_Content_Studio\\Botanica\\Concept9-16.mp4",
+  "stages": {
+    "3_artist_detection_intake_plan": "ok",
+    "4_media_classification_ears_sample": "ok"
+  },
+  "notes": [
+    "ears.py dash-metric crash fixed",
+    "03_Proxies_Compressed absent — used Botanica root",
+    "EVENT_SELECTS skipped for intake"
+  ]
+}
