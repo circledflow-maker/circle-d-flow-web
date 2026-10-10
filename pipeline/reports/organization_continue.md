@@ -1,20 +1,14 @@
-# Continue — Phase 5 ears green
+# Phase 5 complete — STOP
 
-**Updated:** 2026-10-10T18:58:00Z
+**Updated:** 2026-10-10T19:04:00Z
 
-## Status
-- `[3] ok` + `[4] ok` on `Botanica\Concept9-16.mp4`
-- Flags: include proxies + skip EVENT_SELECTS
-- Drive CREATE: skip (ENSURE done)
-- Render 6–10: gated
+Intake review snapshot: **sort=3 / create=3 / review=34**. Drive CREATE skipped. Ears green.
 
-## Windows (one snapshot, then stop)
+## Optional only
 ```powershell
-git fetch origin cursor/phase5-intake-sort-exit1-f46a
-git checkout -f origin/cursor/phase5-intake-sort-exit1-f46a -- pipeline scripts/content_pipeline
-pipeline\PHASE5_INTAKE_REVIEW.cmd
+pipeline\PHASE5_STATUS.cmd
 ```
 
-Paste/screenshot the summary (item counts). Empty inventory after skipping EVENT_SELECTS is OK — means no local artist proxies beyond root clips; Drive org already covers selects.
+No more Phase 5 ears/intake loops needed unless you point `LOCAL_ROOT` at a real proxy/pack tree with audio.
 
-Then: `pipeline\PHASE5_STATUS.cmd` — Phase 5 metadata/ears lane is done until you ask for render or a real proxy-folder intake.
+**Awaiting your call:** Drive rediscovery (`--only 1`) or enable render stages.
