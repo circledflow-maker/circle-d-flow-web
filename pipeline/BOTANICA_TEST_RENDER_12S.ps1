@@ -1,14 +1,8 @@
-#Requires -Version 5.1
-<#
-  Botanica 12s preview render — AUTHORIZED TEST ONLY
-  Implements pipeline/reports/BOTANICA_TEST_RENDER_PLAN.md
+﻿#Requires -Version 5.1
+# Botanica 12s preview render - AUTHORIZED TEST ONLY
+# Implements pipeline/reports/BOTANICA_TEST_RENDER_PLAN.md
+# Usage: powershell -NoProfile -ExecutionPolicy Bypass -File pipeline\BOTANICA_TEST_RENDER_12S.ps1
 
-  Usage (on Windows PC with D:):
-    cd D:\circle-d-flow-web
-    powershell -ExecutionPolicy Bypass -File pipeline\BOTANICA_TEST_RENDER_12S.ps1
-
-  Stops without render if preflight fails.
-#>
 $ErrorActionPreference = "Stop"
 
 $Root = "D:\Wakungo_Content_Studio\Botanica"
@@ -22,16 +16,16 @@ $Candidates = @(
   "DSC_1598.MOV"
 )
 
-function Assert-Cmd($name) {
+function Assert-Cmd([string]$name) {
   if (-not (Get-Command $name -ErrorAction SilentlyContinue)) {
-    throw "MISSING command on PATH: $name"
+    throw ("MISSING command on PATH: " + $name)
   }
 }
 
 function Get-Duration([string]$path) {
   $d = & ffprobe -v quiet -show_entries format=duration -of csv=p=0 -- $path 2>$null
-  if (-not $d) { throw "ffprobe failed for $path" }
-  return [double]::Parse($d, [System.Globalization.CultureInfo]::InvariantCulture)
+  if (-not $d) { throw ("ffprobe failed for " + $path) }
+  return [double]::Parse(([string]$d).Trim(), [System.Globalization.CultureInfo]::InvariantCulture)
 }
 
 function Get-MidBandIn([double]$dur, [double]$frac, [double]$length) {
@@ -42,7 +36,7 @@ function Get-MidBandIn([double]$dur, [double]$frac, [double]$length) {
   if (($t0 + $length) -gt ($dur - 0.15)) {
     $t0 = [Math]::Max($usableStart, $dur - 0.15 - $length)
   }
-  if ($t0 -lt 0) { throw "Invalid in-point for duration=$dur length=$length" }
+  if ($t0 -lt 0) { throw "Invalid in-point" }
   return [Math]::Round($t0, 3)
 }
 
@@ -65,13 +59,17 @@ function Find-NearestDsc([string]$dir, [string]$wantedName) {
   return $best
 }
 
+function Inv([double]$n) {
+  return $n.ToString([System.Globalization.CultureInfo]::InvariantCulture)
+}
+
 Write-Host "=== Botanica 12s TEST RENDER (authorized preview only) ==="
-Write-Host "Root: $Root"
+Write-Host ("Root: " + $Root)
 Assert-Cmd ffmpeg
 Assert-Cmd ffprobe
 
-if (-not (Test-Path -LiteralPath $Root)) { throw "PREFLIGHT FAIL: missing root $Root" }
-if (-not (Test-Path -LiteralPath $SrcDir)) { throw "PREFLIGHT FAIL: missing source dir $SrcDir" }
+if (-not (Test-Path -LiteralPath $Root)) { throw ("PREFLIGHT FAIL: missing root " + $Root) }
+if (-not (Test-Path -LiteralPath $SrcDir)) { throw ("PREFLIGHT FAIL: missing source dir " + $SrcDir) }
 
 New-Item -ItemType Directory -Force -Path $OutDir | Out-Null
 $testWrite = Join-Path $OutDir "_write_test.tmp"
@@ -79,12 +77,11 @@ Set-Content -Path $testWrite -Value "ok" -Encoding ASCII
 Remove-Item -LiteralPath $testWrite -Force
 
 $stamp = Get-Date -Format "yyyyMMdd_HHmmss"
-$Out = Join-Path $OutDir "BOTANICA_12s_PREVIEW_720x1280_$stamp.mp4"
-if (Test-Path -LiteralPath $Out) { throw "PREFLIGHT FAIL: output already exists $Out" }
-$Work = Join-Path $OutDir "parts_$stamp"
+$Out = Join-Path $OutDir ("BOTANICA_12s_PREVIEW_720x1280_" + $stamp + ".mp4")
+if (Test-Path -LiteralPath $Out) { throw ("PREFLIGHT FAIL: output already exists " + $Out) }
+$Work = Join-Path $OutDir ("parts_" + $stamp)
 New-Item -ItemType Directory -Force -Path $Work | Out-Null
 
-# Crop specs: name, length, mid-band frac, cw,ch,cx,cy
 $Shots = @(
   @{ Name = "01_env";   File = $Candidates[0]; Len = 2.4; Frac = 0.20; Cw = 0.92; Ch = 0.58; Cx = 0.04; Cy = 0.04 },
   @{ Name = "02_med";   File = $Candidates[1]; Len = 2.4; Frac = 0.35; Cw = 0.78; Ch = 0.78; Cx = 0.11; Cy = 0.10 },
@@ -93,72 +90,98 @@ $Shots = @(
   @{ Name = "05_wide";  File = $Candidates[4]; Len = 2.4; Frac = 0.70; Cw = 1.00; Ch = 1.00; Cx = 0.00; Cy = 0.00 }
 )
 
-$resolved = @()
-Write-Host "`n--- Preflight sources ---"
+$resolved = New-Object System.Collections.Generic.List[object]
+Write-Host ""
+Write-Host "--- Preflight sources ---"
 foreach ($s in $Shots) {
   $path = Join-Path $SrcDir $s.File
   $usedName = $s.File
   if (-not (Test-Path -LiteralPath $path)) {
     $near = Find-NearestDsc $SrcDir $s.File
-    if (-not $near) { throw "PREFLIGHT FAIL: missing $($s.File) and no DSC_*.MOV in $SrcDir" }
-    Write-Host "SUBSTITUTE $($s.File) -> $($near.Name)"
+    if (-not $near) { throw ("PREFLIGHT FAIL: missing " + $s.File + " and no DSC_*.MOV in " + $SrcDir) }
+    Write-Host ("SUBSTITUTE " + $s.File + " -> " + $near.Name)
     $path = $near.FullName
     $usedName = $near.Name
   }
   $dur = Get-Duration $path
-  if ($dur -lt ($s.Len + 1.0)) { throw "PREFLIGHT FAIL: $usedName duration=$dur too short for $($s.Len)s shot" }
+  if ($dur -lt ($s.Len + 1.0)) { throw ("PREFLIGHT FAIL: " + $usedName + " duration too short") }
   $t0 = Get-MidBandIn $dur $s.Frac $s.Len
-  if (($t0 + $s.Len) -gt ($dur - 0.05)) { throw "PREFLIGHT FAIL: timecode out of range for $usedName" }
-  Write-Host ("OK {0} dur={1:N2}s in={2:N3} len={3} crop={4}/{5}@{6},{7}" -f $usedName, $dur, $t0, $s.Len, $s.Cw, $s.Ch, $s.Cx, $s.Cy)
-  $resolved += [pscustomobject]@{
-    Name = $s.Name; Path = $path; UsedName = $usedName; Dur = $dur; T0 = $t0; Len = $s.Len
-    Cw = $s.Cw; Ch = $s.Ch; Cx = $s.Cx; Cy = $s.Cy
-  }
+  if (($t0 + $s.Len) -gt ($dur - 0.05)) { throw ("PREFLIGHT FAIL: timecode out of range for " + $usedName) }
+  Write-Host ("OK " + $usedName + " dur=" + (Inv $dur) + "s in=" + (Inv $t0) + " len=" + (Inv $s.Len))
+  $resolved.Add([pscustomobject]@{
+    Name = $s.Name
+    Path = $path
+    UsedName = $usedName
+    Dur = $dur
+    T0 = $t0
+    Len = $s.Len
+    Cw = $s.Cw
+    Ch = $s.Ch
+    Cx = $s.Cx
+    Cy = $s.Cy
+  }) | Out-Null
 }
 
-Write-Host "`nPREFLIGHT OK — starting lightweight 12s preview encode"
+Write-Host ""
+Write-Host "PREFLIGHT OK - starting lightweight 12s preview encode"
 $renderStart = Get-Date
-$partFiles = @()
+$partFiles = New-Object System.Collections.Generic.List[string]
 $i = 0
 foreach ($r in $resolved) {
   $i++
-  $part = Join-Path $Work ("{0:D2}_{1}.mp4" -f $i, $r.Name)
-  $vf = "crop=w=iw*$($r.Cw):h=ih*$($r.Ch):x=iw*$($r.Cx):y=ih*$($r.Cy),scale=720:1280:force_original_aspect_ratio=increase,crop=720:1280,eq=contrast=1.06:brightness=0.02:saturation=0.95,fps=30"
-  Write-Host "ffmpeg part $i : $($r.UsedName)"
-  & ffmpeg -hide_banner -loglevel warning -y -threads 2 `
-    -ss $r.T0.ToString([System.Globalization.CultureInfo]::InvariantCulture) `
-    -t $r.Len.ToString([System.Globalization.CultureInfo]::InvariantCulture) `
-    -i $r.Path `
-    -vf $vf -an -c:v libx264 -preset veryfast -crf 23 -pix_fmt yuv420p `
+  $part = Join-Path $Work (("{0:D2}_{1}.mp4" -f $i, $r.Name))
+  $vf = "crop=w=iw*" + (Inv $r.Cw) + ":h=ih*" + (Inv $r.Ch) + ":x=iw*" + (Inv $r.Cx) + ":y=ih*" + (Inv $r.Cy) + ",scale=720:1280:force_original_aspect_ratio=increase,crop=720:1280,eq=contrast=1.06:brightness=0.02:saturation=0.95,fps=30"
+  Write-Host ("ffmpeg part " + $i + " : " + $r.UsedName)
+  $ffArgs = @(
+    "-hide_banner", "-loglevel", "warning", "-y", "-threads", "2",
+    "-ss", (Inv $r.T0),
+    "-t", (Inv $r.Len),
+    "-i", $r.Path,
+    "-vf", $vf,
+    "-an", "-c:v", "libx264", "-preset", "veryfast", "-crf", "23", "-pix_fmt", "yuv420p",
     $part
+  )
+  & ffmpeg @ffArgs
   if ($LASTEXITCODE -ne 0 -or -not (Test-Path -LiteralPath $part)) {
-    throw "RENDER FAIL: part $i"
+    throw ("RENDER FAIL: part " + $i)
   }
-  $partFiles += $part
+  $partFiles.Add($part) | Out-Null
 }
 
 $listPath = Join-Path $Work "list.txt"
-$listBody = ($partFiles | ForEach-Object { "file '$([IO.Path]::GetFileName($_))'" }) -join "`n"
-Set-Content -Path $listPath -Value $listBody -Encoding ASCII
+$listLines = @()
+foreach ($pf in $partFiles) {
+  $listLines += ("file '" + [IO.Path]::GetFileName($pf) + "'")
+}
+Set-Content -Path $listPath -Value $listLines -Encoding ASCII
 
-# Audio bed from performance shot (index 2 / DSC_1580 family)
 $audioSrc = $resolved[2]
 $audioPath = Join-Path $Work "bed.m4a"
-Write-Host "ffmpeg audio bed from $($audioSrc.UsedName)"
-& ffmpeg -hide_banner -loglevel warning -y -threads 2 `
-  -ss $audioSrc.T0.ToString([System.Globalization.CultureInfo]::InvariantCulture) `
-  -t "12" -i $audioSrc.Path -vn `
-  -af "loudnorm=I=-14:TP=-1.5:LRA=11,afade=t=in:st=0:d=0.4,afade=t=out:st=10.5:d=1.5" `
-  -c:a aac -b:a 160k $audioPath
+Write-Host ("ffmpeg audio bed from " + $audioSrc.UsedName)
+$ffAudio = @(
+  "-hide_banner", "-loglevel", "warning", "-y", "-threads", "2",
+  "-ss", (Inv $audioSrc.T0),
+  "-t", "12",
+  "-i", $audioSrc.Path,
+  "-vn",
+  "-af", "loudnorm=I=-14:TP=-1.5:LRA=11,afade=t=in:st=0:d=0.4,afade=t=out:st=10.5:d=1.5",
+  "-c:a", "aac", "-b:a", "160k",
+  $audioPath
+)
+& ffmpeg @ffAudio
 if ($LASTEXITCODE -ne 0) { throw "RENDER FAIL: audio bed" }
 
-Write-Host "ffmpeg concat + mux -> $Out"
+Write-Host ("ffmpeg concat + mux -> " + $Out)
 Push-Location $Work
 try {
-  & ffmpeg -hide_banner -loglevel warning -y -threads 2 `
-    -f concat -safe 0 -i list.txt -i $audioPath `
-    -c:v copy -c:a aac -b:a 160k -shortest -movflags +faststart `
+  $ffMux = @(
+    "-hide_banner", "-loglevel", "warning", "-y", "-threads", "2",
+    "-f", "concat", "-safe", "0", "-i", "list.txt",
+    "-i", $audioPath,
+    "-c:v", "copy", "-c:a", "aac", "-b:a", "160k", "-shortest", "-movflags", "+faststart",
     $Out
+  )
+  & ffmpeg @ffMux
 } finally {
   Pop-Location
 }
@@ -169,14 +192,28 @@ if ($LASTEXITCODE -ne 0 -or -not (Test-Path -LiteralPath $Out)) {
 $renderEnd = Get-Date
 $wallSec = [Math]::Round(($renderEnd - $renderStart).TotalSeconds, 1)
 
-Write-Host "`n--- ffprobe validation ---"
+Write-Host ""
+Write-Host "--- ffprobe validation ---"
 $probeJson = & ffprobe -v quiet -print_format json -show_format -show_streams -- $Out
 $probe = $probeJson | ConvertFrom-Json
 $v = $probe.streams | Where-Object { $_.codec_type -eq "video" } | Select-Object -First 1
 $a = $probe.streams | Where-Object { $_.codec_type -eq "audio" } | Select-Object -First 1
 $durOut = [double]$probe.format.duration
 $size = (Get-Item -LiteralPath $Out).Length
-$fps = $v.r_frame_rate
+$fps = [string]$v.r_frame_rate
+$audioLabel = "MISSING"
+if ($a) { $audioLabel = [string]$a.codec_name }
+
+$srcList = @()
+foreach ($r in $resolved) {
+  $srcList += @{
+    file = $r.UsedName
+    path = $r.Path
+    in = $r.T0
+    len = $r.Len
+    source_duration = $r.Dur
+  }
+}
 
 $result = [ordered]@{
   created_at = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
@@ -187,11 +224,11 @@ $result = [ordered]@{
   duration = $durOut
   width = [int]$v.width
   height = [int]$v.height
-  fps = "$fps"
-  video_codec = $v.codec_name
-  audio_codec = $(if ($a) { $a.codec_name } else { $null })
+  fps = $fps
+  video_codec = [string]$v.codec_name
+  audio_codec = $audioLabel
   has_audio = [bool]$a
-  sources = @($resolved | ForEach-Object { @{ file = $_.UsedName; path = $_.Path; in = $_.T0; len = $_.Len; source_duration = $_.Dur } })
+  sources = $srcList
   notes = @(
     "720x1280 preview only",
     "No Drive / ARTISTS / EXPORT / full recap",
@@ -199,23 +236,22 @@ $result = [ordered]@{
   )
 }
 
-$reportJson = Join-Path $OutDir "BOTANICA_12s_PREVIEW_RESULT_$stamp.json"
-$reportMd = Join-Path $OutDir "BOTANICA_12s_PREVIEW_RESULT_$stamp.md"
+$reportJson = Join-Path $OutDir ("BOTANICA_12s_PREVIEW_RESULT_" + $stamp + ".json")
+$reportMd = Join-Path $OutDir ("BOTANICA_12s_PREVIEW_RESULT_" + $stamp + ".md")
 ($result | ConvertTo-Json -Depth 6) | Set-Content -Path $reportJson -Encoding UTF8
 
-$audioLabel = if ($a) { [string]$a.codec_name } else { "MISSING" }
 $mdLines = @(
   "# Botanica 12s preview - RESULT",
   "",
   "- Status: ok",
-  "- Output: $Out",
-  "- Wall time: ${wallSec}s",
-  "- Size: $size bytes",
-  "- Duration: $durOut",
-  "- Resolution: $($v.width)x$($v.height)",
-  "- FPS: $fps",
-  "- Video: $($v.codec_name)",
-  "- Audio: $audioLabel",
+  ("- Output: " + $Out),
+  ("- Wall time: " + $wallSec + "s"),
+  ("- Size: " + $size + " bytes"),
+  ("- Duration: " + $durOut),
+  ("- Resolution: " + $v.width + "x" + $v.height),
+  ("- FPS: " + $fps),
+  ("- Video: " + $v.codec_name),
+  ("- Audio: " + $audioLabel),
   "",
   "STOP - no further render/upload."
 )
@@ -223,8 +259,8 @@ $mdLines -join "`r`n" | Set-Content -Path $reportMd -Encoding UTF8
 
 Write-Host ""
 Write-Host "RESULT OK"
-Write-Host "OUT=$Out"
-Write-Host "BYTES=$size DUR=$durOut RES=$($v.width)x$($v.height) FPS=$fps V=$($v.codec_name) A=$audioLabel"
-Write-Host "WALL_SECONDS=$wallSec"
-Write-Host "REPORT=$reportMd"
+Write-Host ("OUT=" + $Out)
+Write-Host ("BYTES=" + $size + " DUR=" + $durOut + " RES=" + $v.width + "x" + $v.height + " FPS=" + $fps + " V=" + $v.codec_name + " A=" + $audioLabel)
+Write-Host ("WALL_SECONDS=" + $wallSec)
+Write-Host ("REPORT=" + $reportMd)
 Write-Host "STOP - authorized test complete. No upload / no further render."
