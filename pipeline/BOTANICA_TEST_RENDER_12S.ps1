@@ -132,11 +132,12 @@ foreach ($r in $resolved) {
   $part = Join-Path $Work (("{0:D2}_{1}.mp4" -f $i, $r.Name))
   $vf = "crop=w=iw*" + (Inv $r.Cw) + ":h=ih*" + (Inv $r.Ch) + ":x=iw*" + (Inv $r.Cx) + ":y=ih*" + (Inv $r.Cy) + ",scale=720:1280:force_original_aspect_ratio=increase,crop=720:1280,eq=contrast=1.06:brightness=0.02:saturation=0.95,fps=30"
   Write-Host ("ffmpeg part " + $i + " : " + $r.UsedName)
+  # Put -ss AFTER -i for accurate cuts on MOV edit-lists / sparse keyframes.
   $ffArgs = @(
     "-hide_banner", "-loglevel", "warning", "-y", "-threads", "2",
+    "-i", $r.Path,
     "-ss", (Inv $r.T0),
     "-t", (Inv $r.Len),
-    "-i", $r.Path,
     "-vf", $vf,
     "-an", "-c:v", "libx264", "-preset", "veryfast", "-crf", "23", "-pix_fmt", "yuv420p",
     $part
@@ -160,9 +161,9 @@ $audioPath = Join-Path $Work "bed.m4a"
 Write-Host ("ffmpeg audio bed from " + $audioSrc.UsedName)
 $ffAudio = @(
   "-hide_banner", "-loglevel", "warning", "-y", "-threads", "2",
+  "-i", $audioSrc.Path,
   "-ss", (Inv $audioSrc.T0),
   "-t", "12",
-  "-i", $audioSrc.Path,
   "-vn",
   "-af", "loudnorm=I=-14:TP=-1.5:LRA=11,afade=t=in:st=0:d=0.4,afade=t=out:st=10.5:d=1.5",
   "-c:a", "aac", "-b:a", "160k",
@@ -178,7 +179,9 @@ try {
     "-hide_banner", "-loglevel", "warning", "-y", "-threads", "2",
     "-f", "concat", "-safe", "0", "-i", "list.txt",
     "-i", $audioPath,
-    "-c:v", "copy", "-c:a", "aac", "-b:a", "160k", "-shortest", "-movflags", "+faststart",
+    "-c:v", "copy", "-c:a", "aac", "-b:a", "160k",
+    "-t", "12",
+    "-movflags", "+faststart",
     $Out
   )
   & ffmpeg @ffMux
