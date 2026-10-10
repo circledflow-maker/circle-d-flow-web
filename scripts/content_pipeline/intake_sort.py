@@ -88,12 +88,57 @@ def slug_artist(name: str) -> str:
     return s
 
 
+_PATH_NOISE = {
+    "botanica",
+    "event",
+    "event_selects",
+    "performance",
+    "crowd_wide",
+    "place_broll",
+    "details",
+    "artists",
+    "events",
+    "recap",
+    "dsc",
+    "img",
+    "video",
+    "photo",
+    "stage",
+    "jam",
+    "content pipeline",
+    "wakungo_content_studio",
+    "00_work",
+    "01_raw_video",
+    "02_raw_audio",
+    "03_proxies_compressed",
+    "04_videos_compressed",
+}
+
+
+def _match_blobs(path: Path) -> list[str]:
+    """Filename + useful parent/pack folder tokens (skip dump roots)."""
+    blobs = [
+        path.stem.lower().replace("_", " ").replace("-", " ").replace(".", " "),
+        path.name.lower(),
+    ]
+    for part in path.parts[:-1]:
+        pl = part.lower().replace("_", " ").replace("-", " ").replace(".", " ").strip()
+        if not pl or pl in _PATH_NOISE:
+            continue
+        blobs.append(pl)
+        # pack folders like "11 filipesax felippe sax"
+        stripped = re.sub(r"^\d+\s+", "", pl).strip()
+        if stripped and stripped != pl:
+            blobs.append(stripped)
+    return blobs
+
+
 def match_artist(path: Path, artists: list[dict[str, Any]]) -> Optional[dict[str, Any]]:
-    """Filename alias match — never use parent dump folders as the artist."""
-    stem = path.stem.lower().replace("_", " ").replace("-", " ").replace(".", " ")
-    name = path.name.lower()
+    """Alias match on filename + artist/pack parent folders (not dump roots)."""
+    blobs = _match_blobs(path)
+    hay = " ".join(blobs)
+    hay_c = hay.replace(" ", "")
     scored: list[tuple[int, dict[str, Any]]] = []
-    # Filename-only matching (parent dump folders like Botanica/Wako Kungo are ignored).
     noise = {"botanica", "event", "recap", "dsc", "img", "video", "photo", "stage", "jam"}
     for a in artists:
         aliases = [a.get("name", "")] + list(a.get("aliases") or [])
@@ -101,10 +146,8 @@ def match_artist(path: Path, artists: list[dict[str, Any]]) -> Optional[dict[str
             token = str(al or "").lower().strip()
             if not token or len(token) < 3 or token in noise:
                 continue
-            # require multi-token artist names (e.g. wako kungo) or longer handles
-            compact = stem.replace(" ", "")
             tok_c = token.replace(" ", "").replace(".", "")
-            if token in stem or tok_c in compact or token in name:
+            if token in hay or tok_c in hay_c:
                 scored.append((len(token), a))
     if not scored:
         return None
@@ -115,8 +158,9 @@ def match_artist(path: Path, artists: list[dict[str, Any]]) -> Optional[dict[str
 def match_proposed(
     path: Path, proposals: list[dict[str, Any]]
 ) -> Optional[dict[str, Any]]:
-    stem = path.stem.lower().replace("_", " ").replace("-", " ").replace(".", " ")
-    name = path.name.lower()
+    blobs = _match_blobs(path)
+    hay = " ".join(blobs)
+    hay_c = hay.replace(" ", "")
     best = None
     best_n = 0
     for p in proposals:
@@ -124,23 +168,70 @@ def match_proposed(
             token = str(al or "").lower().strip()
             if len(token) < 3:
                 continue
-            if token in stem or token.replace(" ", "") in stem.replace(" ", "") or token in name:
+            tok_c = token.replace(" ", "")
+            if token in hay or tok_c in hay_c:
                 if len(token) > best_n:
                     best_n = len(token)
                     best = p
     return best
 
 
+def _intake_rank(path: Path, root: Path) -> tuple:
+    """Lower tuple sorts first: AV + artist/pack paths before EVENT_SELECTS/shot_*."""
+    try:
+        rel = str(path.relative_to(root)).lower().replace("\\", "/")
+    except ValueError:
+        rel = str(path).lower().replace("\\", "/")
+    name = path.name.lower()
+    ext = path.suffix.lower()
+    is_photo = ext in PHOTO_EXT
+    is_event = "event_selects" in rel
+    is_crowd_place = any(x in rel for x in ("crowd_wide", "place_broll", "/place/", "/crowd/"))
+    is_generic = bool(re.match(r"^(shot_|dsc_|img_|video_|photo_)\d*", name))
+    artistish = any(
+        x in rel
+        for x in (
+            "artists/",
+            "filipesax",
+            "wako",
+            "noua",
+            "diaza",
+            "lyssa",
+            "silso",
+            "arpan",
+            "felippe",
+            "zeus",
+            "joao",
+            "redondo",
+            "piano_player",
+            "other_guitar",
+            "performance -",
+            "flow talk",
+            "botanicaartistpack",
+            "artist_pack",
+        )
+    )
+    return (
+        1 if is_photo else 0,
+        1 if is_crowd_place else 0,
+        1 if (is_event and is_generic) else 0,
+        0 if artistish else 1,
+        1 if is_generic else 0,
+        1 if is_event else 0,
+        rel,
+    )
+
+
 def inventory_media(root: Path, limit: int = 0) -> list[Path]:
-    """Inventory media under root. When limited, prefer AV over photos so ears get signal."""
-    av: list[Path] = []
-    photos: list[Path] = []
+    """Inventory media. When limited: prefer AV under artist/pack paths over EVENT_SELECTS/shot_*."""
+    found: list[Path] = []
+    scan_cap = max(limit * 25, 800) if limit else 0
     try:
         walker = root.rglob("*")
     except OSError as e:
         print(f"WARN: cannot scan {root}: {e}")
         return []
-    for p in sorted(walker):
+    for p in walker:
         try:
             if not p.is_file():
                 continue
@@ -154,20 +245,13 @@ def inventory_media(root: Path, limit: int = 0) -> list[Path]:
             continue
         if p.name.lower().startswith("botanica_90s"):
             continue  # finished masters - not intake sources
-        if ext in PHOTO_EXT:
-            photos.append(p)
-        else:
-            av.append(p)
-        # Early exit only when unlimited? keep scanning until we can fill AV quota.
-        if limit and len(av) >= limit:
+        found.append(p)
+        if scan_cap and len(found) >= scan_cap:
             break
-    if not limit:
-        return av + photos
-    # Fill limit with AV first, then photos if short.
-    out = av[:limit]
-    if len(out) < limit:
-        out.extend(photos[: limit - len(out)])
-    return out
+    found.sort(key=lambda x: _intake_rank(x, root))
+    if limit:
+        return found[:limit]
+    return found
 
 
 def arpan_schema_dirs(base: Path) -> None:
@@ -433,6 +517,18 @@ def _run(args: argparse.Namespace) -> int:
     listen_audio = args.listen and not args.no_listen
     media = inventory_media(source, limit=args.limit)
     print(f"01 - Inventory: {len(media)} media files (limit={args.limit})")
+    # Quick path mix so Windows runs show whether EVENT_SELECTS crowded out artist packs
+    prefixes: dict[str, int] = {}
+    for p in media:
+        try:
+            rel = p.relative_to(source)
+            key = "/".join(rel.parts[:2]) if len(rel.parts) >= 2 else (rel.parts[0] if rel.parts else "?")
+        except ValueError:
+            key = p.parent.name
+        prefixes[key] = prefixes.get(key, 0) + 1
+    top_pref = sorted(prefixes.items(), key=lambda x: -x[1])[:8]
+    if top_pref:
+        print("    path mix:", ", ".join(f"{k}={v}" for k, v in top_pref))
 
     items: list[dict[str, Any]] = []
     print("02 - Analyze (ears + name)...")

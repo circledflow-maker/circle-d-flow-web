@@ -48,9 +48,16 @@ _SKIP_SAMPLE_PARTS = (
     "drive_upload",
 )
 
+_DEPRIORITIZE_SAMPLE = (
+    "crowd_wide",
+    "place_broll",
+    "/place/",
+    "/crowd/",
+)
+
 
 def _pick_sample_media(root: Path, limit_scan: int = 400) -> Optional[Path]:
-    """Pick a local media file for ears smoke sample. Prefer compressed/proxy paths."""
+    """Pick a local media file for ears smoke. Prefer artist/pack proxies over crowd selects."""
     if not root.exists():
         return None
     prefer_parts = (
@@ -59,10 +66,14 @@ def _pick_sample_media(root: Path, limit_scan: int = 400) -> Optional[Path]:
         "compressed",
         "03_proxies",
         "04_videos_compressed",
-        "event_selects",
+        "artists/",
+        "filipesax",
+        "wako",
+        "performance",
     )
-    found: list[Path] = []
     preferred: list[Path] = []
+    mid: list[Path] = []
+    low: list[Path] = []
     n = 0
     try:
         walker = root.rglob("*")
@@ -76,20 +87,22 @@ def _pick_sample_media(root: Path, limit_scan: int = 400) -> Optional[Path]:
             continue
         if p.suffix.lower() not in _MEDIA_EXTS:
             continue
-        low = str(p).lower().replace("\\", "/")
-        if any(x in low for x in _SKIP_SAMPLE_PARTS):
+        path_l = str(p).lower().replace("\\", "/")
+        if any(x in path_l for x in _SKIP_SAMPLE_PARTS):
             continue
         n += 1
-        if any(x in low for x in prefer_parts):
+        if any(x in path_l for x in _DEPRIORITIZE_SAMPLE):
+            low.append(p)
+        elif any(x in path_l for x in prefer_parts):
             preferred.append(p)
         else:
-            found.append(p)
+            mid.append(p)
         if n >= limit_scan:
             break
-    pool = preferred or found
+    pool = preferred or mid or low
     if not pool:
         return None
-    # Prefer smaller files (likely proxies)
+
     def _size(x: Path) -> int:
         try:
             return x.stat().st_size
