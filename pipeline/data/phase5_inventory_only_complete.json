@@ -1,0 +1,28 @@
+{
+  "created_at": "2026-10-10T19:53:00Z",
+  "status": "complete",
+  "source": "windows_run_botanica_recap_inventory_only_screenshot_2026-10-10",
+  "command": "python scripts\\botanica_90s_recap\\run_botanica_recap.py --root \"D:\\Wakungo_Content_Studio\\Botanica\" --inventory-only",
+  "root": "D:\\Wakungo_Content_Studio\\Botanica",
+  "font": "C:\\Windows\\Fonts\\arialbd.ttf",
+  "results": {
+    "concept_probed": "D:\\Wakungo_Content_Studio\\Botanica\\Concept9-16.mp4",
+    "prefer_wako_kungo_clips": 46,
+    "other_clips": 1,
+    "videos": 49,
+    "photos": 9,
+    "event_source_clips_used": 47,
+    "from_wako_kungo_pool": 46
+  },
+  "expected_local_outputs": [
+    "D:\\Wakungo_Content_Studio\\Botanica\\ANALYSIS\\media_inventory.json",
+    "D:\\Wakungo_Content_Studio\\Botanica\\ANALYSIS\\artist_database.json",
+    "D:\\Wakungo_Content_Studio\\Botanica\\ANALYSIS\\event_timeline.json",
+    "D:\\Wakungo_Content_Studio\\Botanica\\ANALYSIS\\ (concept analysis artifacts)"
+  ],
+  "render": false,
+  "notes": [
+    "DRIVE_UPLOAD\\EVENT\\BOTANICA_90s_RECAP_9x16.mp4 was also probed (prior export present)",
+    "No encode / no --force / no --allow-render"
+  ]
+}
