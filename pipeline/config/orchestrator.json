@@ -87,12 +87,14 @@
           "{event_name}",
           "--limit",
           "40",
+          "--include-proxies",
+          "--skip-event-selects",
           "--propose-drive-create",
           "--out",
           "pipeline/data/intake_plan.json"
         ]
       },
-      "notes": "Name+ears plan. Use --no-listen for metadata/name-only. Does not mutate Drive."
+      "notes": "Name+ears plan on local proxies; skips EVENT_SELECTS (Drive-org done). Does not mutate Drive."
     },
     {
       "id": 4,

@@ -49,6 +49,7 @@ _SKIP_SAMPLE_PARTS = (
 )
 
 _DEPRIORITIZE_SAMPLE = (
+    "event_selects",
     "crowd_wide",
     "place_broll",
     "/place/",
@@ -56,20 +57,20 @@ _DEPRIORITIZE_SAMPLE = (
 )
 
 
-def _pick_sample_media(root: Path, limit_scan: int = 400) -> Optional[Path]:
-    """Pick a local media file for ears smoke. Prefer artist/pack proxies over crowd selects."""
+def _pick_sample_media(root: Path, limit_scan: int = 800) -> Optional[Path]:
+    """Pick a local media file for ears smoke. Prefer proxies/artist packs over EVENT_SELECTS."""
     if not root.exists():
         return None
     prefer_parts = (
-        "proxy",
-        "proxies",
-        "compressed",
+        "03_proxies_compressed",
         "03_proxies",
         "04_videos_compressed",
+        "/proxies/",
+        "/proxy/",
         "artists/",
         "filipesax",
         "wako",
-        "performance",
+        "botanicaartistpack",
     )
     preferred: list[Path] = []
     mid: list[Path] = []

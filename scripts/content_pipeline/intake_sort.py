@@ -222,10 +222,19 @@ def _intake_rank(path: Path, root: Path) -> tuple:
     )
 
 
-def inventory_media(root: Path, limit: int = 0) -> list[Path]:
-    """Inventory media. When limited: prefer AV under artist/pack paths over EVENT_SELECTS/shot_*."""
+def inventory_media(
+    root: Path,
+    limit: int = 0,
+    *,
+    include_proxies: bool = False,
+    skip_event_selects: bool = False,
+) -> list[Path]:
+    """Inventory media. Prefer artist/pack AV; optionally include proxies / skip EVENT_SELECTS."""
+    skip = set(SKIP_DIR)
+    if include_proxies:
+        skip.discard("03_Proxies_Compressed")
     found: list[Path] = []
-    scan_cap = max(limit * 25, 800) if limit else 0
+    scan_cap = max(limit * 25, 1200) if limit else 0
     try:
         walker = root.rglob("*")
     except OSError as e:
@@ -236,7 +245,9 @@ def inventory_media(root: Path, limit: int = 0) -> list[Path]:
             if not p.is_file():
                 continue
             rel = p.relative_to(root)
-            if any(part in SKIP_DIR for part in rel.parts):
+            if any(part in skip for part in rel.parts):
+                continue
+            if skip_event_selects and "EVENT_SELECTS" in rel.parts:
                 continue
         except (ValueError, OSError):
             continue
@@ -444,8 +455,23 @@ def main() -> int:
     ap.add_argument("--no-listen", action="store_true", help="Skip ears (metadata/name only)")
     ap.add_argument("--limit", type=int, default=40, help="Max media files to analyze")
     ap.add_argument("--propose-drive-create", action="store_true")
+    ap.add_argument(
+        "--include-proxies",
+        action="store_true",
+        help="Also scan 03_Proxies_Compressed (Phase 5 local ears)",
+    )
+    ap.add_argument(
+        "--skip-event-selects",
+        action="store_true",
+        help="Skip EVENT_SELECTS (already organized on Drive; nameless shot_*)",
+    )
     ap.add_argument("--out", type=Path, default=None, help="Write plan JSON")
     args = ap.parse_args()
+    # Env fallbacks for Windows .cmd wrappers
+    if os.environ.get("CDF_INTAKE_INCLUDE_PROXIES", "").strip() in ("1", "true", "yes"):
+        args.include_proxies = True
+    if os.environ.get("CDF_INTAKE_SKIP_EVENT_SELECTS", "").strip() in ("1", "true", "yes"):
+        args.skip_event_selects = True
 
     try:
         return _run(args)
@@ -467,6 +493,10 @@ def _run(args: argparse.Namespace) -> int:
     print(
         "Schema:     Arpan -> "
         + ", ".join(drive["reference_artist"]["schema_folders"])
+    )
+    print(
+        f"Flags:      include_proxies={getattr(args, 'include_proxies', False)} "
+        f"skip_event_selects={getattr(args, 'skip_event_selects', False)}"
     )
 
     if args.artist and args.artist.lower() == "arpan":
@@ -515,7 +545,12 @@ def _run(args: argparse.Namespace) -> int:
         return 0
 
     listen_audio = args.listen and not args.no_listen
-    media = inventory_media(source, limit=args.limit)
+    media = inventory_media(
+        source,
+        limit=args.limit,
+        include_proxies=bool(getattr(args, "include_proxies", False)),
+        skip_event_selects=bool(getattr(args, "skip_event_selects", False)),
+    )
     print(f"01 - Inventory: {len(media)} media files (limit={args.limit})")
     # Quick path mix so Windows runs show whether EVENT_SELECTS crowded out artist packs
     prefixes: dict[str, int] = {}
@@ -529,6 +564,43 @@ def _run(args: argparse.Namespace) -> int:
     top_pref = sorted(prefixes.items(), key=lambda x: -x[1])[:8]
     if top_pref:
         print("    path mix:", ", ".join(f"{k}={v}" for k, v in top_pref))
+
+    if not media:
+        print("NOTE: no media matched filters.")
+        print("  Local Botanica may be EVENT_SELECTS-only while proxies live under 03_Proxies_Compressed.")
+        print("  Try: --include-proxies --skip-event-selects")
+        print("  Or set LOCAL_ROOT to a folder with artist-named proxies.")
+        plan = {
+            "created_at": utc_now(),
+            "source": str(source),
+            "event": args.event,
+            "listen": listen_audio,
+            "include_proxies": bool(getattr(args, "include_proxies", False)),
+            "skip_event_selects": bool(getattr(args, "skip_event_selects", False)),
+            "items": [],
+            "summary": {
+                "total": 0,
+                "sort_existing": 0,
+                "create_artist_then_sort": 0,
+                "review": 0,
+                "ears_music": 0,
+                "ears_speech": 0,
+                "ears_mixed": 0,
+                "ears_no_audio": 0,
+            },
+            "drive_create_proposals": [],
+            "note": "empty_inventory_after_filters",
+        }
+        out = args.out or (source / "ANALYSIS" / "content_pipeline_intake_plan.json")
+        try:
+            out.parent.mkdir(parents=True, exist_ok=True)
+            out.write_text(json.dumps(plan, indent=2, ensure_ascii=False), encoding="utf-8")
+        except OSError:
+            out = HERE / "LAST_PLAN.json"
+            out.write_text(json.dumps(plan, indent=2, ensure_ascii=False), encoding="utf-8")
+        print(f"Plan -> {out}")
+        print("STOP - empty plan (not a failure). Point LOCAL_ROOT at artist proxies if needed.")
+        return 0
 
     items: list[dict[str, Any]] = []
     print("02 - Analyze (ears + name)...")
