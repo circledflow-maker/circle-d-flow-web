@@ -88,12 +88,57 @@ def slug_artist(name: str) -> str:
     return s
 
 
+_PATH_NOISE = {
+    "botanica",
+    "event",
+    "event_selects",
+    "performance",
+    "crowd_wide",
+    "place_broll",
+    "details",
+    "artists",
+    "events",
+    "recap",
+    "dsc",
+    "img",
+    "video",
+    "photo",
+    "stage",
+    "jam",
+    "content pipeline",
+    "wakungo_content_studio",
+    "00_work",
+    "01_raw_video",
+    "02_raw_audio",
+    "03_proxies_compressed",
+    "04_videos_compressed",
+}
+
+
+def _match_blobs(path: Path) -> list[str]:
+    """Filename + useful parent/pack folder tokens (skip dump roots)."""
+    blobs = [
+        path.stem.lower().replace("_", " ").replace("-", " ").replace(".", " "),
+        path.name.lower(),
+    ]
+    for part in path.parts[:-1]:
+        pl = part.lower().replace("_", " ").replace("-", " ").replace(".", " ").strip()
+        if not pl or pl in _PATH_NOISE:
+            continue
+        blobs.append(pl)
+        # pack folders like "11 filipesax felippe sax"
+        stripped = re.sub(r"^\d+\s+", "", pl).strip()
+        if stripped and stripped != pl:
+            blobs.append(stripped)
+    return blobs
+
+
 def match_artist(path: Path, artists: list[dict[str, Any]]) -> Optional[dict[str, Any]]:
-    """Filename alias match — never use parent dump folders as the artist."""
-    stem = path.stem.lower().replace("_", " ").replace("-", " ").replace(".", " ")
-    name = path.name.lower()
+    """Alias match on filename + artist/pack parent folders (not dump roots)."""
+    blobs = _match_blobs(path)
+    hay = " ".join(blobs)
+    hay_c = hay.replace(" ", "")
     scored: list[tuple[int, dict[str, Any]]] = []
-    # Filename-only matching (parent dump folders like Botanica/Wako Kungo are ignored).
     noise = {"botanica", "event", "recap", "dsc", "img", "video", "photo", "stage", "jam"}
     for a in artists:
         aliases = [a.get("name", "")] + list(a.get("aliases") or [])
@@ -101,10 +146,8 @@ def match_artist(path: Path, artists: list[dict[str, Any]]) -> Optional[dict[str
             token = str(al or "").lower().strip()
             if not token or len(token) < 3 or token in noise:
                 continue
-            # require multi-token artist names (e.g. wako kungo) or longer handles
-            compact = stem.replace(" ", "")
             tok_c = token.replace(" ", "").replace(".", "")
-            if token in stem or tok_c in compact or token in name:
+            if token in hay or tok_c in hay_c:
                 scored.append((len(token), a))
     if not scored:
         return None
@@ -115,8 +158,9 @@ def match_artist(path: Path, artists: list[dict[str, Any]]) -> Optional[dict[str
 def match_proposed(
     path: Path, proposals: list[dict[str, Any]]
 ) -> Optional[dict[str, Any]]:
-    stem = path.stem.lower().replace("_", " ").replace("-", " ").replace(".", " ")
-    name = path.name.lower()
+    blobs = _match_blobs(path)
+    hay = " ".join(blobs)
+    hay_c = hay.replace(" ", "")
     best = None
     best_n = 0
     for p in proposals:
@@ -124,32 +168,101 @@ def match_proposed(
             token = str(al or "").lower().strip()
             if len(token) < 3:
                 continue
-            if token in stem or token.replace(" ", "") in stem.replace(" ", "") or token in name:
+            tok_c = token.replace(" ", "")
+            if token in hay or tok_c in hay_c:
                 if len(token) > best_n:
                     best_n = len(token)
                     best = p
     return best
 
 
-def inventory_media(root: Path, limit: int = 0) -> list[Path]:
-    items: list[Path] = []
-    for p in sorted(root.rglob("*")):
-        if not p.is_file():
-            continue
+def _intake_rank(path: Path, root: Path) -> tuple:
+    """Lower tuple sorts first: AV + artist/pack paths before EVENT_SELECTS/shot_*."""
+    try:
+        rel = str(path.relative_to(root)).lower().replace("\\", "/")
+    except ValueError:
+        rel = str(path).lower().replace("\\", "/")
+    name = path.name.lower()
+    ext = path.suffix.lower()
+    is_photo = ext in PHOTO_EXT
+    is_event = "event_selects" in rel
+    is_crowd_place = any(x in rel for x in ("crowd_wide", "place_broll", "/place/", "/crowd/"))
+    is_generic = bool(re.match(r"^(shot_|dsc_|img_|video_|photo_)\d*", name))
+    artistish = any(
+        x in rel
+        for x in (
+            "artists/",
+            "filipesax",
+            "wako",
+            "noua",
+            "diaza",
+            "lyssa",
+            "silso",
+            "arpan",
+            "felippe",
+            "zeus",
+            "joao",
+            "redondo",
+            "piano_player",
+            "other_guitar",
+            "performance -",
+            "flow talk",
+            "botanicaartistpack",
+            "artist_pack",
+        )
+    )
+    return (
+        1 if is_photo else 0,
+        1 if is_crowd_place else 0,
+        1 if (is_event and is_generic) else 0,
+        0 if artistish else 1,
+        1 if is_generic else 0,
+        1 if is_event else 0,
+        rel,
+    )
+
+
+def inventory_media(
+    root: Path,
+    limit: int = 0,
+    *,
+    include_proxies: bool = False,
+    skip_event_selects: bool = False,
+) -> list[Path]:
+    """Inventory media. Prefer artist/pack AV; optionally include proxies / skip EVENT_SELECTS."""
+    skip = set(SKIP_DIR)
+    if include_proxies:
+        skip.discard("03_Proxies_Compressed")
+    found: list[Path] = []
+    scan_cap = max(limit * 25, 1200) if limit else 0
+    try:
+        walker = root.rglob("*")
+    except OSError as e:
+        print(f"WARN: cannot scan {root}: {e}")
+        return []
+    for p in walker:
         try:
-            rel = p.relative_to(root)
-            if any(part in SKIP_DIR for part in rel.parts):
+            if not p.is_file():
                 continue
-        except ValueError:
+            rel = p.relative_to(root)
+            if any(part in skip for part in rel.parts):
+                continue
+            if skip_event_selects and "EVENT_SELECTS" in rel.parts:
+                continue
+        except (ValueError, OSError):
             continue
-        if p.suffix.lower() not in VIDEO_EXT | AUDIO_EXT | PHOTO_EXT:
+        ext = p.suffix.lower()
+        if ext not in VIDEO_EXT | AUDIO_EXT | PHOTO_EXT:
             continue
         if p.name.lower().startswith("botanica_90s"):
-            continue  # finished masters — not intake sources
-        items.append(p)
-        if limit and len(items) >= limit:
+            continue  # finished masters - not intake sources
+        found.append(p)
+        if scan_cap and len(found) >= scan_cap:
             break
-    return items
+    found.sort(key=lambda x: _intake_rank(x, root))
+    if limit:
+        return found[:limit]
+    return found
 
 
 def arpan_schema_dirs(base: Path) -> None:
@@ -309,7 +422,27 @@ def print_arpan_inventory() -> None:
         print(f"  events/{ev}: {len(data.get('files') or [])} files")
 
 
+def _configure_stdio() -> None:
+    """Avoid UnicodeEncodeError on Windows cp1252 consoles (arrows/accents)."""
+    for stream in (sys.stdout, sys.stderr):
+        try:
+            stream.reconfigure(encoding="utf-8", errors="replace")  # type: ignore[attr-defined]
+        except Exception:
+            pass
+
+
+def _safe_text(s: str) -> str:
+    """Best-effort ASCII-safe console text when reconfigure is unavailable."""
+    enc = getattr(sys.stdout, "encoding", None) or "utf-8"
+    try:
+        s.encode(enc)
+        return s
+    except UnicodeEncodeError:
+        return s.encode(enc, errors="replace").decode(enc, errors="replace")
+
+
 def main() -> int:
+    _configure_stdio()
     ap = argparse.ArgumentParser(description="Content Pipeline intake+sort (ears+names)")
     ap.add_argument("--source", type=Path, default=None, help="Local new-upload root (Botanica)")
     ap.add_argument("--event", type=str, default="Botanica 90s", help="Event leaf under events/")
@@ -322,16 +455,49 @@ def main() -> int:
     ap.add_argument("--no-listen", action="store_true", help="Skip ears (metadata/name only)")
     ap.add_argument("--limit", type=int, default=40, help="Max media files to analyze")
     ap.add_argument("--propose-drive-create", action="store_true")
+    ap.add_argument(
+        "--include-proxies",
+        action="store_true",
+        help="Also scan 03_Proxies_Compressed (Phase 5 local ears)",
+    )
+    ap.add_argument(
+        "--skip-event-selects",
+        action="store_true",
+        help="Skip EVENT_SELECTS (already organized on Drive; nameless shot_*)",
+    )
     ap.add_argument("--out", type=Path, default=None, help="Write plan JSON")
     args = ap.parse_args()
+    # Env fallbacks for Windows .cmd wrappers
+    if os.environ.get("CDF_INTAKE_INCLUDE_PROXIES", "").strip() in ("1", "true", "yes"):
+        args.include_proxies = True
+    if os.environ.get("CDF_INTAKE_SKIP_EVENT_SELECTS", "").strip() in ("1", "true", "yes"):
+        args.skip_event_selects = True
 
+    try:
+        return _run(args)
+    except Exception as e:  # noqa: BLE001
+        print(f"ERROR: intake_sort failed: {type(e).__name__}: {e}", file=sys.stderr)
+        import traceback
+
+        traceback.print_exc()
+        return 1
+
+
+def _run(args: argparse.Namespace) -> int:
     registry = load_registry()
     drive = load_drive_ids()
 
-    print("Content Pipeline — Intake+Sort")
+    print("Content Pipeline - Intake+Sort")
     print(f"Drive root: {drive['root']['name']} ({drive['root']['id']})")
     print(f"Artists:    {len(registry.get('artists') or [])} registered from Drive")
-    print(f"Schema:     Arpan → {', '.join(drive['reference_artist']['schema_folders'])}")
+    print(
+        "Schema:     Arpan -> "
+        + ", ".join(drive["reference_artist"]["schema_folders"])
+    )
+    print(
+        f"Flags:      include_proxies={getattr(args, 'include_proxies', False)} "
+        f"skip_event_selects={getattr(args, 'skip_event_selects', False)}"
+    )
 
     if args.artist and args.artist.lower() == "arpan":
         print_arpan_inventory()
@@ -342,7 +508,7 @@ def main() -> int:
         print_arpan_inventory()
         print("\nDrive Artists registry:")
         for a in registry.get("artists") or []:
-            print(f"  - {a['name']}  [{a.get('id')}]")
+            print(f"  - {_safe_text(a['name'])}  [{a.get('id')}]")
         return 0
 
     source = args.source or default_source()
@@ -358,7 +524,7 @@ def main() -> int:
             "event": args.event,
             "items": [],
             "drive_create_proposals": [],
-            "note": "source missing here — proposals only",
+            "note": "source missing here - proposals only",
         }
         for p in registry.get("botanica_lineup_proposals") or []:
             plan["drive_create_proposals"].append(
@@ -372,25 +538,81 @@ def main() -> int:
                 }
             )
         out = args.out or (HERE / "LAST_PLAN.json")
+        out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(json.dumps(plan, indent=2), encoding="utf-8")
-        print(f"Wrote proposals → {out}")
+        print(f"Wrote proposals -> {out}")
         print("STOP: no local media to analyze in this environment.")
         return 0
 
     listen_audio = args.listen and not args.no_listen
-    media = inventory_media(source, limit=args.limit)
-    print(f"01 — Inventory: {len(media)} media files (limit={args.limit})")
+    media = inventory_media(
+        source,
+        limit=args.limit,
+        include_proxies=bool(getattr(args, "include_proxies", False)),
+        skip_event_selects=bool(getattr(args, "skip_event_selects", False)),
+    )
+    print(f"01 - Inventory: {len(media)} media files (limit={args.limit})")
+    # Quick path mix so Windows runs show whether EVENT_SELECTS crowded out artist packs
+    prefixes: dict[str, int] = {}
+    for p in media:
+        try:
+            rel = p.relative_to(source)
+            key = "/".join(rel.parts[:2]) if len(rel.parts) >= 2 else (rel.parts[0] if rel.parts else "?")
+        except ValueError:
+            key = p.parent.name
+        prefixes[key] = prefixes.get(key, 0) + 1
+    top_pref = sorted(prefixes.items(), key=lambda x: -x[1])[:8]
+    if top_pref:
+        print("    path mix:", ", ".join(f"{k}={v}" for k, v in top_pref))
+
+    if not media:
+        print("NOTE: no media matched filters.")
+        print("  Local Botanica may be EVENT_SELECTS-only while proxies live under 03_Proxies_Compressed.")
+        print("  Try: --include-proxies --skip-event-selects")
+        print("  Or set LOCAL_ROOT to a folder with artist-named proxies.")
+        plan = {
+            "created_at": utc_now(),
+            "source": str(source),
+            "event": args.event,
+            "listen": listen_audio,
+            "include_proxies": bool(getattr(args, "include_proxies", False)),
+            "skip_event_selects": bool(getattr(args, "skip_event_selects", False)),
+            "items": [],
+            "summary": {
+                "total": 0,
+                "sort_existing": 0,
+                "create_artist_then_sort": 0,
+                "review": 0,
+                "ears_music": 0,
+                "ears_speech": 0,
+                "ears_mixed": 0,
+                "ears_no_audio": 0,
+            },
+            "drive_create_proposals": [],
+            "note": "empty_inventory_after_filters",
+        }
+        out = args.out or (source / "ANALYSIS" / "content_pipeline_intake_plan.json")
+        try:
+            out.parent.mkdir(parents=True, exist_ok=True)
+            out.write_text(json.dumps(plan, indent=2, ensure_ascii=False), encoding="utf-8")
+        except OSError:
+            out = HERE / "LAST_PLAN.json"
+            out.write_text(json.dumps(plan, indent=2, ensure_ascii=False), encoding="utf-8")
+        print(f"Plan -> {out}")
+        print("STOP - empty plan (not a failure). Point LOCAL_ROOT at artist proxies if needed.")
+        return 0
 
     items: list[dict[str, Any]] = []
-    print("02 — Analyze (ears + name)…")
+    print("02 - Analyze (ears + name)...")
     for i, p in enumerate(media, 1):
         it = classify_item(p, registry, args.event, listen_audio=listen_audio)
         items.append(it)
         ear = it["ears"]
-        print(
-            f"  [{i:02d}] {it['name'][:40]:40} → {it['action']:22} "
-            f"{it['artist'][:22]:22} ears={ear.get('class')} → {it['dest_rel'][:60]}"
+        line = (
+            f"  [{i:02d}] {it['name'][:40]:40} -> {it['action']:22} "
+            f"{it['artist'][:22]:22} ears={ear.get('class')} -> {it['dest_rel'][:60]}"
         )
+        print(_safe_text(line))
 
     # Aggregate Drive create proposals
     create_names = sorted({it["artist"] for it in items if it["action"] == "create_artist_then_sort"})
@@ -425,11 +647,11 @@ def main() -> int:
     staging = args.staging or (source / "00_work" / "content_pipeline_staging")
     apply_stats = None
     if args.apply:
-        print(f"03 — APPLY local staging → {staging}")
+        print(f"03 - APPLY local staging -> {staging}")
         apply_stats = apply_local(items, staging)
         print(f"   {apply_stats}")
     else:
-        print("03 — DRY RUN (no files moved). Pass --apply for local hardlink staging.")
+        print("03 - DRY RUN (no files moved). Pass --apply for local hardlink staging.")
 
     plan = {
         "created_at": utc_now(),
@@ -461,18 +683,22 @@ def main() -> int:
     out = args.out or (source / "ANALYSIS" / "content_pipeline_intake_plan.json")
     try:
         out.parent.mkdir(parents=True, exist_ok=True)
-        out.write_text(json.dumps(plan, indent=2), encoding="utf-8")
+        out.write_text(json.dumps(plan, indent=2, ensure_ascii=False), encoding="utf-8")
     except OSError:
         out = HERE / "LAST_PLAN.json"
-        out.write_text(json.dumps(plan, indent=2), encoding="utf-8")
+        try:
+            out.write_text(json.dumps(plan, indent=2, ensure_ascii=False), encoding="utf-8")
+        except OSError as e:
+            print(f"ERROR: cannot write plan JSON: {e}", file=sys.stderr)
+            return 1
 
-    print(f"\nPlan → {out}")
+    print(f"\nPlan -> {out}")
     print("Summary:", json.dumps(plan["summary"], indent=2))
     if drive_creates:
-        print(f"Drive CREATE proposals ({len(drive_creates)}) — not executed:")
+        print(f"Drive CREATE proposals ({len(drive_creates)}) - not executed:")
         for d in drive_creates:
-            print(f"  + Artists/{d['name']}/  (schema from Arpan)")
-    print("\nSTOP — awaiting approval before Drive folder creation or any render.")
+            print(_safe_text(f"  + Artists/{d['name']}/  (schema from Arpan)"))
+    print("\nSTOP - awaiting approval before Drive folder creation or any render.")
     return 0
 
 

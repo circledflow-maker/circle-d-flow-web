@@ -1,22 +1,20 @@
-# Continue after ears skip
+# Continue — Phase 5 ears green
 
-**Updated:** 2026-10-09T16:04:11Z
+**Updated:** 2026-10-10T18:58:00Z
 
-Stage 4 previously skipped (no `CDF_SAMPLE_MEDIA`). Fixed:
-- auto-pick a local proxy under `--local-root`
-- `PHASE5_EARS_OPTIONAL.cmd` now runs **stage 3 (intake_sort+ears)** then **stage 4 (smoke sample)**
+## Status
+- `[3] ok` + `[4] ok` on `Botanica\Concept9-16.mp4`
+- Flags: include proxies + skip EVENT_SELECTS
+- Drive CREATE: skip (ENSURE done)
+- Render 6–10: gated
 
-## Windows (already in `D:\circle-d-flow-web`)
+## Windows (one snapshot, then stop)
 ```powershell
-git fetch origin cursor/content-pipeline-org-execute-f46a
-git checkout -f origin/cursor/content-pipeline-org-execute-f46a -- pipeline scripts/content_pipeline
-pipeline\PHASE5_EARS_OPTIONAL.cmd
+git fetch origin cursor/phase5-intake-sort-exit1-f46a
+git checkout -f origin/cursor/phase5-intake-sort-exit1-f46a -- pipeline scripts/content_pipeline
+pipeline\PHASE5_INTAKE_REVIEW.cmd
 ```
 
-If proxies are not under `D:\Wakungo_Content_Studio\Botanica`, set:
-```powershell
-$env:LOCAL_ROOT="D:\path\to\your\proxies"
-```
-(or edit the path inside the `.cmd`).
+Paste/screenshot the summary (item counts). Empty inventory after skipping EVENT_SELECTS is OK — means no local artist proxies beyond root clips; Drive org already covers selects.
 
-No Drive downloads. No render.
+Then: `pipeline\PHASE5_STATUS.cmd` — Phase 5 metadata/ears lane is done until you ask for render or a real proxy-folder intake.

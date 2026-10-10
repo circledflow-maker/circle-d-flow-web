@@ -1,0 +1,24 @@
+{
+  "created_at": "2026-10-10T18:36:00Z",
+  "decision": "skip_all_intake_proposals",
+  "reason": "ENSURE_BOTANICA_ARTISTS already executed 2026-10-08 for the Botanica lineup (Lyssa, Noua, Diaza, Joao Redondo Maia, Zeus Atro, Silso, Felippe Sax, Piano Player, Other Guitar).",
+  "intake_plan_proposals_count": 6,
+  "expected_names": [
+    "Lyssa",
+    "Noua",
+    "Diaza",
+    "João Redondo Maia",
+    "Zeus Atro",
+    "Silso"
+  ],
+  "actions": {
+    "drive_folder_create_via_intake_sort": "do_not_execute",
+    "review_queue_35": "leave_unassigned_no_artist_assign",
+    "ears_no_audio_39": "expected_photo_heavy_limit40_sample; intake inventory now prefers AV on re-run"
+  },
+  "optional_next": [
+    "Re-run PHASE5_EARS_OPTIONAL after pull (AV-preferring inventory) for a more useful ears sample",
+    "Optional Drive rediscovery: python pipeline\\tools\\orchestrate.py --only 1 --execute",
+    "Render stages 6-10 remain gated until explicit ask"
+  ]
+}

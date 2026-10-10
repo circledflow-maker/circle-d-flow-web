@@ -28,6 +28,19 @@ def run_capture(cmd: list[str]) -> subprocess.CompletedProcess:
     return subprocess.run(cmd, check=False, capture_output=True, text=True)
 
 
+def _safe_float(text: Optional[str]) -> Optional[float]:
+    """Parse ffmpeg metric tokens; reject '-', '-inf', blank, etc."""
+    if text is None:
+        return None
+    s = str(text).strip().lower()
+    if not s or s in {"-", "-inf", "+inf", "inf", "nan", "."}:
+        return None
+    try:
+        return float(s)
+    except ValueError:
+        return None
+
+
 def probe_has_audio(path: Path) -> dict[str, Any]:
     if not which("ffprobe"):
         return {"has_audio": False, "error": "ffprobe missing"}
@@ -112,27 +125,35 @@ def listen(
     r = run_capture(cmd)
     log = (r.stderr or "") + "\n" + (r.stdout or "")
 
-    silence_starts = [float(x) for x in re.findall(r"silence_start:\s*([0-9.]+)", log)]
-    silence_ends = [float(x) for x in re.findall(r"silence_end:\s*([0-9.]+)", log)]
-    silence_durs = [float(x) for x in re.findall(r"silence_duration:\s*([0-9.]+)", log)]
+    silence_starts = [
+        v for x in re.findall(r"silence_start:\s*([0-9.]+)", log) if (v := _safe_float(x)) is not None
+    ]
+    silence_ends = [
+        v for x in re.findall(r"silence_end:\s*([0-9.]+)", log) if (v := _safe_float(x)) is not None
+    ]
+    silence_durs = [
+        v
+        for x in re.findall(r"silence_duration:\s*([0-9.]+)", log)
+        if (v := _safe_float(x)) is not None
+    ]
     silent_total = sum(silence_durs) if silence_durs else 0.0
     silence_ratio = min(1.0, silent_total / max(t, 0.1))
 
-    # Integrated loudness
+    # Integrated loudness (ffmpeg may print "I:   - LUFS" when undefined)
     i_lufs = None
-    m = re.search(r"I:\s*([-0-9.]+)\s*LUFS", log)
+    m = re.search(r"I:\s*([^\s]+)\s*LUFS", log)
     if m:
-        i_lufs = float(m.group(1))
+        i_lufs = _safe_float(m.group(1))
 
-    # RMS / peak from astats
+    # RMS / peak from astats (may be "-" for silent / odd streams)
     rms = None
-    m = re.search(r"RMS level dB:\s*([-0-9.]+)", log)
+    m = re.search(r"RMS level dB:\s*(\S+)", log)
     if m:
-        rms = float(m.group(1))
+        rms = _safe_float(m.group(1))
     peak = None
-    m = re.search(r"Peak level dB:\s*([-0-9.]+)", log)
+    m = re.search(r"Peak level dB:\s*(\S+)", log)
     if m:
-        peak = float(m.group(1))
+        peak = _safe_float(m.group(1))
 
     # Dynamic range proxy: peak - rms (music often wider; speech mid)
     dyn = None
@@ -204,9 +225,26 @@ def format_bucket_for_artist(ears: dict[str, Any], event_name: Optional[str] = N
 
 if __name__ == "__main__":
     import sys
+    import traceback
 
     p = Path(sys.argv[1]) if len(sys.argv) > 1 else None
     if not p or not p.exists():
         print("Usage: python ears.py <mediafile>")
         raise SystemExit(2)
-    print(json.dumps(listen(p), indent=2))
+    try:
+        print(json.dumps(listen(p), indent=2))
+    except Exception as e:  # noqa: BLE001
+        print(
+            json.dumps(
+                {
+                    "path": str(p),
+                    "name": p.name,
+                    "class": "unknown",
+                    "error": f"{type(e).__name__}: {e}",
+                    "ears": "error",
+                },
+                indent=2,
+            )
+        )
+        traceback.print_exc()
+        raise SystemExit(1)

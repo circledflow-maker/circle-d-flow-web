@@ -1,0 +1,14 @@
+{
+  "created_at": "2026-10-10T18:41:00Z",
+  "status": "rerun_all_review_fixed_in_followup",
+  "source": "windows_PHASE5_INTAKE_REVIEW_screenshot_2026-10-10_1841",
+  "summary": {
+    "total": 40,
+    "sort_existing": 0,
+    "create_artist_then_sort": 0,
+    "review": 40,
+    "ears_no_audio": 39
+  },
+  "diagnosis": "AV-prefer limit filled with EVENT_SELECTS/shot_* (no artist tokens; often no audio track). Drive CREATE still skip/already ensured.",
+  "fix": "inventory ranks artist/pack paths first; match_artist uses pack folder names; sample picker deprioritizes crowd/place"
+}
