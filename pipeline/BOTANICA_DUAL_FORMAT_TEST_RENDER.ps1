@@ -39,8 +39,27 @@ function Get-Duration([string]$path) {
 }
 
 function Test-Blackish([string]$path) {
-  # Sample a few frames; fail only if clearly empty (best-effort, non-fatal warning)
-  $r = & ffmpeg -hide_banner -v info -ss 0.3 -i $path -frames:v 6 -vf "blackframe=amount=98:threshold=24" -f null - 2>&1 | Out-String
+  # Sample a few frames; best-effort warning only.
+  # PS 5.1 + ErrorActionPreference=Stop treats ffmpeg stderr as terminating NativeCommandError.
+  $tmp = [IO.Path]::GetTempFileName()
+  try {
+    $args = @(
+      "-hide_banner", "-v", "info", "-ss", "0.3", "-i", $path,
+      "-frames:v", "6", "-vf", "blackframe=amount=98:threshold=24",
+      "-f", "null", "-"
+    )
+    $p = Start-Process -FilePath "ffmpeg" -ArgumentList $args -NoNewWindow -Wait -PassThru `
+      -RedirectStandardError $tmp -RedirectStandardOutput ([IO.Path]::GetTempFileName())
+    $r = ""
+    if (Test-Path -LiteralPath $tmp) {
+      $r = [IO.File]::ReadAllText($tmp)
+    }
+    if ($p.ExitCode -ne 0 -and -not $r) { return $false }
+  } catch {
+    return $false
+  } finally {
+    Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue
+  }
   $hits = ([regex]::Matches($r, "pblack:9[0-9]")).Count + ([regex]::Matches($r, "pblack:100")).Count
   return ($hits -ge 5)
 }
