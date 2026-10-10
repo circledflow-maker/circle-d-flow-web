@@ -15,11 +15,36 @@
   },
   "wall_seconds": 8.2,
   "sources_preflight": [
-    {"file": "DSC_1552.MOV", "dur": 4.08, "in": 1.53, "len": 2.4},
-    {"file": "DSC_1568.MOV", "dur": 13.68, "in": 5.28, "len": 2.4},
-    {"file": "DSC_1580.MOV", "dur": 12.36, "in": 6.18, "len": 2.6},
-    {"file": "DSC_1590.MOV", "dur": 53.04, "in": 28.536, "len": 2.2},
-    {"file": "DSC_1598.MOV", "dur": 187.92, "in": 122.524, "len": 2.4}
+    {
+      "file": "DSC_1552.MOV",
+      "dur": 4.08,
+      "in": 1.53,
+      "len": 2.4
+    },
+    {
+      "file": "DSC_1568.MOV",
+      "dur": 13.68,
+      "in": 5.28,
+      "len": 2.4
+    },
+    {
+      "file": "DSC_1580.MOV",
+      "dur": 12.36,
+      "in": 6.18,
+      "len": 2.6
+    },
+    {
+      "file": "DSC_1590.MOV",
+      "dur": 53.04,
+      "in": 28.536,
+      "len": 2.2
+    },
+    {
+      "file": "DSC_1598.MOV",
+      "dur": 187.92,
+      "in": 122.524,
+      "len": 2.4
+    }
   ],
   "warnings": [
     "ffmpeg MOV edit-list / missing keyframe seek warnings on parts",
