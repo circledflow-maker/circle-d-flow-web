@@ -203,25 +203,28 @@ $reportJson = Join-Path $OutDir "BOTANICA_12s_PREVIEW_RESULT_$stamp.json"
 $reportMd = Join-Path $OutDir "BOTANICA_12s_PREVIEW_RESULT_$stamp.md"
 ($result | ConvertTo-Json -Depth 6) | Set-Content -Path $reportJson -Encoding UTF8
 
-@"
-# Botanica 12s preview — RESULT
+$audioLabel = if ($a) { [string]$a.codec_name } else { "MISSING" }
+$mdLines = @(
+  "# Botanica 12s preview - RESULT",
+  "",
+  "- Status: ok",
+  "- Output: $Out",
+  "- Wall time: ${wallSec}s",
+  "- Size: $size bytes",
+  "- Duration: $durOut",
+  "- Resolution: $($v.width)x$($v.height)",
+  "- FPS: $fps",
+  "- Video: $($v.codec_name)",
+  "- Audio: $audioLabel",
+  "",
+  "STOP - no further render/upload."
+)
+$mdLines -join "`r`n" | Set-Content -Path $reportMd -Encoding UTF8
 
-- **Status:** ok
-- **Output:** ``$Out``
-- **Wall time:** ${wallSec}s
-- **Size:** $size bytes
-- **Duration:** $durOut
-- **Resolution:** $($v.width)x$($v.height)
-- **FPS:** $fps
-- **Video:** $($v.codec_name)
-- **Audio:** $(if ($a) { $a.codec_name } else { "MISSING" })
-
-STOP — no further render/upload.
-"@ | Set-Content -Path $reportMd -Encoding UTF8
-
-Write-Host "`nRESULT OK"
+Write-Host ""
+Write-Host "RESULT OK"
 Write-Host "OUT=$Out"
-Write-Host "BYTES=$size DUR=$durOut RES=$($v.width)x$($v.height) FPS=$fps V=$($v.codec_name) A=$(if ($a){$a.codec_name}else{'none'})"
+Write-Host "BYTES=$size DUR=$durOut RES=$($v.width)x$($v.height) FPS=$fps V=$($v.codec_name) A=$audioLabel"
 Write-Host "WALL_SECONDS=$wallSec"
 Write-Host "REPORT=$reportMd"
-Write-Host "STOP — authorized test complete. No upload / no further render."
+Write-Host "STOP - authorized test complete. No upload / no further render."
