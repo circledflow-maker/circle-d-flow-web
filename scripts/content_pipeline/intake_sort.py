@@ -132,12 +132,14 @@ def match_proposed(
 
 
 def inventory_media(root: Path, limit: int = 0) -> list[Path]:
-    items: list[Path] = []
+    """Inventory media under root. When limited, prefer AV over photos so ears get signal."""
+    av: list[Path] = []
+    photos: list[Path] = []
     try:
         walker = root.rglob("*")
     except OSError as e:
         print(f"WARN: cannot scan {root}: {e}")
-        return items
+        return []
     for p in sorted(walker):
         try:
             if not p.is_file():
@@ -147,14 +149,25 @@ def inventory_media(root: Path, limit: int = 0) -> list[Path]:
                 continue
         except (ValueError, OSError):
             continue
-        if p.suffix.lower() not in VIDEO_EXT | AUDIO_EXT | PHOTO_EXT:
+        ext = p.suffix.lower()
+        if ext not in VIDEO_EXT | AUDIO_EXT | PHOTO_EXT:
             continue
         if p.name.lower().startswith("botanica_90s"):
             continue  # finished masters - not intake sources
-        items.append(p)
-        if limit and len(items) >= limit:
+        if ext in PHOTO_EXT:
+            photos.append(p)
+        else:
+            av.append(p)
+        # Early exit only when unlimited? keep scanning until we can fill AV quota.
+        if limit and len(av) >= limit:
             break
-    return items
+    if not limit:
+        return av + photos
+    # Fill limit with AV first, then photos if short.
+    out = av[:limit]
+    if len(out) < limit:
+        out.extend(photos[: limit - len(out)])
+    return out
 
 
 def arpan_schema_dirs(base: Path) -> None:

@@ -67,15 +67,42 @@ def main() -> int:
     for k, n in by_artist.most_common(20):
         lines.append(f"- **{k}**: {n}")
 
+    # These were already ensured via ENSURE_BOTANICA_ARTISTS (2026-10-08).
+    already_ensured = {
+        "felippe sax",
+        "noua",
+        "diaza",
+        "joão redondo maia",
+        "joao redondo maia",
+        "lyssa",
+        "zeus atro",
+        "silso",
+        "piano player",
+        "other guitar",
+    }
+    create_names = [str(d.get("name") or "") for d in creates]
+    superseded = [n for n in create_names if n.lower() in already_ensured]
+    novel = [n for n in create_names if n.lower() not in already_ensured]
+
     lines += [
         "",
-        "## Drive CREATE proposals (NOT executed)",
+        "## Drive CREATE proposals (NOT executed by intake_sort)",
         "",
         f"Count: **{len(creates)}**",
         "",
     ]
     for d in creates:
-        lines.append(f"- Artists/`{d.get('name')}`/ (mirror {d.get('mirror')}, status={d.get('status')})")
+        name = str(d.get("name") or "")
+        tag = " already ensured — skip" if name.lower() in already_ensured else " needs decision"
+        lines.append(
+            f"- Artists/`{name}`/ (mirror {d.get('mirror')}, status={d.get('status')}){tag}"
+        )
+    lines += [
+        "",
+        f"- Superseded by `ENSURE_BOTANICA_ARTISTS`: **{len(superseded)}**",
+        f"- Novel (need human decision): **{len(novel)}**"
+        + (f" — {', '.join(novel)}" if novel else ""),
+    ]
 
     review_items = [it for it in items if it.get("action") == "review"]
     lines += ["", f"## Review queue (`_UNASSIGNED_REVIEW`) — {len(review_items)}", ""]

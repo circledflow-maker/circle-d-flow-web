@@ -15,7 +15,8 @@ if not exist "pipeline\data\intake_plan.json" (
 )
 python pipeline\tools\intake_plan_review.py
 echo.
-echo Then refresh QA gates:
-echo   pipeline\PHASE5_LITE.cmd
+echo Drive CREATE proposals: usually already covered by ENSURE_BOTANICA_ARTISTS - do not re-create.
+echo Optional better ears sample after pull: pipeline\PHASE5_EARS_OPTIONAL.cmd
+echo QA refresh: pipeline\PHASE5_LITE.cmd
 pause
 endlocal
