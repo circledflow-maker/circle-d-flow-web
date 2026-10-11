@@ -14,8 +14,10 @@ const runtimeCfg = window.__CDF_CONFIG__ || {};
 const SUPABASE_URL = runtimeCfg.supabaseUrl || window.CDF_SUPABASE_URL;
 const SUPABASE_KEY = runtimeCfg.supabaseKey || window.CDF_SUPABASE_KEY;
 
-// Auto-init if library present
-if(window.supabase && SUPABASE_URL && SUPABASE_KEY) {
+// Auto-init if library present — skip if member_card / another page already created the client
+if (window.supabaseClient) {
+    /* already initialized */
+} else if (window.supabase && SUPABASE_URL && SUPABASE_KEY) {
     try {
         window.supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
             auth: {
@@ -24,24 +26,12 @@ if(window.supabase && SUPABASE_URL && SUPABASE_KEY) {
                 detectSessionInUrl: true
             }
         });
-        console.log("[Supabase] Client Initialized Successfully.");
-        
-        // Test Connection (only if session exists or handle RLS gracefully)
-        window.supabaseClient.auth.getSession().then(({ data: { session } }) => {
-            if (session) {
-                window.supabaseClient.from('profiles').select('count', { count: 'exact', head: true })
-                    .then(({ count, error }) => {
-                        if(error) console.log("[Supabase] Connection Test (RLS):", error.message);
-                        else console.log("[Supabase] Connection Verified. Profiles:", count);
-                    });
-            }
-        });
-            
     } catch (e) {
         console.error("[Supabase] Initialization Failed:", e);
     }
-} else {
-    console.error("[Supabase] Critical: Library not loaded or runtime config missing.");
+} else if (!window.supabase) {
+    // Defer-loaded CDN may still be pending; member_card.ensureLibs retries
+    console.warn("[Supabase] Library not ready yet — waiting for deferred load.");
 }
 
 // --- OAUTH LOGIC (THE SYNAPSE GATE) ---

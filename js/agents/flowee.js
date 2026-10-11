@@ -470,9 +470,17 @@ class FloweeAgent {
                             btn.style.fontFamily = "'Montserrat', sans-serif";
                             btn.style.fontWeight = 'bold';
                             
-                            btn.onclick = () => {
-                                this.shush();
-                                if (typeof opt.action === 'function') opt.action();
+                            btn.type = 'button';
+                            btn.onclick = (ev) => {
+                                ev.preventDefault();
+                                ev.stopPropagation();
+                                // Run action first — shush() clears timers and can race the next talk()
+                                const run = typeof opt.action === 'function' ? opt.action : null;
+                                if (run) {
+                                    try { run(); } catch (err) { console.warn('[Flowee] option action', err); }
+                                } else {
+                                    this.shush();
+                                }
                             };
                             optionsDiv.appendChild(btn);
                         });

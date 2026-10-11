@@ -13,7 +13,8 @@ Member Card is **usable now**. Remaining work finalizes the ecosystem around it.
 | 3b | Admin auth env-first (no prod hardcoded password) | Done this pass |
 | 4 | Lapa71 ViV PiP + CTA script + IG carousel today | Script + carousel done; D: master render on Windows |
 | 5 | Member Card daily use (claim, Orbit, benefits) | **Live — primary surface** |
-| 6 | Stripe Silver/Gold checkout + activate | Done |
+| 5b | Claim gate / QR / deep-links / yearly / admin harden | Done 2026-10-11 — `Docs/member-card-finalize-2026-10-11.md` |
+| 6 | Stripe Silver/Gold checkout + activate | Done (yearly interval wired) |
 | 7 | Opportunity / slot + artist matching | Next (P2) |
 | 8 | Event interactive feed + RSVP clarity | Next (P2) |
 | 9 | RLS promo codes / partner redeem hardening | Not started |
