@@ -510,22 +510,57 @@ body.wk-intro-dim .wk-deck {
 body.wk-flowee-center #flowee-agent {
   left: 50% !important;
   right: auto !important;
-  top: 38% !important;
+  top: 42% !important;
   bottom: auto !important;
-  transform: translate(-50%, -50%) scale(1.45) !important;
+  transform: translate(-50%, -50%) scale(1.12) !important;
   align-items: center !important;
   z-index: 999999 !important;
+  max-width: calc(100vw - 16px);
 }
 body.wk-flowee-center #flowee-agent #flowee-visual {
-  width: 92px !important;
-  height: 92px !important;
+  width: 84px !important;
+  height: 84px !important;
   filter: drop-shadow(0 0 22px rgba(61, 224, 255, 0.5));
 }
 body.wk-flowee-center #flowee-agent #flowee-bubble {
-  width: min(300px, calc(100vw - 40px)) !important;
-  max-width: min(300px, calc(100vw - 40px)) !important;
+  width: min(320px, calc(100vw - 28px)) !important;
+  max-width: min(320px, calc(100vw - 28px)) !important;
   margin-right: 0 !important;
   transform-origin: bottom center !important;
+  max-height: min(70dvh, 520px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+body.wk-flowee-center #flowee-agent .flowee-options-container {
+  display: flex !important;
+  flex-direction: column !important;
+  flex-wrap: nowrap !important;
+  gap: 10px !important;
+  width: 100%;
+}
+body.wk-flowee-center #flowee-agent .flowee-options-container button {
+  width: 100% !important;
+  min-height: 44px !important;
+  padding: 12px 14px !important;
+  font-size: 12px !important;
+  border-radius: 12px !important;
+  box-sizing: border-box;
+}
+@media (max-width: 480px) {
+  body.wk-flowee-center #flowee-agent {
+    top: 46% !important;
+    transform: translate(-50%, -50%) scale(1.02) !important;
+  }
+  body.wk-flowee-center #flowee-agent #flowee-visual {
+    width: 72px !important;
+    height: 72px !important;
+  }
+}
+/* Keep language bar tappable during intro dim */
+body.wk-intro-dim .cdf-lang-bar {
+  pointer-events: auto;
+  position: relative;
+  z-index: 1000000;
 }
 body.wk-intro-dim .wk-shell {
   opacity: 0.4;

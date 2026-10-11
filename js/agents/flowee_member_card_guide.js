@@ -203,38 +203,80 @@
     ]);
   }
 
+  let langPicked = null;
+  let awaitingLangConfirm = false;
+
+  function confirmLabels(code) {
+    if (code === 'pt') return { confirm: 'Confirmar · Continuar', pick: 'Escolhe o idioma — depois Confirmar.' };
+    if (code === 'de') return { confirm: 'Bestätigen · Weiter', pick: 'Sprache wählen — dann Bestätigen.' };
+    return { confirm: 'Confirm · Continue', pick: 'Choose your language — then Confirm.' };
+  }
+
   /** After language: Login or Registration — not the old HELLO → benefits path */
   function askAuthGate() {
+    awaitingLangConfirm = false;
+    langPicked = null;
     setStage('center');
     showBenefitsPanel(false);
-    say(t('auth_gate'), 'guide', [
-      { label: t('have_login'), action: () => startLoginPath() },
-      { label: t('register_me'), action: () => startRegisterPath() },
+    // Slight delay so Flowee.shush() from the previous option does not kill this talk()
+    setTimeout(() => {
+      say(t('auth_gate'), 'guide', [
+        { label: t('have_login'), action: () => startLoginPath() },
+        { label: t('register_me'), action: () => startRegisterPath() },
+      ]);
+    }, 80);
+  }
+
+  function selectLang(code) {
+    langPicked = code;
+    window.CDFi18n?.setLang(code);
+    renderBenefitsTable();
+    document.querySelectorAll('.cdf-lang-btn').forEach((btn) => {
+      const on = (btn.getAttribute('data-lang') || '') === code;
+      btn.classList.toggle('is-active', on);
+      btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+    showLangConfirm();
+  }
+
+  function showLangConfirm() {
+    awaitingLangConfirm = true;
+    const code = langPicked || window.CDFi18n?.getLang?.() || 'en';
+    const labels = confirmLabels(code);
+    setStage('center');
+    say(labels.pick, 'guide', [
+      { label: 'PORTUGUÊS', action: () => selectLang('pt') },
+      { label: 'ENGLISH', action: () => selectLang('en') },
+      { label: 'DEUTSCH', action: () => selectLang('de') },
+      {
+        label: labels.confirm,
+        action: () => {
+          if (!langPicked) selectLang(code);
+          try {
+            sessionStorage.setItem('cdf_member_lang_done', '1');
+          } catch (_) { /* ignore */ }
+          askAuthGate();
+        },
+      },
     ]);
   }
 
   function askLanguage() {
     setStage('center');
     showBenefitsPanel(false);
-    say(t('pick_lang'), 'guide', [
+    langPicked = null;
+    awaitingLangConfirm = true;
+    say(t('pick_lang') || 'Choose your language — then Confirm.', 'guide', [
+      { label: 'PORTUGUÊS', action: () => selectLang('pt') },
+      { label: 'ENGLISH', action: () => selectLang('en') },
+      { label: 'DEUTSCH', action: () => selectLang('de') },
       {
-        label: 'PORTUGUÊS',
+        label: confirmLabels('en').confirm,
         action: () => {
-          window.CDFi18n?.setLang('pt');
-          askAuthGate();
-        },
-      },
-      {
-        label: 'ENGLISH',
-        action: () => {
-          window.CDFi18n?.setLang('en');
-          askAuthGate();
-        },
-      },
-      {
-        label: 'DEUTSCH',
-        action: () => {
-          window.CDFi18n?.setLang('de');
+          if (!langPicked) selectLang(window.CDFi18n?.getLang?.() || 'en');
+          try {
+            sessionStorage.setItem('cdf_member_lang_done', '1');
+          } catch (_) { /* ignore */ }
           askAuthGate();
         },
       },
@@ -246,6 +288,11 @@
     if (window.CDFi18n && switcher) {
       window.CDFi18n.mountSwitcher(switcher, () => {
         renderBenefitsTable();
+        // Top bar language during gate also counts as selection
+        if (awaitingLangConfirm) {
+          const code = window.CDFi18n?.getLang?.() || 'en';
+          selectLang(code);
+        }
       });
     }
     document.getElementById('wk-benefits-toggle')?.addEventListener('click', () => {
@@ -259,6 +306,24 @@
     });
 
     const params = new URLSearchParams(location.search);
+    // Public Orbit peek — do not block with language gate
+    if (params.get('preview') === '1') {
+      setStage('dock');
+      showBenefitsPanel(false);
+      return;
+    }
+    try {
+      if (sessionStorage.getItem('cdf_member_lang_done') === '1') {
+        setStage('dock');
+        showBenefitsPanel(false);
+        // Returning visitor already chose language — offer auth gate softly if claim shell visible
+        if (!document.body.classList.contains('wk-orbit-mode')) {
+          setTimeout(() => askAuthGate(), 200);
+        }
+        return;
+      }
+    } catch (_) { /* ignore */ }
+
     const auth = params.get('auth');
     if (auth === 'login' || auth === 'register') {
       setStage('dock');
