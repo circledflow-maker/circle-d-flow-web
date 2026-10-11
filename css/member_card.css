@@ -512,7 +512,8 @@ body.wk-flowee-center #flowee-agent {
   right: auto !important;
   top: 42% !important;
   bottom: auto !important;
-  transform: translate(-50%, -50%) scale(1.12) !important;
+  /* No scale() — transforms break mobile tap hit-testing on option buttons */
+  transform: translate(-50%, -50%) !important;
   align-items: center !important;
   z-index: 999999 !important;
   max-width: calc(100vw - 16px);
@@ -548,8 +549,8 @@ body.wk-flowee-center #flowee-agent .flowee-options-container button {
 }
 @media (max-width: 480px) {
   body.wk-flowee-center #flowee-agent {
-    top: 46% !important;
-    transform: translate(-50%, -50%) scale(1.02) !important;
+    top: 48% !important;
+    transform: translate(-50%, -50%) !important;
   }
   body.wk-flowee-center #flowee-agent #flowee-visual {
     width: 72px !important;
