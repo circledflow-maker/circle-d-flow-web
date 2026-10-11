@@ -12,12 +12,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
   <noscript><link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
-  <link rel="stylesheet" href="/css/member_card.css?v=20260918auth3">
+  <link rel="stylesheet" href="/css/member_card.css?v=20261011finalize1">
   <link rel="preload" as="image" href="/Assets/membership/wako_card_front.webp">
-  <link rel="preload" as="image" href="/Assets/membership/wako_card_back.webp">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="/js/cdf_runtime_config.js"></script>
-  <script src="/js/agents/supabase_client.js"></script>
+  <!-- Back face loads on first flip — skip preload for LCP -->
+  <script src="/js/cdf_runtime_config.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="/js/agents/supabase_client.js" defer></script>
 </head>
 <body class="wk-card-page">
   <div class="cdf-lang-bar" role="group" aria-label="Language">
@@ -69,7 +69,7 @@
       <div class="wk-ben-actions">
         <button type="button" class="wk-btn wk-btn--gold" data-tier-select="flow_supporter">Silver · €5</button>
         <button type="button" class="wk-btn wk-btn--gold" data-tier-select="flow_crew">Gold · €10</button>
-        <a class="wk-btn wk-btn--ghost" href="/pages/membership_plans#mp-policy">Plans &amp; policy</a>
+        <a class="wk-btn wk-btn--ghost" href="/membership#mp-policy">Plans &amp; policy</a>
       </div>
     </aside>
 
@@ -236,7 +236,7 @@
             </div>
             <div class="wk-nav" style="margin-top:0.45rem" id="wk-after-claim-nav" hidden>
               <button type="button" class="wk-btn wk-btn--gold" id="enter-orbit-btn">Enter Flow Orbit</button>
-              <a class="wk-btn wk-btn--cyan" id="go-sanctuary-after-claim" href="/pages/artist_sanctuary.html?welcome=card">3D Sanctuary</a>
+              <a class="wk-btn wk-btn--cyan" id="go-sanctuary-after-claim" href="/sanctuary?welcome=card">3D Sanctuary</a>
               <button type="button" class="wk-btn wk-btn--ghost" data-next id="to-tiers-btn">Optional tiers</button>
             </div>
             <div class="wk-nav" style="margin-top:0.45rem">
@@ -266,7 +266,7 @@
             </div>
             <div class="wk-nav">
               <a class="wk-btn wk-btn--gold" id="go-sanctuary-btn" href="/sanctuary?welcome=card">Enter 3D Sanctuary</a>
-              <a class="wk-btn wk-btn--ghost" href="/pages/membership_plans#mp-policy">Policy</a>
+              <a class="wk-btn wk-btn--ghost" href="/membership#mp-policy">Policy</a>
             </div>
             <div class="wk-partners">
               <p>Open partner links</p>
@@ -301,18 +301,18 @@
       </div>
       <div class="orbit-enter-row">
         <button type="button" class="wk-btn wk-btn--ghost" id="orbit-back-claim" hidden>Claim flow</button>
-        <a class="wk-btn wk-btn--cyan" href="/pages/artist_sanctuary.html?welcome=card">Sanctuary</a>
+        <a class="wk-btn wk-btn--cyan" href="/sanctuary?welcome=card">Sanctuary</a>
       </div>
     </div>
   </main>
 
   <div id="flowee-agent"></div>
 
-  <!-- Heavy scripts deferred; supabase + qrcode loaded on demand by member_card.js -->
-  <script src="/js/data/cdf_i18n.js?v=20260918auth3" defer></script>
-  <script src="/js/agents/flowee.js?v=20260918auth3" defer></script>
-  <script src="/js/agents/flowee_member_card_guide.js?v=20260918auth3" defer></script>
-  <script src="/js/member_card.js?v=20260918auth3" defer></script>
-  <script src="/js/flow_orbit.js?v=20260918auth3" defer></script>
+  <!-- Heavy scripts deferred; QRCode loaded on demand by member_card.js -->
+  <script src="/js/data/cdf_i18n.js?v=20261011finalize1" defer></script>
+  <script src="/js/agents/flowee.js?v=20261011finalize1" defer></script>
+  <script src="/js/agents/flowee_member_card_guide.js?v=20261011finalize1" defer></script>
+  <script src="/js/member_card.js?v=20261011finalize1" defer></script>
+  <script src="/js/flow_orbit.js?v=20261011finalize1" defer></script>
 </body>
 </html>

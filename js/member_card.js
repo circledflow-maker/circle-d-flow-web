@@ -208,8 +208,21 @@
 
   const WAKO_IG = 'https://www.instagram.com/wako.kungo/';
 
-  function profileQrUrl(_card, _uid) {
-    return WAKO_IG;
+  /** True only after server publicId or an intentional local claim stamp. */
+  function hasClaimedCard(card, profile) {
+    if (profile && profile.publicId) return true;
+    if (!card) return false;
+    if (card.publicId && (card.claimedAt || card.profileBound)) return true;
+    return Boolean(card.claimed && card.claimedAt);
+  }
+
+  /** QR encodes the shareable member-card URL (IG is a separate CTA). */
+  function profileQrUrl(card, _uid) {
+    try {
+      return cardUrl(card || loadCard());
+    } catch (_) {
+      return window.location.origin + '/member-card';
+    }
   }
 
   function speak(msg, type) {
@@ -618,7 +631,8 @@
 
   function showGuestIdentity() {
     renderName('', '');
-    renderQr(WAKO_IG);
+    // Guest QR points at claim page (not Instagram stub)
+    renderQr(window.location.origin + '/member-card');
     setChips({ claimed: false, memberNumber: '' }, 0);
     if (els.tierChip) els.tierChip.textContent = 'Bronze · Free';
   }
@@ -748,10 +762,11 @@
     speak('Password saved. Welcome back.', 'guide');
     const { card, profile } = await applySessionToCard();
     setAuthGate(false);
-    if (card.claimed || profile.publicId) {
+    if (hasClaimedCard(card, profile)) {
+      renderQr(profileQrUrl(card, profile.uid));
       await enterProfileOrbit(card, profile);
     } else {
-      goStep(card.displayName ? 5 : 1);
+      goStep(card.displayName || profile.name ? 5 : 1);
     }
   }
 
@@ -809,12 +824,14 @@
     if (profile.publicId) {
       card.publicId = profile.publicId;
       card.claimed = true;
+      card.profileBound = true;
+      if (!card.claimedAt) card.claimedAt = new Date().toISOString();
     }
     if (profile.tier) card.tier = profile.tier;
     if (profile.uid) card.userId = profile.uid;
     if (typeof profile.exp === 'number') card.exp = profile.exp;
-    if (profile.authed && (card.claimed || profile.publicId || card.displayName)) {
-      card.claimed = true;
+    // Never mark claimed from displayName alone — that skipped +25 EXP / claim API
+    if (hasClaimedCard(card, profile)) {
       memberNumber(card);
     }
     saveCard(card);
@@ -858,13 +875,14 @@
     }
     const { card, profile } = await applySessionToCard();
     setAuthGate(false);
-    if (card.claimed || profile.publicId) {
+    if (hasClaimedCard(card, profile)) {
       renderName(card.displayName || '', card.memberNumber || '');
+      renderQr(profileQrUrl(card, profile.uid));
       setChips(card, profile.exp);
       await enterProfileOrbit(card, profile);
       return;
     }
-    if (card.displayName) {
+    if (card.displayName || profile.name) {
       goStep(5);
       speak('Signed in. Claim your free Bronze card · +25 EXP.', 'guide');
     } else {
@@ -981,9 +999,7 @@
 
     const card = loadCard();
     card.displayName = name;
-    card.claimed = true;
     card.tier = card.tier || 'registered';
-    card.claimedAt = new Date().toISOString();
     card.source = new URLSearchParams(window.location.search).get('src') || 'direct';
     publicId(card);
     memberNumber(card);
@@ -992,6 +1008,7 @@
     const { jwt, user } = await sessionJwt();
     let expShown = null;
     let uid = user?.id || null;
+    let claimOk = false;
 
     if (jwt) {
       try {
@@ -1012,8 +1029,11 @@
         });
         const data = await res.json().catch(() => ({}));
         if (res.ok && data.success) {
+          claimOk = true;
           expShown = data.exp;
           card.publicId = data.publicId || card.publicId;
+          card.claimed = true;
+          card.claimedAt = new Date().toISOString();
           card.profileBound = true;
           if (data.tier) card.tier = data.tier;
           saveCard(card);
@@ -1028,14 +1048,18 @@
           if (data.coupons) renderCoupons(data.coupons);
           else renderCoupons(DEFAULT_COUPONS);
         } else {
-          setMsg(els.issueMsg, data.error || 'Profile save failed — card kept locally.', false);
+          setMsg(els.issueMsg, data.error || 'Profile save failed — try again.', false);
           renderCoupons(DEFAULT_COUPONS);
         }
       } catch (_) {
-        setMsg(els.issueMsg, 'Network issue — card kept on this device.', false);
+        setMsg(els.issueMsg, 'Network issue — sign in and claim again when online.', false);
         renderCoupons(DEFAULT_COUPONS);
       }
     } else {
+      // Local draft stamp only — Orbit still requires login
+      claimOk = true;
+      card.claimed = true;
+      card.claimedAt = new Date().toISOString();
       try {
         const g = JSON.parse(localStorage.getItem('user_gamification_data') || '{}');
         if (!card.xpAwarded) {
@@ -1043,14 +1067,19 @@
           g.exp = (g.exp || 0) + XP_CLAIM;
           localStorage.setItem('user_gamification_data', JSON.stringify(g));
           card.xpAwarded = true;
-          saveCard(card);
           expShown = g.exp;
         }
       } catch (_) {
         /* ignore */
       }
+      saveCard(card);
       setMsg(els.issueMsg, 'Card claimed on device. Sign in later to sync EXP.', true);
       renderCoupons(DEFAULT_COUPONS);
+    }
+
+    if (!claimOk) {
+      speak('Claim did not finish — stay signed in and tap Claim again.', 'error');
+      return;
     }
 
     pushInventory(card, uid);
@@ -1315,6 +1344,7 @@
     claimAndEnter,
     sendPasswordReset,
     enterAuthMode,
+    hasClaimedCard,
   };
 
   async function boot() {
@@ -1322,6 +1352,12 @@
       await ensureLibs();
     } catch (_) { /* ignore */ }
     const params = new URLSearchParams(window.location.search);
+    const deepLink =
+      params.has('view') ||
+      params.has('event') ||
+      params.has('location') ||
+      params.get('orbit') === '1';
+    const previewOrbit = params.get('preview') === '1';
 
     // Password recovery from email link first
     if (await consumeRecoverySession()) return;
@@ -1329,12 +1365,14 @@
     const profile = await readExp();
     let card = loadCard();
 
-    // Paid return (requires prior session typically)
+    // Paid return → activate then open Orbit
     if (params.get('paid') === '1' && params.get('session_id')) {
-      if (card.claimed) memberNumber(card);
+      const applied = await applySessionToCard();
+      card = applied.card;
+      if (hasClaimedCard(card, applied.profile)) memberNumber(card);
       renderName(card.displayName || '', card.memberNumber || '');
-      renderQr(WAKO_IG);
-      setChips(card, profile.exp);
+      renderQr(profileQrUrl(card, applied.profile.uid));
+      setChips(card, applied.profile.exp);
       goStep(6, { silent: true });
       speak('Payment return — confirming membership…', 'guide');
       try {
@@ -1347,8 +1385,20 @@
         if (res.ok && data.success) {
           card.tier = data.tier || card.tier;
           card.claimed = true;
+          if (!card.claimedAt) card.claimedAt = new Date().toISOString();
+          if (data.publicId) card.publicId = data.publicId;
+          card.profileBound = true;
           saveCard(card);
-          speak('Membership active. Enter the Sanctuary when ready.', 'guide');
+          setChips(card, data.exp != null ? data.exp : applied.profile.exp);
+          speak('Membership active. Opening your Flow Orbit…', 'guide');
+          if (typeof window.cdfEnterFlowOrbit === 'function' && (applied.profile.authed || profile.authed)) {
+            setTimeout(() => window.cdfEnterFlowOrbit(), 400);
+            return;
+          }
+          if (els.afterClaimNav) els.afterClaimNav.hidden = false;
+        } else if (data.pendingClaim) {
+          speak('Payment received — claim or sync your card to bind the tier.', 'guide');
+          goStep(5);
         }
       } catch (_) {
         speak('Could not confirm payment — card still works.', 'error');
@@ -1367,17 +1417,30 @@
       return;
     }
 
+    // Public Orbit peek (?preview=1&event=… / view=…)
+    if (previewOrbit && deepLink && typeof window.cdfEnterFlowOrbit === 'function') {
+      window.cdfEnterFlowOrbit();
+      return;
+    }
+
     // OAuth return
     if (params.get('oauth') === '1' || params.get('step') === 'issue') {
       const { user } = await sessionJwt();
       if (user) {
         const applied = await applySessionToCard();
         card = applied.card;
+        if (hasClaimedCard(card, applied.profile)) {
+          renderName(card.displayName || '', card.memberNumber || '');
+          renderQr(profileQrUrl(card, applied.profile.uid));
+          setChips(card, applied.profile.exp);
+          await enterProfileOrbit(card, applied.profile);
+          return;
+        }
         if (card.displayName) {
           renderName(card.displayName, card.memberNumber || '');
           setChips(card, applied.profile.exp);
           goStep(5);
-          speak('Google connected. Claim your card to enter the Sanctuary.', 'guide');
+          speak('Google connected. Claim your card to enter Orbit.', 'guide');
         } else {
           showGuestIdentity();
           goStep(1);
@@ -1389,18 +1452,42 @@
       return;
     }
 
-    // Returning member with real Supabase session
-    if (profile.authed && (card.claimed || profile.publicId || card.displayName)) {
+    // Deep-link Orbit (events/locations/view) — require session + real claim
+    if (deepLink && !previewOrbit) {
+      if (!profile.authed) {
+        enterAuthMode('login');
+        setMsg(
+          els.loginMsg,
+          'Log in to open this Flow in your Member Card Orbit.',
+          true
+        );
+        return;
+      }
       const applied = await applySessionToCard();
       card = applied.card;
-      if (card.claimed) memberNumber(card);
+      if (hasClaimedCard(card, applied.profile)) {
+        renderName(card.displayName || '', card.memberNumber || '');
+        renderQr(profileQrUrl(card, applied.profile.uid));
+        setChips(card, applied.profile.exp);
+        await enterProfileOrbit(card, applied.profile);
+        return;
+      }
+      goStep(card.displayName || applied.profile.name ? 5 : 1);
+      speak('Claim your free Bronze card to unlock this Flow in Orbit.', 'guide');
+      return;
+    }
+
+    // Returning member with real Supabase session + real claim
+    if (profile.authed) {
+      const applied = await applySessionToCard();
+      card = applied.card;
       renderName(card.displayName || '', card.memberNumber || '');
-      renderQr(WAKO_IG);
+      renderQr(profileQrUrl(card, applied.profile.uid));
       setChips(card, applied.profile.exp);
       try {
         sessionStorage.setItem('cdf_flowee_auth_gate', '1');
       } catch (_) {}
-      if (card.claimed || profile.publicId) {
+      if (hasClaimedCard(card, applied.profile)) {
         if (typeof window.cdfEnterFlowOrbit === 'function') {
           window.cdfEnterFlowOrbit();
           return;
@@ -1417,10 +1504,15 @@
         speak('Welcome back. Your card and partner codes are ready.', 'guide');
         return;
       }
+      if (card.displayName || applied.profile.name) {
+        goStep(5);
+        speak('Welcome back — claim your free Bronze card · +25 EXP.', 'guide');
+        return;
+      }
     }
 
-    // Local mock / claimed without session → force login (do not open profile)
-    if (card.claimed && !profile.authed) {
+    // Local mock / claimed without session → force login
+    if (hasClaimedCard(card, null) && !profile.authed) {
       enterAuthMode('login');
       setMsg(
         els.loginMsg,
@@ -1430,7 +1522,7 @@
       return;
     }
 
-    // Fresh visitor — blank guest identity + welcome slide
+    // Fresh visitor
     showGuestIdentity();
     if (params.get('n') && !card.displayName) {
       card.displayName = params.get('n');
@@ -1440,6 +1532,7 @@
     goStep(0, { silent: true });
     speak('Pick Login if you already have a profile — or Registration for a free Bronze card.', 'guide');
   }
+
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', boot);

@@ -95,7 +95,10 @@
   }
 
   function isClaimed(card) {
-    return Boolean(card.claimedAt || card.memberCardClaimedAt || card.claimed);
+    // Align with member_card.hasClaimedCard — displayName alone is not a claim
+    if (!card) return false;
+    if (card.publicId && (card.claimedAt || card.profileBound || card.claimed)) return true;
+    return Boolean(card.claimedAt || card.memberCardClaimedAt);
   }
 
   async function authHeaders() {
@@ -514,6 +517,33 @@
   }
 
   async function enterOrbit() {
+    const p = qs();
+    const allowPreview = p.get('preview') === '1';
+
+    // Require live session — never open Orbit from localStorage mock alone
+    // Exception: explicit ?preview=1 public peeks (event/location deep links)
+    if (!allowPreview) {
+      try {
+        const sb = window.supabaseClient || window.cdfSupabase;
+        let session = null;
+        if (sb?.auth?.getSession) {
+          const { data } = await sb.auth.getSession();
+          session = data?.session || null;
+        }
+        if (!session?.access_token) {
+          showClaim();
+          if (typeof window.MemberCardFlow?.enterAuthMode === 'function') {
+            window.MemberCardFlow.enterAuthMode('login');
+          }
+          setGuide('Log in to enter your Flow Orbit.');
+          return;
+        }
+      } catch (_) {
+        showClaim();
+        return;
+      }
+    }
+
     const card = loadCard();
     showOrbit();
     setGuide('Loading your Orbit…');
@@ -521,7 +551,14 @@
     try {
       feed = await fetchFeed();
     } catch (_) {
-      feed = { cards: [], events: [], coupons: [], locations: [], saves: [], flowee: { line: 'Offline Orbit — local card ready.' } };
+      feed = {
+        cards: [],
+        events: [],
+        coupons: [],
+        locations: [],
+        saves: [],
+        flowee: { line: allowPreview ? 'Preview Orbit — claim to unlock full member access.' : 'Offline Orbit — local card ready.' },
+      };
     }
     state.feed = feed;
     state.cards = buildCards(feed, card);
@@ -536,9 +573,14 @@
     // Explicit Login / Registration must show auth UI — never skip to Orbit
     if (p.get('auth') === 'login' || p.get('auth') === 'register') return false;
     if (p.get('orbit') === '0') return false;
-    // Deep-link preview only — real Orbit entry is gated by member_card.js after session check
-    if (p.get('preview') === '1' && (p.get('orbit') === '1' || p.get('view'))) return true;
-    // Do not auto-enter from localStorage "claimed" alone (blocks mock profile without login)
+    // Public deep-link preview (?preview=1 with view/event/location)
+    if (
+      p.get('preview') === '1' &&
+      (p.get('orbit') === '1' || p.get('view') || p.get('event') || p.get('location'))
+    ) {
+      return true;
+    }
+    // Real Orbit entry is gated by member_card.js after session + claim check
     return false;
   }
 
@@ -548,6 +590,17 @@
     if (els.detailClose) els.detailClose.addEventListener('click', closeDetail);
     bindSwipe();
     bindDock();
+
+    const backClaim = document.getElementById('orbit-back-claim');
+    if (backClaim) {
+      backClaim.hidden = false;
+      backClaim.addEventListener('click', () => {
+        showClaim();
+        if (typeof window.MemberCardFlow?.goStep === 'function') {
+          window.MemberCardFlow.goStep(0);
+        }
+      });
+    }
 
     // After claim, member_card.js can call this
     window.cdfEnterFlowOrbit = enterOrbit;
@@ -562,9 +615,9 @@
       showClaim();
     }
 
-    // Preview deep link for public event without claim
+    // Deep link without preview: member_card boot handles auth → Orbit
     const p = qs();
-    if (p.get('event') && !isClaimed(card) && p.get('preview') !== '0') {
+    if ((p.get('event') || p.get('location')) && !isClaimed(card) && p.get('preview') !== '1') {
       setGuide('Event waiting — claim your card to unlock member access.');
     }
   }
