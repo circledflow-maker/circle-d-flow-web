@@ -3,7 +3,22 @@
 Stand: 2026-10-28 · Agent: Codex · Koordination Ebene 2 · Entscheidung: Hope (CEO)
 Repo: https://github.com/circledflow-maker/circle-d-flow-web
 
-## Ergebnis dieser Arbeit — Repo-Koordination
+## 2026-10-28 — Codex · Circle D Flow · beauftragtes Deployment
+
+Ergebnis: NICHT AUSGEFÜHRT — Zugriff auf das bestehende Vercel-Projekt fehlt in der aktuellen Verbindung. Hopes ausdrücklicher Deployment-Auftrag liegt vor; eine erneute kreative Veröffentlichungsfreigabe ist hierfür nicht erforderlich.
+
+- Ziel geprüft: bestehendes Projekt circle-d-flow-web, lokale Projektverknüpfung aus E:/circle-d-flow-web/.vercel/project.json. Kein Ersatzprojekt angelegt.
+- Vercel-Projektabfrage per ID und Namen: 404 / Project not found.
+- Deployment-Liste im zugeordneten Team: 403 / You don't have permission to list the deployment.
+- Projektsuche im selben Team: leeres Ergebnis. Der Deployment-Kontext zeigt das Team, aber keine verknüpften Projekte.
+- Lokaler Fallback geprüft: Vercel-CLI nicht im PATH; an den beiden üblichen CLI-Anmeldepfaden keine Anmeldung gefunden. Kein neuer Login und keine Zugangsdaten angelegt.
+- Kein Create-Deployment-Aufruf, keine Promotion, kein Merge, keine Produktivänderung. Es gibt keine neue Deployment-ID oder verifizierte neue Live-Version.
+- Sechs lokale Acceptance-Dateien erneut mit node --test gestartet: alle sechs brechen bei der Initialisierung ab, weil CDF_DOM_PARSER nicht gesetzt ist (ERR_INVALID_ARG_TYPE). Der erwartete Parser ist auch nicht als node_modules/linkedom vorhanden. Das ist kein frischer Nachweis bestandener Produkttests; die einzelnen Assertions liefen nicht. Keine Abhängigkeit nachinstalliert oder Produktdatei verändert.
+- Browser-/GPU-/Smartphone-, authentifizierte Live- und RLS-Abnahme in diesem Lauf NICHT AUSGEFÜHRT.
+
+Nächster erforderlicher Schritt: Zugriff der Vercel-Verbindung auf das bestehende Projekt klären; die API-Antwort allein belegt nicht, ob Projektberechtigung, Verbindungskonfiguration oder Ressourcenzuordnung die Ursache ist. Danach getestetes, bereinigtes Release aus tatsächlicher Produktionsbasis und öffentlichen lokalen Änderungen bauen, ausliefern und Live-Dateien/Routen prüfen. Vorher den vorhandenen Test-Parser gemäß bisherigem Harness bereitstellen. Der vollständige Produktdatei-Abgleich bleibt offen.
+
+## Ergebnis der vorherigen Arbeit — Repo-Koordination
 
 - AGENTS.md um Hopes verbindlichen Repo-Arbeitsablauf ergänzt; Status und offene Übergabe angelegt.
 - Aktive lokale Quelle E:/circle-d-flow-web geprüft. D: wird nicht als Ersatz-Webstand bearbeitet.
