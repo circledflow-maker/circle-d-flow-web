@@ -3,7 +3,20 @@
 Stand: 2026-10-28 · Agent: Codex · Koordination Ebene 2 · Entscheidung: Hope (CEO)
 Repo: https://github.com/circledflow-maker/circle-d-flow-web
 
-## 2026-10-28 — Codex · Circle D Flow · beauftragtes Deployment
+## 2026-11-01 — Codex · Circle D Flow · Review-Befunde zu PR #17 nachgeführt
+
+- Vorherigen GitHub-Head 56fdd95 und weiterhin offenen Draft PR #17 geprüft; PR #18 steht auf e706e5e und bleibt ein separater ungemergter Produktdatei-Vorschlag.
+- Ignore-Regeln für Team/, private Übergaben und Zugangsdaten ergänzt. Bereits versionierte credentials.json und adobe_token.json aus dem vorgeschlagenen aktuellen PR-Dateibaum entfernt; lokale Originale, Historie und Anbieterzugänge bleiben unverändert. Inhalt/Gültigkeit nicht geprüft; Rotation und Historienbereinigung bleiben offen.
+- Fehlende lokale Rollenbriefe/Registry werden nicht erfunden oder ungeprüft publiziert. Docs/repository-workflow.md erlaubt Review/Koordination ohne diese optionalen lokalen Hilfen. Rollenbestätigung bleibt bei 21 Rollen/Version 1.0; vollständige bestätigte Liste weiterhin nicht verfügbar.
+- Automatische Vercel- und Netlify-Previews sind durch GitHub-Botmeldungen/Commit-Status belegt. Für den Koordinationsbranch Skip-Konfiguration ergänzt; Exportgrenzen für interne Dateien ergänzt. Tatsächliches Überspringen/404-Verhalten beim Anbieter muss nach dem Commit separat überprüft werden.
+- Release-Build dpl_2Ja1kMkJqtXrtfPVV6NCKDtE54xc am 01.11. über Vercel erneut gelesen: READY, target null (Preview), keine Aliase. Das ersetzt die frühere Meldung BUILDING. Keine neue Promotion oder Produktionsfreigabe in dieser Arbeit.
+- Die am 28.10. berichteten 39 erfolgreichen lokalen Tests sind historisches Ergebnis; am 01.11. nicht als frischer Lauf wiederholt. Physische Smartphone-, GPU-, authentifizierte Live- und RLS-Abnahme bleiben offen.
+- Lokale E:-Quelle enthält inzwischen auch Status-/Übergabedateien anderer Bearbeiter. Diese wurden gelesen, nicht überschrieben oder mit ihren privaten Medienreferenzen ins öffentliche Repo kopiert. Keine Übernahme ihrer Test-/Medienfreigaben behauptet.
+- Prüfungen dieser Korrektur: Vercel-JSON erfolgreich geparst; bestehende Rewrites/Redirects strukturell unverändert. Git check-ignore bestätigt fünf getestete Privatpfade und lässt .env.example zu. Sechs Netlify-Skip-Fälle bestehen, darunter Produktions-/andere Branchkontexte, die nicht übersprungen werden. Der erste isolierte Testlauf scheiterte an Sandbox-/TEMP-Zugriffen; der abschließende zusammenhängende Lauf bestand.
+
+Nächster Schritt: korrigierten PR erneut lesen; Anbieter-Skip-Ergebnisse prüfen. Anschließend PR #18 und den neueren Produktionsstand gesondert vergleichen. Kein Merge, keine Produktivänderung, Zahlung, Medienveröffentlichung oder neue Rollenvergabe durch diesen Status.
+
+## Historischer Bericht: 2026-10-28 — Codex · Circle D Flow · beauftragtes Deployment
 
 Ergebnis: NICHT AUSGEFÜHRT — Zugriff auf das bestehende Vercel-Projekt fehlt in der aktuellen Verbindung. Hopes ausdrücklicher Deployment-Auftrag liegt vor; eine erneute kreative Veröffentlichungsfreigabe ist hierfür nicht erforderlich.
 

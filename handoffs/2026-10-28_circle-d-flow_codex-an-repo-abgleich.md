@@ -14,13 +14,15 @@ Den neueren lokalen Webstand dateibasiert gegen GitHub-main erfassen und einen s
 
 Aktive Quelle ist E:/circle-d-flow-web; D: ist kein synchronisierter Ersatz. Remote-main wurde als b20601734fe2aaef706f688863aa29fad90d094a gelesen, lokal lesbarer HEAD als 8844240. Git-Status des aktiven Arbeitsbaums ließ sich im eingeschränkten Lauf nicht zuverlässig lesen (Worktree-/Zugriffsfehler). Nicht daraus schließen, dass der Arbeitsbaum sauber oder vollständig inventarisiert sei.
 
+Nachtrag 01.11.2026: PR #18 sichert ausgewählte öffentliche Produktdateien; kein vollständiger Abgleich. Der Release-Preview dpl_2Ja1kMkJqtXrtfPVV6NCKDtE54xc ist laut erneuter Anbieterabfrage READY ohne Aliase, keine bestätigte Produktionsauslieferung.
+
 Lokale Implementierungsberichte reichen bis room visual polish25 (28.10.). Sie dokumentieren Weiterarbeit nach origin19. Die Koordinationsdateien synchronisieren diese Produktdateien nicht.
 
 ## Inputs
 
 - AGENTS.md und STATUS.md dieses Branches.
 - Lokal: Docs/implementation-status.md, Docs/orbit-navigation-intro-20261026.md, .gitignore und .vercelignore.
-- Vor Rollenübernahme ausdrücklich .cursor/agents/cdf-business-organiser.md prüfen; falls der tatsächliche Brief anders heißt, suchen und laden, keinen Brief erfinden.
+- Portabler Ablauf: Docs/repository-workflow.md. Vor tatsächlicher Rollenübernahme einen vorhandenen bestätigten Brief laden; solange dieser fehlt, keine Rollendelegation und keine erfundene Besetzung. Normale Repo-Bestandsaufnahme bleibt möglich.
 - Private Team/-Akten bleiben lokal und dürfen nicht als Anhang ins öffentliche Repo.
 
 ## Gewünschtes Ergebnis

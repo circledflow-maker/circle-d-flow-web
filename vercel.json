@@ -2,6 +2,11 @@
   "outputDirectory": ".",
   "cleanUrls": true,
   "trailingSlash": false,
+  "git": {
+    "deploymentEnabled": {
+      "codex/repo-koordination-2026-10-28": false
+    }
+  },
   "rewrites": [
     { "source": "/api/register-event", "destination": "/api/registrations?route=event" },
     { "source": "/api/register-guest", "destination": "/api/registrations?route=guest" },

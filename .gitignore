@@ -50,3 +50,13 @@ token.json
 .env
 token.json
 .vercel
+
+# Private operator data and credentials (not public repository content)
+/Team/
+.env.*
+!.env.example
+/credentials.json
+/adobe_token.json
+/token.json
+/HANDOFF_TO_GEMINI.md
+/HANDOFF_CDF_WEB_MEMBERCARD_LIVE_ACCEPTANCE.md
