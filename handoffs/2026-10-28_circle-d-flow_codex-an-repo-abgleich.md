@@ -3,8 +3,8 @@
 - Projekt: Circle D Flow; KYH und Flowee nur mit getrenntem Umfang.
 - Datum / Absender: 2026-10-28 / Codex, Koordination Ebene 2.
 - Empfänger-Rolle: Business organiser (vorhandener Brief); Rollenbesetzung noch nicht zugeordnet.
-- Tatsächlicher Empfänger-Agent: noch nicht zugeordnet. Daiku, Codex, Antigravity oder IDA sind nicht automatisch beauftragt.
-- Zustand: offen, noch nicht angenommen.
+- Tatsächlicher Empfänger-Agent für die begrenzte Inventarphase: Codex (Koordination, keine zusätzliche Rollenvergabe). Weitere Aufgaben sind noch nicht zugeordnet.
+- Zustand: offen; begrenzte Raum-Inventarphase am05.11.2026 durchgeführt, vollständiger Produktabgleich noch ausstehend.
 
 ## Ziel
 
@@ -46,6 +46,6 @@ Eine bereinigte Dateiliste mit lokalen/Remote-Unterschieden, geordnet nach CDF, 
 - Git-/Worktree-Zugriff, Umfang möglicher Zugangsdaten im Altbestand und aktuelle Deploy-Verknüpfung müssen vor Produktintegration geklärt werden.
 - Keine Zahlungen, Produktivmigrationen, Rechte-/Rollenvergabe oder Veröffentlichung in diesem Auftrag.
 
-Annahme: noch nicht zugeordnet.
-Ergebnisnotiz / Beleg: noch nicht zugeordnet.
-Nächster Schritt: Empfänger übernimmt einen begrenzten Inventarauftrag im Repo; noch keine Implementierung oder Übernahme behaupten.
+Annahme: Codex,05.11.2026, begrenzter Abgleich der Raumdateien in PR #18 gegen die aktive E:-Quelle.
+Ergebnisnotiz / Beleg:17 von26 bisherigen öffentlichen Dateien bytegleich,9 inhaltlich aktualisiert und zusätzliches Atmosphärenmodul aufgenommen. PR #18 auf bbaba2f, Releasequelle4d7c0f2;41 frische Tests bestanden. Bericht: PR-#18-Datei Docs/room-release-review-20261105.md. Keine vollständige Repo-Synchronisierung, Produktionsauslieferung oder Live-Abnahme behauptet.
+Nächster Schritt: neuen Kandidaten aus vollständiger Produktionsbasis plus geprüftem29-Dateien-Overlay bauen und abnehmen. Übergabe bleibt offen, weil die vollständigen Abnahmekriterien noch nicht erfüllt sind.
