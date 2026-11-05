@@ -49,6 +49,8 @@
   dialog.classList.remove('has-error');
   if(!dialog.open){if(dialog.showModal)dialog.showModal();else dialog.setAttribute('open','');}
   dialog.querySelector('#room-transition-cancel').focus();
+  window.dispatchEvent(new window.Event('cdf:room-modal'));
+  if(isIncoming)timer=setTimeout(fail,20000);
  }
  function close(){
   generation++;controller?.abort();controller=null;clearTimeout(timer);timer=null;clearMarker();

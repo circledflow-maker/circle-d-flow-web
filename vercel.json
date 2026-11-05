@@ -2,69 +2,306 @@
   "outputDirectory": ".",
   "cleanUrls": true,
   "trailingSlash": false,
+  "git": {
+    "deploymentEnabled": {
+      "codex/repo-koordination-2026-10-28": false,
+      "codex/room-polish25-release-20261028": false
+    }
+  },
   "rewrites": [
-    { "source": "/api/register-event", "destination": "/api/registrations?route=event" },
-    { "source": "/api/register-guest", "destination": "/api/registrations?route=guest" },
-    { "source": "/api/admin-registrations", "destination": "/api/registrations?route=admin" },
-    { "source": "/api/kyh-feedback-invite", "destination": "/api/registrations?route=kyh-feedback" },
-    { "source": "/api/create-checkout", "destination": "/api/payments?route=checkout" },
-    { "source": "/api/create-payment-intent", "destination": "/api/payments?route=intent" },
-    { "source": "/api/support-checkout", "destination": "/api/payments?route=support" },
-    { "source": "/api/create-membership-checkout", "destination": "/api/payments?route=membership" },
-    { "source": "/api/membership-activate", "destination": "/api/payments?route=membership-activate" },
-    { "source": "/api/claim-member-card", "destination": "/api/registrations?route=claim-card" },
-    { "source": "/api/admin-membership", "destination": "/api/registrations?route=admin-membership" },
-    { "source": "/api/member-orbit", "destination": "/api/registrations?route=member-orbit" },
-    { "source": "/api/whatsapp-webhook", "destination": "/api/whatsapp?webhook=1" }
+    {
+      "source": "/api/register-event",
+      "destination": "/api/registrations?route=event"
+    },
+    {
+      "source": "/api/register-guest",
+      "destination": "/api/registrations?route=guest"
+    },
+    {
+      "source": "/api/admin-registrations",
+      "destination": "/api/registrations?route=admin"
+    },
+    {
+      "source": "/api/kyh-feedback-invite",
+      "destination": "/api/registrations?route=kyh-feedback"
+    },
+    {
+      "source": "/api/create-checkout",
+      "destination": "/api/payments?route=checkout"
+    },
+    {
+      "source": "/api/create-payment-intent",
+      "destination": "/api/payments?route=intent"
+    },
+    {
+      "source": "/api/support-checkout",
+      "destination": "/api/payments?route=support"
+    },
+    {
+      "source": "/api/create-membership-checkout",
+      "destination": "/api/payments?route=membership"
+    },
+    {
+      "source": "/api/membership-activate",
+      "destination": "/api/payments?route=membership-activate"
+    },
+    {
+      "source": "/api/claim-member-card",
+      "destination": "/api/registrations?route=claim-card"
+    },
+    {
+      "source": "/api/admin-membership",
+      "destination": "/api/registrations?route=admin-membership"
+    },
+    {
+      "source": "/api/member-orbit",
+      "destination": "/api/registrations?route=member-orbit"
+    },
+    {
+      "source": "/api/whatsapp-webhook",
+      "destination": "/api/whatsapp?webhook=1"
+    }
   ],
   "redirects": [
-    { "source": "/photographer", "destination": "/pages/photographer_hub", "permanent": false },
-    { "source": "/vision", "destination": "/pages/vision_studio", "permanent": false },
-    { "source": "/book", "destination": "/pages/booking", "permanent": false },
-    { "source": "/book-session", "destination": "/pages/booking", "permanent": false },
-    { "source": "/studio", "destination": "/pages/vision_studio", "permanent": false },
-    { "source": "/taste", "destination": "/pages/taste_world_hub", "permanent": false },
-    { "source": "/taste-hub", "destination": "/pages/taste_world_hub", "permanent": false },
-    { "source": "/kitchen-ops", "destination": "/pages/kitchen_command", "permanent": false },
-    { "source": "/kitchen-command", "destination": "/pages/kitchen_command", "permanent": false },
-    { "source": "/kitchen-forge", "destination": "/pages/kitchen_forge", "permanent": false },
-    { "source": "/coop", "destination": "/pages/coop", "permanent": false },
-    { "source": "/login", "destination": "/pages/login", "permanent": false },
-    { "source": "/logout", "destination": "/pages/logout", "permanent": false },
-    { "source": "/auth/callback", "destination": "/pages/auth_callback", "permanent": false },
-    { "source": "/join", "destination": "/pages/lapa71_register", "permanent": false },
-    { "source": "/membership", "destination": "/pages/membership_plans", "permanent": false },
-    { "source": "/membership/plans", "destination": "/pages/membership_plans", "permanent": false },
-    { "source": "/plans", "destination": "/pages/membership_plans", "permanent": false },
-    { "source": "/member-card", "destination": "/pages/member_card", "permanent": false },
-    { "source": "/invite/wako-card", "destination": "/pages/wako_member_invite", "permanent": false },
-    { "source": "/invite", "destination": "/pages/wako_member_invite", "permanent": false },
-    { "source": "/print/flyer", "destination": "/pages/print_wako_flyer", "permanent": false },
-    { "source": "/print/stickers", "destination": "/pages/print_wako_stickers", "permanent": false },
-    { "source": "/sanctuary", "destination": "/pages/artist_sanctuary.html", "permanent": false },
-    { "source": "/flow-orbit", "destination": "/pages/member_card", "permanent": false },
-    { "source": "/events/:slug", "destination": "/pages/member_card?view=event&event=:slug", "permanent": false },
-    { "source": "/locations/:slug", "destination": "/pages/member_card?view=location&location=:slug", "permanent": false },
-    { "source": "/flow-crew", "destination": "/pages/member_card", "permanent": false },
-    { "source": "/admin/registrations", "destination": "/pages/admin_registrations", "permanent": false },
-    { "source": "/admin/membership", "destination": "/pages/admin_membership", "permanent": false },
-    { "source": "/admin/flow", "destination": "/pages/admin_membership", "permanent": false },
-    { "source": "/admin", "destination": "/pages/admin_membership", "permanent": false },
-    { "source": "/heart", "destination": "/pages/admin_membership", "permanent": false },
-    { "source": "/welt-heart", "destination": "/pages/admin_membership", "permanent": false },
-    { "source": "/heart-world", "destination": "/pages/heart", "permanent": false },
-    { "source": "/kyh", "destination": "/pages/kyh", "permanent": false },
-    { "source": "/kiss-your-heart", "destination": "/pages/kyh", "permanent": false },
-    { "source": "/create", "destination": "/pages/kyh/create", "permanent": false },
-    { "source": "/create/project-builder", "destination": "/pages/kyh/create/project-builder", "permanent": false },
-    { "source": "/create/project-map", "destination": "/pages/kyh/create/project-map", "permanent": false },
-    { "source": "/dashboard", "destination": "/pages/kyh/dashboard", "permanent": false },
-    { "source": "/feedback", "destination": "/pages/kyh/feedback", "permanent": false },
-    { "source": "/journey", "destination": "/pages/kyh/journey", "permanent": false },
-    { "source": "/experiences", "destination": "/pages/kyh/experiences", "permanent": false },
-    { "source": "/support", "destination": "/pages/kyh/support", "permanent": false },
-    { "source": "/spaces", "destination": "/pages/kyh/spaces", "permanent": false },
-    { "source": "/services", "destination": "/pages/kyh/services", "permanent": false },
-    { "source": "/sessions", "destination": "/pages/kyh/book", "permanent": false }
+    {
+      "source": "/photographer",
+      "destination": "/pages/photographer_hub",
+      "permanent": false
+    },
+    {
+      "source": "/vision",
+      "destination": "/pages/vision_studio",
+      "permanent": false
+    },
+    {
+      "source": "/book",
+      "destination": "/pages/booking",
+      "permanent": false
+    },
+    {
+      "source": "/book-session",
+      "destination": "/pages/booking",
+      "permanent": false
+    },
+    {
+      "source": "/studio",
+      "destination": "/pages/vision_studio",
+      "permanent": false
+    },
+    {
+      "source": "/taste",
+      "destination": "/pages/taste_world_hub",
+      "permanent": false
+    },
+    {
+      "source": "/taste-hub",
+      "destination": "/pages/taste_world_hub",
+      "permanent": false
+    },
+    {
+      "source": "/kitchen-ops",
+      "destination": "/pages/kitchen_command",
+      "permanent": false
+    },
+    {
+      "source": "/kitchen-command",
+      "destination": "/pages/kitchen_command",
+      "permanent": false
+    },
+    {
+      "source": "/kitchen-forge",
+      "destination": "/pages/kitchen_forge",
+      "permanent": false
+    },
+    {
+      "source": "/coop",
+      "destination": "/pages/coop",
+      "permanent": false
+    },
+    {
+      "source": "/login",
+      "destination": "/pages/login",
+      "permanent": false
+    },
+    {
+      "source": "/logout",
+      "destination": "/pages/logout",
+      "permanent": false
+    },
+    {
+      "source": "/auth/callback",
+      "destination": "/pages/auth_callback",
+      "permanent": false
+    },
+    {
+      "source": "/join",
+      "destination": "/pages/lapa71_register",
+      "permanent": false
+    },
+    {
+      "source": "/membership",
+      "destination": "/pages/membership_plans",
+      "permanent": false
+    },
+    {
+      "source": "/membership/plans",
+      "destination": "/pages/membership_plans",
+      "permanent": false
+    },
+    {
+      "source": "/plans",
+      "destination": "/pages/membership_plans",
+      "permanent": false
+    },
+    {
+      "source": "/member-card",
+      "destination": "/pages/member_card",
+      "permanent": false
+    },
+    {
+      "source": "/invite/wako-card",
+      "destination": "/pages/wako_member_invite",
+      "permanent": false
+    },
+    {
+      "source": "/invite",
+      "destination": "/pages/wako_member_invite",
+      "permanent": false
+    },
+    {
+      "source": "/print/flyer",
+      "destination": "/pages/print_wako_flyer",
+      "permanent": false
+    },
+    {
+      "source": "/print/stickers",
+      "destination": "/pages/print_wako_stickers",
+      "permanent": false
+    },
+    {
+      "source": "/sanctuary",
+      "destination": "/pages/artist_sanctuary.html",
+      "permanent": false
+    },
+    {
+      "source": "/flow-orbit",
+      "destination": "/pages/member_card",
+      "permanent": false
+    },
+    {
+      "source": "/events/:slug",
+      "destination": "/pages/member_card?view=event&event=:slug",
+      "permanent": false
+    },
+    {
+      "source": "/locations/:slug",
+      "destination": "/pages/member_card?view=location&location=:slug",
+      "permanent": false
+    },
+    {
+      "source": "/flow-crew",
+      "destination": "/pages/member_card",
+      "permanent": false
+    },
+    {
+      "source": "/admin/registrations",
+      "destination": "/pages/admin_registrations",
+      "permanent": false
+    },
+    {
+      "source": "/admin/membership",
+      "destination": "/pages/admin_membership",
+      "permanent": false
+    },
+    {
+      "source": "/admin/flow",
+      "destination": "/pages/admin_membership",
+      "permanent": false
+    },
+    {
+      "source": "/admin",
+      "destination": "/pages/admin_membership",
+      "permanent": false
+    },
+    {
+      "source": "/heart",
+      "destination": "/pages/admin_membership",
+      "permanent": false
+    },
+    {
+      "source": "/welt-heart",
+      "destination": "/pages/admin_membership",
+      "permanent": false
+    },
+    {
+      "source": "/heart-world",
+      "destination": "/pages/heart",
+      "permanent": false
+    },
+    {
+      "source": "/kyh",
+      "destination": "/pages/kyh",
+      "permanent": false
+    },
+    {
+      "source": "/kiss-your-heart",
+      "destination": "/pages/kyh",
+      "permanent": false
+    },
+    {
+      "source": "/create",
+      "destination": "/pages/kyh/create",
+      "permanent": false
+    },
+    {
+      "source": "/create/project-builder",
+      "destination": "/pages/kyh/create/project-builder",
+      "permanent": false
+    },
+    {
+      "source": "/create/project-map",
+      "destination": "/pages/kyh/create/project-map",
+      "permanent": false
+    },
+    {
+      "source": "/dashboard",
+      "destination": "/pages/kyh/dashboard",
+      "permanent": false
+    },
+    {
+      "source": "/feedback",
+      "destination": "/pages/kyh/feedback",
+      "permanent": false
+    },
+    {
+      "source": "/journey",
+      "destination": "/pages/kyh/journey",
+      "permanent": false
+    },
+    {
+      "source": "/experiences",
+      "destination": "/pages/kyh/experiences",
+      "permanent": false
+    },
+    {
+      "source": "/support",
+      "destination": "/pages/kyh/support",
+      "permanent": false
+    },
+    {
+      "source": "/spaces",
+      "destination": "/pages/kyh/spaces",
+      "permanent": false
+    },
+    {
+      "source": "/services",
+      "destination": "/pages/kyh/services",
+      "permanent": false
+    },
+    {
+      "source": "/sessions",
+      "destination": "/pages/kyh/book",
+      "permanent": false
+    }
   ]
 }
