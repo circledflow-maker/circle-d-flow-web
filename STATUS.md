@@ -1,7 +1,19 @@
 # Gemeinsamer Arbeitsstand
 
-Stand: 2026-10-28 · Agent: Codex · Koordination Ebene 2 · Entscheidung: Hope (CEO)
+Stand: 2026-11-05 · Agent: Codex · Koordination Ebene 2 · Entscheidung: Hope (CEO)
 Repo: https://github.com/circledflow-maker/circle-d-flow-web
+
+## 2026-11-05 — Codex · Circle D Flow · Anbieterwirkung geprüft und Raumrelease fortgeführt
+
+- Geprüfter PR-#17-Commit: 0590161. GitHub-Status meldet Netlify success / Deploy Preview canceled; Inspector erfolgreich. Vercel-Branchabfrage zeigt nur den alten Build zu 56fdd95 vom28.10., keinen neuen Build zum korrigierten Stand. Kein Hinweis auf eine wesentliche neue Sicherheitsgefährdung durch diese Preview-Sperren. Das ist keine Garantie für alte Deployments oder unbekannte historische Zugangsdaten.
+- PR #17 wird nach diesem Nachtrag zur Review bereitgestellt; Merge und Produktionsfreigabe sind eigenständige Schritte.
+- PR #18 gegen aktive E:-Quelle verglichen: von26 öffentlichen Dateien17 bytegleich,9 inhaltlich weiterentwickelt. Zusätzlich erforderliches Atmosphärenmodul entdeckt und aufgenommen. Öffentliche Änderungen26/27 geprüft und in PR #18 gesichert; kein pauschaler Upload des lokalen Bestands.
+- Neue Release-Quellbasis: 4d7c0f2ac29fbc03043e45dbe6dd6f88f76e6db8; PR-#18-Abschlusscommit: bbaba2f7340b73cbfba663070673bf8e7ff434aa. Festes Manifest mit29 öffentlichen Dateien und neuem Buildhelfer scripts/releases/room-atmosphere27.cjs. Schutzregeln auch für den vorbereitenden Produktbranch übernommen; frische Anbieterwirkung dieses Updates separat prüfen.
+- Frischer Lauf am05.11.:41 relevante Tests bestanden,0 Fehler. Buildscript-Syntax und8 Preview-Skip-Fälle bestehen;28 bisherige Manifest-Dateien bytegenau gegen Git-Blob-Hashes geprüft, zusätzliches Modul exakt zurückgelesen. Keine frische GPU-/physische Smartphone-/authentifizierte Live-/RLS-Abnahme.
+- Letzte gelesene Produktionsbasis bleibt origin19, dpl_AmqQ8YRQZiBrGyBDmtsBCxpfivLq. Kein neues Produktionsdeployment oder Merge in dieser Arbeit. Für die Veröffentlichung ist der vollständige Produktionsquellstand mit dem begrenzten29-Dateien-Overlay zu bauen; der Git-Branch allein ist dafür ungeeignet.
+- Bereinigter Detailbericht in PR #18: Docs/room-release-review-20261105.md. Zugangsdatenrotation, alte Historie und frühere Deployments bleiben ungeprüft/offen. Lokale Originale und fremde Medienakten erhalten.
+
+Nächster Schritt: PR #17 reviewen; anschließend geschützten atmosphere27-Kandidaten auf vollständiger Produktionsbasis bauen, Dateihashes/Routen/Grenzen und echte Browserdarstellung prüfen. Erst danach den konkret geprüften Kandidaten veröffentlichen.
 
 ## 2026-11-01 — Codex · Circle D Flow · Review-Befunde zu PR #17 nachgeführt
 
