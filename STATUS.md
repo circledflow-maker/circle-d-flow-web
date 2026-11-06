@@ -143,3 +143,7 @@ CEO-Richtung umgesetzt: Intro/Registrierung/Login in gemeinsamer prozeduraler Th
 Quellsicherung in PR18: 3ff01d4003801d77910a25cae0176dafd7720d13; fünf ausgewählte Produkt-/Testdateien plus Bericht und14-Abhängigkeiten-Manifest. PR18 bleibt unvollständige Quellbasis/Draft, älterer atmosphere27-Buildhelfer liefert LUVO32 nicht. Bericht: Docs/community-pilot/luvo-3d32-20261106.md. Offene Übergabe: handoffs/2026-11-06_luvo3d_codex-an-release-pruefung.md.
 
 Physisches Telefon, echte Tastatur/Leistung, vollständige Fokus-/authentifizierte Live-Abnahme und vollständiger Releasekandidat offen. Automatisierte Reduktions-/GPU-Fehlertests nicht als echte Browserbedingungen behauptet. Lokale Vorschau beendet, Viewport zurückgesetzt. Kein Merge, Deployment, Slack-Dienst oder zusätzliche Rollenfreigabe. Nächster Schritt: vollständigen Kandidaten auf aktueller Produktionsbasis mit den dokumentierten Abhängigkeiten abgleichen und abnehmen.
+
+
+## 2026-11-06 — Codex · Handy-Designvorschau für Hope
+Auf ausdrücklichen Wunsch eine auf zwei Stunden begrenzte LUVO32-Designvorschau im lokalen WLAN bereitgestellt. Ausgewählte Login-/Assetdateien, private Pfade und API-Aufrufe404; externe API-Verbindungen und echter Formularversand gesperrt, Google deaktiviert. Link ausschließlich direkt an Hope, keine Netzwerkadresse im öffentlichen Repo. Lokaler Browseraufruf erfolgreich und Google-Sperre kontrolliert; tatsächlicher Handy-Aufruf/Feedback noch offen. Kein Produktionsdeployment oder Firewall-Eingriff. Release-Übergabe bleibt offen.
