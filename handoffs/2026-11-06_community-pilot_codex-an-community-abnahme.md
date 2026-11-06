@@ -12,3 +12,7 @@ Zustand: offen, nicht abgeschlossen. Erst nach erfüllter Abnahme und Ergebnisno
 
 ## Ergebnisnotiz 2026-11-06 · Teilprüfung durch Codex
 Live-Browser und mobile Emulation wieder nutzbar; Einstieg/Weltenliste/Card/registrierungsfreier Rückweg geprüft. Bericht: Docs/community-pilot/guest-mobile-20261106.md. Sprachübergang DE→EN als Fehler belegt, lokal minimal korrigiert und gezielt geprüft; Browser-Nachprüfung des lokalen Fixes offen. Physisches Gerät, reduzierte Bewegung, langsames Netz und erzwungener WebGL-Ausfall offen. Übergabe bleibt offen; nicht nach done verschoben.
+
+
+## Nachprüfung 2026-11-06 · Codex
+Lokaler Sprachfix jetzt in tatsächlichem Browser mit DE/PT gegen veraltetes Legacy-EN geprüft. Bericht: Docs/community-pilot/login-browser-verification-20261106.md. Viewport zurückgesetzt, eigene Vorschau beendet. Kein Deployment. Restliche Geräte-/Sonderbedingungen bleiben offen; Übergabe weiterhin nicht abgeschlossen.

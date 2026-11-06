@@ -123,3 +123,12 @@ Browserzugriff wieder funktionsfähig. Öffentliche Gast-Startseite bei360×640,
 Konkreter Fehler: deutsche Wahl geht beim Wechsel Member Card→Login zunächst verloren. Eine lokale Zeile in js/cdf_login.js korrigiert cdf_lang/Legacy-Fallback; sieben Initialisierungsfälle und sieben bestehende Gast-/Identitätstests bestanden, Syntaxcheck bestanden. Fix NICHT deployed und noch nicht lokal im Browser abgenommen. Patch und Bericht: Docs/community-pilot/guest-mobile-20261106.md; kein Produktcode in die ältere Koordinationsbasis kopiert.
 
 Eventliste derzeit mit Ausfallhinweis statt bestätigten aktuellen Terminen. Physisches Telefon, reduzierte Bewegung, langsames Netz und erzwungener WebGL-Ausfall offen. CDF-P01 bleibt Teilabnahme/offen; bestehende Übergabe bleibt offen. Mobile Stichproben nach relevanten UI-Änderungen und vor Releases verbindlich in Arbeits-/Abnahmeregeln ergänzt. Keine neue Automation, Slack-Nachricht, Veröffentlichung oder Änderung an Rollen/XP/FLOW/RLS/Zahlungen.
+
+
+## 2026-11-06 — Codex · lokale Browser-Nachprüfung und Freigabelinks
+
+Lokalen Sprachfix im echten In-App-Browser geprüft: gemeinsame Sprache DE bzw.PT bleibt trotz altem Legacy-EN erhalten. DE bei390×844, PT zusätzlich bei360×640,844×390 und1280×800 ohne horizontales Überlaufen. Aufgezeichnete Browser-Error-Logs leer. Kein Konto/Versand und keine Produktionsänderung. Begrenzte Loopback-Vorschau ohne private Konfigurationsdateien, externe Verbindungen/Formularversand gesperrt; eigenen Server nach Prüfung beendet, Viewport zurückgesetzt.
+
+Bericht: Docs/community-pilot/login-browser-verification-20261106.md. Prüf-/Freigabeübersicht: Docs/community-pilot/review-and-approvals.md. PR17 ist inhaltlich prüfbar; Merge vor Abgleich mit Produktions-Deploy-Triggern/abweichendem main nicht als sicher behaupten. PR18 bleibt älterer Draft und kein fertiger aktueller Releasekandidat. Keine erneute Konzeptfreigabe für bereits beschlossenen kostenlosen Pilot erforderlich.
+
+Offen bleiben echtes Smartphone, reduzierte Bewegung, langsames Netz/WebGL-Ausfall sowie authentifizierte Live-Abnahme und vollständige Releasebasis. Verbundener Browser bietet hier keine Steuerung für die genannten Sonderbedingungen. CDF-P01 bleibt teilweise geprüft; Sprachfix jetzt lokal browsergeprüft, nicht deployed. Nächste technische Arbeit: öffentlichen Event-Ausfallpfad eingrenzen, parallel Releasebasis weiter abgleichen. Keine Rechte, Rollen, Zahlungen, XP/FLOW, RLS, Slack-Dienste oder Veröffentlichungen geändert.

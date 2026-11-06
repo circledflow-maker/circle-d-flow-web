@@ -38,8 +38,8 @@
       "timebox": "ein Gast-Abnahmedurchlauf",
       "acceptance": "Soll/Ist und Beleg je Einstiegsschritt; Emulator/physisch getrennt; keine Kontomutation",
       "state": "teilweise im Live-Browser geprüft; physisches Gerät und Sonderbedingungen offen",
-      "evidence": "Docs/community-pilot/guest-mobile-20261106.md",
-      "next": "Lokalen Sprachfix im Browser prüfen; danach verbleibende Gastfälle schließen"
+      "evidence": "Docs/community-pilot/login-browser-verification-20261106.md",
+      "next": "Verbleibende Gastfälle/physisches Gerät schließen; öffentlichen Event-Ausfallpfad unabhängig eingrenzen"
     },
     {
       "id": "CDF-R01",
