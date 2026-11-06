@@ -23,3 +23,9 @@ Vor einem Merge nach main müssen der neuere tatsächliche Produktstand, bestehe
 ## Offene Zugangsdatenprüfung
 
 credentials.json und adobe_token.json waren schon vor PR #17 versioniert. Dieser Korrekturstand entfernt sie aus seinem vorgeschlagenen aktuellen Dateibaum, ohne lokale Originale oder Anbieterzugänge zu ändern. Ihre Inhalte/Gültigkeit wurden nicht ausgelesen. Historie und frühere Deployments bleiben davon unberührt. Falls echte Geheimnisse enthalten waren: zuständiger Kontoinhaber muss Sperrung/Rotation und anschließend eine abgestimmte Historienbereinigung durchführen. Zuständigkeit: noch nicht zugeordnet. Keine automatische Rotation oder Rechteänderung.
+
+
+## Pilot-Arbeitsgrundlage · 2026-11-06
+
+Aktueller Einstieg: [Community-Pilot](community-pilot/README.md). Bereinigte Aufgaben stehen in community-pilot/tasks.json; pro Aufgabe/Dateibereich ein schreibender Bearbeiter. Parallele Projekte über konkrete Abhängigkeiten verbinden, App-Arbeit bei gemeinsamer Zeit priorisieren. Unbekannte Besetzungen heißen „noch nicht zugeordnet“.
+Diese Grundlage erweitert keine Veröffentlichungs-/Zugriffsrechte. Slack-Vorbereitung bleibt lesend, private Betriebsdaten bleiben lokal. Historische Statusabschnitte nicht als aktuellen Produktionsstand übernehmen. Vor Änderungen aktive E:-Quelle und tatsächlichen Release erneut prüfen.

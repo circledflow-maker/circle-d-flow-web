@@ -103,3 +103,11 @@ Diese neuere Anweisung hat bei Widersprüchen Vorrang vor älteren Kommunikation
 - Kein pauschales git add . oder automatisches Übernehmen des gesamten lokalen Bestands. Lokale Produktänderungen erst nach Dateiinventar, Diff-, Geheimnis- und Exportprüfung in getrennten reviewbaren Änderungen abgleichen.
 - Vor jedem Push und Merge Deploy-/Workflow-Trigger prüfen. Ein Branch verhindert keinen Preview-Build: Vercel und Netlify sind mit dem Repo verbunden. Für diesen Koordinationsbranch sind automatische Previews in vercel.json und netlify.toml zum Überspringen konfiguriert; deren tatsächliche Wirkung gesondert prüfen. main nicht automatisch ändern. Build READY ist keine Live-Abnahme.
 - Diese Regeln installieren keinen Hintergrunddienst und keine automatische Synchronisierung.
+
+
+## Community-Pilot — Koordinationsnachtrag 2026-11-06
+
+Hope hat die gemeinsame Pilot-Arbeitsgrundlage beauftragt. Einstieg: Docs/community-pilot/README.md; bereinigtes Aufgabenregister: Docs/community-pilot/tasks.json. App priorisiert gemeinsame Arbeitszeit; CDF, KYH, Flowee und Medien bleiben parallel mit getrennten Aufgaben und verlinkten Abhängigkeiten.
+Orchestra bezeichnet den Ablauf; Dirigent koordiniert Ebene 2; Business-Analyse prüft Nutzen und Nachfrage. Daraus folgen keine neuen Rollen oder Agentenstarts. Rollenreferenz bleibt Version 1.0 mit 21 Rollen; zusätzliche Registry-Einträge unbestätigt.
+Ein Bearbeiter pro Aufgabe/Dateibereich; bestehende Aufgaben vor Beginn prüfen. Genau nächste Community-Aufgabe: CDF-P01, Gastorientierung auf Desktop/Smartphone. GitHub führt nur bereinigte Aufgaben/Ergebnisse; private Beobachtungen, Kontakte, Quellenmedien und Betriebsgrenzen bleiben im ignorierten Team/.
+Slack-Brücke nur lesend vorbereiten; kein automatischer Versand, Listener, Dienst oder neue Automation aus diesem Nachtrag. Bestehende Kanalangaben vor Nutzung prüfen. Kein Merge, Deployment, neuer kostenpflichtiger Aufruf oder externe Veröffentlichung aus dem Pilotauftrag ableiten.

@@ -99,3 +99,18 @@ Offen:
 - Einwände: öffentliches Repo, private lokale Akten, auseinanderliegende Git-Stände, unbekannte Deploy-Trigger und fehlende Live-/Geräteabnahme. Kein gesamter lokaler Upload.
 - Offene Übergabe: [Lokalen Webstand sicher abgleichen](handoffs/2026-10-28_circle-d-flow_codex-an-repo-abgleich.md).
 - Kommunikationskonvention und Vorlage: [handoffs/README.md](handoffs/README.md).
+
+
+## 2026-11-06 — Codex · CDF-Pilot und paralleler Projektkreislauf
+
+Gemeinsame Grundlage erstellt: Docs/community-pilot/README.md, Bestand, Werkzeug-/Verbindungsübersicht mit offiziellen Quellen, Medienbriefing, Pilot-Geschäftsmodell, Abnahme und Aufgabenregister (9 Aufgaben). Formale Rollenlücken ausdrücklich offen; Conductor-/Business-Perspektiven durch Codex nacheinander geprüft, keine neuen Agenten gestartet. Offene Gast-Abnahme: handoffs/2026-11-06_community-pilot_codex-an-community-abnahme.md.
+
+Frisch gelesen: PR16 aa694709, PR17 Ausgangshead8fa2720, PR18 bbaba2f, alle ungemergt; PR18 weiterhin Draft/atmosphere27. Begrenzter Raw-Blob-Vergleich: PR16 11 Dateien,0 bytegleich/10 abweichend/1 lokal fehlend; PR18 separate29-Dateien-Stichprobe17 bytegleich/12 abweichend (nicht gleich Release-Manifest). Semantischer Vollabgleich offen. Aktiver E:-Git-HEAD8844240;1182 Statuszeilen, keine fremden Änderungen gestaged oder zurückgesetzt.
+
+Vercel-Liste bestätigt dpl_AdoK4VXMcrS8DgF9pWZ9S1f1kPqg READY/production. Vorhandener lokaler Releasebeleg identifiziert Flowee28; Root, Member-Card, Community, Worlds und Sanctuary anonym nach Redirects HTTP200. Kein vollständiger frischer Hash-/Journey-Nachweis. Room/shop29 bleibt lokal laut Status/Abnahmebeleg; kein Deployment in dieser Phase. Damit sind ältere Hinweise auf origin19 als letzten Produktionsstand historisch überholt.
+
+Frisch ausgeführt: fünf vorhandene Testdateien community-journey, cdf-identity, member-intake, member-community und membership-integrity:34 bestanden,0 Fehler. Fixtures/VM/lokale PGlite-Prüfung; keine echten Konten, Zahlungen oder produktiven RLS-Änderungen. Neue Dokumente auf vollständige Aufgabenfelder, eindeutige IDs, zyklusfreie Abhängigkeiten, Belegpfade/Links und begrenzte sensible Muster geprüft; privates Protokoll wird von Git ignoriert.
+
+Medien: nur bestehende V10-Reviewdatei am angegebenen Exportort frisch nachgewiesen; V11/Master und Rechte bleiben offen. Alte Übergaben nicht nach done verschoben. Slack-Leseverbindung sieht inzwischen auch team-cdf-web-operators; automatischer Empfang/weitere Worker nicht nachgewiesen. Keine Slack-Nachricht, neue App, Automation oder Dienst aktiviert. Instagram-/YouTube-Statistikanbindung in dieser Sitzung nicht bestätigt.
+
+Nächster Schritt: CDF-P01, echte Gastorientierung Desktop/Smartphone mit Version, Soll/Ist und Beleg prüfen. Authentifizierte Live-Abnahme, vollständige Releasebasis, Medienrechte und historische Credential-Prüfung bleiben offen. Keine Produktcode-, Rollen-, Zahlungs-, XP/FLOW- oder RLS-Änderung; kein Merge/Deployment.

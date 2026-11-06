@@ -1,0 +1,149 @@
+{
+  "version": 1,
+  "updated": "2026-11-06",
+  "coordinator": "Codex (Ebene 2)",
+  "decision_owner": "Hope",
+  "first_community_task": "CDF-P01",
+  "rules": {
+    "canonical": "GitHub sanitized tasks; private operational records in ignored Team/",
+    "single_writer": true,
+    "role_reference": "Circle D Flow Teamorganisation Version 1.0 (21 roles)",
+    "new_roles_confirmed": false
+  },
+  "tasks": [
+    {
+      "id": "CDF-F00",
+      "project": "CDF / Koordination",
+      "goal": "Gemeinsame Pilot-Arbeitsgrundlage erstellen",
+      "owner": "Codex",
+      "tool": "Dateiprüfung, GitHub, vorhandene Node-Tests",
+      "baseline": "PR17 8fa2720 + E Status 2026-11-06",
+      "dependencies": [],
+      "timebox": "diese begrenzte Arbeitsphase",
+      "acceptance": "Sechs Ergebnisbereiche dokumentiert; lokale und Remote-Dateien geprüft",
+      "state": "erstellt und strukturell geprüft",
+      "evidence": "Docs/community-pilot/README.md",
+      "next": "CDF-P01"
+    },
+    {
+      "id": "CDF-P01",
+      "project": "CDF / Community-App",
+      "goal": "Gastorientierung auf Desktop und Smartphone abnehmen",
+      "owner": "Codex",
+      "tool": "Browser und tatsächliches Smartphone; nur GET/UI ohne Absenden",
+      "baseline": "Produktion Flowee28; Room/shop29 separat lokal",
+      "dependencies": [
+        "CDF-F00"
+      ],
+      "timebox": "ein Gast-Abnahmedurchlauf",
+      "acceptance": "Soll/Ist und Beleg je Einstiegsschritt; Emulator/physisch getrennt; keine Kontomutation",
+      "state": "offen",
+      "evidence": "Docs/community-pilot/acceptance.md",
+      "next": "Gastbericht; danach genau eine nächste fehlende Kernweg-Abnahme"
+    },
+    {
+      "id": "CDF-R01",
+      "project": "CDF / Releasebasis",
+      "goal": "Vollständige reproduzierbare Produktbasis abgleichen",
+      "owner": "Codex",
+      "tool": "GitHub-Diff, lokale Hashprüfung",
+      "baseline": "PR16/17/18 auseinanderliegend; E stark verändert",
+      "dependencies": [
+        "CDF-F00"
+      ],
+      "timebox": "begrenzte Inventur je öffentlichem Modul",
+      "acceptance": "Quellenmanifest und semantische Konflikte statt pauschalem Upload; keine fremden Änderungen überschreiben",
+      "state": "teilweise geprüft",
+      "evidence": "Docs/community-pilot/baseline-20261106.md",
+      "next": "Pilotrelevante Auth-/Member-Module semantisch abgleichen; kein Merge"
+    },
+    {
+      "id": "FLOWEE-V01",
+      "project": "Flowee / Räume",
+      "goal": "Room/shop29 visuell prüfen",
+      "owner": "noch nicht zugeordnet",
+      "tool": "Browser/GPU und Telefon",
+      "baseline": "lokaler Status Room/shop29; Produktion Flowee28",
+      "dependencies": [],
+      "timebox": "ein gezielter visueller Durchlauf",
+      "acceptance": "Zoom, Dialog, Reichweite, Kollision und Flowee verständlich; tatsächliches Gerät belegt",
+      "state": "offen; historische lokale Tests vorhanden",
+      "evidence": "Docs/community-pilot/baseline-20261106.md",
+      "next": "Bestehende visuelle Übergabe prüfen; keine Deployment-Ableitung"
+    },
+    {
+      "id": "STAGES-M01",
+      "project": "CDF / Circle D Stages",
+      "goal": "Vorhandenes V10-Reviewmaterial für Medienbriefing sichten",
+      "owner": "noch nicht zugeordnet",
+      "tool": "vorhandener Player/Schnittwerkzeug ohne Upload",
+      "baseline": "V10-Dateiexistenz belegt; V11 nicht am Exportort bestätigt",
+      "dependencies": [],
+      "timebox": "eine Sichtung",
+      "acceptance": "Materialfassung und Rechte-/Creditslücken belegt; konkretes Ziel vor aktiver CTA",
+      "state": "Briefing erstellt; Sichtung offen",
+      "evidence": "Docs/community-pilot/media-brief.md",
+      "next": "Bestehende Cutter-/Daiku-Übergaben ergänzen statt doppelte Produktion"
+    },
+    {
+      "id": "CDF-B01",
+      "project": "CDF / Geschäftsprüfung",
+      "goal": "Nutzenhypothese im freiwilligen Pilot prüfen",
+      "owner": "noch nicht zugeordnet",
+      "tool": "private Beobachtung ohne Profiling",
+      "baseline": "keine erhobenen Nachfrage-/Erlöszahlen",
+      "dependencies": [
+        "CDF-P01"
+      ],
+      "timebox": "eine Pilot-Runde nach technischer Kernweg-Abnahme",
+      "acceptance": "5–8 Personen; Quote und konkrete Nutzenbeispiele getrennt; keine öffentliche Rohdaten",
+      "state": "Hypothese dokumentiert; Erhebung offen",
+      "evidence": "Docs/community-pilot/business-model.md",
+      "next": "Erst verbleibende Kernweg-Abnahmen schließen; dann Einladung durch autorisierten Owner"
+    },
+    {
+      "id": "CDF-S01",
+      "project": "CDF / Koordination",
+      "goal": "Lokale Slack-Brücke lesend vorbereiten",
+      "owner": "Codex",
+      "tool": "lokale Entwürfe und synthetische Ereignisse",
+      "baseline": "Slack-Lesezugriff vorhanden; kein Listener nachgewiesen",
+      "dependencies": [
+        "CDF-F00"
+      ],
+      "timebox": "ein lokaler Preflight ohne Dienststart",
+      "acceptance": "aktueller Kanal/Freigabeidentität, App/Scopes, Dedup, Budget/Lock/Pause geprüft; kein echter Versand",
+      "state": "Prüfauftrag vorbereitet; technischer Preflight offen",
+      "evidence": "Docs/community-pilot/tools-20261106.md",
+      "next": "bestehenden lokalen Adapter/Automation abgleichen; keine neue Anmeldung"
+    },
+    {
+      "id": "CDF-SEC01",
+      "project": "CDF / Repository-Schutz",
+      "goal": "Historische Credential-Exposition zuständig klären",
+      "owner": "noch nicht zugeordnet",
+      "tool": "Kontoinhaberprüfung ohne Geheimnisexport",
+      "baseline": "PR17 entfernt zwei Dateien nur aus neuem Baum",
+      "dependencies": [],
+      "timebox": "begrenzte Schutzprüfung durch Kontoinhaber",
+      "acceptance": "Gültigkeit/Exposition geklärt und ggf. Rotation mit gesondertem Auftrag belegt",
+      "state": "offen",
+      "evidence": "Docs/repository-workflow.md",
+      "next": "Kontozuständigkeit bestätigen; keine Schlüssel lesen oder rotieren"
+    },
+    {
+      "id": "KYH-Q01",
+      "project": "KYH",
+      "goal": "Eigenen nächsten Beitrag zum Pilot bestimmen",
+      "owner": "noch nicht zugeordnet",
+      "tool": "vorhandenes KYH-Backlog",
+      "baseline": "keine neue KYH-Leistung in dieser Phase geprüft",
+      "dependencies": [],
+      "timebox": "ein Kontextabgleich",
+      "acceptance": "separates Ziel und tatsächliche freigegebene Inputs; keine Vermischung mit CDF-Medienrechten",
+      "state": "noch nicht zugeordnet",
+      "evidence": "Docs/community-pilot/README.md",
+      "next": "bestehendes KYH-Backlog auf belegte Vorleistung prüfen"
+    }
+  ]
+}
