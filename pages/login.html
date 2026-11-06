@@ -1,267 +1,43 @@
-<!DOCTYPE html>
-<html class="dark" lang="en">
-
-<head>
-    <meta name="description" content="Login to your Circle D Flow account to access your private gallery and rewards.">
-    <meta property="og:title" content="Circle D Flow | Login">
-    <meta property="og:description" content="Login to your Circle D Flow account to access your private gallery and rewards.">
-    <meta property="og:type" content="website">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Member Login - Circle D Flow</title>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com" rel="preconnect" />
-    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&amp;display=swap"
-        rel="stylesheet" />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-        rel="stylesheet" />
-    <style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24
-        }
-
-        /* Video Background Styles */
-        #video-bg {
-            position: fixed;
-            right: 0;
-            bottom: 0;
-            min-width: 100%;
-            min-height: 100%;
-            z-index: -1;
-            object-fit: cover;
-            opacity: 0.6;
-        }
-
-        .bg-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(13, 13, 15, 0.7);
-            /* midnight with opacity */
-            z-index: -1;
-        }
-    </style>
-    <script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        "primary": "#8A2BE2",
-                        "background-light": "#f7f5f8",
-                        "background-dark": "#191022",
-                        "mystic-gold": "#FFD700"
-                    },
-                    fontFamily: {
-                        "display": ["Plus Jakarta Sans", "sans-serif"]
-                    },
-                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
-                },
-            },
-        }
-    </script>
-    </script>
-    <script src="../js/agents/visual_eye.js" defer></script>
-    <script src="../js/agents/global_ticker.js" defer></script>
-    <script src="../js/agents/network_hub.js" defer></script>
-    <script src="../js/agents/constructor_bot.js" defer></script>
-    <script src="../js/agents/kingdom_science.js" defer></script>
-    <script src="../js/agents/resonance_bridge.js" defer></script>
-    <script src="../js/agents/vault_space.js" defer></script>
-    <script src="../js/agents/orbital_menu.js" defer></script>
-    <script src="../js/agents/tutorial_core.js" defer></script>
-    <script src="../js/agents/quest_controller.js" defer></script>
-    <script src="../js/agents/visual_integrity.js" defer></script>
-    <script src="../js/agents/sound_engineer.js" defer></script>
-    <script src="../js/agents/horizon_bar.js" defer></script>
-    <script src="../js/agents/social_matrix.js" defer></script>
-    <script src="../js/agents/flowee.js" defer></script>
-    <script src="../js/agents/helper.js" defer></script>
-    <script src="../js/agents/bridge_pusher.js" defer></script>
-    <script src="../js/agents/device_sync.js" defer></script>
-    <script src="../js/agents/stress_test.js" defer></script>
-</head>
-
-<body class="bg-background-light dark:bg-background-dark font-display text-gray-800 dark:text-gray-200">
-
-    <!-- Mobile Header & Burger Menu -->
-    <div class="fixed top-6 left-6 z-[100]">
-        <button id="burger-btn" class="w-10 h-10 flex flex-col justify-center items-center gap-1.5 bg-black border border-[#d4af37]/50 rounded cursor-pointer z-[101]">
-            <span class="w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
-            <span class="w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
-            <span class="w-6 h-0.5 bg-[#d4af37] transition-all duration-300"></span>
-        </button>
-    </div>
-
-    <!-- Fullscreen Mobile Menu Overlay -->
-    <div id="mobile-menu" class="fixed inset-0 bg-black/95 z-[90] opacity-0 pointer-events-none transition-opacity duration-300 flex flex-col items-center justify-center">
-        <nav class="flex flex-col gap-6 text-center">
-            <a href="../index.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">Zum Orbit</a>
-            <a href="bantaba.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">Nach Bantaba</a>
-            <a href="about.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">About Us</a>
-            <a href="portfolio_anime_reality.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">Portfolio</a>
-            <a href="heart.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">Heart</a>
-            <a href="luvo.html" class="cinzel text-2xl text-white hover:text-[#d4af37] transition">Luvo</a>
-        </nav>
-    </div>
-
-
-    <!-- Video Background -->
-    <video autoplay loop muted playsinline id="video-bg">
-        <source src="https://pub-24ba376bfccb446996666eaff4dbae12.r2.dev/hero.mp4" type="video/mp4">
-    </video>
-    <!-- Overlay increased to 0.95 to match Void -->
-    <div class="bg-overlay" style="background: rgba(13, 13, 15, 0.95);"></div>
-
-    <div class="flex flex-col min-h-screen relative z-10">
-        <!-- Navbar (The Compass - Full) -->
-        <nav
-            class="hidden md:flex fixed top-0 w-full z-50 bg-[#0F0A13]/80 backdrop-blur-xl border-b border-white/5 h-20 items-center justify-between px-12 transition-all duration-300">
-            <!-- Left: Core Paths -->
-            <div class="flex items-center gap-8">
-                <a href="dashboard.html"
-                    class="text-xs font-bold uppercase tracking-widest text-white hover:text-electric transition-colors"
-                    data-i18n="nav_hub">Hub</a>
-                <a href="outbreak_tunes.html"
-                    class="text-xs font-bold uppercase tracking-widest text-white hover:text-purple-400 transition-colors"
-                    data-i18n="nav_sound">Sound</a>
-                <a href="taste_world_entry.html"
-                    class="text-xs font-bold uppercase tracking-widest text-white hover:text-amber transition-colors"
-                    data-i18n="nav_taste">Taste</a>
-                <a href="kiss-your-heart.html"
-                    class="text-xs font-bold uppercase tracking-widest text-white hover:text-pink-400 transition-colors"
-                    data-i18n="nav_visuals">Visuals</a>
-            </div>
-
-            <!-- Center: Logo -->
-            <a href="../index.html" class="absolute left-1/2 -translate-x-1/2 group">
-                <img src="../Assets/images/logo.png" alt="Circle D Flow" width="40" height="40"
-                    class="h-10 w-auto group-hover:scale-110 transition-transform duration-300 drop-shadow-[0_0_15px_rgba(98,0,234,0.5)]">
-            </a>
-
-            <!-- Right: Explorer Paths -->
-            <div class="flex items-center gap-8">
-                <a href="marketplace.html"
-                    class="text-xs font-bold uppercase tracking-widest text-white hover:text-mystic-gold transition-colors"
-                    data-i18n="nav_style">Style</a>
-                <a href="academy.html"
-                    class="text-xs font-bold uppercase tracking-widest text-white hover:text-blue-400 transition-colors"
-                    data-i18n="nav_knowledge">Knowledge</a>
-                <a href="bantaba.html#events"
-                    class="text-xs font-bold uppercase tracking-widest text-white hover:text-green-400 transition-colors"
-                    data-i18n="nav_space">Space</a>
-                <a href="mindfulness.html"
-                    class="text-xs font-bold uppercase tracking-widest text-white hover:text-indigo-400 transition-colors"
-                    data-i18n="nav_spirit">Spirit</a>
-            </div>
-
-        </nav>
-
-        <main class="flex-1 flex items-center justify-center px-4 py-24">
-            <div class="w-full max-w-md bg-black/60 border border-white/10 rounded-2xl p-8 backdrop-blur-xl shadow-2xl">
-                <div id="auth-feedback" class="hidden mb-4 text-sm text-center p-3 rounded-lg"></div>
-
-                <div id="login-section">
-                    <h1 class="text-2xl font-bold text-white mb-2 text-center">Navigator Login</h1>
-                    <p id="login-sub" class="text-white/50 text-xs text-center mb-6">Photographers, creators & crew — enter the orbit.</p>
-                    <div class="space-y-4">
-                        <input id="auth-email" type="email" placeholder="Email" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:border-primary outline-none" autocomplete="email">
-                        <input id="auth-password" type="password" placeholder="Password" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:border-primary outline-none" autocomplete="current-password">
-                        <button type="button" onclick="localLogin()" class="w-full py-3 bg-primary hover:bg-purple-600 text-white font-bold rounded-lg uppercase tracking-widest text-xs transition">Enter Orbit</button>
-                        <button type="button" onclick="window.handleOAuthLogin && window.handleOAuthLogin('google')" class="w-full py-3 bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold rounded-lg uppercase tracking-widest text-xs transition">Continue with Google</button>
-                    </div>
-                    <p class="text-center text-xs text-white/40 mt-4">New Navigator? <a href="/join?invite=1&amp;src=login" class="text-mystic-gold underline">Register with Flowee</a> · <button type="button" onclick="toggleAuth('register')" class="text-mystic-gold underline">Create profile</button></p>
-                </div>
-
-                <div id="register-section" class="hidden">
-                    <h1 class="text-2xl font-bold text-white mb-2 text-center">Forge Your Profile</h1>
-                    <p class="text-white/50 text-xs text-center mb-6">Join as photographer, artist, or explorer.</p>
-                    <div class="space-y-4">
-                        <input id="reg-username" type="text" placeholder="Navigator name" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:border-primary outline-none">
-                        <input id="reg-email" type="email" placeholder="Email" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:border-primary outline-none" autocomplete="email">
-                        <input id="reg-password" type="password" placeholder="Password (min 6)" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:border-primary outline-none" autocomplete="new-password">
-                        <button type="button" onclick="localRegister()" class="w-full py-3 bg-mystic-gold hover:bg-yellow-500 text-black font-bold rounded-lg uppercase tracking-widest text-xs transition">Start Initiation</button>
-                    </div>
-                    <p class="text-center text-xs text-white/40 mt-4">Already registered? <button type="button" onclick="toggleAuth('login')" class="text-primary underline">Log in</button></p>
-                </div>
-
-                <div class="mt-6 pt-4 border-t border-white/10 flex flex-col gap-2 text-center">
-                    <a href="vision_studio.html" class="text-[10px] uppercase tracking-widest text-white/50 hover:text-white">Vision Studio →</a>
-                    <a href="booking.html" class="text-[10px] uppercase tracking-widest text-white/50 hover:text-white">Book Photo Session →</a>
-                    <a href="coop.html" class="text-[10px] uppercase tracking-widest text-white/50 hover:text-white">Coop / Community →</a>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../js/agents/supabase_client.js?v=4.1"></script>
-    <script src="../js/auth-handler.js?v=3.4"></script>
-    <script>
-        function toggleAuth(mode) {
-            const loginSec = document.getElementById('login-section');
-            const regSec = document.getElementById('register-section');
-
-            if (mode === 'register') {
-                loginSec.classList.add('hidden');
-                regSec.classList.remove('hidden', 'translate-x-full');
-            } else {
-                regSec.classList.add('hidden');
-                loginSec.classList.remove('hidden');
-            }
-        }
-
-        // Bridge to auth-handler.js
-        window.localLogin = function() {
-            // Uses ID 'auth-email' and 'auth-password' which we defined in the form
-            window.handleLogin(
-                document.getElementById('auth-email').value,
-                document.getElementById('auth-password').value
-            );
-        };
-
-        window.localRegister = function() {
-            // Uses 'reg-email', 'reg-password', 'reg-username'
-            window.handleRegister(
-                document.getElementById('reg-email').value,
-                document.getElementById('reg-password').value,
-                document.getElementById('reg-username').value
-            );
-        };
-
-        (function loginSanctuaryHint() {
-            try {
-                const next = new URLSearchParams(location.search).get('next') || '';
-                if (!next.includes('sanctuary')) return;
-                const sub = document.getElementById('login-sub');
-                if (sub) {
-                    sub.textContent = 'After login, Flowee meets you in the 3D Artist Sanctuary.';
-                }
-                setTimeout(() => {
-                    if (window.Flowee?.talk) {
-                        window.Flowee.talk(
-                            true,
-                            'Welcome back. Log in and I take you into the Sanctuary — your Member Card and Vault wait there.',
-                            'guide'
-                        );
-                    }
-                }, 800);
-            } catch (_) { /* ignore */ }
-        })();
-    </script>
-    <div id="flowee-agent" class="fixed bottom-8 left-8 z-50 flex flex-col items-center group cursor-pointer"></div>
-    <script defer src="../js/agents/pusher.js"></script>
-
-    <!-- AUTOMATED AGENT INJECTION -->
-
-    <!-- AUTOMATED AGENT INJECTION -->
-    <script src="../js/agents/imperial_hud.js" defer></script>
-</body>
-
-</html>
-
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#09191b"><meta name="description" content="Meet Flowee at LUVO. Create your Circle D Flow identity step by step and discover your connected Soul Nexus Pass.">
+<title>LUVO · Your first light | Circle D Flow</title>
+<link rel="stylesheet" href="/css/cdf_login.css?v=20261027-arrival14">
+<script src="/js/vendor/supabase-2.108.2.js" defer></script><script src="/js/cdf_runtime_config.js" defer></script>
+<script src="/js/agents/supabase_client.js?v=20261026-identity7" defer></script><script src="/js/cdf_identity.js?v=20261026-welcome12" defer></script>
+<script src="/js/flowee_fairy.js?v=20261026-fairy5" defer></script><script src="/js/cdf_account_motion.js?v=20261026-story10" defer></script><script src="/js/cdf_account_journey.js?v=20261027-arrival14" defer></script>
+<script src="/js/auth-handler.js?v=20261027-confirm13" defer></script><script src="/js/cdf_login.js?v=20261027-confirm13" defer></script>
+<script src="/js/cdf_account_story.js?v=20261026-welcome12" defer></script>
+<link rel="stylesheet" href="/css/luvo_scene.css?v=20261106-luvo32"><script src="/js/luvo_scene.js?v=20261106-luvo32" defer></script>
+</head><body>
+<div id="luvo-scene" aria-hidden="true"></div><div id="luvo-anime-transition" aria-hidden="true"></div>
+<a class="skip-link" href="#identity-entry">Skip to account</a>
+<header><a class="brand" href="/orbit">◈ <span>CIRCLE D FLOW</span></a><label><span class="sr-only">Language</span><select id="identity-language" aria-label="Language"><option value="en">EN</option><option value="de">DE</option><option value="pt">PT</option></select></label><a href="/orbit" data-copy="guest">Explore first</a></header>
+<div class="luvo-scene-tools"><button id="luvo-scene-toggle" type="button" aria-pressed="true">Quiet view</button><span id="luvo-scene-status" role="status" aria-live="polite">Opening LUVO…</span></div>
+<main class="journey-shell">
+<aside class="world-window" aria-label="LUVO"><div class="world-orbits" aria-hidden="true"><i></i><i></i><i></i><span class="soul-seed">✦</span></div><p class="eyebrow">LUVO · CIRCLE D FLOW</p><h1 data-copy="title">Your world starts<br>with a little light.</h1><p data-copy="intro">A creative community connecting real places, art and people. Your Orbit is the doorway.</p><div class="world-trail" aria-hidden="true"><span>LUVO</span><b>·</b><span>ORBIT</span><b>·</b><span>SANCTUARY</span></div></aside>
+<div class="account-panel">
+<div class="flowee-guide"><div id="cdf-account-flowee" aria-hidden="true"></div><div><span class="speaker">FLOWEE · <span data-copy="guideLabel">YOUR GUIDE</span></span><p id="flowee-dialogue" aria-live="polite"></p><button type="button" class="text-button" id="flowee-help" data-copy="help">Why do you need this?</button><p id="flowee-help-copy" class="hint" hidden></p></div></div>
+<div id="auth-status" role="status" aria-live="polite"></div>
+<div id="identity-entry">
+<nav class="modes" aria-label="Account action"><button id="mode-register" type="button" data-copy="new">Begin a new journey</button><button id="mode-login" type="button" data-copy="returning">I have an account</button></nav>
+<section id="welcome-section"><h2 tabindex="-1" data-copy="welcome">Welcome to your Circle.</h2><p data-copy="welcomeBody">I’m Flowee. We’ll choose your name, protect your access and connect your pass. One small step at a time.</p><button id="start-journey" class="primary" type="button" data-copy="start">Begin with Flowee</button><p class="hint" data-copy="noPressure">You can return, edit or explore as a guest. No location or microphone access needed.</p></section>
+<section id="story-section" hidden><p class="eyebrow" id="story-count"></p><div class="story-constellation" aria-hidden="true"><span>✦</span><i></i><span>◈</span><i></i><span>✧</span></div><h2 id="story-title" tabindex="-1"></h2><p id="story-body"></p><div id="story-choices" class="story-choices" role="group" aria-label="Your first direction"></div><p class="hint" id="story-note"></p><div class="step-actions"><button id="story-back" type="button"></button><button id="story-next" type="button" class="primary"></button></div><button id="story-skip" class="text-button" type="button"></button></section><section id="login-section" hidden><h2 tabindex="-1" data-copy="loginHeading">Welcome back, Navigator.</h2><form id="cdf-login-form"><label for="auth-email" data-copy="email">Email</label><input id="auth-email" name="email" type="email" autocomplete="email" required><label for="auth-password" data-copy="password">Password</label><div class="password-row"><input id="auth-password" name="password" type="password" autocomplete="current-password" required><button type="button" data-toggle-password="auth-password" aria-pressed="false" data-copy="show">Show</button></div><button type="submit" class="primary" data-copy="login">Sign in with Flowee</button></form><a class="recovery" href="/pages/account_recovery" data-copy="recovery">Recover access</a><p class="hint" data-copy="sameAccount">Already have a Wako Kungo card? Use that same account here.</p></section>
+<section id="register-section" hidden>
+<ol id="journey-progress" class="journey-progress" aria-label="Registration steps"><li><button type="button" data-go-step="0"><span>1</span><small data-copy="nameStep">Name</small></button></li><li><button type="button" data-go-step="1"><span>2</span><small data-copy="emailStep">Email</small></button></li><li><button type="button" data-go-step="2"><span>3</span><small data-copy="accessStep">Access</small></button></li><li><button type="button" data-go-step="3"><span>4</span><small data-copy="reviewStep">Review</small></button></li></ol>
+<form id="cdf-register-form" novalidate>
+<section data-journey-step="0"><h2 tabindex="-1" data-copy="nameHeading">What should I call you?</h2><label for="reg-username" data-copy="name">Your public display name</label><input id="reg-username" name="name" autocomplete="nickname" minlength="2" maxlength="80" required aria-describedby="name-hint"><p class="hint" id="name-hint" data-copy="nameHint">A name you’re comfortable sharing with your community. It doesn’t have to be your legal name.</p></section>
+<section data-journey-step="1" hidden><h2 tabindex="-1" data-copy="emailHeading">Keep a way back to your world.</h2><label for="reg-email" data-copy="email">Email</label><input id="reg-email" name="email" type="email" autocomplete="email" required aria-describedby="email-hint"><p class="hint" id="email-hint" data-copy="emailHint">Use an address you can open. Your confirmation link and account recovery go here.</p></section>
+<section data-journey-step="2" hidden><h2 tabindex="-1" data-copy="accessHeading">Protect your little universe.</h2><label for="reg-password" data-copy="password">Password</label><div class="password-row"><input id="reg-password" name="password" type="password" autocomplete="new-password" minlength="8" required aria-describedby="password-hint"><button type="button" data-toggle-password="reg-password" aria-pressed="false" data-copy="show">Show</button></div><p class="hint" id="password-hint" data-copy="passwordHint">At least 8 characters. A long, unique passphrase or a password manager is a good choice.</p><p id="password-check" class="hint" aria-live="polite"></p></section>
+<section data-journey-step="3" hidden><h2 tabindex="-1" data-copy="reviewHeading">Your first chapter.</h2><dl class="review-summary"><dt data-copy="nameStep">Name</dt><dd id="review-name"></dd><dt data-copy="email">Email</dt><dd id="review-email"></dd></dl><fieldset class="destinations"><legend data-copy="destination">Where would you like to begin?</legend><label><input type="radio" name="arrival" value="sanctuary" checked><span><strong>Sanctuary</strong><small data-copy="sanctuaryHint">Enter your creative gathering place</small></span></label><label><input type="radio" name="arrival" value="orbit"><span><strong>Orbit</strong><small data-copy="orbitHint">See the worlds and choose your own direction</small></span></label><label id="requested-destination" hidden><input type="radio" name="arrival" value="requested"><span data-copy="requested">Return to the page you selected</span></label></fieldset><label class="consent"><input id="cdf-account-consent" type="checkbox" required><span data-copy="consent">Create one CDF account with a linked free Wako Kungo Member Card.</span></label><p class="hint"><a href="/pages/privacy.html" data-copy="privacy">Read the privacy information</a> · <span data-copy="separate">Paid membership and event attendance stay separate.</span></p></section>
+<div class="step-actions"><button id="journey-back" type="button" data-copy="back">Back</button><button id="journey-next" class="primary" type="submit" data-copy="next">Continue</button></div>
+</form></section>
+<div class="alternative-entry"><span data-copy="or">or</span><button id="cdf-google" type="button" data-copy="google">Continue with Google</button><p class="hint" data-copy="googleHint">Google uses the same CDF identity flow. New Google users create an account.</p></div>
+</div>
+<section id="identity-outcome" hidden></section>
+<button id="resend-confirmation" type="button" hidden data-copy="resend">Resend confirmation email</button><button id="finish-account" type="button" hidden data-copy="retry">Continue with this signed-in account</button>
+<details class="identity-details"><summary data-copy="oneAccount">One identity, connected worlds</summary><p data-copy="identityDetails">LUVO is your sign-in doorway. Circle D Flow is your account. The Soul Nexus Pass presents your connected Wako Kungo Member Card. You never need a second registration.</p></details>
+<footer><a href="/orbit" data-copy="guest">Explore first</a><a href="/pages/account_recovery" data-copy="recovery">Recover access</a></footer>
+<noscript>JavaScript is required for account access. You can still <a href="/orbit">explore Orbit</a>.</noscript>
+</div></main></body></html>
