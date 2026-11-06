@@ -19,3 +19,6 @@ Reflexion darf übersprungen werden; kein neues öffentliches Feedbackformular v
 Vor Beginn Kernweg und erlaubte Hilfestellung festlegen. Eingreifen als Hilfe zählen. Technische Abbrüche und Rückzüge separat ausweisen, nicht nachträglich aus der Quote entfernen, um Erfolg zu erhöhen; freiwilligen Rückzug nicht als persönliches Versagen bewerten.
 Zähler/Nenner selbstständiger Durchläufe berichten, Erfolgsgrenze ceil(0,8 × n), mindestens drei konkrete freiwillige Nutzenerfahrungen. Keine wesentlichen Auth-/Datenschutz-/Datenverlustfehler.
 Leere Erhebungsfelder sind noch keine Ergebnisse. Teilnehmer-/Zeitplanung und private Beobachtung im geschützten Bereich führen.
+
+
+Mobile Wiederholungsregel: nach relevanten UI-Änderungen und vor Release;360×640/390×844, bei Bedarf844×390 sowie Desktop1280×800. Bericht: [Gast-/Mobilprüfung](guest-mobile-20261106.md). CDF-P01 bleibt nach diesem Lauf teilweise geprüft; tatsächliches Smartphone und Sonderbedingungen offen.

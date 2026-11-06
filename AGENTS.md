@@ -111,3 +111,8 @@ Hope hat die gemeinsame Pilot-Arbeitsgrundlage beauftragt. Einstieg: Docs/commun
 Orchestra bezeichnet den Ablauf; Dirigent koordiniert Ebene 2; Business-Analyse prüft Nutzen und Nachfrage. Daraus folgen keine neuen Rollen oder Agentenstarts. Rollenreferenz bleibt Version 1.0 mit 21 Rollen; zusätzliche Registry-Einträge unbestätigt.
 Ein Bearbeiter pro Aufgabe/Dateibereich; bestehende Aufgaben vor Beginn prüfen. Genau nächste Community-Aufgabe: CDF-P01, Gastorientierung auf Desktop/Smartphone. GitHub führt nur bereinigte Aufgaben/Ergebnisse; private Beobachtungen, Kontakte, Quellenmedien und Betriebsgrenzen bleiben im ignorierten Team/.
 Slack-Brücke nur lesend vorbereiten; kein automatischer Versand, Listener, Dienst oder neue Automation aus diesem Nachtrag. Bestehende Kanalangaben vor Nutzung prüfen. Kein Merge, Deployment, neuer kostenpflichtiger Aufruf oder externe Veröffentlichung aus dem Pilotauftrag ableiten.
+
+
+## Mobile Prüfung · CEO-Auftrag 2026-11-06
+
+Bei relevanten UI-/Navigations-/Dialog-/Auth-Einstiegs-/3D-Bedienänderungen und vor Releases eine mobile Stichprobe ergänzen:360×640 und390×844, gegebenenfalls844×390, dazu Desktop1280×800. Hauptaktion, Lesbarkeit, Überlagerungen, Scroll/Fokus und Rückweg prüfen. Emulierte Viewports und tatsächliche Smartphones getrennt dokumentieren; kein unbeaufsichtigter Dienst oder neue Automation daraus ableiten. Details: Docs/community-pilot/guest-mobile-20261106.md.

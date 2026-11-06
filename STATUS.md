@@ -114,3 +114,12 @@ Frisch ausgeführt: fünf vorhandene Testdateien community-journey, cdf-identity
 Medien: nur bestehende V10-Reviewdatei am angegebenen Exportort frisch nachgewiesen; V11/Master und Rechte bleiben offen. Alte Übergaben nicht nach done verschoben. Slack-Leseverbindung sieht inzwischen auch team-cdf-web-operators; automatischer Empfang/weitere Worker nicht nachgewiesen. Keine Slack-Nachricht, neue App, Automation oder Dienst aktiviert. Instagram-/YouTube-Statistikanbindung in dieser Sitzung nicht bestätigt.
 
 Nächster Schritt: CDF-P01, echte Gastorientierung Desktop/Smartphone mit Version, Soll/Ist und Beleg prüfen. Authentifizierte Live-Abnahme, vollständige Releasebasis, Medienrechte und historische Credential-Prüfung bleiben offen. Keine Produktcode-, Rollen-, Zahlungs-, XP/FLOW- oder RLS-Änderung; kein Merge/Deployment.
+
+
+## 2026-11-06 — Codex · CDF-P01 mobile Browser-Teilabnahme
+
+Browserzugriff wieder funktionsfähig. Öffentliche Gast-Startseite bei360×640,390×844,844×390 und1280×800 ohne horizontales Überlaufen geprüft. Mobile Richtungswahl, deutsche Sprache, sichtbarer Tab-Fokus, Weltenliste, kostenloser Member-Card-Einstieg, überspringbare Einführung, erstes leeres Registrierungsfeld und Rückweg zu Orbit/2D geprüft; Gastdialog mit Escape geschlossen. Kein Konto/Formular abgesendet.
+
+Konkreter Fehler: deutsche Wahl geht beim Wechsel Member Card→Login zunächst verloren. Eine lokale Zeile in js/cdf_login.js korrigiert cdf_lang/Legacy-Fallback; sieben Initialisierungsfälle und sieben bestehende Gast-/Identitätstests bestanden, Syntaxcheck bestanden. Fix NICHT deployed und noch nicht lokal im Browser abgenommen. Patch und Bericht: Docs/community-pilot/guest-mobile-20261106.md; kein Produktcode in die ältere Koordinationsbasis kopiert.
+
+Eventliste derzeit mit Ausfallhinweis statt bestätigten aktuellen Terminen. Physisches Telefon, reduzierte Bewegung, langsames Netz und erzwungener WebGL-Ausfall offen. CDF-P01 bleibt Teilabnahme/offen; bestehende Übergabe bleibt offen. Mobile Stichproben nach relevanten UI-Änderungen und vor Releases verbindlich in Arbeits-/Abnahmeregeln ergänzt. Keine neue Automation, Slack-Nachricht, Veröffentlichung oder Änderung an Rollen/XP/FLOW/RLS/Zahlungen.

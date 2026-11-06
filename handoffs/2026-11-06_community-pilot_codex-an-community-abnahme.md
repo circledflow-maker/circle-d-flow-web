@@ -8,3 +8,7 @@ Gewünschtes Ergebnis: ein begrenzter Gastbericht Desktop/Smartphone mit tatsäc
 Abnahme: Richtungswahl, Ziele, Listenalternative, kostenloser Member-Card-Einstieg, Rückweg, Tastatur/Fokus und reduzierte Bewegung geprüft; Simulation von physischem Gerät unterschieden. Keine Konten/Formularübermittlung/Rewards/Veröffentlichung.
 Offene Abhängigkeiten: lauffähiger Browser/GPU und tatsächliches Smartphone noch nicht bestätigt. Authentifizierte und Pilotpersonen-Abnahme später, keine Voraussetzung für unabhängig mögliche Gastprüfung.
 Zustand: offen, nicht abgeschlossen. Erst nach erfüllter Abnahme und Ergebnisnotiz nach handoffs/done/ verschieben.
+
+
+## Ergebnisnotiz 2026-11-06 · Teilprüfung durch Codex
+Live-Browser und mobile Emulation wieder nutzbar; Einstieg/Weltenliste/Card/registrierungsfreier Rückweg geprüft. Bericht: Docs/community-pilot/guest-mobile-20261106.md. Sprachübergang DE→EN als Fehler belegt, lokal minimal korrigiert und gezielt geprüft; Browser-Nachprüfung des lokalen Fixes offen. Physisches Gerät, reduzierte Bewegung, langsames Netz und erzwungener WebGL-Ausfall offen. Übergabe bleibt offen; nicht nach done verschoben.

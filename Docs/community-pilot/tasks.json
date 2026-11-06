@@ -37,9 +37,9 @@
       ],
       "timebox": "ein Gast-Abnahmedurchlauf",
       "acceptance": "Soll/Ist und Beleg je Einstiegsschritt; Emulator/physisch getrennt; keine Kontomutation",
-      "state": "offen",
-      "evidence": "Docs/community-pilot/acceptance.md",
-      "next": "Gastbericht; danach genau eine nächste fehlende Kernweg-Abnahme"
+      "state": "teilweise im Live-Browser geprüft; physisches Gerät und Sonderbedingungen offen",
+      "evidence": "Docs/community-pilot/guest-mobile-20261106.md",
+      "next": "Lokalen Sprachfix im Browser prüfen; danach verbleibende Gastfälle schließen"
     },
     {
       "id": "CDF-R01",
