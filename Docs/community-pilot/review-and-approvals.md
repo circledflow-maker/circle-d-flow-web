@@ -23,3 +23,7 @@ Die lesende Vorbereitung ist beauftragt. Aktive Brücke, App-/Scope-Erweiterung 
 
 ## Ablauf
 Vorbereitungsarbeit läuft innerhalb des bestehenden Auftrags weiter. Nur echte offene CEO-Entscheidungen mit fertigem Gegenstand, Beleg und klar benannter Aktion vorlegen. Keine pauschale Freigabe für sämtliche späteren Schritte erbitten.
+
+
+## LUVO32 · konkreter neuer Quellstand
+[PR18 Quellcommit 3ff01d4](https://github.com/circledflow-maker/circle-d-flow-web/commit/3ff01d4003801d77910a25cae0176dafd7720d13) sichert den lokalen3D-LUVO-Eingang, Anime-Übergänge, Sprachfix und Tests. [Bericht](luvo-3d32-20261106.md). Inhalt/Design sind prüfbar, noch keine fertige Deployment-Freigabe:14 Login-Abhängigkeiten und vollständige Produktionsbasis müssen im Kandidaten zusammengeführt werden. Der frühere Hinweis „PR18 nur atmosphere27“ ist damit als Quellbeschreibung überholt; der ältere Releasehelfer bleibt unverändert und unvollständig für LUVO32.

@@ -132,3 +132,14 @@ Lokalen Sprachfix im echten In-App-Browser geprüft: gemeinsame Sprache DE bzw.P
 Bericht: Docs/community-pilot/login-browser-verification-20261106.md. Prüf-/Freigabeübersicht: Docs/community-pilot/review-and-approvals.md. PR17 ist inhaltlich prüfbar; Merge vor Abgleich mit Produktions-Deploy-Triggern/abweichendem main nicht als sicher behaupten. PR18 bleibt älterer Draft und kein fertiger aktueller Releasekandidat. Keine erneute Konzeptfreigabe für bereits beschlossenen kostenlosen Pilot erforderlich.
 
 Offen bleiben echtes Smartphone, reduzierte Bewegung, langsames Netz/WebGL-Ausfall sowie authentifizierte Live-Abnahme und vollständige Releasebasis. Verbundener Browser bietet hier keine Steuerung für die genannten Sonderbedingungen. CDF-P01 bleibt teilweise geprüft; Sprachfix jetzt lokal browsergeprüft, nicht deployed. Nächste technische Arbeit: öffentlichen Event-Ausfallpfad eingrenzen, parallel Releasebasis weiter abgleichen. Keine Rechte, Rollen, Zahlungen, XP/FLOW, RLS, Slack-Dienste oder Veröffentlichungen geändert.
+
+
+## 2026-11-06 — Codex · LUVO32:3D-Eingang und Anime-Übergänge
+
+CEO-Richtung umgesetzt: Intro/Registrierung/Login in gemeinsamer prozeduraler Three.js-Szene mit LUVO-Portal, goldenem Baum, räumlicher originaler Flowee und Lichtpfad. Native Account-Panels und bestehende Auth-/Kartenlogik erhalten. Anime-Lichtspuren bei Szenenwechsel; tatsächliches Szene-Nachladen bzw.accountConnecting-Signal steuert Lichtzustand ohne Fake-Prozent oder Wartepflicht. Ruhige Ansicht, reduzierte Bewegung,8s-CDN-Fallback und Ressourcenabbau ergänzt.
+
+17 betroffene Tests bestanden,0 Fehler; sechs neue Ausfall-/Lifecycle-Fälle, Syntaxcheck bestanden. Lokaler Browser zeigt echtes3D auf Desktop und Mobil, Umschalten0→1Canvas sowie optionales Intro, erstes leeres Registrierungsfeld und direkten Login geprüft. Vier Viewports ohne horizontales Überlaufen; Browser-Error-Logs leer. Letzte Korrektur verhindert mehrfachen Animationszyklus nach Resize; danach17 Tests wiederholt. Keine Kontoanlage/Anmeldung abgesendet, keine Backend-/RLS-/XP/FLOW-/Zahlungsänderung.
+
+Quellsicherung in PR18: 3ff01d4003801d77910a25cae0176dafd7720d13; fünf ausgewählte Produkt-/Testdateien plus Bericht und14-Abhängigkeiten-Manifest. PR18 bleibt unvollständige Quellbasis/Draft, älterer atmosphere27-Buildhelfer liefert LUVO32 nicht. Bericht: Docs/community-pilot/luvo-3d32-20261106.md. Offene Übergabe: handoffs/2026-11-06_luvo3d_codex-an-release-pruefung.md.
+
+Physisches Telefon, echte Tastatur/Leistung, vollständige Fokus-/authentifizierte Live-Abnahme und vollständiger Releasekandidat offen. Automatisierte Reduktions-/GPU-Fehlertests nicht als echte Browserbedingungen behauptet. Lokale Vorschau beendet, Viewport zurückgesetzt. Kein Merge, Deployment, Slack-Dienst oder zusätzliche Rollenfreigabe. Nächster Schritt: vollständigen Kandidaten auf aktueller Produktionsbasis mit den dokumentierten Abhängigkeiten abgleichen und abnehmen.

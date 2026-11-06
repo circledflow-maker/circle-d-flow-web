@@ -144,6 +144,22 @@
       "state": "noch nicht zugeordnet",
       "evidence": "Docs/community-pilot/README.md",
       "next": "bestehendes KYH-Backlog auf belegte Vorleistung prüfen"
+    },
+    {
+      "id": "CDF-LUVO32",
+      "project": "CDF / LUVO und Flowee-Einstieg",
+      "goal": "3D-Intro, Registrierung und Login mit Anime-Übergängen",
+      "owner": "Codex",
+      "tool": "Vanilla JS/Three.js, Node-Tests, verbundener Browser",
+      "baseline": "aktive E:-Quelle; Produktion Flowee28 unverändert",
+      "dependencies": [
+        "CDF-R01"
+      ],
+      "timebox": "dieser begrenzte Implementierungsauftrag",
+      "acceptance": "3D-Szene; direktes Login/überspringbares Intro; ruhige Ansicht; reale Ladezustände; mobile Ausweichfälle; bestätigter Release separat",
+      "state": "lokal umgesetzt;17 Tests und Browserstichprobe bestanden; nicht deployed",
+      "evidence": "Docs/community-pilot/luvo-3d32-20261106.md",
+      "next": "vollständiger Kandidat und physische/authentifizierte Abnahme vor Veröffentlichung"
     }
   ]
 }
