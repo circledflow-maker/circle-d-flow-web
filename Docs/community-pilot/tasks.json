@@ -231,15 +231,15 @@
       "goal": "Szenensichtbare mobile Dialoge und einheitliche Flowee-Darstellung",
       "owner": "Codex",
       "tool": "Vanilla CSS/JS/Three.js; vorhandene Tests",
-      "baseline": "76d1f8308c19a0e0f367a79bf368446bd815e22b",
+      "baseline": "16a813f19ca980ec815c893741d2ef15808c2059",
       "dependencies": [
         "CDF-INTRO34"
       ],
       "timebox": "dieser beauftragte lokale UI-Schritt",
       "acceptance": "sichtbare Szene und Antworten; Story-Swipe ohne Formularsubmit; gemeinsame Silhouette; echte neue Viewport-/Telefonprüfung getrennt",
-      "state": "lokal umgesetzt und automatisiert geprüft; neue visuelle Abnahme offen",
-      "evidence": "Docs/community-pilot/intro39-20261107.md",
-      "next": "Neue tatsächliche mobile Sichtprüfung; nur beobachteten Fehler korrigieren"
+      "state": "Intro41: tatsächlicher Browser390×844/360×640 mit sichtbarer Szene und emuliertem Touch geprüft; Dialoghöhenfehler korrigiert; physisch/Softwarekeyboard offen",
+      "evidence": "Docs/community-pilot/intro41-20261107.md",
+      "next": "Hopes echter Smartphone-/Softwarekeyboard-Test; danach genau einen beobachteten Folgefehler schließen"
     },
     {
       "id": "CDF-EXCHANGE40",

@@ -47,3 +47,6 @@ Cursor-Anbindung und Annahme nicht nachgewiesen; Hope kann diesen Prompt in Curs
 
 ## Ergänzung · lokaler Austausch40 / Intro39
 Bei nachgewiesenem lokalem E:-Zugang liegt das eigene Aufgabenpaket unter Team/collaboration/inbox/Cursor/current.json. Vertrag: Docs/community-pilot/agent-local-exchange-20261107.md. Kein automatischer Agentenstart behauptet. Berichtdaten zunächst privat zur Prüfung liefern; keine Produktdateien überschreiben. Aktueller ausgewählter Intro39-Quellcommit: 76d1f8308c19a0e0f367a79bf368446bd815e22b; neue Darstellungs-/Swipeprüfung im Bericht ausdrücklich von altem Intro35-Stand trennen. Ohne E:-Zugang kein E:-Speichern behaupten, sondern Ergebnisdateien exportieren. Bestehender begrenzter Auftrag und gemeinsames Budget bleiben bestehen.
+
+## Intro41 · tatsächliche Nachprüfung durch Codex
+Quellcommit 16a813f19ca980ec815c893741d2ef15808c2059; Bericht Docs/community-pilot/intro41-20261107.md. Native Browser-Emulation390×844 und360×640, zwei Touch-Drags, Antwort-Szenenwechsel, interner Scroll und Szenenvergrößerung geprüft. Beobachteten Dialoghöhenfehler korrigiert und nachgeprüft. Dies ist keine unabhängige Cursor-Abnahme und kein physischer Test. Als nächste offene Stichprobe echtes Gerät/Softwarekeyboard; eigene Prüfbedingungen und Version weiter benennen. Auftrag bleibt offen, nicht nach done verschoben.
