@@ -189,9 +189,41 @@
       ],
       "timebox": "höchstens20 Minuten Projektarbeit unter bestehender gemeinsamer Tagesgrenze",
       "acceptance": "Version belegt; PASS/FAIL/NOT_RUN pro Fall; reproduzierbare Belege; kein Produkt-/Accounteingriff; genau ein nächster Fehler",
-      "state": "Übergabe vorbereitet, nicht gestartet",
+      "state": "Prompt laut Hope erhalten; Annahme/Ausführung nicht belegt",
       "evidence": "handoffs/2026-11-07_intro36_codex-an-cursor.md",
-      "next": "Hope startet Prompt in Cursor; Cursor bestätigt Annahme über Ergebnisdatei/Commit"
+      "next": "Cursor liefert eigene Ergebnisdatei/Commit; Codex prüft vor Integration"
+    },
+    {
+      "id": "CDF-INTRO37-ART",
+      "project": "CDF / Flowee / Sanctuary",
+      "goal": "Regieblatt für drei bestehende Intro-/Ankunftsmomente",
+      "owner": "Antigravity (vorgesehen; Annahme nicht bestätigt)",
+      "tool": "vorhandene Quellen und optional nachgewiesener Browser; keine Generierung",
+      "baseline": "264a7c725fd4acca69e58ffdfa36601e9d3c29c8",
+      "dependencies": [
+        "CDF-INTRO34"
+      ],
+      "timebox": "erster Prüfpass höchstens5 Minuten im vorhandenen gemeinsamen Restbudget; keine zusätzliche Tagesfreigabe",
+      "acceptance": "eigene begrenzte Ergebnisdatei, Ist/Vorschlag/Unsicherheit getrennt; kein Produktdiff; genau eine Empfehlung",
+      "state": "Übergabe vorbereitet, nicht gestartet",
+      "evidence": "handoffs/2026-11-07_intro37_codex-an-antigravity.md",
+      "next": "Antigravity übernimmt nach manuellem Prompt; Ergebnisdatei/Commit an Codex"
+    },
+    {
+      "id": "CDF-INTRO37-CULTURE",
+      "project": "CDF / Flowee / Sanctuary",
+      "goal": "Bis zu drei konkrete Story-/Kulturaussagen prüfen",
+      "owner": "Daiku (vorgesehen; Annahme nicht bestätigt)",
+      "tool": "vorhandene Produkttexte und öffentliche Primärquellen; keine bezahlte API",
+      "baseline": "264a7c725fd4acca69e58ffdfa36601e9d3c29c8",
+      "dependencies": [
+        "CDF-INTRO34"
+      ],
+      "timebox": "erster Prüfpass höchstens5 Minuten im vorhandenen gemeinsamen Restbudget; keine zusätzliche Tagesfreigabe",
+      "acceptance": "eigene begrenzte Ergebnisdatei, Ist/Vorschlag/Unsicherheit getrennt; kein Produktdiff; genau eine Empfehlung",
+      "state": "Übergabe vorbereitet, nicht gestartet",
+      "evidence": "handoffs/2026-11-07_intro37_codex-an-daiku.md",
+      "next": "Daiku übernimmt nach manuellem Prompt; Ergebnisdatei/Commit an Codex"
     }
   ]
 }
