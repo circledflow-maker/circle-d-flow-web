@@ -256,6 +256,22 @@
       "state": "Dateipakete erstellt; echte externe Annahme/Dateiübertragung offen",
       "evidence": "Docs/community-pilot/agent-local-exchange-20261107.md",
       "next": "Erreichbaren Cloud-/IDE-Ergebnisweg prüfen; keine Installation eines konkurrierenden Dienstes"
+    },
+    {
+      "id": "CDF-INTRO42-EXTERNAL",
+      "project": "CDF / Flowee / Sanctuary",
+      "goal": "Intro außerhalb des lokalen WLANs als isolierte Designvorschau testen",
+      "owner": "Codex",
+      "tool": "Vercel-MCP und begrenzter statischer Builder; keine Backend-/Produktionsaktion",
+      "baseline": "16a813f19ca980ec815c893741d2ef15808c2059",
+      "dependencies": [
+        "CDF-INTRO39"
+      ],
+      "timebox": "dieser begrenzte Vorbereitungs-/Bereitstellungsschritt",
+      "acceptance": "konkreter erlaubter Dateisatz; keine echten Kontofunktionen/Privatdateien; READY und tatsächlich geprüfter HTTPS-Link; Produktion unverändert",
+      "state": "41-Dateien-Kandidat geprüft; Vercel403/404; externe Bereitstellung offen",
+      "evidence": "Docs/community-pilot/intro42-external-preview-20261107.md",
+      "next": "Tatsächlichen Team-/Projektzugriff prüfen; danach exakt diesen Kandidaten bereitstellen und anonym prüfen"
     }
   ]
 }
