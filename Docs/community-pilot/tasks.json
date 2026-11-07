@@ -160,6 +160,22 @@
       "state": "Universe33 lokal umgesetzt;21 Tests und Browserdurchlauf bestanden; nicht deployed",
       "evidence": "Docs/community-pilot/universe33-20261107.md",
       "next": "Hopes Handy-/Gestaltungsfeedback, vollständige16-Abhängigkeiten-Releasebasis und authentifizierte Abnahme"
+    },
+    {
+      "id": "CDF-INTRO34",
+      "project": "CDF / Flowee / Sanctuary",
+      "goal": "Eigene Introgeschichte bis zum Sanctuary-Erwachen aus nachvollziehbarer Spielstart-Analyse",
+      "owner": "Codex",
+      "tool": "Quellenrecherche, bestehende Lore, Drehbuch und strukturierte Szenendaten",
+      "baseline": "Universe33; bestehender3-Kapitel-Storycontroller; Creator-Story",
+      "dependencies": [
+        "CDF-LUVO32"
+      ],
+      "timebox": "dieser begrenzte Storyauftrag",
+      "acceptance": "vollständiger Originalprolog mit Dialog, Wahl/Interaktion, Gast-/Konto-/Pending-Grenzen und Ankunft; Quellen klar",
+      "state": "deutscher Entwurf erstellt und strukturell geprüft; nicht integriert",
+      "evidence": "Docs/community-pilot/intro-story34-20261107.md",
+      "next": "optionale UI-Integration und neueEN/PT-Fassung; bestehende Auth-/Zielregeln beibehalten"
     }
   ]
 }

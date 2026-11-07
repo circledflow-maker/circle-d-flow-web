@@ -156,3 +156,14 @@ Hopes Gestaltungsfeedback umgesetzt:14 bestehende CDF-Welten als prozedurales Ar
 21 relevante Tests bestanden,0 Fehler. Browser zeigt tatsächliche3D-Szenen für alle vier Registrierungsschritte und Login; nur Testdaten, kein Konto abgesendet. Finale vier Viewports ohne horizontales Überlaufen, Error-Logs leer. Reduktion/GPU-/Ladefehler weiter automatisiert statt als echte Browserbedingungen behauptet. Physisches Telefon-Feedback, Leistung und authentifizierte Live-Journey offen.
 
 Quellcommit in PR18: df43b3cc8f134985239e3250602c5c89ea107e1d; ausgewählte6 Produkt-/Testdateien plus Bericht und16-Abhängigkeiten-Manifest. PR18 bleibt Draft/unvollständige Releasebasis, alter atmosphere27-Helfer ungeeignet für Universe33. Bericht: Docs/community-pilot/universe33-20261107.md. Bereits beauftragte Handy-Designvorschau unter derselben privaten Adresse mit unveränderten Sperren und2h-Grenze neu gestartet. Kein Produktionsdeploy, Merge, neue Firewallregel, Slack-Dienst oder Rollen-/RLS-/Zahlungs-/XP/FLOW-Eingriff. Nächster Schritt: Gestaltungsfeedback und vollständiger Kandidat mit den dokumentierten Abhängigkeiten.
+
+
+## 2026-11-07 — Codex · Intro34: Spielstart-Analyse und eigene Introgeschichte
+
+Klassische Pokémon-Muster anhand offizieller Sinnoh-Storyseite, Kingdom-Hearts-I-Dive anhand ausdrücklich benannter Community-Sekundärquelle geprüft. Nintendo-Iwata-Zusatzabruf502, Square-Enix-Handbuch zu groß; keine vollständige Lektüre/aktuellen Spieldurchlauf behauptet. Ableitung: hilfreiche Begleitung, frühe Wahl, kleine echte Handlung, Wechsel von abstrakter Welt zum greifbaren Ankunftsort.
+
+Originales deutsches Drehbuch „Der verhüllte Funke — Erwachen im Sanctuary“ mit8 Szenen, Kamerabild, Flowee-Dialog, Handlungen, Gast-/Konto-/Pending-/Rückkehrpfaden erstellt. Bestehende Mantel-/Weltenbaum-/Siegelwächter-Lore erhalten; keine neuen Rollen/Belohnungen oder angeblichen Mitwirkenden. Kulturpfade/Originalfiktion getrennt. Audio-/Voice-Rechte/Besetzung noch nicht zugeordnet; keine neue Komposition erstellt.
+
+Dateien: Docs/community-pilot/intro-story34-20261107.md und .json. Strukturell geprüft:8 eindeutige Szenen, gültige Übergänge/Endzustände, expliziter Skip-/Gast-/Zielwahlstatus. Neue Story ist ein Entwurf und noch nicht in den bestehenden3-Kapitel-Controller integriert; keine neuen Produkttests oder spielbare Szenen daraus behauptet. Übergabe: handoffs/2026-11-07_intro-story_codex-an-gameplay.md.
+
+Nächster Schritt: Story-Daten/Zustände im bestehenden Controller und die tatsächliche Sanctuary-Ankunft verbinden; EN/PT-Erzählfassung und Abnahme ergänzen. Kein Produktcode, Konto-/RLS-/XP/FLOW-/Zahlungseingriff, Merge, Deployment oder Slack-Dienst durch diesen Storyauftrag.
