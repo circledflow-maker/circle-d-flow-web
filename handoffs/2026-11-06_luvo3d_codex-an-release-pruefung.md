@@ -12,3 +12,6 @@ Zustand: offen; nicht nach done verschieben.
 
 ## 2026-11-07 · Universe33 erweitert den Auftrag
 Aktueller Quellcommit df43b3cc8f134985239e3250602c5c89ea107e1d in PR18; Docs/community-pilot/universe33-20261107.md und universe33-dependencies.json mit16 Laufzeitabhängigkeiten. Bestehende Aufgabe umfasst jetzt Weltenarchipel und schrittbezogene Umwelt-/Kamerawechsel samt Quellenhinweis.21 Tests und lokaler UI-Durchlauf bestanden; reine Testdaten/keine echte Registrierung. Übergabe bleibt offen für vollständigen Kandidaten, echtes Telefon und authentifizierte Abnahme; kein Erledigt-/Freigabestatus aus Gestaltung ableiten.
+
+## 2026-11-07 · Intro38-Teilergebnis
+Aktueller Quellcommit 7c411ee9003e5f4f325b5ba758d3100d20406928. Intro35 ist enthalten; neuer Report Docs/community-pilot/intro38-20261107.md. Groß-/Kleinschreibung der Ladegrafik entschieden: vorhandene assets/-URL im PR behalten. Lokalen Modaleingabe-Reset gezielt in den Scene-Snapshot übernommen.17 lokale Bewegungs-/Introtests bestanden, kein neuer nativer GPU-/Gerätebeleg. Zwei Auth-Quelldifferenzen und16 fehlende direkte Quellen plus transitive Ressourcen weiterhin offen. Zwei-Stunden-Handyvorschau erneut auf Wunsch bereitgestellt; physischer Test unbestätigt. Übergabe bleibt offen, kein Release/Done-Status.

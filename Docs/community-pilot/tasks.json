@@ -53,9 +53,9 @@
       ],
       "timebox": "begrenzte Inventur je öffentlichem Modul",
       "acceptance": "Quellenmanifest und semantische Konflikte statt pauschalem Upload; keine fremden Änderungen überschreiben",
-      "state": "Intro36-Direktabgleich erstellt:16 fehlend,4 inhaltlich abweichend; transitive/semantische Prüfung offen",
-      "evidence": "Docs/community-pilot/intro36-release-audit-20261107.md",
-      "next": "Vier inhaltliche Abweichungen und16 fehlende direkte Quellen prüfen; vollständigen Kandidaten anschließend isoliert vorbereiten"
+      "state": "Intro38:2 von4 inhaltlichen Abweichungen entschieden; Modaleingabe im Quellsnapshot ergänzt;2 Auth-Dateien und16 fehlende direkte Quellen offen",
+      "evidence": "Docs/community-pilot/intro38-20261107.md",
+      "next": "supabase_client.js und auth-handler.js separat abgleichen; danach fehlende direkte/transitive Ressourcen ergänzen"
     },
     {
       "id": "FLOWEE-V01",
