@@ -8,7 +8,7 @@
  .cdf-dialogue header{flex:none;width:100%;padding:3px 12px;min-height:44px}.cdf-dialogue header select{min-height:36px;font-size:12px}
  .cdf-dialogue .luvo-scene-tools{flex:none;width:100%;padding:0 12px;gap:6px;flex-wrap:nowrap;min-height:32px}
  .cdf-dialogue #luvo-scene-toggle{min-height:30px;padding:3px 10px;font-size:10px}.cdf-dialogue #luvo-scene-status{font-size:8px}.cdf-dialogue .luvo-world-label{margin-left:auto;width:auto;order:0;font-size:8px;min-height:0}
- .cdf-dialogue .journey-shell{flex:1;min-height:0;width:100%;max-width:none;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(100px,32%) minmax(0,1fr);gap:0;margin:0;overflow:hidden}
+ .cdf-dialogue .journey-shell{flex:1;min-height:0;width:100%;max-width:none;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(100px,32%) minmax(0,1fr);align-items:stretch;gap:0;margin:0;overflow:hidden}
  .cdf-dialogue .world-window{min-height:0;min-width:0;height:100%;padding:8px 12px;justify-content:space-between;gap:4px;pointer-events:auto;touch-action:pan-y pinch-zoom}
  .cdf-dialogue .world-window .eyebrow,.cdf-dialogue .world-trail,.cdf-dialogue .world-window>p:not(.eyebrow){display:none}
  .cdf-dialogue .world-window h1{font:17px/1.2 Georgia,serif;max-width:70%;margin:0;padding:5px 8px;background:#06151ab0;border:0}
