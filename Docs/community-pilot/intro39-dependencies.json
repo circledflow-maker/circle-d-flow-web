@@ -1,0 +1,202 @@
+{
+  "date": "2026-11-07",
+  "scope": "direct static JS/CSS only; incomplete release graph",
+  "count": 39,
+  "files": [
+    {
+      "path": "/css/cdf_login.css",
+      "exists": true,
+      "sha256": "21b7eca57dd493988482368acf68c7f8f9ab2163a688da902ccfb4e20e7f6363"
+    },
+    {
+      "path": "/js/vendor/supabase-2.108.2.js",
+      "exists": true,
+      "sha256": "c123f7e874934778b7d89fee7dce8de26c858a2c3a92fd7a3f870394a6a2f91f"
+    },
+    {
+      "path": "/js/cdf_runtime_config.js",
+      "exists": true,
+      "sha256": "84b55b064837405ecac4476b76003616a1bdf7872ae0508a5b48c03928d5d97e"
+    },
+    {
+      "path": "/js/agents/supabase_client.js",
+      "exists": true,
+      "sha256": "2ee00a2de8a7537ac26fc972bc42a6735537c83c859d6bad38f06fd4df63715b"
+    },
+    {
+      "path": "/js/cdf_identity.js",
+      "exists": true,
+      "sha256": "ded7a3653472c0198bc6384f724afc7b89a9cfec169788fe744441d053ba77c3"
+    },
+    {
+      "path": "/js/flowee_fairy.js",
+      "exists": true,
+      "sha256": "593dc9c3efc9eb81da8fef89e28ff0af40f5dac52202af16d361cc77bf94a94d"
+    },
+    {
+      "path": "/js/cdf_account_motion.js",
+      "exists": true,
+      "sha256": "e16e46846f1fb7c20c5e976b6150fe823e6852456bd5e4342191974c1474e248"
+    },
+    {
+      "path": "/js/cdf_intro_story.js",
+      "exists": true,
+      "sha256": "bde32546513295cb4c727b0bf3cb55da77fbf45a923bf24408a5fe09d2811f22"
+    },
+    {
+      "path": "/css/cdf_intro_story.css",
+      "exists": true,
+      "sha256": "1758325bafd0d2b94922c7d1d3f9a9e7745cb0e34898076c489df9bfb961e5f7"
+    },
+    {
+      "path": "/js/cdf_account_journey.js",
+      "exists": true,
+      "sha256": "d728a60a64fb477afeceb329443fb47ea65c72ecaebbac7f2b09f461bed8d6e7"
+    },
+    {
+      "path": "/js/auth-handler.js",
+      "exists": true,
+      "sha256": "e5b9ccdd4a6507e117493bec513dc03d6a9183461f5a790603549665a4dea4d2"
+    },
+    {
+      "path": "/js/cdf_login.js",
+      "exists": true,
+      "sha256": "4de0ccd75064900a434cc83fec5fe324c09dc31bac99eedb43d63fa29508537f"
+    },
+    {
+      "path": "/js/cdf_account_story.js",
+      "exists": true,
+      "sha256": "a58df4fc68f9bb2ada2aa0e48aea8b9349da3f5f0058cdf5c2a186ed23c781d8"
+    },
+    {
+      "path": "/js/world_registry.js",
+      "exists": true,
+      "sha256": "9bbea857602024ea053d217e9f1c627f42adc820cdf1a02128be7300db2f73af"
+    },
+    {
+      "path": "/js/luvo_universe.js",
+      "exists": true,
+      "sha256": "b01ea3f5e3c7d690df74de924c9e453aadc142eb0d400bb10d40261426d73553"
+    },
+    {
+      "path": "/css/luvo_scene.css",
+      "exists": true,
+      "sha256": "8f5512776241f5e3bf783c4752b5d88a099ce83f43becd2f624b7b83fca8e96c"
+    },
+    {
+      "path": "/js/luvo_scene.js",
+      "exists": true,
+      "sha256": "58ab245135329a4bdd979dce00304992acaca35387aca43cd47b057e4660dfd7"
+    },
+    {
+      "path": "/css/cdf_scene_dialogue.css",
+      "exists": true,
+      "sha256": "bfdf6eeb1d63992a27c5664a1863683588f257bbe335b6f1f1ad6761be81b436"
+    },
+    {
+      "path": "/js/cdf_scene_dialogue.js",
+      "exists": true,
+      "sha256": "cd22eb271f6eebc3cb4484ad2c7407752f380e6ee32f6364c3b9154e5190c848"
+    },
+    {
+      "path": "/css/sanctuary_courtyard.css",
+      "exists": true,
+      "sha256": "8cde38deae8d83a4ff4ae5d65de09f11deb436ab61f1b40e1a7e93f0e33368d7"
+    },
+    {
+      "path": "/css/room_transition.css",
+      "exists": true,
+      "sha256": "8296dd42aede802beebb301f3e11d7d22c27208b3eadc695d0a3813b804ee960"
+    },
+    {
+      "path": "/js/room_transition.js",
+      "exists": true,
+      "sha256": "8ecb65d860606481d69b8f2d4818663cab7d630e6291efdbf60d903691fa1bc8"
+    },
+    {
+      "path": "/js/sanctuary_layout.js",
+      "exists": true,
+      "sha256": "0657302e03a5e9f38c2119dcf8132cab3a8eb46e47448d56924d0d1207c6b56a"
+    },
+    {
+      "path": "/js/sanctuary_movement.js",
+      "exists": true,
+      "sha256": "cafadcef0ed7b8c26dae9632c7c9db7165402a24f2567d40f187cc871c285ae0"
+    },
+    {
+      "path": "/js/ewe_cultural_library.js",
+      "exists": true,
+      "sha256": "b7b3a6163941c4f32698b8c6f2f5c1a935bd615f4d83188967f017006e42bc01"
+    },
+    {
+      "path": "/js/sanctuary_characters.js",
+      "exists": true,
+      "sha256": "1fe91446ade6fd9d9b5ab71c4ce55c3e1fa5599ef8d342ce7c74bfacceb0b048"
+    },
+    {
+      "path": "/js/sanctuary_environment.js",
+      "exists": true,
+      "sha256": "df188c09393cf86c2bff75a6dba5b9997b78b3a839871cd03cdff29136c0e331"
+    },
+    {
+      "path": "/js/data/lisbon_regions.js",
+      "exists": true,
+      "sha256": "6b5a95dea8b6e073182c4d4d1f254e0398159e464eab911a86be38cb88ec9d82"
+    },
+    {
+      "path": "/js/lisbon_geography.js",
+      "exists": true,
+      "sha256": "e4e6ea954ceb337df1ca9359fe07d7a60bde31ccac23fcd98e78d874dd4a6898"
+    },
+    {
+      "path": "/js/lisbon_context.js",
+      "exists": true,
+      "sha256": "0d31462037539c56239b7001ea210269be2d3de741f861699edde1a4a2d04710"
+    },
+    {
+      "path": "/js/sanctuary_arrival.js",
+      "exists": true,
+      "sha256": "60271c21bcf4470d6726e80e5ae55c05265396a526b73a1ceb0967b053b97f12"
+    },
+    {
+      "path": "/js/sanctuary_scene.js",
+      "exists": true,
+      "sha256": "5e237f7c0cda0686aaafef6c27b86ada93cd43fc038cc6ef7bdeccd345600179"
+    },
+    {
+      "path": "/js/sanctuary_shell.js",
+      "exists": true,
+      "sha256": "8a793ef455c1e295d36484e15ac8eb0adbe9049a4381a9535d71ae6853ef04c3"
+    },
+    {
+      "path": "/js/sanctuary_next_step.js",
+      "exists": true,
+      "sha256": "4793396945b75007b88982e95ab4a083a98a5d5bfc2f1417de576529df252d0c"
+    },
+    {
+      "path": "/js/sanctuary_collection.js",
+      "exists": true,
+      "sha256": "8a7363d161d43469dd325e496933cdfeb59c20dfad6196759a4a5b7e4796207d"
+    },
+    {
+      "path": "/js/sanctuary_culture.js",
+      "exists": true,
+      "sha256": "dcaa6a823dc2511836c45031b64c0de6a73c4ae8ee7dec8e067de9d59b9ee855"
+    },
+    {
+      "path": "/css/sanctuary_mobile20.css",
+      "exists": true,
+      "sha256": "513e48bfe7f6bd96afca562c66c2eac000df3b03be02a60143eafbca39ac9e89"
+    },
+    {
+      "path": "/css/flowee_room_tutorial.css",
+      "exists": true,
+      "sha256": "9cb70ad961721633f2723da0c72ffd9c69251d6bbf85230b45d1ae84b88aecd9"
+    },
+    {
+      "path": "/js/flowee_room_tutorial.js",
+      "exists": true,
+      "sha256": "3ea4ee5010e11c06ee51ae19ede5c50e7601ea70a8d2f337de97871f4fae3ee8"
+    }
+  ]
+}

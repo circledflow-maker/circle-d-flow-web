@@ -44,3 +44,6 @@ Version und tatsächliche Arbeitsumgebung belegt; Prüfmatrix vollständig mit e
 
 ## Offene Abhängigkeiten
 Cursor-Anbindung und Annahme nicht nachgewiesen; Hope kann diesen Prompt in Cursor starten. Ein Screenshot oder gespeicherter Rollenbrief belegt keinen Agentenlauf. Physisches Gerät und authentifizierte Kernweg-Abnahme bleiben gesondert. Die lokale Szene rendert im Browser; ein separater Video-Render wurde in dieser Phase weder gestartet noch geprüft. Finale kreative/Veröffentlichungsentscheidung Hope.
+
+## Ergänzung · lokaler Austausch40 / Intro39
+Bei nachgewiesenem lokalem E:-Zugang liegt das eigene Aufgabenpaket unter Team/collaboration/inbox/Cursor/current.json. Vertrag: Docs/community-pilot/agent-local-exchange-20261107.md. Kein automatischer Agentenstart behauptet. Berichtdaten zunächst privat zur Prüfung liefern; keine Produktdateien überschreiben. Aktueller ausgewählter Intro39-Quellcommit: 76d1f8308c19a0e0f367a79bf368446bd815e22b; neue Darstellungs-/Swipeprüfung im Bericht ausdrücklich von altem Intro35-Stand trennen. Ohne E:-Zugang kein E:-Speichern behaupten, sondern Ergebnisdateien exportieren. Bestehender begrenzter Auftrag und gemeinsames Budget bleiben bestehen.

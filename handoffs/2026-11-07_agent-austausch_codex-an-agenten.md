@@ -1,0 +1,7 @@
+# Übergabe · lokaler Dateiaustausch40
+Datum:2026-11-07 · Projekt:CDF / Koordination · Von:Codex · Empfänger:Cursor, Antigravity, Daiku als vorgesehene Bearbeiter bestehender Aufgaben; Fachrollen-Zuordnung noch nicht zugeordnet.
+Ziel: vorhandene Aufträge und Ergebnisse auf E: abgleichen, ohne gegenseitige Produktüberschreibung.
+Kontext/Inputs: aktuelle GitHub-Aufgaben und jeweilige offene Intro36-/Intro37-Übergabe; Vertrag Docs/community-pilot/agent-local-exchange-20261107.md; private lokale Postfächer Team/collaboration/inbox/<Agent>/current.json.
+Gewünschtes Ergebnis: Nach tatsächlichem manuellem Start/Auftrag eigenes Paket lesen, nur die zwei darin zugewiesenen Bericht-/Übergabedateien liefern. Bei echtem E:-Zugang im vorgegebenen outbox/-Paket ablegen; bei Cloud-Ausführung ohne E: die zwei Dateien exportieren, keine lokale Speicherung behaupten. Codex prüft privat vor Repo-Übernahme.
+Abnahme: Version/Herkunft belegt; keine Produkt-, Auth-, Status- oder Rollenänderungen durch Rückgabepaket; received_unreviewed bleibt bis tatsächlicher Prüfung; Repo-Übergabe erst bei verifiziertem Commit.
+Offene Abhängigkeiten: echte IDE-/Cloud-Anbindung und agentenseitige Annahme nicht nachgewiesen. Daikus screenshotgemeldeter Cloud-Commit ist aktuell nicht auf GitHub/E: erreichbar. Kein beliebiger Push wegen möglicher Provider-Preview. Kein Dienst oder zusätzlicher Agent gestartet; nach begrenztem Ergebnis stoppen. Zustand: vorbereitet, nicht erledigt.

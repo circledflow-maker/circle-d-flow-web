@@ -221,9 +221,41 @@
       ],
       "timebox": "erster Prüfpass höchstens5 Minuten im vorhandenen gemeinsamen Restbudget; keine zusätzliche Tagesfreigabe",
       "acceptance": "eigene begrenzte Ergebnisdatei, Ist/Vorschlag/Unsicherheit getrennt; kein Produktdiff; genau eine Empfehlung",
-      "state": "Übergabe vorbereitet, nicht gestartet",
+      "state": "Ergebnis von Hope per Screenshot gemeldet; Originaldateien und Commitübertragung nicht verifiziert",
       "evidence": "handoffs/2026-11-07_intro37_codex-an-daiku.md",
-      "next": "Daiku übernimmt nach manuellem Prompt; Ergebnisdatei/Commit an Codex"
+      "next": "Cloud-Aufgabenlink/Ergebnisdateien erhalten; privat prüfen und bereinigt in Koordinationsbranch übernehmen"
+    },
+    {
+      "id": "CDF-INTRO39",
+      "project": "CDF / Flowee / Sanctuary",
+      "goal": "Szenensichtbare mobile Dialoge und einheitliche Flowee-Darstellung",
+      "owner": "Codex",
+      "tool": "Vanilla CSS/JS/Three.js; vorhandene Tests",
+      "baseline": "76d1f8308c19a0e0f367a79bf368446bd815e22b",
+      "dependencies": [
+        "CDF-INTRO34"
+      ],
+      "timebox": "dieser beauftragte lokale UI-Schritt",
+      "acceptance": "sichtbare Szene und Antworten; Story-Swipe ohne Formularsubmit; gemeinsame Silhouette; echte neue Viewport-/Telefonprüfung getrennt",
+      "state": "lokal umgesetzt und automatisiert geprüft; neue visuelle Abnahme offen",
+      "evidence": "Docs/community-pilot/intro39-20261107.md",
+      "next": "Neue tatsächliche mobile Sichtprüfung; nur beobachteten Fehler korrigieren"
+    },
+    {
+      "id": "CDF-EXCHANGE40",
+      "project": "CDF / Koordination",
+      "goal": "Begrenzten lokalen Agenten-Dateiaustausch vorbereiten",
+      "owner": "Codex",
+      "tool": "einmaliger lokaler Dateiabgleich; kein Agentenstart",
+      "baseline": "03f39268a0235f1ab9a7195c4cebc79c703c7435",
+      "dependencies": [
+        "CDF-F00"
+      ],
+      "timebox": "ein beauftragter lokaler Abgleich",
+      "acceptance": "getrennte Aufträge, erlaubte Ergebnisdateien, private Prüfung vor Übernahme; keine Produktüberschreibung/ungeprüfter Push",
+      "state": "Dateipakete erstellt; echte externe Annahme/Dateiübertragung offen",
+      "evidence": "Docs/community-pilot/agent-local-exchange-20261107.md",
+      "next": "Erreichbaren Cloud-/IDE-Ergebnisweg prüfen; keine Installation eines konkurrierenden Dienstes"
     }
   ]
 }
