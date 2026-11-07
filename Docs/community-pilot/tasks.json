@@ -213,7 +213,7 @@
       "id": "CDF-INTRO37-CULTURE",
       "project": "CDF / Flowee / Sanctuary",
       "goal": "Bis zu drei konkrete Story-/Kulturaussagen prüfen",
-      "owner": "Daiku (vorgesehen; Annahme nicht bestätigt)",
+      "owner": "Daiku (begrenztes Ergebnis empfangen; formale Rollenbesetzung noch nicht zugeordnet)",
       "tool": "vorhandene Produkttexte und öffentliche Primärquellen; keine bezahlte API",
       "baseline": "264a7c725fd4acca69e58ffdfa36601e9d3c29c8",
       "dependencies": [
@@ -273,6 +273,23 @@
       "state": "41-Dateien-Kandidat geprüft; Vercel403/404; externe Bereitstellung offen",
       "evidence": "Docs/community-pilot/intro42-external-preview-20261107.md",
       "next": "Tatsächlichen Team-/Projektzugriff prüfen; danach exakt diesen Kandidaten bereitstellen und anonym prüfen"
+    },
+    {
+      "id": "CDF-DAIKU44",
+      "project": "CDF / Pilot-Pipeline und Geschäftsprüfung",
+      "goal": "Bestehende Belege in genau eine nächste Pilot-Entscheidung und überprüfbare Pipeline-Abhängigkeiten übersetzen",
+      "owner": "Daiku (Auftrag vorbereitet; Übernahme noch nicht bestätigt)",
+      "tool": "Vorhandene Repo-Belege; öffentliche Primärquellen nur bei konkreter entscheidungsrelevanter Lücke",
+      "baseline": "Koordination f11188257c5a48dc7bd4daaa6119d570c94770c2; Produktreferenz Intro41 16a813f19ca980ec815c893741d2ef15808c2059",
+      "dependencies": [
+        "CDF-INTRO37-CULTURE"
+      ],
+      "timebox": "Ein erster Pass höchstens5 Minuten innerhalb gemeinsamer20 Minuten Projektarbeit; keine automatische Wiederholung ohne belegtes Restbudget",
+      "acceptance": "Bis3 belegte Abhängigkeiten,1 prüfbare Nutzenhypothese,1 nächste Empfehlung; Quelle/Annahme/Lücke getrennt; private Kalenderentwürfe bleiben Team/; kein Produktdiff",
+      "state": "Übergabe vorbereitet; neuer Daiku-Lauf nicht gestartet",
+      "evidence": "handoffs/2026-11-07_pilot-pipeline_codex-an-daiku.md",
+      "next": "Daiku übernimmt den begrenzten Brief und liefert genau2 bereinigte Ergebnisdateien; Codex prüft und integriert",
+      "exchange_status": "pending"
     }
   ]
 }

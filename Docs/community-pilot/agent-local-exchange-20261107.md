@@ -20,7 +20,12 @@ Lokale IDE-Agenten können dieses Postfach bei ihren ausdrücklich gestarteten A
 Ein Schreibender pro Produktbereich: Codex bearbeitet Intro39/Mobilansicht; Cursor prüft unabhängig Bedienung; Antigravity prüft Inszenierung; Daiku Story-/Kulturkontext. Diese Zuordnung sind bestehende begrenzte Aufgaben, keine neuen bestätigten Fachrollen. Alle drei externen Prüfaufträge bleiben ohne Produktdiff.
 
 ## Konkreter Daiku-Stand
-Hope übermittelt Screenshots eines gemeldeten Ergebnisses/Commits87dda99129cc612ecae0bcbddcd16d55871c23db. GitHub-Abruf dieses Commits:404; Objekt im aktiven lokalen Repo nicht vorhanden. Kein Zugriff auf die zwei vollständigen Ergebnisdateien behauptet. Die sichtbaren Vorschläge sind zur Kenntnis genommen, noch nicht als überprüfte Recherche oder Produkttext übernommen. Der Link zur Cloud-Aufgabe ist angefragt. Ein beliebiger Branch-Push könnte neue Provider-Previews auslösen; deshalb keine Aufforderung zum ungeprüften Push.
+Intro37-Dateiexporte sind inzwischen tatsächlich empfangen und geprüft (Intro43, f11188257c5a48dc7bd4daaa6119d570c94770c2). Der damalige Cloud-Commit wurde nicht unabhängig bytegleich verifiziert. Keine neue Mobilprüfung daraus ableiten. Der alte Auftrag bleibt received_reviewed; kreative Restfragen offen.
+Neuer separater Auftrag CDF-DAIKU44: handoffs/2026-11-07_pilot-pipeline_codex-an-daiku.md. prepare verteilt jetzt diesen Brief für Daiku; kein automatischer Start. Ausschließlich die beiden im neuen Brief genannten Dateien werden angenommen. Alte Originale bleiben im privaten Empfangsarchiv und im Repo erhalten.
 
 ## Teststand
 Fünf neue deterministische Prüfungen für Aufgabenpakete, Pfadgrenzen, Swipe-Erkennung und sichere Flowee-Farbparameter. Reale Agenten-Annahme, dauerhafte automatische Verteilung, native Smartphone-Swipes und Cloud-Dateiübertragung bleiben gesondert nachzuweisen.
+
+## Ergebnisabgleich und Recherche44
+Vorhandenen täglichen Koordinationslauf ergänzen, keine konkurrierende Automation erstellen. Konkrete Zeit-/Kalenderplanung und gemeinsame Zeitnachweise bleiben privat in Team/collaboration/cadence/. Ein wöchentlicher Abgleich erzeugt höchstens einen begrenzten nächsten Auftrag, wenn Belege, Bedarf und gemeinsames Restbudget vorliegen. Ein Kalenderplan startet keinen externen Agenten.
+Daiku bereitet Quellen/Entscheidungen vor; Codex koordiniert/integriert, Cursor prüft Bedienung und Antigravity Inszenierung gemäß ihren bestehenden Briefen. Formale unbestätigte Rollen bleiben noch nicht zugeordnet. Recherche ist bedarfsgesteuert, keine permanente Suche; höchstens2 öffentliche Primärquellen pro begrenztem Pass. Keine Social-/Partneransprache oder Veröffentlichung durch diese Planung.
