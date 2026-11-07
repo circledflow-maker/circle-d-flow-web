@@ -6,7 +6,7 @@ const assignments={
  Antigravity:{task:'CDF-INTRO37-ART',brief:'handoffs/2026-11-07_intro37_codex-an-antigravity.md',outputs:['Docs/community-pilot/intro37-antigravity-direction-20261107.md','handoffs/2026-11-07_intro37_antigravity-an-codex.md']},
  Daiku:{task:'CDF-INTRO37-CULTURE',brief:'handoffs/2026-11-07_intro37_codex-an-daiku.md',outputs:['Docs/community-pilot/intro37-daiku-story-context-20261107.md','handoffs/2026-11-07_intro37_daiku-an-codex.md']}
 };
-function plan(tasks){return Object.entries(assignments).map(([agent,a])=>{const task=tasks.tasks.find(t=>t.id===a.task);if(!task)throw Error('Missing canonical task '+a.task);return{agent,...a,canonical_state:task.state,delivery:'file_prepared_not_agent_started'};});}
+function plan(tasks){return Object.entries(assignments).map(([agent,a])=>{const task=tasks.tasks.find(t=>t.id===a.task);if(!task)throw Error('Missing canonical task '+a.task);return{agent,...a,canonical_state:task.state,exchange_status:task.exchange_status||'pending',delivery:'file_prepared_not_agent_started'};}).filter(item=>item.exchange_status!=='received_reviewed');}
 function validate(pkg){const a=assignments[pkg?.agent];if(!a||pkg.task!==a.task||!/^([0-9a-f]{40})$/.test(pkg.base_commit||''))throw Error('Unknown assignment or missing exact base commit');
  if(!Array.isArray(pkg.files)||pkg.files.length!==a.outputs.length)throw Error('Expected exact output set');
  const found=new Set();for(const f of pkg.files){if(!a.outputs.includes(f.path)||found.has(f.path)||typeof f.content!=='string'||Buffer.byteLength(f.content)>200000)throw Error('Unexpected, duplicate or oversized output');found.add(f.path);}
@@ -21,6 +21,8 @@ function run(root,args){
    const packet={...item,source_commit:canonical.source_commit,brief_text:brief,return_package:'Team/collaboration/outbox/'+item.agent+'.json',instructions:'Read current GitHub status and this brief. No product edits. Export only the two approved outputs to the return package; coordinator reviews before publication. This file does not start your agent.'};
    fs.writeFileSync(path.join(folder,'current.json'),JSON.stringify(packet,null,2)+'\n');
   }
+  for(const [agent,a]of Object.entries(assignments)){const task=canonical.tasks.find(t=>t.id===a.task);if(task?.exchange_status!=='received_reviewed')continue;
+   const folder=inside(home,'inbox/'+agent);fs.mkdirSync(folder,{recursive:true});fs.writeFileSync(path.join(folder,'current.json'),JSON.stringify({agent,task:a.task,state:'received_reviewed',source_commit:canonical.source_commit,brief_text:'Kein neuer Auftrag. Ergebnis empfangen und geprüft; kreative Restentscheidungen getrennt offen.',outputs:[],delivery:'no_active_assignment'},null,2)+'\n');}
   fs.mkdirSync(inside(home,'outbox'),{recursive:true});fs.writeFileSync(inside(home,'queue.json'),JSON.stringify(queue,null,2)+'\n');
   return{prepared:queue.map(x=>x.agent),started:[],canonical_commit:canonical.source_commit};
  }

@@ -221,9 +221,10 @@
       ],
       "timebox": "erster Prüfpass höchstens5 Minuten im vorhandenen gemeinsamen Restbudget; keine zusätzliche Tagesfreigabe",
       "acceptance": "eigene begrenzte Ergebnisdatei, Ist/Vorschlag/Unsicherheit getrennt; kein Produktdiff; genau eine Empfehlung",
-      "state": "Ergebnis von Hope per Screenshot gemeldet; Originaldateien und Commitübertragung nicht verifiziert",
-      "evidence": "handoffs/2026-11-07_intro37_codex-an-daiku.md",
-      "next": "Cloud-Aufgabenlink/Ergebnisdateien erhalten; privat prüfen und bereinigt in Koordinationsbranch übernehmen"
+      "state": "Begrenztes Intro35-Ergebnis als zwei Dateiexporte empfangen und von Codex eingeordnet; kreative Entscheidungen offen",
+      "evidence": "Docs/community-pilot/intro43-daiku-intake-20261107.md",
+      "next": "Hope entscheidet zuerst über Textvorschlag2; danach Sprach-/Namensfragen und gegebenenfalls Umsetzung getrennt",
+      "exchange_status": "received_reviewed"
     },
     {
       "id": "CDF-INTRO39",
