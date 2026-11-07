@@ -3,7 +3,7 @@
  const doc=root.document,host=doc.getElementById('luvo-scene');if(!host)return;
  const media=root.matchMedia('(prefers-reduced-motion: reduce)'),toggle=doc.getElementById('luvo-scene-toggle'),status=doc.getElementById('luvo-scene-status');
  let renderer,scene,camera,world,fairy,ring,frame=0,epoch=0,stopped=false,paused=false,loading=false,disposed=false,timer,script,pulseTimer;
- const geometries=new Set(),materials=new Set();let particles,universe,lastTime=0;
+ const geometries=new Set(),materials=new Set(),textures=new Set();let particles,universe,lastTime=0;
  const words={en:{start:'Opening LUVO…',ready:'LUVO · your first light',fallback:'Quiet view · your journey is ready',quiet:'Quiet view',open:'Open 3D',link:'Connecting your account…'},de:{start:'LUVO öffnet sich…',ready:'LUVO · dein erstes Licht',fallback:'Ruhige Ansicht · dein Einstieg ist bereit',quiet:'Ruhige Ansicht',open:'3D öffnen',link:'Dein Konto wird verbunden…'},pt:{start:'A abrir LUVO…',ready:'LUVO · a tua primeira luz',fallback:'Vista tranquila · podes começar',quiet:'Vista tranquila',open:'Abrir 3D',link:'A ligar a tua conta…'}};
  function stage(){
  const phase=doc.body.dataset.journeyScene||'welcome',sections=Array.from(doc.querySelectorAll?.('[data-journey-step]')||[]);
@@ -11,18 +11,19 @@
  const chapter=Number((doc.getElementById('story-count')?.textContent||'').match(/\d+/)?.[0]||1)-1;
  const mode=['ready','pending'].includes(phase)?phase:story&&!story.hidden?'story':login&&!login.hidden?'login':phase;
  const narrative=story&&!story.hidden?root.CDFIntroStory?.scene(doc.body.dataset.introScene):null;
- const id=narrative?.environment||root.CDFLuvoUniverse?.resolveStage({mode,step:Math.max(0,sections.findIndex(n=>!n.hidden)),chapter})||'welcome';
+ const selectedEnvironment=narrative&&['horizon','shelter','roots','tides'].includes(doc.body.dataset.introEnvironment)?doc.body.dataset.introEnvironment:narrative?.environment;
+ const id=selectedEnvironment||root.CDFLuvoUniverse?.resolveStage({mode,step:Math.max(0,sections.findIndex(n=>!n.hidden)),chapter})||'welcome';
  doc.body.dataset.luvoStage=id;universe?.setStage(id);
  const label=doc.getElementById('luvo-world-label');
  if(label){const names={welcome:'ORBIT · KINGDOM OF HEARTS',story:'ARCHIVE · CIRCLE D FLOW',roots:'SANCTUARY · ROOTS',tides:'CONNECTION · TIDES',shelter:'ARCHIVE · SHELTER',horizon:'HEART · HORIZON',login:'ATLAS · RETURN',pending:'CONNECTION · CROSSING',ready:'SANCTUARY · ARRIVAL'};label.textContent=names[id]||names.welcome;}
  }
  function copy(){stage();const w=words[doc.documentElement.lang]||words.en;toggle.textContent=media.matches?w.quiet:paused?w.open:w.quiet;toggle.disabled=media.matches;doc.body.dataset.luvoLoading=String(loading);toggle.setAttribute('aria-pressed',String(!paused&&!media.matches));status.textContent=doc.body.dataset.accountConnecting==='true'?w.link:loading?w.start:renderer?w.ready:w.fallback;}
  function halt(){if(frame)root.cancelAnimationFrame(frame);frame=0;}
- function release(){halt();universe?.dispose();universe=null;if(renderer){renderer.domElement.removeEventListener('webglcontextlost',lost);renderer.dispose();renderer.domElement.remove();}for(const g of geometries)g.dispose();for(const m of materials)m.dispose();geometries.clear();materials.clear();renderer=scene=camera=world=fairy=ring=particles=null;host.dataset.ready='false';}
+ function release(){halt();universe?.dispose();universe=null;if(renderer){renderer.domElement.removeEventListener('webglcontextlost',lost);renderer.dispose();renderer.domElement.remove();}for(const g of geometries)g.dispose();for(const m of materials)m.dispose();for(const t of textures)t.dispose();textures.clear();geometries.clear();materials.clear();renderer=scene=camera=world=fairy=ring=particles=null;host.dataset.ready='false';}
  function lost(event){event.preventDefault();epoch++;loading=false;release();copy();}
- function size(){if(!renderer)return;halt();const width=root.innerWidth,height=root.innerHeight;renderer.setPixelRatio(Math.min(root.devicePixelRatio||1,width<700?1.25:1.75));renderer.setSize(width,height);camera.aspect=width/height;camera.position.set(width<700?0:3.8,width<700?4.8:4.2,width<700?17:15);camera.lookAt(width<700?0:1,3.3,0);camera.updateProjectionMatrix();world.position.set(width<700?0:-2.6,width<700?3.2:0,0);world.scale.setScalar(width<700?.72:1);draw(0);}
+ function size(){if(!renderer)return;halt();const width=host.clientWidth||root.innerWidth,height=host.clientHeight||root.innerHeight;renderer.setPixelRatio(Math.min(root.devicePixelRatio||1,width<700?1.25:1.75));renderer.setSize(width,height);camera.aspect=width/height;camera.position.set(width<700?0:3.8,width<700?4.8:4.2,width<700?17:15);camera.lookAt(width<700?0:1,3.3,0);camera.updateProjectionMatrix();world.position.set(width<700?0:-2.6,width<700?3.2:0,0);world.scale.setScalar(width<700?.72:1);draw(0);}
  function draw(time){if(!renderer)return;const t=time*.001,dt=lastTime?Math.min(.05,Math.max(0,(time-lastTime)*.001)):.016;lastTime=time;const active=!paused&&!media.matches&&!doc.hidden&&!stopped;
-  if(active){world.rotation.y=Math.sin(t*.12)*.07;fairy.position.y=4.2+Math.sin(t*1.4)*.15;fairy.rotation.y=t*.28;ring.rotation.z=Math.sin(t*.12)*.04;particles.rotation.y=t*.008;universe?.update(t,dt,root.innerWidth,root.innerHeight);}
+  if(active){world.rotation.y=Math.sin(t*.12)*.07;fairy.position.y=4.2+Math.sin(t*1.4)*.15;fairy.rotation.y=t*.28;ring.rotation.z=Math.sin(t*.12)*.04;particles.rotation.y=t*.008;universe?.update(t,dt,host.clientWidth||root.innerWidth,host.clientHeight||root.innerHeight);}
   renderer.render(scene,camera);frame=active?root.requestAnimationFrame(draw):0;
  }
  function resume(){halt();if(renderer)draw(root.performance.now());}
@@ -46,9 +47,7 @@
    const leaf=mesh(new T.IcosahedronGeometry(.52,0),mint);leaf.position.set(x*1.25,y+1.3,z);leaf.scale.set(1,.55,.7);
   }
   for(let i=0;i<7;i++){const o=mesh(new T.BoxGeometry(1.15,.09,.85),i%2?gold:stone);o.position.set(Math.sin(i*.35)*.25,-.1,1.4+i*1.1);o.rotation.y=Math.sin(i*.4)*.1;}
-  fairy=new T.Group();world.add(fairy);fairy.position.set(2,4.2,1.3);
-  mesh(new T.SphereGeometry(.15,12,8),mint,fairy);const body=mesh(new T.ConeGeometry(.13,.42,10),mint,fairy);body.position.y=-.25;
-  for(const side of [-1,1]){const wing=mesh(new T.SphereGeometry(.25,12,8),mint,fairy);wing.position.set(side*.3,-.07,0);wing.scale.set(1,.5,.12);wing.rotation.z=side*.5;}
+  fairy=root.CDFFloweeFairy?.sprite(T,{registerTexture:t=>textures.add(t),registerMaterial:m=>materials.add(m)})||new T.Group();world.add(fairy);fairy.position.set(2,4.2,1.3);
   const positions=new Float32Array(72*3);for(let i=0;i<72;i++){positions[i*3]=Math.sin(i*12.98)*13;positions[i*3+1]=(i%19)*.58;positions[i*3+2]=Math.cos(i*7.23)*10-4;}
   const dust=new T.BufferGeometry();dust.setAttribute('position',new T.BufferAttribute(positions,3));geometries.add(dust);const dustMat=new T.PointsMaterial({color:0xe9d298,size:.045,transparent:true,opacity:.65});materials.add(dustMat);particles=new T.Points(dust,dustMat);scene.add(particles);
   universe=root.CDFLuvoUniverse?.build({T,scene,world,mesh,mat,gold,mint,stone,dark,camera,registerGeometry:g=>geometries.add(g),registerMaterial:m=>materials.add(m),worlds:root.CDFWorlds?.worlds||[]});stage();
@@ -64,8 +63,8 @@
  toggle.addEventListener('click',()=>{paused=!paused;host.dataset.quiet=String(paused);if(paused){epoch++;loading=false;root.clearTimeout(timer);script?.remove();release();}else start();copy();});
  media.addEventListener?.('change',()=>{epoch++;loading=false;root.clearTimeout(timer);if(media.matches){script?.remove();release();}else if(!paused)start();copy();});
  doc.addEventListener('visibilitychange',resume);
- root.addEventListener('resize',size);root.addEventListener('pagehide',()=>{stopped=true;epoch++;loading=false;script?.remove();release();root.clearTimeout(timer);root.clearTimeout(pulseTimer);});root.addEventListener('pageshow',()=>{if(stopped){stopped=false;start();}});
- const observer=new root.MutationObserver(records=>{if(disposed)return;copy();if(records.some(r=>r.attributeName==='data-journey-scene'))pulse();});observer.observe(doc.body,{attributes:true,attributeFilter:['data-journey-scene','data-account-connecting','data-intro-scene']});
+ root.addEventListener('resize',size);root.addEventListener('cdf:scene-frame',size);root.addEventListener('pagehide',()=>{stopped=true;epoch++;loading=false;script?.remove();release();root.clearTimeout(timer);root.clearTimeout(pulseTimer);});root.addEventListener('pageshow',()=>{if(stopped){stopped=false;start();}});
+ const observer=new root.MutationObserver(records=>{if(disposed)return;copy();if(records.some(r=>['data-journey-scene','data-intro-scene','data-intro-environment'].includes(r.attributeName)))pulse();});observer.observe(doc.body,{attributes:true,attributeFilter:['data-journey-scene','data-account-connecting','data-intro-scene','data-intro-environment']});
  const langObserver=new root.MutationObserver(copy);langObserver.observe(doc.documentElement,{attributes:true,attributeFilter:['lang']});
  root.CDFLuvoScene={dispose(){disposed=true;epoch++;root.clearTimeout(timer);root.clearTimeout(pulseTimer);observer.disconnect();langObserver.disconnect();release();},pulse};
  copy();start();

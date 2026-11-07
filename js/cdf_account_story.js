@@ -9,19 +9,19 @@
  const arrival=doc.createElement('a');arrival.className='primary story-arrival';arrival.href=target;arrival.hidden=true;primary.parentNode.append(arrival);
  const guestEntry=doc.createElement('button');guestEntry.type='button';guestEntry.className='text-button story-guest-entry';doc.querySelector('.account-panel footer').prepend(guestEntry);
  function remember(){try{if(selected>=0)root.sessionStorage.setItem('cdf_story_intent',['explore','create','learn','community'][selected]);else root.sessionStorage.removeItem('cdf_story_intent');}catch{}}
- function hide(){host.hidden=true;delete doc.body.dataset.introScene;$('flowee-help').hidden=false;$('flowee-help-copy').hidden=true;}
+ function hide(){host.hidden=true;delete doc.body.dataset.introScene;delete doc.body.dataset.introEnvironment;$('flowee-help').hidden=false;$('flowee-help-copy').hidden=true;}
  function exit(action){remember();hide();action();}
  function toRegister(){exit(originalStart);}
  function toLogin(){exit(originalLogin);}
  function present(next,push=true){
   if(push&&next!==index)history.push(index);index=next;$('welcome-section').hidden=true;$('login-section').hidden=true;$('register-section').hidden=true;
   const alternative=doc.querySelector('.alternative-entry');if(alternative)alternative.hidden=true;
-  root.CDFAccountJourney?.reset();host.hidden=false;render();$('story-title').focus();root.CDFAccountMotion?.enter(host,'story');
+  root.CDFAccountJourney?.reset();host.hidden=false;render();$('story-title').focus({preventScroll:true});root.CDFAccountMotion?.enter(host,'story');
  }
  function button(label,fn,pressed){const el=doc.createElement('button');el.type='button';el.textContent=label;if(pressed!==undefined)el.setAttribute('aria-pressed',String(pressed));el.addEventListener('click',fn);choices.append(el);return el;}
  function render(){
   const text=t();guestEntry.textContent=text.explore;if(host.hidden)return;
-  const s=data.scene(data.ids[index],language());doc.body.dataset.introScene=s.id;
+  const s=data.scene(data.ids[index],language());doc.body.dataset.introScene=s.id;doc.body.dataset.introEnvironment=index===2&&selected>=0?['horizon','shelter','roots','tides'][selected]:s.environment;
   $('story-count').textContent=text.chapter+' · '+(index+1)+' / '+data.ids.length;
   $('story-title').textContent=s.title;$('story-body').textContent=s.body;$('flowee-dialogue').textContent=s.guide;
   $('story-note').textContent=index===2&&selected>=0?text.picked:s.note;back.textContent=text.back;skip.textContent=text.skip;skip.hidden=index>=4;

@@ -17,17 +17,7 @@
   // A small CDF soul spark makes the hooded traveller readable from above.
  const soulSpark=mesh(new T.SphereGeometry(.075,8,6),new T.MeshBasicMaterial({color:'#a4ead6',toneMapped:false}),0,1.25,-.37);soulSpark.name='navigator-soul-spark';
  navigator.scale.setScalar(.86);
-  const flowee=new T.Group();flowee.name='flowee-reference';
-  const leafMat=new T.MeshBasicMaterial({color:'#00cfad',toneMapped:false}),coreMat=new T.MeshBasicMaterial({color:'#00ffe0',toneMapped:false});leafMat.color.convertSRGBToLinear();coreMat.color.convertSRGBToLinear();
-  const leafShape=new T.Shape();leafShape.moveTo(0,.24);leafShape.bezierCurveTo(-.35,.3,-.33,-.12,0,-.34);leafShape.bezierCurveTo(.33,-.12,.3,.25,0,.24);
-  const leafGeo=new T.ExtrudeGeometry(leafShape,{depth:.1,bevelEnabled:true,bevelThickness:.035,bevelSize:.025,bevelSegments:2,steps:1});
-  for(const side of [-1,1]){const leaf=mesh(leafGeo,leafMat,side*.3,-.02,-.04,flowee);leaf.rotation.z=side*.35;leaf.name=side<0?'flowee-left':'flowee-right';}
-  const core=mesh(new T.SphereGeometry(.245,20,14),coreMat,0,.19,.09,flowee);core.name='flowee-core';core.scale.z=.62;
-  // A generated radial texture gives a soft mint glow without a downloaded bitmap.
-  const pixels=new Uint8Array(32*32*4);for(let y=0;y<32;y++)for(let x=0;x<32;x++){const i=(y*32+x)*4,r=Math.hypot((x-15.5)/15.5,(y-15.5)/15.5);pixels.set([0,255,217,Math.round(Math.max(0,1-r)**3*150)],i);}
-  const texture=new T.DataTexture(pixels,32,32,T.RGBAFormat);texture.needsUpdate=true;
-  const glow=new T.Sprite(new T.SpriteMaterial({map:texture,transparent:true,depthWrite:false,blending:T.AdditiveBlending}));glow.scale.set(2.15,2.15,1);flowee.add(glow);
-  const light=new T.PointLight('#00ebc7',.3,3.5);flowee.add(light);
+  const flowee=root.CDFFloweeFairy?.sprite(T)||new T.Group();flowee.name='flowee-reference';
   function update(time,moving){if(!Number.isFinite(time))return;tails.forEach((tail,i)=>{tail.rotation.x=Math.sin(time*1.7+i)*.045+(moving?.18:0);});}
   return{navigator,flowee,update};
  }
