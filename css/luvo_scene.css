@@ -20,3 +20,21 @@ header{z-index:3;max-width:1440px}.journey-shell{z-index:2;max-width:1440px;widt
 @media(max-height:500px) and (min-width:701px){.world-window{min-height:340px}.journey-shell{margin:14px auto}.world-trail{padding-top:70px}.world-window h1{font-size:36px}}
 @media(prefers-reduced-motion:reduce){#luvo-anime-transition{display:none!important}#luvo-scene canvas{transition:none}#luvo-scene{background:radial-gradient(ellipse at 20% 30%,#204947,#07151c 70%)}}
 
+
+/* Universe33: environmental chapters, cinematic framing, readable native controls. */
+#luvo-scene{background:radial-gradient(ellipse at 35% 0%,#49345f77,transparent 65%),linear-gradient(#070e20,#18323d 68%,#355968)}
+#luvo-scene:before{inset:0;z-index:1;border-radius:0;filter:none;background:linear-gradient(90deg,#06121c66,transparent 46%,#06121c22),linear-gradient(#02091577,transparent 22%,transparent 75%,#041119aa)}
+#luvo-scene:after{content:"";position:absolute;inset:0;z-index:1;box-shadow:inset 0 0 120px #0006;pointer-events:none}
+.world-window{justify-content:flex-end;min-height:560px;gap:10px;padding:32px 0 10px}
+.world-window .eyebrow{margin-bottom:auto;font-size:10px;letter-spacing:.25em}
+.world-window h1{max-width:15ch;font-size:clamp(32px,3.2vw,46px);line-height:1.15;letter-spacing:-.02em;margin:0;max-width:16ch}
+.world-window>p:not(.eyebrow){font-size:.84rem;max-width:37ch;margin:0;background:#06121caa}
+.world-trail{padding-top:0;margin-top:4px;font-size:9px}
+.account-panel{background:linear-gradient(160deg,#102532ef,#07131de8);border-radius:8px 26px 8px 26px;border-color:#d6c99870;box-shadow:0 24px 90px #0009}
+.luvo-world-label{display:block;color:#efd59b;font-size:10px;letter-spacing:.13em;min-height:16px}
+[data-luvo-stage=roots] #luvo-scene{background:radial-gradient(ellipse at 20% 20%,#28615977,transparent 65%),#071c24}
+[data-luvo-stage=tides] #luvo-scene,[data-luvo-stage=login] #luvo-scene{background:radial-gradient(ellipse at 30% 10%,#3b5a7b88,transparent 65%),#0a1d32}
+[data-luvo-stage=horizon] #luvo-scene,[data-luvo-stage=ready] #luvo-scene{background:radial-gradient(ellipse at 28% 18%,#bc855955,transparent 65%),#102532}
+@media(max-width:700px){.world-window{min-height:270px;gap:6px;padding:12px 6px 14px}.world-window .eyebrow{font-size:8px;margin:0 0 auto}.world-window h1{font-size:26px;max-width:20ch;background:linear-gradient(90deg,#081a24e0,#081a2440);padding:8px 10px;border-left:1px solid #dac29066}.account-panel{padding:18px}.luvo-scene-tools{align-items:center}.luvo-world-label{font-size:9px;width:100%;order:3;letter-spacing:.1em}.journey-shell{margin-top:0}}
+@media(max-height:500px) and (min-width:701px){.world-window{min-height:360px}.world-window h1{font-size:30px}}
+.luvo-cultural-note{position:relative;z-index:2;max-width:1000px;margin:16px auto 28px;padding:12px 20px;color:var(--muted);font:12px/1.7 system-ui;background:#07151ee8;border-top:1px solid #d9c89a33}.luvo-cultural-note summary{color:var(--gold);font-size:11px}.luvo-cultural-note a{display:inline-block;margin-right:18px;min-height:36px}.luvo-cultural-note [data-culture-lang]{display:none}html[lang=en] .luvo-cultural-note [data-culture-lang=en],html[lang=de] .luvo-cultural-note [data-culture-lang=de],html[lang=pt] .luvo-cultural-note [data-culture-lang=pt]{display:revert}
