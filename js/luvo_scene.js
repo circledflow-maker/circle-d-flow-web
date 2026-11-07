@@ -10,7 +10,8 @@
  const story=doc.getElementById('story-section'),login=doc.getElementById('login-section');
  const chapter=Number((doc.getElementById('story-count')?.textContent||'').match(/\d+/)?.[0]||1)-1;
  const mode=['ready','pending'].includes(phase)?phase:story&&!story.hidden?'story':login&&!login.hidden?'login':phase;
- const id=root.CDFLuvoUniverse?.resolveStage({mode,step:Math.max(0,sections.findIndex(n=>!n.hidden)),chapter})||'welcome';
+ const narrative=story&&!story.hidden?root.CDFIntroStory?.scene(doc.body.dataset.introScene):null;
+ const id=narrative?.environment||root.CDFLuvoUniverse?.resolveStage({mode,step:Math.max(0,sections.findIndex(n=>!n.hidden)),chapter})||'welcome';
  doc.body.dataset.luvoStage=id;universe?.setStage(id);
  const label=doc.getElementById('luvo-world-label');
  if(label){const names={welcome:'ORBIT · KINGDOM OF HEARTS',story:'ARCHIVE · CIRCLE D FLOW',roots:'SANCTUARY · ROOTS',tides:'CONNECTION · TIDES',shelter:'ARCHIVE · SHELTER',horizon:'HEART · HORIZON',login:'ATLAS · RETURN',pending:'CONNECTION · CROSSING',ready:'SANCTUARY · ARRIVAL'};label.textContent=names[id]||names.welcome;}
@@ -64,7 +65,7 @@
  media.addEventListener?.('change',()=>{epoch++;loading=false;root.clearTimeout(timer);if(media.matches){script?.remove();release();}else if(!paused)start();copy();});
  doc.addEventListener('visibilitychange',resume);
  root.addEventListener('resize',size);root.addEventListener('pagehide',()=>{stopped=true;epoch++;loading=false;script?.remove();release();root.clearTimeout(timer);root.clearTimeout(pulseTimer);});root.addEventListener('pageshow',()=>{if(stopped){stopped=false;start();}});
- const observer=new root.MutationObserver(records=>{if(disposed)return;copy();if(records.some(r=>r.attributeName==='data-journey-scene'))pulse();});observer.observe(doc.body,{attributes:true,attributeFilter:['data-journey-scene','data-account-connecting']});
+ const observer=new root.MutationObserver(records=>{if(disposed)return;copy();if(records.some(r=>r.attributeName==='data-journey-scene'))pulse();});observer.observe(doc.body,{attributes:true,attributeFilter:['data-journey-scene','data-account-connecting','data-intro-scene']});
  const langObserver=new root.MutationObserver(copy);langObserver.observe(doc.documentElement,{attributes:true,attributeFilter:['lang']});
  root.CDFLuvoScene={dispose(){disposed=true;epoch++;root.clearTimeout(timer);root.clearTimeout(pulseTimer);observer.disconnect();langObserver.disconnect();release();},pulse};
  copy();start();
