@@ -3,11 +3,11 @@
   "date": "2026-11-07",
   "project": "CDF / Flowee / Sanctuary",
   "title": "Der verhüllte Funke — Erwachen im Sanctuary",
-  "status": "draft_not_integrated",
+  "status": "intro35_local_integration_physical_auth_acceptance_open",
   "creative_decision_owner": "Hope",
   "author": "Codex",
   "language": "de",
-  "en_pt_new_story": "noch nicht erstellt",
+  "en_pt_new_story": "Intro35 Laufzeittexte erstellt; menschliche Sprachabnahme offen",
   "default_existing_destination": "/sanctuary",
   "preserve_explicit_destination": true,
   "existing_lore_reference": "data/creator_story.json",
@@ -157,5 +157,6 @@
   "publication": false,
   "auth_backend_changed": false,
   "awards_progress": false,
-  "skip_intro_target": "return_path"
+  "skip_intro_target": "return_path",
+  "implementation_report": "intro35-20261107.md"
 }

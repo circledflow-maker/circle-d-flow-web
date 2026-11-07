@@ -167,3 +167,14 @@ Originales deutsches Drehbuch „Der verhüllte Funke — Erwachen im Sanctuary�
 Dateien: Docs/community-pilot/intro-story34-20261107.md und .json. Strukturell geprüft:8 eindeutige Szenen, gültige Übergänge/Endzustände, expliziter Skip-/Gast-/Zielwahlstatus. Neue Story ist ein Entwurf und noch nicht in den bestehenden3-Kapitel-Controller integriert; keine neuen Produkttests oder spielbare Szenen daraus behauptet. Übergabe: handoffs/2026-11-07_intro-story_codex-an-gameplay.md.
 
 Nächster Schritt: Story-Daten/Zustände im bestehenden Controller und die tatsächliche Sanctuary-Ankunft verbinden; EN/PT-Erzählfassung und Abnahme ergänzen. Kein Produktcode, Konto-/RLS-/XP/FLOW-/Zahlungseingriff, Merge, Deployment oder Slack-Dienst durch diesen Storyauftrag.
+
+
+## 2026-11-07 — Codex · Intro35: optionaler Prolog bis ins Sanctuary umgesetzt
+
+Hopes Umsetzungsauftrag lokal auf E: ausgeführt: sechs optionale DE/EN/PT-Storyansichten, bestehende Kontobucht und tatsächliche Sanctuary-Ankunft bilden den achtteiligen Entwurf ab. Freiwillige sitzungsbezogene Richtungswahl, Laternenreaktion, Zurück/Skip, Gastweg und direktes Login. Verifizierter Pass-Weiterlink erhält ausschließlich einen Sanctuary-Erzählparameter; Bestätigungs-/UUID-/Kartenregeln unverändert. Ankunft wartet auf Szene-ready und fällt bei Fehler/Timeout auf einfache Ansicht zurück. Spätes Laden überschreibt die bewusste einfache Ansicht nicht.
+
+32 relevante Tests bestanden, 0 Fehler. Browser: vollständiger deutscher Gastweg bis tatsächlich geladener 3D-Hof, Ankunftsabschluss, Wiederholung per Tastatur, Einstieg ins vorhandene Formular und direktes Login; PT/EN-Sprachwechsel. 390×844,360×640 und1280×800 ohne horizontales Überlaufen; ausgelesene Error-Logs leer. Physisches Telefon, Leistungs-/Touchabnahme und bestätigte Auth-/E-Mail-/Member-Card-Journey offen. Neue Cutscene-Animationen, Musik oder Sprecher nicht produziert; noch nicht zugeordnet.
+
+Bericht: Docs/community-pilot/intro35-20261107.md. Quellen ausgewählt in Draft-PR18; direkte Abhängigkeiten in intro35-dependencies.json, keine vollständige Releasebasis. Alte Buildhilfe weiterhin ungeeignet. Story-Übergabe wegen verbleibender Abnahme offen. Temporäre geschützte Handy-Designvorschau aktualisiert; Adresse nur privat. Kein Merge, Deployment, Slack-Dienst, Rollen-/RLS-/Zahlungs-/XP/FLOW-Eingriff. Nächster Schritt: Handy-/Gestaltungsfeedback und vollständiger Kandidat mit Auth-Abnahme.
+
+Quellbeleg Intro35: [Commit 264a7c7](https://github.com/circledflow-maker/circle-d-flow-web/commit/264a7c725fd4acca69e58ffdfa36601e9d3c29c8) in Draft-PR18; elf Dateien exakt zurückgelesen. Direkte37 JS/CSS-Abhängigkeiten lokal vorhanden und mit Hashwerten inventarisiert; dynamische/transitive Assets und vollständige Produktionsbasis separat offen.

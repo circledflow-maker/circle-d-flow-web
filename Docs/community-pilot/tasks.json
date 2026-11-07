@@ -166,16 +166,16 @@
       "project": "CDF / Flowee / Sanctuary",
       "goal": "Eigene Introgeschichte bis zum Sanctuary-Erwachen aus nachvollziehbarer Spielstart-Analyse",
       "owner": "Codex",
-      "tool": "Quellenrecherche, bestehende Lore, Drehbuch und strukturierte Szenendaten",
-      "baseline": "Universe33; bestehender3-Kapitel-Storycontroller; Creator-Story",
+      "tool": "Vanilla JS/Three.js, Node-Tests und verbundener Browser",
+      "baseline": "Universe33 und Intro34-Drehbuch; Intro35-Quellsnapshot 264a7c725fd4acca69e58ffdfa36601e9d3c29c8",
       "dependencies": [
         "CDF-LUVO32"
       ],
-      "timebox": "dieser begrenzte Storyauftrag",
+      "timebox": "diese begrenzte lokale UI-Implementierungsphase",
       "acceptance": "vollständiger Originalprolog mit Dialog, Wahl/Interaktion, Gast-/Konto-/Pending-Grenzen und Ankunft; Quellen klar",
-      "state": "deutscher Entwurf erstellt und strukturell geprüft; nicht integriert",
-      "evidence": "Docs/community-pilot/intro-story34-20261107.md",
-      "next": "optionale UI-Integration und neueEN/PT-Fassung; bestehende Auth-/Zielregeln beibehalten"
+      "state": "Intro35 lokal integriert;32 relevante Tests bestanden; Gastweg bis echter 3D-Ankunft im Browser geprüft; nicht deployed",
+      "evidence": "Docs/community-pilot/intro35-20261107.md",
+      "next": "Hopes physisches Handy-/Gestaltungsfeedback, authentifizierte Kernweg-Abnahme und vollständigen Releasekandidaten vorbereiten"
     }
   ]
 }
