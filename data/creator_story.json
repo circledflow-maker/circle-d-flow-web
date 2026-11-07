@@ -1,0 +1,285 @@
+{
+  "version": 1,
+  "checked": "2026-10-27",
+  "kind": "original_cdf_fiction",
+  "title": {
+    "de": "Geschichte der Siegelwächter",
+    "en": "Chronicle of the Sealkeepers",
+    "pt": "História dos Guardiões dos Selos"
+  },
+  "premise": {
+    "de": "Unter den Wurzeln des Weltenbaums wartet kein Gold. Verstreute Funken ergeben eine Frage: Was möchtest du aus eigener Freude erschaffen? Flowee begleitet deinen Weg vom Secret Garden LX, deinem ersten Community-Sanctuary, zu echten Menschen und Orten. Die Omen hüten das Herz der Welten und bewahren Hinweise auf den Schatz des intrinsischen Creators. Als Initiate suchst du deinen eigenen Ausdruck. „Flow Creator“ ist deine erzählerische Perspektive, kein hier vergebener Kontorang.",
+    "en": "No gold waits beneath the world tree. Scattered sparks form a question: what would you love to create? Flowee follows your journey from Secret Garden LX, your first community Sanctuary, to real people and places. The Omen guard the heart of the worlds and clues to the intrinsic creator’s treasure. As an Initiate, you seek your own expression. “Flow Creator” is a narrative aspiration, not an account rank granted here.",
+    "pt": "Não há ouro sob as raízes da árvore dos mundos. Faíscas dispersas formam uma pergunta: o que gostarias de criar por gosto próprio? A Flowee acompanha-te do Secret Garden LX, o teu primeiro Sanctuary comunitário, até pessoas e lugares reais. Os Omen guardam o coração dos mundos e pistas do tesouro do criador intrínseco. Como Initiate, procuras a tua expressão. “Flow Creator” é uma aspiração narrativa, não um nível de conta concedido aqui."
+  },
+  "roles": [
+    [
+      "navigator",
+      "Entdecker",
+      "Explorer",
+      "Explorador",
+      "atlas"
+    ],
+    [
+      "artist",
+      "Bildgestalter",
+      "Visual creator",
+      "Criador visual",
+      "vision"
+    ],
+    [
+      "performer",
+      "Klangweber",
+      "Sound weaver",
+      "Criador de som",
+      "sound"
+    ],
+    [
+      "maker",
+      "Aufbauer",
+      "Maker",
+      "Artesão",
+      "taste"
+    ],
+    [
+      "learner",
+      "Wissenssucher",
+      "Learner",
+      "Aprendiz",
+      "academy"
+    ],
+    [
+      "connector",
+      "Brückenbauer",
+      "Connector",
+      "Conector",
+      "connection"
+    ]
+  ],
+  "chapters": [
+    {
+      "id": "harbour",
+      "x": 12,
+      "y": 75,
+      "world": "sanctuary",
+      "symbol": "gomekadi",
+      "source": "ewe",
+      "title": [
+        "Der verhüllte Funke",
+        "The cloaked spark",
+        "A faísca encoberta"
+      ],
+      "body": [
+        "Dein Weg beginnt im Secret Garden LX, dem ersten Community-Sanctuary. Du erwachst als schwebende Seele im dunklen Reisemantel mit einer mintfarbenen Naht. Flowee bringt eine kleine Laterne: Du musst deine Bestimmung noch nicht kennen. Wähle einen Weg, keine feste Identität.",
+        "Your journey begins at Secret Garden LX, the first community Sanctuary. You arrive as a floating soul in a dark travelling cloak with a mint seam. Flowee carries a small lantern: you do not need to know your purpose yet. Choose a direction, not a fixed identity.",
+        "O teu caminho começa no Secret Garden LX, o primeiro Sanctuary comunitário. Chegas como alma flutuante num manto escuro com uma costura verde-menta. A Flowee traz uma pequena lanterna: ainda não precisas de conhecer o teu propósito. Escolhe uma direção, não uma identidade fixa."
+      ],
+      "invitation": [
+        "Erkunde den Hof oder nutze die einfache Ansicht.",
+        "Explore the courtyard or use simple view.",
+        "Explora o pátio ou usa a vista simples."
+      ]
+    },
+    {
+      "id": "crossroads",
+      "x": 29,
+      "y": 54,
+      "world": "atlas",
+      "source": "legba",
+      "secondSource": "eshu",
+      "title": [
+        "Die Kreuzung der Möglichkeiten",
+        "The crossroads of possibility",
+        "O cruzamento das possibilidades"
+      ],
+      "body": [
+        "An einer Weggabelung findest du zwei getrennte Archivkarten: Legba im Ewe-Kontext und Èṣù im Yoruba-Kontext. Flowee fragt, welchen realen Ort du zuerst verstehen möchtest. Die Gottheiten sprechen hier nicht für eine ganze Kultur; die Quellen erzählen von ihren jeweiligen Kontexten.",
+        "At a fork you find two separate archive cards: Legba in an Ewe context and Èṣù in a Yoruba context. Flowee asks which real place you want to understand first. These cards introduce their distinct traditions rather than merging their deities.",
+        "Numa bifurcação encontras dois cartões distintos: Legba num contexto Ewe e Èṣù num contexto Yoruba. A Flowee pergunta que lugar real queres conhecer primeiro. Os cartões apresentam tradições distintas, sem fundir as divindades."
+      ],
+      "invitation": [
+        "Öffne den echten Atlas manuell; GPS bleibt freiwillig.",
+        "Open the real Atlas manually; GPS remains optional.",
+        "Abre o Atlas real manualmente; o GPS continua opcional."
+      ]
+    },
+    {
+      "id": "workshop",
+      "x": 45,
+      "y": 67,
+      "world": "vision",
+      "symbol": "zegbagba",
+      "source": "ewe",
+      "title": [
+        "Der Hof der ersten Versuche",
+        "The courtyard of first attempts",
+        "O pátio das primeiras tentativas"
+      ],
+      "body": [
+        "Ein zerbrochener Krug wartet neben unbenutzten Werkzeugen. Die Crew baut keinen Palast an einem Tag: ein Entwurf, ein gemeinsamer Lernschritt, ein brauchbarer Beitrag. Fehler gehören zum Versuch. Reale Räume entstehen erst mit Zustimmung der Community.",
+        "A broken pot lies beside unused tools. The crew does not build a palace in a day: one draft, one shared learning step, one useful contribution. Mistakes belong to trying. Real places require community consent.",
+        "Um pote partido está junto de ferramentas por usar. A equipa não constrói um palácio num dia: um rascunho, uma aprendizagem partilhada, um contributo útil. Os erros fazem parte de tentar. Lugares reais exigem consentimento da comunidade."
+      ],
+      "invitation": [
+        "Beginne eine kleine Idee als privaten Vision-Entwurf.",
+        "Start a small idea as a private Vision draft.",
+        "Começa uma pequena ideia num rascunho privado no Vision."
+      ]
+    },
+    {
+      "id": "memory",
+      "x": 64,
+      "y": 51,
+      "world": "archive",
+      "symbol": "sankofa",
+      "source": "sankofa",
+      "title": [
+        "Das rückwärts blickende Segel",
+        "The sail that looks back",
+        "A vela que olha para trás"
+      ],
+      "body": [
+        "Die Suche führt nicht über das Vergessen deiner Herkunft. Ein zurückblickender Vogel erinnert die Crew daran, hinzusehen, zuzuhören und Erfahrungen mitzunehmen. Dein nächstes Werk braucht keine fremde Geschichte zu besitzen.",
+        "The search does not ask you to forget where you come from. A backward-looking bird reminds the crew to notice, listen and learn from experience. Your next work need not possess someone else’s story.",
+        "A procura não te pede para esquecer de onde vens. Uma ave que olha para trás lembra a equipa de observar, escutar e aprender com a experiência. A tua próxima criação não precisa de possuir a história de outra pessoa."
+      ],
+      "invitation": [
+        "Lies eine Geschichte mit Quelle; Reflexion bleibt bei dir.",
+        "Read a sourced story; keep your reflection to yourself.",
+        "Lê uma história com fonte; a reflexão fica contigo."
+      ]
+    },
+    {
+      "id": "roots",
+      "x": 52,
+      "y": 25,
+      "world": "knowledge",
+      "symbol": "kavuvu",
+      "source": "ewe",
+      "secondSource": "yggdrasil",
+      "title": [
+        "Wurzeln, die einander tragen",
+        "Roots that hold each other",
+        "Raízes que se apoiam"
+      ],
+      "body": [
+        "Kavuvu regt eine Frage nach gegenseitiger Unterstützung an. Daneben öffnet sich ein eigenes Fenster zur nordischen Erzählung von Yggdrasil. Nur in unserer CDF-Fiktion verbinden goldene Fäden diese getrennten Archive mit dem Weltenbaum.",
+        "Kavuvu invites a question about mutual support. A separate window opens onto the Norse account of Yggdrasil. Only in our CDF fiction do golden threads connect these distinct archives to the world tree.",
+        "Kavuvu convida a pensar no apoio mútuo. Uma janela separada apresenta a narrativa nórdica de Yggdrasil. Só na ficção CDF os fios dourados ligam estes arquivos distintos à árvore dos mundos."
+      ],
+      "invitation": [
+        "Vergleiche die Quellen, statt Traditionen gleichzusetzen.",
+        "Compare sources rather than treating traditions as equivalent.",
+        "Compara as fontes sem tratar as tradições como equivalentes."
+      ]
+    },
+    {
+      "id": "mirrors",
+      "x": 75,
+      "y": 24,
+      "world": "academy",
+      "source": "kelippot",
+      "title": [
+        "Der Garten der Spiegelschalen",
+        "The garden of mirrored shells",
+        "O jardim das cascas espelhadas"
+      ],
+      "body": [
+        "Eine Schale zeigt nur Applaus, eine andere nur Vergleiche. Flowee fragt: Würdest du es auch ohne Publikum versuchen? Die Spiegelschalen sind eine freie CDF-Metapher. Kelippot gehört zu jüdischen mystischen Texttraditionen; es ist weder ein afrikanischer Stamm noch eine gemeinsame Lehre dieser Welten.",
+        "One shell shows applause, another comparison. Flowee asks: would you try it without an audience? These mirrored shells are a CDF metaphor. Kelippot belongs to Jewish mystical textual traditions, not an African people or a doctrine shared by these worlds.",
+        "Uma casca mostra aplausos, outra comparação. A Flowee pergunta: tentarias sem público? As cascas espelhadas são uma metáfora CDF. Kelippot pertence a tradições textuais místicas judaicas, não a um povo africano ou a uma doutrina comum destes mundos."
+      ],
+      "invitation": [
+        "Wähle eine kleine Lernhandlung aus Interesse. Pausieren ist erlaubt.",
+        "Choose a small learning action out of curiosity. Pausing is welcome.",
+        "Escolhe uma pequena aprendizagem por curiosidade. Podes fazer uma pausa."
+      ]
+    },
+    {
+      "id": "circle",
+      "x": 87,
+      "y": 63,
+      "world": "connection",
+      "symbol": "nu-kple-ge",
+      "source": "ewe",
+      "title": [
+        "Der Schatz, der geteilt wächst",
+        "The treasure that grows through sharing",
+        "O tesouro que cresce ao partilhar"
+      ],
+      "body": [
+        "Der Schatz ist kein Rang und kein gekaufter Titel: ein eigener Ausdruck, etwas Gelerntes und eine freiwillige Verbindung. Deine Crew kann ein Stück Musik, ein Essen, ein Bild oder einen offenen Lernkreis beginnen. Ob daraus echte Wirkung entsteht, zeigt erst die gemeinsame Praxis.",
+        "The treasure is neither a rank nor a purchased title: your own expression, something learned and a freely chosen connection. Your crew might begin music, a meal, a picture or an open learning circle. Real impact still has to be shown through shared practice.",
+        "O tesouro não é uma posição nem um título comprado: expressão própria, aprendizagem e uma ligação livremente escolhida. A equipa pode começar música, uma refeição, uma imagem ou um círculo de aprendizagem. O impacto real ainda terá de ser demonstrado na prática."
+      ],
+      "invitation": [
+        "Plane eine Session mit Einwilligung oder erkunde öffentliche Treffen.",
+        "Plan a consented session or explore public gatherings.",
+        "Planeia uma sessão com consentimento ou explora encontros públicos."
+      ]
+    }
+  ],
+  "sources": {
+    "ewe": {
+      "title": "EƲE DZESIWO · NCC Ghana",
+      "url": "https://ghanaculture.gov.gh/indigenous-ewe-symbols-and-their-meaning/",
+      "context": "Ewe",
+      "note": "Brief meanings and existing CDF schematic sketches; source photographs are not copied."
+    },
+    "legba": {
+      "title": "Legba Dzoka · Übersee-Museum Bremen",
+      "url": "https://www.uebersee-museum.de/ueber-das-museum/sammlung/provenienzforschung/",
+      "context": "Ewe",
+      "note": "The museum describes legba at entrances, protective and messenger functions, alongside colonial provenance research."
+    },
+    "eshu": {
+      "title": "Èṣù · Cleveland Museum of Art",
+      "url": "https://www.clevelandart.org/art/2018.34",
+      "context": "Yoruba",
+      "note": "The museum places Èṣù in relation to messages, crossroads, markets and entrances. Not identified as Satan or a game villain."
+    },
+    "sankofa": {
+      "title": "Sankofa · The Metropolitan Museum of Art",
+      "url": "https://www.metmuseum.org/art/collection/search/317688",
+      "context": "Akan / Adinkra context",
+      "note": "The museum explains the backward-looking bird through learning from hindsight. CDF drawing is an original schematic, not a traced museum image."
+    },
+    "yggdrasil": {
+      "title": "Yggdrasil · Historiska museet",
+      "url": "https://historiska.se/utforska-historien/kunskapsbank/vikingarnas-mytologiska-varld/",
+      "context": "Norse mythology",
+      "note": "The museum describes the tree connecting mythological worlds. The CDF cross-cultural network is fiction."
+    },
+    "kelippot": {
+      "title": "Kelippot · Sefaria",
+      "url": "https://www.sefaria.org/topics/kelippot?tab=sources",
+      "context": "Jewish mystical textual traditions",
+      "note": "Texts discuss shells/husks in their own theological context. CDF mirrored shells are an original reflection device, not a religious practice or diagnosis."
+    }
+  },
+  "origin": {
+    "id": "secret-garden-lx",
+    "name": "Secret Garden LX",
+    "kind": "first_community_sanctuary",
+    "route": "/pages/artist_sanctuary.html?place=secret-garden-lx",
+    "coordinates": null,
+    "locationStatus": "awaiting_verified_position",
+    "authority": "CEO direction, 2026-10-27"
+  },
+  "lore": {
+    "kind": "original_cdf_fiction",
+    "startingRank": "Initiate",
+    "aspiration": "Flow Creator",
+    "guardians": "Omen",
+    "adminPresentation": "Existing server-verified admins may be represented as Omen/Game Masters; narrative selection never grants privileges.",
+    "treasure": "Intrinsic creation, learning and freely chosen community connection.",
+    "skills": [
+      "voice",
+      "rhythm",
+      "movement",
+      "image",
+      "knowledge"
+    ],
+    "healthBoundary": "Fictional creative abilities, not promises of chakra activation, kundalini awakening or health outcomes."
+  }
+}

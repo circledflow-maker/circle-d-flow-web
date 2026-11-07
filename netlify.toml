@@ -1,0 +1,75 @@
+# Preserve existing dashboard build/publish settings. Only preview ignore and
+# internal-source URL exclusions are defined here.
+[context.deploy-preview]
+  ignore = "node scripts/skip-coordination-preview.cjs"
+
+[context.branch-deploy]
+  ignore = "node scripts/skip-coordination-preview.cjs"
+
+# Missing /404.html intentionally falls back to Netlify's standard 404 page.
+
+[[redirects]]
+  from = "/Team/*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/Docs/*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/handoffs/*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/.cursor/*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/.codex/*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/.agents/*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/AGENTS.md"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/STATUS.md"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/credentials.json"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/adobe_token.json"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/token.json"
+  to = "/404.html"
+  status = 404
+  force = true

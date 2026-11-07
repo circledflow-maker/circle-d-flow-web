@@ -1,0 +1,18 @@
+
+/* Optional story beats; no control is hidden behind decoration. */
+.story-arrival{display:flex;align-items:center;justify-content:center;flex:1;min-height:46px;border-radius:12px;text-decoration:none;padding:12px;text-align:center}
+.story-guest-entry{background:transparent;font-size:.72rem;color:var(--mint);border:0;text-decoration:underline}
+[data-intro-beat=first_step] .story-choices button{min-height:84px;font-size:1rem;color:var(--gold);background:radial-gradient(ellipse,#9c864244,#102e30);border-color:var(--gold);box-shadow:0 0 24px #d5bf6722}
+#sanctuary-awakening{width:min(560px,calc(100% - 28px));max-height:calc(100dvh - 36px);overflow:auto;border:1px solid #d1ba79;border-radius:12px 30px 12px 30px;padding:clamp(20px,4vw,34px);background:linear-gradient(145deg,#132c35f5,#071721f5);color:#ecf6ec;box-shadow:0 30px 100px #0008;font:16px/1.65 system-ui,sans-serif}
+#sanctuary-awakening::backdrop{background:#04101970;backdrop-filter:blur(3px)}
+#sanctuary-awakening h2{color:#ead39d;font:clamp(26px,5vw,38px)/1.2 Georgia,serif;margin:16px 0}
+#sanctuary-awakening .eyebrow{font:10px monospace;letter-spacing:.18em;color:#b2e4d2}
+#sanctuary-awakening .small-note{font-size:.76rem;color:#adc6be}
+.awakening-actions{display:grid;gap:9px;margin-top:24px}
+.awakening-actions button,.awakening-actions a,.awakening-replay{font:inherit;min-height:46px;padding:10px 14px;border:1px solid #6f9d8f;border-radius:10px;background:#153b36;color:#e7f4e9;text-align:center;text-decoration:none;cursor:pointer}
+.awakening-actions button:first-child{background:#b6e8d4;color:#11332a;font-weight:700}
+.awakening-actions button:focus-visible,.awakening-actions a:focus-visible,.awakening-replay:focus-visible{outline:3px solid #efd49b;outline-offset:3px}
+.awakening-replay{font-size:.72rem;margin-top:12px;background:#10252a}
+#sanctuary-awakening[open]{animation:awakening-enter .65s ease both}
+@keyframes awakening-enter{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){#sanctuary-awakening[open]{animation:none}}
