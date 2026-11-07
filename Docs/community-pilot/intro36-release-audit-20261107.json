@@ -1,0 +1,386 @@
+{
+  "date": "2026-11-07",
+  "project": "CDF",
+  "source_commit": "264a7c725fd4acca69e58ffdfa36601e9d3c29c8",
+  "remote_tree": "1d317eec9d9f4cf619ebe4294e43b7142fc7e400",
+  "complete_remote_tree": true,
+  "scope": "37 direct local JS/CSS references only; no semantic or live auth acceptance",
+  "counts": {
+    "equal": 13,
+    "line_endings_only": 4,
+    "different": 4,
+    "missing": 16
+  },
+  "files": [
+    {
+      "path": "css/cdf_login.css",
+      "exists": true,
+      "manifest_unchanged": true,
+      "git_blob": "6b3ac586acd126c1cfd793c543fe032333b84131",
+      "remote_state": "missing",
+      "remote_blob": null,
+      "normalized_blob": "f5d28cbaf54bbfa49aeabceb89822c5a89d1ebd6",
+      "crlf_count": 8
+    },
+    {
+      "path": "js/vendor/supabase-2.108.2.js",
+      "exists": true,
+      "manifest_unchanged": true,
+      "git_blob": "76e610f35fa05ec76fbc1f9cf36b86e9f592518b",
+      "remote_state": "missing",
+      "remote_blob": null,
+      "normalized_blob": "76e610f35fa05ec76fbc1f9cf36b86e9f592518b",
+      "crlf_count": 0
+    },
+    {
+      "path": "js/cdf_runtime_config.js",
+      "exists": true,
+      "manifest_unchanged": true,
+      "git_blob": "c4452953c5ae2f8b869f6b5d8066f0bbebfe462a",
+      "remote_state": "line_endings_only",
+      "remote_blob": "6c2e62699b697e31f6f435d15727b245e5780531",
+      "normalized_blob": "6c2e62699b697e31f6f435d15727b245e5780531",
+      "crlf_count": 14
+    },
+    {
+      "path": "js/agents/supabase_client.js",
+      "exists": true,
+      "manifest_unchanged": true,
+      "git_blob": "d2e2aff4f34a5d711f1be00556286048c28e4b6f",
+      "remote_state": "different",
+      "remote_blob": "171d27a4660c9002a3e39b47914baac2cbec4807",
+      "normalized_blob": "bb117522f7cca0f4cdfeb156abbcc13a95ce14ba",
+      "crlf_count": 102
+    },
+    {
+      "path": "js/cdf_identity.js",
+      "exists": true,
+      "manifest_unchanged": true,
+      "git_blob": "18654d1a64bef437f9377fc65bfefbb172d1a373",
+      "remote_state": "missing",
+      "remote_blob": null,
+      "normalized_blob": "3b5547a7e4aa425e84812d2d41263dddea80622a",
+      "crlf_count": 16
+    },
+    {
+      "path": "js/flowee_fairy.js",
+      "exists": true,
+      "manifest_unchanged": true,
+      "git_blob": "05a0d446a68540c6ed7e68f68c9300880fe17528",
+      "remote_state": "missing",
+      "remote_blob": null,
+      "normalized_blob": "965d9bc1616b297d517c1910254ebb0298880c7c",
+      "crlf_count": 2
+    },
+    {
+      "path": "js/cdf_account_motion.js",
+      "exists": true,
+      "manifest_unchanged": true,
+      "git_blob": "5f51e4ae4beb78c24f4230d78f0c7000e82917b4",
+      "remote_state": "missing",
+      "remote_blob": null,
+      "normalized_blob": "1946738928d379b5de9783354c25fa86cb9c503e",
+      "crlf_count": 33
+    },
+    {
+      "path": "js/cdf_intro_story.js",
+      "exists": true,
+      "manifest_unchanged": true,
+      "git_blob": "7aeab54fb48c8c2e06793736c1cce2dbbc45b589",
+      "remote_state": "equal",
+      "remote_blob": "7aeab54fb48c8c2e06793736c1cce2dbbc45b589",
+      "normalized_blob": "7aeab54fb48c8c2e06793736c1cce2dbbc45b589",
+      "crlf_count": 0
+    },
+    {
+      "path": "css/cdf_intro_story.css",
+      "exists": true,
+      "manifest_unchanged": true,
+      "git_blob": "259d5a8b6cd181b05081837880a38d52d98aeb15",
+      "remote_state": "equal",
+      "remote_blob": "259d5a8b6cd181b05081837880a38d52d98aeb15",
+      "normalized_blob": "259d5a8b6cd181b05081837880a38d52d98aeb15",
+      "crlf_count": 0
+    },
+    {
+      "path": "js/cdf_account_journey.js",
+      "exists": true,
+      "manifest_unchanged": true,
+      "git_blob": "d98a6ee7d6ed1b9d22aefea6ede1a3764ded4c16",
+      "remote_state": "line_endings_only",
+      "remote_blob": "dab1b4d47ed2eda0e3a55ce6d1c594caefae2838",
+      "normalized_blob": "dab1b4d47ed2eda0e3a55ce6d1c594caefae2838",
+      "crlf_count": 83
+    },
+    {
+      "path": "js/auth-handler.js",
+      "exists": true,
+      "manifest_unchanged": true,
+      "git_blob": "35f9a13a8584c38dd135ad2504bf0324f3f9093c",
+      "remote_state": "different",
+      "remote_blob": "d9699fbe4d70bc590f9a590773ac8eec54610adb",
+      "normalized_blob": "d8a6904d72d3c7148e1872cd3ee9e7fb2885e45b",
+      "crlf_count": 349
+    },
+    {
+      "path": "js/cdf_login.js",
+      "exists": true,
+      "manifest_unchanged": true,
+      "git_blob": "3282936c722220e4de7c0f76e9660db5a4e4b96f",
+      "remote_state": "equal",
+      "remote_blob": "3282936c722220e4de7c0f76e9660db5a4e4b96f",
+      "normalized_blob": "7f8ca504f08656d9bde64bc2aa525f7ae8995ebb",
+      "crlf_count": 50
+    },
+    {
+      "path": "js/cdf_account_story.js",
+      "exists": true,
+      "manifest_unchanged": true,
+      "git_blob": "58dd55a5df513d5781dbb2ea13aab82957ea72cb",
+      "remote_state": "equal",
+      "remote_blob": "58dd55a5df513d5781dbb2ea13aab82957ea72cb",
+      "normalized_blob": "58dd55a5df513d5781dbb2ea13aab82957ea72cb",
+      "crlf_count": 0
+    },
+    {
+      "path": "js/world_registry.js",
+      "exists": true,
+      "manifest_unchanged": true,
+      "git_blob": "bfca03f26e14e429649479c1aa0b5e606e645a97",
+      "remote_state": "equal",
+      "remote_blob": "bfca03f26e14e429649479c1aa0b5e606e645a97",
+      "normalized_blob": "e7201d39a4f08b595269b3157892f5a6913212c5",
+      "crlf_count": 2
+    },
+    {
+      "path": "js/luvo_universe.js",
+      "exists": true,
+      "manifest_unchanged": true,
+      "git_blob": "1a5a569ae5bdc1af6afc4c05d9d56578518280f0",
+      "remote_state": "equal",
+      "remote_blob": "1a5a569ae5bdc1af6afc4c05d9d56578518280f0",
+      "normalized_blob": "1a5a569ae5bdc1af6afc4c05d9d56578518280f0",
+      "crlf_count": 0
+    },
+    {
+      "path": "css/luvo_scene.css",
+      "exists": true,
+      "manifest_unchanged": true,
+      "git_blob": "e552f0a7abccdb5d18f076d21155600cc017915a",
+      "remote_state": "equal",
+      "remote_blob": "e552f0a7abccdb5d18f076d21155600cc017915a",
+      "normalized_blob": "e552f0a7abccdb5d18f076d21155600cc017915a",
+      "crlf_count": 0
+    },
+    {
+      "path": "js/luvo_scene.js",
+      "exists": true,
+      "manifest_unchanged": true,
+      "git_blob": "1c233937e5b54ea5b8b474d00730cb3fa4711d29",
+      "remote_state": "line_endings_only",
+      "remote_blob": "18adfaa14c949f3616e77f8cf9485e9c4d48f6f0",
+      "normalized_blob": "18adfaa14c949f3616e77f8cf9485e9c4d48f6f0",
+      "crlf_count": 73
+    },
+    {
+      "path": "css/sanctuary_courtyard.css",
+      "exists": true,
+      "manifest_unchanged": true,
+      "git_blob": "ef489422814fc227d14ca3ca75f08d5daaabbd49",
+      "remote_state": "missing",
+      "remote_blob": null,
+      "normalized_blob": "7aa548e575b06bade87faddccad1b5fc0378b85a",
+      "crlf_count": 19
+    },
+    {
+      "path": "css/room_transition.css",
+      "exists": true,
+      "manifest_unchanged": true,
+      "git_blob": "77512a59234d5e9b592bf526f767dbeeaa30942c",
+      "remote_state": "equal",
+      "remote_blob": "77512a59234d5e9b592bf526f767dbeeaa30942c",
+      "normalized_blob": "41fdeb5942cb03e25ec6cc8dc52d32f8be75c0c6",
+      "crlf_count": 1
+    },
+    {
+      "path": "js/room_transition.js",
+      "exists": true,
+      "manifest_unchanged": true,
+      "git_blob": "7bd1c25709ecc7c7683f631c2389c2ffeb9215c4",
+      "remote_state": "different",
+      "remote_blob": "c98ed334439ad83b17811d8bfcd6b32adae96972",
+      "normalized_blob": "51b22205bcb3738457f14b9722046e98d844ea6f",
+      "crlf_count": 104
+    },
+    {
+      "path": "js/sanctuary_layout.js",
+      "exists": true,
+      "manifest_unchanged": true,
+      "git_blob": "aa0f9c513437cbfa1d671cf8384164c88e64907d",
+      "remote_state": "equal",
+      "remote_blob": "aa0f9c513437cbfa1d671cf8384164c88e64907d",
+      "normalized_blob": "b4327407717ab9e515be6ded0ce6387740905b3e",
+      "crlf_count": 55
+    },
+    {
+      "path": "js/sanctuary_movement.js",
+      "exists": true,
+      "manifest_unchanged": true,
+      "git_blob": "6ef0d64e30d363fe6d7859652547f7867f206559",
+      "remote_state": "missing",
+      "remote_blob": null,
+      "normalized_blob": "c2bcf0880f61e16d85c39412dfe36cfd347e52ca",
+      "crlf_count": 1
+    },
+    {
+      "path": "js/ewe_cultural_library.js",
+      "exists": true,
+      "manifest_unchanged": true,
+      "git_blob": "54c89908049311cd8eee2c8ad3badac8747aa98e",
+      "remote_state": "missing",
+      "remote_blob": null,
+      "normalized_blob": "6b03e1eaab5435bceb67f54428abd999f98cda43",
+      "crlf_count": 36
+    },
+    {
+      "path": "js/sanctuary_characters.js",
+      "exists": true,
+      "manifest_unchanged": true,
+      "git_blob": "d3df9191462ea73d112457219d919935c2ae478d",
+      "remote_state": "equal",
+      "remote_blob": "d3df9191462ea73d112457219d919935c2ae478d",
+      "normalized_blob": "0c275c901e684e190a91e6576fa9b2e06b87b88c",
+      "crlf_count": 34
+    },
+    {
+      "path": "js/sanctuary_environment.js",
+      "exists": true,
+      "manifest_unchanged": true,
+      "git_blob": "9e9dfbc25322588788ec678ee057893bd6dd8165",
+      "remote_state": "missing",
+      "remote_blob": null,
+      "normalized_blob": "e70f21ce27ccebcc6016fd8444178a95f91d4632",
+      "crlf_count": 205
+    },
+    {
+      "path": "js/data/lisbon_regions.js",
+      "exists": true,
+      "manifest_unchanged": true,
+      "git_blob": "5d421e238718b9f582ada32a0322f161a9f41464",
+      "remote_state": "missing",
+      "remote_blob": null,
+      "normalized_blob": "5d421e238718b9f582ada32a0322f161a9f41464",
+      "crlf_count": 0
+    },
+    {
+      "path": "js/lisbon_geography.js",
+      "exists": true,
+      "manifest_unchanged": true,
+      "git_blob": "6929cf54039191aae5364fc54625b86ba1fa2015",
+      "remote_state": "missing",
+      "remote_blob": null,
+      "normalized_blob": "aac7c9379531ec6b7aa4e0e38999e7c5d697fd27",
+      "crlf_count": 2
+    },
+    {
+      "path": "js/lisbon_context.js",
+      "exists": true,
+      "manifest_unchanged": true,
+      "git_blob": "dc173e0614240f162a1cc42291807dfa1da2165e",
+      "remote_state": "missing",
+      "remote_blob": null,
+      "normalized_blob": "e2882659d3bf3c27347daf807fa7dd1bf5d3334e",
+      "crlf_count": 2
+    },
+    {
+      "path": "js/sanctuary_arrival.js",
+      "exists": true,
+      "manifest_unchanged": true,
+      "git_blob": "d6ad0b3bc9c1e068fffbd26d145b0a0aa6dc4847",
+      "remote_state": "line_endings_only",
+      "remote_blob": "8cd6ab843f0f6b9758ffbf39c888d3cec903c8fc",
+      "normalized_blob": "8cd6ab843f0f6b9758ffbf39c888d3cec903c8fc",
+      "crlf_count": 33
+    },
+    {
+      "path": "js/sanctuary_scene.js",
+      "exists": true,
+      "manifest_unchanged": true,
+      "git_blob": "95641a3dbf3bfb7bcbd19a32eb1cded90da59c35",
+      "remote_state": "different",
+      "remote_blob": "fe666e3e54cb05d8d647c0cf19fd578a270b44d6",
+      "normalized_blob": "8817b6b973b153ab984ff72e205694a7da15f0d7",
+      "crlf_count": 44
+    },
+    {
+      "path": "js/sanctuary_shell.js",
+      "exists": true,
+      "manifest_unchanged": true,
+      "git_blob": "fe21951336bbd211d390559f0d7c6635887ac67a",
+      "remote_state": "missing",
+      "remote_blob": null,
+      "normalized_blob": "1253db7b24a27ee6ec19fe723cdf6ac236615956",
+      "crlf_count": 21
+    },
+    {
+      "path": "js/sanctuary_next_step.js",
+      "exists": true,
+      "manifest_unchanged": true,
+      "git_blob": "5e6c03f0372660c62bffd52cf089180d6323b271",
+      "remote_state": "missing",
+      "remote_blob": null,
+      "normalized_blob": "5b12de48aa568575a0dcffd072eae5beb7083466",
+      "crlf_count": 2
+    },
+    {
+      "path": "js/sanctuary_collection.js",
+      "exists": true,
+      "manifest_unchanged": true,
+      "git_blob": "33d182b677c090e7d52c2db7c17f3a9436ef7065",
+      "remote_state": "equal",
+      "remote_blob": "33d182b677c090e7d52c2db7c17f3a9436ef7065",
+      "normalized_blob": "33d182b677c090e7d52c2db7c17f3a9436ef7065",
+      "crlf_count": 0
+    },
+    {
+      "path": "js/sanctuary_culture.js",
+      "exists": true,
+      "manifest_unchanged": true,
+      "git_blob": "98b19707cf8e543fbe893cd70e91d7f986a341d6",
+      "remote_state": "equal",
+      "remote_blob": "98b19707cf8e543fbe893cd70e91d7f986a341d6",
+      "normalized_blob": "abacc5edc30e96187d6bd3f66f63239ad356de9a",
+      "crlf_count": 15
+    },
+    {
+      "path": "css/sanctuary_mobile20.css",
+      "exists": true,
+      "manifest_unchanged": true,
+      "git_blob": "c876a5b381ccfd9fa495ab5bdc6c7607829cec4d",
+      "remote_state": "equal",
+      "remote_blob": "c876a5b381ccfd9fa495ab5bdc6c7607829cec4d",
+      "normalized_blob": "c876a5b381ccfd9fa495ab5bdc6c7607829cec4d",
+      "crlf_count": 0
+    },
+    {
+      "path": "css/flowee_room_tutorial.css",
+      "exists": true,
+      "manifest_unchanged": true,
+      "git_blob": "03fd391ac545348f7d689ec26a845da2f14b5e28",
+      "remote_state": "missing",
+      "remote_blob": null,
+      "normalized_blob": "88d262667bb15f6e3791608441bb2e148d11da49",
+      "crlf_count": 17
+    },
+    {
+      "path": "js/flowee_room_tutorial.js",
+      "exists": true,
+      "manifest_unchanged": true,
+      "git_blob": "bb828c0f8bf6db194f59dea1d3754caeda827ac2",
+      "remote_state": "missing",
+      "remote_blob": null,
+      "normalized_blob": "5d778e9f4e4c150acdaef48a8f9ac85cacdfa4fd",
+      "crlf_count": 90
+    }
+  ]
+}

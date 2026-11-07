@@ -53,9 +53,9 @@
       ],
       "timebox": "begrenzte Inventur je öffentlichem Modul",
       "acceptance": "Quellenmanifest und semantische Konflikte statt pauschalem Upload; keine fremden Änderungen überschreiben",
-      "state": "teilweise geprüft",
-      "evidence": "Docs/community-pilot/baseline-20261106.md",
-      "next": "Pilotrelevante Auth-/Member-Module semantisch abgleichen; kein Merge"
+      "state": "Intro36-Direktabgleich erstellt:16 fehlend,4 inhaltlich abweichend; transitive/semantische Prüfung offen",
+      "evidence": "Docs/community-pilot/intro36-release-audit-20261107.md",
+      "next": "Vier inhaltliche Abweichungen und16 fehlende direkte Quellen prüfen; vollständigen Kandidaten anschließend isoliert vorbereiten"
     },
     {
       "id": "FLOWEE-V01",
@@ -176,6 +176,22 @@
       "state": "Intro35 lokal integriert;32 relevante Tests bestanden; Gastweg bis echter 3D-Ankunft im Browser geprüft; nicht deployed",
       "evidence": "Docs/community-pilot/intro35-20261107.md",
       "next": "Hopes physisches Handy-/Gestaltungsfeedback, authentifizierte Kernweg-Abnahme und vollständigen Releasekandidaten vorbereiten"
+    },
+    {
+      "id": "CDF-INTRO36-QA",
+      "project": "CDF / Flowee / Sanctuary",
+      "goal": "Intro35 unabhängig auf Mobilbedienung und Tastatur prüfen",
+      "owner": "Cursor (vorgesehen; Übernahme nicht bestätigt)",
+      "tool": "vorhandener Browser und Quellprüfung; tatsächliches Gerät getrennt",
+      "baseline": "264a7c725fd4acca69e58ffdfa36601e9d3c29c8 als ausgewählter Snapshot; aktive E:-Quelle separat bestätigen",
+      "dependencies": [
+        "CDF-INTRO34"
+      ],
+      "timebox": "höchstens20 Minuten Projektarbeit unter bestehender gemeinsamer Tagesgrenze",
+      "acceptance": "Version belegt; PASS/FAIL/NOT_RUN pro Fall; reproduzierbare Belege; kein Produkt-/Accounteingriff; genau ein nächster Fehler",
+      "state": "Übergabe vorbereitet, nicht gestartet",
+      "evidence": "handoffs/2026-11-07_intro36_codex-an-cursor.md",
+      "next": "Hope startet Prompt in Cursor; Cursor bestätigt Annahme über Ergebnisdatei/Commit"
     }
   ]
 }

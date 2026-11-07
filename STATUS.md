@@ -178,3 +178,11 @@ Hopes Umsetzungsauftrag lokal auf E: ausgeführt: sechs optionale DE/EN/PT-Story
 Bericht: Docs/community-pilot/intro35-20261107.md. Quellen ausgewählt in Draft-PR18; direkte Abhängigkeiten in intro35-dependencies.json, keine vollständige Releasebasis. Alte Buildhilfe weiterhin ungeeignet. Story-Übergabe wegen verbleibender Abnahme offen. Temporäre geschützte Handy-Designvorschau aktualisiert; Adresse nur privat. Kein Merge, Deployment, Slack-Dienst, Rollen-/RLS-/Zahlungs-/XP/FLOW-Eingriff. Nächster Schritt: Handy-/Gestaltungsfeedback und vollständiger Kandidat mit Auth-Abnahme.
 
 Quellbeleg Intro35: [Commit 264a7c7](https://github.com/circledflow-maker/circle-d-flow-web/commit/264a7c725fd4acca69e58ffdfa36601e9d3c29c8) in Draft-PR18; elf Dateien exakt zurückgelesen. Direkte37 JS/CSS-Abhängigkeiten lokal vorhanden und mit Hashwerten inventarisiert; dynamische/transitive Assets und vollständige Produktionsbasis separat offen.
+
+
+## 2026-11-07 — Codex · Intro36: Cursor-Prüfphase und Releaseinventur
+Hopes Wunsch nach begrenzter paralleler Cursor-Unterstützung aufgenommen. Reine unabhängige Mobil-/Tastatur-/Gastprüfung vorbereitet: handoffs/2026-11-07_intro36_codex-an-cursor.md. Cursor ist vorgesehener Bearbeiter; keine Anbindung, Annahme oder ausgeführte Prüfung behauptet. Produktdateien bleiben in dieser Prüfphase unangetastet. Separate Ergebnisdateien und isolierter Statusbeitrag verhindern gleichzeitiges Schreiben.
+
+Codex hat37 direkte Intro35-Laufzeitdateien mit dem frischen vollständigen PR18-Baum 264a7c725fd4acca69e58ffdfa36601e9d3c29c8 abgeglichen:13 bytegleich,4 nur Zeilenenden,4 inhaltlich abweichend,16 fehlend. Alle37 lokalen Dateien unverändert zum Intro35-SHA-256-Manifest. Zusätzliche Ladegrafik Assets/room_loading/courtyard-door.svg lokal vorhanden, im PR18-Baum fehlend. Bericht/maschinelle Inventur: Docs/community-pilot/intro36-release-audit-20261107.md und .json. Keine semantische Auth-Freigabe oder vollständige transitive Inventur daraus ableiten.
+
+Kein Produktcode, Testresultat, Video-Render, Agentenstart, Merge, Deployment oder Slack-Dienst in dieser Phase. Nächster Schritt Codex: vier inhaltliche Abweichungen und16 fehlende direkte Quellen semantisch abgleichen; Cursor nach manueller Übernahme: eigene belegte Gast-/Mobilprüfung. Authentifizierte und physische Abnahmen bleiben offen.
