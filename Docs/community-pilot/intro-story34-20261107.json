@@ -1,0 +1,162 @@
+{
+  "version": 1,
+  "date": "2026-11-07",
+  "project": "CDF / Flowee / Sanctuary",
+  "title": "Der verhüllte Funke — Erwachen im Sanctuary",
+  "status": "intro35_local_integration_physical_auth_acceptance_open",
+  "creative_decision_owner": "Hope",
+  "author": "Codex",
+  "language": "de",
+  "en_pt_new_story": "Intro35 Laufzeittexte erstellt; menschliche Sprachabnahme offen",
+  "default_existing_destination": "/sanctuary",
+  "preserve_explicit_destination": true,
+  "existing_lore_reference": "data/creator_story.json",
+  "script": "intro-story34-20261107.md",
+  "audio": {
+    "created": false,
+    "rights": "noch nicht zugeordnet",
+    "opt_in": true
+  },
+  "scenes": [
+    {
+      "id": "city_light",
+      "order": 0,
+      "title": "Die Stadt hinter dem Licht",
+      "next": [
+        "flowee_lantern"
+      ],
+      "controls": [
+        "follow_light",
+        "skip_intro",
+        "existing_login",
+        "guest_explore"
+      ],
+      "runtime_state": "proposed"
+    },
+    {
+      "id": "flowee_lantern",
+      "order": 1,
+      "title": "Flowees Laterne",
+      "next": [
+        "many_worlds"
+      ],
+      "controls": [
+        "continue",
+        "explore_independently",
+        "back",
+        "skip_intro"
+      ],
+      "runtime_state": "proposed"
+    },
+    {
+      "id": "many_worlds",
+      "order": 2,
+      "title": "Die vielen Welten",
+      "next": [
+        "first_step"
+      ],
+      "controls": [
+        "explore",
+        "create",
+        "learn",
+        "community",
+        "leave_open",
+        "back",
+        "skip_intro"
+      ],
+      "choice_scope": "current browser session only; mutable; no roles or rewards",
+      "runtime_state": "proposed"
+    },
+    {
+      "id": "first_step",
+      "order": 3,
+      "title": "Dein erster eigener Schritt",
+      "next": [
+        "return_path"
+      ],
+      "controls": [
+        "move_to_lantern",
+        "equivalent_accessible_button",
+        "back",
+        "skip_intro"
+      ],
+      "awards_progress": false,
+      "runtime_state": "proposed"
+    },
+    {
+      "id": "return_path",
+      "order": 4,
+      "title": "Ein Weg, auf den du zurückkehren kannst",
+      "next": [
+        "account_cove",
+        "threshold"
+      ],
+      "controls": [
+        "register",
+        "existing_login",
+        "guest_continue",
+        "back"
+      ],
+      "runtime_state": "proposed"
+    },
+    {
+      "id": "account_cove",
+      "order": 5,
+      "title": "Name, Rückweg, Zugang",
+      "next": [
+        "threshold",
+        "requested_destination"
+      ],
+      "controls": [
+        "existing_name_email_password_review_forms",
+        "back",
+        "guest_continue"
+      ],
+      "gates": {
+        "member": "existing verified identity and truthful card state; no new auth",
+        "pending": "remain honest; offer explicit guest path",
+        "requested_destination": "honor explicit prior choice"
+      },
+      "runtime_state": "proposed"
+    },
+    {
+      "id": "threshold",
+      "order": 6,
+      "title": "Die Schwelle",
+      "next": [
+        "awakening"
+      ],
+      "controls": [
+        "enter_sanctuary",
+        "back",
+        "simple_view"
+      ],
+      "loading": "only actual target-scene readiness; retry/fallback on error",
+      "runtime_state": "proposed"
+    },
+    {
+      "id": "awakening",
+      "order": 7,
+      "title": "Erwachen im Sanctuary",
+      "next": [],
+      "controls": [
+        "explore_courtyard",
+        "open_worlds",
+        "ask_flowee",
+        "simple_view"
+      ],
+      "terminal": true,
+      "identity": "actual guest/member state unchanged",
+      "awards_progress": false,
+      "runtime_state": "proposed"
+    }
+  ],
+  "external_terminal_ids": [
+    "requested_destination"
+  ],
+  "publication": false,
+  "auth_backend_changed": false,
+  "awards_progress": false,
+  "skip_intro_target": "return_path",
+  "implementation_report": "intro35-20261107.md"
+}

@@ -1,0 +1,278 @@
+{
+  "version": 1,
+  "updated": "2026-11-07",
+  "coordinator": "Codex (Ebene 2)",
+  "decision_owner": "Hope",
+  "first_community_task": "CDF-P01",
+  "rules": {
+    "canonical": "GitHub sanitized tasks; private operational records in ignored Team/",
+    "single_writer": true,
+    "role_reference": "Circle D Flow Teamorganisation Version 1.0 (21 roles)",
+    "new_roles_confirmed": false
+  },
+  "tasks": [
+    {
+      "id": "CDF-F00",
+      "project": "CDF / Koordination",
+      "goal": "Gemeinsame Pilot-Arbeitsgrundlage erstellen",
+      "owner": "Codex",
+      "tool": "Dateiprüfung, GitHub, vorhandene Node-Tests",
+      "baseline": "PR17 8fa2720 + E Status 2026-11-06",
+      "dependencies": [],
+      "timebox": "diese begrenzte Arbeitsphase",
+      "acceptance": "Sechs Ergebnisbereiche dokumentiert; lokale und Remote-Dateien geprüft",
+      "state": "erstellt und strukturell geprüft",
+      "evidence": "Docs/community-pilot/README.md",
+      "next": "CDF-P01"
+    },
+    {
+      "id": "CDF-P01",
+      "project": "CDF / Community-App",
+      "goal": "Gastorientierung auf Desktop und Smartphone abnehmen",
+      "owner": "Codex",
+      "tool": "Browser und tatsächliches Smartphone; nur GET/UI ohne Absenden",
+      "baseline": "Produktion Flowee28; Room/shop29 separat lokal",
+      "dependencies": [
+        "CDF-F00"
+      ],
+      "timebox": "ein Gast-Abnahmedurchlauf",
+      "acceptance": "Soll/Ist und Beleg je Einstiegsschritt; Emulator/physisch getrennt; keine Kontomutation",
+      "state": "teilweise im Live-Browser geprüft; physisches Gerät und Sonderbedingungen offen",
+      "evidence": "Docs/community-pilot/login-browser-verification-20261106.md",
+      "next": "Verbleibende Gastfälle/physisches Gerät schließen; öffentlichen Event-Ausfallpfad unabhängig eingrenzen"
+    },
+    {
+      "id": "CDF-R01",
+      "project": "CDF / Releasebasis",
+      "goal": "Vollständige reproduzierbare Produktbasis abgleichen",
+      "owner": "Codex",
+      "tool": "GitHub-Diff, lokale Hashprüfung",
+      "baseline": "PR16/17/18 auseinanderliegend; E stark verändert",
+      "dependencies": [
+        "CDF-F00"
+      ],
+      "timebox": "begrenzte Inventur je öffentlichem Modul",
+      "acceptance": "Quellenmanifest und semantische Konflikte statt pauschalem Upload; keine fremden Änderungen überschreiben",
+      "state": "Intro38:2 von4 inhaltlichen Abweichungen entschieden; Modaleingabe im Quellsnapshot ergänzt;2 Auth-Dateien und16 fehlende direkte Quellen offen",
+      "evidence": "Docs/community-pilot/intro38-20261107.md",
+      "next": "supabase_client.js und auth-handler.js separat abgleichen; danach fehlende direkte/transitive Ressourcen ergänzen"
+    },
+    {
+      "id": "FLOWEE-V01",
+      "project": "Flowee / Räume",
+      "goal": "Room/shop29 visuell prüfen",
+      "owner": "noch nicht zugeordnet",
+      "tool": "Browser/GPU und Telefon",
+      "baseline": "lokaler Status Room/shop29; Produktion Flowee28",
+      "dependencies": [],
+      "timebox": "ein gezielter visueller Durchlauf",
+      "acceptance": "Zoom, Dialog, Reichweite, Kollision und Flowee verständlich; tatsächliches Gerät belegt",
+      "state": "offen; historische lokale Tests vorhanden",
+      "evidence": "Docs/community-pilot/baseline-20261106.md",
+      "next": "Bestehende visuelle Übergabe prüfen; keine Deployment-Ableitung"
+    },
+    {
+      "id": "STAGES-M01",
+      "project": "CDF / Circle D Stages",
+      "goal": "Vorhandenes V10-Reviewmaterial für Medienbriefing sichten",
+      "owner": "noch nicht zugeordnet",
+      "tool": "vorhandener Player/Schnittwerkzeug ohne Upload",
+      "baseline": "V10-Dateiexistenz belegt; V11 nicht am Exportort bestätigt",
+      "dependencies": [],
+      "timebox": "eine Sichtung",
+      "acceptance": "Materialfassung und Rechte-/Creditslücken belegt; konkretes Ziel vor aktiver CTA",
+      "state": "Briefing erstellt; Sichtung offen",
+      "evidence": "Docs/community-pilot/media-brief.md",
+      "next": "Bestehende Cutter-/Daiku-Übergaben ergänzen statt doppelte Produktion"
+    },
+    {
+      "id": "CDF-B01",
+      "project": "CDF / Geschäftsprüfung",
+      "goal": "Nutzenhypothese im freiwilligen Pilot prüfen",
+      "owner": "noch nicht zugeordnet",
+      "tool": "private Beobachtung ohne Profiling",
+      "baseline": "keine erhobenen Nachfrage-/Erlöszahlen",
+      "dependencies": [
+        "CDF-P01"
+      ],
+      "timebox": "eine Pilot-Runde nach technischer Kernweg-Abnahme",
+      "acceptance": "5–8 Personen; Quote und konkrete Nutzenbeispiele getrennt; keine öffentliche Rohdaten",
+      "state": "Hypothese dokumentiert; Erhebung offen",
+      "evidence": "Docs/community-pilot/business-model.md",
+      "next": "Erst verbleibende Kernweg-Abnahmen schließen; dann Einladung durch autorisierten Owner"
+    },
+    {
+      "id": "CDF-S01",
+      "project": "CDF / Koordination",
+      "goal": "Lokale Slack-Brücke lesend vorbereiten",
+      "owner": "Codex",
+      "tool": "lokale Entwürfe und synthetische Ereignisse",
+      "baseline": "Slack-Lesezugriff vorhanden; kein Listener nachgewiesen",
+      "dependencies": [
+        "CDF-F00"
+      ],
+      "timebox": "ein lokaler Preflight ohne Dienststart",
+      "acceptance": "aktueller Kanal/Freigabeidentität, App/Scopes, Dedup, Budget/Lock/Pause geprüft; kein echter Versand",
+      "state": "Prüfauftrag vorbereitet; technischer Preflight offen",
+      "evidence": "Docs/community-pilot/tools-20261106.md",
+      "next": "bestehenden lokalen Adapter/Automation abgleichen; keine neue Anmeldung"
+    },
+    {
+      "id": "CDF-SEC01",
+      "project": "CDF / Repository-Schutz",
+      "goal": "Historische Credential-Exposition zuständig klären",
+      "owner": "noch nicht zugeordnet",
+      "tool": "Kontoinhaberprüfung ohne Geheimnisexport",
+      "baseline": "PR17 entfernt zwei Dateien nur aus neuem Baum",
+      "dependencies": [],
+      "timebox": "begrenzte Schutzprüfung durch Kontoinhaber",
+      "acceptance": "Gültigkeit/Exposition geklärt und ggf. Rotation mit gesondertem Auftrag belegt",
+      "state": "offen",
+      "evidence": "Docs/repository-workflow.md",
+      "next": "Kontozuständigkeit bestätigen; keine Schlüssel lesen oder rotieren"
+    },
+    {
+      "id": "KYH-Q01",
+      "project": "KYH",
+      "goal": "Eigenen nächsten Beitrag zum Pilot bestimmen",
+      "owner": "noch nicht zugeordnet",
+      "tool": "vorhandenes KYH-Backlog",
+      "baseline": "keine neue KYH-Leistung in dieser Phase geprüft",
+      "dependencies": [],
+      "timebox": "ein Kontextabgleich",
+      "acceptance": "separates Ziel und tatsächliche freigegebene Inputs; keine Vermischung mit CDF-Medienrechten",
+      "state": "noch nicht zugeordnet",
+      "evidence": "Docs/community-pilot/README.md",
+      "next": "bestehendes KYH-Backlog auf belegte Vorleistung prüfen"
+    },
+    {
+      "id": "CDF-LUVO32",
+      "project": "CDF / LUVO und Flowee-Einstieg",
+      "goal": "Filmischer 3D-CDF-Eingang mit wechselnden RPG-Registrierungsszenen und Anime-Übergängen",
+      "owner": "Codex",
+      "tool": "Vanilla JS/Three.js, Node-Tests, verbundener Browser",
+      "baseline": "aktive E:-Quelle auf LUVO32; Produktion unverändert",
+      "dependencies": [
+        "CDF-R01"
+      ],
+      "timebox": "dieser begrenzte Implementierungsauftrag",
+      "acceptance": "3D-Szene; direktes Login/überspringbares Intro; ruhige Ansicht; reale Ladezustände; mobile Ausweichfälle; bestätigter Release separat",
+      "state": "Universe33 lokal umgesetzt;21 Tests und Browserdurchlauf bestanden; nicht deployed",
+      "evidence": "Docs/community-pilot/universe33-20261107.md",
+      "next": "Hopes Handy-/Gestaltungsfeedback, vollständige16-Abhängigkeiten-Releasebasis und authentifizierte Abnahme"
+    },
+    {
+      "id": "CDF-INTRO34",
+      "project": "CDF / Flowee / Sanctuary",
+      "goal": "Eigene Introgeschichte bis zum Sanctuary-Erwachen aus nachvollziehbarer Spielstart-Analyse",
+      "owner": "Codex",
+      "tool": "Vanilla JS/Three.js, Node-Tests und verbundener Browser",
+      "baseline": "Universe33 und Intro34-Drehbuch; Intro35-Quellsnapshot 264a7c725fd4acca69e58ffdfa36601e9d3c29c8",
+      "dependencies": [
+        "CDF-LUVO32"
+      ],
+      "timebox": "diese begrenzte lokale UI-Implementierungsphase",
+      "acceptance": "vollständiger Originalprolog mit Dialog, Wahl/Interaktion, Gast-/Konto-/Pending-Grenzen und Ankunft; Quellen klar",
+      "state": "Intro35 lokal integriert;32 relevante Tests bestanden; Gastweg bis echter 3D-Ankunft im Browser geprüft; nicht deployed",
+      "evidence": "Docs/community-pilot/intro35-20261107.md",
+      "next": "Hopes physisches Handy-/Gestaltungsfeedback, authentifizierte Kernweg-Abnahme und vollständigen Releasekandidaten vorbereiten"
+    },
+    {
+      "id": "CDF-INTRO36-QA",
+      "project": "CDF / Flowee / Sanctuary",
+      "goal": "Intro35 unabhängig auf Mobilbedienung und Tastatur prüfen",
+      "owner": "Cursor (vorgesehen; Übernahme nicht bestätigt)",
+      "tool": "vorhandener Browser und Quellprüfung; tatsächliches Gerät getrennt",
+      "baseline": "264a7c725fd4acca69e58ffdfa36601e9d3c29c8 als ausgewählter Snapshot; aktive E:-Quelle separat bestätigen",
+      "dependencies": [
+        "CDF-INTRO34"
+      ],
+      "timebox": "höchstens20 Minuten Projektarbeit unter bestehender gemeinsamer Tagesgrenze",
+      "acceptance": "Version belegt; PASS/FAIL/NOT_RUN pro Fall; reproduzierbare Belege; kein Produkt-/Accounteingriff; genau ein nächster Fehler",
+      "state": "Prompt laut Hope erhalten; Annahme/Ausführung nicht belegt",
+      "evidence": "handoffs/2026-11-07_intro36_codex-an-cursor.md",
+      "next": "Cursor liefert eigene Ergebnisdatei/Commit; Codex prüft vor Integration"
+    },
+    {
+      "id": "CDF-INTRO37-ART",
+      "project": "CDF / Flowee / Sanctuary",
+      "goal": "Regieblatt für drei bestehende Intro-/Ankunftsmomente",
+      "owner": "Antigravity (vorgesehen; Annahme nicht bestätigt)",
+      "tool": "vorhandene Quellen und optional nachgewiesener Browser; keine Generierung",
+      "baseline": "264a7c725fd4acca69e58ffdfa36601e9d3c29c8",
+      "dependencies": [
+        "CDF-INTRO34"
+      ],
+      "timebox": "erster Prüfpass höchstens5 Minuten im vorhandenen gemeinsamen Restbudget; keine zusätzliche Tagesfreigabe",
+      "acceptance": "eigene begrenzte Ergebnisdatei, Ist/Vorschlag/Unsicherheit getrennt; kein Produktdiff; genau eine Empfehlung",
+      "state": "Übergabe vorbereitet, nicht gestartet",
+      "evidence": "handoffs/2026-11-07_intro37_codex-an-antigravity.md",
+      "next": "Antigravity übernimmt nach manuellem Prompt; Ergebnisdatei/Commit an Codex"
+    },
+    {
+      "id": "CDF-INTRO37-CULTURE",
+      "project": "CDF / Flowee / Sanctuary",
+      "goal": "Bis zu drei konkrete Story-/Kulturaussagen prüfen",
+      "owner": "Daiku (vorgesehen; Annahme nicht bestätigt)",
+      "tool": "vorhandene Produkttexte und öffentliche Primärquellen; keine bezahlte API",
+      "baseline": "264a7c725fd4acca69e58ffdfa36601e9d3c29c8",
+      "dependencies": [
+        "CDF-INTRO34"
+      ],
+      "timebox": "erster Prüfpass höchstens5 Minuten im vorhandenen gemeinsamen Restbudget; keine zusätzliche Tagesfreigabe",
+      "acceptance": "eigene begrenzte Ergebnisdatei, Ist/Vorschlag/Unsicherheit getrennt; kein Produktdiff; genau eine Empfehlung",
+      "state": "Begrenztes Intro35-Ergebnis als zwei Dateiexporte empfangen und von Codex eingeordnet; kreative Entscheidungen offen",
+      "evidence": "Docs/community-pilot/intro43-daiku-intake-20261107.md",
+      "next": "Hope entscheidet zuerst über Textvorschlag2; danach Sprach-/Namensfragen und gegebenenfalls Umsetzung getrennt",
+      "exchange_status": "received_reviewed"
+    },
+    {
+      "id": "CDF-INTRO39",
+      "project": "CDF / Flowee / Sanctuary",
+      "goal": "Szenensichtbare mobile Dialoge und einheitliche Flowee-Darstellung",
+      "owner": "Codex",
+      "tool": "Vanilla CSS/JS/Three.js; vorhandene Tests",
+      "baseline": "16a813f19ca980ec815c893741d2ef15808c2059",
+      "dependencies": [
+        "CDF-INTRO34"
+      ],
+      "timebox": "dieser beauftragte lokale UI-Schritt",
+      "acceptance": "sichtbare Szene und Antworten; Story-Swipe ohne Formularsubmit; gemeinsame Silhouette; echte neue Viewport-/Telefonprüfung getrennt",
+      "state": "Intro41: tatsächlicher Browser390×844/360×640 mit sichtbarer Szene und emuliertem Touch geprüft; Dialoghöhenfehler korrigiert; physisch/Softwarekeyboard offen",
+      "evidence": "Docs/community-pilot/intro41-20261107.md",
+      "next": "Hopes echter Smartphone-/Softwarekeyboard-Test; danach genau einen beobachteten Folgefehler schließen"
+    },
+    {
+      "id": "CDF-EXCHANGE40",
+      "project": "CDF / Koordination",
+      "goal": "Begrenzten lokalen Agenten-Dateiaustausch vorbereiten",
+      "owner": "Codex",
+      "tool": "einmaliger lokaler Dateiabgleich; kein Agentenstart",
+      "baseline": "03f39268a0235f1ab9a7195c4cebc79c703c7435",
+      "dependencies": [
+        "CDF-F00"
+      ],
+      "timebox": "ein beauftragter lokaler Abgleich",
+      "acceptance": "getrennte Aufträge, erlaubte Ergebnisdateien, private Prüfung vor Übernahme; keine Produktüberschreibung/ungeprüfter Push",
+      "state": "Dateipakete erstellt; echte externe Annahme/Dateiübertragung offen",
+      "evidence": "Docs/community-pilot/agent-local-exchange-20261107.md",
+      "next": "Erreichbaren Cloud-/IDE-Ergebnisweg prüfen; keine Installation eines konkurrierenden Dienstes"
+    },
+    {
+      "id": "CDF-INTRO42-EXTERNAL",
+      "project": "CDF / Flowee / Sanctuary",
+      "goal": "Intro außerhalb des lokalen WLANs als isolierte Designvorschau testen",
+      "owner": "Codex",
+      "tool": "Vercel-MCP und begrenzter statischer Builder; keine Backend-/Produktionsaktion",
+      "baseline": "16a813f19ca980ec815c893741d2ef15808c2059",
+      "dependencies": [
+        "CDF-INTRO39"
+      ],
+      "timebox": "dieser begrenzte Vorbereitungs-/Bereitstellungsschritt",
+      "acceptance": "konkreter erlaubter Dateisatz; keine echten Kontofunktionen/Privatdateien; READY und tatsächlich geprüfter HTTPS-Link; Produktion unverändert",
+      "state": "41-Dateien-Kandidat geprüft; Vercel403/404; externe Bereitstellung offen",
+      "evidence": "Docs/community-pilot/intro42-external-preview-20261107.md",
+      "next": "Tatsächlichen Team-/Projektzugriff prüfen; danach exakt diesen Kandidaten bereitstellen und anonym prüfen"
+    }
+  ]
+}

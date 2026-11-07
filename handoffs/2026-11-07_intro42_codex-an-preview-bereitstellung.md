@@ -1,0 +1,7 @@
+# Übergabe · isolierte Internet-Designvorschau Intro42
+Datum:2026-11-07 · Projekt:CDF / Flowee / Sanctuary · Von:Codex · Empfänger:Codex, technische Preview-Bereitstellung; formale Rollen-Zuordnung noch nicht zugeordnet.
+Ziel: Hope kann außerhalb des Heim-WLANs genau Intro und Sanctuary ohne echte Kontofunktionen testen.
+Kontext/Inputs: Docs/community-pilot/intro42-external-preview-20261107.md; Builder scripts/build-intro-design-preview.py; Fixture/Guard und3 Tests. Isolierter Kandidat privat Team/previews/intro42-20261107, explizites41-Dateien-Manifest; keine pauschale Git-Branch-Auslieferung.
+Gewünschtes Ergebnis: nach tatsächlicher Anbieterberechtigung ausschließlich ausgewählte statische Dateien in separatem Testprojekt als Preview bereitstellen. Keine Produktionsdomain/-konfiguration oder PR-Preview-Sperren verändern. Keine Anmeldung, Secret-/Umgebungsübernahme oder bezahlte Erweiterung.
+Abnahme: READY, tatsächlicher HTTPS-Aufruf, aktuelle Version, alle benötigten Assets, Guard/CSP und private/API-Pfade geprüft; danach konkreten erreichbaren Link an Hope. Falls Vercel-Schutz aktiv, dafür vorgesehenen zeitlichen Share-Link nutzen, keine pauschale Abschaltung.
+Offene Abhängigkeit: Projektlookup404, Projektanlage403; Vercel-CLI nicht vorhanden/gecached. Tatsächlicher Team-/Projektzugriff muss geklärt werden. Ein Consentlink ist noch keine Freigabe und keine garantierte Fehlerbehebung. Zustand: vorbereitet, nicht deployed, Übergabe offen. Hope hat Außentest beauftragt; daraus keine Produktionsfreigabe ableiten.

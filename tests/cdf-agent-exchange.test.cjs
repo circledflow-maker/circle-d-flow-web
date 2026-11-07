@@ -1,0 +1,7 @@
+const test=require('node:test'),assert=require('node:assert/strict'),{plan,validate}=require('../scripts/cdf-agent-exchange.cjs');
+test('queue creation never reports a started agent',()=>{const tasks={tasks:['CDF-INTRO36-QA','CDF-INTRO37-ART','CDF-INTRO37-CULTURE'].map(id=>({id,state:'prepared'}))};const q=plan(tasks);assert.equal(q.length,3);assert.ok(q.every(t=>t.delivery==='file_prepared_not_agent_started'));assert.throws(()=>plan({tasks:[]}));});
+const pkg=()=>({agent:'Daiku',task:'CDF-INTRO37-CULTURE',base_commit:'a'.repeat(40),files:[{path:'Docs/community-pilot/intro37-daiku-story-context-20261107.md',content:'Evidence'},{path:'handoffs/2026-11-07_intro37_daiku-an-codex.md',content:'Handoff'}]});
+test('result package accepts only assigned report paths and exact base commit',()=>{assert.equal(validate(pkg()).agent,'Daiku');const x=pkg();x.base_commit='main';assert.throws(()=>validate(x));});
+test('private paths, traversal, product writes and duplicate outputs are rejected',()=>{for(const p of ['../../secrets','Team/private.md','pages/login.html','/absolute']){const x=pkg();x.files[0].path=p;assert.throws(()=>validate(x));}const x=pkg();x.files[1].path=x.files[0].path;assert.throws(()=>validate(x));});
+
+test('received Daiku result is not dispatched as new work',()=>{const tasks={tasks:['CDF-INTRO36-QA','CDF-INTRO37-ART','CDF-INTRO37-CULTURE'].map(id=>({id,state:'review open',exchange_status:id==='CDF-INTRO37-CULTURE'?'received_reviewed':'pending'}))};assert.deepEqual(plan(tasks).map(x=>x.agent),['Cursor','Antigravity']);});
