@@ -8,3 +8,7 @@ Gewünschtes Ergebnis: vollständiger Kandidat aus bestätigter Produktionsbasis
 Abnahme: Hashmanifest, richtige statische URL-Auflösung, keine privaten Exportdateien; 3D/ruhige Ansicht und Login-/Register-Einstieg auf Desktop/Mobil; Auth/RLS/Rewards unverändert; GPU-/Ladefehler korrekt eingeordnet; bestehende Daten/Änderungen erhalten. Kandidat mit konkreter Version/Link für Hope erst nach Prüfung.
 Offene Abhängigkeiten: vollständige Releasebasis, physisches Smartphone/echte Tastatur, authentifizierte E-Mail-/Karten-Journey, finale Veröffentlichungsentscheidung Hope.17 lokale Tests bestanden; Browserbelege und Grenzen im Bericht. Keine Deployment-Freigabe aus Testzahl oder Branch ableiten.
 Zustand: offen; nicht nach done verschieben.
+
+
+## 2026-11-07 · Universe33 erweitert den Auftrag
+Aktueller Quellcommit df43b3cc8f134985239e3250602c5c89ea107e1d in PR18; Docs/community-pilot/universe33-20261107.md und universe33-dependencies.json mit16 Laufzeitabhängigkeiten. Bestehende Aufgabe umfasst jetzt Weltenarchipel und schrittbezogene Umwelt-/Kamerawechsel samt Quellenhinweis.21 Tests und lokaler UI-Durchlauf bestanden; reine Testdaten/keine echte Registrierung. Übergabe bleibt offen für vollständigen Kandidaten, echtes Telefon und authentifizierte Abnahme; kein Erledigt-/Freigabestatus aus Gestaltung ableiten.

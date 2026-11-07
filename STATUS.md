@@ -147,3 +147,12 @@ Physisches Telefon, echte Tastatur/Leistung, vollständige Fokus-/authentifizier
 
 ## 2026-11-06 — Codex · Handy-Designvorschau für Hope
 Auf ausdrücklichen Wunsch eine auf zwei Stunden begrenzte LUVO32-Designvorschau im lokalen WLAN bereitgestellt. Ausgewählte Login-/Assetdateien, private Pfade und API-Aufrufe404; externe API-Verbindungen und echter Formularversand gesperrt, Google deaktiviert. Link ausschließlich direkt an Hope, keine Netzwerkadresse im öffentlichen Repo. Lokaler Browseraufruf erfolgreich und Google-Sperre kontrolliert; tatsächlicher Handy-Aufruf/Feedback noch offen. Kein Produktionsdeployment oder Firewall-Eingriff. Release-Übergabe bleibt offen.
+
+
+## 2026-11-07 — Codex · Universe33: CDF-Universum und wechselnde RPG-Szenen
+
+Hopes Gestaltungsfeedback umgesetzt:14 bestehende CDF-Welten als prozedurales Archipel, Himmel/Mond, Wasser, Vegetation, Stege/Boot, Pavillon und erfundene lissabonorientierte Küstengebäude. Kamera, Licht-/Nebelfarbe und Umweltgruppen folgen Intro, Name, E-Mail, Zugang, Übersicht und direktem Login. Kein Konto-/Rewardfortschritt aus der Kulisse abgeleitet. Optionale EN/DE/PT-Kulturhinweise mit Fowler-/Met-Quellen trennen afrikanische Wassergeist-Kontexte/Akan-Metallkunst von eigener CDF-Fiktion.
+
+21 relevante Tests bestanden,0 Fehler. Browser zeigt tatsächliche3D-Szenen für alle vier Registrierungsschritte und Login; nur Testdaten, kein Konto abgesendet. Finale vier Viewports ohne horizontales Überlaufen, Error-Logs leer. Reduktion/GPU-/Ladefehler weiter automatisiert statt als echte Browserbedingungen behauptet. Physisches Telefon-Feedback, Leistung und authentifizierte Live-Journey offen.
+
+Quellcommit in PR18: df43b3cc8f134985239e3250602c5c89ea107e1d; ausgewählte6 Produkt-/Testdateien plus Bericht und16-Abhängigkeiten-Manifest. PR18 bleibt Draft/unvollständige Releasebasis, alter atmosphere27-Helfer ungeeignet für Universe33. Bericht: Docs/community-pilot/universe33-20261107.md. Bereits beauftragte Handy-Designvorschau unter derselben privaten Adresse mit unveränderten Sperren und2h-Grenze neu gestartet. Kein Produktionsdeploy, Merge, neue Firewallregel, Slack-Dienst oder Rollen-/RLS-/Zahlungs-/XP/FLOW-Eingriff. Nächster Schritt: Gestaltungsfeedback und vollständiger Kandidat mit den dokumentierten Abhängigkeiten.

@@ -1,0 +1,98 @@
+{
+  "version": 1,
+  "date": "2026-11-07",
+  "stage": "Universe33 selected local source snapshot; not a complete deployment",
+  "runtime_dependencies": [
+    {
+      "path": "pages/login.html",
+      "bytes": 11991,
+      "sha256": "a4e753b59033cab1db174f8022ad51a7fb91b3465d66afcff5dc58d3439fc476"
+    },
+    {
+      "path": "css/cdf_login.css",
+      "bytes": 12222,
+      "sha256": "21b7eca57dd493988482368acf68c7f8f9ab2163a688da902ccfb4e20e7f6363"
+    },
+    {
+      "path": "js/vendor/supabase-2.108.2.js",
+      "bytes": 204619,
+      "sha256": "c123f7e874934778b7d89fee7dce8de26c858a2c3a92fd7a3f870394a6a2f91f"
+    },
+    {
+      "path": "js/cdf_runtime_config.js",
+      "bytes": 802,
+      "sha256": "84b55b064837405ecac4476b76003616a1bdf7872ae0508a5b48c03928d5d97e"
+    },
+    {
+      "path": "js/agents/supabase_client.js",
+      "bytes": 4249,
+      "sha256": "2ee00a2de8a7537ac26fc972bc42a6735537c83c859d6bad38f06fd4df63715b"
+    },
+    {
+      "path": "js/cdf_identity.js",
+      "bytes": 2081,
+      "sha256": "ded7a3653472c0198bc6384f724afc7b89a9cfec169788fe744441d053ba77c3"
+    },
+    {
+      "path": "js/flowee_fairy.js",
+      "bytes": 1080,
+      "sha256": "c138b86c296444052d9b6af27b7bb9ddfb4ce99ebea87cbbfcb15673a45b400a"
+    },
+    {
+      "path": "js/cdf_account_motion.js",
+      "bytes": 2562,
+      "sha256": "e16e46846f1fb7c20c5e976b6150fe823e6852456bd5e4342191974c1474e248"
+    },
+    {
+      "path": "js/cdf_account_journey.js",
+      "bytes": 20122,
+      "sha256": "2b7e6b503d30e54bd201ddfd549170906df7d0c201988ecaff83dd9edb5adca5"
+    },
+    {
+      "path": "js/auth-handler.js",
+      "bytes": 17393,
+      "sha256": "e5b9ccdd4a6507e117493bec513dc03d6a9183461f5a790603549665a4dea4d2"
+    },
+    {
+      "path": "js/cdf_login.js",
+      "bytes": 19330,
+      "sha256": "4de0ccd75064900a434cc83fec5fe324c09dc31bac99eedb43d63fa29508537f"
+    },
+    {
+      "path": "js/cdf_account_story.js",
+      "bytes": 7613,
+      "sha256": "e6ba6507dc350cfee99fe09303d78cf00f16171a1f6f60c6c027b37101da52d7"
+    },
+    {
+      "path": "js/world_registry.js",
+      "bytes": 4019,
+      "sha256": "9bbea857602024ea053d217e9f1c627f42adc820cdf1a02128be7300db2f73af"
+    },
+    {
+      "path": "js/luvo_universe.js",
+      "bytes": 7577,
+      "sha256": "b01ea3f5e3c7d690df74de924c9e453aadc142eb0d400bb10d40261426d73553"
+    },
+    {
+      "path": "css/luvo_scene.css",
+      "bytes": 6872,
+      "sha256": "8f5512776241f5e3bf783c4752b5d88a099ce83f43becd2f624b7b83fca8e96c"
+    },
+    {
+      "path": "js/luvo_scene.js",
+      "bytes": 10032,
+      "sha256": "06f090db4048ec2b425d8dc446420786e8dc231c898b9038fb7d7c0b45d4102a"
+    }
+  ],
+  "selected_snapshot_paths": [
+    "js/luvo_universe.js",
+    "js/luvo_scene.js",
+    "js/world_registry.js",
+    "css/luvo_scene.css",
+    "pages/login.html",
+    "tests/luvo-universe.test.cjs"
+  ],
+  "rendering": "existing Three.js r128, original procedural scenes",
+  "full_release_ready": false,
+  "auth_mutations": false
+}
