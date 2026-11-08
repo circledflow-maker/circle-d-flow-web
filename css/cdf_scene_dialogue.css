@@ -145,3 +145,17 @@ body.cdf-dialogue{height:var(--cdf-viewport-height,100dvh);min-height:0;overflow
 .cdf-dialogue .flowee-hotspot:hover,.cdf-dialogue .flowee-hotspot:focus-visible{outline:2px solid #b4ebd7;outline-offset:3px;background:#b4ebd712}
 
 .cdf-dialogue[data-flowee-render=fallback] #cdf-account-flowee,.cdf-dialogue[data-flowee-render=fallback] .fairy-wing{animation:none}
+
+/* Intro53: top chrome has no auto margins; welcome stays in the scene. */
+.cdf-dialogue header,.cdf-dialogue .luvo-scene-tools{margin:0;align-self:stretch}
+.cdf-dialogue[data-dialog-interaction=false] .account-panel{display:none}
+.cdf-dialogue[data-dialog-interaction=false] .flowee-more,.cdf-dialogue[data-dialog-interaction=false] .flowee-question{display:none}
+.cdf-dialogue[data-dialog-mode=welcome] .world-window h1{font:clamp(28px,4vw,52px)/1.15 Georgia,serif;background:none;text-shadow:0 2px 16px #000;max-width:80vw}
+.cdf-dialogue .flowee-cinematic p{margin:7px 0 12px}
+.cdf-dialogue .flowee-cinematic-actions{display:flex;flex-direction:column;gap:7px}
+.cdf-dialogue .flowee-cinematic-actions button{min-height:44px;padding:8px 10px;font:13px/1.35 system-ui;border:1px solid #66877b;background:#173d35;color:#f2f8ed}
+.cdf-dialogue .flowee-cinematic-actions button.primary{background:#b7e9d4;color:#173b35}
+.cdf-dialogue[data-dialog-interaction=false] .flowee-guide{width:min(300px,72vw)}
+.cdf-dialogue .flowee-guide{animation:cdf-speech-enter .6s ease-out}
+@keyframes cdf-speech-enter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.cdf-dialogue .flowee-guide{animation:none}}

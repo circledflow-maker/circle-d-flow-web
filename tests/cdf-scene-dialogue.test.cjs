@@ -15,3 +15,10 @@ test('answer overlays never reduce the scene frame; projected speech stays insid
  assert.deepEqual(viewportFrame(390,844),{left:0,top:0,width:390,height:844});
  for(const x of [45,300]){const p=bubblePosition({x,y:300,width:390,height:844,top:120,bottom:470,bubbleWidth:240,bubbleHeight:90});assert.ok(p.left>=12&&p.left+240<=378);assert.ok(p.top>=120&&p.top+90<=458);assert.equal(p.tail,x>195?'right':'left');}
 });
+
+test('cinematic welcome and narration need no answer sheet, real choices and forms do',()=>{
+ const {interactionMode}=require('../js/cdf_scene_dialogue.js');
+ for(const mode of ['register','login','outcome'])assert.equal(interactionMode({mode}),true);
+ for(const beat of ['many_worlds','first_step','return_path','threshold'])assert.equal(interactionMode({mode:'story',beat}),true);
+ for(const x of [{mode:'welcome'},{mode:'story',beat:'city_light'},{mode:'story',beat:'flowee_lantern'},{mode:'unknown'}])assert.equal(interactionMode(x),false);
+});

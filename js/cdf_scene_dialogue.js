@@ -7,12 +7,21 @@
  cancel(){first=null;invalid=false;active.clear();}
  };}function viewportFrame(width,height){return{left:0,top:0,width:Math.max(1,Number(width)||1),height:Math.max(1,Number(height)||1)};}
  function bubblePosition({x,y,width,height,top=12,bottom=height,bubbleWidth=240,bubbleHeight=90}){const w=Math.min(bubbleWidth,width-24),side=x>width/2?'right':'left';const left=Math.max(12,Math.min(width-w-12,side==='right'?x-w-16:x+16));const ceiling=Math.max(top,bottom-bubbleHeight-12);return{left,top:Math.max(top,Math.min(ceiling,y-30)),tail:side};}
- const api={swipe,gesture,viewportFrame,bubblePosition};if(typeof module==='object'&&module.exports)module.exports=api;
+ function interactionMode({mode,beat}={}){return ['register','login','outcome'].includes(mode)||(mode==='story'&&['many_worlds','first_step','return_path','threshold'].includes(beat));}
+ const api={swipe,gesture,viewportFrame,bubblePosition,interactionMode};if(typeof module==='object'&&module.exports)module.exports=api;
  const doc=root.document,main=doc?.querySelector('.journey-shell');if(!main)return;
  const $=id=>doc.getElementById(id),panel=doc.querySelector('.account-panel'),scene=doc.querySelector('.world-window'),heading=scene.querySelector('h1'),originalHeading=heading.textContent,guide=doc.querySelector('.flowee-guide');if(guide){guide.id='cdf-flowee-speech';scene.append(guide);}
  const floweeTap=doc.createElement('button');floweeTap.type='button';floweeTap.className='flowee-hotspot';floweeTap.hidden=true;floweeTap.setAttribute('aria-controls','cdf-flowee-speech');floweeTap.setAttribute('aria-expanded','true');scene.append(floweeTap);
  floweeTap.addEventListener('click',()=>{if(guide){guide.hidden=!guide.hidden;floweeTap.setAttribute('aria-expanded',String(!guide.hidden));if(!guide.hidden)frame();}});
  const words={de:{options:'Weitere Wege & Hinweise',peek:'Antworten ausblenden',reply:'Antworten zeigen',swipe:'← Auf der Szene wischen oder ziehen →',login:'Vorhandenes Konto'},en:{options:'More paths & information',peek:'Hide answers',reply:'Show answers',swipe:'← Swipe or drag on the scene →',login:'Existing account'},pt:{options:'Mais caminhos e informações',peek:'Ocultar respostas',reply:'Mostrar respostas',swipe:'← Desliza ou arrasta na cena →',login:'Conta existente'}};
+ const greeting={
+ de:{title:'Willkommen.',body:'Ich bin Flowee. Folge meinem Licht – in deinem Tempo. Deine Reise beginnt hier.',start:'Mit Flowee beginnen',login:'Ich habe ein Konto',back:'Zurück'},
+ en:{title:'Welcome.',body:'I’m Flowee. Follow my light, at your own pace. Your journey begins here.',start:'Begin with Flowee',login:'I have an account',back:'Back'},
+ pt:{title:'Bem-vindo.',body:'Sou a Flowee. Segue a minha luz, ao teu ritmo. A tua viagem começa aqui.',start:'Começar com a Flowee',login:'Já tenho conta',back:'Voltar'}};
+ const cinematic=doc.createElement('div');cinematic.className='flowee-cinematic';const cinematicCopy=doc.createElement('p'),cinematicActions=doc.createElement('div');cinematicActions.className='flowee-cinematic-actions';
+ const cinematicNext=doc.createElement('button'),cinematicBack=doc.createElement('button');for(const button of [cinematicNext,cinematicBack])button.type='button';cinematicNext.className='primary';cinematic.append(cinematicCopy,cinematicActions);cinematicActions.append(cinematicNext,cinematicBack);guide?.querySelector('.flowee-speech').append(cinematic);
+ cinematicNext.addEventListener('click',()=>{if(doc.body.dataset.dialogMode==='welcome')$('start-journey').click();else $('story-next').click();});
+ cinematicBack.addEventListener('click',()=>{if(doc.body.dataset.dialogMode==='welcome')$('mode-login').click();else $('story-back').click();});
  function put(el,value){if(el.textContent!==value)el.textContent=value;}
  const text=()=>words[doc.documentElement.lang]||words.en,options=doc.createElement('details'),summary=doc.createElement('summary');options.className='journey-options';options.append(summary);
  const quick=doc.createElement('button');quick.type='button';quick.className='quick-login';quick.addEventListener('click',()=>{options.open=false;$('mode-login').click();});options.append(quick);
@@ -37,7 +46,11 @@
   if(noSceneFairy&&guide?.hidden){guide.hidden=false;floweeTap.setAttribute('aria-expanded','true');}
   put(floweeTap,({de:'',en:'',pt:''})[doc.documentElement.lang]||'');
   floweeTap.setAttribute('aria-label',({de:'Flowees Sprechblase öffnen oder schließen',en:'Open or close Flowee’s speech bubble',pt:'Abrir ou fechar a fala da Flowee'})[doc.documentElement.lang]||'Open or close Flowee’s speech bubble');
-  const title=mode==='story'?$('story-title').textContent:mode==='register'?register.querySelector('[data-journey-step]:not([hidden]) h2')?.textContent:originalHeading;if(heading.textContent!==title)heading.textContent=title||originalHeading;
+  const hello=greeting[doc.documentElement.lang]||greeting.en,beat=story.dataset.introBeat,interactive=interactionMode({mode,beat});
+  const nextInteraction=String(interactive);if(doc.body.dataset.dialogInteraction!==nextInteraction)doc.body.dataset.dialogInteraction=nextInteraction;
+  if(cinematic.hidden===!interactive)cinematic.hidden=interactive;
+  put(cinematicCopy,mode==='welcome'?hello.body:$('story-body').textContent);put(cinematicNext,mode==='welcome'?hello.start:$('story-next').textContent);put(cinematicBack,mode==='welcome'?hello.login:hello.back);
+  const title=mode==='welcome'?hello.title:mode==='story'?$('story-title').textContent:mode==='register'?register.querySelector('[data-journey-step]:not([hidden]) h2')?.textContent:originalHeading;if(heading.textContent!==title)heading.textContent=title||originalHeading;
   const question=$('flowee-question'),more=$('flowee-more'),moreLabel=$('flowee-more-label'),answers=$('register-answers'),status=$('auth-status'),entry=$('identity-entry');
   const compact=root.innerWidth<=700||root.innerHeight<=500;
   if(question){const hideQuestion=!(compact&&mode==='register');if(question.hidden!==hideQuestion)question.hidden=hideQuestion;put(question,title||originalHeading);}
@@ -45,7 +58,7 @@
   const nextSpeechKey=String(compact)+':'+mode+':'+(title||'');
   if(more&&speechKey!==nextSpeechKey){more.open=!(compact&&mode==='register');speechKey=nextSpeechKey;}
   if(answers&&status){if(mode==='register'&&status.parentNode!==answers)answers.prepend(status);else if(mode!=='register'&&status.parentNode!==panel)panel.insertBefore(status,entry);}
-  const nextViewKey=mode+':'+(title||'');if(viewKey!==nextViewKey){if(answers)answers.scrollTop=0;viewKey=nextViewKey;}
+  const nextViewKey=mode+':'+(title||'');if(viewKey!==nextViewKey){if(answers)answers.scrollTop=0;doc.body.dataset.sceneExpanded='false';peek.setAttribute('aria-expanded','true');if(guide)guide.hidden=false;viewKey=nextViewKey;root.requestAnimationFrame(frame);}
 
   put(summary,text().options);put(quick,text().login);put(tip,mode==='register'?({de:'Weiter mit dem sichtbaren Button',en:'Use the visible Continue button',pt:'Usa o botão Continuar'})[doc.documentElement.lang]||'Use Continue':text().swipe);put(peek,doc.body.dataset.sceneExpanded==='true'?text().reply:text().peek);
  }
