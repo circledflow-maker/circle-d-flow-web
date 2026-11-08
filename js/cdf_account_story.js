@@ -31,6 +31,7 @@
   if(index===3)button(text.lantern,advance);
   if(index===4){button(text.login,toLogin);button(text.guest,()=>{remember();present(5);});}
   $('flowee-help').hidden=true;$('flowee-help-copy').hidden=true;
+  if(root.CustomEvent&&root.dispatchEvent)root.dispatchEvent(new root.CustomEvent('cdf:story-state',{detail:snapshot()}));
  }
  function advance(){if(index===4){toRegister();return;}if(index===3){root.CDFAccountMotion?.fairy('ready');root.CDFLuvoScene?.pulse();}if(index<5)present(index+1);}
  primary.onclick=advance;skip.onclick=()=>present(4);back.onclick=()=>{if(history.length)present(history.pop(),false);else{hide();originalRegister();}};
@@ -38,5 +39,10 @@
  $('mode-login').onclick=toLogin;$('mode-register').onclick=()=>exit(originalRegister);
  guestEntry.onclick=()=>{history=[];remember();present(5,false);};
  doc.addEventListener('keydown',event=>{if(event.key==='Escape'&&!host.hidden){event.preventDefault();if(index<4)present(4);else{hide();originalRegister();}}});
- root.CDFAccountStory={refresh:render};render();
+ function snapshot(){return host.hidden?null:{step:data.ids[index],intent:['explore','create','learn','community'][selected]||null};}
+ function restore(state){if(!state||Object.keys(state).some(k=>!['step','intent'].includes(k))||!data.ids.includes(state.step)||![null,'explore','create','learn','community'].includes(state.intent))return false;
+  if(!$('login-section').hidden||!$('register-section').hidden)return false;
+  selected=['explore','create','learn','community'].indexOf(state.intent);const next=data.ids.indexOf(state.step);history=Array.from({length:next},(_,i)=>i);remember();present(next,false);return true;
+ }
+ root.CDFAccountStory=Object.freeze({refresh:render,snapshot,restore});render();
 })(window);

@@ -1,4 +1,5 @@
 /* Scene-first mobile dialogue. Page stays still; only long answer content scrolls. */
+.cdf-dialogue .world-window{pointer-events:auto;touch-action:pan-y pinch-zoom;user-select:none}
 .dialog-copy{min-height:0}.scene-peek{pointer-events:auto;font-size:.72rem;background:#0a2029d9}.scene-controls{display:flex;align-items:center;gap:10px;width:100%;justify-content:space-between;pointer-events:auto}.scene-swipe-tip{font:10px/1.3 system-ui;color:#d8e8df;background:#06151aaa;padding:5px 9px;border-radius:8px}
 .journey-options{flex:none;border-top:1px solid #9dbaac44;font-size:.74rem}.journey-options>summary{color:var(--mint)}.journey-options .identity-details{margin:0}.journey-options footer{margin:0}.journey-options .luvo-cultural-note{margin:0;padding:8px 0;border:0;background:none}.journey-options .quick-login{font-size:.75rem;min-height:44px}
 .flowee-tutorial-fairy:has(svg){background:none!important;box-shadow:none!important;border-radius:0!important;width:34px!important;height:26px!important}.flowee-tutorial-fairy:has(svg):before,.flowee-tutorial-fairy:has(svg):after{display:none!important}
