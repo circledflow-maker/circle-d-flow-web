@@ -9,7 +9,8 @@
  const dialog=doc.createElement('dialog');dialog.id='sanctuary-awakening';dialog.setAttribute('aria-labelledby','awakening-title');
  const eyebrow=doc.createElement('p');eyebrow.className='eyebrow';eyebrow.textContent='FLOWEE / SANCTUARY';
  const title=doc.createElement('h2');title.id='awakening-title';title.tabIndex=-1;const body=doc.createElement('p'),note=doc.createElement('p');note.className='small-note';
- const actions=doc.createElement('div');actions.className='awakening-actions';dialog.append(eyebrow,title,body,note,actions);doc.body.append(dialog);
+ const content=doc.createElement('div');content.className='awakening-copy';content.append(body,note);
+ const actions=doc.createElement('div');actions.className='awakening-actions';dialog.append(eyebrow,title,content,actions);doc.body.append(dialog);
  const replay=doc.createElement('button');replay.type='button';replay.className='awakening-replay';doc.getElementById('welcome-wayfinder')?.parentNode.append(replay);
  const text=()=>copy[doc.documentElement.lang]||copy.en;
  function button(label,action){const b=doc.createElement('button');b.type='button';b.textContent=label;b.addEventListener('click',action);actions.append(b);return b;}

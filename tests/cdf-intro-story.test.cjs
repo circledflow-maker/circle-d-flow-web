@@ -24,8 +24,8 @@ function arrival({query='?intro=first-light',ready=false}={}){
 }
 test('ordinary Sanctuary visits do not open an unsolicited intro',()=>assert.equal(arrival({query:''}).dialog,undefined));
 test('arrival waits for actual scene ready and can finish with keyboard-native dialog close',()=>{const x=arrival();assert.equal(x.doc.body.dataset.arrivalState,'loading');x.events['sanctuary:ready']();assert.equal(x.doc.body.dataset.arrivalState,'scene');assert.equal(x.dialog.children[1].textContent,'Unter Blättern');x.dialog.close();assert.equal(x.root.replaced,'/sanctuary');assert.equal(x.nodes['courtyard-title'].focused,true);});
-test('failed scene and timeout both provide a simple-view narrative',()=>{for(const fail of [x=>x.events['sanctuary:unavailable'](),x=>x.timers[0]()]){const x=arrival();fail(x);assert.equal(x.doc.body.dataset.arrivalState,'simple');assert.match(x.dialog.children[3].textContent,/Ruhige Ansicht/);}});
-test('user can request simple view before GPU loading completes',()=>{const x=arrival();x.dialog.children[4].children[0].click();assert.equal(x.simple(),true);assert.equal(x.doc.body.dataset.arrivalState,'simple');});
+test('failed scene and timeout both provide a simple-view narrative',()=>{for(const fail of [x=>x.events['sanctuary:unavailable'](),x=>x.timers[0]()]){const x=arrival();fail(x);assert.equal(x.doc.body.dataset.arrivalState,'simple');assert.match(x.dialog.children[2].children[1].textContent,/Ruhige Ansicht/);}});
+test('user can request simple view before GPU loading completes',()=>{const x=arrival();x.dialog.children[3].children[0].click();assert.equal(x.simple(),true);assert.equal(x.doc.body.dataset.arrivalState,'simple');});
 function controller(){
  const names=['story-section','start-journey','mode-login','mode-register','story-next','story-back','story-skip','story-choices','welcome-section','login-section','register-section','flowee-help','flowee-help-copy','story-title','story-count','story-body','story-note','flowee-dialogue'];
  const nodes=Object.fromEntries(names.map(id=>[id,new Element(id==='story-choices'?'div':'button')]));nodes['story-section'].hidden=true;nodes['story-next'].parentNode=new Element();
@@ -40,4 +40,4 @@ test('skip reaches an honest guest/account menu; guest reaches Sanctuary without
 test('account choice invokes existing form and direct login stays available',()=>{const x=controller(),n=x.nodes;n['start-journey'].click();n['story-skip'].click();n['story-next'].click();assert.equal(x.calls.register,1);assert.equal(n['story-section'].hidden,true);n['mode-login'].click();assert.equal(x.calls.login,1);});
 
 
-test('a late renderer cannot override an explicit simple-view choice',()=>{const x=arrival();x.dialog.children[4].children[0].click();x.events['sanctuary:ready']();assert.equal(x.doc.body.dataset.arrivalState,'simple');assert.equal(x.simple(),true);});
+test('a late renderer cannot override an explicit simple-view choice',()=>{const x=arrival();x.dialog.children[3].children[0].click();x.events['sanctuary:ready']();assert.equal(x.doc.body.dataset.arrivalState,'simple');assert.equal(x.simple(),true);});
