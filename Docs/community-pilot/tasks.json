@@ -278,7 +278,7 @@
     {
       "id": "CDF-DAIKU44",
       "project": "CDF / Pilot-Pipeline und Geschäftsprüfung",
-      "goal": "Bestehende Pilot-/Medienbelege auf höchstens drei entscheidungsrelevante Lücken prüfen; konkrete öffentliche Terminhinweise nur bei Bedarf verifizieren",
+      "goal": "Entscheidungsrelevante Beleglücken prüfen und höchstens eine begründete kleine Potenzialempfehlung für den Pilot liefern",
       "owner": "Daiku (Auftrag vorbereitet; Übernahme noch nicht bestätigt)",
       "tool": "Vorhandene Repo-Belege; öffentliche Primärquellen nur bei konkreter entscheidungsrelevanter Lücke",
       "baseline": "Business56/Model55; aktuelle Koordination in PR17 vor Beginn erneut lesen",
@@ -289,7 +289,7 @@
       "acceptance": "Bis3 belegte Abhängigkeiten,1 prüfbare Nutzenhypothese,1 nächste Empfehlung; Quelle/Annahme/Lücke getrennt; private Kalenderentwürfe bleiben Team/; kein Produktdiff",
       "state": "Aktueller Folgebrief und validierteRoutingzuordnung vorbereitet; tatsächlicheexterneAnnahme/Lauf offen",
       "evidence": "handoffs/2026-11-08_business56_codex-an-daiku.md",
-      "next": "Aktualisierten Folgebrief ausdrücklich annehmen, höchstens zwei bereinigte Dateiexporte liefern; kein automatischer Start oder Wiederholen alter Myth48-Recherche",
+      "next": "Aktuelle Inbox und Decision59 lesen; vorhandene Belege nutzen, Recherche nur für konkrete offene Entscheidung; zwei bereinigte Ergebnisdateien",
       "exchange_status": "pending"
     },
     {
@@ -557,7 +557,25 @@
       "acceptance": "Kanonische Pipeline-ID, richtige Inhaltsart/Artistidentität, vollständiger Review, belegte Rechte/Credits und geprüftes Profil-/Video-/Kontaktziel; Publikation separat",
       "state": "15 vorhandene Paketverzeichnisse privat zugeordnet; begrenzte Websitewege geprüft; öffentliche Profil-/Assetzuweisung und neue Hör-/Bildabnahme offen",
       "evidence": "Docs/community-pilot/content-integration58-20261108.md",
-      "next": "Erstes vorhandenes Artist-/Performancepaket vollständig prüfen und geschützte Website-Referenz vorbereiten; Begriff Betzen offen"
+      "next": "Erstes vorhandenes Artist-/Performancepaket vollständig prüfen und geschützte Website-Referenz vorbereiten; Begriffsrückfrage laut Hope geschlossen"
+    },
+    {
+      "id": "CDF-DECISION59",
+      "project": "CDF / Business und Entscheidungskoordination",
+      "goal": "Potenziale begrenzt bewerten und Hopes Kalenderentscheidungen nachvollziehbar mit bestehenden Aufgaben verbinden",
+      "owner": "Codex Ebene2; finale Entscheidung Hope; menschliche Business-Besetzung noch nicht zugeordnet",
+      "tool": "Bestehende Repo-/Dateiablage und autorisierter Google-Kalender-Browserzugriff",
+      "baseline": "25ec8aeedd0b96218be073ace0b5c2c04f25a65b",
+      "dependencies": [
+        "CDF-P01",
+        "CDF-BUSINESS56",
+        "CDF-CONTENT58"
+      ],
+      "timebox": "Begrenzte manuelle Einrichtung; keine wiederkehrende Automatik",
+      "acceptance": "Fünf private Entscheidungsmerker gespeichert, zwei bestehende Postingbögen ergänzt; Begriff geklärt, genau ein kleiner Potenzialtest empfohlen; private Details bleiben lokal",
+      "state": "Kalender und Entscheidungsweg eingerichtet; Hopes Entscheidungen und externe Agentenannahme offen",
+      "evidence": "Docs/community-pilot/decision59-20261108.md",
+      "next": "Bei nächster gestarteter Arbeit Kalenderentscheidungen prüfen und CDF-P01 fortsetzen; keine pauschale Publikationsfreigabe ableiten"
     }
   ]
 }

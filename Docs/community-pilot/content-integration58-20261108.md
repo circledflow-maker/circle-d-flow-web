@@ -36,4 +36,4 @@ Codex: Website-Zuordnung, technische Integrationsvorbereitung und Belegführung.
 Bestehende Editorial-Producer-/Cutter-Perspektive: genaue Fassung prüfen und redaktionell fertigstellen; tatsächlicher Hör-/Schnittbearbeiter noch nicht zugeordnet.
 Hope: kreative Wahl und konkrete Veröffentlichungsentscheidung. Externe Agentenstarts bleiben wie in Orchestra57 separat zu bestätigen.
 CDF-P01 bleibt die erste Website-Abnahme; Contentarbeit ist ihr verbundener Inhaltsstrang. Pilotziel und Zeitgrenzen aus Business56 bleiben unverändert.
-Der unklare Begriff „Betzen“ ist noch nicht zugeordnet und wurde zur Klärung zurückgefragt. Er blockiert die übrige Zuordnung nicht.
+Klärung durch Hope am 2026-11-08: „Betzen“ hat keine besondere Bedeutung. Die Rückfrage ist geschlossen; kein eigenes Aufgabenfeld. Potenzialsichtung und Kalenderentscheidungen: decision59-20261108.md.

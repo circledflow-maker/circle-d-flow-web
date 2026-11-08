@@ -47,3 +47,8 @@ Parallel höchstens eine vorhandene Mediencharge und ein begrenzter Modellvergle
 Arbeitsfenster und Entscheidungspunkte: delivery-plan-20261108.md. Private persönliche Kapazität und Veranstaltungs-/Gastdetails bleiben in Team/.
 Wöchentlicher Fortschritt wird über bestandene Abnahmen, tatsächlich geprüfte Medien und begründete Entscheidungen bewertet, nicht über Renderzahl oder neue Rollen.
 19.November: Go/No-Go für vollen Pilotumfang. Fehlen Kernweg-/Sicherheits-/Versionsgates, visuelle Serien und neue Podcastproduktion zurückstellen; keine unvollständige Prüfung als fertigen Pilot ausgeben. Änderungen am Ziel offen mit Hope entscheiden.
+
+
+## Potenziale und Hopes Entscheidungen · Decision59
+Potenzialsichtung gehört zur bestehenden Business-/Analysearbeit: höchstens drei belegte Kandidaten, Nutzen für Beteiligte, Aufwand/Unsicherheit, Abhängigkeiten und genau ein kleiner empfohlener Test. Website zuerst; vorhandene Medienpakete vor neuer Serienproduktion. Keine neue Rolle oder Markt-/Erlösbehauptung.
+Entscheidungen werden in privaten Kalenderbögen vorbereitet und beim nächsten ausdrücklich gestarteten Arbeitslauf mit exakter Fassung/Ziel abgeglichen. GitHub erhält ausschließlich bereinigte Aufgaben/Belege. Ablauf und vorhandene Chancen: decision59-20261108.md. Keine laufende Überwachung oder automatische Veröffentlichung.
