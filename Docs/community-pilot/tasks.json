@@ -31,15 +31,15 @@
       "goal": "Gastorientierung auf Desktop und Smartphone abnehmen",
       "owner": "Codex",
       "tool": "Browser und tatsächliches Smartphone; nur GET/UI ohne Absenden",
-      "baseline": "Intro63 / PR18 c2da5666a75ece2e80d3019360d4cb7596f159a6; aktive E:-Quelle mit geschützter Designvorschau",
+      "baseline": "Intro64 / PR18 618e1bbe0e8464c70ba23ff1618a1f4d6651391a; lokale Designvorschau mit aktualisiertem Community-Einstieg",
       "dependencies": [
         "CDF-F00"
       ],
       "timebox": "ein Gast-Abnahmedurchlauf",
       "acceptance": "Soll/Ist und Beleg je Einstiegsschritt; Emulator/physisch getrennt; keine Kontomutation",
       "state": "Begrenzte Browserstichprobe390×844/360×640/1280×800 und Vollbild-Namenseingabe geprüft; physischer und vollständiger Kernweg offen",
-      "evidence": "Docs/community-pilot/intro63-20261108.md",
-      "next": "Hope prüft Intro63 auf physischem Handy; danach genau belegten Bedienfehler schließen, Auth-/MemberCard-Gates separat"
+      "evidence": "Docs/community-pilot/intro64-20261108.md",
+      "next": "Physisch prüfen, ob Community-Zweck und geplant/verfügbar verständlich sind; vollständige Kernweg-/Authgates separat"
     },
     {
       "id": "CDF-R01",
@@ -593,6 +593,41 @@
       "evidence": "handoffs/2026-11-08_model62_codex-an-antigravity.md",
       "next": "Brief ausdrücklich annehmen und genau zwei Ergebnisdateien liefern",
       "exchange_status": "pending"
+    },
+    {
+      "id": "CDF-INTRO64",
+      "project": "CDF / Community-Einstieg und Charakterstudie",
+      "goal": "Menschlichen Community-Zweck professionell vermitteln und einen weich modellierten Originalreisenden erstellen",
+      "owner": "Codex; zwei tatsächliche interne Teilaufträge; kreative Entscheidung Hope",
+      "tool": "Vanilla-JS-Textpflege, vorhandener Blender5.2.3LTS und bestehender Three-r128-Import",
+      "baseline": "618e1bbe0e8464c70ba23ff1618a1f4d6651391a",
+      "dependencies": [
+        "CDF-P01",
+        "CDF-MODEL55"
+      ],
+      "timebox": "Ein Textpass und ein Charakterprototyp mit einer Optimierung; keine Serie",
+      "acceptance": "DE/EN/PT mit ehrlichen Ausbauzielen; editierbare Quelle/Blend/GLB/Studiobild und tatsächliche Importwerte; Web-/Handygrenzen offen",
+      "state": "Texte lokal und im Produkt-PR; Traveller64 lokal erzeugt/gesichtet/importgeprüft, nicht integriert oder animiert",
+      "evidence": "Docs/community-pilot/intro64-20261108.md",
+      "next": "Model62 abschließen; danach ein isolierter Charaktervergleich vor Integration"
+    },
+    {
+      "id": "CDF-CHARACTER65-ART",
+      "project": "CDF / Charakterabnahme",
+      "goal": "Genau einen vorhandenen Blender-Reisenden nach Abschluss des Lichtvergleichs bewerten",
+      "owner": "Antigravity vorgeschlagen; Annahme offen",
+      "tool": "Vorhandene lokale Studie und Model62-Vergleich, zwei Dateiexporte",
+      "baseline": "618e1bbe0e8464c70ba23ff1618a1f4d6651391a",
+      "dependencies": [
+        "CDF-MODEL62-WEBKIT",
+        "CDF-INTRO64"
+      ],
+      "timebox": "Ein begrenzter Folgepass, nicht parallelzumlaufendenModel62",
+      "acceptance": "Stil/Proportion/Materialwirkung getrennt von echtem Webtest; höchstens eine Änderung mit Beleg; Grenzen offen",
+      "state": "Vorgemerkt, nicht aktiv geroutet oder gestartet",
+      "evidence": "handoffs/2026-11-08_character65_codex-an-antigravity.md",
+      "next": "Erst Model62-Rückgabe prüfen, dann begrenzten Folgebrief aktivieren",
+      "exchange_status": "queued_after_dependency"
     }
   ]
 }
