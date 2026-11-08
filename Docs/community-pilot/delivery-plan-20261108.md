@@ -40,3 +40,8 @@ Die erreichbare Google-Calendar-Verbindung antwortete mehrfach mit Authentifizie
 ## Ausführung Orchestra57 · 2026-11-08
 DerRoutingblocker ausBusiness56 wurdebehoben. Aktuelle begrenzte Aufträge stehen in data/agent_exchange_assignments.json; Details:orchestra57-20261108.md. Pakete werdeninTeam vorbereitet, externeAnnahme/Läufe weiteroffen.
 Codex bleibtProduktintegrationsowner/CDF-P01; Cursor liefertunabhängigenRead-only-Bericht, Antigravity einenModellvergleich, Daiku einenengenBusiness-/Quellencheck. KeineparallelenProduktdateiänderungen. Podcast/Posts laufen überdenbestehendenMaster-/Freigabeprozess, ohnezusätzlicheTerminierung.
+
+## Content58 · Website-Inhalte gehören zur Fertigstellung
+Hopes Präzisierung: Performance-Videos, Manga-Darstellungen und Artist-Profile bilden den Inhaltsstrang der Website. Sie werden nicht auf spätere Podcast-/Social-Arbeit reduziert.
+Website-Abnahme und genau ein vollständig geprüftes Profil-/Videopaket laufen verbunden weiter. Keine Performance automatisch als Porträt oder Künstler als Kontonutzer zuordnen. Inhalte müssen einen bestätigten Kontakt-/Aktivitätsweg unterstützen; Form, Rechte, Credits und technische Einbindung getrennt abnehmen.
+Siehe content-integration58-20261108.md. Der unklare Begriff aus der Anfrage bleibt bis zur Klärung noch nicht zugeordnet.

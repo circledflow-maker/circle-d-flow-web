@@ -33,3 +33,8 @@ Dieser ältere M01-Brief bleibt historisch erhalten. Sein Dateinachweis vom06.No
 Nächste Charge: genau eine bereits vorhandene kurze CDF-Community-Fassung prüfen; konkrete private Quellversion und identifizierende Materialdetails im lokalen Produktionsbogen. Neue Performance-/Flow-Talk-/Podcast-Varianten nicht gleichzeitig starten.
 Vollständig hören, Sinn/Untertitel/Name/Einwilligung/Credits prüfen; danach höchstens wichtigste Korrektur, ein Master und je nach bestätigtem Ziel YouTube-/Instagram-/App-Entwurf. Tatsächlicher Hör-/Redaktionsbearbeiter noch nicht zugeordnet. Podcast bleibt zunächst Flow-Talk-Brief, keine Aufnahmezusage.
 Zuerst ein geprüftes aktuelles App-/Kontaktziel; kein Ereignisdatum oder Veröffentlichungstermin aus alten Quellen ableiten. Siehe media-formats-20261108.md und delivery-plan-20261108.md.
+
+## Content58 · Präzisierung2026-11-08
+Performance-Videos und Manga-/Artist-Profile werden für die Website selbst produziert, nicht nur für Social Media. Podcast ergänzt diesen Inhaltsstrang. Ein vorhandenes Artist- oder Performancepaket als erste Website-Referenz vollständig prüfen; keine neue pauschale Videoproduktion vor Sichtung.
+Interne Bearbeitung und geschützte Vorschau können im vorhandenen autorisierten Rahmen weitergehen. Öffentliche Einbindung und kanalspezifische Veröffentlichung benötigen die jeweilige konkrete Freigabe.
+Die private Arbeitszuordnung umfasst15 bestehende aktuelle Pakete, ohne neue öffentliche Personen-/Konto-/Rechtezuweisung. Details:content-integration58-20261108.md.

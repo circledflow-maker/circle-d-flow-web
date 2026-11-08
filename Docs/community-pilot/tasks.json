@@ -74,7 +74,7 @@
     {
       "id": "STAGES-M01",
       "project": "CDF / Circle D Stages",
-      "goal": "Genau eine vorhandene kurze CDF-Community-Fassung vollständig prüfen, bevor weitere Medienvarianten entstehen",
+      "goal": "Ein vorhandenes Artist- oder Performancepaket vollständig prüfen und als erste Website-Inhaltsreferenz vorbereiten",
       "owner": "noch nicht zugeordnet",
       "tool": "vorhandener Player/Schnittwerkzeug ohne Upload",
       "baseline": "Medien56: vorhandene technische Reviewfassungen registriert/Dateiexistenz geprüft; vollständige Hör-/Rechte-/Redaktionsabnahme offen",
@@ -83,7 +83,7 @@
       "acceptance": "Materialfassung und Rechte-/Creditslücken belegt; konkretes Ziel vor aktiver CTA",
       "state": "Bestand durch interne Produktionsprüfung eingeordnet; ausführender Hör-/Redaktionsprüfer noch nicht zugeordnet",
       "evidence": "Docs/community-pilot/media-brief.md",
-      "next": "Eine private Quellfassung/Owner wählen, vollständig hören und Rechte/Credits prüfen; danach ein Master und freigegebene Kanalentwürfe"
+      "next": "Genaue bestehende Fassung sichten/hören, Identität/Rechte/Credits prüfen und Profil-/Video-/Kontaktziel belegen; Social-Ableitungen aus geprüftem Master"
     },
     {
       "id": "CDF-B01",
@@ -541,6 +541,23 @@
       "state": "Routingimplementiert,9Testsbestanden/1Host-Symlinktestübersprungen; tatsächlicheexterneAnnahme/Läufeoffen",
       "evidence": "Docs/community-pilot/orchestra57-20261108.md",
       "next": "AktuellePaketevorbereitenundquittieren,danachCDF-P01/ersteWebsite-AbnahmevorweitererPlanrunde"
+    },
+    {
+      "id": "CDF-CONTENT58",
+      "project": "CDF / Website-Inhalte und Medienproduktion",
+      "goal": "Vorhandene Performance-/Manga-/Artist-Pakete ohne falsche Identitäts- oder Freigabeannahmen mit der Website verbinden",
+      "owner": "Codex für Zuordnung; Hör-/Schnittbearbeiter noch nicht zugeordnet",
+      "tool": "Bestehende private Medienpipeline und aktuelle Website-Quellprüfung, keine neue Quelle oder Plattform",
+      "baseline": "Koordination183376def2e9bcc6e658ed0563e3768409b5c417; vorhandene V7/V8-Metadaten",
+      "dependencies": [
+        "STAGES-M01",
+        "CDF-P01"
+      ],
+      "timebox": "Ein vorhandenes Paket als Integrationsreferenz vor einer Serienproduktion",
+      "acceptance": "Kanonische Pipeline-ID, richtige Inhaltsart/Artistidentität, vollständiger Review, belegte Rechte/Credits und geprüftes Profil-/Video-/Kontaktziel; Publikation separat",
+      "state": "15 vorhandene Paketverzeichnisse privat zugeordnet; begrenzte Websitewege geprüft; öffentliche Profil-/Assetzuweisung und neue Hör-/Bildabnahme offen",
+      "evidence": "Docs/community-pilot/content-integration58-20261108.md",
+      "next": "Erstes vorhandenes Artist-/Performancepaket vollständig prüfen und geschützte Website-Referenz vorbereiten; Begriff Betzen offen"
     }
   ]
 }
