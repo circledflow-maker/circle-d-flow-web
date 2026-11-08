@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-11-07",
+  "updated": "2026-11-08",
   "coordinator": "Codex (Ebene 2)",
   "decision_owner": "Hope",
   "first_community_task": "CDF-P01",
@@ -197,7 +197,7 @@
       "id": "CDF-INTRO37-ART",
       "project": "CDF / Flowee / Sanctuary",
       "goal": "Regieblatt für drei bestehende Intro-/Ankunftsmomente",
-      "owner": "Antigravity (vorgesehen; Annahme nicht bestätigt)",
+      "owner": "Antigravity (begrenzte Quellprüfung geliefert; formale Rolle noch nicht zugeordnet)",
       "tool": "vorhandene Quellen und optional nachgewiesener Browser; keine Generierung",
       "baseline": "264a7c725fd4acca69e58ffdfa36601e9d3c29c8",
       "dependencies": [
@@ -205,9 +205,10 @@
       ],
       "timebox": "erster Prüfpass höchstens5 Minuten im vorhandenen gemeinsamen Restbudget; keine zusätzliche Tagesfreigabe",
       "acceptance": "eigene begrenzte Ergebnisdatei, Ist/Vorschlag/Unsicherheit getrennt; kein Produktdiff; genau eine Empfehlung",
-      "state": "Übergabe vorbereitet, nicht gestartet",
-      "evidence": "handoffs/2026-11-07_intro37_codex-an-antigravity.md",
-      "next": "Antigravity übernimmt nach manuellem Prompt; Ergebnisdatei/Commit an Codex"
+      "state": "Quellprüfungsbericht empfangen und von Codex eingeordnet; eine Empfehlung ausgewählt und durch Codex umgesetzt",
+      "evidence": "Docs/community-pilot/intro37-antigravity-direction-20261107.md",
+      "next": "Visuelle Geräteabnahme von Intro45; keine alte Recherche neu verteilen",
+      "exchange_status": "received_reviewed"
     },
     {
       "id": "CDF-INTRO37-CULTURE",
@@ -290,6 +291,22 @@
       "evidence": "handoffs/2026-11-07_pilot-pipeline_codex-an-daiku.md",
       "next": "Daiku übernimmt den begrenzten Brief und liefert genau2 bereinigte Ergebnisdateien; Codex prüft und integriert",
       "exchange_status": "pending"
+    },
+    {
+      "id": "CDF-INTRO45",
+      "project": "CDF / Sanctuary-Ankunft",
+      "goal": "Szenensichtbares mobiles Erwachen mit kompakter Dialogkarte",
+      "owner": "Codex",
+      "tool": "Vanilla CSS/JS; bestehende Node-Tests; geschützte LAN-Vorschau",
+      "baseline": "02a19e8f8816292b770d18cda5f621c4bb9dc148",
+      "dependencies": [
+        "CDF-INTRO37-ART"
+      ],
+      "timebox": "dieser ausdrücklich beauftragte lokale Umsetzungsschritt",
+      "acceptance": "Unterer Dialog ohne Blur, interne Textrolle, erreichbare Aktionen; Kamera unverändert; reale mobile Sichtprüfung getrennt",
+      "state": "Lokal umgesetzt,24 Tests bestanden; Browsersteuerung gestoppt, neue visuelle/physische Abnahme offen",
+      "evidence": "Docs/community-pilot/intro45-20261108.md",
+      "next": "Hope testet den echten Gastweg und drei Ankunftsschritte auf Smartphone im Heim-WLAN; danach genau einen beobachteten Fehler prüfen"
     }
   ]
 }
