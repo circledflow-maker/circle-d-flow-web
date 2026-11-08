@@ -436,9 +436,25 @@
       ],
       "timebox": "Ein begrenzter aktueller Bild-/Bediencheck",
       "acceptance": "Kopfzeile oben, keine abgeschnittene Begrüßung, eine Flowee rechts oben, volle Szene; Antwortpanel erst bei echter Wahl/Handlung/Eingabe; Softwaretastatur/Zurückweg erreichbar",
-      "state": "Implementiert,32 Node- und3 Strukturtests sowie4 Geometrie-/Projektionsläufe bestanden; echte Bild-/Touchabnahme NOT_RUN",
+      "state": "Hope bestätigt Sprechblasenrichtung; echte Screenshots belegen verdeckte Flowee/große Blase. Folgekorrektur54 umgesetzt, keine volle Bildfreigabe",
       "evidence": "Docs/community-pilot/intro53-20261108.md",
-      "next": "Hope prüft Handy/Desktop-Einstieg und ersten Wahlwechsel; größten belegten Kernwegfehler schließen"
+      "next": "Aktuelle54-Figur/Blase abnehmen"
+    },
+    {
+      "id": "CDF-INTRO54-FLOWEE",
+      "project": "CDF / kostenloser Kernweg und Intro",
+      "goal": "Eine lesbare Flowee mit kurz eingeblendeter, schließbarer Blase; freier Weltblick",
+      "owner": "Codex; echte Geräteprüfung Hope",
+      "tool": "Vanilla/Three-r128, bestehende begrenzte lokale Vorschau",
+      "baseline": "4e9e2ee786656c32ea6df3f5223afddbd7252e78",
+      "dependencies": [
+        "CDF-INTRO53-CINEMA"
+      ],
+      "timebox": "Eine aktuelle mobile/desktop Sicht- und Bedienabnahme",
+      "acceptance": "Flowee an wechselnden Positionen sichtbar außerhalb der Blase; kurze Texte vollständig durchblätterbar; ×/Flowee öffnen/schließen, freie Szene bei versteckten Antworten; ruhiger Ersatz erreichbar",
+      "state": "Implementiert und technisch geprüft; physische aktuelle Sicht-/Touchabnahme NOT_RUN",
+      "evidence": "Docs/community-pilot/intro54-20261108.md",
+      "next": "Hope prüft54, anschließend genau größtes belegtes Kernwegproblem; Blender-Vergleichsasset erst danach"
     }
   ]
 }
