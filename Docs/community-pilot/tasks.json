@@ -53,8 +53,8 @@
       ],
       "timebox": "begrenzte Inventur je öffentlichem Modul",
       "acceptance": "Quellenmanifest und semantische Konflikte statt pauschalem Upload; keine fremden Änderungen überschreiben",
-      "state": "Release60:39 direkte JS/CSS-Pfade an PR18 592de002 geprüft;14 fehlen,17 bytegleich,5 nur lokale CRLF-Unterschiede,3 Hashabweichungen noch nicht semantisch klassifiziert",
-      "evidence": "Docs/community-pilot/release60-20261108.md",
+      "state": "Intake61:3 fehlende Basis-Stylesheets in PR18 ergänzt;11 der14 direkten Ressourcen noch offen, Auth-Differenzen/transitive Prüfung offen",
+      "evidence": "Docs/community-pilot/intake61-20261108.md",
       "next": "Fehlende14 direkten Ressourcen einzeln prüfen/ergänzen; Auth-Unterschiede semantisch klären und bewusst abweichenden Assetpfad erhalten; danach transitive Abhängigkeiten und echte Tests"
     },
     {
@@ -287,10 +287,10 @@
       ],
       "timebox": "Ein erster Pass höchstens5 Minuten innerhalb gemeinsamer20 Minuten Projektarbeit; keine automatische Wiederholung ohne belegtes Restbudget",
       "acceptance": "Bis3 belegte Abhängigkeiten,1 prüfbare Nutzenhypothese,1 nächste Empfehlung; Quelle/Annahme/Lücke getrennt; private Kalenderentwürfe bleiben Team/; kein Produktdiff",
-      "state": "Hope bestätigt Zustellung; E:-Unzugänglichkeit bestätigt, GitHub-Verbindung und Rückgabe noch nicht belegt",
+      "state": "Zwei Originalexporte empfangen; begrenzter Dokumentenreview geprüft, formale Rollen-/Pilotabnahme offen",
       "evidence": "handoffs/2026-11-08_business56_codex-an-daiku.md",
-      "next": "Öffentliche Grundlagen am tatsächlichen GitHub-Commit lesen; zwei vollständige Markdown-Exporte mit Quellenstand an Hope liefern",
-      "exchange_status": "pending"
+      "next": "Kein neuer Recherchelauf; bestehende Abnahme-/Mediengates bearbeiten",
+      "exchange_status": "received_reviewed"
     },
     {
       "id": "CDF-INTRO45",
@@ -503,10 +503,10 @@
       ],
       "timebox": "Ein begrenzter Vergleich; keine neue Modellserie oder Dienste",
       "acceptance": "Kosten/Rechte/Provenienz, eigne Silhouette/Funktion, echter Weblichtvergleich bzwNOT_RUN, höchstens eine priorisierte Empfehlung",
-      "state": "Auftrag laut Hope zugestellt; tatsächliche Ausführung und Ergebnis offen",
+      "state": "Quellreview privat empfangen und geprüft; BLEND-Annahme korrigiert; echter Weblichtvergleich NOT_RUN",
       "evidence": "handoffs/2026-11-08_model56_codex-an-antigravity.md",
-      "next": "Brief ausdrücklich annehmen; zwei bereinigte Ergebnisdateien exportieren, kein automatischer Push/Deploy",
-      "exchange_status": "pending"
+      "next": "Genau ein isoliertes Vergleichsfixture vorbereiten, keine Weltserie",
+      "exchange_status": "received_reviewed"
     },
     {
       "id": "CDF-CORE57-QA",
@@ -520,9 +520,9 @@
       ],
       "timebox": "ErsterPasshöchstens5Minuten innerhalb tatsächlichbekanntergemeinsamerRestgrenze",
       "acceptance": "Zuerst390×844,Version/Repro/PASS-FAIL-NOT_RUN,eineFlowee/Blase/Welt/Antworten/Hauptaktion,genaueinbelegterBlocker; keineKontomutation",
-      "state": "Auftrag laut Hope zugestellt; tatsächliche Ausführung und Ergebnis offen",
+      "state": "Über Hope mitgeteiltes NOT_RUN; Originalexporte fehlen, gemeldeter Commit nicht über GitHub abrufbar",
       "evidence": "handoffs/2026-11-08_core57_codex-an-cursor.md",
-      "next": "Inboxausdrücklichannehmen,Quelleprüfen,zweizugeordneteDateienexportieren;Grenzeoffenmarkieren",
+      "next": "Vorhandene zwei Originaldateien ohne Push/E-Abhängigkeit exportieren; neue Prüfung erst bei erreichbarer Fläche",
       "exchange_status": "pending"
     },
     {
@@ -576,6 +576,23 @@
       "state": "Kalender und Entscheidungsweg eingerichtet; Hopes Entscheidungen und externe Agentenannahme offen",
       "evidence": "Docs/community-pilot/decision59-20261108.md",
       "next": "Bei nächster gestarteter Arbeit Kalenderentscheidungen prüfen und CDF-P01 fortsetzen; keine pauschale Publikationsfreigabe ableiten"
+    },
+    {
+      "id": "CDF-MODEL62-WEBKIT",
+      "project": "CDF / isolierter Modellvergleich",
+      "goal": "Ein überprüfbares Weblicht-Vergleichsfixture als Quelltext vorbereiten, ohne Produktumbau",
+      "owner": "Antigravity vorgeschlagen; neue Annahme offen, Koordination Codex",
+      "tool": "Vorhandene lokale Model55/Three-r128/GLTFLoader-Quellen; zwei Markdown-Exporte",
+      "baseline": "b234f4992cc139888072f2b538331dc04a5a91bc",
+      "dependencies": [
+        "CDF-MODEL56-SELECT"
+      ],
+      "timebox": "Ein begrenzter Pass innerhalb bestehender gemeinsamer Grenzen",
+      "acceptance": "Gleiche Kamera/Licht/Nebel/Maßstab; Waiting/lit ohne gemeinsame Materialnebenwirkung; Dispose/Fehler/ruhige Ansicht; echte Läufe sonst NOT_RUN",
+      "state": "Folgebrief vorbereitet, nicht gestartet",
+      "evidence": "handoffs/2026-11-08_model62_codex-an-antigravity.md",
+      "next": "Brief ausdrücklich annehmen und genau zwei Ergebnisdateien liefern",
+      "exchange_status": "pending"
     }
   ]
 }

@@ -3,18 +3,18 @@
   "assignments": {
     "Cursor": {
       "task": "CDF-CORE57-QA",
-      "brief": "handoffs/2026-11-08_core57_codex-an-cursor.md",
+      "brief": "handoffs/2026-11-08_core61_codex-an-cursor.md",
       "outputs": [
         "Docs/community-pilot/core57-cursor-review-20261108.md",
         "handoffs/2026-11-08_core57_cursor-an-codex.md"
       ]
     },
     "Antigravity": {
-      "task": "CDF-MODEL56-SELECT",
-      "brief": "handoffs/2026-11-08_model56_codex-an-antigravity.md",
+      "task": "CDF-MODEL62-WEBKIT",
+      "brief": "handoffs/2026-11-08_model62_codex-an-antigravity.md",
       "outputs": [
-        "Docs/community-pilot/model56-antigravity-review-20261108.md",
-        "handoffs/2026-11-08_model56_antigravity-an-codex.md"
+        "Docs/community-pilot/model62-antigravity-webkit-20261108.md",
+        "handoffs/2026-11-08_model62_antigravity-an-codex.md"
       ]
     },
     "Daiku": {
