@@ -31,15 +31,15 @@
       "goal": "Gastorientierung auf Desktop und Smartphone abnehmen",
       "owner": "Codex",
       "tool": "Browser und tatsächliches Smartphone; nur GET/UI ohne Absenden",
-      "baseline": "Aktuelle aktive E:-Intro54-Quelle 4e9e2ee786656c32ea6df3f5223afddbd7252e78; Model55 ergänzt Werkzeuge, keinen neuen App-Release",
+      "baseline": "Intro63 / PR18 c2da5666a75ece2e80d3019360d4cb7596f159a6; aktive E:-Quelle mit geschützter Designvorschau",
       "dependencies": [
         "CDF-F00"
       ],
       "timebox": "ein Gast-Abnahmedurchlauf",
       "acceptance": "Soll/Ist und Beleg je Einstiegsschritt; Emulator/physisch getrennt; keine Kontomutation",
-      "state": "teilweise im Live-Browser geprüft; physisches Gerät und Sonderbedingungen offen",
-      "evidence": "Docs/community-pilot/delivery-plan-20261108.md",
-      "next": "Zuerst aktuellen Gastweg auf echtem Handy und Desktop mit Version/Beleg abnehmen; genau größten belegten Fehler schließen"
+      "state": "Begrenzte Browserstichprobe390×844/360×640/1280×800 und Vollbild-Namenseingabe geprüft; physischer und vollständiger Kernweg offen",
+      "evidence": "Docs/community-pilot/intro63-20261108.md",
+      "next": "Hope prüft Intro63 auf physischem Handy; danach genau belegten Bedienfehler schließen, Auth-/MemberCard-Gates separat"
     },
     {
       "id": "CDF-R01",
