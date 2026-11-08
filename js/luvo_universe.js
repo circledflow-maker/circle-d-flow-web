@@ -30,12 +30,22 @@
    const island=new T.Group();far.add(island);const angle=i*2.399,size=.8+(i%3)*.3;island.position.set(Math.cos(angle)*(10+i*.5),1+(i%5)*1.4,-12-i*1.3);island.userData.worldId=entry.id;
    const rock=mesh(new T.CylinderGeometry(size,size*.22,size*1.6,6),stone,island);rock.position.y=-size*.6;
    const top=mesh(new T.CylinderGeometry(size*1.03,size,.14,24),leaf,island);
+   island.userData.silhouette=['arcade','terraces','spire','grove','sail'][i%5];
    const portal=mesh(new T.TorusGeometry(size*.56,.035,6,40),mat(entry.accent),island);portal.position.y=size*.8;
-   for(let j=0;j<3;j++){const building=mesh(new T.BoxGeometry(.25,.3+j*.12,.3),j%2?copper:ivory,island);building.position.set((j-1)*.35,.2+j*.06,-.2);}
+   // Independent CDF silhouettes; these shapes are not assigned to a culture or deity.
+   switch(i%5){
+    case 0:for(const x of [-.45,.45]){const post=mesh(new T.CylinderGeometry(.1,.14,.75,6),ivory,island);post.position.set(x,.45,0);}const arch=mesh(new T.TorusGeometry(.45,.09,6,20,Math.PI),copper,island);arch.position.y=.82;break;
+    case 1:for(let j=0;j<3;j++){const terrace=mesh(new T.CylinderGeometry(.7-j*.16,.73-j*.16,.18,6),j%2?ivory:copper,island);terrace.position.y=.16+j*.2;}break;
+    case 2:{const tower=mesh(new T.CylinderGeometry(.2,.37,1.1,7),ivory,island);tower.position.y=.6;const roof=mesh(new T.ConeGeometry(.48,.65,7),copper,island);roof.position.y=1.45;const balcony=mesh(new T.TorusGeometry(.4,.055,5,16),gold,island);balcony.rotation.x=Math.PI/2;balcony.position.y=.9;break;}
+    case 3:for(let j=0;j<3;j++){const x=(j-1)*.42,trunk=mesh(new T.CylinderGeometry(.045,.09,.6,5),copper,island);trunk.position.set(x,.35,0);const crown=mesh(new T.IcosahedronGeometry(.35,1),leaf,island);crown.position.set(x,.7+(j%2)*.25,0);crown.scale.set(.9,1.25,.8);}break;
+    case 4:{const deck=mesh(new T.BoxGeometry(1.1,.12,.4),copper,island);deck.position.y=.18;const mast=mesh(new T.CylinderGeometry(.035,.04,1.2,5),gold,island);mast.position.y=.8;const sail=mesh(new T.ConeGeometry(.5,.95,3,1,true),ivory,island);sail.position.set(.15,.85,0);sail.rotation.z=-.2;break;}
+   }
   });
   function theme(id){const group=new T.Group();world.add(group);themes[id]=group;return group;}
   const roots=theme('roots');
-  for(let i=0;i<6;i++){const angle=i*Math.PI/3,x=Math.cos(angle)*3.5,z=Math.sin(angle)*2.8;const trunk=mesh(new T.CylinderGeometry(.14,.3,1.6,7),copper,roots);trunk.position.set(x,.8,z);const crown=mesh(new T.IcosahedronGeometry(.75,1),leaf,roots);crown.scale.set(1.5,.7,1);crown.position.set(x,1.8,z);}
+  for(let i=0;i<6;i++){const angle=i*Math.PI/3,x=Math.cos(angle)*3.5,z=Math.sin(angle)*2.8;const trunk=mesh(new T.CylinderGeometry(.14,.3,1.6,7),copper,roots);trunk.position.set(x,.8,z);const crown=mesh(new T.IcosahedronGeometry(.75,1),leaf,roots);crown.scale.set(i%2?1.25:.8,i%2?.8:1.35,1);crown.position.set(x,1.9,z);
+   for(let j=0;j<3;j++){const shoot=mesh(new T.IcosahedronGeometry(.4,1),leaf,roots);shoot.position.set(x+Math.cos(j*2.1)*.55,1.6+(j%2)*.35,z+Math.sin(j*2.1)*.45);shoot.scale.set(1,.55,1);}
+  }
   const rootsRing=mesh(new T.TorusGeometry(4.5,.08,6,60),mint,roots);rootsRing.rotation.x=Math.PI/2;rootsRing.position.y=-.15;
   const tides=theme('tides');
   for(const x of [-3.2,3.2]){const dock=mesh(new T.BoxGeometry(1.1,.2,7),copper,tides);dock.position.set(x,-.1,1);for(let i=0;i<4;i++){const post=mesh(new T.CylinderGeometry(.08,.11,.9,6),gold,tides);post.position.set(x,.3,-1.5+i*1.5);}}
@@ -47,15 +57,19 @@
   const roof=mesh(new T.ConeGeometry(4.7,1,6,1,true),terracotta,shelter);roof.position.y=3.1;roof.rotation.y=Math.PI/6;
   const threshold=mesh(new T.TorusGeometry(3.7,.045,5,64),gold,shelter);threshold.rotation.x=Math.PI/2;threshold.position.y=.1;
   const horizon=theme('horizon');
-  for(let i=0;i<8;i++){const x=-4+i*1.15,height=1.5+(i%3)*.6;const building=mesh(new T.BoxGeometry(.85,height,.85),i%2?ivory:terracotta,horizon);building.position.set(x,height/2,-3.2);const tileRoof=mesh(new T.ConeGeometry(.72,.55,4),copper,horizon);tileRoof.position.set(x,height+.2,-3.2);tileRoof.rotation.y=Math.PI/4;for(let j=0;j<2;j++){const window=mesh(new T.PlaneGeometry(.16,.3),mint,horizon);window.position.set(x+(j-.5)*.3,height*.65,-2.76);}}
+  for(let i=0;i<8;i++){const x=-4+i*1.15,height=1.5+(i%3)*.6;const building=mesh(new T.BoxGeometry(.85,height,.85),i%2?ivory:terracotta,horizon);building.position.set(x,height/2,-3.2);const tileRoof=mesh(new T.ConeGeometry(.72,.55,4),copper,horizon);tileRoof.position.set(x,height+.2,-3.2);tileRoof.rotation.y=Math.PI/4;for(let j=0;j<2;j++){const window=mesh(new T.PlaneGeometry(.16,.3),mint,horizon);window.position.set(x+(j-.5)*.3,height*.65,-2.76);}
+   const door=mesh(new T.BoxGeometry(.23,.46,.035),deep,horizon);door.position.set(x,.23,-2.75);
+   const lintel=mesh(new T.TorusGeometry(.16,.035,5,12,Math.PI),sand,horizon);lintel.position.set(x,.46,-2.72);
+   const step=mesh(new T.BoxGeometry(.4,.07,.22),sand,horizon);step.position.set(x,.035,-2.65);
+  }
   for(let i=0;i<5;i++){const wave=mesh(new T.TorusGeometry(5+i*1.6,.025,4,80),mint,scene);wave.rotation.x=Math.PI/2;wave.position.set(0,-4.9,-3);wave.scale.y=.6;}
   // Original linework evokes conversation and navigation; no sacred sign or deity is reproduced.
   const lines=[];for(let i=0;i<8;i++){const a=i*Math.PI/4;lines.push(new T.Vector3(0,0,0),new T.Vector3(Math.cos(a)*2,Math.sin(a)*2,0));}
   const geometry=new T.BufferGeometry().setFromPoints(lines);registerGeometry(geometry);const wireMaterial=new T.LineBasicMaterial({color:0xd4af37,transparent:true,opacity:.35});registerMaterial(wireMaterial);const weave=new T.LineSegments(geometry,wireMaterial);weave.position.set(9,10,-20);far.add(weave);
   function setStage(id){goal=Object.hasOwn(stages,id)?id:'welcome';for(const [themeId,group]of Object.entries(themes))group.visible=themeId===stages[goal].theme;}
   function update(t,dt,width,height){
-   const spec=stages[goal],mobile=width<700,rate=Math.min(1,Math.max(0,dt)*2.8);targetCamera.set(...(mobile?[spec.cam[0]*.15,4.8,spec.cam[2]+2]:spec.cam));camera.position.lerp(targetCamera,rate);
-   targetLook.set(...(mobile?[0,3.3,0]:spec.look));focus.lerp(targetLook,rate);camera.lookAt(focus);
+   const spec=stages[goal],mobile=width<700,rate=Math.min(1,Math.max(0,dt)*2.8);targetCamera.set(...(mobile?[spec.cam[0]*.15,4.8,Math.max(11,spec.cam[2]*.68)]:spec.cam));camera.position.lerp(targetCamera,rate);
+   targetLook.set(...(mobile?[0,2.8,0]:spec.look));focus.lerp(targetLook,rate);camera.lookAt(focus);
    fogColor.lerp(fogGoals[goal],rate);scene.fog.color.copy(fogColor);seaMaterial.color.lerp(seaGoals[spec.theme]||seaGoals.other,rate);
    far.rotation.y=Math.sin(t*.035)*.018;boat.position.y=-.2+Math.sin(t*.65)*.045;current=goal;
   }

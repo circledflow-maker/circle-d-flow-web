@@ -22,3 +22,9 @@
 @media(prefers-reduced-motion:reduce){#sanctuary-awakening[open]{animation:none}}
 
 @media(max-height:499px){#sanctuary-awakening{max-height:80dvh;padding:12px}#sanctuary-awakening h2{font-size:22px;margin:5px 0}.awakening-actions{margin-top:8px}}
+
+/* The lantern action remains recognizable in quiet view and without WebGL. */
+.story-lantern-action{display:flex;align-items:center;justify-content:center;gap:10px}
+.story-lantern-action svg{display:block;width:38px;height:48px;flex:none}
+.story-lantern-action>span:first-child{flex:none;filter:drop-shadow(0 0 8px #efbe6844)}
+@media(max-width:700px){.cdf-dialogue .step-actions .story-lantern-action{padding:5px 8px;min-height:58px}.story-lantern-action svg{width:30px;height:38px}}

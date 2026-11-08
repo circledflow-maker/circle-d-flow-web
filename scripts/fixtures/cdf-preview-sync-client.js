@@ -4,7 +4,7 @@ root.addEventListener('DOMContentLoaded',()=>{
  const doc=root.document,story=root.CDFAccountStory;if(!story)return;
  const box=doc.createElement('div');box.setAttribute('role','note');box.style.cssText='position:relative;z-index:5;display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:4px 10px;background:#173b3b;color:#effff6;font:12px system-ui';
  const status=doc.createElement('span'),connect=doc.createElement('button'),link=doc.createElement('a'),leave=doc.createElement('button');
- connect.type=leave.type='button';connect.textContent='Geräte verbinden';leave.textContent='Verbindung trennen';link.textContent='Kopplungslink für anderes Gerät';link.style.color='#b6e8d4';link.hidden=leave.hidden=true;status.textContent='Fortschritt bisher nur auf diesem Gerät';box.append(status,connect,link,leave);doc.body.prepend(box);
+ connect.type=leave.type='button';connect.textContent='Geräte verbinden';leave.textContent='Verbindung trennen';link.textContent='Kopplungslink für anderes Gerät';link.style.color='#b6e8d4';link.hidden=leave.hidden=true;status.textContent='Fortschritt bisher nur auf diesem Gerät';for(const control of [connect,leave])control.style.cssText='font:11px/1.2 system-ui;min-height:28px;padding:3px 7px;width:auto;margin:0;border:1px solid #6f9d8f;border-radius:7px';link.style.cssText='color:#b6e8d4;font:10px system-ui';status.style.cssText='font:10px/1.2 system-ui;flex:1;min-width:130px';box.append(status,connect,link,leave);doc.body.prepend(box);
  let token=new URLSearchParams(root.location.hash.slice(1)).get('pair'),revision=-1,applying=false,busy=false,pending=null,last='',timer=null;
  const allowed=/^[a-f0-9]{48}$/;
  function local(){return story.snapshot();}

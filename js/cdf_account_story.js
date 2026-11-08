@@ -16,7 +16,7 @@
  function present(next,push=true){
   if(push&&next!==index)history.push(index);index=next;$('welcome-section').hidden=true;$('login-section').hidden=true;$('register-section').hidden=true;
   const alternative=doc.querySelector('.alternative-entry');if(alternative)alternative.hidden=true;
-  root.CDFAccountJourney?.reset();host.hidden=false;render();$('story-title').focus({preventScroll:true});root.CDFAccountMotion?.enter(host,'story');
+  root.CDFAccountJourney?.reset();host.hidden=false;render();const scroll=host.querySelector?.('.dialog-copy');if(scroll)scroll.scrollTop=0;$('story-title').focus({preventScroll:true});root.CDFAccountMotion?.enter(host,'story');
  }
  function button(label,fn,pressed){const el=doc.createElement('button');el.type='button';el.textContent=label;if(pressed!==undefined)el.setAttribute('aria-pressed',String(pressed));el.addEventListener('click',fn);choices.append(el);return el;}
  function render(){
@@ -28,7 +28,7 @@
   primary.textContent=s.next;primary.hidden=index===5;arrival.hidden=index!==5;arrival.textContent=isSanctuary?s.next:text.requested;
   choices.replaceChildren();choices.setAttribute('aria-label',s.title);host.dataset.introBeat=s.id;
   if(index===2){text.choices.forEach((label,i)=>button(label,()=>{selected=i;remember();render();choices.querySelectorAll('button')[i]?.focus();root.CDFAccountMotion?.fairy();},selected===i));button(text.open,()=>{selected=-1;remember();render();choices.querySelectorAll('button')[4]?.focus();});}
-  if(index===3)button(text.lantern,advance);
+  if(index===3){primary.textContent='';primary.classList?.add?.('story-lantern-action');const image=doc.createElement('span');image.setAttribute('aria-hidden','true');image.innerHTML='<svg viewBox="0 0 64 80" xmlns="http://www.w3.org/2000/svg"><path d="M24 18V12a8 8 0 0 1 16 0v6" fill="none" stroke="#f2d591" stroke-width="4"/><path d="m16 29 8-11h16l8 11v34l-8 9H24l-8-9Z" fill="#183b3b" stroke="#f2d591" stroke-width="3"/><path d="M18 31h28M18 61h28M24 32v28M40 32v28" stroke="#f2d591" stroke-width="3"/><path d="M32 34c-2 8-9 10-8 17a8 8 0 0 0 16 0c0-5-6-9-8-17Z" fill="#ffcf75"/><path d="M32 46c-1 4-4 5-3 8a3 3 0 0 0 6 0c0-3-2-5-3-8Z" fill="#fff1c2"/></svg>';const label=doc.createElement('span');label.textContent=text.lantern;primary.append(image,label);primary.setAttribute('aria-label',text.lantern);}else{primary.classList?.remove?.('story-lantern-action');primary.removeAttribute('aria-label');}
   if(index===4){button(text.login,toLogin);button(text.guest,()=>{remember();present(5);});}
   $('flowee-help').hidden=true;$('flowee-help-copy').hidden=true;
   if(root.CustomEvent&&root.dispatchEvent)root.dispatchEvent(new root.CustomEvent('cdf:story-state',{detail:snapshot()}));
