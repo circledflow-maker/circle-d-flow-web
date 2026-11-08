@@ -29,3 +29,8 @@ Andere Aufgaben dürfen unabhängig vorbereiten, aber keine fehlenden Rechte umg
 Keine neuen Rollenbefugnisse, Zahlungen, XP/FLOW- oder RLS-Regeländerungen. Vanilla HTML/CSS/JS und bestehende Renderpipeline beibehalten.
 Kein Merge, Deployment, externer Post, neuer kostenpflichtiger Dienst oder zusätzlicher Modelltest ohne konkreten Auftrag. Kein automatisches Profiling.
 Slack wird zunächst nur lesend vorbereitet; kein Listener, Dienst oder neue Automation wird durch diese Grundlage gestartet. Bestehende Automation später gezielt anpassen. Interne Zeit- und Kostenregeln im geschützten lokalen Betriebsbereich führen.
+
+## Aktualisierung 2026-11-08 · Business56
+Hope setzt den betreuten Pilot als Ziel bis Ende November. [Aktueller Arbeitsplan](delivery-plan-20261108.md), [Geschäftsmodell](business-model.md), [Modellauswahl](model-selection-20261108.md), [Formate und Podcast](media-formats-20261108.md).
+Genau nächste Community-Aufgabe bleibt CDF-P01 mit aktueller Intro54-Abnahme; Releasebasis-/Authgates separat offen. Parallel höchstens eine vorhandene Mediencharge und ein Modellvergleich. Business-/Medienperspektiven wurden nun tatsächlich durch zwei begrenzte interne Codex-Teilaufgaben geprüft; frühere sequentielle Rollenlektüre wird dadurch nicht rückwirkend zu Teamarbeit.
+Private Kapazität/Event-/Gastdetails und Kalenderentwürfe bleiben lokal. Kein externer Agent, Kalendertermin, Post, Merge oder Deploy automatisch gestartet.

@@ -31,15 +31,15 @@
       "goal": "Gastorientierung auf Desktop und Smartphone abnehmen",
       "owner": "Codex",
       "tool": "Browser und tatsächliches Smartphone; nur GET/UI ohne Absenden",
-      "baseline": "Produktion Flowee28; Room/shop29 separat lokal",
+      "baseline": "Aktuelle aktive E:-Intro54-Quelle 4e9e2ee786656c32ea6df3f5223afddbd7252e78; Model55 ergänzt Werkzeuge, keinen neuen App-Release",
       "dependencies": [
         "CDF-F00"
       ],
       "timebox": "ein Gast-Abnahmedurchlauf",
       "acceptance": "Soll/Ist und Beleg je Einstiegsschritt; Emulator/physisch getrennt; keine Kontomutation",
       "state": "teilweise im Live-Browser geprüft; physisches Gerät und Sonderbedingungen offen",
-      "evidence": "Docs/community-pilot/login-browser-verification-20261106.md",
-      "next": "Verbleibende Gastfälle/physisches Gerät schließen; öffentlichen Event-Ausfallpfad unabhängig eingrenzen"
+      "evidence": "Docs/community-pilot/delivery-plan-20261108.md",
+      "next": "Zuerst aktuellen Gastweg auf echtem Handy und Desktop mit Version/Beleg abnehmen; genau größten belegten Fehler schließen"
     },
     {
       "id": "CDF-R01",
@@ -74,16 +74,16 @@
     {
       "id": "STAGES-M01",
       "project": "CDF / Circle D Stages",
-      "goal": "Vorhandenes V10-Reviewmaterial für Medienbriefing sichten",
+      "goal": "Genau eine vorhandene kurze CDF-Community-Fassung vollständig prüfen, bevor weitere Medienvarianten entstehen",
       "owner": "noch nicht zugeordnet",
       "tool": "vorhandener Player/Schnittwerkzeug ohne Upload",
-      "baseline": "V10-Dateiexistenz belegt; V11 nicht am Exportort bestätigt",
+      "baseline": "Medien56: vorhandene technische Reviewfassungen registriert/Dateiexistenz geprüft; vollständige Hör-/Rechte-/Redaktionsabnahme offen",
       "dependencies": [],
       "timebox": "eine Sichtung",
       "acceptance": "Materialfassung und Rechte-/Creditslücken belegt; konkretes Ziel vor aktiver CTA",
-      "state": "Briefing erstellt; Sichtung offen",
+      "state": "Bestand durch interne Produktionsprüfung eingeordnet; ausführender Hör-/Redaktionsprüfer noch nicht zugeordnet",
       "evidence": "Docs/community-pilot/media-brief.md",
-      "next": "Bestehende Cutter-/Daiku-Übergaben ergänzen statt doppelte Produktion"
+      "next": "Eine private Quellfassung/Owner wählen, vollständig hören und Rechte/Credits prüfen; danach ein Master und freigegebene Kanalentwürfe"
     },
     {
       "id": "CDF-B01",
@@ -97,9 +97,9 @@
       ],
       "timebox": "eine Pilot-Runde nach technischer Kernweg-Abnahme",
       "acceptance": "5–8 Personen; Quote und konkrete Nutzenbeispiele getrennt; keine öffentliche Rohdaten",
-      "state": "Hypothese dokumentiert; Erhebung offen",
+      "state": "Business56: Geschäftsmodell und Pilotkriterien durch echte interne Business-Prüfung aktualisiert; Nachfrage-/Nutzen-/Erlöserhebung weiterhin offen",
       "evidence": "Docs/community-pilot/business-model.md",
-      "next": "Erst verbleibende Kernweg-Abnahmen schließen; dann Einladung durch autorisierten Owner"
+      "next": "CDF-P01 und autorisierte Kernweg-Gates schließen; Go/No-Go19.November, betreuter Pilot als bedingtes Ziel EndeNovember"
     },
     {
       "id": "CDF-S01",
@@ -278,18 +278,18 @@
     {
       "id": "CDF-DAIKU44",
       "project": "CDF / Pilot-Pipeline und Geschäftsprüfung",
-      "goal": "Bestehende Belege in genau eine nächste Pilot-Entscheidung und überprüfbare Pipeline-Abhängigkeiten übersetzen",
+      "goal": "Bestehende Pilot-/Medienbelege auf höchstens drei entscheidungsrelevante Lücken prüfen; konkrete öffentliche Terminhinweise nur bei Bedarf verifizieren",
       "owner": "Daiku (Auftrag vorbereitet; Übernahme noch nicht bestätigt)",
       "tool": "Vorhandene Repo-Belege; öffentliche Primärquellen nur bei konkreter entscheidungsrelevanter Lücke",
-      "baseline": "Koordination f11188257c5a48dc7bd4daaa6119d570c94770c2; Produktreferenz Intro41 16a813f19ca980ec815c893741d2ef15808c2059",
+      "baseline": "Business56/Model55; aktuelle Koordination in PR17 vor Beginn erneut lesen",
       "dependencies": [
         "CDF-INTRO37-CULTURE"
       ],
       "timebox": "Ein erster Pass höchstens5 Minuten innerhalb gemeinsamer20 Minuten Projektarbeit; keine automatische Wiederholung ohne belegtes Restbudget",
       "acceptance": "Bis3 belegte Abhängigkeiten,1 prüfbare Nutzenhypothese,1 nächste Empfehlung; Quelle/Annahme/Lücke getrennt; private Kalenderentwürfe bleiben Team/; kein Produktdiff",
       "state": "Übergabe vorbereitet; neuer Daiku-Lauf nicht gestartet",
-      "evidence": "handoffs/2026-11-07_pilot-pipeline_codex-an-daiku.md",
-      "next": "Separater Auftrag bleibt offen; nach dem begrenzten Myth48-Pass wieder aufnehmen, nicht als erledigt markieren",
+      "evidence": "handoffs/2026-11-08_business56_codex-an-daiku.md",
+      "next": "Aktualisierten Folgebrief ausdrücklich annehmen, höchstens zwei bereinigte Dateiexporte liefern; kein automatischer Start oder Wiederholen alter Myth48-Recherche",
       "exchange_status": "pending"
     },
     {
@@ -471,6 +471,42 @@
       "state": "Werkzeug bereitgestellt und eigener Mint-Prototyp erzeugt/gesichtet; Importprüfung bestanden; App-/Handy-Bildprüfung NOT_RUN",
       "evidence": "Docs/community-pilot/model55-20261108.md",
       "next": "Genau ein Asset in isolierter Webszene mit App-Beleuchtung auf Handy/Desktop prüfen, dann Hopes Stilentscheidung; keine gesamte Welt ersetzen"
+    },
+    {
+      "id": "CDF-BUSINESS56",
+      "project": "CDF / Ökosystem und Pilotplanung",
+      "goal": "Geschäftsmodell, Formate, kostenlose Modellwahl und bedingten November-Pilot zu einem prüfbaren Arbeitsplan verbinden",
+      "owner": "Codex (Ebene2); Hope entscheidet final",
+      "tool": "Vorhandene Repo-Belege, zwei echte interne Codex-Prüfaufgaben, private Kapazitäts-/Kalenderentwürfe",
+      "baseline": "Koordination8ac451827787bc07454f9e67edff4802b44a90f0 und Model55-Quelle592de00258f012565bf1b9aed4e1f3ae722d36bf",
+      "dependencies": [
+        "CDF-B01",
+        "CDF-P01",
+        "STAGES-M01",
+        "CDF-MODEL55"
+      ],
+      "timebox": "Begrenzter Planabgleich; keine neue Dauerautomation",
+      "acceptance": "Beleg/Annahme/offene Frage getrennt, ein kritischer Pfad, begrenzte parallele Arbeit, klare Gate-/Freigabeverantwortung, private Grenzen bleiben lokal",
+      "state": "Plan und tatsächlicher Business-/Medienabgleich erstellt; Durchführung/Pilot und externe Annahmen offen",
+      "evidence": "Docs/community-pilot/delivery-plan-20261108.md",
+      "next": "CDF-P01 vor weiterer Weltserie; eine bestehende Mediencharge prüfen; externe begrenzte Briefs erst nach tatsächlicher Annahme als aktiv führen"
+    },
+    {
+      "id": "CDF-MODEL56-SELECT",
+      "project": "CDF / Modellvergleich",
+      "goal": "Genau Model55 als kostenlosen Vergleich für Weblesbarkeit und Stil prüfen",
+      "owner": "Antigravity (vorgeschlagen; Annahme nicht bestätigt), technische Koordination Codex",
+      "tool": "Vorhandenes kostenloses Blender5.2.3/Model55 und bestehende Szene, falls tatsächlich erreichbar",
+      "baseline": "Model55-Quelle592de00258f012565bf1b9aed4e1f3ae722d36bf",
+      "dependencies": [
+        "CDF-MODEL55"
+      ],
+      "timebox": "Ein begrenzter Vergleich; keine neue Modellserie oder Dienste",
+      "acceptance": "Kosten/Rechte/Provenienz, eigne Silhouette/Funktion, echter Weblichtvergleich bzwNOT_RUN, höchstens eine priorisierte Empfehlung",
+      "state": "Folgebrief vorbereitet; kein externer Agent gestartet",
+      "evidence": "handoffs/2026-11-08_model56_codex-an-antigravity.md",
+      "next": "Brief ausdrücklich annehmen; zwei bereinigte Ergebnisdateien exportieren, kein automatischer Push/Deploy",
+      "exchange_status": "pending"
     }
   ]
 }
