@@ -307,6 +307,22 @@
       "state": "Lokal umgesetzt,24 Tests bestanden; Browsersteuerung gestoppt, neue visuelle/physische Abnahme offen",
       "evidence": "Docs/community-pilot/intro45-20261108.md",
       "next": "Hope testet den echten Gastweg und drei Ankunftsschritte auf Smartphone im Heim-WLAN; danach genau einen beobachteten Fehler prüfen"
+    },
+    {
+      "id": "CDF-INTRO46",
+      "project": "CDF / Intro-Designvorschau",
+      "goal": "Swipe-Einstieg und gemeinsam gekoppelten Erzählfortschritt auf Handy/Desktop prüfen",
+      "owner": "Codex",
+      "tool": "Vanilla Pointer Events; explizite flüchtige lokale Kopplung; Node-/HTTP-Prüfung",
+      "baseline": "ac2f65abde0fd7c0f9c10ce37adac57775a82286",
+      "dependencies": [
+        "CDF-INTRO45"
+      ],
+      "timebox": "dieser ausdrücklich beauftragte Fehler-/Kopplungsschritt",
+      "acceptance": "Story-Swipe/Mauszug ohne Formularaktionen; explizit gekoppelter Schritt und Richtung; reale Zwei-Geräte-Abnahme separat",
+      "state": "Lokal implementiert,24 Tests und Serveraustausch bestanden; tatsächliche Handy-/Desktop-Abnahme offen",
+      "evidence": "Docs/community-pilot/intro46-20261108.md",
+      "next": "Hope öffnet denselben privaten Kopplungslink auf beiden Geräten und prüft Schritt/Richtungswahl in beide Richtungen"
     }
   ]
 }
