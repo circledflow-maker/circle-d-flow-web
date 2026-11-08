@@ -404,9 +404,25 @@
       ],
       "timebox": "Eine begrenzte konkrete mobile Abnahme vor weiterer Weltengestaltung",
       "acceptance": "Vollständige Antwort-/Ziel-/Einwilligungstexte erreichbar, Hauptaktion außerhalb Antwortscroll, Tastatur/Querformat; echter Gerätebeleg getrennt",
-      "state": "Lokal umgesetzt;19 Interaktions-/Schutztests und3 Strukturprüfungen bestanden; neue Bildabnahme offen",
+      "state": "Historische51-Implementierung geprüft; neues Layoutziel durch52 konkretisiert, echte Bildabnahme weiterhin offen",
       "evidence": "Docs/community-pilot/intro51-20261108.md",
-      "next": "Hope testet Dein erstes Kapitel und Softwaretastatur; genau einen beobachteten Folgefehler vor Figuren-/Weltenphase schließen"
+      "next": "Aktuelle52-Vollbildansicht abnehmen, keine alte51-Bildfreigabe erfinden"
+    },
+    {
+      "id": "CDF-INTRO52-FULL",
+      "project": "CDF / Intro und mobiler Kernweg",
+      "goal": "Eine vollständige Szene mit einzelner interaktiver Flowee, verankerter Sprechblase und kleinem Antwort-Overlay abnehmen",
+      "owner": "Codex; tatsächlicher Handytest durch Hope",
+      "tool": "Vanilla CSS/DOM/Three-Projektion; aktuelle geschützte LAN-Vorschau",
+      "baseline": "6be35cff0926b59f4a5c20518c8f95c89735fd0a",
+      "dependencies": [
+        "CDF-INTRO46"
+      ],
+      "timebox": "Ein begrenzter vollständiger Intro-Bild-/Bediencheck",
+      "acceptance": "Canvas bleibt voller Viewport beim Antworten-Ein-/Ausblenden; eine Flowee, lesbare Blase, erreichbare native Antworten/Hauptaktion; körperliche Gerätebelege getrennt",
+      "state": "Lokal umgesetzt;31 Node- und3 Strukturtests sowie2 Geometrieprüfungen bestanden; echte neue Sicht-/Touchabnahme offen",
+      "evidence": "Docs/community-pilot/intro52-20261108.md",
+      "next": "Hope prüft aktuelle52-Ansicht, Flowee-Tap, Antworten-Overlay, lange Texte und Tastatur; danach größten belegten Fehler schließen"
     }
   ]
 }
