@@ -11,6 +11,7 @@
   pending:{world:'connection',theme:'tides',cam:[1,4,17],look:[0,2.5,0],hue:0x142c37},
   ready:{world:'sanctuary',theme:'horizon',cam:[0,4,13],look:[0,3,0],hue:0x31362c}
  };
+ function fitMobileDistance(width,height,base=11.5){const aspect=Math.max(.25,(Number(width)||1)/Math.max(1,Number(height)||1));return Math.max(Number.isFinite(base)?base:11.5,11.8/(2*Math.tan(Math.PI/8)*aspect));}
  function resolveStage({mode='welcome',step=0,chapter=0}={}){
   if(mode==='step'||mode==='register')return ['roots','tides','shelter','horizon'][Number.isInteger(step)&&step>=0&&step<4?step:0];
   if(mode==='story')return ['story','roots','horizon'][Number.isInteger(chapter)&&chapter>=0&&chapter<3?chapter:0];
@@ -75,12 +76,12 @@
   const geometry=new T.BufferGeometry().setFromPoints(lines);registerGeometry(geometry);const wireMaterial=new T.LineBasicMaterial({color:0xd4af37,transparent:true,opacity:.35});registerMaterial(wireMaterial);const weave=new T.LineSegments(geometry,wireMaterial);weave.position.set(9,10,-20);far.add(weave);
   function setStage(id){goal=Object.hasOwn(stages,id)?id:'welcome';for(const [themeId,group]of Object.entries(themes))group.visible=themeId===stages[goal].theme;}
   function update(t,dt,width,height){
-   const spec=stages[goal],mobile=width<700,rate=Math.min(1,Math.max(0,dt)*2.8);targetCamera.set(...(mobile?[spec.cam[0]*.15,4.8,Math.max(11,spec.cam[2]*.68)]:spec.cam));camera.position.lerp(targetCamera,rate);
+   const spec=stages[goal],mobile=width<700,rate=Math.min(1,Math.max(0,dt)*2.8);targetCamera.set(...(mobile?[spec.cam[0]*.15,4.8,fitMobileDistance(width,height,Math.max(11,spec.cam[2]*.68))]:spec.cam));camera.position.lerp(targetCamera,rate);
    targetLook.set(...(mobile?[0,2.8,0]:spec.look));focus.lerp(targetLook,rate);camera.lookAt(focus);
    fogColor.lerp(fogGoals[goal],rate);scene.fog.color.copy(fogColor);seaMaterial.color.lerp(seaGoals[spec.theme]||seaGoals.other,rate);
    far.rotation.y=Math.sin(t*.035)*.018;boat.position.y=-.2+Math.sin(t*.65)*.045;current=goal;
   }
   setStage(goal);return{setStage,update,get stage(){return current;},dispose(){scene.remove(far);scene.remove(sea);}};
  }
- const api=Object.freeze({resolveStage,stages,build});if(typeof module==='object'&&module.exports)module.exports=api;else root.CDFLuvoUniverse=api;
+ const api=Object.freeze({resolveStage,stages,build,fitMobileDistance});if(typeof module==='object'&&module.exports)module.exports=api;else root.CDFLuvoUniverse=api;
 })(typeof window==='object'?window:globalThis);

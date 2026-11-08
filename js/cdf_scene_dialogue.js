@@ -5,21 +5,38 @@
  down(e,interactive=false){if(!['touch','pen','mouse'].includes(e.pointerType)||(e.pointerType==='mouse'&&e.button!==0))return;active.add(e.pointerId);if(active.size!==1||e.isPrimary===false){invalid=true;return;}first={x:e.clientX,y:e.clientY,time:e.timeStamp,id:e.pointerId,interactive};invalid=false;},
  up(e){const p=first,blocked=invalid;active.delete(e.pointerId);if(!active.size){first=null;invalid=false;}if(!p||p.id!==e.pointerId||blocked)return null;return swipe({dx:e.clientX-p.x,dy:e.clientY-p.y,elapsed:e.timeStamp-p.time,interactive:p.interactive});},
  cancel(){first=null;invalid=false;active.clear();}
- };}const api={swipe,gesture};if(typeof module==='object'&&module.exports)module.exports=api;
+ };}function viewportFrame(width,height){return{left:0,top:0,width:Math.max(1,Number(width)||1),height:Math.max(1,Number(height)||1)};}
+ function bubblePosition({x,y,width,height,top=12,bottom=height,bubbleWidth=240,bubbleHeight=90}){const w=Math.min(bubbleWidth,width-24),side=x>width/2?'right':'left';const left=Math.max(12,Math.min(width-w-12,side==='right'?x-w-16:x+16));const ceiling=Math.max(top,bottom-bubbleHeight-12);return{left,top:Math.max(top,Math.min(ceiling,y-30)),tail:side};}
+ const api={swipe,gesture,viewportFrame,bubblePosition};if(typeof module==='object'&&module.exports)module.exports=api;
  const doc=root.document,main=doc?.querySelector('.journey-shell');if(!main)return;
- const $=id=>doc.getElementById(id),panel=doc.querySelector('.account-panel'),scene=doc.querySelector('.world-window'),heading=scene.querySelector('h1'),originalHeading=heading.textContent;
- const words={de:{options:'Weitere Wege & Hinweise',peek:'Szene ansehen',reply:'Zurück zu den Antworten',swipe:'← Auf der Szene wischen oder ziehen →',login:'Vorhandenes Konto'},en:{options:'More paths & information',peek:'Enjoy the scene',reply:'Back to answers',swipe:'← Swipe or drag on the scene →',login:'Existing account'},pt:{options:'Mais caminhos e informações',peek:'Ver a cena',reply:'Voltar às respostas',swipe:'← Desliza ou arrasta na cena →',login:'Conta existente'}};
+ const $=id=>doc.getElementById(id),panel=doc.querySelector('.account-panel'),scene=doc.querySelector('.world-window'),heading=scene.querySelector('h1'),originalHeading=heading.textContent,guide=doc.querySelector('.flowee-guide');if(guide){guide.id='cdf-flowee-speech';scene.append(guide);}
+ const floweeTap=doc.createElement('button');floweeTap.type='button';floweeTap.className='flowee-hotspot';floweeTap.hidden=true;floweeTap.setAttribute('aria-controls','cdf-flowee-speech');floweeTap.setAttribute('aria-expanded','true');scene.append(floweeTap);
+ floweeTap.addEventListener('click',()=>{if(guide){guide.hidden=!guide.hidden;floweeTap.setAttribute('aria-expanded',String(!guide.hidden));if(!guide.hidden)frame();}});
+ const words={de:{options:'Weitere Wege & Hinweise',peek:'Antworten ausblenden',reply:'Antworten zeigen',swipe:'← Auf der Szene wischen oder ziehen →',login:'Vorhandenes Konto'},en:{options:'More paths & information',peek:'Hide answers',reply:'Show answers',swipe:'← Swipe or drag on the scene →',login:'Existing account'},pt:{options:'Mais caminhos e informações',peek:'Ocultar respostas',reply:'Mostrar respostas',swipe:'← Desliza ou arrasta na cena →',login:'Conta existente'}};
  function put(el,value){if(el.textContent!==value)el.textContent=value;}
  const text=()=>words[doc.documentElement.lang]||words.en,options=doc.createElement('details'),summary=doc.createElement('summary');options.className='journey-options';options.append(summary);
  const quick=doc.createElement('button');quick.type='button';quick.className='quick-login';quick.addEventListener('click',()=>{options.open=false;$('mode-login').click();});options.append(quick);
  for(const el of [doc.querySelector('.identity-details'),panel.querySelector('footer'),doc.querySelector('.luvo-cultural-note')])if(el)options.append(el);panel.append(options);
- const controls=doc.createElement('div');controls.className='scene-controls';const tip=doc.createElement('span');tip.className='scene-swipe-tip';const peek=doc.createElement('button');peek.type='button';peek.className='scene-peek';peek.setAttribute('aria-expanded','false');controls.append(tip,peek);scene.append(controls);
+ const controls=doc.createElement('div');controls.className='scene-controls';const tip=doc.createElement('span');tip.className='scene-swipe-tip';const peek=doc.createElement('button');peek.type='button';peek.className='scene-peek';peek.setAttribute('aria-expanded','true');peek.setAttribute('aria-controls','identity-entry');controls.append(tip,peek);panel.prepend(controls);
  doc.body.classList.add('cdf-dialogue');
- let speechKey='',viewKey='';
- function frame(){const height=root.visualViewport?.height||root.innerHeight;if(height)doc.body.style.setProperty('--cdf-viewport-height',Math.round(height)+'px');
+ let speechKey='',viewKey='',frameKey='',lastAnchor=null,guideWidth=240,guideHeight=90,guideTop=100,guideBottom=root.innerHeight;
+ function anchor(point){lastAnchor=point;floweeTap.style.left=Math.max(0,Math.min(point.width-48,point.x-24))+'px';floweeTap.style.top=Math.max(0,Math.min(point.height-48,point.y-24))+'px';if(!guide)return;const placed=bubblePosition({...point,top:guideTop,bottom:guideBottom,bubbleWidth:guideWidth,bubbleHeight:guideHeight});guide.style.left=placed.left+'px';guide.style.top=placed.top+'px';guide.dataset.tail=placed.tail;}
+ function frame(){const height=root.visualViewport?.height||root.innerHeight,width=root.visualViewport?.width||root.innerWidth;
+ const rect=viewportFrame(width,height);doc.body.style.setProperty('--cdf-viewport-height',rect.height+'px');
  const editable=doc.activeElement?.matches?.('input,textarea,select');doc.body.dataset.keyboardOpen=String(!!editable&&height<560);
- const r=scene.getBoundingClientRect();const host=$('luvo-scene');if(!host)return;for(const [k,v]of Object.entries({top:r.top,left:r.left,width:r.width,height:r.height}))host.style.setProperty('--cdf-scene-'+k,v+'px');root.dispatchEvent(new root.Event('cdf:scene-frame'));}
+ const tools=doc.querySelector('.luvo-scene-tools')?.getBoundingClientRect();const headingTop=(tools?.bottom||80)+8;guideTop=headingTop+(heading.getBoundingClientRect().height||24)+8;
+ const sheet=panel.getBoundingClientRect();guideBottom=sheet.top>guideTop?sheet.top:height;
+ doc.body.style.setProperty('--cdf-intro-top',headingTop+'px');doc.body.style.setProperty('--cdf-guide-max-height',Math.max(60,guideBottom-guideTop-16)+'px');
+ if(guide){const box=guide.getBoundingClientRect();guideWidth=box.width||240;guideHeight=box.height||90;}
+ anchor(lastAnchor?{...lastAnchor,width:rect.width,height:rect.height}:{x:width*.68,y:height*.34,width,height});
+ const host=$('luvo-scene');if(!host)return;for(const [k,v]of Object.entries(rect))host.style.setProperty('--cdf-scene-'+k,v+'px');
+ const nextKey=rect.width+'x'+rect.height;if(frameKey!==nextKey){frameKey=nextKey;root.dispatchEvent(new root.Event('cdf:scene-frame'));}
+ }
  function sync(){const story=$('story-section'),register=$('register-section'),login=$('login-section'),outcome=$('identity-outcome');const mode=!outcome.hidden?'outcome':!story.hidden?'story':!register.hidden?'register':!login.hidden?'login':'welcome';doc.body.dataset.dialogMode=mode;
+  const noSceneFairy=doc.body.dataset.floweeRender!=='scene';if(floweeTap.hidden!==noSceneFairy)floweeTap.hidden=noSceneFairy;
+  if(noSceneFairy&&guide?.hidden){guide.hidden=false;floweeTap.setAttribute('aria-expanded','true');}
+  put(floweeTap,({de:'',en:'',pt:''})[doc.documentElement.lang]||'');
+  floweeTap.setAttribute('aria-label',({de:'Flowees Sprechblase öffnen oder schließen',en:'Open or close Flowee’s speech bubble',pt:'Abrir ou fechar a fala da Flowee'})[doc.documentElement.lang]||'Open or close Flowee’s speech bubble');
   const title=mode==='story'?$('story-title').textContent:mode==='register'?register.querySelector('[data-journey-step]:not([hidden]) h2')?.textContent:originalHeading;if(heading.textContent!==title)heading.textContent=title||originalHeading;
   const question=$('flowee-question'),more=$('flowee-more'),moreLabel=$('flowee-more-label'),answers=$('register-answers'),status=$('auth-status'),entry=$('identity-entry');
   const compact=root.innerWidth<=700||root.innerHeight<=500;
@@ -32,7 +49,7 @@
 
   put(summary,text().options);put(quick,text().login);put(tip,mode==='register'?({de:'Weiter mit dem sichtbaren Button',en:'Use the visible Continue button',pt:'Usa o botão Continuar'})[doc.documentElement.lang]||'Use Continue':text().swipe);put(peek,doc.body.dataset.sceneExpanded==='true'?text().reply:text().peek);
  }
- peek.addEventListener('click',()=>{const open=doc.body.dataset.sceneExpanded!=='true';doc.body.dataset.sceneExpanded=String(open);peek.setAttribute('aria-expanded',String(open));sync();frame();});
+ peek.addEventListener('click',()=>{const open=doc.body.dataset.sceneExpanded!=='true';doc.body.dataset.sceneExpanded=String(open);peek.setAttribute('aria-expanded',String(!open));sync();frame();});
  function navigate(direction){if(doc.body.dataset.accountConnecting==='true')return;
   if(!$('welcome-section').hidden){if(direction==='next')$('start-journey').click();return;}
   if(!$('story-section').hidden){if(direction==='back')$('story-back').click();else if(!['return_path','threshold'].includes($('story-section').dataset.introBeat))$('story-next').click();}
@@ -40,6 +57,7 @@
  const gestures=gesture();main.addEventListener('pointerdown',e=>{const interactive=!!e.target.closest('input,textarea,select,button,a,summary,[contenteditable=true]')||e.clientX<24||e.clientX>root.innerWidth-24;gestures.down(e,interactive);if(!interactive&&['touch','pen','mouse'].includes(e.pointerType)&&(e.pointerType!=='mouse'||e.button===0)){if(e.pointerType==='mouse')e.preventDefault();try{main.setPointerCapture?.(e.pointerId);}catch{}}});
  main.addEventListener('pointercancel',()=>gestures.cancel());main.addEventListener('lostpointercapture',()=>gestures.cancel());main.addEventListener('pointerup',e=>{const direction=gestures.up(e);if(direction)navigate(direction);});
  const observer=new root.MutationObserver(sync);observer.observe(main,{subtree:true,attributes:true,attributeFilter:['hidden'],childList:true});const lang=new root.MutationObserver(sync);lang.observe(doc.documentElement,{attributes:true,attributeFilter:['lang']});
- const resize=root.ResizeObserver?new root.ResizeObserver(frame):null;resize?.observe(scene);root.addEventListener('resize',()=>{sync();frame();});root.visualViewport?.addEventListener('resize',frame);doc.addEventListener('focusin',frame);doc.addEventListener('focusout',frame);root.addEventListener('pagehide',()=>{observer.disconnect();lang.disconnect();resize?.disconnect();root.visualViewport?.removeEventListener('resize',frame);doc.removeEventListener('focusin',frame);doc.removeEventListener('focusout',frame);});
- sync();frame();root.CDFSceneDialogue=Object.freeze({...api,navigate});
+ const renderObserver=new root.MutationObserver(sync);renderObserver.observe(doc.body,{attributes:true,attributeFilter:['data-flowee-render']});
+ const resize=root.ResizeObserver?new root.ResizeObserver(frame):null;resize?.observe(scene);resize?.observe(panel);if(guide)resize?.observe(guide);root.addEventListener('resize',()=>{sync();frame();});root.visualViewport?.addEventListener('resize',frame);doc.addEventListener('focusin',frame);doc.addEventListener('focusout',frame);root.addEventListener('pagehide',()=>{observer.disconnect();lang.disconnect();renderObserver.disconnect();resize?.disconnect();root.visualViewport?.removeEventListener('resize',frame);doc.removeEventListener('focusin',frame);doc.removeEventListener('focusout',frame);});
+ sync();frame();root.CDFSceneDialogue=Object.freeze({...api,navigate,anchor});
 })(typeof window==='object'?window:globalThis);

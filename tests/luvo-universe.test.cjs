@@ -1,6 +1,8 @@
 const test=require('node:test'),assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs');
-const {resolveStage,stages}=require('../js/luvo_universe');
+const {resolveStage,stages,fitMobileDistance}=require('../js/luvo_universe');
 test('each registration step selects a distinct environmental chapter',()=>{assert.deepEqual([0,1,2,3].map(step=>resolveStage({mode:'step',step})),['roots','tides','shelter','horizon']);});
 test('optional story chapters and direct login have deterministic scenes',()=>{assert.deepEqual([0,1,2].map(chapter=>resolveStage({mode:'story',chapter})),['story','roots','horizon']);assert.equal(resolveStage({mode:'login'}),'login');});
 test('invalid input cannot select a scene or inject a route',()=>{for(const mode of ['__proto__','constructor','https://bad.test'])assert.equal(resolveStage({mode}),'welcome');for(const step of [-1,8,Infinity,'2'])assert.equal(resolveStage({mode:'step',step}),'roots');});
 test('scenery references actual world IDs and changes no account permissions',()=>{const x={window:{}};vm.runInNewContext(fs.readFileSync('js/world_registry.js','utf8'),x);const ids=new Set(['orbit',...x.window.CDFWorlds.worlds.map(w=>w.id)]);for(const spec of Object.values(stages))assert.ok(ids.has(spec.world),spec.world);assert.equal(resolveStage({mode:'welcome',is_admin:true,membership_tier:'paid'}),'welcome');});
+
+test('full portrait scene fits the same island span without using the answer panel dimensions',()=>{for(const [width,height]of [[360,640],[390,844],[844,390]]){const distance=fitMobileDistance(width,height);const span=2*Math.tan(Math.PI/8)*distance*width/height;assert.ok(span>=11.8-1e-8);}assert.ok(fitMobileDistance(390,844)>fitMobileDistance(844,390));});
