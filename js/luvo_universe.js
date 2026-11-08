@@ -31,13 +31,20 @@
    const rock=mesh(new T.CylinderGeometry(size,size*.22,size*1.6,6),stone,island);rock.position.y=-size*.6;
    const top=mesh(new T.CylinderGeometry(size*1.03,size,.14,24),leaf,island);
    island.userData.silhouette=['arcade','terraces','spire','grove','sail'][i%5];
-   const portal=mesh(new T.TorusGeometry(size*.56,.035,6,40),mat(entry.accent),island);portal.position.y=size*.8;
+   const portal=mesh(new T.TorusGeometry(size*.56,.035,6,40),mat(entry.accent),island);portal.rotation.x=1.25;portal.position.y=size*.35;portal.name='world-base-ring';
    // Independent CDF silhouettes; these shapes are not assigned to a culture or deity.
    switch(i%5){
-    case 0:for(const x of [-.45,.45]){const post=mesh(new T.CylinderGeometry(.1,.14,.75,6),ivory,island);post.position.set(x,.45,0);}const arch=mesh(new T.TorusGeometry(.45,.09,6,20,Math.PI),copper,island);arch.position.y=.82;break;
-    case 1:for(let j=0;j<3;j++){const terrace=mesh(new T.CylinderGeometry(.7-j*.16,.73-j*.16,.18,6),j%2?ivory:copper,island);terrace.position.y=.16+j*.2;}break;
+    case 0:{for(const x of [-.55,.2]){const post=mesh(new T.CylinderGeometry(.1,.14,.75,6),ivory,island);post.position.set(x,.45,-.12);}const arch=mesh(new T.TorusGeometry(.45,.09,6,20,Math.PI),copper,island);arch.position.set(-.175,.82,-.12);
+     const crown=mesh(new T.IcosahedronGeometry(.38,1),leaf,island);crown.position.set(.58,.96,-.12);crown.scale.set(.85,1.3,.85);
+     const water=mesh(new T.CylinderGeometry(.3,.34,.07,8),mint,island);water.position.set(-.15,.16,.28);
+     const step=mesh(new T.BoxGeometry(.65,.08,.24),sand,island);step.position.set(-.175,.12,.48);break;}
+    case 1:{for(let j=0;j<3;j++){const terrace=mesh(new T.CylinderGeometry(.7-j*.16,.73-j*.16,.24,6),j%2?copper:terracotta,island);terrace.position.set(0,.18+j*.24,.14-j*.18);}
+     const stair=mesh(new T.BoxGeometry(.22,.36,.4),sand,island);stair.position.set(0,.28,.48);
+     const roof=mesh(new T.BoxGeometry(.76,.1,.38),copper,island);roof.position.set(0,.94,-.22);
+     for(const side of [-1,1]){const shrub=mesh(new T.IcosahedronGeometry(.2,1),leaf,island);shrub.position.set(side*.52,.38,.04);}break;}
     case 2:{const tower=mesh(new T.CylinderGeometry(.2,.37,1.1,7),ivory,island);tower.position.y=.6;const roof=mesh(new T.ConeGeometry(.48,.65,7),copper,island);roof.position.y=1.45;const balcony=mesh(new T.TorusGeometry(.4,.055,5,16),gold,island);balcony.rotation.x=Math.PI/2;balcony.position.y=.9;break;}
-    case 3:for(let j=0;j<3;j++){const x=(j-1)*.42,trunk=mesh(new T.CylinderGeometry(.045,.09,.6,5),copper,island);trunk.position.set(x,.35,0);const crown=mesh(new T.IcosahedronGeometry(.35,1),leaf,island);crown.position.set(x,.7+(j%2)*.25,0);crown.scale.set(.9,1.25,.8);}break;
+    case 3:{for(let j=0;j<3;j++){const x=[-.34,.34,.05][j],z=[-.22,.08,-.18][j],height=[1.22,.88,.72][j],trunk=mesh(new T.CylinderGeometry(.045,.09,height*.7,5),copper,island);trunk.position.set(x,height*.35,z);const crown=mesh(new T.IcosahedronGeometry(.35,1),j===1?mint:leaf,island);crown.position.set(x,height,z);crown.scale.set(j===0?1.05:.85,j===0?1.45:1,.8);}
+     const threshold=mesh(new T.BoxGeometry(.85,.1,.18),terracotta,island);threshold.position.set(0,.38,.4);break;}
     case 4:{const deck=mesh(new T.BoxGeometry(1.1,.12,.4),copper,island);deck.position.y=.18;const mast=mesh(new T.CylinderGeometry(.035,.04,1.2,5),gold,island);mast.position.y=.8;const sail=mesh(new T.ConeGeometry(.5,.95,3,1,true),ivory,island);sail.position.set(.15,.85,0);sail.rotation.z=-.2;break;}
    }
   });

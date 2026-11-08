@@ -11,9 +11,9 @@ for(const width of [390,1280]){
  const runtime={...T,WebGLRenderer:function(){this.domElement={setAttribute(){},addEventListener(){},removeEventListener(){},remove(){}};this.setClearColor=this.setPixelRatio=this.setSize=()=>{};this.render=(scene,camera)=>{rendered={scene,camera};};this.dispose=()=>{disposedRenderer=true;};}};
  const root={document:doc,innerWidth:width,innerHeight:800,devicePixelRatio:2,THREE:runtime,CDFIntroStory:story,CDFLuvoUniverse:universe,CDFWorlds:registry.window.CDFWorlds,CDFFloweeFairy:{sprite:()=>new T.Group()},matchMedia:()=>({matches:false,addEventListener(){}}),MutationObserver:class{observe(){}disconnect(){}},addEventListener:(k,f)=>events[k]=f,setTimeout:()=>1,clearTimeout(){},requestAnimationFrame:()=>1,cancelAnimationFrame(){},performance:{now:()=>0}};
  vm.runInNewContext(fs.readFileSync('js/luvo_scene.js','utf8'),{window:root});
- assert.equal(host.dataset.ready,'true');assert.ok(rendered.scene.getObjectByName('cdf-lantern'));let meshes=0,triangles=0;const designs=new Set();
- rendered.scene.traverse(o=>{if(o.userData.silhouette)designs.add(o.userData.silhouette);if(!o.isMesh)return;meshes++;for(const value of o.geometry.attributes.position.array)assert.ok(Number.isFinite(value));triangles+=(o.geometry.index?.count||o.geometry.attributes.position.count)/3;});
- assert.equal(designs.size,5);assert.ok(meshes<450);assert.ok(triangles<100000);assert.ok(Number.isFinite(rendered.camera.aspect));root.CDFLuvoScene.dispose();assert.equal(disposedRenderer,true);
- reports.push({width,meshes,triangles,distinctSilhouettes:designs.size,lanternGeometry:true,finiteGeometry:true,rendererDisposed:true,visualTest:false});
+ assert.equal(host.dataset.ready,'true');assert.ok(rendered.scene.getObjectByName('cdf-lantern'));let meshes=0,triangles=0;const designs=new Set();let baseRings=0;
+ rendered.scene.traverse(o=>{if(o.userData.silhouette)designs.add(o.userData.silhouette);if(o.name==='world-base-ring'){baseRings++;assert.equal(o.rotation.x,1.25);assert.ok(o.position.y>0);}if(!o.isMesh)return;meshes++;for(const value of o.geometry.attributes.position.array)assert.ok(Number.isFinite(value));triangles+=(o.geometry.index?.count||o.geometry.attributes.position.count)/3;});
+ assert.equal(baseRings,registry.window.CDFWorlds.worlds.length);assert.equal(designs.size,5);assert.ok(meshes<450);assert.ok(triangles<100000);assert.ok(Number.isFinite(rendered.camera.aspect));root.CDFLuvoScene.dispose();assert.equal(disposedRenderer,true);
+ reports.push({width,meshes,triangles,distinctSilhouettes:designs.size,lanternGeometry:true,inclinedBaseRings:baseRings,finiteGeometry:true,rendererDisposed:true,visualTest:false});
 }
 console.log(JSON.stringify(reports,null,2));
