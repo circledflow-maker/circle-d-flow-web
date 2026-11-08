@@ -292,3 +292,15 @@ Innerhalb bestehender beauftragter Formgestaltung begrenzte Konturkorrektur durc
 Cursor bekommt CDF-INTRO49-QA mit konkretem Stand,390×844 zuerst, Laterne/Hauptaktion/drei Konturen, genau1 belegtem Blocker und2 erlaubten Rückgabedateien. Kein Cursor-Start/Annahme behauptet; alter Intro36-Auftrag nicht als erledigt markiert. Fehlender formaler Brief ist benannte Grenze, kein fingierter Rollenstart. Getrennte Geschäfts-Pipelineaufgabe CDF-DAIKU44 bleibt offen. Kostenfreier Pilot-Kernweg und reale Abnahme vor weiterer Figuren-/Weltenausweitung.
 
 Keine neuen externen Agenten, Slack-Nachrichten, Automatik, Kamera-/Figuren-/Auth-/RLS-/Rollen-/XP/FLOW-/Zahlungsänderung, Merge oder Produktionsdeployment. Nächster Schritt: Cursor übernimmt den begrenzten aktuellen Prüfumfang über nachweisbaren Weg und liefert echte Befunde; Hope entscheidet später über Delphi als Erstwelt.
+
+
+
+## 2026-11-08 — Codex · Intro50: Cursor-Zugriffsgrenze und portabler Testkoffer
+Hope übermittelt Cursor-NOT_RUN, keine Bild-/Bedienfreigabe. Laut Rückmeldung fehlen E:-Zugang und aktuelle öffentliche Intro49-Vorschau. Gemeldete2 Berichte nicht eingegangen; Commit300832cbe33959455b5b82577015b0374e7f09fc weder über GitHub (422) noch als lokales E:-Gitobjekt erreichbar. Nicht als integrierte Originaldateien gemeldet. Export ohne Push im aktualisierten Brief verlangt.
+
+Portablen eingefrorenen Intro49-Testkoffer gebaut, SHA-256 5a68f2edeb86e3085431f5fafdde92b984fa96d786c0c256fe4ed146f15962ab, 280777 Bytes;44 öffentliche UI-/Bibliotheks-/Lizenzdateien plus4 Prüfhilfen. Ausgewählte E:-Abhängigkeiten statt pauschaler Releasebasis. Three/OrbitControls r128 lokal mit MIT-Notice, kein3D-CDN erforderlich. Backend-SDK/-Konfiguration/realer Auth-Handler ausgeschlossen, keine privaten Tokens/Team/env/API-Dateien. CSP und Guard sperren Kontoaktionen. Loopbackserver127.0.0.1:3219, GET/HEAD, exakt manifestierte Dateien, maximal15 Minuten.
+
+Tatsächlicher Smokecheck aus neu entpacktem ZIP:44 Assets200, Einstieg/Sanctuary200, private/API/Manifest404, POST405; Manifesthashes geprüft;3 Preview-Guardtests bestanden; temporärer Server beendet. Neue Browser-/GPU-/physische Prüfung bleibt NOT_RUN. Verification-Anleitung angewandt, keine End-to-End-Freigabe behauptet.
+
+Initialer ZIP-Upload automatisch wegen fehlender ausdrücklicher öffentlicher Payloadfreigabe abgelehnt; nicht umgangen. Hope erteilt danach ausdrückliche Zustimmung, exakt gehashten Prüfsatz in öffentlichem Koordinationsbranch bereitgestellt. Keine Produktdatei oder Produktion verändert, kein Merge/Deployment/Slack/Agentenstart. Aktueller Cursor-Brief ersetzt nur E:-/LAN-Voraussetzung und früheres Serververbot durch diesen begrenzten Cloud-Prüfweg. Kein anderer Anbieter oder zweite Automation.
+Nächster Schritt: Cursor exportiert Originale und prüft bei vorhandenem Browser das eingefrorene Kit; fehlt Browserfähigkeit, diese konkrete Grenze statt erneuter Quellprüfung melden.

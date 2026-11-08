@@ -379,7 +379,7 @@
       "project": "CDF / Community-App",
       "goal": "Intro49 unabhängig auf mobile Kontur-/Laternenlesbarkeit und Bedienung prüfen",
       "owner": "Cursor (vorgesehen; Annahme nicht bestätigt)",
-      "tool": "Tatsächlich vorhandener Browser und private Belege; Emulation/physisch getrennt",
+      "tool": "Portabler eingefrorener Intro49-Prüfsatz, begrenzter Loopback-Server, tatsächlich vorhandener Browser",
       "baseline": "1d60a3f3908efc6f22451b6e7add0fda8cc9e2a1",
       "dependencies": [
         "CDF-INTRO47",
@@ -387,9 +387,10 @@
       ],
       "timebox": "Erster Pass höchstens5 Minuten im belegten gemeinsamen Restbudget",
       "acceptance": "390×844 zuerst, PASS/FAIL/NOT_RUN, Version/Repro; genau ein echter Blocker; kein Produktdiff",
-      "state": "Übergabe vorbereitet, nicht gestartet",
-      "evidence": "handoffs/2026-11-08_intro49_codex-an-cursor.md",
-      "next": "Cursor übernimmt current.json oder kopierten Brief, liefert genau2 Dateien"
+      "state": "Cursor-Versuch laut Hope NOT_RUN wegen fehlender erreichbarer Testbasis; Originaldateien nicht eingegangen; portabler Prüfsatz vorbereitet und freigegeben",
+      "evidence": "Docs/community-pilot/intro50-cursor-access-20261108.md",
+      "next": "Zuerst2 Originalberichte exportieren; danach Kit-Prüfsumme/Smokecheck und echte390×844-Browserprüfung bei nachgewiesener Fähigkeit; keine weitere Quellprüfung als Ersatz",
+      "exchange_status": "pending"
     }
   ]
 }
