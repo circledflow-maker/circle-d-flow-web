@@ -1,0 +1,14 @@
+# Übergabe: World48 · drei eigene Silhouetten
+Empfänger:Antigravity. Empfänger-Rolle: visuelle Regie, formale Zuordnung noch nicht zugeordnet.
+Datum:2026-11-08 · Projekt:CDF / eigene Welten. Von:Codex (Ebene2). Hope bleibt CEO.
+Zustand: vorbereitet; nach Stromausfall kein neuer externer Lauf bestätigt. Formale Rolle gemäß21-Rollen-Referenz noch nicht zugeordnet.
+Vor Arbeit aktive E:/circle-d-flow-web, AGENTS.md, STATUS.md, Docs/repository-workflow.md, tasks.json und relevante handoffs/ lesen. Kein Ersatz durch D:, kein Reset/Checkout im gemeinsamen Arbeitsbaum. Produktreferenz Intro47 45daef68373352ebc0eecf63272b2d432293f099; Draft-PR18 ist keine vollständige Releasebasis. Quellenkontext: Docs/community-pilot/world48-mythology-context-20261108.md. Erreichbare Quelle/Commit und Prüfart zuerst benennen.
+Nur ein begrenzter erster Pass höchstens5 Minuten im belegten gemeinsamen20-Minuten-Projektbudget. Keine zusätzliche Automation/Watcher/Slack-Nachricht, Ausgabe als gestarteter Agent oder neuer kostenpflichtiger Aufruf. Bei unbekanntem Rest keine automatische Wiederholung. Nach Ergebnis stoppen. Keine Produkt-/Auth-/RLS-/Rollen-/XP/FLOW-/Zahlungsänderung, Merge, Push mit ungeklärter Previewwirkung oder Deployment.
+
+## Ziel und Inputs
+Drei unterscheidbare eigene Weltsilhouetten mit vorhandener Pipeline beschreiben. Vor Auftrag .cursor/agents/cdf-game-direction.md vollständig laden. Intro47 enthält Arkade/Terrassen/Turm/Baumgruppe/Segel als eigene Formstudien, keine bestätigten Mythologiezuordnungen. Lies luvo_scene.js, luvo_universe.js, Intro47 und Kontextbrief. Dein Intro37-Bericht ist bereits übernommen; nicht erneut exportieren.
+## Gewünschtes Ergebnis
+Wähle für3 vorhandene Formstudien je eine klare Silhouette, Pflanzen-/Architekturrhythmus, Material/Farbe, räumlichen Blickfang und ruhige mobile Alternative. Ist/Vorschlag/NOT_RUN trennen. Vorläufige Kulturbezüge nur als Vorschläge, später mit Daikus belegter Karte abgleichen. Keine Franchise-Motive, neue heilige Zeichen, Gottheiten oder Renderpipeline. Browser nur als geprüft melden, wenn tatsächlich vorhanden.
+Genau1 visuelle Priorität für die nächste Umsetzung. Sanctuary-Figuren als eigenständige nächste Phase vormerken: eigene lesbare Reisenden-Proportionen und einheitliche Flowee; in diesem Auftrag noch keine Figuren-/Produktänderung. Codex besitzt laufende Intro-Produktdateien.
+## Dateien, Abnahme und Abhängigkeiten
+Nur Docs/community-pilot/world48-antigravity-shapes-20261108.md und handoffs/2026-11-08_world48_antigravity-an-codex.md. Private Screenshots nur Team/. Eigenes current.json und Austauschvertrag beachten; sonst2 Exporte liefern. Abnahme:3 kleine Silhouettenentwürfe,1 Priorität, vorhandene Geometrie, mobile Lesbarkeit und reduzierte Bewegung berücksichtigt, kein Produktdiff. Kulturelle finale Zuordnung braucht belegte Weltkarte und Hope-Entscheidung. Kein neuer Auftrag nur durch diese Datei als gestartet melden.

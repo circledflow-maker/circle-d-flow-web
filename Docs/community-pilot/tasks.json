@@ -183,7 +183,7 @@
       "goal": "Intro35 unabhängig auf Mobilbedienung und Tastatur prüfen",
       "owner": "Cursor (vorgesehen; Übernahme nicht bestätigt)",
       "tool": "vorhandener Browser und Quellprüfung; tatsächliches Gerät getrennt",
-      "baseline": "264a7c725fd4acca69e58ffdfa36601e9d3c29c8 als ausgewählter Snapshot; aktive E:-Quelle separat bestätigen",
+      "baseline": "45daef68373352ebc0eecf63272b2d432293f099",
       "dependencies": [
         "CDF-INTRO34"
       ],
@@ -191,7 +191,7 @@
       "acceptance": "Version belegt; PASS/FAIL/NOT_RUN pro Fall; reproduzierbare Belege; kein Produkt-/Accounteingriff; genau ein nächster Fehler",
       "state": "Prompt laut Hope erhalten; Annahme/Ausführung nicht belegt",
       "evidence": "handoffs/2026-11-07_intro36_codex-an-cursor.md",
-      "next": "Cursor liefert eigene Ergebnisdatei/Commit; Codex prüft vor Integration"
+      "next": "Intro47-Laterne, Scroll/Lesbarkeit und mobile Silhouetten unabhängig prüfen;5-Minuten-Pass im gemeinsamen Budget"
     },
     {
       "id": "CDF-INTRO37-ART",
@@ -289,7 +289,7 @@
       "acceptance": "Bis3 belegte Abhängigkeiten,1 prüfbare Nutzenhypothese,1 nächste Empfehlung; Quelle/Annahme/Lücke getrennt; private Kalenderentwürfe bleiben Team/; kein Produktdiff",
       "state": "Übergabe vorbereitet; neuer Daiku-Lauf nicht gestartet",
       "evidence": "handoffs/2026-11-07_pilot-pipeline_codex-an-daiku.md",
-      "next": "Daiku übernimmt den begrenzten Brief und liefert genau2 bereinigte Ergebnisdateien; Codex prüft und integriert",
+      "next": "Separater Auftrag bleibt offen; nach dem begrenzten Myth48-Pass wieder aufnehmen, nicht als erledigt markieren",
       "exchange_status": "pending"
     },
     {
@@ -323,6 +323,54 @@
       "state": "Lokal implementiert,24 Tests und Serveraustausch bestanden; tatsächliche Handy-/Desktop-Abnahme offen",
       "evidence": "Docs/community-pilot/intro46-20261108.md",
       "next": "Hope öffnet denselben privaten Kopplungslink auf beiden Geräten und prüft Schritt/Richtungswahl in beide Richtungen"
+    },
+    {
+      "id": "CDF-INTRO47",
+      "project": "CDF / eigene Welten und Community-Pilot",
+      "goal": "Erkennbare Laternenhandlung und differenzierte eigene räumliche Formen",
+      "owner": "Codex",
+      "tool": "Vorhandene Vanilla-/Quell-/Recherchewerkzeuge; keine neue kostenpflichtige Anbindung",
+      "baseline": "45daef68373352ebc0eecf63272b2d432293f099",
+      "dependencies": [
+        "CDF-INTRO46"
+      ],
+      "timebox": "Ein begrenzter Pass im gemeinsamen Restbudget; externe Aufträge höchstens5 Minuten",
+      "acceptance": "Belegte Inputs, begrenztes Ergebnis, Ist/Vorschlag/NOT_RUN getrennt; keine Veröffentlichung",
+      "state": "Lokal umgesetzt,26 Tests und zwei echte Three-Geometrieprüfungen bestanden; neue Bildabnahme offen",
+      "evidence": "Docs/community-pilot/intro47-20261108.md",
+      "next": "Hope/Cursor prüfen den neuen tatsächlichen mobilen Bildstand"
+    },
+    {
+      "id": "CDF-MYTH48",
+      "project": "CDF / eigene Welten und Community-Pilot",
+      "goal": "Genau eine belegte griechische Weltkarte vorbereiten",
+      "owner": "Daiku (vorgesehen; neuer Lauf nicht bestätigt)",
+      "tool": "Vorhandene Vanilla-/Quell-/Recherchewerkzeuge; keine neue kostenpflichtige Anbindung",
+      "baseline": "45daef68373352ebc0eecf63272b2d432293f099",
+      "dependencies": [
+        "CDF-INTRO47"
+      ],
+      "timebox": "Ein begrenzter Pass im gemeinsamen Restbudget; externe Aufträge höchstens5 Minuten",
+      "acceptance": "Belegte Inputs, begrenztes Ergebnis, Ist/Vorschlag/NOT_RUN getrennt; keine Veröffentlichung",
+      "state": "Übergabe vorbereitet; neuer externer Lauf nicht bestätigt",
+      "evidence": "handoffs/2026-11-08_world48_codex-an-daiku.md",
+      "next": "Ein konkreter Mythos, drei belegte Formhinweise und eine eigene CDF-Formidee; danach separaten Pipelineauftrag fortführen"
+    },
+    {
+      "id": "CDF-WORLD48-ART",
+      "project": "CDF / eigene Welten und Community-Pilot",
+      "goal": "Drei eigene unterscheidbare Weltsilhouetten vorbereiten",
+      "owner": "Antigravity (vorgesehen; neuer Lauf nicht bestätigt)",
+      "tool": "Vorhandene Vanilla-/Quell-/Recherchewerkzeuge; keine neue kostenpflichtige Anbindung",
+      "baseline": "45daef68373352ebc0eecf63272b2d432293f099",
+      "dependencies": [
+        "CDF-INTRO47"
+      ],
+      "timebox": "Ein begrenzter Pass im gemeinsamen Restbudget; externe Aufträge höchstens5 Minuten",
+      "acceptance": "Belegte Inputs, begrenztes Ergebnis, Ist/Vorschlag/NOT_RUN getrennt; keine Veröffentlichung",
+      "state": "Übergabe vorbereitet; neuer externer Lauf nicht bestätigt",
+      "evidence": "handoffs/2026-11-08_world48_codex-an-antigravity.md",
+      "next": "Drei Entwürfe und genau eine Priorität, kulturelle Zuordnung mit Weltkarte abgleichen"
     }
   ]
 }

@@ -50,3 +50,6 @@ Bei nachgewiesenem lokalem E:-Zugang liegt das eigene Aufgabenpaket unter Team/c
 
 ## Intro41 · tatsächliche Nachprüfung durch Codex
 Quellcommit 16a813f19ca980ec815c893741d2ef15808c2059; Bericht Docs/community-pilot/intro41-20261107.md. Native Browser-Emulation390×844 und360×640, zwei Touch-Drags, Antwort-Szenenwechsel, interner Scroll und Szenenvergrößerung geprüft. Beobachteten Dialoghöhenfehler korrigiert und nachgeprüft. Dies ist keine unabhängige Cursor-Abnahme und kein physischer Test. Als nächste offene Stichprobe echtes Gerät/Softwarekeyboard; eigene Prüfbedingungen und Version weiter benennen. Auftrag bleibt offen, nicht nach done verschoben.
+
+## Intro47 · neuer Prüfstand 2026-11-08
+Referenz 45daef68373352ebc0eecf63272b2d432293f099, Bericht intro47-20261108.md. Prüfe jetzt besonders sichtbare einzelne Laternen-Hauptaktion (auch ruhige Ansicht), zurückgesetzten Textscroll, kompaktere Kopplungsleiste,5 eigene Silhouetten und näheren mobilen Bildausschnitt. Kein Teil davon ist bereits als neue Geräteabnahme belegt. 360×640/390×844/844×390/1280×800, Touch/Maus/Tastatur trennen. Neuer Pass höchstens5 Minuten im gemeinsamen belegten Restbudget, keine automatische Wiederholung. Keine Produktdateien ändern. Bestehende2 Ergebnisdateien und ehrliche NOT_RUN-Lücken beibehalten.

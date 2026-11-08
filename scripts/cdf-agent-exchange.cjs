@@ -3,8 +3,8 @@
 const fs=require('node:fs'),path=require('node:path');
 const assignments={
  Cursor:{task:'CDF-INTRO36-QA',brief:'handoffs/2026-11-07_intro36_codex-an-cursor.md',outputs:['Docs/community-pilot/intro36-cursor-review-20261107.md','handoffs/2026-11-07_intro36_cursor-an-codex.md']},
- Antigravity:{task:'CDF-INTRO37-ART',brief:'handoffs/2026-11-07_intro37_codex-an-antigravity.md',outputs:['Docs/community-pilot/intro37-antigravity-direction-20261107.md','handoffs/2026-11-07_intro37_antigravity-an-codex.md']},
- Daiku:{task:'CDF-DAIKU44',brief:'handoffs/2026-11-07_pilot-pipeline_codex-an-daiku.md',outputs:['Docs/community-pilot/daiku44-pilot-pipeline-20261107.md','handoffs/2026-11-07_pilot-pipeline_daiku-an-codex.md']}
+ Antigravity:{task:'CDF-WORLD48-ART',brief:'handoffs/2026-11-08_world48_codex-an-antigravity.md',outputs:['Docs/community-pilot/world48-antigravity-shapes-20261108.md','handoffs/2026-11-08_world48_antigravity-an-codex.md']},
+ Daiku:{task:'CDF-MYTH48',brief:'handoffs/2026-11-08_world48_codex-an-daiku.md',outputs:['Docs/community-pilot/world48-daiku-research-20261108.md','handoffs/2026-11-08_world48_daiku-an-codex.md']}
 };
 function plan(tasks){return Object.entries(assignments).map(([agent,a])=>{const task=tasks.tasks.find(t=>t.id===a.task);if(!task)throw Error('Missing canonical task '+a.task);return{agent,...a,canonical_state:task.state,exchange_status:task.exchange_status||'pending',delivery:'file_prepared_not_agent_started'};}).filter(item=>item.exchange_status!=='received_reviewed');}
 function validate(pkg){const a=assignments[pkg?.agent];if(!a||pkg.task!==a.task||!/^([0-9a-f]{40})$/.test(pkg.base_commit||''))throw Error('Unknown assignment or missing exact base commit');
