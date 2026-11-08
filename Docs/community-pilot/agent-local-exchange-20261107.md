@@ -29,3 +29,10 @@ Fünf neue deterministische Prüfungen für Aufgabenpakete, Pfadgrenzen, Swipe-E
 ## Ergebnisabgleich und Recherche44
 Vorhandenen täglichen Koordinationslauf ergänzen, keine konkurrierende Automation erstellen. Konkrete Zeit-/Kalenderplanung und gemeinsame Zeitnachweise bleiben privat in Team/collaboration/cadence/. Ein wöchentlicher Abgleich erzeugt höchstens einen begrenzten nächsten Auftrag, wenn Belege, Bedarf und gemeinsames Restbudget vorliegen. Ein Kalenderplan startet keinen externen Agenten.
 Daiku bereitet Quellen/Entscheidungen vor; Codex koordiniert/integriert, Cursor prüft Bedienung und Antigravity Inszenierung gemäß ihren bestehenden Briefen. Formale unbestätigte Rollen bleiben noch nicht zugeordnet. Recherche ist bedarfsgesteuert, keine permanente Suche; höchstens2 öffentliche Primärquellen pro begrenztem Pass. Keine Social-/Partneransprache oder Veröffentlichung durch diese Planung.
+
+## Orchestra57 · Aktualisierung2026-11-08
+DieserNachtrag ersetzt diefestehistorischeZuordnung. VerbindlicheAufträge/Outputs stehen jetzt in data/agent_exchange_assignments.json, validiert vorprepare undreceive. AktuellCursor=CDF-CORE57-QA,Antigravity=CDF-MODEL56-SELECT,Daiku=CDF-DAIKU44.
+Jeweils genau einBericht unterDocs/community-pilot und eineÜbergabe unterhandoffs, ausschließlichMarkdown; keineProdukt-/Privat-/absoluten/Traversalpfade. UnbekannteAgenten und doppelteTasks/Outputs werdenabgelehnt.
+prepare schreibt privateInboxen/Queue, started bleibt[]. BestehendeOutboxes werden nichtüberschrieben. receive prüft aktuelleKonfiguration undTask, erfasstexakteBasis undmarkiertstaleErgebnisse; ausschließlichprivateQuarantäne, keineVeröffentlichung/Produktintegration.
+ÖffentlicheFollow-up-Briefs nennen denRückgabepfad, keineprivatenNutzerdaten. PrivatePaketbasis ist source_commit desaktuellenInboxpakets. Auftragsannahme/Lauf bleibtseparater tatsächlicherBeleg; keineIDE startet durchDatei.
+Details undPrüfgrenzen:orchestra57-20261108.md.

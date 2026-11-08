@@ -287,7 +287,7 @@
       ],
       "timebox": "Ein erster Pass höchstens5 Minuten innerhalb gemeinsamer20 Minuten Projektarbeit; keine automatische Wiederholung ohne belegtes Restbudget",
       "acceptance": "Bis3 belegte Abhängigkeiten,1 prüfbare Nutzenhypothese,1 nächste Empfehlung; Quelle/Annahme/Lücke getrennt; private Kalenderentwürfe bleiben Team/; kein Produktdiff",
-      "state": "Übergabe vorbereitet; neuer Daiku-Lauf nicht gestartet",
+      "state": "Aktueller Folgebrief und validierteRoutingzuordnung vorbereitet; tatsächlicheexterneAnnahme/Lauf offen",
       "evidence": "handoffs/2026-11-08_business56_codex-an-daiku.md",
       "next": "Aktualisierten Folgebrief ausdrücklich annehmen, höchstens zwei bereinigte Dateiexporte liefern; kein automatischer Start oder Wiederholen alter Myth48-Recherche",
       "exchange_status": "pending"
@@ -389,8 +389,8 @@
       "acceptance": "390×844 zuerst, PASS/FAIL/NOT_RUN, Version/Repro; genau ein echter Blocker; kein Produktdiff",
       "state": "Cursor-Versuch laut Hope NOT_RUN wegen fehlender erreichbarer Testbasis; Originaldateien nicht eingegangen; portabler Prüfsatz vorbereitet und freigegeben",
       "evidence": "Docs/community-pilot/intro50-cursor-access-20261108.md",
-      "next": "Bestehendes Kit49 getrennt als eingefrorenen49-Stand prüfen/exportieren; neue Intro51-Bildabnahme daraus nicht ableiten",
-      "exchange_status": "pending"
+      "next": "Historische Originalexporte weiterhin offen; neue aktuelleAbnahme separatCDF-CORE57-QA, kein49-Kit-PASSfür54",
+      "exchange_status": "historical_open_not_current_assignment"
     },
     {
       "id": "CDF-INTRO51-MOBILE",
@@ -503,10 +503,44 @@
       ],
       "timebox": "Ein begrenzter Vergleich; keine neue Modellserie oder Dienste",
       "acceptance": "Kosten/Rechte/Provenienz, eigne Silhouette/Funktion, echter Weblichtvergleich bzwNOT_RUN, höchstens eine priorisierte Empfehlung",
-      "state": "Folgebrief vorbereitet; kein externer Agent gestartet",
+      "state": "Aktueller Folgebrief und validierteRoutingzuordnung vorbereitet; tatsächlicheexterneAnnahme/Lauf offen",
       "evidence": "handoffs/2026-11-08_model56_codex-an-antigravity.md",
       "next": "Brief ausdrücklich annehmen; zwei bereinigte Ergebnisdateien exportieren, kein automatischer Push/Deploy",
       "exchange_status": "pending"
+    },
+    {
+      "id": "CDF-CORE57-QA",
+      "project": "CDF / Website und Community-Pilot",
+      "goal": "AktuellenGast-/Bedienkernweg unabhängig prüfen, soweitQuelle/Browser tatsächlich erreichbar",
+      "owner": "Cursor (Paket vorbereitet; Annahme nicht bestätigt)",
+      "tool": "Bestehender autorisierterBrowser und erreichbareaktuelleQuelle, keinhistorischer49-Kit-PASS",
+      "baseline": "UI54 inProduktreferenz592de00258f012565bf1b9aed4e1f3ae722d36bf; aktiveE:-QuellevorTestabgleichen",
+      "dependencies": [
+        "CDF-P01"
+      ],
+      "timebox": "ErsterPasshöchstens5Minuten innerhalb tatsächlichbekanntergemeinsamerRestgrenze",
+      "acceptance": "Zuerst390×844,Version/Repro/PASS-FAIL-NOT_RUN,eineFlowee/Blase/Welt/Antworten/Hauptaktion,genaueinbelegterBlocker; keineKontomutation",
+      "state": "AktuellerBrief undRoutingpaket vorbereitet; keinexternerAgentgestartet",
+      "evidence": "handoffs/2026-11-08_core57_codex-an-cursor.md",
+      "next": "Inboxausdrücklichannehmen,Quelleprüfen,zweizugeordneteDateienexportieren;Grenzeoffenmarkieren",
+      "exchange_status": "pending"
+    },
+    {
+      "id": "CDF-ORCHESTRA57",
+      "project": "CDF / Koordination und gemeinsamePipeline",
+      "goal": "Business56-Aufträge über den vorhandenenDateiaustausch tatsächlich aktuell vorbereiten",
+      "owner": "Codex/Dirigent Ebene2",
+      "tool": "Prompt-Orchestra-Intake, validierteJSON-Zuordnung, bestehenderDateiaustausch; keinneuerDienst",
+      "baseline": "Koordination4efde14e810329bb1ba8a51a009d7e7ece0ebd50",
+      "dependencies": [
+        "CDF-BUSINESS56",
+        "CDF-EXCHANGE40"
+      ],
+      "timebox": "BegrenzterRoutingfixundReview; keineAuto-Schleife",
+      "acceptance": "Aktuelle3Pakete,genau2Markdownoutputs/Agent,alteErgebnisseerhalten,privateQuarantäne,started=[],keineProdukt-/Git-/API-AufrufeimRunner",
+      "state": "Routingimplementiert,9Testsbestanden/1Host-Symlinktestübersprungen; tatsächlicheexterneAnnahme/Läufeoffen",
+      "evidence": "Docs/community-pilot/orchestra57-20261108.md",
+      "next": "AktuellePaketevorbereitenundquittieren,danachCDF-P01/ersteWebsite-AbnahmevorweitererPlanrunde"
     }
   ]
 }
