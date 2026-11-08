@@ -420,9 +420,25 @@
       ],
       "timebox": "Ein begrenzter vollständiger Intro-Bild-/Bediencheck",
       "acceptance": "Canvas bleibt voller Viewport beim Antworten-Ein-/Ausblenden; eine Flowee, lesbare Blase, erreichbare native Antworten/Hauptaktion; körperliche Gerätebelege getrennt",
-      "state": "Lokal umgesetzt;31 Node- und3 Strukturtests sowie2 Geometrieprüfungen bestanden; echte neue Sicht-/Touchabnahme offen",
+      "state": "Umgesetzt; Hope meldet im Folge-Screenshot abgeschnittene Welcome-Ansicht. Korrektur53 integriert, neue Sichtabnahme offen",
       "evidence": "Docs/community-pilot/intro52-20261108.md",
-      "next": "Hope prüft aktuelle52-Ansicht, Flowee-Tap, Antworten-Overlay, lange Texte und Tastatur; danach größten belegten Fehler schließen"
+      "next": "Aktuelle53-Abnahme statt alten52-Sicht-PASS ableiten"
+    },
+    {
+      "id": "CDF-INTRO53-CINEMA",
+      "project": "CDF / Intro und kostenloser Kernweg",
+      "goal": "Vollbildbegrüßung mit einzelner Flowee und natürlicherem Himmel auf Handy/Desktop abnehmen",
+      "owner": "Codex; tatsächlicher Gerätecheck durch Hope",
+      "tool": "Vanilla DOM/CSS/Three; bestehende geschützte LAN-Vorschau",
+      "baseline": "4771d89944c729fe2209d482e85140740a5e62cb",
+      "dependencies": [
+        "CDF-INTRO52-FULL"
+      ],
+      "timebox": "Ein begrenzter aktueller Bild-/Bediencheck",
+      "acceptance": "Kopfzeile oben, keine abgeschnittene Begrüßung, eine Flowee rechts oben, volle Szene; Antwortpanel erst bei echter Wahl/Handlung/Eingabe; Softwaretastatur/Zurückweg erreichbar",
+      "state": "Implementiert,32 Node- und3 Strukturtests sowie4 Geometrie-/Projektionsläufe bestanden; echte Bild-/Touchabnahme NOT_RUN",
+      "evidence": "Docs/community-pilot/intro53-20261108.md",
+      "next": "Hope prüft Handy/Desktop-Einstieg und ersten Wahlwechsel; größten belegten Kernwegfehler schließen"
     }
   ]
 }
