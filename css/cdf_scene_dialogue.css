@@ -4,7 +4,7 @@
 .journey-options{flex:none;border-top:1px solid #9dbaac44;font-size:.74rem}.journey-options>summary{color:var(--mint)}.journey-options .identity-details{margin:0}.journey-options footer{margin:0}.journey-options .luvo-cultural-note{margin:0;padding:8px 0;border:0;background:none}.journey-options .quick-login{font-size:.75rem;min-height:44px}
 .flowee-tutorial-fairy:has(svg){background:none!important;box-shadow:none!important;border-radius:0!important;width:34px!important;height:26px!important}.flowee-tutorial-fairy:has(svg):before,.flowee-tutorial-fairy:has(svg):after{display:none!important}
 @media(max-width:700px),(max-height:500px){
- body.cdf-dialogue{height:100dvh;min-height:0;overflow:hidden;display:flex;flex-direction:column}
+ body.cdf-dialogue{height:var(--cdf-viewport-height,100dvh);min-height:0;overflow:hidden;display:flex;flex-direction:column}
  body.cdf-dialogue>div[role=note]{flex:none;font-size:10px!important;line-height:1.25!important;padding:4px 10px!important}
  .cdf-dialogue header{flex:none;width:100%;padding:3px 12px;min-height:44px}.cdf-dialogue header select{min-height:36px;font-size:12px}
  .cdf-dialogue .luvo-scene-tools{flex:none;width:100%;padding:0 12px;gap:6px;flex-wrap:nowrap;min-height:32px}
@@ -42,4 +42,51 @@
  .cdf-dialogue .journey-shell,.cdf-dialogue[data-scene-expanded=true] .journey-shell{grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr)}
  .cdf-dialogue .account-panel{border-radius:16px 0 0 0}.cdf-dialogue .flowee-guide{display:none}
  .cdf-dialogue[data-scene-expanded=true] .journey-shell{grid-template-columns:minmax(0,3fr) minmax(0,1fr)}
+}
+
+/* Intro51: original manga dialogue, one answer scroller and fixed form actions. */
+.flowee-more>summary{display:none}
+.flowee-question{margin:4px 0!important}
+@media(max-width:700px),(max-height:500px){
+ .cdf-dialogue .account-panel{overflow:hidden;padding:10px 12px max(8px,env(safe-area-inset-bottom))}
+ .cdf-dialogue .flowee-guide{grid-template-columns:36px minmax(0,1fr);gap:10px;border:0;padding:0;margin:0 0 8px;align-items:start}
+ .cdf-dialogue #cdf-account-flowee{height:40px;margin-top:12px}
+ .cdf-dialogue .flowee-speech{position:relative;min-width:0;padding:8px 12px;background:#e0f3e9;color:#173b35;border:1px solid #b8d9c6;border-radius:18px 20px 18px 5px}
+ .cdf-dialogue .flowee-speech:before{content:"";position:absolute;left:-7px;top:19px;width:12px;height:12px;background:#e0f3e9;border-left:1px solid #b8d9c6;border-bottom:1px solid #b8d9c6;transform:rotate(45deg)}
+ .cdf-dialogue .flowee-speech .speaker{color:#315c50;font-size:9px;line-height:1.3;letter-spacing:.08em}
+ .cdf-dialogue .flowee-speech p{font-size:14px;line-height:1.45;color:#173b35}
+ .cdf-dialogue .flowee-speech .text-button{color:#244f43;font-size:12px}
+ .cdf-dialogue .flowee-more>summary{color:#244f43;font-size:11px;min-height:32px;padding:4px 0}
+ .cdf-dialogue[data-dialog-mode=register] .flowee-more>summary{display:block}
+ .cdf-dialogue[data-dialog-mode=register] .journey-shell{grid-template-rows:minmax(86px,24%) minmax(0,1fr)}
+ .cdf-dialogue[data-dialog-mode=register] .modes{display:none}
+ .cdf-dialogue[data-dialog-mode=register] #identity-entry{overflow:hidden}
+ .cdf-dialogue #register-section{display:flex;flex:1;flex-direction:column;min-height:0;overflow:hidden}
+ .cdf-dialogue .journey-progress{flex:none;margin:0 0 6px}
+ .cdf-dialogue .journey-progress button{min-height:44px}
+ .cdf-dialogue .journey-progress small{font-size:10px}
+ .cdf-dialogue #cdf-register-form{display:flex;flex:1;flex-direction:column;min-height:0;overflow:hidden}
+ .cdf-dialogue .answer-scroll{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y pinch-zoom;scrollbar-gutter:stable;padding:2px 4px 12px 1px;scroll-padding-block:8px}
+ .cdf-dialogue #register-section .step-actions{position:static;flex:none;margin:0;padding:8px 0 0;border-top:1px solid #55776c;background:#081c25}
+ .cdf-dialogue #register-section h2{font-size:20px;line-height:1.25;margin:4px 0 12px}
+ .cdf-dialogue .answer-scroll label{font-size:14px}
+ .cdf-dialogue .answer-scroll .hint{font-size:12px;line-height:1.5}
+ .cdf-dialogue .review-summary{font-size:14px;gap:6px 12px}
+ .cdf-dialogue .destinations{margin:12px 0}
+ .cdf-dialogue .destinations label{min-height:56px;padding:10px;align-items:flex-start}
+ .cdf-dialogue .destinations strong{font-size:15px}
+ .cdf-dialogue .destinations small{font-size:12px;line-height:1.4;margin-top:3px}
+ .cdf-dialogue .consent{font-size:13px;line-height:1.45;padding:6px 0}
+ .cdf-dialogue .dialog-copy #story-body{font-size:15px;line-height:1.5}
+ .cdf-dialogue .story-choices button{font-size:13px;line-height:1.35;min-height:48px}
+ .cdf-dialogue #story-note{font-size:11px;line-height:1.4}
+ .cdf-dialogue #auth-status:not(:empty){font-size:12px;line-height:1.4;padding:6px 0}
+ .cdf-dialogue[data-dialog-mode=login] #login-section,.cdf-dialogue[data-dialog-mode=welcome] #welcome-section{min-height:0;overflow-y:auto}
+ .cdf-dialogue[data-keyboard-open=true] .journey-shell{grid-template-rows:minmax(52px,12%) minmax(0,1fr)}
+ .cdf-dialogue[data-keyboard-open=true] .world-window h1,.cdf-dialogue[data-keyboard-open=true] .scene-controls{display:none}
+ .cdf-dialogue[data-keyboard-open=true] .flowee-guide{display:none}
+}
+@media(max-height:500px) and (min-width:600px){
+ .cdf-dialogue[data-dialog-mode=register] .journey-shell,.cdf-dialogue[data-keyboard-open=true] .journey-shell{grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr)}
+ .cdf-dialogue .flowee-guide{display:none}
 }

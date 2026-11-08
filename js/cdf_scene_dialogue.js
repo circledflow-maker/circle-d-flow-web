@@ -15,9 +15,21 @@
  for(const el of [doc.querySelector('.identity-details'),panel.querySelector('footer'),doc.querySelector('.luvo-cultural-note')])if(el)options.append(el);panel.append(options);
  const controls=doc.createElement('div');controls.className='scene-controls';const tip=doc.createElement('span');tip.className='scene-swipe-tip';const peek=doc.createElement('button');peek.type='button';peek.className='scene-peek';peek.setAttribute('aria-expanded','false');controls.append(tip,peek);scene.append(controls);
  doc.body.classList.add('cdf-dialogue');
- function frame(){const r=scene.getBoundingClientRect();const host=$('luvo-scene');if(!host)return;for(const [k,v]of Object.entries({top:r.top,left:r.left,width:r.width,height:r.height}))host.style.setProperty('--cdf-scene-'+k,v+'px');root.dispatchEvent(new root.Event('cdf:scene-frame'));}
+ let speechKey='',viewKey='';
+ function frame(){const height=root.visualViewport?.height||root.innerHeight;if(height)doc.body.style.setProperty('--cdf-viewport-height',Math.round(height)+'px');
+ const editable=doc.activeElement?.matches?.('input,textarea,select');doc.body.dataset.keyboardOpen=String(!!editable&&height<560);
+ const r=scene.getBoundingClientRect();const host=$('luvo-scene');if(!host)return;for(const [k,v]of Object.entries({top:r.top,left:r.left,width:r.width,height:r.height}))host.style.setProperty('--cdf-scene-'+k,v+'px');root.dispatchEvent(new root.Event('cdf:scene-frame'));}
  function sync(){const story=$('story-section'),register=$('register-section'),login=$('login-section'),outcome=$('identity-outcome');const mode=!outcome.hidden?'outcome':!story.hidden?'story':!register.hidden?'register':!login.hidden?'login':'welcome';doc.body.dataset.dialogMode=mode;
   const title=mode==='story'?$('story-title').textContent:mode==='register'?register.querySelector('[data-journey-step]:not([hidden]) h2')?.textContent:originalHeading;if(heading.textContent!==title)heading.textContent=title||originalHeading;
+  const question=$('flowee-question'),more=$('flowee-more'),moreLabel=$('flowee-more-label'),answers=$('register-answers'),status=$('auth-status'),entry=$('identity-entry');
+  const compact=root.innerWidth<=700||root.innerHeight<=500;
+  if(question){const hideQuestion=!(compact&&mode==='register');if(question.hidden!==hideQuestion)question.hidden=hideQuestion;put(question,title||originalHeading);}
+  if(moreLabel)put(moreLabel,({de:'Mehr von Flowee',en:'More from Flowee',pt:'Mais da Flowee'})[doc.documentElement.lang]||'More from Flowee');
+  const nextSpeechKey=String(compact)+':'+mode+':'+(title||'');
+  if(more&&speechKey!==nextSpeechKey){more.open=!(compact&&mode==='register');speechKey=nextSpeechKey;}
+  if(answers&&status){if(mode==='register'&&status.parentNode!==answers)answers.prepend(status);else if(mode!=='register'&&status.parentNode!==panel)panel.insertBefore(status,entry);}
+  const nextViewKey=mode+':'+(title||'');if(viewKey!==nextViewKey){if(answers)answers.scrollTop=0;viewKey=nextViewKey;}
+
   put(summary,text().options);put(quick,text().login);put(tip,mode==='register'?({de:'Weiter mit dem sichtbaren Button',en:'Use the visible Continue button',pt:'Usa o botão Continuar'})[doc.documentElement.lang]||'Use Continue':text().swipe);put(peek,doc.body.dataset.sceneExpanded==='true'?text().reply:text().peek);
  }
  peek.addEventListener('click',()=>{const open=doc.body.dataset.sceneExpanded!=='true';doc.body.dataset.sceneExpanded=String(open);peek.setAttribute('aria-expanded',String(open));sync();frame();});
@@ -28,6 +40,6 @@
  const gestures=gesture();main.addEventListener('pointerdown',e=>{const interactive=!!e.target.closest('input,textarea,select,button,a,summary,[contenteditable=true]')||e.clientX<24||e.clientX>root.innerWidth-24;gestures.down(e,interactive);if(!interactive&&['touch','pen','mouse'].includes(e.pointerType)&&(e.pointerType!=='mouse'||e.button===0)){if(e.pointerType==='mouse')e.preventDefault();try{main.setPointerCapture?.(e.pointerId);}catch{}}});
  main.addEventListener('pointercancel',()=>gestures.cancel());main.addEventListener('lostpointercapture',()=>gestures.cancel());main.addEventListener('pointerup',e=>{const direction=gestures.up(e);if(direction)navigate(direction);});
  const observer=new root.MutationObserver(sync);observer.observe(main,{subtree:true,attributes:true,attributeFilter:['hidden'],childList:true});const lang=new root.MutationObserver(sync);lang.observe(doc.documentElement,{attributes:true,attributeFilter:['lang']});
- const resize=root.ResizeObserver?new root.ResizeObserver(frame):null;resize?.observe(scene);root.addEventListener('resize',frame);root.addEventListener('pagehide',()=>{observer.disconnect();lang.disconnect();resize?.disconnect();});
+ const resize=root.ResizeObserver?new root.ResizeObserver(frame):null;resize?.observe(scene);root.addEventListener('resize',()=>{sync();frame();});root.visualViewport?.addEventListener('resize',frame);doc.addEventListener('focusin',frame);doc.addEventListener('focusout',frame);root.addEventListener('pagehide',()=>{observer.disconnect();lang.disconnect();resize?.disconnect();root.visualViewport?.removeEventListener('resize',frame);doc.removeEventListener('focusin',frame);doc.removeEventListener('focusout',frame);});
  sync();frame();root.CDFSceneDialogue=Object.freeze({...api,navigate});
 })(typeof window==='object'?window:globalThis);
