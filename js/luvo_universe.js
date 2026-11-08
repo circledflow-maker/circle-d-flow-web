@@ -92,8 +92,8 @@
   for(let i=0;i<5;i++){const wave=mesh(new T.TorusGeometry(5+i*1.6,.025,4,80),mint,scene);wave.rotation.x=Math.PI/2;wave.position.set(0,-4.9,-3);wave.scale.y=.6;}
   function setStage(id){goal=Object.hasOwn(stages,id)?id:'welcome';for(const [themeId,group]of Object.entries(themes))group.visible=themeId===stages[goal].theme;}
   function update(t,dt,width,height){
-   const spec=stages[goal],mobile=width<700,rate=Math.min(1,Math.max(0,dt)*2.8);targetCamera.set(...(mobile?[spec.cam[0]*.15,4.8,fitMobileDistance(width,height,Math.max(11,spec.cam[2]*.68))]:spec.cam));camera.position.lerp(targetCamera,rate);
-   targetLook.set(...(mobile?[0,2.8,0]:spec.look));focus.lerp(targetLook,rate);camera.lookAt(focus);
+   const close=root.document?.body?.dataset.luvoFocus==='cabin',spec=close?{...stages[goal],cam:[-2.5,3.4,10],look:[-1.5,1.5,1]}:stages[goal],mobile=width<700,rate=Math.min(1,Math.max(0,dt)*2.8);targetCamera.set(...(mobile?(close?[-1.4,4.1,10]:[spec.cam[0]*.15,4.8,fitMobileDistance(width,height,Math.max(11,spec.cam[2]*.68))]):spec.cam));camera.position.lerp(targetCamera,rate);
+   targetLook.set(...(mobile?(close?[-1.3,3,1]:[0,2.8,0]):spec.look));focus.lerp(targetLook,rate);camera.lookAt(focus);
    fogColor.lerp(fogGoals[goal],rate);scene.fog.color.copy(fogColor);seaMaterial.color.lerp(seaGoals[spec.theme]||seaGoals.other,rate);
    moon.position.x=mobile?-8:-17;moon.position.y=mobile?21:15;far.rotation.y=Math.sin(t*.035)*.008;boat.position.y=-.2+Math.sin(t*.65)*.045;current=goal;
   }

@@ -3,7 +3,7 @@
  const doc=root.document,host=doc.getElementById('luvo-scene');if(!host)return;
  const media=root.matchMedia('(prefers-reduced-motion: reduce)'),toggle=doc.getElementById('luvo-scene-toggle'),status=doc.getElementById('luvo-scene-status');
  let renderer,scene,camera,world,fairy,ring,frame=0,epoch=0,stopped=false,paused=false,loading=false,disposed=false,timer,script,pulseTimer;
- const geometries=new Set(),materials=new Set(),textures=new Set();let particles,universe,lastTime=0,lantern,lanternGlow,pathLights=[],fairyPoint,fairyDestination;
+ const geometries=new Set(),materials=new Set(),textures=new Set();let particles,universe,lastTime=0,lantern,lanternGlow,pathLights=[],fairyPoint,fairyDestination,arrivalCabin;
  const words={en:{start:'Opening LUVO…',ready:'LUVO · your first light',fallback:'Quiet view · your journey is ready',quiet:'Quiet view',open:'Open 3D',link:'Connecting your account…'},de:{start:'LUVO öffnet sich…',ready:'LUVO · dein erstes Licht',fallback:'Ruhige Ansicht · dein Einstieg ist bereit',quiet:'Ruhige Ansicht',open:'3D öffnen',link:'Dein Konto wird verbunden…'},pt:{start:'A abrir LUVO…',ready:'LUVO · a tua primeira luz',fallback:'Vista tranquila · podes começar',quiet:'Vista tranquila',open:'Abrir 3D',link:'A ligar a tua conta…'}};
  function stage(){
  const phase=doc.body.dataset.journeyScene||'welcome',sections=Array.from(doc.querySelectorAll?.('[data-journey-step]')||[]);
@@ -22,10 +22,11 @@
  }
  function copy(){stage();doc.body.dataset.floweeRender=renderer&&fairy?.isSprite&&!paused&&!media.matches?'scene':'fallback';const w=words[doc.documentElement.lang]||words.en;toggle.textContent=media.matches?w.quiet:paused?w.open:w.quiet;toggle.disabled=media.matches;doc.body.dataset.luvoLoading=String(loading);toggle.setAttribute('aria-pressed',String(!paused&&!media.matches));status.textContent=doc.body.dataset.accountConnecting==='true'?w.link:loading?w.start:renderer?w.ready:w.fallback;}
  function halt(){if(frame)root.cancelAnimationFrame(frame);frame=0;}
- function release(){halt();universe?.dispose();universe=null;if(renderer){renderer.domElement.removeEventListener('webglcontextlost',lost);renderer.dispose();renderer.domElement.remove();}for(const g of geometries)g.dispose();for(const m of materials)m.dispose();for(const t of textures)t.dispose();textures.clear();geometries.clear();materials.clear();renderer=scene=camera=world=fairy=ring=particles=lantern=lanternGlow=null;pathLights=[];host.dataset.ready='false';}
+ function release(){halt();universe?.dispose();universe=null;if(renderer){renderer.domElement.removeEventListener('webglcontextlost',lost);renderer.dispose();renderer.domElement.remove();}for(const g of geometries)g.dispose();for(const m of materials)m.dispose();for(const t of textures)t.dispose();textures.clear();geometries.clear();materials.clear();renderer=scene=camera=world=fairy=ring=particles=lantern=lanternGlow=null;pathLights=[];arrivalCabin=null;host.dataset.ready='false';}
  function lost(event){event.preventDefault();epoch++;loading=false;release();copy();}
  function size(){if(!renderer)return;halt();const width=host.clientWidth||root.innerWidth,height=host.clientHeight||root.innerHeight;renderer.setPixelRatio(Math.min(root.devicePixelRatio||1,width<700?1.25:1.75));renderer.setSize(width,height);camera.aspect=width/height;camera.position.set(width<700?0:3.8,width<700?4.8:4.2,width<700?(root.CDFLuvoUniverse?.fitMobileDistance(width,height)||11.5):15);camera.lookAt(width<700?0:1,3.3,0);camera.updateProjectionMatrix();world.position.set(width<700?0:-2.6,width<700?1.9:0,0);world.scale.setScalar(width<700?.9:1);draw(0);}
  function draw(time){if(!renderer)return;const t=time*.001,dt=lastTime?Math.min(.05,Math.max(0,(time-lastTime)*.001)):.016;lastTime=time;const active=!paused&&!media.matches&&!doc.hidden&&!stopped;
+  if(arrivalCabin)arrivalCabin.visible=doc.body.dataset.luvoFocus==='cabin';
   if(active){world.rotation.y=Math.sin(t*.12)*.07;const welcome=doc.body.dataset.dialogMode==='welcome',mobile=(host.clientWidth||root.innerWidth)<700;fairy.position.set(welcome?(mobile?3.8:8):2,(welcome?6.5:4.2)+Math.sin(t*1.4)*.12,welcome?.6:1.3);fairy.rotation.y=t*.28;ring.rotation.z=Math.sin(t*.12)*.04;particles.rotation.y=t*.008;universe?.update(t,dt,host.clientWidth||root.innerWidth,host.clientHeight||root.innerHeight);}
   if(fairy?.isSprite&&root.CDFSceneDialogue?.target){
    const width=host.clientWidth||root.innerWidth,height=host.clientHeight||root.innerHeight,target=root.CDFSceneDialogue.target(width,height);
@@ -46,6 +47,22 @@
   const mat=(color,emissive=0)=>{const m=new T.MeshStandardMaterial({color,emissive,emissiveIntensity:.45,roughness:.75,metalness:.18,flatShading:true});materials.add(m);return m;};
   const bark=mat(0x715038),foliage=mat(0x648a69),gold=mat(0xc6ac75,0x151006),stone=mat(0x1b4445),mint=mat(0x96eed2,0x267c68),dark=mat(0x0f2c34);
   function mesh(g,m,parent=world){geometries.add(g);const o=new T.Mesh(g,m);parent.add(o);return o;}
+  // Original CDF threshold cottage and faceless hooded traveller; no franchise insignia.
+  arrivalCabin=new T.Group();world.add(arrivalCabin);arrivalCabin.visible=false;
+  const plaster=mat(0xc2b697),roofCloth=mat(0x234944),cloak=mat(0x20232e),face=mat(0x080e17);
+  function part(g,m,x,y,z,parent=arrivalCabin){const o=mesh(g,m,parent);o.position.set(x,y,z);return o;}
+  part(new T.BoxGeometry(1.8,1.6,1.5),plaster,-2,.55,.6);
+  const cottageRoof=part(new T.ConeGeometry(1.65,.9,4),roofCloth,-2,1.8,.6);cottageRoof.rotation.y=Math.PI/4;
+  part(new T.BoxGeometry(.55,1.05,.05),face,-2,.27,1.38);
+  part(new T.TorusGeometry(.3,.045,6,24,Math.PI),gold,-2,.79,1.42);
+  part(new T.BoxGeometry(.3,.4,.06),mint,-2.62,.75,1.39);
+  const traveller=new T.Group();traveller.name='cdf-cloaked-traveller';arrivalCabin.add(traveller);traveller.position.set(-.55,-.25,2.1);
+  const profile=[new T.Vector2(.4,0),new T.Vector2(.3,.4),new T.Vector2(.22,.95),new T.Vector2(.25,1.25)];
+  part(new T.LatheGeometry(profile,20),cloak,0,0,0,traveller);
+  const hood=part(new T.SphereGeometry(.27,20,14),cloak,0,1.46,0,traveller);hood.scale.set(1,1.2,1);
+  part(new T.CircleGeometry(.19,24),face,0,1.46,.245,traveller);
+  part(new T.BoxGeometry(.018,1.12,.018),mint,0,.64,.28,traveller);
+  for(const side of [-1,1]){const sleeve=part(new T.CylinderGeometry(.105,.08,.75,12),cloak,side*.29,.9,0,traveller);sleeve.rotation.z=side*.16;}
   const island=mesh(new T.CylinderGeometry(5.2,2.2,2.2,7),stone);island.position.y=-1.7;
   const terrace=mesh(new T.CylinderGeometry(5.4,5.2,.35,48),dark);terrace.position.y=-.45;
   ring=new T.Group();world.add(ring);ring.position.set(0,3.5,-1.3);

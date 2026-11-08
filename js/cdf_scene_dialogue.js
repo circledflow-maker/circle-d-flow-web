@@ -27,9 +27,9 @@
  floweeTap.addEventListener('click',()=>{root.clearTimeout(speechTimer);if(guide){guide.hidden=!guide.hidden;floweeTap.setAttribute('aria-expanded',String(!guide.hidden));if(!guide.hidden)frame();}});
  const words={de:{options:'Weitere Wege & Hinweise',peek:'Antworten ausblenden',reply:'Antworten zeigen',swipe:'← Auf der Szene wischen oder ziehen →',login:'Vorhandenes Konto'},en:{options:'More paths & information',peek:'Hide answers',reply:'Show answers',swipe:'← Swipe or drag on the scene →',login:'Existing account'},pt:{options:'Mais caminhos e informações',peek:'Ocultar respostas',reply:'Mostrar respostas',swipe:'← Desliza ou arrasta na cena →',login:'Conta existente'}};
  const greeting={
- de:{title:'Willkommen.',body:'Ich bin Flowee. Folge meinem Licht – in deinem Tempo. Deine Reise beginnt hier.',start:'Mit Flowee beginnen',login:'Ich habe ein Konto',back:'Zurück'},
- en:{title:'Welcome.',body:'I’m Flowee. Follow my light, at your own pace. Your journey begins here.',start:'Begin with Flowee',login:'I have an account',back:'Back'},
- pt:{title:'Bem-vindo.',body:'Sou a Flowee. Segue a minha luz, ao teu ritmo. A tua viagem começa aqui.',start:'Começar com a Flowee',login:'Já tenho conta',back:'Voltar'}};
+ de:{title:'Willkommen.',body:'Willkommen in LUVO, zwischen den Welten von Circle D Flow. Ich bin Flowee und begleite dich. An der Hütte am Lichtpfad wählst du deinen ersten Schritt. Du kannst auch einfach als Gast entdecken.',start:'Mit Flowee beginnen',login:'Ich habe ein Konto',back:'Zurück'},
+ en:{title:'Welcome.',body:'Welcome to LUVO, between the worlds of Circle D Flow. I’m Flowee, your guide. At the cottage on the light path, you can choose your first step or simply explore as a guest.',start:'Begin with Flowee',login:'I have an account',back:'Back'},
+ pt:{title:'Bem-vindo.',body:'Bem-vindo a LUVO, entre os mundos do Circle D Flow. Sou a Flowee, a tua guia. Na cabana do caminho de luz, podes escolher o primeiro passo ou explorar como visitante.',start:'Começar com a Flowee',login:'Já tenho conta',back:'Voltar'}};
  const cinematic=doc.createElement('div');cinematic.className='flowee-cinematic';const cinematicCopy=doc.createElement('p'),cinematicActions=doc.createElement('div');cinematicActions.className='flowee-cinematic-actions';
  const cinematicNext=doc.createElement('button'),cinematicBack=doc.createElement('button');for(const button of [cinematicNext,cinematicBack])button.type='button';cinematicNext.className='primary';cinematic.append(cinematicCopy,cinematicActions);cinematicActions.append(cinematicNext,cinematicBack);guide?.querySelector('.flowee-speech').append(cinematic);
  let pageIndex=0,pageKey='';
@@ -47,6 +47,7 @@
  function target(width,height){return fairyTarget({width,height,top:guideTop,bottom:guideBottom,mode:doc.body.dataset.dialogMode,beat:$('story-section').dataset.introBeat,step:Array.from(doc.querySelectorAll('[data-journey-step]')).findIndex(n=>!n.hidden)});}
  function frame(){const height=root.visualViewport?.height||root.innerHeight,width=root.visualViewport?.width||root.innerWidth;
  const rect=viewportFrame(width,height);doc.body.style.setProperty('--cdf-viewport-height',rect.height+'px');
+ doc.body.style.setProperty('--cdf-input-banner-height',Math.max(0,doc.querySelector('header')?.getBoundingClientRect().top||0)+'px');
  const editable=doc.activeElement?.matches?.('input,textarea,select');doc.body.dataset.keyboardOpen=String(!!editable&&height<560);
  const tools=doc.querySelector('.luvo-scene-tools')?.getBoundingClientRect();const headingTop=(tools?.bottom||80)+8;guideTop=headingTop+(heading.getBoundingClientRect().height||24)+8;
  const sheet=panel.getBoundingClientRect();guideBottom=sheet.top>guideTop?sheet.top:height;
@@ -59,6 +60,7 @@
  function sync(){const story=$('story-section'),register=$('register-section'),login=$('login-section'),outcome=$('identity-outcome');const mode=!outcome.hidden?'outcome':!story.hidden?'story':!register.hidden?'register':!login.hidden?'login':'welcome';doc.body.dataset.dialogMode=mode;
   floweeTap.setAttribute('aria-label',({de:'Flowees Sprechblase öffnen oder schließen',en:'Open or close Flowee’s speech bubble',pt:'Abrir ou fechar a fala da Flowee'})[doc.documentElement.lang]||'Open or close Flowee’s speech bubble');
   const hello=greeting[doc.documentElement.lang]||greeting.en,beat=story.dataset.introBeat,interactive=interactionMode({mode,beat});
+  doc.body.dataset.luvoFocus=interactive?'cabin':'world';
   const nextInteraction=String(interactive);if(doc.body.dataset.dialogInteraction!==nextInteraction)doc.body.dataset.dialogInteraction=nextInteraction;
   if(cinematic.hidden===!interactive)cinematic.hidden=interactive;
   const nextPageKey=mode+':'+beat+':'+doc.documentElement.lang;if(pageKey!==nextPageKey){pageIndex=0;pageKey=nextPageKey;}

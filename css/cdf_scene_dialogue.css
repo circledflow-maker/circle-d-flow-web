@@ -176,3 +176,27 @@ body.cdf-dialogue{height:var(--cdf-viewport-height,100dvh);min-height:0;overflow
 .cdf-dialogue .flowee-guide{grid-template-columns:minmax(0,1fr)}
 .cdf-dialogue .flowee-hotspot #cdf-account-flowee{display:block;width:76px;height:57px;margin:0;pointer-events:none}
 .cdf-dialogue[data-flowee-render=scene] .flowee-hotspot #cdf-account-flowee{display:none}
+
+/* Intro63: choices and account input use the entire viewport, narration keeps the world. */
+.cdf-dialogue[data-dialog-interaction=true]:not([data-scene-expanded=true]) .account-panel{position:fixed;inset:0;z-index:30;width:100%;height:var(--cdf-viewport-height,100dvh);max-height:none!important;margin:0;border:0;border-radius:0;padding:max(18px,env(safe-area-inset-top)) max(18px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)) max(18px,env(safe-area-inset-left));display:flex;flex-direction:column;gap:10px;background:linear-gradient(150deg,#102b32f5,#06151df5);overflow:hidden;box-sizing:border-box}
+.cdf-dialogue[data-dialog-interaction=true]:not([data-scene-expanded=true]) .account-panel>*{width:min(100%,760px);align-self:center;min-width:0}
+.cdf-dialogue[data-dialog-interaction=true]:not([data-scene-expanded=true]) .flowee-guide,.cdf-dialogue[data-dialog-interaction=true]:not([data-scene-expanded=true]) .flowee-hotspot{display:none!important}
+.cdf-dialogue[data-dialog-interaction=true]:not([data-scene-expanded=true]) #story-section{display:flex;flex:1;flex-direction:column;min-height:0;overflow:hidden}
+.cdf-dialogue[data-dialog-interaction=true]:not([data-scene-expanded=true]) .dialog-copy{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:8px 2px 16px}
+.cdf-dialogue[data-dialog-interaction=true]:not([data-scene-expanded=true]) h2{font-size:clamp(26px,4vw,38px);line-height:1.2;margin:12px 0 18px}
+.cdf-dialogue[data-dialog-interaction=true]:not([data-scene-expanded=true]) #story-body{font-size:17px;line-height:1.55;margin-bottom:20px}
+.cdf-dialogue[data-dialog-interaction=true]:not([data-scene-expanded=true]) .story-choices button{font-size:16px;min-height:64px;padding:14px;line-height:1.35}
+.cdf-dialogue[data-dialog-interaction=true]:not([data-scene-expanded=true]) .step-actions{flex:none;margin-top:12px}
+.cdf-dialogue[data-dialog-interaction=true]:not([data-scene-expanded=true]) .step-actions button,.cdf-dialogue[data-dialog-interaction=true]:not([data-scene-expanded=true]) .step-actions a{font-size:16px;min-height:48px}
+.cdf-dialogue[data-dialog-interaction=true]:not([data-scene-expanded=true]) #register-section{flex:1;min-height:0;overflow-y:auto}
+.cdf-dialogue[data-dialog-interaction=true]:not([data-scene-expanded=true]) #story-note{font-size:12px;line-height:1.5}
+.cdf-dialogue[data-dialog-interaction=true]:not([data-scene-expanded=true]) .scene-swipe-tip{display:none}
+.cdf-dialogue[data-dialog-interaction=true]:not([data-scene-expanded=true]) .scene-controls{justify-content:flex-end;flex:none}
+
+
+.cdf-dialogue[data-dialog-interaction=true]:not([data-scene-expanded=true]) header,.cdf-dialogue[data-dialog-interaction=true]:not([data-scene-expanded=true]) .luvo-scene-tools{visibility:hidden}
+.cdf-dialogue[data-dialog-interaction=true]:not([data-scene-expanded=true]) .account-panel{padding-top:calc(var(--cdf-input-banner-height,0px) + 14px)}
+.cdf-dialogue[data-dialog-interaction=true]:not([data-scene-expanded=true]) .scene-controls{position:static;inset:auto;min-height:44px;margin:0;padding:0}
+
+.cdf-dialogue[data-dialog-interaction=true]:not([data-scene-expanded=true]) .story-constellation{display:none}
+.cdf-dialogue[data-dialog-interaction=true]:not([data-scene-expanded=true]) .world-window h1{visibility:hidden}
