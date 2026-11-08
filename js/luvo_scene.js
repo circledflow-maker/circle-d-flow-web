@@ -3,7 +3,7 @@
  const doc=root.document,host=doc.getElementById('luvo-scene');if(!host)return;
  const media=root.matchMedia('(prefers-reduced-motion: reduce)'),toggle=doc.getElementById('luvo-scene-toggle'),status=doc.getElementById('luvo-scene-status');
  let renderer,scene,camera,world,fairy,ring,frame=0,epoch=0,stopped=false,paused=false,loading=false,disposed=false,timer,script,pulseTimer;
- const geometries=new Set(),materials=new Set(),textures=new Set();let particles,universe,lastTime=0,lantern,lanternGlow,pathLights=[],fairyPoint;
+ const geometries=new Set(),materials=new Set(),textures=new Set();let particles,universe,lastTime=0,lantern,lanternGlow,pathLights=[],fairyPoint,fairyDestination;
  const words={en:{start:'Opening LUVO…',ready:'LUVO · your first light',fallback:'Quiet view · your journey is ready',quiet:'Quiet view',open:'Open 3D',link:'Connecting your account…'},de:{start:'LUVO öffnet sich…',ready:'LUVO · dein erstes Licht',fallback:'Ruhige Ansicht · dein Einstieg ist bereit',quiet:'Ruhige Ansicht',open:'3D öffnen',link:'Dein Konto wird verbunden…'},pt:{start:'A abrir LUVO…',ready:'LUVO · a tua primeira luz',fallback:'Vista tranquila · podes começar',quiet:'Vista tranquila',open:'Abrir 3D',link:'A ligar a tua conta…'}};
  function stage(){
  const phase=doc.body.dataset.journeyScene||'welcome',sections=Array.from(doc.querySelectorAll?.('[data-journey-step]')||[]);
@@ -27,6 +27,13 @@
  function size(){if(!renderer)return;halt();const width=host.clientWidth||root.innerWidth,height=host.clientHeight||root.innerHeight;renderer.setPixelRatio(Math.min(root.devicePixelRatio||1,width<700?1.25:1.75));renderer.setSize(width,height);camera.aspect=width/height;camera.position.set(width<700?0:3.8,width<700?4.8:4.2,width<700?(root.CDFLuvoUniverse?.fitMobileDistance(width,height)||11.5):15);camera.lookAt(width<700?0:1,3.3,0);camera.updateProjectionMatrix();world.position.set(width<700?0:-2.6,width<700?1.9:0,0);world.scale.setScalar(width<700?.9:1);draw(0);}
  function draw(time){if(!renderer)return;const t=time*.001,dt=lastTime?Math.min(.05,Math.max(0,(time-lastTime)*.001)):.016;lastTime=time;const active=!paused&&!media.matches&&!doc.hidden&&!stopped;
   if(active){world.rotation.y=Math.sin(t*.12)*.07;const welcome=doc.body.dataset.dialogMode==='welcome',mobile=(host.clientWidth||root.innerWidth)<700;fairy.position.set(welcome?(mobile?3.8:8):2,(welcome?6.5:4.2)+Math.sin(t*1.4)*.12,welcome?.6:1.3);fairy.rotation.y=t*.28;ring.rotation.z=Math.sin(t*.12)*.04;particles.rotation.y=t*.008;universe?.update(t,dt,host.clientWidth||root.innerWidth,host.clientHeight||root.innerHeight);}
+  if(fairy?.isSprite&&root.CDFSceneDialogue?.target){
+   const width=host.clientWidth||root.innerWidth,height=host.clientHeight||root.innerHeight,target=root.CDFSceneDialogue.target(width,height);
+   camera.updateMatrixWorld();world.updateMatrixWorld(true);
+   fairyDestination.set(target.x/width*2-1,1-target.y/height*2,.5).unproject(camera).sub(camera.position).normalize().multiplyScalar(12).add(camera.position);
+   world.worldToLocal(fairyDestination);fairy.position.copy(fairyDestination);
+   const units=2*Math.tan(camera.fov*Math.PI/360)*12/height/(world.scale.x||1);fairy.scale.set(units*86,units*64.5,1);fairy.renderOrder=20;fairy.material.depthTest=false;
+  }
   renderer.render(scene,camera);
   if(fairyPoint&&root.CDFSceneDialogue?.anchor){fairy.getWorldPosition(fairyPoint);fairyPoint.project(camera);const width=host.clientWidth||root.innerWidth,height=host.clientHeight||root.innerHeight;if(Number.isFinite(fairyPoint.x)&&Number.isFinite(fairyPoint.y))root.CDFSceneDialogue.anchor({x:(fairyPoint.x*.5+.5)*width,y:(-.5*fairyPoint.y+.5)*height,width,height});}
   frame=active?root.requestAnimationFrame(draw):0;
@@ -61,7 +68,7 @@
   const handle=mesh(new T.TorusGeometry(.16,.035,6,20),gold,lantern);handle.position.y=.7;
   lanternGlow=mat(0xffd78d,0xffaa36);const heart=mesh(new T.SphereGeometry(.2,12,8),lanternGlow,lantern);heart.scale.set(.75,1.2,.75);heart.position.y=.06;
   const plinth=mesh(new T.CylinderGeometry(.58,.66,.22,8),stone);plinth.position.set(1.25,.14,2.7);
-  fairy=root.CDFFloweeFairy?.sprite(T,{registerTexture:t=>textures.add(t),registerMaterial:m=>materials.add(m)})||new T.Group();world.add(fairy);fairy.position.set(2,4.2,1.3);fairyPoint=new T.Vector3();
+  fairy=root.CDFFloweeFairy?.sprite(T,{registerTexture:t=>textures.add(t),registerMaterial:m=>materials.add(m)})||new T.Group();world.add(fairy);fairy.position.set(2,4.2,1.3);fairyPoint=new T.Vector3();fairyDestination=new T.Vector3();
   const positions=new Float32Array(72*3);for(let i=0;i<72;i++){positions[i*3]=Math.sin(i*12.98)*13;positions[i*3+1]=(i%19)*.58;positions[i*3+2]=Math.cos(i*7.23)*10-4;}
   const dust=new T.BufferGeometry();dust.setAttribute('position',new T.BufferAttribute(positions,3));geometries.add(dust);const dustMat=new T.PointsMaterial({color:0xe9d298,size:.045,transparent:true,opacity:.65});materials.add(dustMat);particles=new T.Points(dust,dustMat);scene.add(particles);
   universe=root.CDFLuvoUniverse?.build({T,scene,world,mesh,mat,gold,mint,stone,dark,camera,registerGeometry:g=>geometries.add(g),registerMaterial:m=>materials.add(m),registerTexture:t=>textures.add(t),worlds:root.CDFWorlds?.worlds||[]});stage();

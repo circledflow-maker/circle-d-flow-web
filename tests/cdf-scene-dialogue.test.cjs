@@ -22,3 +22,13 @@ test('cinematic welcome and narration need no answer sheet, real choices and for
  for(const beat of ['many_worlds','first_step','return_path','threshold'])assert.equal(interactionMode({mode:'story',beat}),true);
  for(const x of [{mode:'welcome'},{mode:'story',beat:'city_light'},{mode:'story',beat:'flowee_lantern'},{mode:'unknown'}])assert.equal(interactionMode(x),false);
 });
+
+test('speech leaves a clear 42px radius around Flowee at all supported sides',()=>{
+ const {bubblePosition,fairyTarget,speechPages}=require('../js/cdf_scene_dialogue.js');
+ for(const [width,height]of [[360,640],[390,844],[844,390],[1280,800]])for(const beat of ['city_light','flowee_lantern','many_worlds','first_step']){
+  const point=fairyTarget({width,height,top:130,bottom:height*.7,mode:'story',beat});const b=bubblePosition({...point,top:130,bottom:height*.7,bubbleWidth:230,bubbleHeight:140});
+  assert.ok(b.left>=12&&b.left+b.width<=width-12+.01);assert.ok(b.left+b.width<=point.x-42+.01||b.left>=point.x+42-.01);
+ }
+ const body='Flowee begleitet dich auf deinem Weg. Du kannst dir die Welt in Ruhe ansehen und die Sprechblase jederzeit wieder öffnen.';
+ const pages=speechPages(body,60);assert.ok(pages.length>1);assert.equal(pages.join(' '),body);assert.ok(pages.every(x=>x.length<=60));
+});

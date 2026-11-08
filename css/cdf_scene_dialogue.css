@@ -159,3 +159,20 @@ body.cdf-dialogue{height:var(--cdf-viewport-height,100dvh);min-height:0;overflow
 .cdf-dialogue .flowee-guide{animation:cdf-speech-enter .6s ease-out}
 @keyframes cdf-speech-enter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){.cdf-dialogue .flowee-guide{animation:none}}
+
+/* Intro54: reserve the fairy's silhouette, reveal short speech after arrival. */
+.cdf-dialogue .flowee-guide{width:min(230px,64vw)}
+.cdf-dialogue[data-dialog-interaction=false] .flowee-guide{width:min(230px,64vw)}
+.cdf-dialogue .flowee-speech{padding:12px;max-height:min(var(--cdf-guide-max-height,240px),270px)}
+.cdf-dialogue .flowee-speech p{font-size:14px;line-height:1.45;margin:8px 0}
+.cdf-dialogue .flowee-speech .speaker{display:block;padding-right:24px}
+.cdf-dialogue .flowee-dismiss{position:absolute;top:0;right:0;width:44px;height:44px;min-height:44px;padding:0;border:0;background:transparent;color:#244f43;font:24px/1 system-ui}
+.cdf-dialogue .flowee-cinematic-actions{flex-direction:row;gap:6px}
+.cdf-dialogue .flowee-cinematic-actions button{flex:1;min-width:0;font-size:12px}
+.cdf-dialogue .flowee-hotspot{width:76px;height:76px;min-height:76px}
+.cdf-dialogue .flowee-guide[hidden]{display:none!important}
+.cdf-dialogue #luvo-scene:after{box-shadow:inset 0 0 42px #0002}
+
+.cdf-dialogue .flowee-guide{grid-template-columns:minmax(0,1fr)}
+.cdf-dialogue .flowee-hotspot #cdf-account-flowee{display:block;width:76px;height:57px;margin:0;pointer-events:none}
+.cdf-dialogue[data-flowee-render=scene] .flowee-hotspot #cdf-account-flowee{display:none}
