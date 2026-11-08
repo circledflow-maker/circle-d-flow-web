@@ -2,7 +2,7 @@
 'use strict';
 const fs=require('node:fs'),path=require('node:path');
 const assignments={
- Cursor:{task:'CDF-INTRO36-QA',brief:'handoffs/2026-11-07_intro36_codex-an-cursor.md',outputs:['Docs/community-pilot/intro36-cursor-review-20261107.md','handoffs/2026-11-07_intro36_cursor-an-codex.md']},
+ Cursor:{task:'CDF-INTRO49-QA',brief:'handoffs/2026-11-08_intro49_codex-an-cursor.md',outputs:['Docs/community-pilot/intro49-cursor-review-20261108.md','handoffs/2026-11-08_intro49_cursor-an-codex.md']},
  Antigravity:{task:'CDF-WORLD48-ART',brief:'handoffs/2026-11-08_world48_codex-an-antigravity.md',outputs:['Docs/community-pilot/world48-antigravity-shapes-20261108.md','handoffs/2026-11-08_world48_antigravity-an-codex.md']},
  Daiku:{task:'CDF-MYTH48',brief:'handoffs/2026-11-08_world48_codex-an-daiku.md',outputs:['Docs/community-pilot/world48-daiku-research-20261108.md','handoffs/2026-11-08_world48_daiku-an-codex.md']}
 };

@@ -189,9 +189,9 @@
       ],
       "timebox": "höchstens20 Minuten Projektarbeit unter bestehender gemeinsamer Tagesgrenze",
       "acceptance": "Version belegt; PASS/FAIL/NOT_RUN pro Fall; reproduzierbare Belege; kein Produkt-/Accounteingriff; genau ein nächster Fehler",
-      "state": "Prompt laut Hope erhalten; Annahme/Ausführung nicht belegt",
+      "state": "Alte Abnahme nicht nachgewiesen; aktueller Prüfumfang separat präzisiert",
       "evidence": "handoffs/2026-11-07_intro36_codex-an-cursor.md",
-      "next": "Intro47-Laterne, Scroll/Lesbarkeit und mobile Silhouetten unabhängig prüfen;5-Minuten-Pass im gemeinsamen Budget"
+      "next": "Neuer begrenzter Stand/Prüfauftrag CDF-INTRO49-QA; historische Ergebnisse erhalten"
     },
     {
       "id": "CDF-INTRO37-ART",
@@ -344,7 +344,7 @@
       "id": "CDF-MYTH48",
       "project": "CDF / eigene Welten und Community-Pilot",
       "goal": "Genau eine belegte griechische Weltkarte vorbereiten",
-      "owner": "Daiku (vorgesehen; neuer Lauf nicht bestätigt)",
+      "owner": "Daiku (begrenzte literarische Karte empfangen)",
       "tool": "Vorhandene Vanilla-/Quell-/Recherchewerkzeuge; keine neue kostenpflichtige Anbindung",
       "baseline": "45daef68373352ebc0eecf63272b2d432293f099",
       "dependencies": [
@@ -352,15 +352,16 @@
       ],
       "timebox": "Ein begrenzter Pass im gemeinsamen Restbudget; externe Aufträge höchstens5 Minuten",
       "acceptance": "Belegte Inputs, begrenztes Ergebnis, Ist/Vorschlag/NOT_RUN getrennt; keine Veröffentlichung",
-      "state": "Übergabe vorbereitet; neuer externer Lauf nicht bestätigt",
-      "evidence": "handoffs/2026-11-08_world48_codex-an-daiku.md",
-      "next": "Ein konkreter Mythos, drei belegte Formhinweise und eine eigene CDF-Formidee; danach separaten Pipelineauftrag fortführen"
+      "state": "Teilresultat empfangen/geprüft; fehlende Grundlagen/volle Abnahme offen",
+      "evidence": "Docs/community-pilot/world48-daiku-research-20261108.md",
+      "next": "Delphi bleibt Vorschlag für Hope; fehlende Grundlagen vor formaler weiterer Rollenarbeit klären; separater Pipelineauftrag offen",
+      "exchange_status": "received_reviewed"
     },
     {
       "id": "CDF-WORLD48-ART",
       "project": "CDF / eigene Welten und Community-Pilot",
       "goal": "Drei eigene unterscheidbare Weltsilhouetten vorbereiten",
-      "owner": "Antigravity (vorgesehen; neuer Lauf nicht bestätigt)",
+      "owner": "Antigravity (begrenzter Quellentwurf empfangen)",
       "tool": "Vorhandene Vanilla-/Quell-/Recherchewerkzeuge; keine neue kostenpflichtige Anbindung",
       "baseline": "45daef68373352ebc0eecf63272b2d432293f099",
       "dependencies": [
@@ -368,9 +369,27 @@
       ],
       "timebox": "Ein begrenzter Pass im gemeinsamen Restbudget; externe Aufträge höchstens5 Minuten",
       "acceptance": "Belegte Inputs, begrenztes Ergebnis, Ist/Vorschlag/NOT_RUN getrennt; keine Veröffentlichung",
-      "state": "Übergabe vorbereitet; neuer externer Lauf nicht bestätigt",
-      "evidence": "handoffs/2026-11-08_world48_codex-an-antigravity.md",
-      "next": "Drei Entwürfe und genau eine Priorität, kulturelle Zuordnung mit Weltkarte abgleichen"
+      "state": "Begrenzten Silhouettenauftrag erfüllt; durch Codex eingeordnet",
+      "evidence": "Docs/community-pilot/world48-antigravity-shapes-20261108.md",
+      "next": "Intro49 unabhängig durch Cursor prüfen; keine alte Recherche neu verteilen",
+      "exchange_status": "received_reviewed"
+    },
+    {
+      "id": "CDF-INTRO49-QA",
+      "project": "CDF / Community-App",
+      "goal": "Intro49 unabhängig auf mobile Kontur-/Laternenlesbarkeit und Bedienung prüfen",
+      "owner": "Cursor (vorgesehen; Annahme nicht bestätigt)",
+      "tool": "Tatsächlich vorhandener Browser und private Belege; Emulation/physisch getrennt",
+      "baseline": "1d60a3f3908efc6f22451b6e7add0fda8cc9e2a1",
+      "dependencies": [
+        "CDF-INTRO47",
+        "CDF-WORLD48-ART"
+      ],
+      "timebox": "Erster Pass höchstens5 Minuten im belegten gemeinsamen Restbudget",
+      "acceptance": "390×844 zuerst, PASS/FAIL/NOT_RUN, Version/Repro; genau ein echter Blocker; kein Produktdiff",
+      "state": "Übergabe vorbereitet, nicht gestartet",
+      "evidence": "handoffs/2026-11-08_intro49_codex-an-cursor.md",
+      "next": "Cursor übernimmt current.json oder kopierten Brief, liefert genau2 Dateien"
     }
   ]
 }
