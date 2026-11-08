@@ -455,6 +455,22 @@
       "state": "Implementiert und technisch geprüft; physische aktuelle Sicht-/Touchabnahme NOT_RUN",
       "evidence": "Docs/community-pilot/intro54-20261108.md",
       "next": "Hope prüft54, anschließend genau größtes belegtes Kernwegproblem; Blender-Vergleichsasset erst danach"
+    },
+    {
+      "id": "CDF-MODEL55",
+      "project": "CDF / eigene Welten und Community-App",
+      "goal": "Kostenloses Blender-Werkzeug und einen weicheren CDF-Modellprototyp nachvollziehbar bereitstellen",
+      "owner": "Codex; zwei tatsächlich begrenzte interne Codex-Teilaufgaben",
+      "tool": "Blender5.2.3 LTS portabel auf E:, eigener bpy-Entwurf, bestehender Three-r128-Importtest",
+      "baseline": "592de00258f012565bf1b9aed4e1f3ae722d36bf",
+      "dependencies": [
+        "CDF-INTRO54-FLOWEE"
+      ],
+      "timebox": "Ein Prototyp vor einer breiten Weltmigration",
+      "acceptance": "Prüfsummenverifiziertes lauffähiges Blender, editierbare Quelle/GLB/PNG, echtes Import-/Geometriebudget und gesichteter Render; App-/Gerätebelege getrennt",
+      "state": "Werkzeug bereitgestellt und eigener Mint-Prototyp erzeugt/gesichtet; Importprüfung bestanden; App-/Handy-Bildprüfung NOT_RUN",
+      "evidence": "Docs/community-pilot/model55-20261108.md",
+      "next": "Genau ein Asset in isolierter Webszene mit App-Beleuchtung auf Handy/Desktop prüfen, dann Hopes Stilentscheidung; keine gesamte Welt ersetzen"
     }
   ]
 }
