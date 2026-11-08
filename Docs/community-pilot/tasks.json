@@ -389,8 +389,24 @@
       "acceptance": "390×844 zuerst, PASS/FAIL/NOT_RUN, Version/Repro; genau ein echter Blocker; kein Produktdiff",
       "state": "Cursor-Versuch laut Hope NOT_RUN wegen fehlender erreichbarer Testbasis; Originaldateien nicht eingegangen; portabler Prüfsatz vorbereitet und freigegeben",
       "evidence": "Docs/community-pilot/intro50-cursor-access-20261108.md",
-      "next": "Zuerst2 Originalberichte exportieren; danach Kit-Prüfsumme/Smokecheck und echte390×844-Browserprüfung bei nachgewiesener Fähigkeit; keine weitere Quellprüfung als Ersatz",
+      "next": "Bestehendes Kit49 getrennt als eingefrorenen49-Stand prüfen/exportieren; neue Intro51-Bildabnahme daraus nicht ableiten",
       "exchange_status": "pending"
+    },
+    {
+      "id": "CDF-INTRO51-MOBILE",
+      "project": "CDF / kostenloser Kernweg",
+      "goal": "Mobile Antworten und Registrierungszusammenfassung ohne Überdeckung lesen und bedienen",
+      "owner": "Codex; tatsächlicher Handytest durch Hope",
+      "tool": "Vanilla CSS/DOM; bestehende Tests, Strukturprüfung, geschützte aktuelle LAN-Vorschau",
+      "baseline": "bf4b208dce1239ad3568fc82622a5a86217e4e83",
+      "dependencies": [
+        "CDF-INTRO46"
+      ],
+      "timebox": "Eine begrenzte konkrete mobile Abnahme vor weiterer Weltengestaltung",
+      "acceptance": "Vollständige Antwort-/Ziel-/Einwilligungstexte erreichbar, Hauptaktion außerhalb Antwortscroll, Tastatur/Querformat; echter Gerätebeleg getrennt",
+      "state": "Lokal umgesetzt;19 Interaktions-/Schutztests und3 Strukturprüfungen bestanden; neue Bildabnahme offen",
+      "evidence": "Docs/community-pilot/intro51-20261108.md",
+      "next": "Hope testet Dein erstes Kapitel und Softwaretastatur; genau einen beobachteten Folgefehler vor Figuren-/Weltenphase schließen"
     }
   ]
 }
