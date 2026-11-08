@@ -1,0 +1,591 @@
+{
+  "date": "2026-11-08",
+  "project": "CDF",
+  "source_commit": "592de00258f012565bf1b9aed4e1f3ae722d36bf",
+  "complete_remote_tree": true,
+  "scope": "Direct script src and stylesheet link href in login and artist_sanctuary only; Git-blob hashes, no semantic auth/DB check, transitive closure, browser or live acceptance",
+  "pages": {
+    "pages/login.html": {
+      "remoteGitBlob": "7f8915f58f15ab3ea900d0500869ea9c073697d9",
+      "localGitBlob": "7f8915f58f15ab3ea900d0500869ea9c073697d9",
+      "sameNormalized": true,
+      "localRefCount": 19,
+      "remoteRefCount": 19
+    },
+    "pages/artist_sanctuary.html": {
+      "remoteGitBlob": "a32ab487906666766936bfbbf65379e31f619fde",
+      "localGitBlob": "a32ab487906666766936bfbbf65379e31f619fde",
+      "sameNormalized": true,
+      "localRefCount": 26,
+      "remoteRefCount": 26
+    }
+  },
+  "counts": {
+    "equal": 17,
+    "missing_remote": 14,
+    "different_or_remote_line_endings": 3,
+    "line_endings_only": 5
+  },
+  "remoteDirectMissing": 14,
+  "files": [
+    {
+      "path": "css/cdf_intro_story.css",
+      "state": "equal",
+      "localExists": true,
+      "localGitBlob": "577144c4b571e049ed7c0b135ffa2e9057c0d8b6",
+      "normalizedLocalGitBlob": "577144c4b571e049ed7c0b135ffa2e9057c0d8b6",
+      "remoteGitBlob": "577144c4b571e049ed7c0b135ffa2e9057c0d8b6",
+      "referencedByRemote": [
+        "pages/login.html",
+        "pages/artist_sanctuary.html"
+      ],
+      "referencedByLocal": [
+        "pages/login.html",
+        "pages/artist_sanctuary.html"
+      ]
+    },
+    {
+      "path": "css/cdf_login.css",
+      "state": "missing_remote",
+      "localExists": true,
+      "localGitBlob": "6b3ac586acd126c1cfd793c543fe032333b84131",
+      "normalizedLocalGitBlob": "f5d28cbaf54bbfa49aeabceb89822c5a89d1ebd6",
+      "remoteGitBlob": null,
+      "referencedByRemote": [
+        "pages/login.html"
+      ],
+      "referencedByLocal": [
+        "pages/login.html"
+      ]
+    },
+    {
+      "path": "css/cdf_scene_dialogue.css",
+      "state": "equal",
+      "localExists": true,
+      "localGitBlob": "08e44b8679ac9acadfc42b87055c5e3960ebdf56",
+      "normalizedLocalGitBlob": "08e44b8679ac9acadfc42b87055c5e3960ebdf56",
+      "remoteGitBlob": "08e44b8679ac9acadfc42b87055c5e3960ebdf56",
+      "referencedByRemote": [
+        "pages/login.html",
+        "pages/artist_sanctuary.html"
+      ],
+      "referencedByLocal": [
+        "pages/login.html",
+        "pages/artist_sanctuary.html"
+      ]
+    },
+    {
+      "path": "css/flowee_room_tutorial.css",
+      "state": "missing_remote",
+      "localExists": true,
+      "localGitBlob": "03fd391ac545348f7d689ec26a845da2f14b5e28",
+      "normalizedLocalGitBlob": "88d262667bb15f6e3791608441bb2e148d11da49",
+      "remoteGitBlob": null,
+      "referencedByRemote": [
+        "pages/artist_sanctuary.html"
+      ],
+      "referencedByLocal": [
+        "pages/artist_sanctuary.html"
+      ]
+    },
+    {
+      "path": "css/luvo_scene.css",
+      "state": "equal",
+      "localExists": true,
+      "localGitBlob": "e552f0a7abccdb5d18f076d21155600cc017915a",
+      "normalizedLocalGitBlob": "e552f0a7abccdb5d18f076d21155600cc017915a",
+      "remoteGitBlob": "e552f0a7abccdb5d18f076d21155600cc017915a",
+      "referencedByRemote": [
+        "pages/login.html"
+      ],
+      "referencedByLocal": [
+        "pages/login.html"
+      ]
+    },
+    {
+      "path": "css/room_transition.css",
+      "state": "equal",
+      "localExists": true,
+      "localGitBlob": "77512a59234d5e9b592bf526f767dbeeaa30942c",
+      "normalizedLocalGitBlob": "41fdeb5942cb03e25ec6cc8dc52d32f8be75c0c6",
+      "remoteGitBlob": "77512a59234d5e9b592bf526f767dbeeaa30942c",
+      "referencedByRemote": [
+        "pages/artist_sanctuary.html"
+      ],
+      "referencedByLocal": [
+        "pages/artist_sanctuary.html"
+      ]
+    },
+    {
+      "path": "css/sanctuary_courtyard.css",
+      "state": "missing_remote",
+      "localExists": true,
+      "localGitBlob": "ef489422814fc227d14ca3ca75f08d5daaabbd49",
+      "normalizedLocalGitBlob": "7aa548e575b06bade87faddccad1b5fc0378b85a",
+      "remoteGitBlob": null,
+      "referencedByRemote": [
+        "pages/artist_sanctuary.html"
+      ],
+      "referencedByLocal": [
+        "pages/artist_sanctuary.html"
+      ]
+    },
+    {
+      "path": "css/sanctuary_mobile20.css",
+      "state": "equal",
+      "localExists": true,
+      "localGitBlob": "c876a5b381ccfd9fa495ab5bdc6c7607829cec4d",
+      "normalizedLocalGitBlob": "c876a5b381ccfd9fa495ab5bdc6c7607829cec4d",
+      "remoteGitBlob": "c876a5b381ccfd9fa495ab5bdc6c7607829cec4d",
+      "referencedByRemote": [
+        "pages/artist_sanctuary.html"
+      ],
+      "referencedByLocal": [
+        "pages/artist_sanctuary.html"
+      ]
+    },
+    {
+      "path": "js/agents/supabase_client.js",
+      "state": "different_or_remote_line_endings",
+      "localExists": true,
+      "localGitBlob": "d2e2aff4f34a5d711f1be00556286048c28e4b6f",
+      "normalizedLocalGitBlob": "bb117522f7cca0f4cdfeb156abbcc13a95ce14ba",
+      "remoteGitBlob": "171d27a4660c9002a3e39b47914baac2cbec4807",
+      "referencedByRemote": [
+        "pages/login.html",
+        "pages/artist_sanctuary.html"
+      ],
+      "referencedByLocal": [
+        "pages/login.html",
+        "pages/artist_sanctuary.html"
+      ]
+    },
+    {
+      "path": "js/auth-handler.js",
+      "state": "different_or_remote_line_endings",
+      "localExists": true,
+      "localGitBlob": "35f9a13a8584c38dd135ad2504bf0324f3f9093c",
+      "normalizedLocalGitBlob": "d8a6904d72d3c7148e1872cd3ee9e7fb2885e45b",
+      "remoteGitBlob": "d9699fbe4d70bc590f9a590773ac8eec54610adb",
+      "referencedByRemote": [
+        "pages/login.html"
+      ],
+      "referencedByLocal": [
+        "pages/login.html"
+      ]
+    },
+    {
+      "path": "js/cdf_account_journey.js",
+      "state": "line_endings_only",
+      "localExists": true,
+      "localGitBlob": "d98a6ee7d6ed1b9d22aefea6ede1a3764ded4c16",
+      "normalizedLocalGitBlob": "dab1b4d47ed2eda0e3a55ce6d1c594caefae2838",
+      "remoteGitBlob": "dab1b4d47ed2eda0e3a55ce6d1c594caefae2838",
+      "referencedByRemote": [
+        "pages/login.html"
+      ],
+      "referencedByLocal": [
+        "pages/login.html"
+      ]
+    },
+    {
+      "path": "js/cdf_account_motion.js",
+      "state": "missing_remote",
+      "localExists": true,
+      "localGitBlob": "5f51e4ae4beb78c24f4230d78f0c7000e82917b4",
+      "normalizedLocalGitBlob": "1946738928d379b5de9783354c25fa86cb9c503e",
+      "remoteGitBlob": null,
+      "referencedByRemote": [
+        "pages/login.html"
+      ],
+      "referencedByLocal": [
+        "pages/login.html"
+      ]
+    },
+    {
+      "path": "js/cdf_account_story.js",
+      "state": "equal",
+      "localExists": true,
+      "localGitBlob": "7bcfb1ad79d33787b339d02427b3a28ae1a1ef47",
+      "normalizedLocalGitBlob": "7bcfb1ad79d33787b339d02427b3a28ae1a1ef47",
+      "remoteGitBlob": "7bcfb1ad79d33787b339d02427b3a28ae1a1ef47",
+      "referencedByRemote": [
+        "pages/login.html"
+      ],
+      "referencedByLocal": [
+        "pages/login.html"
+      ]
+    },
+    {
+      "path": "js/cdf_identity.js",
+      "state": "missing_remote",
+      "localExists": true,
+      "localGitBlob": "18654d1a64bef437f9377fc65bfefbb172d1a373",
+      "normalizedLocalGitBlob": "3b5547a7e4aa425e84812d2d41263dddea80622a",
+      "remoteGitBlob": null,
+      "referencedByRemote": [
+        "pages/login.html"
+      ],
+      "referencedByLocal": [
+        "pages/login.html"
+      ]
+    },
+    {
+      "path": "js/cdf_intro_story.js",
+      "state": "equal",
+      "localExists": true,
+      "localGitBlob": "7aeab54fb48c8c2e06793736c1cce2dbbc45b589",
+      "normalizedLocalGitBlob": "7aeab54fb48c8c2e06793736c1cce2dbbc45b589",
+      "remoteGitBlob": "7aeab54fb48c8c2e06793736c1cce2dbbc45b589",
+      "referencedByRemote": [
+        "pages/login.html"
+      ],
+      "referencedByLocal": [
+        "pages/login.html"
+      ]
+    },
+    {
+      "path": "js/cdf_login.js",
+      "state": "equal",
+      "localExists": true,
+      "localGitBlob": "3282936c722220e4de7c0f76e9660db5a4e4b96f",
+      "normalizedLocalGitBlob": "7f8ca504f08656d9bde64bc2aa525f7ae8995ebb",
+      "remoteGitBlob": "3282936c722220e4de7c0f76e9660db5a4e4b96f",
+      "referencedByRemote": [
+        "pages/login.html"
+      ],
+      "referencedByLocal": [
+        "pages/login.html"
+      ]
+    },
+    {
+      "path": "js/cdf_runtime_config.js",
+      "state": "line_endings_only",
+      "localExists": true,
+      "localGitBlob": "c4452953c5ae2f8b869f6b5d8066f0bbebfe462a",
+      "normalizedLocalGitBlob": "6c2e62699b697e31f6f435d15727b245e5780531",
+      "remoteGitBlob": "6c2e62699b697e31f6f435d15727b245e5780531",
+      "referencedByRemote": [
+        "pages/login.html",
+        "pages/artist_sanctuary.html"
+      ],
+      "referencedByLocal": [
+        "pages/login.html",
+        "pages/artist_sanctuary.html"
+      ]
+    },
+    {
+      "path": "js/cdf_scene_dialogue.js",
+      "state": "equal",
+      "localExists": true,
+      "localGitBlob": "6265761f9ff193ac286c21634391797fe73c8fad",
+      "normalizedLocalGitBlob": "6265761f9ff193ac286c21634391797fe73c8fad",
+      "remoteGitBlob": "6265761f9ff193ac286c21634391797fe73c8fad",
+      "referencedByRemote": [
+        "pages/login.html"
+      ],
+      "referencedByLocal": [
+        "pages/login.html"
+      ]
+    },
+    {
+      "path": "js/data/lisbon_regions.js",
+      "state": "missing_remote",
+      "localExists": true,
+      "localGitBlob": "5d421e238718b9f582ada32a0322f161a9f41464",
+      "normalizedLocalGitBlob": "5d421e238718b9f582ada32a0322f161a9f41464",
+      "remoteGitBlob": null,
+      "referencedByRemote": [
+        "pages/artist_sanctuary.html"
+      ],
+      "referencedByLocal": [
+        "pages/artist_sanctuary.html"
+      ]
+    },
+    {
+      "path": "js/ewe_cultural_library.js",
+      "state": "missing_remote",
+      "localExists": true,
+      "localGitBlob": "54c89908049311cd8eee2c8ad3badac8747aa98e",
+      "normalizedLocalGitBlob": "6b03e1eaab5435bceb67f54428abd999f98cda43",
+      "remoteGitBlob": null,
+      "referencedByRemote": [
+        "pages/artist_sanctuary.html"
+      ],
+      "referencedByLocal": [
+        "pages/artist_sanctuary.html"
+      ]
+    },
+    {
+      "path": "js/flowee_fairy.js",
+      "state": "line_endings_only",
+      "localExists": true,
+      "localGitBlob": "b79e45a51b9770a16b4c70805d810c4e68aff5d3",
+      "normalizedLocalGitBlob": "dcd8692239ea48062cb5e28c098be47488b23a84",
+      "remoteGitBlob": "dcd8692239ea48062cb5e28c098be47488b23a84",
+      "referencedByRemote": [
+        "pages/login.html",
+        "pages/artist_sanctuary.html"
+      ],
+      "referencedByLocal": [
+        "pages/login.html",
+        "pages/artist_sanctuary.html"
+      ]
+    },
+    {
+      "path": "js/flowee_room_tutorial.js",
+      "state": "line_endings_only",
+      "localExists": true,
+      "localGitBlob": "57a79841772ceb4c7e019c305217bec8022f5199",
+      "normalizedLocalGitBlob": "0880cb88cf2e475f42e9d98cb644a2161184ab97",
+      "remoteGitBlob": "0880cb88cf2e475f42e9d98cb644a2161184ab97",
+      "referencedByRemote": [
+        "pages/artist_sanctuary.html"
+      ],
+      "referencedByLocal": [
+        "pages/artist_sanctuary.html"
+      ]
+    },
+    {
+      "path": "js/lisbon_context.js",
+      "state": "missing_remote",
+      "localExists": true,
+      "localGitBlob": "dc173e0614240f162a1cc42291807dfa1da2165e",
+      "normalizedLocalGitBlob": "e2882659d3bf3c27347daf807fa7dd1bf5d3334e",
+      "remoteGitBlob": null,
+      "referencedByRemote": [
+        "pages/artist_sanctuary.html"
+      ],
+      "referencedByLocal": [
+        "pages/artist_sanctuary.html"
+      ]
+    },
+    {
+      "path": "js/lisbon_geography.js",
+      "state": "missing_remote",
+      "localExists": true,
+      "localGitBlob": "6929cf54039191aae5364fc54625b86ba1fa2015",
+      "normalizedLocalGitBlob": "aac7c9379531ec6b7aa4e0e38999e7c5d697fd27",
+      "remoteGitBlob": null,
+      "referencedByRemote": [
+        "pages/artist_sanctuary.html"
+      ],
+      "referencedByLocal": [
+        "pages/artist_sanctuary.html"
+      ]
+    },
+    {
+      "path": "js/luvo_scene.js",
+      "state": "equal",
+      "localExists": true,
+      "localGitBlob": "adad93507cddb3d1615e3fe1d00eef806b5bf69c",
+      "normalizedLocalGitBlob": "adad93507cddb3d1615e3fe1d00eef806b5bf69c",
+      "remoteGitBlob": "adad93507cddb3d1615e3fe1d00eef806b5bf69c",
+      "referencedByRemote": [
+        "pages/login.html"
+      ],
+      "referencedByLocal": [
+        "pages/login.html"
+      ]
+    },
+    {
+      "path": "js/luvo_universe.js",
+      "state": "equal",
+      "localExists": true,
+      "localGitBlob": "2f1536aa3f3e7509738d18d353ca0e52b082b4a0",
+      "normalizedLocalGitBlob": "2f1536aa3f3e7509738d18d353ca0e52b082b4a0",
+      "remoteGitBlob": "2f1536aa3f3e7509738d18d353ca0e52b082b4a0",
+      "referencedByRemote": [
+        "pages/login.html"
+      ],
+      "referencedByLocal": [
+        "pages/login.html"
+      ]
+    },
+    {
+      "path": "js/room_transition.js",
+      "state": "different_or_remote_line_endings",
+      "localExists": true,
+      "localGitBlob": "7bd1c25709ecc7c7683f631c2389c2ffeb9215c4",
+      "normalizedLocalGitBlob": "51b22205bcb3738457f14b9722046e98d844ea6f",
+      "remoteGitBlob": "c98ed334439ad83b17811d8bfcd6b32adae96972",
+      "referencedByRemote": [
+        "pages/artist_sanctuary.html"
+      ],
+      "referencedByLocal": [
+        "pages/artist_sanctuary.html"
+      ]
+    },
+    {
+      "path": "js/sanctuary_arrival.js",
+      "state": "equal",
+      "localExists": true,
+      "localGitBlob": "aa4ca0d6bc088c9749ba7f609c13edb97feccdf0",
+      "normalizedLocalGitBlob": "aa4ca0d6bc088c9749ba7f609c13edb97feccdf0",
+      "remoteGitBlob": "aa4ca0d6bc088c9749ba7f609c13edb97feccdf0",
+      "referencedByRemote": [
+        "pages/artist_sanctuary.html"
+      ],
+      "referencedByLocal": [
+        "pages/artist_sanctuary.html"
+      ]
+    },
+    {
+      "path": "js/sanctuary_characters.js",
+      "state": "line_endings_only",
+      "localExists": true,
+      "localGitBlob": "1c6ab0d2342b375d32f645f39742fd7028eab4dd",
+      "normalizedLocalGitBlob": "ca8a3f3de12d1caa89f3cf07b2951210a4d89b85",
+      "remoteGitBlob": "ca8a3f3de12d1caa89f3cf07b2951210a4d89b85",
+      "referencedByRemote": [
+        "pages/artist_sanctuary.html"
+      ],
+      "referencedByLocal": [
+        "pages/artist_sanctuary.html"
+      ]
+    },
+    {
+      "path": "js/sanctuary_collection.js",
+      "state": "equal",
+      "localExists": true,
+      "localGitBlob": "33d182b677c090e7d52c2db7c17f3a9436ef7065",
+      "normalizedLocalGitBlob": "33d182b677c090e7d52c2db7c17f3a9436ef7065",
+      "remoteGitBlob": "33d182b677c090e7d52c2db7c17f3a9436ef7065",
+      "referencedByRemote": [
+        "pages/artist_sanctuary.html"
+      ],
+      "referencedByLocal": [
+        "pages/artist_sanctuary.html"
+      ]
+    },
+    {
+      "path": "js/sanctuary_culture.js",
+      "state": "equal",
+      "localExists": true,
+      "localGitBlob": "98b19707cf8e543fbe893cd70e91d7f986a341d6",
+      "normalizedLocalGitBlob": "abacc5edc30e96187d6bd3f66f63239ad356de9a",
+      "remoteGitBlob": "98b19707cf8e543fbe893cd70e91d7f986a341d6",
+      "referencedByRemote": [
+        "pages/artist_sanctuary.html"
+      ],
+      "referencedByLocal": [
+        "pages/artist_sanctuary.html"
+      ]
+    },
+    {
+      "path": "js/sanctuary_environment.js",
+      "state": "missing_remote",
+      "localExists": true,
+      "localGitBlob": "9e9dfbc25322588788ec678ee057893bd6dd8165",
+      "normalizedLocalGitBlob": "e70f21ce27ccebcc6016fd8444178a95f91d4632",
+      "remoteGitBlob": null,
+      "referencedByRemote": [
+        "pages/artist_sanctuary.html"
+      ],
+      "referencedByLocal": [
+        "pages/artist_sanctuary.html"
+      ]
+    },
+    {
+      "path": "js/sanctuary_layout.js",
+      "state": "equal",
+      "localExists": true,
+      "localGitBlob": "aa0f9c513437cbfa1d671cf8384164c88e64907d",
+      "normalizedLocalGitBlob": "b4327407717ab9e515be6ded0ce6387740905b3e",
+      "remoteGitBlob": "aa0f9c513437cbfa1d671cf8384164c88e64907d",
+      "referencedByRemote": [
+        "pages/artist_sanctuary.html"
+      ],
+      "referencedByLocal": [
+        "pages/artist_sanctuary.html"
+      ]
+    },
+    {
+      "path": "js/sanctuary_movement.js",
+      "state": "missing_remote",
+      "localExists": true,
+      "localGitBlob": "6ef0d64e30d363fe6d7859652547f7867f206559",
+      "normalizedLocalGitBlob": "c2bcf0880f61e16d85c39412dfe36cfd347e52ca",
+      "remoteGitBlob": null,
+      "referencedByRemote": [
+        "pages/artist_sanctuary.html"
+      ],
+      "referencedByLocal": [
+        "pages/artist_sanctuary.html"
+      ]
+    },
+    {
+      "path": "js/sanctuary_next_step.js",
+      "state": "missing_remote",
+      "localExists": true,
+      "localGitBlob": "5e6c03f0372660c62bffd52cf089180d6323b271",
+      "normalizedLocalGitBlob": "5b12de48aa568575a0dcffd072eae5beb7083466",
+      "remoteGitBlob": null,
+      "referencedByRemote": [
+        "pages/artist_sanctuary.html"
+      ],
+      "referencedByLocal": [
+        "pages/artist_sanctuary.html"
+      ]
+    },
+    {
+      "path": "js/sanctuary_scene.js",
+      "state": "equal",
+      "localExists": true,
+      "localGitBlob": "95641a3dbf3bfb7bcbd19a32eb1cded90da59c35",
+      "normalizedLocalGitBlob": "8817b6b973b153ab984ff72e205694a7da15f0d7",
+      "remoteGitBlob": "95641a3dbf3bfb7bcbd19a32eb1cded90da59c35",
+      "referencedByRemote": [
+        "pages/artist_sanctuary.html"
+      ],
+      "referencedByLocal": [
+        "pages/artist_sanctuary.html"
+      ]
+    },
+    {
+      "path": "js/sanctuary_shell.js",
+      "state": "missing_remote",
+      "localExists": true,
+      "localGitBlob": "fe21951336bbd211d390559f0d7c6635887ac67a",
+      "normalizedLocalGitBlob": "1253db7b24a27ee6ec19fe723cdf6ac236615956",
+      "remoteGitBlob": null,
+      "referencedByRemote": [
+        "pages/artist_sanctuary.html"
+      ],
+      "referencedByLocal": [
+        "pages/artist_sanctuary.html"
+      ]
+    },
+    {
+      "path": "js/vendor/supabase-2.108.2.js",
+      "state": "missing_remote",
+      "localExists": true,
+      "localGitBlob": "76e610f35fa05ec76fbc1f9cf36b86e9f592518b",
+      "normalizedLocalGitBlob": "76e610f35fa05ec76fbc1f9cf36b86e9f592518b",
+      "remoteGitBlob": null,
+      "referencedByRemote": [
+        "pages/login.html",
+        "pages/artist_sanctuary.html"
+      ],
+      "referencedByLocal": [
+        "pages/login.html",
+        "pages/artist_sanctuary.html"
+      ]
+    },
+    {
+      "path": "js/world_registry.js",
+      "state": "equal",
+      "localExists": true,
+      "localGitBlob": "bfca03f26e14e429649479c1aa0b5e606e645a97",
+      "normalizedLocalGitBlob": "e7201d39a4f08b595269b3157892f5a6913212c5",
+      "remoteGitBlob": "bfca03f26e14e429649479c1aa0b5e606e645a97",
+      "referencedByRemote": [
+        "pages/login.html"
+      ],
+      "referencedByLocal": [
+        "pages/login.html"
+      ]
+    }
+  ],
+  "productChanged": false
+}

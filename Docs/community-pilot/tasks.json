@@ -53,9 +53,9 @@
       ],
       "timebox": "begrenzte Inventur je öffentlichem Modul",
       "acceptance": "Quellenmanifest und semantische Konflikte statt pauschalem Upload; keine fremden Änderungen überschreiben",
-      "state": "Intro38:2 von4 inhaltlichen Abweichungen entschieden; Modaleingabe im Quellsnapshot ergänzt;2 Auth-Dateien und16 fehlende direkte Quellen offen",
-      "evidence": "Docs/community-pilot/intro38-20261107.md",
-      "next": "supabase_client.js und auth-handler.js separat abgleichen; danach fehlende direkte/transitive Ressourcen ergänzen"
+      "state": "Release60:39 direkte JS/CSS-Pfade an PR18 592de002 geprüft;14 fehlen,17 bytegleich,5 nur lokale CRLF-Unterschiede,3 Hashabweichungen noch nicht semantisch klassifiziert",
+      "evidence": "Docs/community-pilot/release60-20261108.md",
+      "next": "Fehlende14 direkten Ressourcen einzeln prüfen/ergänzen; Auth-Unterschiede semantisch klären und bewusst abweichenden Assetpfad erhalten; danach transitive Abhängigkeiten und echte Tests"
     },
     {
       "id": "FLOWEE-V01",
@@ -279,17 +279,17 @@
       "id": "CDF-DAIKU44",
       "project": "CDF / Pilot-Pipeline und Geschäftsprüfung",
       "goal": "Entscheidungsrelevante Beleglücken prüfen und höchstens eine begründete kleine Potenzialempfehlung für den Pilot liefern",
-      "owner": "Daiku (Auftrag vorbereitet; Übernahme noch nicht bestätigt)",
-      "tool": "Vorhandene Repo-Belege; öffentliche Primärquellen nur bei konkreter entscheidungsrelevanter Lücke",
+      "owner": "Daiku/Grok – Auftrag laut Hope zugestellt; tatsächlicher Arbeits-/Ergebnisnachweis offen",
+      "tool": "Erreichbares GitHub und zwei vollständige Dateiexporte; kein E:-Zugriff",
       "baseline": "Business56/Model55; aktuelle Koordination in PR17 vor Beginn erneut lesen",
       "dependencies": [
         "CDF-INTRO37-CULTURE"
       ],
       "timebox": "Ein erster Pass höchstens5 Minuten innerhalb gemeinsamer20 Minuten Projektarbeit; keine automatische Wiederholung ohne belegtes Restbudget",
       "acceptance": "Bis3 belegte Abhängigkeiten,1 prüfbare Nutzenhypothese,1 nächste Empfehlung; Quelle/Annahme/Lücke getrennt; private Kalenderentwürfe bleiben Team/; kein Produktdiff",
-      "state": "Aktueller Folgebrief und validierteRoutingzuordnung vorbereitet; tatsächlicheexterneAnnahme/Lauf offen",
+      "state": "Hope bestätigt Zustellung; E:-Unzugänglichkeit bestätigt, GitHub-Verbindung und Rückgabe noch nicht belegt",
       "evidence": "handoffs/2026-11-08_business56_codex-an-daiku.md",
-      "next": "Aktuelle Inbox und Decision59 lesen; vorhandene Belege nutzen, Recherche nur für konkrete offene Entscheidung; zwei bereinigte Ergebnisdateien",
+      "next": "Öffentliche Grundlagen am tatsächlichen GitHub-Commit lesen; zwei vollständige Markdown-Exporte mit Quellenstand an Hope liefern",
       "exchange_status": "pending"
     },
     {
@@ -503,7 +503,7 @@
       ],
       "timebox": "Ein begrenzter Vergleich; keine neue Modellserie oder Dienste",
       "acceptance": "Kosten/Rechte/Provenienz, eigne Silhouette/Funktion, echter Weblichtvergleich bzwNOT_RUN, höchstens eine priorisierte Empfehlung",
-      "state": "Aktueller Folgebrief und validierteRoutingzuordnung vorbereitet; tatsächlicheexterneAnnahme/Lauf offen",
+      "state": "Auftrag laut Hope zugestellt; tatsächliche Ausführung und Ergebnis offen",
       "evidence": "handoffs/2026-11-08_model56_codex-an-antigravity.md",
       "next": "Brief ausdrücklich annehmen; zwei bereinigte Ergebnisdateien exportieren, kein automatischer Push/Deploy",
       "exchange_status": "pending"
@@ -520,7 +520,7 @@
       ],
       "timebox": "ErsterPasshöchstens5Minuten innerhalb tatsächlichbekanntergemeinsamerRestgrenze",
       "acceptance": "Zuerst390×844,Version/Repro/PASS-FAIL-NOT_RUN,eineFlowee/Blase/Welt/Antworten/Hauptaktion,genaueinbelegterBlocker; keineKontomutation",
-      "state": "AktuellerBrief undRoutingpaket vorbereitet; keinexternerAgentgestartet",
+      "state": "Auftrag laut Hope zugestellt; tatsächliche Ausführung und Ergebnis offen",
       "evidence": "handoffs/2026-11-08_core57_codex-an-cursor.md",
       "next": "Inboxausdrücklichannehmen,Quelleprüfen,zweizugeordneteDateienexportieren;Grenzeoffenmarkieren",
       "exchange_status": "pending"
