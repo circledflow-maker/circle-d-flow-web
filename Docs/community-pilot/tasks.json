@@ -798,7 +798,24 @@
       "acceptance": "Vollständiger Einband, seitliche Gesten, zugängliche Kontoinhalte, keine erfundenen Besuchs-/Begegnungsdaten oder Chronikfreigabe",
       "state": "Lokal und Draft-Produkt-PR implementiert;35Tests und synthetische Browserfälle geprüft; dauerhafte Chronik nicht verbunden",
       "evidence": "Docs/community-pilot/pass77-20261109.md; Docs/community-pilot/pass77-journal-contract-20261109.md",
-      "next": "Physischer Buchtest und CDF-P01; ownergebundenen Chronikvertrag umsetzen; vorbereitete externe Modell-/Reviewaufträge erst nach Annahme als gestartet führen"
+      "next": "Antigravity laut Hope beauftragt; Lieferung offen. Journal78 erweitert eigene private Erinnerungen lokal; CDF-P01 und vollständiger Releaseabgleich priorisiert."
+    },
+    {
+      "id": "CDF-JOURNAL78",
+      "project": "CDF / private Reisebuch-Erinnerungen",
+      "goal": "Eigene Erinnerungen privat anlegen, lesen, ändern und löschen; sichere Eigentümertrennung",
+      "owner": "Codex; spätere Aktivierung Hope",
+      "tool": "Vanilla, bestehende registrations-API, Supabase-RLS-Entwurf, vorhandenes lokales PGlite",
+      "baseline": "1223aca3aa360a5278078a1077cf7d88b5daa0cc",
+      "dependencies": [
+        "CDF-PASS77",
+        "CDF-P01"
+      ],
+      "timebox": "Begrenzte private Notiz-/Speicherphase",
+      "acceptance": "Explizite Selbsteinträge ohne Teilnahme-/Belohnungsbehauptung; Owner aus bestätigter Sitzung; zwei Konten getrennt; Fehler nie als gespeichert; keine Notizen im Begegnungsbild",
+      "state": "Lokal und Draft-Produkt-PR vorbereitet;46 sonstige Tests sowie ein isolierter PostgreSQL-Test bestanden; gehostete Speicherung nicht aktiviert",
+      "evidence": "Docs/community-pilot/journal78-20261109.md; sql/pass78-private-journal.sql",
+      "next": "Vollständigen Profil-/Karten-/Tagebuch-Kandidaten prüfen; SQL über Migrationsablauf übernehmen, echte Auth/Advisors/Mehrgeräteabnahme und konkrete Aktivierungsfreigabe getrennt"
     }
   ]
 }

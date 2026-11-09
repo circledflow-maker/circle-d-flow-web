@@ -1,9 +1,9 @@
-# Pass77 · seitliches Reisebuch — physischer Gerätetest offen
+# Journal78 · Tagebuch-Gerätetest mit Beispieldaten
 Datum:2026-11-09 · Projekt:Circle D Flow
-Empfänger-Rolle:Hope (CEO), Gerätetest und kreative Rückmeldung
-Ziel:Neuen Einband seitlich öffnen, seitliches/vertikales Blättern und private Tagebuchansicht beurteilen.
-Kontext:Produktcommit 29601a544947ee139cf63e6fb1d8b1421420c3be;35Tests, reale WebGL-Browserfälle, keine physische Geräte-/Liveabnahme.
-Inputs:Docs/community-pilot/pass77-20261109.md; http://192.168.1.72:3218/__pass76-review (historischer Routenname, aktueller Pass77; eigenes WLAN, synthetische Daten).
-Gewünschtes Ergebnis:Einband öffnen, links/rechts und nach unten/oben blättern, Pass lesen/Einstellungen öffnen/Tagebuch und Rückweg. Keine echten Zugangsdaten verwenden.
-Abnahmekriterien:Einband/Buchhälften vollständig sichtbar, Buttons lesbar, Formulare unabhängig scrollbar, ruhige Ansicht, Begegnungsauswahl leer und ohne Chronik. Tagebuch trennt tatsächlichen Fortschritt von noch nicht verbundenen Besuchen/Begegnungen.
-Offene Abhängigkeiten:Physischer Touch/Softwaretastatur, tatsächlicher früherer Bilddownload/Empfang, echter Auth-/Profil-/Releaseweg und dauerhafte private Chronik. Keine Chronik oder Teilnahme als gespeichert/freigegeben behaupten; kein Deploymentauftrag.
+Empfänger-Rolle:Hope (CEO), eigener Gerätetest
+Ziel:Seitliches Reisebuch und explizite Erinnerungen am Handy beurteilen.
+Kontext:Produktcommit 1223aca3aa360a5278078a1077cf7d88b5daa0cc; Browserfälle synthetisch, keine physische Abnahme behauptet.
+Inputs:http://192.168.1.72:3218/__pass78-review; Docs/community-pilot/journal78-20261109.md. Nur im Heimnetz; flüchtiger Testspeicher ohne echte Konto-/Cloudspeicherung.
+Gewünschtes Ergebnis:Pass öffnen→Tagebuch→eigene Erinnerung mit Fantasiedaten anlegen→ändern→Löschfrage abbrechen→schließen/neu öffnen. Nach Seitenreload wird der flüchtige Testspeicher geleert.
+Abnahmekriterien:Lesbare Felder/Buttons, unabhängiges Formularscrollen, Softwaretastatur und Rückweg, keine versehentliche Buchgeste bei Eingabe. Unbekanntes Datum bleibt unbekannt; eigene Erinnerungen als selbst eingetragen. Kein echter Besuch/keine bestätigte Begegnung aus dieser Vorschau.
+Offene Abhängigkeiten:Physischer Touch/Softwaretastatur, echte Auth-/Cloud-/Mehrgeräteabnahme, bestätigte Begegnungs-/Besuchschronik, tatsächlicher früherer Dateidownload/Empfang. Keine echten Personen-/Zugangsdaten in dieser Testansicht. Keine abgeschlossene Geräteprüfung/Liveaktivierung durch diese Datei.
