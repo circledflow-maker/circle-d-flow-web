@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-11-08",
+  "updated": "2026-11-09",
   "coordinator": "Codex (Ebene 2)",
   "decision_owner": "Hope",
   "first_community_task": "CDF-P01",
@@ -31,7 +31,7 @@
       "goal": "Gastorientierung auf Desktop und Smartphone abnehmen",
       "owner": "Codex",
       "tool": "Browser und tatsächliches Smartphone; nur GET/UI ohne Absenden",
-      "baseline": "Visual66 / PR18 bd2c5d997129a02e4d09a72116fff67acff5a6c6; aktive E:-Vorschau mit tatsächlichem Blender66 und lokalen Schriften",
+      "baseline": "Coastal67 / PR18 d92c836dc29248e92d646206d817bc8594a2fb30; aktive E:-Vorschau mit einem Blender-Vordergrundort, Traveller66 und lokalen Schriften",
       "dependencies": [
         "CDF-F00"
       ],
@@ -644,7 +644,24 @@
       "acceptance": "GLB/Fonts tatsächlich geladen und gesehen, Herkunft/Hashes/Lizenzen, sichere Ladefehler/Dispose und mobile Stichprobe",
       "state": "Lokal implementiert, Browserstichprobe und25Tests bestanden, physische/kreative/Vollpilotabnahme offen",
       "evidence": "Docs/community-pilot/visual66-20261109.md",
-      "next": "Hopes Handytest, Model62-Ergebnis abgleichen, ein Vordergrundort statt weiterer einfacher Platzhalter"
+      "next": "Coastal67 eingebaut; Hopes Gerätefeedback und CDF-P01 vor weiterer Grafikserie"
+    },
+    {
+      "id": "CDF-COASTAL67",
+      "project": "CDF / Community-Einstieg",
+      "goal": "Einen vorhandenen Blender-Vordergrundort statt der einfachen Hütte tatsächlich im Intro zeigen",
+      "owner": "Codex; kreative Abnahme Hope",
+      "tool": "Vorhandenes Model55-GLB und Three-r128",
+      "baseline": "d92c836dc29248e92d646206d817bc8594a2fb30",
+      "dependencies": [
+        "CDF-VISUAL66",
+        "CDF-MODEL55"
+      ],
+      "timebox": "Ein Ort, ein Integrationspass und beobachtete Überlagerungskorrektur; keine Weltserie",
+      "acceptance": "Echtes Modell im Weblicht sichtbar, sichere Ersatzansicht/Dispose, isoliertes Laternenmaterial, Handy/Desktop-Stichprobe",
+      "state": "Lokal und in Produkt-PR implementiert;38Tests und Browserstichproben bestanden, vollständige Bedien-/Geräte-/Kreativabnahme offen",
+      "evidence": "Docs/community-pilot/coastal67-20261109.md",
+      "next": "Hope testet Gastweg; genau einen beobachteten Bedienblocker beheben"
     }
   ]
 }
