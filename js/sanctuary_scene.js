@@ -4,7 +4,7 @@
  if(!window.THREE||!layout||!window.CDFSanctuaryEnvironment||!window.CDFSanctuaryCharacters){window.dispatchEvent(new Event('sanctuary:unavailable'));return;}
  const THREE=window.THREE,mobile=innerWidth<761,reducedMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
  let renderer;
- try{renderer=new THREE.WebGLRenderer({antialias:!mobile,powerPreference:'high-performance'});}catch(_){window.dispatchEvent(new Event('sanctuary:unavailable'));return;}
+ try{renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});}catch(_){window.dispatchEvent(new Event('sanctuary:unavailable'));return;}
  renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio||1,mobile?1.5:2));renderer.outputEncoding=THREE.sRGBEncoding;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=.85;renderer.shadowMap.enabled=!mobile;renderer.shadowMap.type=THREE.PCFSoftShadowMap;host.replaceChildren(renderer.domElement);
  const districtSky={river:'#203d46',clay:'#392d30',garden:'#263b32'}[window.CDFLisbonContext?.theme]||'#211c32';const scene=new THREE.Scene();scene.background=new THREE.Color(districtSky);scene.fog=new THREE.Fog(districtSky,48,115);
  scene.add(new THREE.HemisphereLight(0xe5d5ff,0x664333,.65));const moon=new THREE.DirectionalLight(0xffd4a4,.85);moon.position.set(-16,26,18);moon.castShadow=!mobile;moon.shadow.mapSize.set(1024,1024);Object.assign(moon.shadow.camera,{left:-30,right:30,top:28,bottom:-28,near:1,far:90});moon.shadow.bias=-.001;scene.add(moon);scene.add(new THREE.AmbientLight(0xb5a3cf,.18));
@@ -16,12 +16,13 @@
  function material(color,extra={}){const mat=new THREE.MeshStandardMaterial({color,roughness:.75,...extra});mat.color.convertSRGBToLinear();return mat;}
  const avatar=window.CDFSanctuaryCharacters.build(THREE,{mobile});
  const body=avatar.navigator;player.add(body);
+ const stopTraveller=!reducedMotion?window.CDFTravellerAsset?.mount(THREE,body,{height:2.5,y:-1.35,rotation:Math.PI,current:()=>!disposed,onState:state=>{host.dataset.travellerAsset=state;if(state==='ready')renderer.render(scene,camera);}}):null;
  const shadow=new THREE.Mesh(new THREE.CircleGeometry(.65,24),new THREE.MeshBasicMaterial({color:'#08131c',transparent:true,opacity:.2,depthWrite:false}));shadow.rotation.x=-Math.PI/2;shadow.position.y=.045;player.add(shadow);
- const fairy=avatar.flowee;scene.add(fairy);
+ const fairy=avatar.flowee;fairy.scale.multiplyScalar(.6);scene.add(fairy);
  const starsGeo=new THREE.BufferGeometry(),starPositions=[];let seed=71;function random(){seed=(seed*16807)%2147483647;return(seed-1)/2147483646;}for(let i=0;i<(mobile?160:420);i++)starPositions.push((random()-.5)*150,26+random()*45,(random()-.5)*130);starsGeo.setAttribute('position',new THREE.Float32BufferAttribute(starPositions,3));scene.add(new THREE.Points(starsGeo,new THREE.PointsMaterial({color:'#cedbe8',size:.14,transparent:true,opacity:.68,depthWrite:false})));
  let overview=false,paused=reducedMotion,disposed=false,frame=null,last=performance.now(),elapsed=0,nearby=null;const keys=new Set(),touch=new THREE.Vector2(),joystick=document.getElementById('joystick-zone'),knob=document.getElementById('joystick-knob');let pointer=null;
  function reset(){keys.clear();touch.set(0,0);pointer=null;knob.style.transform='';}
- function view(){const target=new THREE.Vector3(player.position.x,1.1,player.position.z);camera.position.copy(target).add(overview?new THREE.Vector3(20,30,29):new THREE.Vector3(0,mobile?9:8,mobile?17:19));if(controls){controls.target.copy(target);controls.update();}else camera.lookAt(target);}
+ function view(){const target=new THREE.Vector3(player.position.x,1.1,player.position.z);camera.position.copy(target).add(overview?new THREE.Vector3(20,30,29):new THREE.Vector3(0,mobile?5.5:6,mobile?11:13));if(controls){controls.target.copy(target);controls.update();}else camera.lookAt(target);}
  function nearest(){const z=layout.zones.find(z=>Math.hypot(player.position.x-z.approach.x,player.position.z-z.approach.z)<z.radius)||null;if(z?.id!==nearby?.id){nearby=z;window.dispatchEvent(new CustomEvent('sanctuary:nearby',{detail:z}));}}
  function arrive(id){const z=layout.zones.find(z=>z.id===id);if(!z||!movement.walkable(z.approach.x,z.approach.z,.8))return false;reset();player.position.set(z.approach.x,0,z.approach.z);overview=false;view();nearest();return true;}
  function home(){reset();player.position.set(layout.spawn.x,0,layout.spawn.z);overview=false;view();nearest();}
@@ -37,7 +38,7 @@
  function setPaused(value){paused=Boolean(value);if(paused)stop();else start();}
  view();fairy.position.set(player.position.x+1.15,1.9,player.position.z+.2);fairy.quaternion.copy(camera.quaternion);renderer.render(scene,camera);
  document.addEventListener('visibilitychange',()=>document.hidden?stop():start());window.addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio||1,innerWidth<761?1.5:2));});
- window.addEventListener('pagehide',e=>{stop();if(e.persisted)return;disposed=true;controls?.dispose();environment.dispose?.();const resources=new Set();scene.traverse(o=>{if(o.geometry)resources.add(o.geometry);for(const m of (Array.isArray(o.material)?o.material:[o.material]).filter(Boolean)){resources.add(m);Object.values(m).forEach(t=>{if(t?.isTexture)resources.add(t);});}});resources.forEach(r=>r.dispose());renderer.dispose();});window.addEventListener('pageshow',start);
+ window.addEventListener('pagehide',e=>{stop();if(e.persisted)return;disposed=true;stopTraveller?.();controls?.dispose();environment.dispose?.();const resources=new Set();scene.traverse(o=>{if(o.geometry)resources.add(o.geometry);for(const m of (Array.isArray(o.material)?o.material:[o.material]).filter(Boolean)){resources.add(m);Object.values(m).forEach(t=>{if(t?.isTexture)resources.add(t);});}});resources.forEach(r=>r.dispose());renderer.dispose();});window.addEventListener('pageshow',start);
  window.SanctuaryScene=Object.freeze({ready:true,arrive,home,overview(){overview=!overview;view();},setPaused,zones:layout.zones,stats:environment.stats});window.dispatchEvent(new Event('sanctuary:ready'));start();
 })();
 

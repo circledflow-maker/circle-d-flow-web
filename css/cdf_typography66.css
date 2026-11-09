@@ -1,0 +1,14 @@
+@font-face{font-family:'CDF Outfit';src:url('/assets/fonts/outfit/outfit-variable.ttf') format('truetype');font-weight:100 900;font-style:normal;font-display:swap}
+@font-face{font-family:'CDF Cinzel';src:url('/assets/fonts/cinzel/cinzel-variable.ttf') format('truetype');font-weight:400 900;font-style:normal;font-display:swap}
+body.cdf-dialogue,body.artist-sanctuary{font-family:'CDF Outfit',system-ui,sans-serif;font-weight:400}
+.cdf-dialogue button,.cdf-dialogue input,.cdf-dialogue select,.cdf-dialogue p,.cdf-dialogue .hint,.artist-sanctuary button,.artist-sanctuary select,.artist-sanctuary p,.artist-sanctuary a{font-family:'CDF Outfit',system-ui,sans-serif}
+.cdf-dialogue h1,.cdf-dialogue h2,.artist-sanctuary h1,.artist-sanctuary h2,#sanctuary-awakening h2{font-family:'CDF Cinzel',Georgia,serif!important;font-weight:500;letter-spacing:.015em;line-height:1.2}
+.artist-sanctuary #sanctuary-awakening h2{font-size:clamp(24px,5vw,34px);outline:none}
+.artist-sanctuary #sanctuary-awakening p{font-size:16px;line-height:1.55}
+.cdf-dialogue .speaker,.artist-sanctuary .eyebrow{font-family:'CDF Outfit',system-ui,sans-serif;font-size:11px;letter-spacing:.14em;font-weight:500}
+.artist-sanctuary .courtyard-intro h1{font-size:clamp(30px,4vw,46px);max-width:12ch}
+@media(max-width:700px){.cdf-dialogue .world-window h1{font-size:clamp(23px,6vw,30px)}.cdf-dialogue .flowee-speech p{font-size:15px;line-height:1.45}.artist-sanctuary #sanctuary-awakening{font-family:'CDF Outfit',system-ui,sans-serif}}
+
+@media(max-width:700px){.artist-sanctuary .courtyard-intro{max-width:min(300px,calc(100vw - 40px))}.artist-sanctuary .courtyard-intro h1{font-size:26px;line-height:1.15;max-width:18ch;margin:10px 0}}
+
+.artist-sanctuary .courtyard-intro h1{font-size:clamp(26px,2.5vw,34px);max-width:none}

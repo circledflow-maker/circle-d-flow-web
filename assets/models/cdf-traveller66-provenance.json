@@ -1,0 +1,15 @@
+{
+  "name": "Original CDF Traveller66",
+  "source": "scripts/blender/create-cdf-traveller66.py",
+  "blender": "5.2.3 LTS",
+  "sha256": "3bd0de8785515e84851fabaad74efcca8c5f40b65b1da821e42b58faa10c788b",
+  "triangles": 24976,
+  "bytes": 593612,
+  "primitives": 5,
+  "front": "+Z",
+  "up": "+Y",
+  "feetY": 0,
+  "rigged": false,
+  "animated": false,
+  "externalAssets": []
+}
