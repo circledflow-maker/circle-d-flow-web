@@ -12,3 +12,6 @@ body.cdf-dialogue,body.artist-sanctuary{font-family:'CDF Outfit',system-ui,sans-
 @media(max-width:700px){.artist-sanctuary .courtyard-intro{max-width:min(300px,calc(100vw - 40px))}.artist-sanctuary .courtyard-intro h1{font-size:26px;line-height:1.15;max-width:18ch;margin:10px 0}}
 
 .artist-sanctuary .courtyard-intro h1{font-size:clamp(26px,2.5vw,34px);max-width:none}
+
+/* Entry68: keep complete story titles above the world instead of a narrow tall column. */
+@media(max-width:700px){.cdf-dialogue[data-dialog-mode=story] .world-window h1{max-width:calc(100% - 24px);width:max-content;box-sizing:border-box;font-size:clamp(17px,4.8vw,20px);line-height:1.2}}
