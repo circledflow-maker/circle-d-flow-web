@@ -712,6 +712,23 @@
       "state": "Lokal und Draft-Produkt-PR implementiert;18Tests und synthetische Browseransichten geprüft; echte Auth-/Speicher-/Geräteabnahme und Aktivierung offen",
       "evidence": "Docs/community-pilot/soulpass72-20261109.md",
       "next": "Vollständige Karten-/SoulNexus-/API-Releasebasis abgleichen, vor Aktivierung echte Eigentümer- und Kontowechselprüfung vorbereiten"
+    },
+    {
+      "id": "CDF-PASS73",
+      "project": "CDF / 3D Soul Pass und Symbolbuch",
+      "owner": "Codex; kreative Entscheidung Hope",
+      "goal": "Räumlicher Pass, gated Symbolbuch und direkte bestehende E-Mail-/Passwortformulare",
+      "baseline": "f886180b3bd5af9a21fdfde9b1d81e08ceca8aa3",
+      "dependencies": [
+        "CDF-SOULPASS72",
+        "CDF-PROFILE71",
+        "C: verfügbar"
+      ],
+      "timebox": "Ein begrenzter UI-Pass",
+      "acceptance": "Zweiseitige 3D-Bedienung, korrekte Sammlungszustände und private Kontoformulare ohne neue Rechte/Rewards",
+      "state": "Lokal implementiert;16Tests bestanden; Browser durch volle C:-Festplatte NOT_RUN; kein neuer Produktcommit",
+      "evidence": "Docs/community-pilot/pass73-20261109.md",
+      "next": "C: freigeben, Codex-Browserprüfung, E:-Koordination nachführen und geprüfte Produktquellen committen"
     }
   ]
 }
