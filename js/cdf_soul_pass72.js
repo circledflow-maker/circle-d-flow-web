@@ -39,10 +39,10 @@
   root.CDFSoulPassExperience?.enhance(host,data);
  }
  let experienceLoader;
- async function experience(){if(root.CDFSoulPassExperience)return;experienceLoader ||=new Promise((resolve,reject)=>{const script=doc.createElement('script');script.src='/js/cdf_soul_pass73.js?v=20261109-pass73';script.onload=resolve;script.onerror=()=>{experienceLoader=null;script.remove();reject(Error());};doc.head.append(script);});await experienceLoader;}
+ async function experience(){if(root.CDFSoulPassExperience)return;experienceLoader ||=new Promise((resolve,reject)=>{const script=doc.createElement('script');script.src='/js/cdf_soul_pass74.js?v=20261109-pass74';script.onload=resolve;script.onerror=()=>{experienceLoader=null;script.remove();reject(Error());};doc.head.append(script);});await experienceLoader;}
  async function mount(host){styles();host.classList.add('soul72');host._soul72=(host._soul72||0)+1;const version=host._soul72;host.replaceChildren();node('p',t().loading,host);try{await experience();const data=await backend().read();if(host.isConnected&&host._soul72===version)render(host,data);}catch(e){if(!host.isConnected||host._soul72!==version)return;host.replaceChildren();node('p',error(e),host);link(t().card,'/login?next=%2Fmember-card',host);button(t().retry,host,()=>mount(host));}}
  function close(){dialog?.close();}
  function open(){styles();if(dialog?.open)return;opener=doc.activeElement;if(!dialog){dialog=doc.createElement('dialog');dialog.className='soul72-dialog';dialog.setAttribute('aria-label','Soul Pass');const bar=node('header','',dialog);node('strong','Soul Pass · SoulNexus',bar);button(t().close,bar,close);const host=node('section','',dialog);host.dataset.cdfSoulPass='';dialog.addEventListener('close',()=>{root.CDFSoulPassExperience?.reset();host._soul72=(host._soul72||0)+1;host.replaceChildren();if(root.SoulPass)root.SoulPass.isOpen=false;opener?.focus?.();});doc.body.append(dialog);}dialog.showModal();mount(dialog.querySelector('[data-cdf-soul-pass]'));}
- doc.addEventListener('cdf:lang',()=>doc.querySelectorAll('[data-cdf-soul-pass]').forEach(mount));root.addEventListener('pagehide',()=>{client?.dispose();client=null;for(const h of doc.querySelectorAll('[data-cdf-soul-pass]')){h._soul72=(h._soul72||0)+1;h.replaceChildren();}});
- root.CDFSoulPass=Object.freeze({mount,open,close});
+ doc.addEventListener('cdf:lang',()=>doc.querySelectorAll('[data-cdf-soul-pass]').forEach(mount));root.addEventListener('pagehide',()=>{root.CDFSoulPassExperience?.reset();client?.dispose();client=null;for(const h of doc.querySelectorAll('[data-cdf-soul-pass]')){h._soul72=(h._soul72||0)+1;h.replaceChildren();}});
+ root.CDFSoulPass=Object.freeze({mount,open,close,progress});
 })(typeof window==='object'?window:globalThis);

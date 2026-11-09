@@ -1,0 +1,42 @@
+{
+  "date": "2026-11-09",
+  "base_commit": "ae95ed0b6a84e3a835daea80d9cc214dcff29239",
+  "active_source": "E:/circle-d-flow-web",
+  "full_release_candidate": false,
+  "source_files": [
+    {
+      "path": "js/cdf_soul_pass74.js",
+      "source": "selected E source or phase report"
+    },
+    {
+      "path": "css/cdf_soul_pass74.css",
+      "source": "selected E source or phase report"
+    },
+    {
+      "path": "tests/soul-pass74.test.cjs",
+      "source": "selected E source or phase report"
+    },
+    {
+      "path": "js/cdf_soul_pass72.js",
+      "source": "selected E source or phase report"
+    },
+    {
+      "path": "js/cdf_orientation_profile71.js",
+      "source": "selected E source or phase report"
+    },
+    {
+      "path": "js/agents/soul_pass.js",
+      "source": "selected E source or phase report"
+    },
+    {
+      "path": "pages/member_card.html",
+      "source": "existing PR18 HTML, only pass script cache version changed"
+    },
+    {
+      "path": "Docs/community-pilot/pass74-20261109.md",
+      "source": "selected E source or phase report"
+    }
+  ],
+  "sharing": "per-encounter allowlisted client projection; no persistent public profile grant",
+  "download_verified": false
+}

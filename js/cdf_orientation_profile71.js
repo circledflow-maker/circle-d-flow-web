@@ -23,7 +23,9 @@
  function el(tag,value,parent){const n=doc.createElement(tag);n.textContent=value;parent.append(n);return n;}
  function errorText(error){const t=text();return error.code==='AUTH_REQUIRED'?t.login:error.code==='CARD_REQUIRED'?t.card:error.code==='CONFIRMATION_REQUIRED'?t.confirm:error.code==='ACCOUNT_CHANGED'?t.changed:t.error;}
  function render(host,data){const t=text();host.replaceChildren();host.classList.add('cdf-orientation-profile');el('h3',t.title,host);el('p',t.private,host);if(data.orientation){const names=(data.orientation.interests||[]).filter(id=>ids.includes(id)).map(id=>t.names[ids.indexOf(id)]);el('p',t.interests+': '+(names.join(' · ')||'—'),host);el('p',t.mode+': '+(t.modes[data.orientation.mode]||'—'),host);if(data.orientation.betaInterest===true)el('p',t.beta,host);}else el('p',t.empty,host);
+  if(host.dataset.cdfOrientationView!=='answers'){
   const symbol=data.symbols.find(s=>s.id==='orientation-first-step-v1'&&Number.isFinite(Date.parse(s.earnedAt)));if(symbol){const item=el('div','',host);item.className='cdf-first-symbol';el('span','✧',item).setAttribute('aria-hidden','true');el('strong',t.symbol,item);el('p',t.earned,item);}else el('p',t.locked,host);
+  }
   const status=el('p','',host);status.setAttribute('role','status');if(data.orientation){const clear=el('button',t.clear,host);clear.type='button';clear.addEventListener('click',async()=>{clear.disabled=true;try{const result=await backend().clear();if(!host.isConnected)return;render(host,result);root.dispatchEvent(new root.Event('cdf:orientation-profile-updated'));}catch(e){status.textContent=errorText(e);}finally{if(clear.isConnected)clear.disabled=false;}});}
   const card=el('a',t.openCard,host);card.href='/member-card';
  }
