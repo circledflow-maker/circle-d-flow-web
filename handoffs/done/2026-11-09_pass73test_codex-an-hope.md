@@ -7,3 +7,6 @@ Inputs: Docs/community-pilot/pass73-20261109.md; lokale ausdrücklich synthetisc
 Gewünschtes Ergebnis: Rückmeldung zu horizontalem Wischen auf der Karte, Lesbarkeit, Vorder-/Rückseite, Schließen/Rückweg sowie grauem vs. gesammeltem Buchzustand.
 Abnahmekriterien: Horizontales Wischen dreht den Pass; vertikales Scrollen löst keinen unbeabsichtigten Wechsel aus; Buttons bleiben Alternative; Buch zeigt Geschichte erst nach bestätigtem Fund; keine Überlagerung/abgeschnittenen Aktionen. Kontoformulare in dieser Sichtprüfung ohne echte Zugangsdaten ansehen.
 Offene Abhängigkeiten: Physischer Touch/Softwaretastatur und individuelle Geräteleistung; vollständiger Profil-/Kartenrelease und echte Auth-/E-Mail-/Passwort-/Liveabnahme separat. Kein Deployment oder gehosteter Migrationsauftrag aus diesem Test.
+
+
+Ergebnisnotiz2026-11-09: Durch Hopes Pass74-Präzisierung abgelöst und als Auftrag geschlossen, NICHT als bestandener Gerätetest. Neuer aktiver Auftrag:2026-11-09_pass74_codex-an-hope.md. Ursprüngliche physische Abnahme bleibt darin offen.

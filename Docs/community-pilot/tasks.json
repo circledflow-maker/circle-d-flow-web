@@ -728,7 +728,25 @@
       "acceptance": "Zweiseitige 3D-Bedienung, korrekte Sammlungszustände und private Kontoformulare ohne neue Rechte/Rewards",
       "state": "Lokal und Draft-Produkt-PR implementiert;22Tests und synthetische Browseransichten geprüft. Speicher-/E-Lesegrenze behoben. Physischer und echter Auth-/Liveweg offen.",
       "evidence": "Docs/community-pilot/pass73-20261109.md; Docs/community-pilot/pass73-source-map.json",
-      "next": "Hope prüft realen Handy-Pass/Buch; Codex gleicht vollständige Profil-/Karten-Releasebasis ab, danach echte autorisierte Kontoprüfung."
+      "next": "Pass74 führt die aktive Reisepass-/Begegnungsansicht fort; physischer Test noch offen."
+    },
+    {
+      "id": "CDF-PASS74",
+      "project": "CDF / SoulNexus-Reisepass und Begegnung",
+      "goal": "Drei blätterbare Seiten und explizit ausgewählte Begegnungsansicht",
+      "owner": "Codex; kreative/Veröffentlichungsentscheidung Hope",
+      "tool": "Vanilla/CSS3D, bestehende private Quellen, lokale Canvas-Bilderzeugung",
+      "baseline": "0d2d4758cfb134e9ea6e9ae89e1b6cbd79821984",
+      "dependencies": [
+        "CDF-PASS73",
+        "CDF-P01",
+        "CDF-PROFILE71"
+      ],
+      "timebox": "Ein begrenzter Pass-/Sichtbarkeitspass",
+      "acceptance": "Identität/Einstellungen/Sammlung, klare gerichtete Navigation, private Kontodaten ausgeschlossen, Freigabe leer/vorhersehbar/temporär und korrekte Fundgrenze",
+      "state": "Lokal und Draft-Produkt-PR implementiert;29Tests und synthetische Browserfälle bestanden; Bilderzeugung gesehen, Dateidownload/Empfang und physische/echte Auth-Abnahme offen",
+      "evidence": "Docs/community-pilot/pass74-20261109.md; Docs/community-pilot/pass74-source-map.json",
+      "next": "Hope testet echten Handy-Pass und Erstellen/Herunterladen/Zeigen einer freiwilligen Auswahl; Codex gleicht vollständigen Profilrelease ab"
     }
   ]
 }
