@@ -31,15 +31,15 @@
       "goal": "Gastorientierung auf Desktop und Smartphone abnehmen",
       "owner": "Codex",
       "tool": "Browser und tatsächliches Smartphone; nur GET/UI ohne Absenden",
-      "baseline": "Intro64 / PR18 618e1bbe0e8464c70ba23ff1618a1f4d6651391a; lokale Designvorschau mit aktualisiertem Community-Einstieg",
+      "baseline": "Visual66 / PR18 bd2c5d997129a02e4d09a72116fff67acff5a6c6; aktive E:-Vorschau mit tatsächlichem Blender66 und lokalen Schriften",
       "dependencies": [
         "CDF-F00"
       ],
       "timebox": "ein Gast-Abnahmedurchlauf",
       "acceptance": "Soll/Ist und Beleg je Einstiegsschritt; Emulator/physisch getrennt; keine Kontomutation",
       "state": "Begrenzte Browserstichprobe390×844/360×640/1280×800 und Vollbild-Namenseingabe geprüft; physischer und vollständiger Kernweg offen",
-      "evidence": "Docs/community-pilot/intro64-20261108.md",
-      "next": "Physisch prüfen, ob Community-Zweck und geplant/verfügbar verständlich sind; vollständige Kernweg-/Authgates separat"
+      "evidence": "Docs/community-pilot/visual66-20261109.md",
+      "next": "Physischer Handytest der tatsächlich eingebauten Figur/Schrift, danach größte belegte Bedienhürde schließen; volle Auth-/Releasegates getrennt"
     },
     {
       "id": "CDF-R01",
@@ -614,20 +614,37 @@
     {
       "id": "CDF-CHARACTER65-ART",
       "project": "CDF / Charakterabnahme",
-      "goal": "Genau einen vorhandenen Blender-Reisenden nach Abschluss des Lichtvergleichs bewerten",
+      "goal": "Aktuellen tatsächlich eingebauten Blender-Reisenden66 stilistisch prüfen",
       "owner": "Antigravity vorgeschlagen; Annahme offen",
       "tool": "Vorhandene lokale Studie und Model62-Vergleich, zwei Dateiexporte",
-      "baseline": "618e1bbe0e8464c70ba23ff1618a1f4d6651391a",
+      "baseline": "bd2c5d997129a02e4d09a72116fff67acff5a6c6",
       "dependencies": [
         "CDF-MODEL62-WEBKIT",
-        "CDF-INTRO64"
+        "CDF-VISUAL66"
       ],
       "timebox": "Ein begrenzter Folgepass, nicht parallelzumlaufendenModel62",
       "acceptance": "Stil/Proportion/Materialwirkung getrennt von echtem Webtest; höchstens eine Änderung mit Beleg; Grenzen offen",
-      "state": "Vorgemerkt, nicht aktiv geroutet oder gestartet",
+      "state": "Auf Traveller66 aktualisiert, weiter vorgemerkt; keine neue externe Ausführung bestätigt",
       "evidence": "handoffs/2026-11-08_character65_codex-an-antigravity.md",
       "next": "Erst Model62-Rückgabe prüfen, dann begrenzten Folgebrief aktivieren",
       "exchange_status": "queued_after_dependency"
+    },
+    {
+      "id": "CDF-VISUAL66",
+      "project": "CDF / sichtbare Grafik und Typografie",
+      "goal": "Tatsächliche Blender-Figur in Intro/Sanctuary statt nur separatem Studiobild und lokale neue Schrift",
+      "owner": "Codex; interner Modellfolgeauftrag tatsächlich ausgeführt; kreative Abnahme Hope",
+      "tool": "Vorhandenes Blender5.2.3/Three-r128, eigener GLB, OFL-Schriften lokal",
+      "baseline": "bd2c5d997129a02e4d09a72116fff67acff5a6c6",
+      "dependencies": [
+        "CDF-INTRO64",
+        "CDF-P01"
+      ],
+      "timebox": "Eine proportionale Revision und begrenzte Webintegration, keine Weltserie",
+      "acceptance": "GLB/Fonts tatsächlich geladen und gesehen, Herkunft/Hashes/Lizenzen, sichere Ladefehler/Dispose und mobile Stichprobe",
+      "state": "Lokal implementiert, Browserstichprobe und25Tests bestanden, physische/kreative/Vollpilotabnahme offen",
+      "evidence": "Docs/community-pilot/visual66-20261109.md",
+      "next": "Hopes Handytest, Model62-Ergebnis abgleichen, ein Vordergrundort statt weiterer einfacher Platzhalter"
     }
   ]
 }
