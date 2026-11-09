@@ -1,9 +1,9 @@
-# Pass75 · vertikaler Reisepass und Begegnung (Fortführung Pass74)
+# Pass76 · echter 3D-Reisepass — physischer Gerätetest offen
 Datum:2026-11-09 · Projekt:Circle D Flow
 Empfänger-Rolle:Hope (CEO), eigener Gerätetest und kreative Rückmeldung.
-Ziel:Auf-/Abwärtsblättern auf der sichtbaren Passleiste und separates Formularscrollen prüfen.
-Kontext:Produktcommit 63fb4498d9a29cb37ec750341e73b39a0632cffa;29Tests bestanden, Desktop-Gesten/Keyboard und mobile Layoutstichproben gesehen. Noch keine echte Handy-/Kontoabnahme.
-Inputs:Docs/community-pilot/pass75-20261109.md; lokale synthetische Testansicht /__pass75-review (Vorschau zeitlich begrenzt).
-Gewünschtes Ergebnis:Auf der markierten Leiste nach unten wischen = nächste Seite, nach oben = zurück. In Einstellungen innerhalb der Seite scrollen; Seite darf dabei nicht wechseln. Siegelband öffnet Sammlung.
-Abnahmekriterien:Identität→Einstellungen→Sammlung und Rückweg; passende Richtung/Seitengrenzen; Buttons als Alternative; kein Formularsubmit durch Wischen; alle Aktionen lesbar. Begegnungsauswahl weiterhin leer und nur ausdrücklich gewählte Felder sichtbar.
-Offene Abhängigkeiten:Physischer Touch/Softwaretastatur, tatsächlicher Dateidownload/Empfang sowie echter Auth-/Releaseweg. Frühere Browser-Bilddownloadgrenze nicht umgangen oder als bestanden gemeldet. Keine echten Zugangsdaten in der synthetischen Vorschau verwenden. Kein Produktions-/Migrationsauftrag.
+Ziel:Vollbild-Reisepass direkt über dem Buch nach unten/oben blättern und Einstellungen lesbar bedienen.
+Kontext:Produktcommit 46c3851e2b919044c43ebe1417f8eabfbb23841c;32Tests und echtes WebGL in Browserviewports bestanden. Keine echte Handy-/Kontoabnahme behauptet.
+Inputs:Docs/community-pilot/pass76-20261109.md; http://192.168.1.72:3218/__pass76-review (nur eigenes WLAN, synthetische Testdaten, lokale Vorschau zeitlich begrenzt).
+Gewünschtes Ergebnis:Nach unten nächste Seite; nach oben zurück. Antippen oder Lesen öffnet zugängliche Inhalte; innerhalb der Formulare normal scrollen. Flowee-Hilfe schließbar, ruhige Ansicht ohne WebGL.
+Abnahmekriterien:Identität→Einstellungen→Sammlung und Rückweg; vollständiger verfügbarer Handybildschirm, dünne Kopf-/Fußzeile ohne Überlauf; Buttons als Alternative; keine Eingabe-/Submit-Aktion durch Wischen. Begegnungsauswahl zunächst leer, nur ausdrücklich gewählte Felder sichtbar.
+Offene Abhängigkeiten:Physischer Touch/Softwaretastatur, tatsächlicher Dateidownload/Empfang sowie echter Auth-/Releaseweg. Keine echten Zugangsdaten in dieser Vorschau. Kein Produktions-/Migrationsauftrag. Browser-Vollbild bezieht sich auf verfügbaren Webseitenbereich, nicht Ausblenden der Handy-Systemleisten.

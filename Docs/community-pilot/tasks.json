@@ -763,7 +763,24 @@
       "acceptance": "Abwärts nächster/Aufwärts vorheriger Passabschnitt; keine versehentlichen Wechsel beim Formularscrollen; bestätigter Siegelzugang; vorhandene Begegnungsauswahl erhalten",
       "state": "Lokal und Draft-Produkt-PR implementiert;29Tests bestanden; Desktop-Maus-/Tastatur und mobile Layoutstichproben geprüft, physischer Touch/echter Authweg offen",
       "evidence": "Docs/community-pilot/pass75-20261109.md; Docs/community-pilot/pass75-source-map.json",
-      "next": "Hope testet die sichtbare vertikale Blätterleiste am Handy; danach vollständigen privaten Profil-/Community-Kernweg priorisieren"
+      "next": "Pass76 ist der aktive echte 3D-Vollbildstand; physischer Gerätetest und tatsächlicher Profil-/Community-Kernweg bleiben offen"
+    },
+    {
+      "id": "CDF-PASS76",
+      "project": "CDF / 3D-SoulNexus-Reisepass",
+      "goal": "Echten räumlichen Reisepass im verfügbaren Vollbild darstellen; direkte vertikale Gesten und zugängliche Einstellungen",
+      "owner": "Codex; kreative Entscheidung Hope",
+      "tool": "Vanilla JavaScript, vorhandenes Three.js, eigene Geometrie/Canvas-Texturen, Browser",
+      "baseline": "46c3851e2b919044c43ebe1417f8eabfbb23841c",
+      "dependencies": [
+        "CDF-PASS75",
+        "CDF-P01"
+      ],
+      "timebox": "Ein begrenzter 3D-/Bedienpass",
+      "acceptance": "Vollbild ohne horizontalen Überlauf; direkte Abwärts-/Aufwärtsgeste; eine Flowee-Hilfe; Formularbedienung und ruhige Alternative; unveränderte private Begegnungsauswahl",
+      "state": "Lokal und Draft-Produkt-PR implementiert;32Tests bestanden; echtes WebGL in drei Browserviewports geprüft; physisches Handy und echter Authweg offen",
+      "evidence": "Docs/community-pilot/pass76-20261109.md; Docs/community-pilot/pass76-source-map.json",
+      "next": "Hope prüft direkten Touch am Handy; danach CDF-P01 und tatsächlichen privaten Profil-/Community-Kernweg fortsetzen"
     }
   ]
 }

@@ -1,0 +1,52 @@
+{
+  "date": "2026-11-09",
+  "base_commit": "63fb4498d9a29cb37ec750341e73b39a0632cffa",
+  "active_source": "E:/circle-d-flow-web",
+  "full_release_candidate": false,
+  "rendering": "Actual Three r128 WebGL meshes and private page textures",
+  "dependencies": [
+    {
+      "url": "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js",
+      "note": "same pinned CDN/version already used by LUVO; loaded only if THREE absent"
+    },
+    {
+      "path": "js/flowee_fairy.js",
+      "note": "existing base file, reused without replacement"
+    }
+  ],
+  "files": [
+    {
+      "path": "js/cdf_passport_stage76.js",
+      "source": "selected E source or phase report"
+    },
+    {
+      "path": "css/cdf_passport_stage76.css",
+      "source": "selected E source or phase report"
+    },
+    {
+      "path": "tests/passport-stage76.test.cjs",
+      "source": "selected E source or phase report"
+    },
+    {
+      "path": "js/cdf_soul_pass74.js",
+      "source": "selected E source or phase report"
+    },
+    {
+      "path": "js/cdf_soul_pass72.js",
+      "source": "selected E source or phase report"
+    },
+    {
+      "path": "js/agents/soul_pass.js",
+      "source": "selected E source or phase report"
+    },
+    {
+      "path": "pages/member_card.html",
+      "source": "Existing PR18 HTML, only pass cache version changed"
+    },
+    {
+      "path": "Docs/community-pilot/pass76-20261109.md",
+      "source": "selected E source or phase report"
+    }
+  ],
+  "physical_device_verified": false
+}
