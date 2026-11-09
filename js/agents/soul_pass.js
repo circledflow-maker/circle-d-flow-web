@@ -720,7 +720,7 @@ class SoulPassAgent {
     async open() {
         try {
             if (!window.CDFSoulPass) {
-                this.pass72Loader ||= new Promise((resolve,reject)=>{const script=document.createElement('script');script.src='/js/cdf_soul_pass72.js?v=20261109-pass76';script.onload=resolve;script.onerror=()=>{this.pass72Loader=null;script.remove();reject(Error('Soul Pass unavailable'));};document.head.append(script);});
+                this.pass72Loader ||= new Promise((resolve,reject)=>{const script=document.createElement('script');script.src='/js/cdf_soul_pass72.js?v=20261109-pass77';script.onload=resolve;script.onerror=()=>{this.pass72Loader=null;script.remove();reject(Error('Soul Pass unavailable'));};document.head.append(script);});
                 await this.pass72Loader;
             }
             window.CDFSoulPass.open();

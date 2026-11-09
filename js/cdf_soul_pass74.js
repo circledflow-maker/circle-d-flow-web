@@ -21,7 +21,7 @@
  };const t=()=>copy[doc.documentElement.lang]||copy.en;
  function node(tag,text,parent){const n=doc.createElement(tag);n.textContent=text;parent.append(n);return n;}
  function button(text,parent,fn){const b=node('button',text,parent);b.type='button';b.addEventListener('click',fn);return b;}
- function styles(){if(doc.querySelector('[data-pass74-style]'))return;for(const href of ['/css/cdf_soul_pass74.css?v=20261109-pass76','/css/cdf_account.css?v=20261109-pass73','/css/cdf_passport_stage76.css?v=20261109-pass76']){const link=doc.createElement('link');link.rel='stylesheet';link.href=href;link.dataset.pass74Style='';doc.head.append(link);}}
+ function styles(){if(doc.querySelector('[data-pass74-style]'))return;for(const href of ['/css/cdf_soul_pass74.css?v=20261109-pass77','/css/cdf_account.css?v=20261109-pass73','/css/cdf_passport_stage76.css?v=20261109-pass77']){const link=doc.createElement('link');link.rel='stylesheet';link.href=href;link.dataset.pass74Style='';doc.head.append(link);}}
  async function load(url,global,security=false){if(root[global]&&(!security||root[global].mountSecurity))return;if(!loaders.has(url))loaders.set(url,new Promise((resolve,reject)=>{const script=doc.createElement('script');script.src=url;if(security)script.dataset.cdfMountOnly='true';script.onload=resolve;script.onerror=()=>{loaders.delete(url);script.remove();reject(Error());};doc.head.append(script);}));await loaders.get(url);}
  async function orientation(){await load('/js/cdf_orientation_profile71.js?v=20261109-pass74','CDFOrientationProfile');return root.CDFOrientationProfile.read();}
  function valueText(field,c){if(field.key==='interests')return field.value.map(id=>c.names[interests.indexOf(id)]).join(' · ');if(field.key==='symbols')return c.first;return field.value;}
@@ -50,7 +50,7 @@
   flip.addEventListener('pointerup',e=>{if(!start||start.id!==e.pointerId)return;const value=pageAfterGesture(index,e.clientX-start.x,e.clientY-start.y);start=null;turn(value);});flip.addEventListener('pointercancel',()=>{start=null;});
   const keys=e=>{if(e.target!==scene&&e.target!==flip)return;if(['ArrowDown','ArrowUp','ArrowRight','ArrowLeft'].includes(e.key)){e.preventDefault();turn(index+(['ArrowDown','ArrowRight'].includes(e.key)?1:-1));}};scene.addEventListener('keydown',keys);flip.addEventListener('keydown',keys);
 
-  if(host.closest('.soul72-dialog[open]'))load('/js/cdf_passport_stage76.js?v=20261109-pass76','CDFPassportStage').then(()=>{if(host.isConnected&&host.closest('.soul72-dialog[open]'))root.CDFPassportStage.mount(host,data,{snapshot:snapshotPromise,turn,getIndex:()=>index,gesture:pageAfterGesture});}).catch(()=>{});
+  if(host.closest('.soul72-dialog[open]'))load('/js/cdf_passport_stage76.js?v=20261109-pass77','CDFPassportStage').then(()=>{if(host.isConnected&&host.closest('.soul72-dialog[open]'))root.CDFPassportStage.mount(host,data,{snapshot:snapshotPromise,turn,getIndex:()=>index,gesture:pageAfterGesture});}).catch(()=>{});
   else button(doc.documentElement.lang==='de'?'3D-Reisepass öffnen':doc.documentElement.lang==='pt'?'Abrir passaporte 3D':'Open 3D passport',host,()=>root.CDFSoulPass.open());
 
  }
