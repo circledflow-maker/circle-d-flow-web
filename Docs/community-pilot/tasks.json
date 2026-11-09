@@ -780,7 +780,25 @@
       "acceptance": "Vollbild ohne horizontalen Überlauf; direkte Abwärts-/Aufwärtsgeste; eine Flowee-Hilfe; Formularbedienung und ruhige Alternative; unveränderte private Begegnungsauswahl",
       "state": "Lokal und Draft-Produkt-PR implementiert;32Tests bestanden; echtes WebGL in drei Browserviewports geprüft; physisches Handy und echter Authweg offen",
       "evidence": "Docs/community-pilot/pass76-20261109.md; Docs/community-pilot/pass76-source-map.json",
-      "next": "Hope prüft direkten Touch am Handy; danach CDF-P01 und tatsächlichen privaten Profil-/Community-Kernweg fortsetzen"
+      "next": "Pass77 ist aktiver seitlicher Einband-/Reisebuchstand; physischer Gerätetest und vollständiger Profilkernweg bleiben offen"
+    },
+    {
+      "id": "CDF-PASS77",
+      "project": "CDF / Reisebuch und private Chronik",
+      "goal": "Seitlich öffnendes eigenes Buch und ehrliche private Tagebuchgrundlage",
+      "owner": "Codex; kreative Entscheidung Hope",
+      "tool": "Vorhandenes Three.js/Vanilla; Blender für spätere Modellverfeinerung",
+      "baseline": "29601a544947ee139cf63e6fb1d8b1421420c3be",
+      "dependencies": [
+        "CDF-PASS76",
+        "CDF-P01",
+        "CDF-PROFILE71"
+      ],
+      "timebox": "Begrenzter Buch-/Quellenpass",
+      "acceptance": "Vollständiger Einband, seitliche Gesten, zugängliche Kontoinhalte, keine erfundenen Besuchs-/Begegnungsdaten oder Chronikfreigabe",
+      "state": "Lokal und Draft-Produkt-PR implementiert;35Tests und synthetische Browserfälle geprüft; dauerhafte Chronik nicht verbunden",
+      "evidence": "Docs/community-pilot/pass77-20261109.md; Docs/community-pilot/pass77-journal-contract-20261109.md",
+      "next": "Physischer Buchtest und CDF-P01; ownergebundenen Chronikvertrag umsetzen; vorbereitete externe Modell-/Reviewaufträge erst nach Annahme als gestartet führen"
     }
   ]
 }
