@@ -1,9 +1,9 @@
-# Pass74 · Reisepass und freiwillige Begegnung
+# Pass75 · vertikaler Reisepass und Begegnung (Fortführung Pass74)
 Datum:2026-11-09 · Projekt:Circle D Flow
 Empfänger-Rolle:Hope (CEO), eigener Gerätetest und kreative Rückmeldung.
-Ziel:Drei Reisepassseiten und selbst gewählte sichtbare Angaben bei Begegnungen prüfen.
-Kontext:Produktcommit 0d2d4758cfb134e9ea6e9ae89e1b6cbd79821984;29Tests und synthetische Browserfälle bestanden. Kein echter Account-/Sammlungswrite oder Deployment.
-Inputs:Docs/community-pilot/pass74-20261109.md; lokale Testansicht /__pass74-review (eigener Preview-Server zeitlich begrenzt).
-Gewünschtes Ergebnis:Handyfeedback zu Identität→Einstellungen→Sammlung, horizontalem Blättern, Formular-/Rückweg und selektiver Begegnungsansicht; Bild erstellen und tatsächlichen Download/Zeigen selbst prüfen.
-Abnahmekriterien:Keine Angaben vorausgewählt; Vorschau/Bild zeigen nur gewählte Felder; keine E-Mail/Kartennummer/Passwörter/Rollenwünsche; nicht verdiente Zeichen fehlen; Abwahl entfernt erzeugtes Bild; erneutes Öffnen leer. Eingaben nicht durch Wischen absenden. Keine echten Zugangsdaten in der synthetischen Vorschau.
-Offene Abhängigkeiten:Automatischer Dateidownload durch Browserrichtlinie nicht verifiziert; echter Smartphone-Download/Empfang sowie Touch/Softwaretastatur/echter Auth-/Releaseweg offen. Geteilte Bilder können gespeichert/weitergegeben werden; es gibt hier keinen widerrufbaren öffentlichen Profil-Link. Kein Produktions-/Migrationsauftrag.
+Ziel:Auf-/Abwärtsblättern auf der sichtbaren Passleiste und separates Formularscrollen prüfen.
+Kontext:Produktcommit 63fb4498d9a29cb37ec750341e73b39a0632cffa;29Tests bestanden, Desktop-Gesten/Keyboard und mobile Layoutstichproben gesehen. Noch keine echte Handy-/Kontoabnahme.
+Inputs:Docs/community-pilot/pass75-20261109.md; lokale synthetische Testansicht /__pass75-review (Vorschau zeitlich begrenzt).
+Gewünschtes Ergebnis:Auf der markierten Leiste nach unten wischen = nächste Seite, nach oben = zurück. In Einstellungen innerhalb der Seite scrollen; Seite darf dabei nicht wechseln. Siegelband öffnet Sammlung.
+Abnahmekriterien:Identität→Einstellungen→Sammlung und Rückweg; passende Richtung/Seitengrenzen; Buttons als Alternative; kein Formularsubmit durch Wischen; alle Aktionen lesbar. Begegnungsauswahl weiterhin leer und nur ausdrücklich gewählte Felder sichtbar.
+Offene Abhängigkeiten:Physischer Touch/Softwaretastatur, tatsächlicher Dateidownload/Empfang sowie echter Auth-/Releaseweg. Frühere Browser-Bilddownloadgrenze nicht umgangen oder als bestanden gemeldet. Keine echten Zugangsdaten in der synthetischen Vorschau verwenden. Kein Produktions-/Migrationsauftrag.

@@ -746,7 +746,24 @@
       "acceptance": "Identität/Einstellungen/Sammlung, klare gerichtete Navigation, private Kontodaten ausgeschlossen, Freigabe leer/vorhersehbar/temporär und korrekte Fundgrenze",
       "state": "Lokal und Draft-Produkt-PR implementiert;29Tests und synthetische Browserfälle bestanden; Bilderzeugung gesehen, Dateidownload/Empfang und physische/echte Auth-Abnahme offen",
       "evidence": "Docs/community-pilot/pass74-20261109.md; Docs/community-pilot/pass74-source-map.json",
-      "next": "Hope testet echten Handy-Pass und Erstellen/Herunterladen/Zeigen einer freiwilligen Auswahl; Codex gleicht vollständigen Profilrelease ab"
+      "next": "Pass75 ist aktiver vertikaler Passstand; physischer Geräte-/Downloadtest und echter Profilrelease weiter offen."
+    },
+    {
+      "id": "CDF-PASS75",
+      "project": "CDF / vertikaler SoulNexus-Reisepass",
+      "goal": "Auf-/Abwärtsblättern vom Formularscrollen trennen und eigenes Siegelband ergänzen",
+      "owner": "Codex; kreative Entscheidung Hope",
+      "tool": "Bestehendes Vanilla-Modul, CSS3D, private Bestandsquelle, Browser",
+      "baseline": "63fb4498d9a29cb37ec750341e73b39a0632cffa",
+      "dependencies": [
+        "CDF-PASS74",
+        "CDF-P01"
+      ],
+      "timebox": "Ein begrenzter Gesten-/Gestaltungspass",
+      "acceptance": "Abwärts nächster/Aufwärts vorheriger Passabschnitt; keine versehentlichen Wechsel beim Formularscrollen; bestätigter Siegelzugang; vorhandene Begegnungsauswahl erhalten",
+      "state": "Lokal und Draft-Produkt-PR implementiert;29Tests bestanden; Desktop-Maus-/Tastatur und mobile Layoutstichproben geprüft, physischer Touch/echter Authweg offen",
+      "evidence": "Docs/community-pilot/pass75-20261109.md; Docs/community-pilot/pass75-source-map.json",
+      "next": "Hope testet die sichtbare vertikale Blätterleiste am Handy; danach vollständigen privaten Profil-/Community-Kernweg priorisieren"
     }
   ]
 }
