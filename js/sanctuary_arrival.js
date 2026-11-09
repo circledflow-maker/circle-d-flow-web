@@ -24,7 +24,7 @@
   button(t.close,close);
  }
  function open(){finished=false;root.dispatchEvent(new Event('cdf:room-modal'));render();if(typeof dialog.showModal==='function'){if(!dialog.open)dialog.showModal();}else{dialog.setAttribute('open','');dialog.setAttribute('role','region');}title.focus();}
- function finish(){finished=true;try{const url=new URL(root.location.href);url.searchParams.delete('intro');root.history.replaceState(null,'',url.pathname+url.search+url.hash);}catch{}const heading=doc.getElementById('courtyard-title');if(heading){heading.tabIndex=-1;heading.focus();}}
+ function finish(){finished=true;try{const url=new URL(root.location.href);url.searchParams.delete('intro');root.history.replaceState(null,'',url.pathname+url.search+url.hash);}catch{}const heading=doc.getElementById('courtyard-info-toggle')||doc.getElementById('courtyard-title');if(heading){heading.tabIndex=-1;heading.focus();}}
  dialog.addEventListener('close',finish);
  replay.addEventListener('click',()=>{index=0;mode=doc.body.classList.contains('scene-simple')?'simple':root.SanctuaryScene?.ready?'scene':'loading';open();});
  root.addEventListener('sanctuary:ready',()=>{if(mode!=='simple')mode='scene';if(!finished)render();});root.addEventListener('sanctuary:unavailable',()=>{mode='simple';if(!finished)render();});
