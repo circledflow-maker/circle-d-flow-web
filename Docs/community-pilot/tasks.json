@@ -39,7 +39,7 @@
       "acceptance": "Soll/Ist und Beleg je Einstiegsschritt; Emulator/physisch getrennt; keine Kontomutation",
       "state": "Browser-Gastweg390x844 bis Hof gesehen;360x640/1280x800 Stichproben, physische und vollständige Abnahme offen",
       "evidence": "Docs/community-pilot/entry69-20261109.md; vorherige Gastweg-Belege in Entry68",
-      "next": "Hopes freiwilligen Interessen→Ort-Test durchführen; Profile/Sichtbarkeit und echte Matching-Datenbasis erst danach getrennt konzipieren"
+      "next": "Vollständige Karten-/Orbit-/API-Releasebasis abgleichen; danach echte freigegebene Profil-/Karten-/Einmalbelohnungsabnahme"
     },
     {
       "id": "CDF-R01",
@@ -677,7 +677,24 @@
       "acceptance": "Freiwillige Auswahl/Überspringen/Reset, vorhandene Ziele mit Gründen, echtes Im-Hof-Zeigen; keine Rollenvergabe durch Interessen oder Beta-Wunsch",
       "state": "Lokal und Produkt-PR implementiert;19Tests und Browserstichproben bestanden; echte Geräte-/Sprach-/Profil-/Personenmatching-Abnahme offen",
       "evidence": "Docs/community-pilot/orientation70-20261109.md",
-      "next": "Hope testet ersten nützlichen Weg; danach Speichern/Sichtbarkeit und echte freiwillige Daten konzipieren"
+      "next": "Profile71 ergänzt bewusste private Speicherung/Sammlung; echte Aktivierung erst nach vollständigem Release-Abgleich"
+    },
+    {
+      "id": "CDF-PROFILE71",
+      "project": "CDF / private Profilkarte und Sammlung",
+      "goal": "Freiwillige Flowee-Angaben derselben Identität zuordnen und ein erstes kosmetisches Symbol einmalig vergeben",
+      "owner": "Codex; kreative/Produktiventscheidung Hope",
+      "tool": "Vanilla-JS, bestehender API-Router/Auth, neue private PostgreSQL-Tabellen/RPC; PGlite lokal",
+      "baseline": "4431b171a464ac97cefbb92e7398accaad9e0425",
+      "dependencies": [
+        "CDF-ORIENT70",
+        "CDF-P01"
+      ],
+      "timebox": "Ein begrenzter Profil-/Symbolpass; kein automatischer Dauerlauf",
+      "acceptance": "Private Eigentümerbindung, explizites Speichern, transaktionale einmalige Vergabe ohne neues XP/FLOW, gemeinsame Profil-/SoulNexus-Quelle und ehrliche Pending-Zustände",
+      "state": "Lokal implementiert;29Tests bestanden, synthetische Browseransicht und Gastgrenze geprüft; Migration nicht live angewandt, komplette echte Abnahme offen",
+      "evidence": "Docs/community-pilot/profile71-20261109.md; Docs/community-pilot/profile71-source-map.json",
+      "next": "Vollständigen Kandidaten aus abweichenden Karten-/Orbit-/API-Basen herstellen, dann konkrete Aktivierung freigeben lassen"
     }
   ]
 }
