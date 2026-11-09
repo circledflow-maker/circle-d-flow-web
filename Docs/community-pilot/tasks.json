@@ -31,15 +31,15 @@
       "goal": "Gastorientierung auf Desktop und Smartphone abnehmen",
       "owner": "Codex",
       "tool": "Browser und tatsächliches Smartphone; nur GET/UI ohne Absenden",
-      "baseline": "Entry68 / PR18 2d04967dd1a88bcf95280a123aa01a920e185dbe; aktiver lokaler DE-Gastweg bis Sanctuary-Hof gesehen",
+      "baseline": "Entry69 / PR18 0416fae9064670d5ddec06ad87efcfe629c3cb94; klare Begrüßung und bewusst einklappbare Sanctuary-Information",
       "dependencies": [
         "CDF-F00"
       ],
       "timebox": "ein Gast-Abnahmedurchlauf",
       "acceptance": "Soll/Ist und Beleg je Einstiegsschritt; Emulator/physisch getrennt; keine Kontomutation",
       "state": "Browser-Gastweg390x844 bis Hof gesehen;360x640/1280x800 Stichproben, physische und vollständige Abnahme offen",
-      "evidence": "Docs/community-pilot/entry68-20261109.md; frühere Berichte bleiben gültige Teilbelege",
-      "next": "Gast-Zielseiten und Preview-/Release-Abdeckung abgleichen; Hopes echter Handytest bleibt offen"
+      "evidence": "Docs/community-pilot/entry69-20261109.md; vorherige Gastweg-Belege in Entry68",
+      "next": "Hopes Story-/Feature-Antworten abwarten, einen freiwilligen Weltzugang und Ziel-/Rückweg abnehmen; physischer Test offen"
     },
     {
       "id": "CDF-R01",
