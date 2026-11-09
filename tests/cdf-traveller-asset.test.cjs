@@ -16,3 +16,7 @@ test('successful mount replaces fallback once and repeated cleanup is harmless',
 test('failed network preserves the usable fallback',async()=>{const x=setup();x.root.fetch=async()=>({ok:false});x.root.CDFTravellerAsset.mount(x.T,x.parent,{onState:s=>x.states.push(s)});await tick();assert.deepEqual(x.parent.children,[x.old]);assert.equal(x.states.at(-1),'fallback');});
 
 test('stale target keeps fallback and disposes parsed character',async()=>{const x=setup();x.root.CDFTravellerAsset.mount(x.T,x.parent,{current:()=>false});await tick();x.complete();await tick();assert.deepEqual(x.parent.children,[x.old]);assert.equal(x.disposed,2);});
+
+test('unknown asset selection never starts an arbitrary request',async()=>{const x=setup();let requested=false;x.root.fetch=async()=>{requested=true;return{ok:false};};x.root.CDFTravellerAsset.mount(x.T,x.parent,{asset:'https://outside.invalid/private',onState:s=>x.states.push(s)});await tick();assert.equal(requested,false);assert.deepEqual(x.parent.children,[x.old]);assert.equal(x.states.at(-1),'fallback');});
+
+test('failed model preparation retains fallback and releases parsed resources',async()=>{const x=setup();x.root.CDFTravellerAsset.mount(x.T,x.parent,{asset:'coastal55',prepare:()=>{throw Error('unsupported model');},onState:s=>x.states.push(s)});await tick();x.complete();await tick();assert.deepEqual(x.parent.children,[x.old]);assert.equal(x.disposed,2);assert.equal(x.states.at(-1),'fallback');});

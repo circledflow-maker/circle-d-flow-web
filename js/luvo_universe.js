@@ -42,6 +42,26 @@
    {name:'Big Dipper asterism',x:-19,y:25,points:[[-4,1],[-2,1.5],[0,.7],[1,0],[4,.4],[3,-2],[.5,-2]],edges:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,3]]}
   ];
   for(const pattern of patterns){const positions=pattern.points.map(([x,y])=>new T.Vector3(x+pattern.x,y+pattern.y,-42)),lines=pattern.edges.flatMap(([a,b])=>[positions[a],positions[b]]);
+   const geometry=new T.BufferGeometry().setFromPoints(lines);registerGeometry(geometry);const material=new T.LineBasicMaterial({color:0x9aafce,transparent:true,opacity:.21,depthWrite:false,fog:false});registerMaterial(material);const constellation=new T.LineSegments(geometry,material);constellation.name='cdf-schematic-'+pattern.name;far.add(constellati…2544 tokens truncated…a.position.set(0,-5.1,-20);
+  // Original procedural lunar surface and schematic sky, not a date/location planetarium.
+  const textureSize=128,pixels=new Uint8Array(textureSize*textureSize*4);
+  const craters=Array.from({length:22},(_,i)=>({x:(i*.61803398875%1)*128,y:(Math.sin(i*12.3)*.5+.5)*128,r:3+i%9}));
+  for(let y=0;y<textureSize;y++)for(let x=0;x<textureSize;x++){let value=181+19*Math.sin(x*.073+Math.sin(y*.12))*Math.cos(y*.058)+7*Math.sin(x*1.7+y*2.9);
+   for(const c of craters){const d=Math.hypot(x-c.x,y-c.y)/c.r;if(d<1)value-=20*(1-d);else if(d<1.15)value+=9;}
+   const p=(y*128+x)*4;pixels[p]=value;pixels[p+1]=value*.98;pixels[p+2]=value*.93;pixels[p+3]=255;
+  }
+  const moonTexture=new T.DataTexture(pixels,128,128,T.RGBAFormat);moonTexture.needsUpdate=true;moonTexture.magFilter=T.LinearFilter;moonTexture.minFilter=T.LinearFilter;registerTexture(moonTexture);
+  const moonMaterial=new T.MeshStandardMaterial({map:moonTexture,color:0xd9d8d0,roughness:1,metalness:0,flatShading:false});registerMaterial(moonMaterial);
+  const moon=mesh(new T.SphereGeometry(2.2,64,32),moonMaterial,far);moon.name='cdf-moon';moon.position.set(-12,17,-40);
+  let seed=5317;const random=()=>{seed=(1664525*seed+1013904223)>>>0;return seed/4294967296;};
+  for(const [count,size,opacity]of [[900,.065,.7],[140,.13,.95]]){const points=new Float32Array(count*3);for(let i=0;i<count;i++){points[i*3]=(random()-.5)*130;points[i*3+1]=2+random()*56;points[i*3+2]=-36-random()*15;}
+   const geometry=new T.BufferGeometry();geometry.setAttribute('position',new T.BufferAttribute(points,3));registerGeometry(geometry);const material=new T.PointsMaterial({color:0xe3e8f5,size,transparent:true,opacity,depthWrite:false,fog:false});registerMaterial(material);const stars=new T.Points(geometry,material);stars.name='cdf-starfield';far.add(stars);
+  }
+  const patterns=[
+   {name:'Orion',x:12,y:18,points:[[-2,3],[2,3.5],[1,0],[0,0],[-1,-.1],[-2,-4],[2,-4]],edges:[[0,1],[1,2],[2,3],[3,4],[4,0],[4,5],[2,6],[5,6]]},
+   {name:'Big Dipper asterism',x:-19,y:25,points:[[-4,1],[-2,1.5],[0,.7],[1,0],[4,.4],[3,-2],[.5,-2]],edges:[[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,3]]}
+  ];
+  for(const pattern of patterns){const positions=pattern.points.map(([x,y])=>new T.Vector3(x+pattern.x,y+pattern.y,-42)),lines=pattern.edges.flatMap(([a,b])=>[positions[a],positions[b]]);
    const geometry=new T.BufferGeometry().setFromPoints(lines);registerGeometry(geometry);const material=new T.LineBasicMaterial({color:0x9aafce,transparent:true,opacity:.21,depthWrite:false,fog:false});registerMaterial(material);const constellation=new T.LineSegments(geometry,material);constellation.name='cdf-schematic-'+pattern.name;far.add(constellation);
    const dotsGeometry=new T.BufferGeometry().setFromPoints(positions);registerGeometry(dotsGeometry);const dotsMaterial=new T.PointsMaterial({color:0xf0e9d8,size:.19,transparent:true,opacity:.95,fog:false});registerMaterial(dotsMaterial);far.add(new T.Points(dotsGeometry,dotsMaterial));
   }

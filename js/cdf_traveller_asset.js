@@ -1,6 +1,6 @@
 /* Shared, local Blender asset. Presentation only; no identity, reward or account state. */
 (function(root){'use strict';
- const doc=root.document;let loaderPromise;
+ const doc=root.document,assets=Object.freeze({traveller:'/assets/models/cdf-traveller66.glb',coastal55:'/assets/models/cdf-coastal55.glb'});let loaderPromise;
  function dispose(object){const owned=new Set();object?.traverse(o=>{if(o.geometry)owned.add(o.geometry);for(const m of (Array.isArray(o.material)?o.material:[o.material]).filter(Boolean)){owned.add(m);for(const v of Object.values(m))if(v?.isTexture)owned.add(v);}});for(const item of owned)item.dispose();}
  function ensure(T){if(T.REVISION!=='128')return Promise.reject(Error('Unsupported renderer'));if(T.GLTFLoader)return Promise.resolve();if(loaderPromise)return loaderPromise;
   loaderPromise=new Promise((resolve,reject)=>{const script=doc.createElement('script');script.src='/js/vendor/GLTFLoader-r128.js';let settled=false;
@@ -8,15 +8,15 @@
    const timer=root.setTimeout(()=>finish(Error('Character loader timed out')),10000);script.onload=()=>finish(T.GLTFLoader?null:Error('Character loader unavailable'));script.onerror=()=>finish(Error('Character loader unavailable'));doc.head.append(script);
   });return loaderPromise;
  }
- async function load(T,signal){await ensure(T);if(signal.aborted)throw Error('Character cancelled');const response=await root.fetch('/assets/models/cdf-traveller66.glb',{signal,credentials:'omit'});if(!response.ok)throw Error('Character unavailable');const bytes=await response.arrayBuffer();if(bytes.byteLength>2*1024*1024)throw Error('Character exceeds asset budget');
+ async function load(T,signal,asset){if(!Object.hasOwn(assets,asset))throw Error('Unknown local asset');await ensure(T);if(signal.aborted)throw Error('Character cancelled');const response=await root.fetch(assets[asset],{signal,credentials:'omit'});if(!response.ok)throw Error('Character unavailable');const bytes=await response.arrayBuffer();if(bytes.byteLength>2*1024*1024)throw Error('Character exceeds asset budget');
   return new Promise((resolve,reject)=>new T.GLTFLoader().parse(bytes,'',gltf=>resolve(gltf.scene),reject));
  }
- function mount(T,parent,{height=2.5,y=0,rotation=0,current=()=>true,onState=()=>{}}={}){let closed=false,instance;const controller=new root.AbortController();onState('loading');
-  load(T,controller.signal).then(model=>{if(closed||!current()){dispose(model);return;}const bounds=new T.Box3().setFromObject(model),size=bounds.getSize(new T.Vector3()),center=bounds.getCenter(new T.Vector3());
-   if(!Number.isFinite(size.y)||size.y<=0){dispose(model);throw Error('Invalid character geometry');}
+ function mount(T,parent,{height=2.5,y=0,rotation=0,asset='traveller',prepare=()=>{},current=()=>true,onState=()=>{}}={}){let closed=false,instance;const controller=new root.AbortController();onState('loading');
+  load(T,controller.signal,asset).then(model=>{if(closed||!current()){dispose(model);return;}try{prepare(model);const bounds=new T.Box3().setFromObject(model),size=bounds.getSize(new T.Vector3()),center=bounds.getCenter(new T.Vector3());
+   if(!Number.isFinite(size.y)||size.y<=0){throw Error('Invalid asset geometry');}
    const scale=height/size.y;model.scale.multiplyScalar(scale);model.position.set(-center.x*scale,-bounds.min.y*scale,-center.z*scale);
-   instance=new T.Group();instance.name='cdf-blender-traveller';instance.position.y=y;instance.rotation.y=rotation;instance.add(model);
-   const old=Array.from(parent.children);parent.add(instance);for(const node of old){parent.remove(node);dispose(node);}parent.userData.cdfTraveller='blender66';onState('ready');
+   instance=new T.Group();instance.name=asset==='traveller'?'cdf-blender-traveller':'cdf-blender-coastal';instance.position.y=y;instance.rotation.y=rotation;instance.add(model);
+   const old=Array.from(parent.children);parent.add(instance);for(const node of old){parent.remove(node);dispose(node);}parent.userData.cdfAsset=asset;if(asset==='traveller')parent.userData.cdfTraveller='blender66';onState('ready');}catch(error){dispose(model);throw error;}
   }).catch(()=>{if(!closed)onState('fallback');});
   return()=>{if(closed)return;closed=true;controller.abort();if(instance){instance.parent?.remove(instance);dispose(instance);instance=null;}};
  }
