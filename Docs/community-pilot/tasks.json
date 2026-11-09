@@ -722,13 +722,13 @@
       "dependencies": [
         "CDF-SOULPASS72",
         "CDF-PROFILE71",
-        "C: verfügbar"
+        "Aktive E:-Quelle lesbar"
       ],
       "timebox": "Ein begrenzter UI-Pass",
       "acceptance": "Zweiseitige 3D-Bedienung, korrekte Sammlungszustände und private Kontoformulare ohne neue Rechte/Rewards",
-      "state": "Lokal implementiert;16Tests bestanden; Browser durch volle C:-Festplatte NOT_RUN; kein neuer Produktcommit",
+      "state": "Lokal zuvor implementiert;16Tests historisch bestanden; C: wieder frei, E:-Inhalte wegen Geräte-E/A-Fehler nicht lesbar. Keine neue Browser-/Produktabnahme.",
       "evidence": "Docs/community-pilot/pass73-20261109.md",
-      "next": "C: freigeben, Codex-Browserprüfung, E:-Koordination nachführen und geprüfte Produktquellen committen"
+      "next": "E:-Lesbarkeit wiederherstellen; private Storybestätigung/STATUS nachführen; dann geprüfte Pass73-Abnahme und Produktcommit"
     }
   ]
 }
