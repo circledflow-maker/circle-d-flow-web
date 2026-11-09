@@ -31,7 +31,7 @@
       "goal": "Gastorientierung auf Desktop und Smartphone abnehmen",
       "owner": "Codex",
       "tool": "Browser und tatsächliches Smartphone; nur GET/UI ohne Absenden",
-      "baseline": "Coastal67 / PR18 d92c836dc29248e92d646206d817bc8594a2fb30; aktive E:-Vorschau mit einem Blender-Vordergrundort, Traveller66 und lokalen Schriften",
+      "baseline": "Coastal67 / PR18 657a79bca36f83259c9d560a282c3fd61be0c1ae; aktive E:-Vorschau mit einem Blender-Vordergrundort, Traveller66 und lokalen Schriften",
       "dependencies": [
         "CDF-F00"
       ],
@@ -652,7 +652,7 @@
       "goal": "Einen vorhandenen Blender-Vordergrundort statt der einfachen Hütte tatsächlich im Intro zeigen",
       "owner": "Codex; kreative Abnahme Hope",
       "tool": "Vorhandenes Model55-GLB und Three-r128",
-      "baseline": "d92c836dc29248e92d646206d817bc8594a2fb30",
+      "baseline": "657a79bca36f83259c9d560a282c3fd61be0c1ae",
       "dependencies": [
         "CDF-VISUAL66",
         "CDF-MODEL55"
