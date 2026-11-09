@@ -1,0 +1,54 @@
+{
+  "date": "2026-11-09",
+  "base_commit": "f886180b3bd5af9a21fdfde9b1d81e08ceca8aa3",
+  "active_source": "E:/circle-d-flow-web",
+  "full_release_candidate": false,
+  "files": [
+    {
+      "path": "js/cdf_soul_pass73.js",
+      "source": "Selected active E source or phase report"
+    },
+    {
+      "path": "css/cdf_soul_pass73.css",
+      "source": "Selected active E source or phase report"
+    },
+    {
+      "path": "js/cdf_soul_pass72.js",
+      "source": "Selected active E source or phase report"
+    },
+    {
+      "path": "js/cdf_account.js",
+      "source": "Selected active E source or phase report"
+    },
+    {
+      "path": "css/cdf_account.css",
+      "source": "Selected active E source or phase report"
+    },
+    {
+      "path": "js/agents/soul_pass.js",
+      "source": "Selected active E source or phase report"
+    },
+    {
+      "path": "pages/member_card.html",
+      "source": "Existing PR18 HTML, only SoulPass cache version changed"
+    },
+    {
+      "path": "tests/soul-pass73.test.cjs",
+      "source": "Selected active E source or phase report"
+    },
+    {
+      "path": "tests/account-settings.test.cjs",
+      "source": "Selected active E source or phase report"
+    },
+    {
+      "path": "Docs/community-pilot/pass73-20261109.md",
+      "source": "Selected active E source or phase report"
+    }
+  ],
+  "notes": [
+    "Private Team/story is not exported.",
+    "CSS 3D pass, no new WebGL/Blender asset.",
+    "Shared existing account source missing in previous product snapshot; now included.",
+    "Authenticated live and physical device acceptance remain open."
+  ]
+}

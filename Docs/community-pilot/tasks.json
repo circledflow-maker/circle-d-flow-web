@@ -718,17 +718,17 @@
       "project": "CDF / 3D Soul Pass und Symbolbuch",
       "owner": "Codex; kreative Entscheidung Hope",
       "goal": "Räumlicher Pass, gated Symbolbuch und direkte bestehende E-Mail-/Passwortformulare",
-      "baseline": "f886180b3bd5af9a21fdfde9b1d81e08ceca8aa3",
+      "baseline": "ae95ed0b6a84e3a835daea80d9cc214dcff29239",
       "dependencies": [
         "CDF-SOULPASS72",
         "CDF-PROFILE71",
-        "Aktive E:-Quelle lesbar"
+        "CDF-P01"
       ],
       "timebox": "Ein begrenzter UI-Pass",
       "acceptance": "Zweiseitige 3D-Bedienung, korrekte Sammlungszustände und private Kontoformulare ohne neue Rechte/Rewards",
-      "state": "Lokal zuvor implementiert;16Tests historisch bestanden; C: wieder frei, E:-Inhalte wegen Geräte-E/A-Fehler nicht lesbar. Keine neue Browser-/Produktabnahme.",
-      "evidence": "Docs/community-pilot/pass73-20261109.md",
-      "next": "E:-Lesbarkeit wiederherstellen; private Storybestätigung/STATUS nachführen; dann geprüfte Pass73-Abnahme und Produktcommit"
+      "state": "Lokal und Draft-Produkt-PR implementiert;22Tests und synthetische Browseransichten geprüft. Speicher-/E-Lesegrenze behoben. Physischer und echter Auth-/Liveweg offen.",
+      "evidence": "Docs/community-pilot/pass73-20261109.md; Docs/community-pilot/pass73-source-map.json",
+      "next": "Hope prüft realen Handy-Pass/Buch; Codex gleicht vollständige Profil-/Karten-Releasebasis ab, danach echte autorisierte Kontoprüfung."
     }
   ]
 }
