@@ -20,7 +20,7 @@
   title.textContent=mode==='loading'?t.opening:t.titles[index];body.textContent=mode==='loading'?t.wait:t.body[index];note.textContent=mode==='simple'?t.simple:t.note;
   if(mode==='loading'){button(t.fallback,simple);button(t.retry,()=>root.location.reload());button(t.close,close);return;}
   if(index<2)button(t.next,()=>{index++;render();title.focus();});
-  else{button(t.explore,close);button(t.ask,()=>{close();doc.getElementById('scene-guide')?.click();});for(const [label,href]of [[t.worlds,'/pages/worlds.html'],[t.story,'/pages/creator_story.html']]){const a=doc.createElement('a');a.textContent=label;a.href=href;actions.append(a);}}
+  else{button(({de:'Mit Flowee meinen Weg finden',en:'Find my way with Flowee',pt:'Encontrar o meu caminho com a Flowee'})[doc.documentElement.lang]||'Find my way with Flowee',()=>{close();if(root.CDFSanctuaryOrientation)root.CDFSanctuaryOrientation.open();else doc.getElementById('scene-guide')?.click();});button(t.explore,close);button(t.ask,()=>{close();doc.getElementById('scene-guide')?.click();});for(const [label,href]of [[t.worlds,'/pages/worlds.html'],[t.story,'/pages/creator_story.html']]){const a=doc.createElement('a');a.textContent=label;a.href=href;actions.append(a);}}
   button(t.close,close);
  }
  function open(){finished=false;root.dispatchEvent(new Event('cdf:room-modal'));render();if(typeof dialog.showModal==='function'){if(!dialog.open)dialog.showModal();}else{dialog.setAttribute('open','');dialog.setAttribute('role','region');}title.focus();}
