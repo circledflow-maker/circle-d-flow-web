@@ -19,6 +19,8 @@ async function invoke(mod, req, res) {
 module.exports = async function handler(req, res) {
   const route = String(req.query?.route || '').trim();
   switch (route) {
+    case 'orientation':
+      return invoke(require('../lib/cdf-api/orientation-profile-api71'), req, res);
     case 'event':
       return invoke(require('../lib/cdf-api/register-event'), req, res);
     case 'guest':

@@ -733,12 +733,25 @@ class SoulPassAgent {
         }
     }
 
+    async mountOrientationProfile(overlay) {
+        let host=overlay.querySelector('[data-cdf-orientation-profile]');
+        if(!host){host=document.createElement('section');host.dataset.cdfOrientationProfile='';overlay.querySelector('#pane-identity').append(host);}
+        try{
+            if(!window.CDFOrientationProfile){
+                this.orientationProfileLoader ||= new Promise((resolve,reject)=>{const script=document.createElement('script');script.src='/js/cdf_orientation_profile71.js?v=20261109-profile71';script.onload=resolve;script.onerror=()=>{script.remove();this.orientationProfileLoader=null;reject(Error('Profile unavailable'));};document.head.append(script);});
+                await this.orientationProfileLoader;
+            }
+            await window.CDFOrientationProfile.mount(host);
+        }catch(_){host.textContent='Private Flowee profile unavailable. / Privates Flowee-Profil nicht verfügbar.';}
+    }
+
     open() {
         this.loadDailySteps();
         this.init().then(() => {
             let overlay = document.getElementById('sp-root-overlay');
             if (!overlay) overlay = this.renderArtifact();
             else this.refreshIdentityStats();
+            this.mountOrientationProfile(overlay);
             requestAnimationFrame(() => overlay.classList.add('active'));
             this.isOpen = true;
             if (window.SoundEngineer) window.SoundEngineer.playSFX('menu_open');

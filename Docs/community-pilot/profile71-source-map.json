@@ -1,0 +1,94 @@
+{
+  "date": "2026-11-09",
+  "project": "CDF",
+  "source_base": "7ad9aea554815c702f7da31c0f7054c230112832",
+  "local_source": "active E source; no automatic synchronization",
+  "production_ready": false,
+  "files": [
+    {
+      "path": "api/registrations.js",
+      "variant": "remote-minimal-patch",
+      "local_blob": "a96e9584b5a3aad0b043d4d4da4ae8a1c4ac63b1"
+    },
+    {
+      "path": "js/sanctuary_orientation70.js",
+      "variant": "exact-local-source",
+      "local_blob": "0fb1c7fd2f6708422c22f19b1966daa382420f21"
+    },
+    {
+      "path": "pages/artist_sanctuary.html",
+      "variant": "exact-local-source",
+      "local_blob": "a829d6569cea15a761be199acee2cde0d3514a3b"
+    },
+    {
+      "path": "pages/member_card.html",
+      "variant": "remote-minimal-patch",
+      "local_blob": "225a6edd6815c969ec0133604fc16e52c6347f4c"
+    },
+    {
+      "path": "js/flow_orbit.js",
+      "variant": "remote-minimal-patch",
+      "local_blob": "56520b6e70dfc1a0fdf2d99b40fa08d5d8ae37fc"
+    },
+    {
+      "path": "js/agents/soul_pass.js",
+      "variant": "exact-local-source",
+      "local_blob": "a592912fcf936539bef18335a711afa25de60033"
+    },
+    {
+      "path": "lib/cdf-api/member-orientation71.js",
+      "variant": "exact-local-source",
+      "local_blob": "50157d527b1eba4b3d131aa887bfe4257a61a5c7"
+    },
+    {
+      "path": "lib/cdf-api/orientation-profile-api71.js",
+      "variant": "exact-local-source",
+      "local_blob": "7a3b211253f865c6afc213a12236ad3fba0e73ca"
+    },
+    {
+      "path": "lib/cdf-api/membership-auth.js",
+      "variant": "exact-local-source",
+      "local_blob": "e8ff90c3ba38e6a5ed1d8a1e90d3dc78dd6925be"
+    },
+    {
+      "path": "js/cdf_orientation_profile71.js",
+      "variant": "exact-local-source",
+      "local_blob": "6e08e379b9e54607c1a5c0684a02875d7b10e432"
+    },
+    {
+      "path": "css/cdf_orientation_profile71.css",
+      "variant": "exact-local-source",
+      "local_blob": "256a201ff5130e13ca9fef6c1b58af12469d8c54"
+    },
+    {
+      "path": "supabase/migrations/20261109130039_cdf_orientation_symbols.sql",
+      "variant": "exact-local-source",
+      "local_blob": "f3cdb89a91379bd6b7a3ec5a9490f9261bb3303e"
+    },
+    {
+      "path": "tests/orientation71.test.cjs",
+      "variant": "exact-local-source",
+      "local_blob": "e554d8457ddfc32fe67f5249db78344875ad995a"
+    },
+    {
+      "path": "tests/profile71-client.test.cjs",
+      "variant": "exact-local-source",
+      "local_blob": "0ca0b95aa20fa67366af8ad2a4f6c08a0acc8a1e"
+    },
+    {
+      "path": "tests/profile71-http.test.cjs",
+      "variant": "exact-local-source",
+      "local_blob": "befc7a08d41a3b39726d34080e51021142b4f8aa"
+    },
+    {
+      "path": "scripts/test-orientation71.cjs",
+      "variant": "exact-local-source",
+      "local_blob": "48796e7d4af88afecfedceb0c97547c3555007d9"
+    }
+  ],
+  "limits": [
+    "Three existing remote files receive minimal patches preserving their older contents.",
+    "The member-card source, Orbit renderer and API router still need full release reconciliation.",
+    "Migration is prepared and locally tested, not applied to hosted Supabase."
+  ]
+}

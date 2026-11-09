@@ -234,7 +234,7 @@
     const pct = tierProgress(exp);
     return `
       <article class="orbit-card orbit-card--profile" data-type="profile">
-        <p class="orbit-kicker">PROFILE</p>
+        <p class="orbit-kicker">PROFILE</p><details class="orbit-profile-panel"><summary>Flowee · SoulNexus</summary><section data-cdf-orientation-profile></section></details>
         <h2>${esc(name)}</h2>
         <p class="orbit-id">${esc(no)}</p>
         <p class="orbit-meta">EXP ${esc(String(exp))}</p>
@@ -296,6 +296,7 @@
   function paint() {
     if (!els.track) return;
     els.track.innerHTML = state.cards.map((c) => c.html).join('');
+    els.track.querySelectorAll('[data-cdf-orientation-profile]').forEach(host=>window.CDFOrientationProfile?.mount(host));
     goTo(state.index, false);
     bindCardActions();
   }
