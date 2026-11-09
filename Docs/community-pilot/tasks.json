@@ -695,6 +695,23 @@
       "state": "Lokal implementiert;29Tests bestanden, synthetische Browseransicht und Gastgrenze geprüft; Migration nicht live angewandt, komplette echte Abnahme offen",
       "evidence": "Docs/community-pilot/profile71-20261109.md; Docs/community-pilot/profile71-source-map.json",
       "next": "Vollständigen Kandidaten aus abweichenden Karten-/Orbit-/API-Basen herstellen, dann konkrete Aktivierung freigeben lassen"
+    },
+    {
+      "id": "CDF-SOULPASS72",
+      "project": "CDF / Soul Pass und Profileinstellungen",
+      "goal": "Vorhandenen D:-SoulPass sichern und trainerartigen privaten Dashboard-Pass mit ehrlichen Social-Einstellungen vervollständigen",
+      "owner": "Codex; Veröffentlichungsentscheidung Hope",
+      "tool": "Gezielter D/E-Abgleich, Vanilla-JS, bestehende private Tabellen und Auth, Browser",
+      "baseline": "f886180b3bd5af9a21fdfde9b1d81e08ceca8aa3",
+      "dependencies": [
+        "CDF-PROFILE71",
+        "CDF-P01"
+      ],
+      "timebox": "Ein begrenzter Wiederherstellungs- und Integrationspass",
+      "acceptance": "D unverändert, privater Herkunftsbeleg, bestätigte eigene Daten statt lokaler Simulationsrechte, bestehende Levelschwellen/Symbolquelle, ehrliche Social-Links, Kontowechsel-Schutz und mobile Lesbarkeit",
+      "state": "Lokal und Draft-Produkt-PR implementiert;18Tests und synthetische Browseransichten geprüft; echte Auth-/Speicher-/Geräteabnahme und Aktivierung offen",
+      "evidence": "Docs/community-pilot/soulpass72-20261109.md",
+      "next": "Vollständige Karten-/SoulNexus-/API-Releasebasis abgleichen, vor Aktivierung echte Eigentümer- und Kontowechselprüfung vorbereiten"
     }
   ]
 }
