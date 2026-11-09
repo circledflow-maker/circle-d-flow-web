@@ -39,7 +39,7 @@
       "acceptance": "Soll/Ist und Beleg je Einstiegsschritt; Emulator/physisch getrennt; keine Kontomutation",
       "state": "Browser-Gastweg390x844 bis Hof gesehen;360x640/1280x800 Stichproben, physische und vollständige Abnahme offen",
       "evidence": "Docs/community-pilot/entry69-20261109.md; vorherige Gastweg-Belege in Entry68",
-      "next": "Hopes Story-/Feature-Antworten abwarten, einen freiwilligen Weltzugang und Ziel-/Rückweg abnehmen; physischer Test offen"
+      "next": "Hopes freiwilligen Interessen→Ort-Test durchführen; Profile/Sichtbarkeit und echte Matching-Datenbasis erst danach getrennt konzipieren"
     },
     {
       "id": "CDF-R01",
@@ -662,6 +662,22 @@
       "state": "Lokal und in Produkt-PR implementiert;38Tests und Browserstichproben bestanden, vollständige Bedien-/Geräte-/Kreativabnahme offen",
       "evidence": "Docs/community-pilot/coastal67-20261109.md",
       "next": "Hope testet Gastweg; genau einen beobachteten Bedienblocker beheben"
+    },
+    {
+      "id": "CDF-ORIENT70",
+      "project": "CDF / freiwillige Community-Orientierung",
+      "goal": "Interessen und Teilnahmewunsch innerhalb Flowees Einstieg in erklärbare vorhandene Hofwege übersetzen",
+      "owner": "Codex; kreative/pilotbezogene Abnahme Hope",
+      "tool": "Vanilla-JS, bestehendes Sanctuary-Layout und Ortsnavigation; keine externe KI",
+      "baseline": "7ad9aea554815c702f7da31c0f7054c230112832",
+      "dependencies": [
+        "CDF-P01"
+      ],
+      "timebox": "Ein optionaler Frageablauf und ein Orts-Matching-Pass, keine Profil-/Rollenmigration",
+      "acceptance": "Freiwillige Auswahl/Überspringen/Reset, vorhandene Ziele mit Gründen, echtes Im-Hof-Zeigen; keine Rollenvergabe durch Interessen oder Beta-Wunsch",
+      "state": "Lokal und Produkt-PR implementiert;19Tests und Browserstichproben bestanden; echte Geräte-/Sprach-/Profil-/Personenmatching-Abnahme offen",
+      "evidence": "Docs/community-pilot/orientation70-20261109.md",
+      "next": "Hope testet ersten nützlichen Weg; danach Speichern/Sichtbarkeit und echte freiwillige Daten konzipieren"
     }
   ]
 }
