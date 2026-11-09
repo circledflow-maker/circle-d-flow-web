@@ -19,6 +19,8 @@ async function invoke(mod, req, res) {
 module.exports = async function handler(req, res) {
   const route = String(req.query?.route || '').trim();
   switch (route) {
+    case 'soul-pass':
+      return invoke(require('../lib/cdf-api/soul-pass-api72'), req, res);
     case 'orientation':
       return invoke(require('../lib/cdf-api/orientation-profile-api71'), req, res);
     case 'event':
