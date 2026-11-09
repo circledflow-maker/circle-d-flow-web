@@ -31,15 +31,15 @@
       "goal": "Gastorientierung auf Desktop und Smartphone abnehmen",
       "owner": "Codex",
       "tool": "Browser und tatsächliches Smartphone; nur GET/UI ohne Absenden",
-      "baseline": "Coastal67 / PR18 657a79bca36f83259c9d560a282c3fd61be0c1ae; aktive E:-Vorschau mit einem Blender-Vordergrundort, Traveller66 und lokalen Schriften",
+      "baseline": "Entry68 / PR18 2d04967dd1a88bcf95280a123aa01a920e185dbe; aktiver lokaler DE-Gastweg bis Sanctuary-Hof gesehen",
       "dependencies": [
         "CDF-F00"
       ],
       "timebox": "ein Gast-Abnahmedurchlauf",
       "acceptance": "Soll/Ist und Beleg je Einstiegsschritt; Emulator/physisch getrennt; keine Kontomutation",
-      "state": "Begrenzte Browserstichprobe390×844/360×640/1280×800 und Vollbild-Namenseingabe geprüft; physischer und vollständiger Kernweg offen",
-      "evidence": "Docs/community-pilot/visual66-20261109.md",
-      "next": "Physischer Handytest der tatsächlich eingebauten Figur/Schrift, danach größte belegte Bedienhürde schließen; volle Auth-/Releasegates getrennt"
+      "state": "Browser-Gastweg390x844 bis Hof gesehen;360x640/1280x800 Stichproben, physische und vollständige Abnahme offen",
+      "evidence": "Docs/community-pilot/entry68-20261109.md; frühere Berichte bleiben gültige Teilbelege",
+      "next": "Gast-Zielseiten und Preview-/Release-Abdeckung abgleichen; Hopes echter Handytest bleibt offen"
     },
     {
       "id": "CDF-R01",
