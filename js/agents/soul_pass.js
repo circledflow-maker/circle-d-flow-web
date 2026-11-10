@@ -639,35 +639,7 @@ class SoulPassAgent {
         }
     }
 
-    async initiateSocialSync(platform) {
-        this.pulseFeedback();
-        
-        // Find clicked card and toggle connected
-        const cards = document.querySelectorAll('.sy-social-card');
-        let targetCard = null;
-        cards.forEach(c => {
-            if(c.innerText.toLowerCase().includes(platform)) targetCard = c;
-        });
-
-        if(platform === 'whatsapp') {
-            const phone = prompt("Verify Phone Number for Bridge (e.g., +49...):", localStorage.getItem('cdf_user_phone') || "");
-            if (phone) {
-                localStorage.setItem('cdf_user_phone', phone);
-                if (window.WhatsApp) {
-                    const success = await window.WhatsApp.sendTemplateMessage('hello_world', phone);
-                    if(success) alert("Signal Sent via Meta API!");
-                }
-                window.open('https://wa.me/351912828940', '_blank');
-                if(targetCard) targetCard.classList.add('connected');
-            }
-        } else {
-            const handle = prompt(`Enter ${platform.toUpperCase()} Handle/URL to sync with Synapse:`);
-            if (handle) {
-                alert(`Synapse Connected to ${handle}!`);
-                if(targetCard) targetCard.classList.add('connected');
-            }
-        }
-    }
+    async initiateSocialSync() { return this.open(); }
 
     async changePassword() {
         if(!window.supabaseClient) return;
@@ -733,21 +705,31 @@ class SoulPassAgent {
         }
     }
 
-    open() {
-        this.loadDailySteps();
-        this.init().then(() => {
-            let overlay = document.getElementById('sp-root-overlay');
-            if (!overlay) overlay = this.renderArtifact();
-            else this.refreshIdentityStats();
-            requestAnimationFrame(() => overlay.classList.add('active'));
+    async mountOrientationProfile(overlay) {
+        let host=overlay.querySelector('[data-cdf-orientation-profile]');
+        if(!host){host=document.createElement('section');host.dataset.cdfOrientationProfile='';overlay.querySelector('#pane-identity').append(host);}
+        try{
+            if(!window.CDFOrientationProfile){
+                this.orientationProfileLoader ||= new Promise((resolve,reject)=>{const script=document.createElement('script');script.src='/js/cdf_orientation_profile71.js?v=20261109-profile71';script.onload=resolve;script.onerror=()=>{script.remove();this.orientationProfileLoader=null;reject(Error('Profile unavailable'));};document.head.append(script);});
+                await this.orientationProfileLoader;
+            }
+            await window.CDFOrientationProfile.mount(host);
+        }catch(_){host.textContent='Private Flowee profile unavailable. / Privates Flowee-Profil nicht verfügbar.';}
+    }
+
+    async open() {
+        try {
+            if (!window.CDFSoulPass) {
+                this.pass72Loader ||= new Promise((resolve,reject)=>{const script=document.createElement('script');script.src='/js/cdf_soul_pass72.js?v=20261109-pass78';script.onload=resolve;script.onerror=()=>{this.pass72Loader=null;script.remove();reject(Error('Soul Pass unavailable'));};document.head.append(script);});
+                await this.pass72Loader;
+            }
+            window.CDFSoulPass.open();
             this.isOpen = true;
-            if (window.SoundEngineer) window.SoundEngineer.playSFX('menu_open');
-            document.body.style.overflow = 'hidden';
-            console.log(`[SoulPass] Soul Nexus Opened.`);
-        });
+        } catch (_) { window.alert('Soul Pass nicht verfügbar. Bitte erneut versuchen. / Soul Pass unavailable. Please try again.'); }
     }
 
     close() {
+        window.CDFSoulPass?.close();
         const overlay = document.getElementById('sp-root-overlay');
         if (overlay) overlay.classList.remove('active');
         this.isOpen = false;

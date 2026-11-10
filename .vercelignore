@@ -32,3 +32,18 @@ scripts/__pycache__/
 *.pyc
 .env
 .env.*
+
+# Internal records, coordination and credentials are not website assets
+Team/
+Docs/
+handoffs/
+.cursor/
+.codex/
+.agents/
+AGENTS.md
+STATUS.md
+credentials.json
+adobe_token.json
+token.json
+HANDOFF_TO_GEMINI.md
+HANDOFF_CDF_WEB_MEMBERCARD_LIVE_ACCEPTANCE.md

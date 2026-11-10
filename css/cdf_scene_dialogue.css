@@ -1,0 +1,202 @@
+/* Scene-first mobile dialogue. Page stays still; only long answer content scrolls. */
+.cdf-dialogue .world-window{pointer-events:auto;touch-action:pan-y pinch-zoom;user-select:none}
+.dialog-copy{min-height:0}.scene-peek{pointer-events:auto;font-size:.72rem;background:#0a2029d9}.scene-controls{display:flex;align-items:center;gap:10px;width:100%;justify-content:space-between;pointer-events:auto}.scene-swipe-tip{font:10px/1.3 system-ui;color:#d8e8df;background:#06151aaa;padding:5px 9px;border-radius:8px}
+.journey-options{flex:none;border-top:1px solid #9dbaac44;font-size:.74rem}.journey-options>summary{color:var(--mint)}.journey-options .identity-details{margin:0}.journey-options footer{margin:0}.journey-options .luvo-cultural-note{margin:0;padding:8px 0;border:0;background:none}.journey-options .quick-login{font-size:.75rem;min-height:44px}
+.flowee-tutorial-fairy:has(svg){background:none!important;box-shadow:none!important;border-radius:0!important;width:34px!important;height:26px!important}.flowee-tutorial-fairy:has(svg):before,.flowee-tutorial-fairy:has(svg):after{display:none!important}
+@media(max-width:700px),(max-height:500px){
+ body.cdf-dialogue{height:var(--cdf-viewport-height,100dvh);min-height:0;overflow:hidden;display:flex;flex-direction:column}
+ body.cdf-dialogue>div[role=note]{flex:none;font-size:10px!important;line-height:1.25!important;padding:4px 10px!important}
+ .cdf-dialogue header{flex:none;width:100%;padding:3px 12px;min-height:44px}.cdf-dialogue header select{min-height:36px;font-size:12px}
+ .cdf-dialogue .luvo-scene-tools{flex:none;width:100%;padding:0 12px;gap:6px;flex-wrap:nowrap;min-height:32px}
+ .cdf-dialogue #luvo-scene-toggle{min-height:30px;padding:3px 10px;font-size:10px}.cdf-dialogue #luvo-scene-status{font-size:8px}.cdf-dialogue .luvo-world-label{margin-left:auto;width:auto;order:0;font-size:8px;min-height:0}
+ .cdf-dialogue .journey-shell{flex:1;min-height:0;width:100%;max-width:none;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(100px,32%) minmax(0,1fr);align-items:stretch;gap:0;margin:0;overflow:hidden}
+ .cdf-dialogue .world-window{min-height:0;min-width:0;height:100%;padding:8px 12px;justify-content:space-between;gap:4px;pointer-events:auto;touch-action:pan-y pinch-zoom}
+ .cdf-dialogue .world-window .eyebrow,.cdf-dialogue .world-trail,.cdf-dialogue .world-window>p:not(.eyebrow){display:none}
+ .cdf-dialogue .world-window h1{font:17px/1.2 Georgia,serif;max-width:70%;margin:0;padding:5px 8px;background:#06151ab0;border:0}
+ .cdf-dialogue #luvo-scene{inset:auto;left:var(--cdf-scene-left,0px);top:var(--cdf-scene-top,80px);width:var(--cdf-scene-width,100vw);height:var(--cdf-scene-height,220px)}
+ .cdf-dialogue #luvo-scene:before{background:linear-gradient(#02091533,transparent 30%,transparent 80%,#04111944)}.cdf-dialogue #luvo-scene:after{inset:0;background:none;box-shadow:inset 0 0 40px #0003}
+ .cdf-dialogue .account-panel{min-height:0;min-width:0;max-height:100%;display:flex;flex-direction:column;overflow:auto;overscroll-behavior:contain;padding:9px 12px max(6px,env(safe-area-inset-bottom));border-radius:18px 18px 0 0;background:#081c25f5;box-shadow:0 -12px 40px #0004;backdrop-filter:none}
+ .cdf-dialogue .flowee-guide{flex:none;grid-template-columns:44px 1fr;gap:8px;margin:0 0 6px;padding:0 0 6px}.cdf-dialogue #cdf-account-flowee{height:40px}.cdf-dialogue .speaker{font-size:8px}.cdf-dialogue .flowee-guide p{font-size:11px;line-height:1.3;margin:2px 0}.cdf-dialogue #flowee-help{font-size:10px;min-height:28px;padding:2px 0}
+ .cdf-dialogue #identity-entry{min-height:0;display:flex;flex-direction:column;flex:1}
+ .cdf-dialogue .modes{flex:none;margin:0 0 6px;padding:3px}.cdf-dialogue .modes button{font-size:10px;padding:5px;min-height:36px}
+ .cdf-dialogue[data-dialog-mode=story] .modes{display:none}
+ .cdf-dialogue #story-section{min-height:0;display:flex;flex-direction:column;flex:1;overflow:hidden}
+ .cdf-dialogue #story-count{flex:none;font-size:8px;margin:0 0 4px;letter-spacing:.1em}.cdf-dialogue .story-constellation{display:none}
+ .cdf-dialogue .dialog-copy{min-height:0;overflow-y:auto;overscroll-behavior:contain;flex:1;touch-action:pan-y pinch-zoom;padding:0 2px 4px}
+ .cdf-dialogue h2{font-size:21px;line-height:1.15;margin:3px 0 7px}.cdf-dialogue #story-body{font-size:13px;line-height:1.4;margin:0 0 9px}
+ .cdf-dialogue .story-choices{gap:6px}.cdf-dialogue .story-choices button{min-height:44px;font-size:11px;line-height:1.25;padding:6px 8px}
+ .cdf-dialogue #story-note{font-size:9px;line-height:1.3;margin:6px 0}.cdf-dialogue [data-intro-beat=first_step] .story-choices button{min-height:48px}
+ .cdf-dialogue .step-actions{flex:none;margin:6px 0 0;gap:8px}.cdf-dialogue .step-actions button,.cdf-dialogue .step-actions a{font-size:12px;min-height:44px;padding:8px}
+ .cdf-dialogue #story-skip{flex:none;margin:0;min-height:30px;padding:4px;font-size:10px}
+ .cdf-dialogue .journey-options{margin-top:4px}.cdf-dialogue .journey-options>summary{min-height:30px;padding:4px 0;font-size:10px}
+ .cdf-dialogue .journey-progress{margin:0 0 7px}.cdf-dialogue .journey-progress button{padding:3px;min-height:36px}.cdf-dialogue .journey-progress small{font-size:8px}
+ .cdf-dialogue .hint{font-size:10px;margin:6px 0}.cdf-dialogue input:not([type=checkbox]):not([type=radio]){min-height:44px;padding:8px;font-size:16px}
+ .cdf-dialogue #register-section{min-height:0;overflow:auto;overscroll-behavior:contain}.cdf-dialogue #register-section .step-actions{position:sticky;bottom:0;background:#081c25;padding:5px 0}
+ .cdf-dialogue .destinations{margin:6px 0}.cdf-dialogue .destinations label{padding:5px}.cdf-dialogue .destinations small{font-size:9px}
+ .cdf-dialogue[data-dialog-mode=story] .account-panel{overflow:hidden}
+ .cdf-dialogue[data-scene-expanded=true] .journey-shell{grid-template-rows:minmax(100px,70%) minmax(0,1fr)}
+ .cdf-dialogue[data-scene-expanded=true] .flowee-guide,.cdf-dialogue[data-scene-expanded=true] .journey-options{display:none}
+ .cdf-dialogue[data-scene-expanded=true] .scene-peek{background:var(--mint);color:#12342a}
+}
+@media(max-height:500px) and (min-width:600px){
+ .cdf-dialogue .journey-shell,.cdf-dialogue[data-scene-expanded=true] .journey-shell{grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr)}
+ .cdf-dialogue .account-panel{border-radius:16px 0 0 0}.cdf-dialogue .flowee-guide{display:none}
+ .cdf-dialogue[data-scene-expanded=true] .journey-shell{grid-template-columns:minmax(0,3fr) minmax(0,1fr)}
+}
+
+/* Intro51: original manga dialogue, one answer scroller and fixed form actions. */
+.flowee-more>summary{display:none}
+.flowee-question{margin:4px 0!important}
+@media(max-width:700px),(max-height:500px){
+ .cdf-dialogue .account-panel{overflow:hidden;padding:10px 12px max(8px,env(safe-area-inset-bottom))}
+ .cdf-dialogue .flowee-guide{grid-template-columns:36px minmax(0,1fr);gap:10px;border:0;padding:0;margin:0 0 8px;align-items:start}
+ .cdf-dialogue #cdf-account-flowee{height:40px;margin-top:12px}
+ .cdf-dialogue .flowee-speech{position:relative;min-width:0;padding:8px 12px;background:#e0f3e9;color:#173b35;border:1px solid #b8d9c6;border-radius:18px 20px 18px 5px}
+ .cdf-dialogue .flowee-speech:before{content:"";position:absolute;left:-7px;top:19px;width:12px;height:12px;background:#e0f3e9;border-left:1px solid #b8d9c6;border-bottom:1px solid #b8d9c6;transform:rotate(45deg)}
+ .cdf-dialogue .flowee-speech .speaker{color:#315c50;font-size:9px;line-height:1.3;letter-spacing:.08em}
+ .cdf-dialogue .flowee-speech p{font-size:14px;line-height:1.45;color:#173b35}
+ .cdf-dialogue .flowee-speech .text-button{color:#244f43;font-size:12px}
+ .cdf-dialogue .flowee-more>summary{color:#244f43;font-size:11px;min-height:32px;padding:4px 0}
+ .cdf-dialogue[data-dialog-mode=register] .flowee-more>summary{display:block}
+ .cdf-dialogue[data-dialog-mode=register] .journey-shell{grid-template-rows:minmax(86px,24%) minmax(0,1fr)}
+ .cdf-dialogue[data-dialog-mode=register] .modes{display:none}
+ .cdf-dialogue[data-dialog-mode=register] #identity-entry{overflow:hidden}
+ .cdf-dialogue #register-section{display:flex;flex:1;flex-direction:column;min-height:0;overflow:hidden}
+ .cdf-dialogue .journey-progress{flex:none;margin:0 0 6px}
+ .cdf-dialogue .journey-progress button{min-height:44px}
+ .cdf-dialogue .journey-progress small{font-size:10px}
+ .cdf-dialogue #cdf-register-form{display:flex;flex:1;flex-direction:column;min-height:0;overflow:hidden}
+ .cdf-dialogue .answer-scroll{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y pinch-zoom;scrollbar-gutter:stable;padding:2px 4px 12px 1px;scroll-padding-block:8px}
+ .cdf-dialogue #register-section .step-actions{position:static;flex:none;margin:0;padding:8px 0 0;border-top:1px solid #55776c;background:#081c25}
+ .cdf-dialogue #register-section h2{font-size:20px;line-height:1.25;margin:4px 0 12px}
+ .cdf-dialogue .answer-scroll label{font-size:14px}
+ .cdf-dialogue .answer-scroll .hint{font-size:12px;line-height:1.5}
+ .cdf-dialogue .review-summary{font-size:14px;gap:6px 12px}
+ .cdf-dialogue .destinations{margin:12px 0}
+ .cdf-dialogue .destinations label{min-height:56px;padding:10px;align-items:flex-start}
+ .cdf-dialogue .destinations strong{font-size:15px}
+ .cdf-dialogue .destinations small{font-size:12px;line-height:1.4;margin-top:3px}
+ .cdf-dialogue .consent{font-size:13px;line-height:1.45;padding:6px 0}
+ .cdf-dialogue .dialog-copy #story-body{font-size:15px;line-height:1.5}
+ .cdf-dialogue .story-choices button{font-size:13px;line-height:1.35;min-height:48px}
+ .cdf-dialogue #story-note{font-size:11px;line-height:1.4}
+ .cdf-dialogue #auth-status:not(:empty){font-size:12px;line-height:1.4;padding:6px 0}
+ .cdf-dialogue[data-dialog-mode=login] #login-section,.cdf-dialogue[data-dialog-mode=welcome] #welcome-section{min-height:0;overflow-y:auto}
+ .cdf-dialogue[data-keyboard-open=true] .journey-shell{grid-template-rows:minmax(52px,12%) minmax(0,1fr)}
+ .cdf-dialogue[data-keyboard-open=true] .world-window h1,.cdf-dialogue[data-keyboard-open=true] .scene-controls{display:none}
+ .cdf-dialogue[data-keyboard-open=true] .flowee-guide{display:none}
+}
+@media(max-height:500px) and (min-width:600px){
+ .cdf-dialogue[data-dialog-mode=register] .journey-shell,.cdf-dialogue[data-keyboard-open=true] .journey-shell{grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr)}
+ .cdf-dialogue .flowee-guide{display:none}
+}
+
+/* Intro52: one full-viewport scene; dialogue and answers are overlays, never split views. */
+body.cdf-dialogue{height:var(--cdf-viewport-height,100dvh);min-height:0;overflow:hidden;display:flex;flex-direction:column}
+.cdf-dialogue header,.cdf-dialogue .luvo-scene-tools{position:relative;z-index:8;flex:none;background:linear-gradient(#06151acd,#06151a70);width:100%;max-width:none}
+.cdf-dialogue>div[role=note]{position:relative;z-index:9;flex:none}
+.cdf-dialogue .journey-shell,.cdf-dialogue[data-dialog-mode=register] .journey-shell,.cdf-dialogue[data-scene-expanded=true] .journey-shell,.cdf-dialogue[data-keyboard-open=true] .journey-shell{position:fixed;inset:0;width:100%;height:var(--cdf-viewport-height,100dvh);max-width:none;display:block;margin:0;padding:0;overflow:visible;pointer-events:none;z-index:2}
+.cdf-dialogue #luvo-scene{position:fixed;inset:0;left:0;top:0;width:100vw;height:var(--cdf-viewport-height,100dvh)}
+.cdf-dialogue #luvo-scene:after{inset:0;background:none;box-shadow:inset 0 0 60px #0003}
+.cdf-dialogue .world-window{position:absolute;inset:0;width:100%;height:100%;min-height:0;padding:0;pointer-events:auto}
+.cdf-dialogue .world-window>.eyebrow,.cdf-dialogue .world-window>p,.cdf-dialogue .world-trail{display:none}
+.cdf-dialogue .world-window h1{position:absolute;top:var(--cdf-intro-top,105px);left:12px;max-width:min(42vw,340px);font-size:16px;line-height:1.25;margin:0;padding:5px 8px;background:#06151a99;border:0;pointer-events:none}
+.cdf-dialogue .flowee-guide{position:absolute;left:12px;top:30vh;width:min(270px,70vw);display:grid;grid-template-columns:36px minmax(0,1fr);gap:9px;margin:0;padding:0;border:0;z-index:3;pointer-events:auto;align-items:start}
+.cdf-dialogue #cdf-account-flowee{height:40px;margin-top:14px}
+.cdf-dialogue .flowee-speech{position:relative;min-width:0;padding:8px 12px;background:#e0f3e9;color:#173b35;border:1px solid #b8d9c6;border-radius:18px 20px 18px 5px;max-height:var(--cdf-guide-max-height,160px);overflow-y:auto;overscroll-behavior:contain}
+.cdf-dialogue .flowee-speech:before{display:none}
+.cdf-dialogue .flowee-guide:before{content:"";position:absolute;left:37px;top:24px;width:12px;height:12px;background:#e0f3e9;border-left:1px solid #b8d9c6;border-bottom:1px solid #b8d9c6;transform:rotate(45deg);z-index:4}
+.cdf-dialogue .flowee-guide[data-tail=right]:before{left:auto;right:-6px;transform:rotate(225deg)}
+.cdf-dialogue[data-flowee-render=scene] #cdf-account-flowee{display:none}
+.cdf-dialogue[data-flowee-render=scene] .flowee-guide{grid-template-columns:minmax(0,1fr)}
+.cdf-dialogue[data-flowee-render=scene] .flowee-guide:before{left:-6px}
+.cdf-dialogue[data-flowee-render=scene] .flowee-guide[data-tail=right]:before{left:auto;right:-6px}
+.cdf-dialogue .flowee-speech .speaker{font-size:9px;color:#315c50;letter-spacing:.08em}
+.cdf-dialogue .flowee-speech p{font-size:14px;line-height:1.45;color:#173b35}
+.cdf-dialogue .flowee-speech .text-button,.cdf-dialogue .flowee-more>summary{color:#244f43}
+.cdf-dialogue .account-panel{position:absolute;left:auto;right:18px;bottom:max(10px,env(safe-area-inset-bottom));width:min(540px,calc(100% - 36px));height:auto;max-height:46%;min-height:0;display:flex;flex-direction:column;overflow:hidden;padding:8px 12px 10px;border-radius:20px;border-color:#b9d9c380;background:#081c25ed;box-shadow:0 10px 30px #0007;backdrop-filter:none;z-index:5;pointer-events:auto}
+.cdf-dialogue .scene-controls{position:static;flex:none;display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 6px;pointer-events:auto}
+.cdf-dialogue .scene-peek{min-height:36px;padding:4px 10px;font-size:11px}
+.cdf-dialogue .scene-swipe-tip{font-size:10px;background:none;padding:0}
+.cdf-dialogue #identity-entry{min-height:0;display:flex;flex-direction:column;flex:1;overflow:hidden}
+.cdf-dialogue #story-section{min-height:0;display:flex;flex-direction:column;flex:1;overflow:hidden}
+.cdf-dialogue .dialog-copy{min-height:0;flex:1;overflow-y:auto;overscroll-behavior:contain}
+.cdf-dialogue[data-scene-expanded=true] .account-panel>*:not(.scene-controls){display:none!important}
+.cdf-dialogue[data-scene-expanded=true] .account-panel{max-height:none}
+.cdf-dialogue[data-dialog-mode=story] .modes,.cdf-dialogue[data-dialog-mode=register] .modes{display:none}
+.cdf-dialogue[data-scene-expanded=true] .flowee-guide{display:grid}
+.cdf-dialogue[data-keyboard-open=true] .flowee-guide{display:none}
+@media(max-width:700px),(max-height:500px){
+ .cdf-dialogue .account-panel{left:10px;right:10px;width:calc(100% - 20px);max-height:44%;padding:6px 10px 8px}
+ .cdf-dialogue[data-dialog-mode=register] .account-panel{max-height:52%}
+ .cdf-dialogue .flowee-guide{width:min(250px,68vw)}
+ .cdf-dialogue .scene-peek{min-height:36px}
+ .cdf-dialogue[data-keyboard-open=true] .account-panel{max-height:76%}
+ .cdf-dialogue[data-scene-expanded=true] .account-panel{max-height:none}
+}
+@media(max-height:500px) and (min-width:600px){
+ .cdf-dialogue .account-panel{left:auto;right:10px;width:min(440px,52vw);max-height:65%}
+ .cdf-dialogue[data-dialog-mode=register] .account-panel{max-height:76%}
+ .cdf-dialogue .flowee-guide{display:grid;width:min(250px,40vw)}
+ .cdf-dialogue[data-keyboard-open=true] .flowee-guide{display:none}
+}
+
+.cdf-dialogue .flowee-hotspot{position:absolute;width:48px;height:48px;min-height:48px;padding:0;border:0;border-radius:50%;background:transparent;pointer-events:auto;z-index:4}
+.cdf-dialogue .flowee-hotspot:hover,.cdf-dialogue .flowee-hotspot:focus-visible{outline:2px solid #b4ebd7;outline-offset:3px;background:#b4ebd712}
+
+.cdf-dialogue[data-flowee-render=fallback] #cdf-account-flowee,.cdf-dialogue[data-flowee-render=fallback] .fairy-wing{animation:none}
+
+/* Intro53: top chrome has no auto margins; welcome stays in the scene. */
+.cdf-dialogue header,.cdf-dialogue .luvo-scene-tools{margin:0;align-self:stretch}
+.cdf-dialogue[data-dialog-interaction=false] .account-panel{display:none}
+.cdf-dialogue[data-dialog-interaction=false] .flowee-more,.cdf-dialogue[data-dialog-interaction=false] .flowee-question{display:none}
+.cdf-dialogue[data-dialog-mode=welcome] .world-window h1{font:clamp(28px,4vw,52px)/1.15 Georgia,serif;background:none;text-shadow:0 2px 16px #000;max-width:80vw}
+.cdf-dialogue .flowee-cinematic p{margin:7px 0 12px}
+.cdf-dialogue .flowee-cinematic-actions{display:flex;flex-direction:column;gap:7px}
+.cdf-dialogue .flowee-cinematic-actions button{min-height:44px;padding:8px 10px;font:13px/1.35 system-ui;border:1px solid #66877b;background:#173d35;color:#f2f8ed}
+.cdf-dialogue .flowee-cinematic-actions button.primary{background:#b7e9d4;color:#173b35}
+.cdf-dialogue[data-dialog-interaction=false] .flowee-guide{width:min(300px,72vw)}
+.cdf-dialogue .flowee-guide{animation:cdf-speech-enter .6s ease-out}
+@keyframes cdf-speech-enter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.cdf-dialogue .flowee-guide{animation:none}}
+
+/* Intro54: reserve the fairy's silhouette, reveal short speech after arrival. */
+.cdf-dialogue .flowee-guide{width:min(230px,64vw)}
+.cdf-dialogue[data-dialog-interaction=false] .flowee-guide{width:min(230px,64vw)}
+.cdf-dialogue .flowee-speech{padding:12px;max-height:min(var(--cdf-guide-max-height,240px),270px)}
+.cdf-dialogue .flowee-speech p{font-size:14px;line-height:1.45;margin:8px 0}
+.cdf-dialogue .flowee-speech .speaker{display:block;padding-right:24px}
+.cdf-dialogue .flowee-dismiss{position:absolute;top:0;right:0;width:44px;height:44px;min-height:44px;padding:0;border:0;background:transparent;color:#244f43;font:24px/1 system-ui}
+.cdf-dialogue .flowee-cinematic-actions{flex-direction:row;gap:6px}
+.cdf-dialogue .flowee-cinematic-actions button{flex:1;min-width:0;font-size:12px}
+.cdf-dialogue .flowee-hotspot{width:76px;height:76px;min-height:76px}
+.cdf-dialogue .flowee-guide[hidden]{display:none!important}
+.cdf-dialogue #luvo-scene:after{box-shadow:inset 0 0 42px #0002}
+
+.cdf-dialogue .flowee-guide{grid-template-columns:minmax(0,1fr)}
+.cdf-dialogue .flowee-hotspot #cdf-account-flowee{display:block;width:76px;height:57px;margin:0;pointer-events:none}
+.cdf-dialogue[data-flowee-render=scene] .flowee-hotspot #cdf-account-flowee{display:none}
+
+/* Intro63: choices and account input use the entire viewport, narration keeps the world. */
+.cdf-dialogue[data-dialog-interaction=true]:not([data-scene-expanded=true]) .account-panel{position:fixed;inset:0;z-index:30;width:100%;height:var(--cdf-viewport-height,100dvh);max-height:none!important;margin:0;border:0;border-radius:0;padding:max(18px,env(safe-area-inset-top)) max(18px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)) max(18px,env(safe-area-inset-left));display:flex;flex-direction:column;gap:10px;background:linear-gradient(150deg,#102b32f5,#06151df5);overflow:hidden;box-sizing:border-box}
+.cdf-dialogue[data-dialog-interaction=true]:not([data-scene-expanded=true]) .account-panel>*{width:min(100%,760px);align-self:center;min-width:0}
+.cdf-dialogue[data-dialog-interaction=true]:not([data-scene-expanded=true]) .flowee-guide,.cdf-dialogue[data-dialog-interaction=true]:not([data-scene-expanded=true]) .flowee-hotspot{display:none!important}
+.cdf-dialogue[data-dialog-interaction=true]:not([data-scene-expanded=true]) #story-section{display:flex;flex:1;flex-direction:column;min-height:0;overflow:hidden}
+.cdf-dialogue[data-dialog-interaction=true]:not([data-scene-expanded=true]) .dialog-copy{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:8px 2px 16px}
+.cdf-dialogue[data-dialog-interaction=true]:not([data-scene-expanded=true]) h2{font-size:clamp(26px,4vw,38px);line-height:1.2;margin:12px 0 18px}
+.cdf-dialogue[data-dialog-interaction=true]:not([data-scene-expanded=true]) #story-body{font-size:17px;line-height:1.55;margin-bottom:20px}
+.cdf-dialogue[data-dialog-interaction=true]:not([data-scene-expanded=true]) .story-choices button{font-size:16px;min-height:64px;padding:14px;line-height:1.35}
+.cdf-dialogue[data-dialog-interaction=true]:not([data-scene-expanded=true]) .step-actions{flex:none;margin-top:12px}
+.cdf-dialogue[data-dialog-interaction=true]:not([data-scene-expanded=true]) .step-actions button,.cdf-dialogue[data-dialog-interaction=true]:not([data-scene-expanded=true]) .step-actions a{font-size:16px;min-height:48px}
+.cdf-dialogue[data-dialog-interaction=true]:not([data-scene-expanded=true]) #register-section{flex:1;min-height:0;overflow-y:auto}
+.cdf-dialogue[data-dialog-interaction=true]:not([data-scene-expanded=true]) #story-note{font-size:12px;line-height:1.5}
+.cdf-dialogue[data-dialog-interaction=true]:not([data-scene-expanded=true]) .scene-swipe-tip{display:none}
+.cdf-dialogue[data-dialog-interaction=true]:not([data-scene-expanded=true]) .scene-controls{justify-content:flex-end;flex:none}
+
+
+.cdf-dialogue[data-dialog-interaction=true]:not([data-scene-expanded=true]) header,.cdf-dialogue[data-dialog-interaction=true]:not([data-scene-expanded=true]) .luvo-scene-tools{visibility:hidden}
+.cdf-dialogue[data-dialog-interaction=true]:not([data-scene-expanded=true]) .account-panel{padding-top:calc(var(--cdf-input-banner-height,0px) + 14px)}
+.cdf-dialogue[data-dialog-interaction=true]:not([data-scene-expanded=true]) .scene-controls{position:static;inset:auto;min-height:44px;margin:0;padding:0}
+
+.cdf-dialogue[data-dialog-interaction=true]:not([data-scene-expanded=true]) .story-constellation{display:none}
+.cdf-dialogue[data-dialog-interaction=true]:not([data-scene-expanded=true]) .world-window h1{visibility:hidden}

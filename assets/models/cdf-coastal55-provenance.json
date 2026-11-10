@@ -1,0 +1,13 @@
+{
+  "name": "Original CDF Coastal55 mint-v2",
+  "source": "scripts/blender/create-cdf-coastal55.py",
+  "sha256": "7e65f4fdd283e493eab4f77a18580e6b7ec4955e6857109c010f935c172c482f",
+  "bytes": 591176,
+  "triangles": 20470,
+  "meshes": 2,
+  "primitives": 19,
+  "materials": 16,
+  "externalAssets": [],
+  "animated": false,
+  "note": "Existing original Model55 export integrated in Coastal67; studio lighting is not exported."
+}
