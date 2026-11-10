@@ -868,7 +868,25 @@
       "acceptance": "Freiwillige Eingaben, nachvollziehbare Raumvorschläge, HTTPS-Shoplink, centgenaue Credits-Anzeige, keine versteckte Anlage/Übertragung/Publikation; bestehende/generativ geplante Fähigkeiten ehrlich trennen",
       "state": "Rundgang lokal und Draft-Produktbranch,9Tests bestanden; begrenzte Tastatur-Browserfälle, Maus/Sicht-/Zielgrößen nicht vollständig abgenommen; Onlinezugang offen, portable Offline-Datei vorhanden",
       "evidence": "Docs/community-pilot/flow81-room-pilot-20261110.md; Docs/community-pilot/flow81-offline-preview.html",
-      "next": "Aktuelle vollständige Online-/Kernbasis herstellen; dann eine echte private Angebotskarte mit eigenem Dashboard, anschließend vorgeschlagenes kostenloses Uploadbudget serverseitig freigeben/prüfen und freigegebenen Cinema-Pfad testen"
+      "next": "Economy82 aktualisiert Entwurf auf74Credits/Euro;25Tutorial-XPnochVorschlag. Vollständige Kern-/Onlinebasis und versionsgebundene Preis-/Reward-Umstellung vor privater Angebots-/Uploadaktivierung."
+    },
+    {
+      "id": "CDF-ECONOMY82",
+      "project": "CDF / Credits, einmalige Tutorial-XP und Kapazität",
+      "goal": "74er-Entwurfsregel präzise vorbereiten, Tutorial-XP ohne Doppelvergaben und Uploadwachstum budgetiert planen",
+      "owner": "Codex; Währungs-/Budget-/Reward-/Aktivierungsentscheidung Hope",
+      "tool": "Vorhandener Rundgang, ganzzahlige Untereinheiten, Quellenabgleich, Tests",
+      "baseline": "fbbb5e3b8c3c298c615dd662dd0cf95ab2d71ecf",
+      "dependencies": [
+        "CDF-R01",
+        "CDF-P01",
+        "CDF-FLOW81"
+      ],
+      "timebox": "Begrenzte Preisentwurfs-/Rewardplanung",
+      "acceptance": "1€74Credits, Centgrenzen exakt, keine Altguthaben-Umbewertung; einmaliges serverautoritatives Tutorialkonzept ohne Daten-/Kaufpflicht; globale Kapazität begrenzt",
+      "state": "74er-Entwurf/Offline aktualisiert,10Tests und begrenzte Tastatur-Browserprüfung bestanden;25XPvorgeschlagen, nicht vergeben; Produktion unverändert",
+      "evidence": "Docs/community-pilot/economy82-20261110.md; economy82-policy-20261110.json",
+      "next": "Legacy-Preis-/Wallet-/Rewardpfade vollständig inventarisieren; Präzision/Versionierung und einmaligen Tutorialabschluss im autorisierten Testkontext umsetzen; keine Live-Migration aus Planung"
     }
   ]
 }

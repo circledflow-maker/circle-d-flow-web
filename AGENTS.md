@@ -116,3 +116,8 @@ Slack-Brücke nur lesend vorbereiten; kein automatischer Versand, Listener, Dien
 ## Mobile Prüfung · CEO-Auftrag 2026-11-06
 
 Bei relevanten UI-/Navigations-/Dialog-/Auth-Einstiegs-/3D-Bedienänderungen und vor Releases eine mobile Stichprobe ergänzen:360×640 und390×844, gegebenenfalls844×390, dazu Desktop1280×800. Hauptaktion, Lesbarkeit, Überlagerungen, Scroll/Fokus und Rückweg prüfen. Emulierte Viewports und tatsächliche Smartphones getrennt dokumentieren; kein unbeaufsichtigter Dienst oder neue Automation daraus ableiten. Details: Docs/community-pilot/guest-mobile-20261106.md.
+
+
+## Economy82 · CEO-Preisvorgabe und sichere Übergangsgrenze · 2026-11-10
+Hopes aktuelle Vorgabe für neue Preisentwürfe ist1€=74FLOWCredits. Diese neuere Vorgabe ersetzt die ältere100er-Entwurfsregel; vorhandene produktive Wallets, Angebote, Bestellungen, Zahlungs-/Rückerstattungsbelege bleiben bis zum ausdrücklich freigegebenen versionsgebundenen Übergang unverändert. Keine pauschalen100→74-Ersetzungen. Centgenau arbeiten; vorgeschlagene Hundertstel-Credit-Unterteilung nicht ungeprüft in alte INTEGER-price_credits/flow_credits schreiben. Detail Economy82.
+Tutorial:einmalige serverbestätigte Abschlussbelohnung gewünscht;25XPist ein Vorschlag, noch keine aktive Gutschrift. Bestehende historische lokale Tutorialboni zuerst abgleichen, keine Doppelbelohnungen. Ein gemeinsamer stabiler Rewardkey pro bestätigter Identität, atomare Vergabe, Wiederholung/optional ausgelassene persönliche Angaben ohne Strafe. Keine clientseitigen XP-/Rollen-/Guthabenänderungen aus dem Vorschlag.
