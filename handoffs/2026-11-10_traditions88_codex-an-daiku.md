@@ -26,3 +26,7 @@ Nur neue Ergebnisdatei Docs/community-pilot/traditions88-daiku-sources.md und R�
 Bestehende Inbox/Outbox-Verträge nicht als diesen Auftrag ausgeben und keine laufende Aufgabe ersetzen. Erst vorhandenen Aufgabenstatus melden.
 Kein Slack-/Social-Versand, keine Konten, bezahlten APIs, Downloads von Assets, neuen Dienste oder automatisierte Übernahme. Keine Produkt-, Schema-, Nutzer-, Rechte-, XP-/FLOW-Änderung.
 Abnahme: Quellen nachprüfbar, Varianten und Zugriffsgrenzen sichtbar, keine kopierten geschützten Assets, genau ein nächster Schritt. Nach Lieferung stoppen.
+
+## Verbindliche Zugriffskorrektur Story90
+Daiku hat keinen E:-Zugriff. Für die Bearbeitung gilt der vollständige GitHub-first-Auftrag handoffs/2026-11-10_story90_codex-an-daiku-github.md in PR17. E: ist keine Voraussetzung. Dort stehen auch der neue Erzählkern und die Chat-/Drive-Rückgabealternative.
+

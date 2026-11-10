@@ -21,3 +21,7 @@ Prüfe ausdrücklich:
 ## Dateigrenzen und Stopp
 Nur neue Docs/community-pilot/traditions88-cursor-integration-review.md plus handoffs/2026-11-10_traditions88_cursor-an-codex.md. Keine js/css/pages/data/SQL-Änderungen und keine fremden Arbeitsdateien überschreiben. Bestehende Inbox-Aufgabe zuerst melden; altes Outbox-Format nicht für diesen Auftrag umetikettieren.
 Rückgabe: tatsächlicher Quellbefund, vorgeschlagener kleinster Folgeschritt und getrennte NOT_RUN-Prüfungen. Kein Push auf Produktbranch, Merge, Deployment, neue Dienste oder bezahlte Aufrufe. Nach dem Review stoppen.
+
+## CEO-Ergänzung: freie Erkundung
+Docs/community-pilot/explore89-free-discovery-20261110.md mitprüfen: Nähe-Hinweise freiwillig, beide Abschlussarten EXP-berechtigt, ein Ziel nur einmal, verschiedene Ziele separat. Zunächst lesende Prüfung der vorhandenen Nähe-/Quest-/Reward-Schnittstellen; kein Client-XP oder neuer Produktcode in diesem Review.
+
