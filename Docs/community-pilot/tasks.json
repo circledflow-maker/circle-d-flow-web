@@ -833,6 +833,24 @@
       "state": "Im Draft-Produktbranch ergänzt;23E-Quelltests und lokaler SDK-Initialisierungstest bestanden;8direkte Sanctuary-Ressourcen fehlen weiterhin",
       "evidence": "Docs/community-pilot/core79-20261110.md; Docs/community-pilot/core79-resources-20261110.json",
       "next": "8verbleibende direkte Sanctuary-Module semantisch/Quelle/Rechte prüfen, danach transitive Abhängigkeiten und tatsächlichen vollständigen Kernweg abnehmen"
+    },
+    {
+      "id": "CDF-MEMBER80",
+      "project": "CDF / Memberprofil und eigene Welt",
+      "goal": "Vielseitige Interessen, aktuelle Projekte, Angebote und Kooperationswünsche in einem selbstbestimmten Profil verbinden",
+      "owner": "Codex; kreative Priorität Hope; spätere Fachbesetzung noch nicht zugeordnet",
+      "tool": "Anforderungsabgleich, vorhandenes Profile71 und bestehende Bereichsquellen",
+      "baseline": "e339a0228d2b22213c6f481aa8fe9804cdb518d5",
+      "dependencies": [
+        "CDF-R01",
+        "CDF-P01",
+        "CDF-PROFILE71"
+      ],
+      "timebox": "Zunächst begrenzte Anforderungsphase; spätere Umsetzung nach Kernweg",
+      "acceptance": "Eine Identität, mehrere Schwerpunkte ohne Rechtevergabe, ein aktuelles Vorhaben und freiwilliger Kontaktweg, Feldsichtbarkeit und private/public Trennung",
+      "state": "Entwicklungsrichtung anonymisiert dokumentiert; persönliche Beispiele privat; keine neuen Profile/Konten/Funktionen aktiviert",
+      "evidence": "Docs/community-pilot/member80-profile-direction-20261110.md",
+      "next": "Kernweg/Releasebasis zuerst; anschließend genau eine freiwillige Projekt-/Kooperationskarte pro Testprofil planen und prüfen"
     }
   ]
 }
