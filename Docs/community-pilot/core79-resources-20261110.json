@@ -1,0 +1,434 @@
+{
+  "date": "2026-11-10",
+  "project": "CDF",
+  "owner": "Codex",
+  "baseline": "1223aca3aa360a5278078a1077cf7d88b5daa0cc",
+  "scope": "Static direct local JS/CSS/font/model/image references in three existing PR18 HTML roots; no transitive/API/runtime/live acceptance",
+  "roots": [
+    "pages/login.html",
+    "pages/member_card.html",
+    "pages/artist_sanctuary.html"
+  ],
+  "reference_occurrences": 64,
+  "missing_unique_before": 11,
+  "missing_unique_after": 8,
+  "resources": [
+    {
+      "page": "pages/login.html",
+      "path": "css/cdf_login.css",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/login.html",
+      "path": "js/vendor/supabase-2.108.2.js",
+      "exists": false,
+      "after_exists": true
+    },
+    {
+      "page": "pages/login.html",
+      "path": "js/cdf_runtime_config.js",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/login.html",
+      "path": "js/agents/supabase_client.js",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/login.html",
+      "path": "js/cdf_identity.js",
+      "exists": false,
+      "after_exists": true
+    },
+    {
+      "page": "pages/login.html",
+      "path": "js/flowee_fairy.js",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/login.html",
+      "path": "js/cdf_account_motion.js",
+      "exists": false,
+      "after_exists": true
+    },
+    {
+      "page": "pages/login.html",
+      "path": "js/cdf_intro_story.js",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/login.html",
+      "path": "css/cdf_intro_story.css",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/login.html",
+      "path": "js/cdf_account_journey.js",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/login.html",
+      "path": "js/auth-handler.js",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/login.html",
+      "path": "js/cdf_login.js",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/login.html",
+      "path": "js/cdf_account_story.js",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/login.html",
+      "path": "js/world_registry.js",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/login.html",
+      "path": "js/luvo_universe.js",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/login.html",
+      "path": "css/luvo_scene.css",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/login.html",
+      "path": "js/cdf_traveller_asset.js",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/login.html",
+      "path": "js/luvo_scene.js",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/login.html",
+      "path": "css/cdf_scene_dialogue.css",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/login.html",
+      "path": "js/cdf_scene_dialogue.js",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/login.html",
+      "path": "css/cdf_typography66.css",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/member_card.html",
+      "path": "css/member_card.css",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/member_card.html",
+      "path": "js/cdf_runtime_config.js",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/member_card.html",
+      "path": "js/agents/supabase_client.js",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/member_card.html",
+      "path": "js/data/cdf_i18n.js",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/member_card.html",
+      "path": "js/agents/flowee.js",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/member_card.html",
+      "path": "js/agents/flowee_member_card_guide.js",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/member_card.html",
+      "path": "js/member_card.js",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/member_card.html",
+      "path": "css/cdf_orientation_profile71.css",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/member_card.html",
+      "path": "js/cdf_orientation_profile71.js",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/member_card.html",
+      "path": "js/cdf_soul_pass72.js",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/member_card.html",
+      "path": "js/flow_orbit.js",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/artist_sanctuary.html",
+      "path": "css/sanctuary_courtyard.css",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/artist_sanctuary.html",
+      "path": "js/cdf_runtime_config.js",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/artist_sanctuary.html",
+      "path": "js/vendor/supabase-2.108.2.js",
+      "exists": false,
+      "after_exists": true
+    },
+    {
+      "page": "pages/artist_sanctuary.html",
+      "path": "js/agents/supabase_client.js",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/artist_sanctuary.html",
+      "path": "css/room_transition.css",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/artist_sanctuary.html",
+      "path": "js/room_transition.js",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/artist_sanctuary.html",
+      "path": "js/sanctuary_layout.js",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/artist_sanctuary.html",
+      "path": "js/sanctuary_movement.js",
+      "exists": false,
+      "after_exists": false
+    },
+    {
+      "page": "pages/artist_sanctuary.html",
+      "path": "js/ewe_cultural_library.js",
+      "exists": false,
+      "after_exists": false
+    },
+    {
+      "page": "pages/artist_sanctuary.html",
+      "path": "js/flowee_fairy.js",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/artist_sanctuary.html",
+      "path": "css/cdf_scene_dialogue.css",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/artist_sanctuary.html",
+      "path": "js/sanctuary_characters.js",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/artist_sanctuary.html",
+      "path": "js/sanctuary_environment.js",
+      "exists": false,
+      "after_exists": false
+    },
+    {
+      "page": "pages/artist_sanctuary.html",
+      "path": "js/data/lisbon_regions.js",
+      "exists": false,
+      "after_exists": false
+    },
+    {
+      "page": "pages/artist_sanctuary.html",
+      "path": "js/lisbon_geography.js",
+      "exists": false,
+      "after_exists": false
+    },
+    {
+      "page": "pages/artist_sanctuary.html",
+      "path": "js/lisbon_context.js",
+      "exists": false,
+      "after_exists": false
+    },
+    {
+      "page": "pages/artist_sanctuary.html",
+      "path": "css/cdf_intro_story.css",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/artist_sanctuary.html",
+      "path": "js/sanctuary_arrival.js",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/artist_sanctuary.html",
+      "path": "js/cdf_traveller_asset.js",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/artist_sanctuary.html",
+      "path": "js/sanctuary_scene.js",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/artist_sanctuary.html",
+      "path": "js/sanctuary_shell.js",
+      "exists": false,
+      "after_exists": false
+    },
+    {
+      "page": "pages/artist_sanctuary.html",
+      "path": "js/sanctuary_next_step.js",
+      "exists": false,
+      "after_exists": false
+    },
+    {
+      "page": "pages/artist_sanctuary.html",
+      "path": "js/sanctuary_collection.js",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/artist_sanctuary.html",
+      "path": "js/sanctuary_culture.js",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/artist_sanctuary.html",
+      "path": "css/sanctuary_mobile20.css",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/artist_sanctuary.html",
+      "path": "css/flowee_room_tutorial.css",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/artist_sanctuary.html",
+      "path": "js/flowee_room_tutorial.js",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/artist_sanctuary.html",
+      "path": "css/cdf_typography66.css",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/artist_sanctuary.html",
+      "path": "css/sanctuary_orientation70.css",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/artist_sanctuary.html",
+      "path": "js/sanctuary_orientation70.js",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/artist_sanctuary.html",
+      "path": "css/cdf_orientation_profile71.css",
+      "exists": true,
+      "after_exists": true
+    },
+    {
+      "page": "pages/artist_sanctuary.html",
+      "path": "js/cdf_orientation_profile71.js",
+      "exists": true,
+      "after_exists": true
+    }
+  ],
+  "restored": [
+    {
+      "path": "js/cdf_identity.js",
+      "git_blob": "3b5547a7e4aa425e84812d2d41263dddea80622a",
+      "variant": "exact active E source, normalized line endings"
+    },
+    {
+      "path": "js/cdf_account_motion.js",
+      "git_blob": "1946738928d379b5de9783354c25fa86cb9c503e",
+      "variant": "exact active E source, normalized line endings"
+    },
+    {
+      "path": "js/vendor/supabase-2.108.2.js",
+      "git_blob": "76e610f35fa05ec76fbc1f9cf36b86e9f592518b",
+      "variant": "exact active E source, normalized line endings"
+    },
+    {
+      "path": "js/vendor/supabase-2.108.2.LICENSE",
+      "git_blob": "ddeba6a00ae5ec536d5429e040bc73ef2c6a07d6",
+      "variant": "exact installed MIT license"
+    }
+  ],
+  "vendor": {
+    "version": "2.108.2",
+    "sha256_raw": "c123f7e874934778b7d89fee7dce8de26c858a2c3a92fd7a3f870394a6a2f91f",
+    "byte_identical_installed_umd": true,
+    "new_provider": false
+  },
+  "production_ready": false,
+  "live_test": "NOT_RUN",
+  "external_agents": {
+    "Antigravity": "Soulpass/Tagebuch laut Hope in Bearbeitung; current sources not changed by Codex"
+  }
+}
