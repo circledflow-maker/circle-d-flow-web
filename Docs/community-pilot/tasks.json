@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-11-09",
+  "updated": "2026-11-10",
   "coordinator": "Codex (Ebene 2)",
   "decision_owner": "Hope",
   "first_community_task": "CDF-P01",
@@ -39,7 +39,7 @@
       "acceptance": "Soll/Ist und Beleg je Einstiegsschritt; Emulator/physisch getrennt; keine Kontomutation",
       "state": "Browser-Gastweg390x844 bis Hof gesehen;360x640/1280x800 Stichproben, physische und vollständige Abnahme offen",
       "evidence": "Docs/community-pilot/entry69-20261109.md; vorherige Gastweg-Belege in Entry68",
-      "next": "Vollständige Karten-/Orbit-/API-Releasebasis abgleichen; danach echte freigegebene Profil-/Karten-/Einmalbelohnungsabnahme"
+      "next": "Core79:8fehlende direkte Sanctuary-Ressourcen prüfen; vollständigen Profil-/Karten-/API-Kandidaten abgleichen, dann freigegebene authentifizierte Kernwegabnahme"
     },
     {
       "id": "CDF-R01",
@@ -47,15 +47,15 @@
       "goal": "Vollständige reproduzierbare Produktbasis abgleichen",
       "owner": "Codex",
       "tool": "GitHub-Diff, lokale Hashprüfung",
-      "baseline": "PR16/17/18 auseinanderliegend; E stark verändert",
+      "baseline": "c3f38ae4956607240ed1e3e50d1a9d90bca35ef5",
       "dependencies": [
         "CDF-F00"
       ],
       "timebox": "begrenzte Inventur je öffentlichem Modul",
       "acceptance": "Quellenmanifest und semantische Konflikte statt pauschalem Upload; keine fremden Änderungen überschreiben",
-      "state": "Intake61:3 fehlende Basis-Stylesheets in PR18 ergänzt;11 der14 direkten Ressourcen noch offen, Auth-Differenzen/transitive Prüfung offen",
-      "evidence": "Docs/community-pilot/intake61-20261108.md",
-      "next": "Fehlende14 direkten Ressourcen einzeln prüfen/ergänzen; Auth-Unterschiede semantisch klären und bewusst abweichenden Assetpfad erhalten; danach transitive Abhängigkeiten und echte Tests"
+      "state": "Core79:3fehlende Einstiegsmodule plus MIT-Lizenz ergänzt;8direkte Sanctuary-Ressourcen und transitive/Auth-Abgleich weiterhin offen",
+      "evidence": "Docs/community-pilot/core79-20261110.md; Docs/community-pilot/core79-resources-20261110.json",
+      "next": "8verbleibende direkte Sanctuary-Module semantisch/Quelle/Rechte prüfen, danach transitive Abhängigkeiten und tatsächlichen vollständigen Kernweg abnehmen"
     },
     {
       "id": "FLOWEE-V01",
@@ -816,6 +816,23 @@
       "state": "Lokal und Draft-Produkt-PR vorbereitet;46 sonstige Tests sowie ein isolierter PostgreSQL-Test bestanden; gehostete Speicherung nicht aktiviert",
       "evidence": "Docs/community-pilot/journal78-20261109.md; sql/pass78-private-journal.sql",
       "next": "Vollständigen Profil-/Karten-/Tagebuch-Kandidaten prüfen; SQL über Migrationsablauf übernehmen, echte Auth/Advisors/Mehrgeräteabnahme und konkrete Aktivierungsfreigabe getrennt"
+    },
+    {
+      "id": "CDF-CORE79",
+      "project": "CDF / reproduzierbarer Community-Kernweg",
+      "goal": "Fehlende Auth-/Einstiegsressourcen aus aktiver Quelle einzeln wiederherstellen",
+      "owner": "Codex",
+      "tool": "GitHub-Dateibaum, lokale Paket-/Hashprüfung, vorhandene Node-Tests",
+      "baseline": "c3f38ae4956607240ed1e3e50d1a9d90bca35ef5",
+      "dependencies": [
+        "CDF-R01",
+        "CDF-P01"
+      ],
+      "timebox": "Begrenzter erster Modulabgleich",
+      "acceptance": "Drei vorher fehlende Einstiegsmodule samt Lizenz eindeutig belegt; vorhandene Remote-Dateien/Antigravity-Bereich unverändert; Restlücken offen benannt",
+      "state": "Im Draft-Produktbranch ergänzt;23E-Quelltests und lokaler SDK-Initialisierungstest bestanden;8direkte Sanctuary-Ressourcen fehlen weiterhin",
+      "evidence": "Docs/community-pilot/core79-20261110.md; Docs/community-pilot/core79-resources-20261110.json",
+      "next": "8verbleibende direkte Sanctuary-Module semantisch/Quelle/Rechte prüfen, danach transitive Abhängigkeiten und tatsächlichen vollständigen Kernweg abnehmen"
     }
   ]
 }
