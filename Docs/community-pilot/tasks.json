@@ -851,6 +851,24 @@
       "state": "Entwicklungsrichtung anonymisiert dokumentiert; persönliche Beispiele privat; keine neuen Profile/Konten/Funktionen aktiviert",
       "evidence": "Docs/community-pilot/member80-profile-direction-20261110.md",
       "next": "Kernweg/Releasebasis zuerst; anschließend genau eine freiwillige Projekt-/Kooperationskarte pro Testprofil planen und prüfen"
+    },
+    {
+      "id": "CDF-FLOW81",
+      "project": "CDF / Flowee-Raumrundgang und Angebots-/Medienpilot",
+      "goal": "Interessenbezogen wiederholbar zu passenden Angebots-, Musik-, Medien-, Sport- und Unterstützungsentwürfen führen",
+      "owner": "Codex; Budget/Veröffentlichung Hope; spätere Bereichsbesetzung noch nicht zugeordnet",
+      "tool": "Vorhandene Orientierung, Vanilla-Rundgang, lokale Größen-/Preisprüfung, portable HTML-Testdatei",
+      "baseline": "f5977386f9af7f87fbd54ef57287bd12635d9764",
+      "dependencies": [
+        "CDF-R01",
+        "CDF-P01",
+        "CDF-MEMBER80"
+      ],
+      "timebox": "Erste begrenzte Rundgangs-/Budgetphase; weitere Aktivierung getrennt",
+      "acceptance": "Freiwillige Eingaben, nachvollziehbare Raumvorschläge, HTTPS-Shoplink, centgenaue Credits-Anzeige, keine versteckte Anlage/Übertragung/Publikation; bestehende/generativ geplante Fähigkeiten ehrlich trennen",
+      "state": "Rundgang lokal und Draft-Produktbranch,9Tests bestanden; begrenzte Tastatur-Browserfälle, Maus/Sicht-/Zielgrößen nicht vollständig abgenommen; Onlinezugang offen, portable Offline-Datei vorhanden",
+      "evidence": "Docs/community-pilot/flow81-room-pilot-20261110.md; Docs/community-pilot/flow81-offline-preview.html",
+      "next": "Aktuelle vollständige Online-/Kernbasis herstellen; dann eine echte private Angebotskarte mit eigenem Dashboard, anschließend vorgeschlagenes kostenloses Uploadbudget serverseitig freigeben/prüfen und freigegebenen Cinema-Pfad testen"
     }
   ]
 }
