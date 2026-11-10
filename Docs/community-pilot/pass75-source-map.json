@@ -1,0 +1,38 @@
+{
+  "date": "2026-11-09",
+  "base_commit": "0d2d4758cfb134e9ea6e9ae89e1b6cbd79821984",
+  "active_source": "E:/circle-d-flow-web",
+  "full_release_candidate": false,
+  "files": [
+    {
+      "path": "js/cdf_soul_pass74.js",
+      "source": "Selected E source / phase report"
+    },
+    {
+      "path": "css/cdf_soul_pass74.css",
+      "source": "Selected E source / phase report"
+    },
+    {
+      "path": "tests/soul-pass74.test.cjs",
+      "source": "Selected E source / phase report"
+    },
+    {
+      "path": "js/cdf_soul_pass72.js",
+      "source": "Selected E source / phase report"
+    },
+    {
+      "path": "js/agents/soul_pass.js",
+      "source": "Selected E source / phase report"
+    },
+    {
+      "path": "pages/member_card.html",
+      "source": "Existing PR18 HTML; only pass script version changed"
+    },
+    {
+      "path": "Docs/community-pilot/pass75-20261109.md",
+      "source": "Selected E source / phase report"
+    }
+  ],
+  "gesture": "dedicated vertical rail: down next, up previous; normal page scrolling preserved",
+  "physical_touch_verified": false
+}

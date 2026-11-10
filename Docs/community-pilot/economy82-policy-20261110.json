@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "status": "design-prepared-not-live",
+  "credits": {
+    "perEuro": 74,
+    "rateVersion": "cdf-74-v1",
+    "minorUnitsPerCredit": 100,
+    "storage": "integer minor units proposed; current legacy integer balances unchanged",
+    "legacyPerEuro": 100,
+    "migrationRequired": true
+  },
+  "tutorialXP": {
+    "status": "proposal-not-active",
+    "rewardKey": "flowee-core-tutorial-v1",
+    "amount": 25,
+    "oncePerVerifiedMember": true,
+    "repeatableTutorial": true,
+    "optionalPersonalDataRequired": false,
+    "uploadOrPurchaseRequired": false,
+    "serverReceiptRequired": true,
+    "existingTutorialRewardsMustBeReconciled": true
+  },
+  "capacity": {
+    "quotaBytesPerActiveUploader": 50000000,
+    "unlimitedAutomaticAllocation": false,
+    "pilotMaxActiveUploaders": 8,
+    "pilotPoolBytes": 400000000,
+    "hostedCapacityVerified": false
+  }
+}

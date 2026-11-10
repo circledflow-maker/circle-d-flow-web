@@ -1,0 +1,7 @@
+--- a/js/cdf_login.js
++++ b/js/cdf_login.js
+@@ -8,3 +8,3 @@
+ const $=id=>document.getElementById(id),query=new URLSearchParams(location.search),select=$('identity-language');
+-let stored='';try{stored=localStorage.getItem('cqr_lang')||'';}catch{}
++let stored='';try{stored=[localStorage.getItem('cdf_lang'),localStorage.getItem('cqr_lang')].find(value=>Object.hasOwn(copy,value))||'';}catch{}
+ select.value=copy[query.get('lang')||stored]?query.get('lang')||stored:'en';

@@ -1,0 +1,892 @@
+{
+  "version": 1,
+  "updated": "2026-11-10",
+  "coordinator": "Codex (Ebene 2)",
+  "decision_owner": "Hope",
+  "first_community_task": "CDF-P01",
+  "rules": {
+    "canonical": "GitHub sanitized tasks; private operational records in ignored Team/",
+    "single_writer": true,
+    "role_reference": "Circle D Flow Teamorganisation Version 1.0 (21 roles)",
+    "new_roles_confirmed": false
+  },
+  "tasks": [
+    {
+      "id": "CDF-F00",
+      "project": "CDF / Koordination",
+      "goal": "Gemeinsame Pilot-Arbeitsgrundlage erstellen",
+      "owner": "Codex",
+      "tool": "Dateiprüfung, GitHub, vorhandene Node-Tests",
+      "baseline": "PR17 8fa2720 + E Status 2026-11-06",
+      "dependencies": [],
+      "timebox": "diese begrenzte Arbeitsphase",
+      "acceptance": "Sechs Ergebnisbereiche dokumentiert; lokale und Remote-Dateien geprüft",
+      "state": "erstellt und strukturell geprüft",
+      "evidence": "Docs/community-pilot/README.md",
+      "next": "CDF-P01"
+    },
+    {
+      "id": "CDF-P01",
+      "project": "CDF / Community-App",
+      "goal": "Gastorientierung auf Desktop und Smartphone abnehmen",
+      "owner": "Codex",
+      "tool": "Browser und tatsächliches Smartphone; nur GET/UI ohne Absenden",
+      "baseline": "Entry69 / PR18 0416fae9064670d5ddec06ad87efcfe629c3cb94; klare Begrüßung und bewusst einklappbare Sanctuary-Information",
+      "dependencies": [
+        "CDF-F00"
+      ],
+      "timebox": "ein Gast-Abnahmedurchlauf",
+      "acceptance": "Soll/Ist und Beleg je Einstiegsschritt; Emulator/physisch getrennt; keine Kontomutation",
+      "state": "Browser-Gastweg390x844 bis Hof gesehen;360x640/1280x800 Stichproben, physische und vollständige Abnahme offen",
+      "evidence": "Docs/community-pilot/entry69-20261109.md; vorherige Gastweg-Belege in Entry68",
+      "next": "Core79:8fehlende direkte Sanctuary-Ressourcen prüfen; vollständigen Profil-/Karten-/API-Kandidaten abgleichen, dann freigegebene authentifizierte Kernwegabnahme"
+    },
+    {
+      "id": "CDF-R01",
+      "project": "CDF / Releasebasis",
+      "goal": "Vollständige reproduzierbare Produktbasis abgleichen",
+      "owner": "Codex",
+      "tool": "GitHub-Diff, lokale Hashprüfung",
+      "baseline": "c3f38ae4956607240ed1e3e50d1a9d90bca35ef5",
+      "dependencies": [
+        "CDF-F00"
+      ],
+      "timebox": "begrenzte Inventur je öffentlichem Modul",
+      "acceptance": "Quellenmanifest und semantische Konflikte statt pauschalem Upload; keine fremden Änderungen überschreiben",
+      "state": "Core79:3fehlende Einstiegsmodule plus MIT-Lizenz ergänzt;8direkte Sanctuary-Ressourcen und transitive/Auth-Abgleich weiterhin offen",
+      "evidence": "Docs/community-pilot/core79-20261110.md; Docs/community-pilot/core79-resources-20261110.json",
+      "next": "8verbleibende direkte Sanctuary-Module semantisch/Quelle/Rechte prüfen, danach transitive Abhängigkeiten und tatsächlichen vollständigen Kernweg abnehmen"
+    },
+    {
+      "id": "FLOWEE-V01",
+      "project": "Flowee / Räume",
+      "goal": "Room/shop29 visuell prüfen",
+      "owner": "noch nicht zugeordnet",
+      "tool": "Browser/GPU und Telefon",
+      "baseline": "lokaler Status Room/shop29; Produktion Flowee28",
+      "dependencies": [],
+      "timebox": "ein gezielter visueller Durchlauf",
+      "acceptance": "Zoom, Dialog, Reichweite, Kollision und Flowee verständlich; tatsächliches Gerät belegt",
+      "state": "offen; historische lokale Tests vorhanden",
+      "evidence": "Docs/community-pilot/baseline-20261106.md",
+      "next": "Bestehende visuelle Übergabe prüfen; keine Deployment-Ableitung"
+    },
+    {
+      "id": "STAGES-M01",
+      "project": "CDF / Circle D Stages",
+      "goal": "Ein vorhandenes Artist- oder Performancepaket vollständig prüfen und als erste Website-Inhaltsreferenz vorbereiten",
+      "owner": "noch nicht zugeordnet",
+      "tool": "vorhandener Player/Schnittwerkzeug ohne Upload",
+      "baseline": "Medien56: vorhandene technische Reviewfassungen registriert/Dateiexistenz geprüft; vollständige Hör-/Rechte-/Redaktionsabnahme offen",
+      "dependencies": [],
+      "timebox": "eine Sichtung",
+      "acceptance": "Materialfassung und Rechte-/Creditslücken belegt; konkretes Ziel vor aktiver CTA",
+      "state": "Bestand durch interne Produktionsprüfung eingeordnet; ausführender Hör-/Redaktionsprüfer noch nicht zugeordnet",
+      "evidence": "Docs/community-pilot/media-brief.md",
+      "next": "Genaue bestehende Fassung sichten/hören, Identität/Rechte/Credits prüfen und Profil-/Video-/Kontaktziel belegen; Social-Ableitungen aus geprüftem Master"
+    },
+    {
+      "id": "CDF-B01",
+      "project": "CDF / Geschäftsprüfung",
+      "goal": "Nutzenhypothese im freiwilligen Pilot prüfen",
+      "owner": "noch nicht zugeordnet",
+      "tool": "private Beobachtung ohne Profiling",
+      "baseline": "keine erhobenen Nachfrage-/Erlöszahlen",
+      "dependencies": [
+        "CDF-P01"
+      ],
+      "timebox": "eine Pilot-Runde nach technischer Kernweg-Abnahme",
+      "acceptance": "5–8 Personen; Quote und konkrete Nutzenbeispiele getrennt; keine öffentliche Rohdaten",
+      "state": "Business56: Geschäftsmodell und Pilotkriterien durch echte interne Business-Prüfung aktualisiert; Nachfrage-/Nutzen-/Erlöserhebung weiterhin offen",
+      "evidence": "Docs/community-pilot/business-model.md",
+      "next": "CDF-P01 und autorisierte Kernweg-Gates schließen; Go/No-Go19.November, betreuter Pilot als bedingtes Ziel EndeNovember"
+    },
+    {
+      "id": "CDF-S01",
+      "project": "CDF / Koordination",
+      "goal": "Lokale Slack-Brücke lesend vorbereiten",
+      "owner": "Codex",
+      "tool": "lokale Entwürfe und synthetische Ereignisse",
+      "baseline": "Slack-Lesezugriff vorhanden; kein Listener nachgewiesen",
+      "dependencies": [
+        "CDF-F00"
+      ],
+      "timebox": "ein lokaler Preflight ohne Dienststart",
+      "acceptance": "aktueller Kanal/Freigabeidentität, App/Scopes, Dedup, Budget/Lock/Pause geprüft; kein echter Versand",
+      "state": "Prüfauftrag vorbereitet; technischer Preflight offen",
+      "evidence": "Docs/community-pilot/tools-20261106.md",
+      "next": "bestehenden lokalen Adapter/Automation abgleichen; keine neue Anmeldung"
+    },
+    {
+      "id": "CDF-SEC01",
+      "project": "CDF / Repository-Schutz",
+      "goal": "Historische Credential-Exposition zuständig klären",
+      "owner": "noch nicht zugeordnet",
+      "tool": "Kontoinhaberprüfung ohne Geheimnisexport",
+      "baseline": "PR17 entfernt zwei Dateien nur aus neuem Baum",
+      "dependencies": [],
+      "timebox": "begrenzte Schutzprüfung durch Kontoinhaber",
+      "acceptance": "Gültigkeit/Exposition geklärt und ggf. Rotation mit gesondertem Auftrag belegt",
+      "state": "offen",
+      "evidence": "Docs/repository-workflow.md",
+      "next": "Kontozuständigkeit bestätigen; keine Schlüssel lesen oder rotieren"
+    },
+    {
+      "id": "KYH-Q01",
+      "project": "KYH",
+      "goal": "Eigenen nächsten Beitrag zum Pilot bestimmen",
+      "owner": "noch nicht zugeordnet",
+      "tool": "vorhandenes KYH-Backlog",
+      "baseline": "keine neue KYH-Leistung in dieser Phase geprüft",
+      "dependencies": [],
+      "timebox": "ein Kontextabgleich",
+      "acceptance": "separates Ziel und tatsächliche freigegebene Inputs; keine Vermischung mit CDF-Medienrechten",
+      "state": "noch nicht zugeordnet",
+      "evidence": "Docs/community-pilot/README.md",
+      "next": "bestehendes KYH-Backlog auf belegte Vorleistung prüfen"
+    },
+    {
+      "id": "CDF-LUVO32",
+      "project": "CDF / LUVO und Flowee-Einstieg",
+      "goal": "Filmischer 3D-CDF-Eingang mit wechselnden RPG-Registrierungsszenen und Anime-Übergängen",
+      "owner": "Codex",
+      "tool": "Vanilla JS/Three.js, Node-Tests, verbundener Browser",
+      "baseline": "aktive E:-Quelle auf LUVO32; Produktion unverändert",
+      "dependencies": [
+        "CDF-R01"
+      ],
+      "timebox": "dieser begrenzte Implementierungsauftrag",
+      "acceptance": "3D-Szene; direktes Login/überspringbares Intro; ruhige Ansicht; reale Ladezustände; mobile Ausweichfälle; bestätigter Release separat",
+      "state": "Universe33 lokal umgesetzt;21 Tests und Browserdurchlauf bestanden; nicht deployed",
+      "evidence": "Docs/community-pilot/universe33-20261107.md",
+      "next": "Hopes Handy-/Gestaltungsfeedback, vollständige16-Abhängigkeiten-Releasebasis und authentifizierte Abnahme"
+    },
+    {
+      "id": "CDF-INTRO34",
+      "project": "CDF / Flowee / Sanctuary",
+      "goal": "Eigene Introgeschichte bis zum Sanctuary-Erwachen aus nachvollziehbarer Spielstart-Analyse",
+      "owner": "Codex",
+      "tool": "Vanilla JS/Three.js, Node-Tests und verbundener Browser",
+      "baseline": "Universe33 und Intro34-Drehbuch; Intro35-Quellsnapshot 264a7c725fd4acca69e58ffdfa36601e9d3c29c8",
+      "dependencies": [
+        "CDF-LUVO32"
+      ],
+      "timebox": "diese begrenzte lokale UI-Implementierungsphase",
+      "acceptance": "vollständiger Originalprolog mit Dialog, Wahl/Interaktion, Gast-/Konto-/Pending-Grenzen und Ankunft; Quellen klar",
+      "state": "Intro35 lokal integriert;32 relevante Tests bestanden; Gastweg bis echter 3D-Ankunft im Browser geprüft; nicht deployed",
+      "evidence": "Docs/community-pilot/intro35-20261107.md",
+      "next": "Hopes physisches Handy-/Gestaltungsfeedback, authentifizierte Kernweg-Abnahme und vollständigen Releasekandidaten vorbereiten"
+    },
+    {
+      "id": "CDF-INTRO36-QA",
+      "project": "CDF / Flowee / Sanctuary",
+      "goal": "Intro35 unabhängig auf Mobilbedienung und Tastatur prüfen",
+      "owner": "Cursor (vorgesehen; Übernahme nicht bestätigt)",
+      "tool": "vorhandener Browser und Quellprüfung; tatsächliches Gerät getrennt",
+      "baseline": "45daef68373352ebc0eecf63272b2d432293f099",
+      "dependencies": [
+        "CDF-INTRO34"
+      ],
+      "timebox": "höchstens20 Minuten Projektarbeit unter bestehender gemeinsamer Tagesgrenze",
+      "acceptance": "Version belegt; PASS/FAIL/NOT_RUN pro Fall; reproduzierbare Belege; kein Produkt-/Accounteingriff; genau ein nächster Fehler",
+      "state": "Alte Abnahme nicht nachgewiesen; aktueller Prüfumfang separat präzisiert",
+      "evidence": "handoffs/2026-11-07_intro36_codex-an-cursor.md",
+      "next": "Neuer begrenzter Stand/Prüfauftrag CDF-INTRO49-QA; historische Ergebnisse erhalten"
+    },
+    {
+      "id": "CDF-INTRO37-ART",
+      "project": "CDF / Flowee / Sanctuary",
+      "goal": "Regieblatt für drei bestehende Intro-/Ankunftsmomente",
+      "owner": "Antigravity (begrenzte Quellprüfung geliefert; formale Rolle noch nicht zugeordnet)",
+      "tool": "vorhandene Quellen und optional nachgewiesener Browser; keine Generierung",
+      "baseline": "264a7c725fd4acca69e58ffdfa36601e9d3c29c8",
+      "dependencies": [
+        "CDF-INTRO34"
+      ],
+      "timebox": "erster Prüfpass höchstens5 Minuten im vorhandenen gemeinsamen Restbudget; keine zusätzliche Tagesfreigabe",
+      "acceptance": "eigene begrenzte Ergebnisdatei, Ist/Vorschlag/Unsicherheit getrennt; kein Produktdiff; genau eine Empfehlung",
+      "state": "Quellprüfungsbericht empfangen und von Codex eingeordnet; eine Empfehlung ausgewählt und durch Codex umgesetzt",
+      "evidence": "Docs/community-pilot/intro37-antigravity-direction-20261107.md",
+      "next": "Visuelle Geräteabnahme von Intro45; keine alte Recherche neu verteilen",
+      "exchange_status": "received_reviewed"
+    },
+    {
+      "id": "CDF-INTRO37-CULTURE",
+      "project": "CDF / Flowee / Sanctuary",
+      "goal": "Bis zu drei konkrete Story-/Kulturaussagen prüfen",
+      "owner": "Daiku (begrenztes Ergebnis empfangen; formale Rollenbesetzung noch nicht zugeordnet)",
+      "tool": "vorhandene Produkttexte und öffentliche Primärquellen; keine bezahlte API",
+      "baseline": "264a7c725fd4acca69e58ffdfa36601e9d3c29c8",
+      "dependencies": [
+        "CDF-INTRO34"
+      ],
+      "timebox": "erster Prüfpass höchstens5 Minuten im vorhandenen gemeinsamen Restbudget; keine zusätzliche Tagesfreigabe",
+      "acceptance": "eigene begrenzte Ergebnisdatei, Ist/Vorschlag/Unsicherheit getrennt; kein Produktdiff; genau eine Empfehlung",
+      "state": "Begrenztes Intro35-Ergebnis als zwei Dateiexporte empfangen und von Codex eingeordnet; kreative Entscheidungen offen",
+      "evidence": "Docs/community-pilot/intro43-daiku-intake-20261107.md",
+      "next": "Hope entscheidet zuerst über Textvorschlag2; danach Sprach-/Namensfragen und gegebenenfalls Umsetzung getrennt",
+      "exchange_status": "received_reviewed"
+    },
+    {
+      "id": "CDF-INTRO39",
+      "project": "CDF / Flowee / Sanctuary",
+      "goal": "Szenensichtbare mobile Dialoge und einheitliche Flowee-Darstellung",
+      "owner": "Codex",
+      "tool": "Vanilla CSS/JS/Three.js; vorhandene Tests",
+      "baseline": "16a813f19ca980ec815c893741d2ef15808c2059",
+      "dependencies": [
+        "CDF-INTRO34"
+      ],
+      "timebox": "dieser beauftragte lokale UI-Schritt",
+      "acceptance": "sichtbare Szene und Antworten; Story-Swipe ohne Formularsubmit; gemeinsame Silhouette; echte neue Viewport-/Telefonprüfung getrennt",
+      "state": "Intro41: tatsächlicher Browser390×844/360×640 mit sichtbarer Szene und emuliertem Touch geprüft; Dialoghöhenfehler korrigiert; physisch/Softwarekeyboard offen",
+      "evidence": "Docs/community-pilot/intro41-20261107.md",
+      "next": "Hopes echter Smartphone-/Softwarekeyboard-Test; danach genau einen beobachteten Folgefehler schließen"
+    },
+    {
+      "id": "CDF-EXCHANGE40",
+      "project": "CDF / Koordination",
+      "goal": "Begrenzten lokalen Agenten-Dateiaustausch vorbereiten",
+      "owner": "Codex",
+      "tool": "einmaliger lokaler Dateiabgleich; kein Agentenstart",
+      "baseline": "03f39268a0235f1ab9a7195c4cebc79c703c7435",
+      "dependencies": [
+        "CDF-F00"
+      ],
+      "timebox": "ein beauftragter lokaler Abgleich",
+      "acceptance": "getrennte Aufträge, erlaubte Ergebnisdateien, private Prüfung vor Übernahme; keine Produktüberschreibung/ungeprüfter Push",
+      "state": "Dateipakete erstellt; echte externe Annahme/Dateiübertragung offen",
+      "evidence": "Docs/community-pilot/agent-local-exchange-20261107.md",
+      "next": "Erreichbaren Cloud-/IDE-Ergebnisweg prüfen; keine Installation eines konkurrierenden Dienstes"
+    },
+    {
+      "id": "CDF-INTRO42-EXTERNAL",
+      "project": "CDF / Flowee / Sanctuary",
+      "goal": "Intro außerhalb des lokalen WLANs als isolierte Designvorschau testen",
+      "owner": "Codex",
+      "tool": "Vercel-MCP und begrenzter statischer Builder; keine Backend-/Produktionsaktion",
+      "baseline": "16a813f19ca980ec815c893741d2ef15808c2059",
+      "dependencies": [
+        "CDF-INTRO39"
+      ],
+      "timebox": "dieser begrenzte Vorbereitungs-/Bereitstellungsschritt",
+      "acceptance": "konkreter erlaubter Dateisatz; keine echten Kontofunktionen/Privatdateien; READY und tatsächlich geprüfter HTTPS-Link; Produktion unverändert",
+      "state": "41-Dateien-Kandidat geprüft; Vercel403/404; externe Bereitstellung offen",
+      "evidence": "Docs/community-pilot/intro42-external-preview-20261107.md",
+      "next": "Tatsächlichen Team-/Projektzugriff prüfen; danach exakt diesen Kandidaten bereitstellen und anonym prüfen"
+    },
+    {
+      "id": "CDF-DAIKU44",
+      "project": "CDF / Pilot-Pipeline und Geschäftsprüfung",
+      "goal": "Entscheidungsrelevante Beleglücken prüfen und höchstens eine begründete kleine Potenzialempfehlung für den Pilot liefern",
+      "owner": "Daiku/Grok – Auftrag laut Hope zugestellt; tatsächlicher Arbeits-/Ergebnisnachweis offen",
+      "tool": "Erreichbares GitHub und zwei vollständige Dateiexporte; kein E:-Zugriff",
+      "baseline": "Business56/Model55; aktuelle Koordination in PR17 vor Beginn erneut lesen",
+      "dependencies": [
+        "CDF-INTRO37-CULTURE"
+      ],
+      "timebox": "Ein erster Pass höchstens5 Minuten innerhalb gemeinsamer20 Minuten Projektarbeit; keine automatische Wiederholung ohne belegtes Restbudget",
+      "acceptance": "Bis3 belegte Abhängigkeiten,1 prüfbare Nutzenhypothese,1 nächste Empfehlung; Quelle/Annahme/Lücke getrennt; private Kalenderentwürfe bleiben Team/; kein Produktdiff",
+      "state": "Zwei Originalexporte empfangen; begrenzter Dokumentenreview geprüft, formale Rollen-/Pilotabnahme offen",
+      "evidence": "handoffs/2026-11-08_business56_codex-an-daiku.md",
+      "next": "Kein neuer Recherchelauf; bestehende Abnahme-/Mediengates bearbeiten",
+      "exchange_status": "received_reviewed"
+    },
+    {
+      "id": "CDF-INTRO45",
+      "project": "CDF / Sanctuary-Ankunft",
+      "goal": "Szenensichtbares mobiles Erwachen mit kompakter Dialogkarte",
+      "owner": "Codex",
+      "tool": "Vanilla CSS/JS; bestehende Node-Tests; geschützte LAN-Vorschau",
+      "baseline": "02a19e8f8816292b770d18cda5f621c4bb9dc148",
+      "dependencies": [
+        "CDF-INTRO37-ART"
+      ],
+      "timebox": "dieser ausdrücklich beauftragte lokale Umsetzungsschritt",
+      "acceptance": "Unterer Dialog ohne Blur, interne Textrolle, erreichbare Aktionen; Kamera unverändert; reale mobile Sichtprüfung getrennt",
+      "state": "Lokal umgesetzt,24 Tests bestanden; Browsersteuerung gestoppt, neue visuelle/physische Abnahme offen",
+      "evidence": "Docs/community-pilot/intro45-20261108.md",
+      "next": "Hope testet den echten Gastweg und drei Ankunftsschritte auf Smartphone im Heim-WLAN; danach genau einen beobachteten Fehler prüfen"
+    },
+    {
+      "id": "CDF-INTRO46",
+      "project": "CDF / Intro-Designvorschau",
+      "goal": "Swipe-Einstieg und gemeinsam gekoppelten Erzählfortschritt auf Handy/Desktop prüfen",
+      "owner": "Codex",
+      "tool": "Vanilla Pointer Events; explizite flüchtige lokale Kopplung; Node-/HTTP-Prüfung",
+      "baseline": "ac2f65abde0fd7c0f9c10ce37adac57775a82286",
+      "dependencies": [
+        "CDF-INTRO45"
+      ],
+      "timebox": "dieser ausdrücklich beauftragte Fehler-/Kopplungsschritt",
+      "acceptance": "Story-Swipe/Mauszug ohne Formularaktionen; explizit gekoppelter Schritt und Richtung; reale Zwei-Geräte-Abnahme separat",
+      "state": "Lokal implementiert,24 Tests und Serveraustausch bestanden; tatsächliche Handy-/Desktop-Abnahme offen",
+      "evidence": "Docs/community-pilot/intro46-20261108.md",
+      "next": "Hope öffnet denselben privaten Kopplungslink auf beiden Geräten und prüft Schritt/Richtungswahl in beide Richtungen"
+    },
+    {
+      "id": "CDF-INTRO47",
+      "project": "CDF / eigene Welten und Community-Pilot",
+      "goal": "Erkennbare Laternenhandlung und differenzierte eigene räumliche Formen",
+      "owner": "Codex",
+      "tool": "Vorhandene Vanilla-/Quell-/Recherchewerkzeuge; keine neue kostenpflichtige Anbindung",
+      "baseline": "45daef68373352ebc0eecf63272b2d432293f099",
+      "dependencies": [
+        "CDF-INTRO46"
+      ],
+      "timebox": "Ein begrenzter Pass im gemeinsamen Restbudget; externe Aufträge höchstens5 Minuten",
+      "acceptance": "Belegte Inputs, begrenztes Ergebnis, Ist/Vorschlag/NOT_RUN getrennt; keine Veröffentlichung",
+      "state": "Lokal umgesetzt,26 Tests und zwei echte Three-Geometrieprüfungen bestanden; neue Bildabnahme offen",
+      "evidence": "Docs/community-pilot/intro47-20261108.md",
+      "next": "Hope/Cursor prüfen den neuen tatsächlichen mobilen Bildstand"
+    },
+    {
+      "id": "CDF-MYTH48",
+      "project": "CDF / eigene Welten und Community-Pilot",
+      "goal": "Genau eine belegte griechische Weltkarte vorbereiten",
+      "owner": "Daiku (begrenzte literarische Karte empfangen)",
+      "tool": "Vorhandene Vanilla-/Quell-/Recherchewerkzeuge; keine neue kostenpflichtige Anbindung",
+      "baseline": "45daef68373352ebc0eecf63272b2d432293f099",
+      "dependencies": [
+        "CDF-INTRO47"
+      ],
+      "timebox": "Ein begrenzter Pass im gemeinsamen Restbudget; externe Aufträge höchstens5 Minuten",
+      "acceptance": "Belegte Inputs, begrenztes Ergebnis, Ist/Vorschlag/NOT_RUN getrennt; keine Veröffentlichung",
+      "state": "Teilresultat empfangen/geprüft; fehlende Grundlagen/volle Abnahme offen",
+      "evidence": "Docs/community-pilot/world48-daiku-research-20261108.md",
+      "next": "Delphi bleibt Vorschlag für Hope; fehlende Grundlagen vor formaler weiterer Rollenarbeit klären; separater Pipelineauftrag offen",
+      "exchange_status": "received_reviewed"
+    },
+    {
+      "id": "CDF-WORLD48-ART",
+      "project": "CDF / eigene Welten und Community-Pilot",
+      "goal": "Drei eigene unterscheidbare Weltsilhouetten vorbereiten",
+      "owner": "Antigravity (begrenzter Quellentwurf empfangen)",
+      "tool": "Vorhandene Vanilla-/Quell-/Recherchewerkzeuge; keine neue kostenpflichtige Anbindung",
+      "baseline": "45daef68373352ebc0eecf63272b2d432293f099",
+      "dependencies": [
+        "CDF-INTRO47"
+      ],
+      "timebox": "Ein begrenzter Pass im gemeinsamen Restbudget; externe Aufträge höchstens5 Minuten",
+      "acceptance": "Belegte Inputs, begrenztes Ergebnis, Ist/Vorschlag/NOT_RUN getrennt; keine Veröffentlichung",
+      "state": "Begrenzten Silhouettenauftrag erfüllt; durch Codex eingeordnet",
+      "evidence": "Docs/community-pilot/world48-antigravity-shapes-20261108.md",
+      "next": "Intro49 unabhängig durch Cursor prüfen; keine alte Recherche neu verteilen",
+      "exchange_status": "received_reviewed"
+    },
+    {
+      "id": "CDF-INTRO49-QA",
+      "project": "CDF / Community-App",
+      "goal": "Intro49 unabhängig auf mobile Kontur-/Laternenlesbarkeit und Bedienung prüfen",
+      "owner": "Cursor (vorgesehen; Annahme nicht bestätigt)",
+      "tool": "Portabler eingefrorener Intro49-Prüfsatz, begrenzter Loopback-Server, tatsächlich vorhandener Browser",
+      "baseline": "1d60a3f3908efc6f22451b6e7add0fda8cc9e2a1",
+      "dependencies": [
+        "CDF-INTRO47",
+        "CDF-WORLD48-ART"
+      ],
+      "timebox": "Erster Pass höchstens5 Minuten im belegten gemeinsamen Restbudget",
+      "acceptance": "390×844 zuerst, PASS/FAIL/NOT_RUN, Version/Repro; genau ein echter Blocker; kein Produktdiff",
+      "state": "Cursor-Versuch laut Hope NOT_RUN wegen fehlender erreichbarer Testbasis; Originaldateien nicht eingegangen; portabler Prüfsatz vorbereitet und freigegeben",
+      "evidence": "Docs/community-pilot/intro50-cursor-access-20261108.md",
+      "next": "Historische Originalexporte weiterhin offen; neue aktuelleAbnahme separatCDF-CORE57-QA, kein49-Kit-PASSfür54",
+      "exchange_status": "historical_open_not_current_assignment"
+    },
+    {
+      "id": "CDF-INTRO51-MOBILE",
+      "project": "CDF / kostenloser Kernweg",
+      "goal": "Mobile Antworten und Registrierungszusammenfassung ohne Überdeckung lesen und bedienen",
+      "owner": "Codex; tatsächlicher Handytest durch Hope",
+      "tool": "Vanilla CSS/DOM; bestehende Tests, Strukturprüfung, geschützte aktuelle LAN-Vorschau",
+      "baseline": "bf4b208dce1239ad3568fc82622a5a86217e4e83",
+      "dependencies": [
+        "CDF-INTRO46"
+      ],
+      "timebox": "Eine begrenzte konkrete mobile Abnahme vor weiterer Weltengestaltung",
+      "acceptance": "Vollständige Antwort-/Ziel-/Einwilligungstexte erreichbar, Hauptaktion außerhalb Antwortscroll, Tastatur/Querformat; echter Gerätebeleg getrennt",
+      "state": "Historische51-Implementierung geprüft; neues Layoutziel durch52 konkretisiert, echte Bildabnahme weiterhin offen",
+      "evidence": "Docs/community-pilot/intro51-20261108.md",
+      "next": "Aktuelle52-Vollbildansicht abnehmen, keine alte51-Bildfreigabe erfinden"
+    },
+    {
+      "id": "CDF-INTRO52-FULL",
+      "project": "CDF / Intro und mobiler Kernweg",
+      "goal": "Eine vollständige Szene mit einzelner interaktiver Flowee, verankerter Sprechblase und kleinem Antwort-Overlay abnehmen",
+      "owner": "Codex; tatsächlicher Handytest durch Hope",
+      "tool": "Vanilla CSS/DOM/Three-Projektion; aktuelle geschützte LAN-Vorschau",
+      "baseline": "6be35cff0926b59f4a5c20518c8f95c89735fd0a",
+      "dependencies": [
+        "CDF-INTRO46"
+      ],
+      "timebox": "Ein begrenzter vollständiger Intro-Bild-/Bediencheck",
+      "acceptance": "Canvas bleibt voller Viewport beim Antworten-Ein-/Ausblenden; eine Flowee, lesbare Blase, erreichbare native Antworten/Hauptaktion; körperliche Gerätebelege getrennt",
+      "state": "Umgesetzt; Hope meldet im Folge-Screenshot abgeschnittene Welcome-Ansicht. Korrektur53 integriert, neue Sichtabnahme offen",
+      "evidence": "Docs/community-pilot/intro52-20261108.md",
+      "next": "Aktuelle53-Abnahme statt alten52-Sicht-PASS ableiten"
+    },
+    {
+      "id": "CDF-INTRO53-CINEMA",
+      "project": "CDF / Intro und kostenloser Kernweg",
+      "goal": "Vollbildbegrüßung mit einzelner Flowee und natürlicherem Himmel auf Handy/Desktop abnehmen",
+      "owner": "Codex; tatsächlicher Gerätecheck durch Hope",
+      "tool": "Vanilla DOM/CSS/Three; bestehende geschützte LAN-Vorschau",
+      "baseline": "4771d89944c729fe2209d482e85140740a5e62cb",
+      "dependencies": [
+        "CDF-INTRO52-FULL"
+      ],
+      "timebox": "Ein begrenzter aktueller Bild-/Bediencheck",
+      "acceptance": "Kopfzeile oben, keine abgeschnittene Begrüßung, eine Flowee rechts oben, volle Szene; Antwortpanel erst bei echter Wahl/Handlung/Eingabe; Softwaretastatur/Zurückweg erreichbar",
+      "state": "Hope bestätigt Sprechblasenrichtung; echte Screenshots belegen verdeckte Flowee/große Blase. Folgekorrektur54 umgesetzt, keine volle Bildfreigabe",
+      "evidence": "Docs/community-pilot/intro53-20261108.md",
+      "next": "Aktuelle54-Figur/Blase abnehmen"
+    },
+    {
+      "id": "CDF-INTRO54-FLOWEE",
+      "project": "CDF / kostenloser Kernweg und Intro",
+      "goal": "Eine lesbare Flowee mit kurz eingeblendeter, schließbarer Blase; freier Weltblick",
+      "owner": "Codex; echte Geräteprüfung Hope",
+      "tool": "Vanilla/Three-r128, bestehende begrenzte lokale Vorschau",
+      "baseline": "4e9e2ee786656c32ea6df3f5223afddbd7252e78",
+      "dependencies": [
+        "CDF-INTRO53-CINEMA"
+      ],
+      "timebox": "Eine aktuelle mobile/desktop Sicht- und Bedienabnahme",
+      "acceptance": "Flowee an wechselnden Positionen sichtbar außerhalb der Blase; kurze Texte vollständig durchblätterbar; ×/Flowee öffnen/schließen, freie Szene bei versteckten Antworten; ruhiger Ersatz erreichbar",
+      "state": "Implementiert und technisch geprüft; physische aktuelle Sicht-/Touchabnahme NOT_RUN",
+      "evidence": "Docs/community-pilot/intro54-20261108.md",
+      "next": "Hope prüft54, anschließend genau größtes belegtes Kernwegproblem; Blender-Vergleichsasset erst danach"
+    },
+    {
+      "id": "CDF-MODEL55",
+      "project": "CDF / eigene Welten und Community-App",
+      "goal": "Kostenloses Blender-Werkzeug und einen weicheren CDF-Modellprototyp nachvollziehbar bereitstellen",
+      "owner": "Codex; zwei tatsächlich begrenzte interne Codex-Teilaufgaben",
+      "tool": "Blender5.2.3 LTS portabel auf E:, eigener bpy-Entwurf, bestehender Three-r128-Importtest",
+      "baseline": "592de00258f012565bf1b9aed4e1f3ae722d36bf",
+      "dependencies": [
+        "CDF-INTRO54-FLOWEE"
+      ],
+      "timebox": "Ein Prototyp vor einer breiten Weltmigration",
+      "acceptance": "Prüfsummenverifiziertes lauffähiges Blender, editierbare Quelle/GLB/PNG, echtes Import-/Geometriebudget und gesichteter Render; App-/Gerätebelege getrennt",
+      "state": "Werkzeug bereitgestellt und eigener Mint-Prototyp erzeugt/gesichtet; Importprüfung bestanden; App-/Handy-Bildprüfung NOT_RUN",
+      "evidence": "Docs/community-pilot/model55-20261108.md",
+      "next": "Genau ein Asset in isolierter Webszene mit App-Beleuchtung auf Handy/Desktop prüfen, dann Hopes Stilentscheidung; keine gesamte Welt ersetzen"
+    },
+    {
+      "id": "CDF-BUSINESS56",
+      "project": "CDF / Ökosystem und Pilotplanung",
+      "goal": "Geschäftsmodell, Formate, kostenlose Modellwahl und bedingten November-Pilot zu einem prüfbaren Arbeitsplan verbinden",
+      "owner": "Codex (Ebene2); Hope entscheidet final",
+      "tool": "Vorhandene Repo-Belege, zwei echte interne Codex-Prüfaufgaben, private Kapazitäts-/Kalenderentwürfe",
+      "baseline": "Koordination8ac451827787bc07454f9e67edff4802b44a90f0 und Model55-Quelle592de00258f012565bf1b9aed4e1f3ae722d36bf",
+      "dependencies": [
+        "CDF-B01",
+        "CDF-P01",
+        "STAGES-M01",
+        "CDF-MODEL55"
+      ],
+      "timebox": "Begrenzter Planabgleich; keine neue Dauerautomation",
+      "acceptance": "Beleg/Annahme/offene Frage getrennt, ein kritischer Pfad, begrenzte parallele Arbeit, klare Gate-/Freigabeverantwortung, private Grenzen bleiben lokal",
+      "state": "Plan und tatsächlicher Business-/Medienabgleich erstellt; Durchführung/Pilot und externe Annahmen offen",
+      "evidence": "Docs/community-pilot/delivery-plan-20261108.md",
+      "next": "CDF-P01 vor weiterer Weltserie; eine bestehende Mediencharge prüfen; externe begrenzte Briefs erst nach tatsächlicher Annahme als aktiv führen"
+    },
+    {
+      "id": "CDF-MODEL56-SELECT",
+      "project": "CDF / Modellvergleich",
+      "goal": "Genau Model55 als kostenlosen Vergleich für Weblesbarkeit und Stil prüfen",
+      "owner": "Antigravity (vorgeschlagen; Annahme nicht bestätigt), technische Koordination Codex",
+      "tool": "Vorhandenes kostenloses Blender5.2.3/Model55 und bestehende Szene, falls tatsächlich erreichbar",
+      "baseline": "Model55-Quelle592de00258f012565bf1b9aed4e1f3ae722d36bf",
+      "dependencies": [
+        "CDF-MODEL55"
+      ],
+      "timebox": "Ein begrenzter Vergleich; keine neue Modellserie oder Dienste",
+      "acceptance": "Kosten/Rechte/Provenienz, eigne Silhouette/Funktion, echter Weblichtvergleich bzwNOT_RUN, höchstens eine priorisierte Empfehlung",
+      "state": "Quellreview privat empfangen und geprüft; BLEND-Annahme korrigiert; echter Weblichtvergleich NOT_RUN",
+      "evidence": "handoffs/2026-11-08_model56_codex-an-antigravity.md",
+      "next": "Genau ein isoliertes Vergleichsfixture vorbereiten, keine Weltserie",
+      "exchange_status": "received_reviewed"
+    },
+    {
+      "id": "CDF-CORE57-QA",
+      "project": "CDF / Website und Community-Pilot",
+      "goal": "AktuellenGast-/Bedienkernweg unabhängig prüfen, soweitQuelle/Browser tatsächlich erreichbar",
+      "owner": "Cursor (Paket vorbereitet; Annahme nicht bestätigt)",
+      "tool": "Bestehender autorisierterBrowser und erreichbareaktuelleQuelle, keinhistorischer49-Kit-PASS",
+      "baseline": "UI54 inProduktreferenz592de00258f012565bf1b9aed4e1f3ae722d36bf; aktiveE:-QuellevorTestabgleichen",
+      "dependencies": [
+        "CDF-P01"
+      ],
+      "timebox": "ErsterPasshöchstens5Minuten innerhalb tatsächlichbekanntergemeinsamerRestgrenze",
+      "acceptance": "Zuerst390×844,Version/Repro/PASS-FAIL-NOT_RUN,eineFlowee/Blase/Welt/Antworten/Hauptaktion,genaueinbelegterBlocker; keineKontomutation",
+      "state": "Über Hope mitgeteiltes NOT_RUN; Originalexporte fehlen, gemeldeter Commit nicht über GitHub abrufbar",
+      "evidence": "handoffs/2026-11-08_core57_codex-an-cursor.md",
+      "next": "Vorhandene zwei Originaldateien ohne Push/E-Abhängigkeit exportieren; neue Prüfung erst bei erreichbarer Fläche",
+      "exchange_status": "pending"
+    },
+    {
+      "id": "CDF-ORCHESTRA57",
+      "project": "CDF / Koordination und gemeinsamePipeline",
+      "goal": "Business56-Aufträge über den vorhandenenDateiaustausch tatsächlich aktuell vorbereiten",
+      "owner": "Codex/Dirigent Ebene2",
+      "tool": "Prompt-Orchestra-Intake, validierteJSON-Zuordnung, bestehenderDateiaustausch; keinneuerDienst",
+      "baseline": "Koordination4efde14e810329bb1ba8a51a009d7e7ece0ebd50",
+      "dependencies": [
+        "CDF-BUSINESS56",
+        "CDF-EXCHANGE40"
+      ],
+      "timebox": "BegrenzterRoutingfixundReview; keineAuto-Schleife",
+      "acceptance": "Aktuelle3Pakete,genau2Markdownoutputs/Agent,alteErgebnisseerhalten,privateQuarantäne,started=[],keineProdukt-/Git-/API-AufrufeimRunner",
+      "state": "Routingimplementiert,9Testsbestanden/1Host-Symlinktestübersprungen; tatsächlicheexterneAnnahme/Läufeoffen",
+      "evidence": "Docs/community-pilot/orchestra57-20261108.md",
+      "next": "AktuellePaketevorbereitenundquittieren,danachCDF-P01/ersteWebsite-AbnahmevorweitererPlanrunde"
+    },
+    {
+      "id": "CDF-CONTENT58",
+      "project": "CDF / Website-Inhalte und Medienproduktion",
+      "goal": "Vorhandene Performance-/Manga-/Artist-Pakete ohne falsche Identitäts- oder Freigabeannahmen mit der Website verbinden",
+      "owner": "Codex für Zuordnung; Hör-/Schnittbearbeiter noch nicht zugeordnet",
+      "tool": "Bestehende private Medienpipeline und aktuelle Website-Quellprüfung, keine neue Quelle oder Plattform",
+      "baseline": "Koordination183376def2e9bcc6e658ed0563e3768409b5c417; vorhandene V7/V8-Metadaten",
+      "dependencies": [
+        "STAGES-M01",
+        "CDF-P01"
+      ],
+      "timebox": "Ein vorhandenes Paket als Integrationsreferenz vor einer Serienproduktion",
+      "acceptance": "Kanonische Pipeline-ID, richtige Inhaltsart/Artistidentität, vollständiger Review, belegte Rechte/Credits und geprüftes Profil-/Video-/Kontaktziel; Publikation separat",
+      "state": "15 vorhandene Paketverzeichnisse privat zugeordnet; begrenzte Websitewege geprüft; öffentliche Profil-/Assetzuweisung und neue Hör-/Bildabnahme offen",
+      "evidence": "Docs/community-pilot/content-integration58-20261108.md",
+      "next": "Erstes vorhandenes Artist-/Performancepaket vollständig prüfen und geschützte Website-Referenz vorbereiten; Begriffsrückfrage laut Hope geschlossen"
+    },
+    {
+      "id": "CDF-DECISION59",
+      "project": "CDF / Business und Entscheidungskoordination",
+      "goal": "Potenziale begrenzt bewerten und Hopes Kalenderentscheidungen nachvollziehbar mit bestehenden Aufgaben verbinden",
+      "owner": "Codex Ebene2; finale Entscheidung Hope; menschliche Business-Besetzung noch nicht zugeordnet",
+      "tool": "Bestehende Repo-/Dateiablage und autorisierter Google-Kalender-Browserzugriff",
+      "baseline": "25ec8aeedd0b96218be073ace0b5c2c04f25a65b",
+      "dependencies": [
+        "CDF-P01",
+        "CDF-BUSINESS56",
+        "CDF-CONTENT58"
+      ],
+      "timebox": "Begrenzte manuelle Einrichtung; keine wiederkehrende Automatik",
+      "acceptance": "Fünf private Entscheidungsmerker gespeichert, zwei bestehende Postingbögen ergänzt; Begriff geklärt, genau ein kleiner Potenzialtest empfohlen; private Details bleiben lokal",
+      "state": "Kalender und Entscheidungsweg eingerichtet; Hopes Entscheidungen und externe Agentenannahme offen",
+      "evidence": "Docs/community-pilot/decision59-20261108.md",
+      "next": "Bei nächster gestarteter Arbeit Kalenderentscheidungen prüfen und CDF-P01 fortsetzen; keine pauschale Publikationsfreigabe ableiten"
+    },
+    {
+      "id": "CDF-MODEL62-WEBKIT",
+      "project": "CDF / isolierter Modellvergleich",
+      "goal": "Ein überprüfbares Weblicht-Vergleichsfixture als Quelltext vorbereiten, ohne Produktumbau",
+      "owner": "Antigravity vorgeschlagen; neue Annahme offen, Koordination Codex",
+      "tool": "Vorhandene lokale Model55/Three-r128/GLTFLoader-Quellen; zwei Markdown-Exporte",
+      "baseline": "b234f4992cc139888072f2b538331dc04a5a91bc",
+      "dependencies": [
+        "CDF-MODEL56-SELECT"
+      ],
+      "timebox": "Ein begrenzter Pass innerhalb bestehender gemeinsamer Grenzen",
+      "acceptance": "Gleiche Kamera/Licht/Nebel/Maßstab; Waiting/lit ohne gemeinsame Materialnebenwirkung; Dispose/Fehler/ruhige Ansicht; echte Läufe sonst NOT_RUN",
+      "state": "Folgebrief vorbereitet, nicht gestartet",
+      "evidence": "handoffs/2026-11-08_model62_codex-an-antigravity.md",
+      "next": "Brief ausdrücklich annehmen und genau zwei Ergebnisdateien liefern",
+      "exchange_status": "pending"
+    },
+    {
+      "id": "CDF-INTRO64",
+      "project": "CDF / Community-Einstieg und Charakterstudie",
+      "goal": "Menschlichen Community-Zweck professionell vermitteln und einen weich modellierten Originalreisenden erstellen",
+      "owner": "Codex; zwei tatsächliche interne Teilaufträge; kreative Entscheidung Hope",
+      "tool": "Vanilla-JS-Textpflege, vorhandener Blender5.2.3LTS und bestehender Three-r128-Import",
+      "baseline": "618e1bbe0e8464c70ba23ff1618a1f4d6651391a",
+      "dependencies": [
+        "CDF-P01",
+        "CDF-MODEL55"
+      ],
+      "timebox": "Ein Textpass und ein Charakterprototyp mit einer Optimierung; keine Serie",
+      "acceptance": "DE/EN/PT mit ehrlichen Ausbauzielen; editierbare Quelle/Blend/GLB/Studiobild und tatsächliche Importwerte; Web-/Handygrenzen offen",
+      "state": "Texte lokal und im Produkt-PR; Traveller64 lokal erzeugt/gesichtet/importgeprüft, nicht integriert oder animiert",
+      "evidence": "Docs/community-pilot/intro64-20261108.md",
+      "next": "Model62 abschließen; danach ein isolierter Charaktervergleich vor Integration"
+    },
+    {
+      "id": "CDF-CHARACTER65-ART",
+      "project": "CDF / Charakterabnahme",
+      "goal": "Aktuellen tatsächlich eingebauten Blender-Reisenden66 stilistisch prüfen",
+      "owner": "Antigravity vorgeschlagen; Annahme offen",
+      "tool": "Vorhandene lokale Studie und Model62-Vergleich, zwei Dateiexporte",
+      "baseline": "bd2c5d997129a02e4d09a72116fff67acff5a6c6",
+      "dependencies": [
+        "CDF-MODEL62-WEBKIT",
+        "CDF-VISUAL66"
+      ],
+      "timebox": "Ein begrenzter Folgepass, nicht parallelzumlaufendenModel62",
+      "acceptance": "Stil/Proportion/Materialwirkung getrennt von echtem Webtest; höchstens eine Änderung mit Beleg; Grenzen offen",
+      "state": "Auf Traveller66 aktualisiert, weiter vorgemerkt; keine neue externe Ausführung bestätigt",
+      "evidence": "handoffs/2026-11-08_character65_codex-an-antigravity.md",
+      "next": "Erst Model62-Rückgabe prüfen, dann begrenzten Folgebrief aktivieren",
+      "exchange_status": "queued_after_dependency"
+    },
+    {
+      "id": "CDF-VISUAL66",
+      "project": "CDF / sichtbare Grafik und Typografie",
+      "goal": "Tatsächliche Blender-Figur in Intro/Sanctuary statt nur separatem Studiobild und lokale neue Schrift",
+      "owner": "Codex; interner Modellfolgeauftrag tatsächlich ausgeführt; kreative Abnahme Hope",
+      "tool": "Vorhandenes Blender5.2.3/Three-r128, eigener GLB, OFL-Schriften lokal",
+      "baseline": "bd2c5d997129a02e4d09a72116fff67acff5a6c6",
+      "dependencies": [
+        "CDF-INTRO64",
+        "CDF-P01"
+      ],
+      "timebox": "Eine proportionale Revision und begrenzte Webintegration, keine Weltserie",
+      "acceptance": "GLB/Fonts tatsächlich geladen und gesehen, Herkunft/Hashes/Lizenzen, sichere Ladefehler/Dispose und mobile Stichprobe",
+      "state": "Lokal implementiert, Browserstichprobe und25Tests bestanden, physische/kreative/Vollpilotabnahme offen",
+      "evidence": "Docs/community-pilot/visual66-20261109.md",
+      "next": "Coastal67 eingebaut; Hopes Gerätefeedback und CDF-P01 vor weiterer Grafikserie"
+    },
+    {
+      "id": "CDF-COASTAL67",
+      "project": "CDF / Community-Einstieg",
+      "goal": "Einen vorhandenen Blender-Vordergrundort statt der einfachen Hütte tatsächlich im Intro zeigen",
+      "owner": "Codex; kreative Abnahme Hope",
+      "tool": "Vorhandenes Model55-GLB und Three-r128",
+      "baseline": "657a79bca36f83259c9d560a282c3fd61be0c1ae",
+      "dependencies": [
+        "CDF-VISUAL66",
+        "CDF-MODEL55"
+      ],
+      "timebox": "Ein Ort, ein Integrationspass und beobachtete Überlagerungskorrektur; keine Weltserie",
+      "acceptance": "Echtes Modell im Weblicht sichtbar, sichere Ersatzansicht/Dispose, isoliertes Laternenmaterial, Handy/Desktop-Stichprobe",
+      "state": "Lokal und in Produkt-PR implementiert;38Tests und Browserstichproben bestanden, vollständige Bedien-/Geräte-/Kreativabnahme offen",
+      "evidence": "Docs/community-pilot/coastal67-20261109.md",
+      "next": "Hope testet Gastweg; genau einen beobachteten Bedienblocker beheben"
+    },
+    {
+      "id": "CDF-ORIENT70",
+      "project": "CDF / freiwillige Community-Orientierung",
+      "goal": "Interessen und Teilnahmewunsch innerhalb Flowees Einstieg in erklärbare vorhandene Hofwege übersetzen",
+      "owner": "Codex; kreative/pilotbezogene Abnahme Hope",
+      "tool": "Vanilla-JS, bestehendes Sanctuary-Layout und Ortsnavigation; keine externe KI",
+      "baseline": "7ad9aea554815c702f7da31c0f7054c230112832",
+      "dependencies": [
+        "CDF-P01"
+      ],
+      "timebox": "Ein optionaler Frageablauf und ein Orts-Matching-Pass, keine Profil-/Rollenmigration",
+      "acceptance": "Freiwillige Auswahl/Überspringen/Reset, vorhandene Ziele mit Gründen, echtes Im-Hof-Zeigen; keine Rollenvergabe durch Interessen oder Beta-Wunsch",
+      "state": "Lokal und Produkt-PR implementiert;19Tests und Browserstichproben bestanden; echte Geräte-/Sprach-/Profil-/Personenmatching-Abnahme offen",
+      "evidence": "Docs/community-pilot/orientation70-20261109.md",
+      "next": "Profile71 ergänzt bewusste private Speicherung/Sammlung; echte Aktivierung erst nach vollständigem Release-Abgleich"
+    },
+    {
+      "id": "CDF-PROFILE71",
+      "project": "CDF / private Profilkarte und Sammlung",
+      "goal": "Freiwillige Flowee-Angaben derselben Identität zuordnen und ein erstes kosmetisches Symbol einmalig vergeben",
+      "owner": "Codex; kreative/Produktiventscheidung Hope",
+      "tool": "Vanilla-JS, bestehender API-Router/Auth, neue private PostgreSQL-Tabellen/RPC; PGlite lokal",
+      "baseline": "4431b171a464ac97cefbb92e7398accaad9e0425",
+      "dependencies": [
+        "CDF-ORIENT70",
+        "CDF-P01"
+      ],
+      "timebox": "Ein begrenzter Profil-/Symbolpass; kein automatischer Dauerlauf",
+      "acceptance": "Private Eigentümerbindung, explizites Speichern, transaktionale einmalige Vergabe ohne neues XP/FLOW, gemeinsame Profil-/SoulNexus-Quelle und ehrliche Pending-Zustände",
+      "state": "Lokal implementiert;29Tests bestanden, synthetische Browseransicht und Gastgrenze geprüft; Migration nicht live angewandt, komplette echte Abnahme offen",
+      "evidence": "Docs/community-pilot/profile71-20261109.md; Docs/community-pilot/profile71-source-map.json",
+      "next": "Vollständigen Kandidaten aus abweichenden Karten-/Orbit-/API-Basen herstellen, dann konkrete Aktivierung freigeben lassen"
+    },
+    {
+      "id": "CDF-SOULPASS72",
+      "project": "CDF / Soul Pass und Profileinstellungen",
+      "goal": "Vorhandenen D:-SoulPass sichern und trainerartigen privaten Dashboard-Pass mit ehrlichen Social-Einstellungen vervollständigen",
+      "owner": "Codex; Veröffentlichungsentscheidung Hope",
+      "tool": "Gezielter D/E-Abgleich, Vanilla-JS, bestehende private Tabellen und Auth, Browser",
+      "baseline": "f886180b3bd5af9a21fdfde9b1d81e08ceca8aa3",
+      "dependencies": [
+        "CDF-PROFILE71",
+        "CDF-P01"
+      ],
+      "timebox": "Ein begrenzter Wiederherstellungs- und Integrationspass",
+      "acceptance": "D unverändert, privater Herkunftsbeleg, bestätigte eigene Daten statt lokaler Simulationsrechte, bestehende Levelschwellen/Symbolquelle, ehrliche Social-Links, Kontowechsel-Schutz und mobile Lesbarkeit",
+      "state": "Lokal und Draft-Produkt-PR implementiert;18Tests und synthetische Browseransichten geprüft; echte Auth-/Speicher-/Geräteabnahme und Aktivierung offen",
+      "evidence": "Docs/community-pilot/soulpass72-20261109.md",
+      "next": "Vollständige Karten-/SoulNexus-/API-Releasebasis abgleichen, vor Aktivierung echte Eigentümer- und Kontowechselprüfung vorbereiten"
+    },
+    {
+      "id": "CDF-PASS73",
+      "project": "CDF / 3D Soul Pass und Symbolbuch",
+      "owner": "Codex; kreative Entscheidung Hope",
+      "goal": "Räumlicher Pass, gated Symbolbuch und direkte bestehende E-Mail-/Passwortformulare",
+      "baseline": "ae95ed0b6a84e3a835daea80d9cc214dcff29239",
+      "dependencies": [
+        "CDF-SOULPASS72",
+        "CDF-PROFILE71",
+        "CDF-P01"
+      ],
+      "timebox": "Ein begrenzter UI-Pass",
+      "acceptance": "Zweiseitige 3D-Bedienung, korrekte Sammlungszustände und private Kontoformulare ohne neue Rechte/Rewards",
+      "state": "Lokal und Draft-Produkt-PR implementiert;22Tests und synthetische Browseransichten geprüft. Speicher-/E-Lesegrenze behoben. Physischer und echter Auth-/Liveweg offen.",
+      "evidence": "Docs/community-pilot/pass73-20261109.md; Docs/community-pilot/pass73-source-map.json",
+      "next": "Pass74 führt die aktive Reisepass-/Begegnungsansicht fort; physischer Test noch offen."
+    },
+    {
+      "id": "CDF-PASS74",
+      "project": "CDF / SoulNexus-Reisepass und Begegnung",
+      "goal": "Drei blätterbare Seiten und explizit ausgewählte Begegnungsansicht",
+      "owner": "Codex; kreative/Veröffentlichungsentscheidung Hope",
+      "tool": "Vanilla/CSS3D, bestehende private Quellen, lokale Canvas-Bilderzeugung",
+      "baseline": "0d2d4758cfb134e9ea6e9ae89e1b6cbd79821984",
+      "dependencies": [
+        "CDF-PASS73",
+        "CDF-P01",
+        "CDF-PROFILE71"
+      ],
+      "timebox": "Ein begrenzter Pass-/Sichtbarkeitspass",
+      "acceptance": "Identität/Einstellungen/Sammlung, klare gerichtete Navigation, private Kontodaten ausgeschlossen, Freigabe leer/vorhersehbar/temporär und korrekte Fundgrenze",
+      "state": "Lokal und Draft-Produkt-PR implementiert;29Tests und synthetische Browserfälle bestanden; Bilderzeugung gesehen, Dateidownload/Empfang und physische/echte Auth-Abnahme offen",
+      "evidence": "Docs/community-pilot/pass74-20261109.md; Docs/community-pilot/pass74-source-map.json",
+      "next": "Pass75 ist aktiver vertikaler Passstand; physischer Geräte-/Downloadtest und echter Profilrelease weiter offen."
+    },
+    {
+      "id": "CDF-PASS75",
+      "project": "CDF / vertikaler SoulNexus-Reisepass",
+      "goal": "Auf-/Abwärtsblättern vom Formularscrollen trennen und eigenes Siegelband ergänzen",
+      "owner": "Codex; kreative Entscheidung Hope",
+      "tool": "Bestehendes Vanilla-Modul, CSS3D, private Bestandsquelle, Browser",
+      "baseline": "63fb4498d9a29cb37ec750341e73b39a0632cffa",
+      "dependencies": [
+        "CDF-PASS74",
+        "CDF-P01"
+      ],
+      "timebox": "Ein begrenzter Gesten-/Gestaltungspass",
+      "acceptance": "Abwärts nächster/Aufwärts vorheriger Passabschnitt; keine versehentlichen Wechsel beim Formularscrollen; bestätigter Siegelzugang; vorhandene Begegnungsauswahl erhalten",
+      "state": "Lokal und Draft-Produkt-PR implementiert;29Tests bestanden; Desktop-Maus-/Tastatur und mobile Layoutstichproben geprüft, physischer Touch/echter Authweg offen",
+      "evidence": "Docs/community-pilot/pass75-20261109.md; Docs/community-pilot/pass75-source-map.json",
+      "next": "Pass76 ist der aktive echte 3D-Vollbildstand; physischer Gerätetest und tatsächlicher Profil-/Community-Kernweg bleiben offen"
+    },
+    {
+      "id": "CDF-PASS76",
+      "project": "CDF / 3D-SoulNexus-Reisepass",
+      "goal": "Echten räumlichen Reisepass im verfügbaren Vollbild darstellen; direkte vertikale Gesten und zugängliche Einstellungen",
+      "owner": "Codex; kreative Entscheidung Hope",
+      "tool": "Vanilla JavaScript, vorhandenes Three.js, eigene Geometrie/Canvas-Texturen, Browser",
+      "baseline": "46c3851e2b919044c43ebe1417f8eabfbb23841c",
+      "dependencies": [
+        "CDF-PASS75",
+        "CDF-P01"
+      ],
+      "timebox": "Ein begrenzter 3D-/Bedienpass",
+      "acceptance": "Vollbild ohne horizontalen Überlauf; direkte Abwärts-/Aufwärtsgeste; eine Flowee-Hilfe; Formularbedienung und ruhige Alternative; unveränderte private Begegnungsauswahl",
+      "state": "Lokal und Draft-Produkt-PR implementiert;32Tests bestanden; echtes WebGL in drei Browserviewports geprüft; physisches Handy und echter Authweg offen",
+      "evidence": "Docs/community-pilot/pass76-20261109.md; Docs/community-pilot/pass76-source-map.json",
+      "next": "Pass77 ist aktiver seitlicher Einband-/Reisebuchstand; physischer Gerätetest und vollständiger Profilkernweg bleiben offen"
+    },
+    {
+      "id": "CDF-PASS77",
+      "project": "CDF / Reisebuch und private Chronik",
+      "goal": "Seitlich öffnendes eigenes Buch und ehrliche private Tagebuchgrundlage",
+      "owner": "Codex; kreative Entscheidung Hope",
+      "tool": "Vorhandenes Three.js/Vanilla; Blender für spätere Modellverfeinerung",
+      "baseline": "29601a544947ee139cf63e6fb1d8b1421420c3be",
+      "dependencies": [
+        "CDF-PASS76",
+        "CDF-P01",
+        "CDF-PROFILE71"
+      ],
+      "timebox": "Begrenzter Buch-/Quellenpass",
+      "acceptance": "Vollständiger Einband, seitliche Gesten, zugängliche Kontoinhalte, keine erfundenen Besuchs-/Begegnungsdaten oder Chronikfreigabe",
+      "state": "Lokal und Draft-Produkt-PR implementiert;35Tests und synthetische Browserfälle geprüft; dauerhafte Chronik nicht verbunden",
+      "evidence": "Docs/community-pilot/pass77-20261109.md; Docs/community-pilot/pass77-journal-contract-20261109.md",
+      "next": "Antigravity laut Hope beauftragt; Lieferung offen. Journal78 erweitert eigene private Erinnerungen lokal; CDF-P01 und vollständiger Releaseabgleich priorisiert."
+    },
+    {
+      "id": "CDF-JOURNAL78",
+      "project": "CDF / private Reisebuch-Erinnerungen",
+      "goal": "Eigene Erinnerungen privat anlegen, lesen, ändern und löschen; sichere Eigentümertrennung",
+      "owner": "Codex; spätere Aktivierung Hope",
+      "tool": "Vanilla, bestehende registrations-API, Supabase-RLS-Entwurf, vorhandenes lokales PGlite",
+      "baseline": "1223aca3aa360a5278078a1077cf7d88b5daa0cc",
+      "dependencies": [
+        "CDF-PASS77",
+        "CDF-P01"
+      ],
+      "timebox": "Begrenzte private Notiz-/Speicherphase",
+      "acceptance": "Explizite Selbsteinträge ohne Teilnahme-/Belohnungsbehauptung; Owner aus bestätigter Sitzung; zwei Konten getrennt; Fehler nie als gespeichert; keine Notizen im Begegnungsbild",
+      "state": "Lokal und Draft-Produkt-PR vorbereitet;46 sonstige Tests sowie ein isolierter PostgreSQL-Test bestanden; gehostete Speicherung nicht aktiviert",
+      "evidence": "Docs/community-pilot/journal78-20261109.md; sql/pass78-private-journal.sql",
+      "next": "Vollständigen Profil-/Karten-/Tagebuch-Kandidaten prüfen; SQL über Migrationsablauf übernehmen, echte Auth/Advisors/Mehrgeräteabnahme und konkrete Aktivierungsfreigabe getrennt"
+    },
+    {
+      "id": "CDF-CORE79",
+      "project": "CDF / reproduzierbarer Community-Kernweg",
+      "goal": "Fehlende Auth-/Einstiegsressourcen aus aktiver Quelle einzeln wiederherstellen",
+      "owner": "Codex",
+      "tool": "GitHub-Dateibaum, lokale Paket-/Hashprüfung, vorhandene Node-Tests",
+      "baseline": "c3f38ae4956607240ed1e3e50d1a9d90bca35ef5",
+      "dependencies": [
+        "CDF-R01",
+        "CDF-P01"
+      ],
+      "timebox": "Begrenzter erster Modulabgleich",
+      "acceptance": "Drei vorher fehlende Einstiegsmodule samt Lizenz eindeutig belegt; vorhandene Remote-Dateien/Antigravity-Bereich unverändert; Restlücken offen benannt",
+      "state": "Im Draft-Produktbranch ergänzt;23E-Quelltests und lokaler SDK-Initialisierungstest bestanden;8direkte Sanctuary-Ressourcen fehlen weiterhin",
+      "evidence": "Docs/community-pilot/core79-20261110.md; Docs/community-pilot/core79-resources-20261110.json",
+      "next": "8verbleibende direkte Sanctuary-Module semantisch/Quelle/Rechte prüfen, danach transitive Abhängigkeiten und tatsächlichen vollständigen Kernweg abnehmen"
+    },
+    {
+      "id": "CDF-MEMBER80",
+      "project": "CDF / Memberprofil und eigene Welt",
+      "goal": "Vielseitige Interessen, aktuelle Projekte, Angebote und Kooperationswünsche in einem selbstbestimmten Profil verbinden",
+      "owner": "Codex; kreative Priorität Hope; spätere Fachbesetzung noch nicht zugeordnet",
+      "tool": "Anforderungsabgleich, vorhandenes Profile71 und bestehende Bereichsquellen",
+      "baseline": "e339a0228d2b22213c6f481aa8fe9804cdb518d5",
+      "dependencies": [
+        "CDF-R01",
+        "CDF-P01",
+        "CDF-PROFILE71"
+      ],
+      "timebox": "Zunächst begrenzte Anforderungsphase; spätere Umsetzung nach Kernweg",
+      "acceptance": "Eine Identität, mehrere Schwerpunkte ohne Rechtevergabe, ein aktuelles Vorhaben und freiwilliger Kontaktweg, Feldsichtbarkeit und private/public Trennung",
+      "state": "Entwicklungsrichtung anonymisiert dokumentiert; persönliche Beispiele privat; keine neuen Profile/Konten/Funktionen aktiviert",
+      "evidence": "Docs/community-pilot/member80-profile-direction-20261110.md",
+      "next": "Kernweg/Releasebasis zuerst; anschließend genau eine freiwillige Projekt-/Kooperationskarte pro Testprofil planen und prüfen"
+    },
+    {
+      "id": "CDF-FLOW81",
+      "project": "CDF / Flowee-Raumrundgang und Angebots-/Medienpilot",
+      "goal": "Interessenbezogen wiederholbar zu passenden Angebots-, Musik-, Medien-, Sport- und Unterstützungsentwürfen führen",
+      "owner": "Codex; Budget/Veröffentlichung Hope; spätere Bereichsbesetzung noch nicht zugeordnet",
+      "tool": "Vorhandene Orientierung, Vanilla-Rundgang, lokale Größen-/Preisprüfung, portable HTML-Testdatei",
+      "baseline": "f5977386f9af7f87fbd54ef57287bd12635d9764",
+      "dependencies": [
+        "CDF-R01",
+        "CDF-P01",
+        "CDF-MEMBER80"
+      ],
+      "timebox": "Erste begrenzte Rundgangs-/Budgetphase; weitere Aktivierung getrennt",
+      "acceptance": "Freiwillige Eingaben, nachvollziehbare Raumvorschläge, HTTPS-Shoplink, centgenaue Credits-Anzeige, keine versteckte Anlage/Übertragung/Publikation; bestehende/generativ geplante Fähigkeiten ehrlich trennen",
+      "state": "Rundgang lokal und Draft-Produktbranch,9Tests bestanden; begrenzte Tastatur-Browserfälle, Maus/Sicht-/Zielgrößen nicht vollständig abgenommen; Onlinezugang offen, portable Offline-Datei vorhanden",
+      "evidence": "Docs/community-pilot/flow81-room-pilot-20261110.md; Docs/community-pilot/flow81-offline-preview.html",
+      "next": "Economy82 aktualisiert Entwurf auf74Credits/Euro;25Tutorial-XPnochVorschlag. Vollständige Kern-/Onlinebasis und versionsgebundene Preis-/Reward-Umstellung vor privater Angebots-/Uploadaktivierung."
+    },
+    {
+      "id": "CDF-ECONOMY82",
+      "project": "CDF / Credits, einmalige Tutorial-XP und Kapazität",
+      "goal": "74er-Entwurfsregel präzise vorbereiten, Tutorial-XP ohne Doppelvergaben und Uploadwachstum budgetiert planen",
+      "owner": "Codex; Währungs-/Budget-/Reward-/Aktivierungsentscheidung Hope",
+      "tool": "Vorhandener Rundgang, ganzzahlige Untereinheiten, Quellenabgleich, Tests",
+      "baseline": "fbbb5e3b8c3c298c615dd662dd0cf95ab2d71ecf",
+      "dependencies": [
+        "CDF-R01",
+        "CDF-P01",
+        "CDF-FLOW81"
+      ],
+      "timebox": "Begrenzte Preisentwurfs-/Rewardplanung",
+      "acceptance": "1€74Credits, Centgrenzen exakt, keine Altguthaben-Umbewertung; einmaliges serverautoritatives Tutorialkonzept ohne Daten-/Kaufpflicht; globale Kapazität begrenzt",
+      "state": "74er-Entwurf/Offline aktualisiert,10Tests und begrenzte Tastatur-Browserprüfung bestanden;25XPvorgeschlagen, nicht vergeben; Produktion unverändert",
+      "evidence": "Docs/community-pilot/economy82-20261110.md; economy82-policy-20261110.json",
+      "next": "Legacy-Preis-/Wallet-/Rewardpfade vollständig inventarisieren; Präzision/Versionierung und einmaligen Tutorialabschluss im autorisierten Testkontext umsetzen; keine Live-Migration aus Planung"
+    }
+  ]
+}

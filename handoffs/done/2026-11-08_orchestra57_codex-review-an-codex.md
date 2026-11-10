@@ -1,0 +1,11 @@
+# Orchestra57 · internerRouting-Gegencheck
+Projekt:CDF / Koordination
+Empfänger-Rolle:Codex,KoordinationEbene2
+Ziel:AktuelleAgentenrouting-Konfiguration begrenztundnachvollziehbarprüfen.
+Kontext:HistorischefesteAufträgeblockiertenBusiness56-Briefs.
+Inputs:AGENTS,Continuous-Improver-Brief,Runner,Tests,neueKonfiguration.
+GewünschtesErgebnis:KonkreteRisiken/AnforderungenohneProduktänderungen.
+Abnahme:StriktePfade/Tasks,alteOutboxeserhalten,privateQuarantäne,keineFake-Agentenstarts.
+Ergebnisnotiz:TatsächlicheinterneCodex-Teilaufgabe orchestra57_reviewlasAltstandundneueQuelle. StrikteKonfiguration/Historie/QuarantänewurdenimQuellreviewbestätigt; Datei-SymlinkpfadbeiInboxcurrent.jsongemeldet. RootfixprüftnunvollständigenDateipfadüberinside/realpath;9gezielteTestsbestanden,1DateisymlinktestwegenHostrechtenübersprungen.
+Beleg:scripts/cdf-agent-exchange.cjs,tests/cdf-agent-exchange.test.cjs,data/agent_exchange_assignments.json,orchestra57-20261108.md.
+OffeneAbhängigkeiten:KeineechtenexternenAgentenläufe/Bild-/Auth-AbnahmeundkeineabsoluteSicherheitsfreigabeausQuellprüfung.
