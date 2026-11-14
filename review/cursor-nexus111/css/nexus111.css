@@ -1,0 +1,77 @@
+:root{
+  color-scheme:dark;
+  --plum:#241433;
+  --plum-deep:#140c22;
+  --gold:#e4c88a;
+  --gold-deep:#a68445;
+  --ink:#241c16;
+  --paper:#f6f1e6;
+  --paper-edge:#e4d8c4;
+  --muted:#5d5348;
+  --text:#f4efe6;
+  --focus:#ffe7ad;
+  --touch:44px;
+  font-family:"Iowan Old Style",Palatino,Georgia,serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:#090d14;color:var(--text)}
+body{font-size:1.05rem;line-height:1.45}
+body[data-text=large]{font-size:1.2rem}
+button,input,select,textarea{font:inherit;color:inherit}
+button,a{min-height:var(--touch)}
+:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+.skip{position:absolute;left:12px;top:-60px;background:var(--gold);color:var(--ink);padding:8px 12px;z-index:5}
+.skip:focus{top:12px}
+.shell{max-width:880px;margin:0 auto;padding:16px}
+.top{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.top h1{font-size:1.3rem;margin:0}
+.tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.tools button,.tools select{border:1px solid var(--gold-deep);background:#1b2230;color:var(--text);border-radius:999px;padding:8px 14px}
+.tools button[aria-pressed=true]{background:var(--gold);color:var(--ink)}
+.tools select{background:#fff;color:var(--ink)}
+.cover{margin-top:18px;min-height:70vh;display:grid;place-items:center}
+.cover-board{width:min(420px,100%);background:radial-gradient(circle at 30% 0%,#4a2d74,var(--plum) 46%,var(--plum-deep));border:2px solid var(--gold);border-radius:18px;padding:28px 22px;text-align:center}
+.cover-board h2{margin:12px 0;font-size:2rem}
+.cover-board button{background:var(--gold);color:var(--ink);border:0;border-radius:999px;padding:10px 18px}
+.note{color:#d9cbb6}
+.book{margin-top:16px;display:grid;gap:12px}
+.card{background:radial-gradient(circle at 20% 0%,#4a2d74,var(--plum) 42%,var(--plum-deep));border:2px solid var(--gold);border-radius:18px;padding:16px}
+.card h2{margin:8px 0}
+.emblem{width:48px;height:48px;border:1px solid var(--gold);border-radius:50%;display:grid;place-items:center;color:var(--gold)}
+.favorites{display:grid;gap:8px}
+.symbol{display:grid;grid-template-columns:44px minmax(0,1fr);gap:8px;align-items:center}
+.mark{width:44px;height:44px;display:grid;place-items:center;border:1px solid var(--gold);border-radius:50%}
+.register{display:flex;flex-wrap:wrap;gap:8px}
+.register button{border:1px solid var(--gold-deep);background:transparent;color:var(--gold);border-radius:999px;padding:8px 14px}
+.register button[aria-current=page]{background:#3a245f}
+.paper{background:var(--paper);color:var(--ink);border-radius:16px;padding:16px;min-height:28vh}
+.paper h3{margin:0 0 8px}
+.scroll{max-height:36vh;overflow:auto;overscroll-behavior:contain;touch-action:pan-y}
+.actions{display:flex;flex-wrap:wrap;gap:8px}
+.actions button{background:#24180f;color:var(--paper);border:0;border-radius:999px;padding:8px 14px}
+.read{background:var(--paper);color:var(--ink);border-radius:16px;padding:16px;margin-top:16px}
+.read .scroll{max-height:68vh}
+.entry{border-top:1px solid var(--paper-edge);padding:8px 0}
+.meta{color:var(--muted);margin:0}
+dialog{border:0;border-radius:16px;padding:0;background:var(--paper);color:var(--ink);width:min(560px,calc(100vw - 24px));max-height:calc(100dvh - 24px);overflow:auto}
+dialog::backdrop{background:rgba(8,6,12,.72)}
+.dialog-head{display:flex;justify-content:space-between;gap:8px;align-items:center;background:var(--plum);color:var(--text);padding:12px 16px;position:sticky;top:0}
+.dialog-body{padding:16px;display:grid;gap:8px}
+fieldset{border:1px solid var(--paper-edge);border-radius:12px;display:grid;gap:6px}
+label{display:flex;gap:8px;align-items:center;min-height:var(--touch)}
+.account label{display:grid}
+.account input,.account textarea{width:100%;min-height:var(--touch);border:1px solid #c8bba8;border-radius:8px;padding:8px;background:#fff;color:var(--ink)}
+.preview{background:#102d36;color:#eff7f1;border:2px solid var(--gold);border-radius:12px;padding:12px}
+[hidden]{display:none!important}
+@media(max-width:700px){
+  .shell{padding:8px}
+  .scroll{max-height:32vh}
+}
+@media(max-height:520px){
+  .cover{min-height:0}
+  .scroll{max-height:24vh}
+  .read .scroll{max-height:46vh}
+}
+@media(prefers-reduced-motion:reduce){
+  *{scroll-behavior:auto}
+}

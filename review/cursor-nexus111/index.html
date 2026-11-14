@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Nexus111 · SoulNexus</title>
+<link rel="stylesheet" href="css/nexus111.css">
+</head>
+<body>
+<a class="skip" href="#book">Zur Buchoberfläche</a>
+<main class="shell">
+<header class="top">
+<div>
+<h1 id="title">SoulNexus</h1>
+<p id="frame">Ein Einband, eine Öffnung, danach eine Buchoberfläche.</p>
+</div>
+<div class="tools">
+<label>Sprache <select id="lang" aria-label="Sprache"><option value="de">DE</option><option value="en">EN</option><option value="pt">PT</option></select></label>
+<button id="mode-empty" type="button" aria-pressed="true">Leerzustand</button>
+<button id="mode-demo" type="button" aria-pressed="false">Demodaten</button>
+<button id="view-large" type="button" aria-pressed="false">Größere Schrift</button>
+<button id="back" type="button">Zurück</button>
+</div>
+</header>
+<section id="cover" class="cover">
+<div class="cover-board">
+<p>CIRCLE D FLOW</p>
+<h2>SoulNexus</h2>
+<div id="cover-host"></div>
+<button id="open-cover" type="button">Einband öffnen</button>
+<p id="cover-note" class="note"></p>
+</div>
+</section>
+<section id="book" class="book" tabindex="0" hidden>
+<article id="card" class="card"></article>
+<nav id="register" class="register" aria-label="Register"></nav>
+<section id="paper" class="paper"></section>
+<div class="actions">
+<button id="action-read" type="button">Lesen</button>
+<button id="action-share" type="button">Begegnung</button>
+<button id="action-journal" type="button">Tagebuch</button>
+</div>
+<p id="status" role="status"></p>
+</section>
+<section id="read" class="read" tabindex="-1" hidden><div id="read-body"></div></section>
+<section id="journal" tabindex="-1" hidden><div id="journal-body" class="paper"></div></section>
+</main>
+<script src="js/nexus111-model.js"></script>
+<script src="js/nexus111-cover.js"></script>
+<script src="js/nexus111-integrate.js"></script>
+<script src="js/nexus111.js"></script>
+</body>
+</html>
