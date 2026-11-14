@@ -1,0 +1,56 @@
+{
+  "report": [
+    {
+      "name": "360-closed",
+      "overflow": false,
+      "text": false,
+      "cover": false,
+      "book": true,
+      "small": 0
+    },
+    {
+      "name": "360-open",
+      "overflow": false,
+      "text": false,
+      "cover": true,
+      "book": false,
+      "small": 0
+    },
+    {
+      "name": "390-demo",
+      "overflow": false,
+      "text": false,
+      "cover": true,
+      "book": false,
+      "small": 0
+    },
+    {
+      "name": "390-large",
+      "overflow": false,
+      "text": false,
+      "cover": true,
+      "book": false,
+      "small": 0
+    },
+    {
+      "name": "844-open",
+      "overflow": false,
+      "text": false,
+      "cover": true,
+      "book": false,
+      "small": 0
+    }
+  ],
+  "share": {
+    "names": [
+      "name",
+      "symbols"
+    ],
+    "text": true
+  },
+  "account": "Nichts gespeichert.",
+  "keyboard": {
+    "before": "Konto",
+    "after": "Konto"
+  }
+}
