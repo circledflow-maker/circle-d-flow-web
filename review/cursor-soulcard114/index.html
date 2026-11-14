@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SoulCard114 · SoulNexus</title>
+<link rel="stylesheet" href="css/soulcard114.css">
+</head>
+<body data-text="normal">
+<main class="shell">
+<header class="top">
+<div><h1 id="title">SoulNexus</h1><p id="frame">Ein geschlossener Einband, eine Öffnung, danach die Kapitel.</p></div>
+<div class="tools">
+<button id="mode-empty" type="button" aria-pressed="true">Leerzustand</button>
+<button id="mode-demo" type="button" aria-pressed="false">Demodaten</button>
+<button id="view-large" type="button" aria-pressed="false">Größere Schrift</button>
+<button id="back" type="button">Zurück</button>
+</div>
+</header>
+<section id="cover" class="cover"><div class="cover-board"><p>CIRCLE D FLOW</p><h2>SoulNexus</h2><button id="open-cover" type="button">Einmal öffnen</button></div></section>
+<section id="book" class="book" tabindex="0" hidden>
+<article id="identity" class="card"></article>
+<nav id="register" class="register" aria-label="Kapitel"></nav>
+<section id="paper" class="paper"></section>
+<div class="actions">
+<button id="action-read" type="button">Lesen</button>
+<button id="action-meeting" type="button">Begegnung</button>
+<button id="action-diary" type="button">Tagebuch</button>
+</div>
+<p id="status" role="status"></p>
+</section>
+<section id="read" class="read paper" tabindex="-1" hidden><h2>Lesen</h2><p>Dieselbe Kapitelansicht, nur zum Lesen. Kein zweiter Pass.</p></section>
+<section id="meeting" class="meeting" hidden>
+<div class="editor">
+<h2>Begegnung</h2>
+<p>Nichts ist vorausgewählt. Die Karte erhält nur die angehakten Angaben.</p>
+<button id="interview-apply" type="button">Flowee fragen</button>
+<button id="interview-skip" type="button">Gespräch überspringen</button>
+<p id="interview-status" role="status"></p>
+<label>Rolle <input id="ask-role" autocomplete="off"></label>
+<label>Instrument oder Werkzeug <input id="ask-instrument" autocomplete="off"></label>
+<label>Bis zu drei Arten, durch Komma <input id="ask-skills" autocomplete="off"></label>
+<label>Persönlicher Satz <input id="ask-phrase" autocomplete="off"></label>
+<label>Interesse an Zusammenarbeit <input id="ask-collaboration" autocomplete="off"></label>
+<h3>Entwurf bearbeiten</h3>
+<label>Avatar, nur ein Kürzel <input id="edit-avatar" autocomplete="off"></label>
+<label>Rolle <input id="edit-role" autocomplete="off"></label>
+<label>Kurzbiografie <textarea id="edit-biography" rows="3"></textarea></label>
+<label>Instrument oder Werkzeug <input id="edit-instrument" autocomplete="off"></label>
+<label>Arten <input id="edit-skills" autocomplete="off"></label>
+<label>Satz <input id="edit-phrase" autocomplete="off"></label>
+<label>Besuchstitel <input id="edit-visits" autocomplete="off"></label>
+<label>Zusammenarbeit <input id="edit-collaboration" autocomplete="off"></label>
+<label>Öffentlicher Kontakt <input id="edit-contact" autocomplete="off"></label>
+<fieldset>
+<legend>Auf die Karte nehmen</legend>
+<label><input type="checkbox" data-choice="name"> Name</label>
+<label><input type="checkbox" data-choice="avatar"> Avatar</label>
+<label><input type="checkbox" data-choice="role"> Rolle</label>
+<label><input type="checkbox" data-choice="biography"> Biografie</label>
+<label><input type="checkbox" data-choice="instrument"> Instrument</label>
+<label><input type="checkbox" data-choice="skills"> Drei Arten</label>
+<label><input type="checkbox" data-choice="phrase"> Satz</label>
+<label><input type="checkbox" data-choice="symbols"> Verdiente Zeichen</label>
+<label><input type="checkbox" data-choice="visits"> Besuche</label>
+<label><input type="checkbox" data-choice="collaboration"> Zusammenarbeit</label>
+<label><input type="checkbox" data-choice="contacts"> Kontakte</label>
+</fieldset>
+<button id="jam" type="button">Für eine Jam vormerken</button>
+<p id="jam-status" role="status"></p>
+</div>
+<article id="soulcard" tabindex="0" aria-label="SoulCard Vorschau">
+<p>Vorschau, noch nicht geteilt</p>
+<button id="flip" type="button" aria-pressed="false">Karte wenden</button>
+<div id="face-front" class="face front"></div>
+<div id="face-back" class="face back" hidden></div>
+</article>
+</section>
+<section id="diary" class="diary" tabindex="-1" hidden>
+<form id="private-form" class="diary-panel"><h2>Private Notiz</h2><p>Private Notiz. Sie erscheint auf keiner Kartenseite.</p><label>Notiz <textarea id="private-note" rows="4"></textarea></label><button type="submit">Nicht speichern</button><p id="private-status" role="status"></p></form>
+<form id="community-form" class="diary-panel"><h2>Community-Entwurf</h2><p>Community-Entwurf. Veröffentlichen bleibt gesperrt.</p><label>Entwurf <textarea id="community-note" rows="4"></textarea></label><button type="submit" disabled>Veröffentlichen gesperrt</button><p id="community-status" role="status"></p></form>
+</section>
+</main>
+<script src="js/soulcard114-model.js"></script>
+<script src="js/soulcard114.js"></script>
+</body>
+</html>

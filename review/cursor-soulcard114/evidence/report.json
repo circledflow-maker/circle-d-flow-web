@@ -1,0 +1,42 @@
+{
+  "flow": {
+    "opened": "1",
+    "still": "1",
+    "chapter": "Chronik",
+    "afterScroll": "Chronik",
+    "checks": 0,
+    "beforeSelect": "Vorderseite\nNoch keine Angabe gewählt.",
+    "afterSelect": "Vorderseite\nRolle: Gast",
+    "backShown": true,
+    "focus": "soulcard",
+    "phase": true
+  },
+  "diary": "Keine Journalverbindung. Nichts gespeichert.",
+  "publish": true,
+  "report": [
+    {
+      "name": "360-closed",
+      "overflow": false,
+      "oldMode": false,
+      "motion": "reduced",
+      "small": 0,
+      "cover": false
+    },
+    {
+      "name": "390-meeting",
+      "overflow": false,
+      "oldMode": false,
+      "motion": "reduced",
+      "small": 0,
+      "cover": true
+    },
+    {
+      "name": "844-open",
+      "overflow": false,
+      "oldMode": false,
+      "motion": "reduced",
+      "small": 0,
+      "cover": true
+    }
+  ]
+}
